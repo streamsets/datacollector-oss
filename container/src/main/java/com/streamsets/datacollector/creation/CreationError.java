@@ -70,6 +70,8 @@ public enum CreationError implements ErrorCode {
 
   CREATION_070("Invalid execution mode '{}'"),
   CREATION_071("Execution mode not set"),
+
+  CREATION_080("Configuration value is required for Webhook URL"),
   ;
 
   private final String msg;

@@ -155,11 +155,13 @@
 
         <table class="table table-bordered" ng-if="_.size(configDefinition.model.configDefinitions) > 4">
           <tbody>
-          <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[configIndex].value track by $index">
+          <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[configIndex].value track by $index"
+              ng-init="configIndex = $index">
 
             <td>
               <div class="form-group "
                    ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions | orderBy: 'displayPosition'"
+                   ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, customFieldConfigDefinition).length > 0}"
                    ng-if="(verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))">
 
                 <label class="col-lg-3 control-label">{{customFieldConfigDefinition.label}}
@@ -172,10 +174,9 @@
 
                 <div class="controls col-lg-9">
                   <ng-include src="'app/home/detail/configuration/listBeanConfiguration.tpl.html'"></ng-include>
+                  <ng-include src="'complexConfigurationIssuesTemplate'"></ng-include>
                 </div>
-
               </div>
-
             </td>
 
             <td>

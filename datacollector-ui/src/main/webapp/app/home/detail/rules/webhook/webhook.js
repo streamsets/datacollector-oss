@@ -58,7 +58,11 @@ angular
 
           if (configIndex === undefined) {
             //No configuration found, added the configuration with default value
-            stageInstance.configuration.push(pipelineService.setDefaultValueForConfig(configDefinition, stageInstance));
+            stageInstance.configuration.push({
+              name: configDefinition.name,
+              value: (configDefinition.defaultValue !== undefined && configDefinition.defaultValue !== null) ? configDefinition.defaultValue : undefined
+            });
+
             configIndex = stageInstance.configuration.length - 1;
           }
 

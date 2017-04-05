@@ -17,6 +17,16 @@
   </div>
 </script>
 
+<script type="text/ng-template" id="complexConfigurationIssuesTemplate">
+  <div class="help-block">
+    <div ng-repeat="issue in getConfigurationIssues(detailPaneConfig, customFieldConfigDefinition)"
+         ng-if="issue.additionalInfo && issue.additionalInfo.index === configIndex">
+      <span>{{issue.message}}</span>
+      <span ng-show="issue.count > 1" class="badge">{{issue.count}}</span>
+    </div>
+  </div>
+</script>
+
 <script type="text/ng-template" id="stringConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
 
@@ -536,8 +546,6 @@
         </button>
       </div>
     </div>
-
-    <ng-include src="'configurationIssuesTemplate'"></ng-include>
   </div>
 </script>
 
@@ -600,8 +608,6 @@
         </button>
       </div>
     </div>
-
-    <ng-include src="'configurationIssuesTemplate'"></ng-include>
   </div>
 </script>
 
@@ -650,5 +656,4 @@
        field-paths="fieldPaths"
        d-field-paths="dFieldPaths">
   </div>
-  <ng-include src="'configurationIssuesTemplate'"></ng-include>
 </script>

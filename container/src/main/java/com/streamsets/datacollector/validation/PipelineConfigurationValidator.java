@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -84,18 +84,18 @@ public class PipelineConfigurationValidator {
       String name,
       PipelineConfiguration pipelineConfiguration
   ) {
-    Preconditions.checkNotNull(stageLibrary, "stageLibrary cannot be null");
-    Preconditions.checkNotNull(name, "name cannot be null");
-    Preconditions.checkNotNull(pipelineConfiguration, "pipelineConfiguration cannot be null");
-    this.stageLibrary = stageLibrary;
-    this.name = name;
-    this.pipelineConfiguration = pipelineConfiguration;
+    this.stageLibrary = Preconditions.checkNotNull(stageLibrary, "stageLibrary cannot be null");
+    this.name = Preconditions.checkNotNull(name, "name cannot be null");
+    this.pipelineConfiguration = Preconditions.checkNotNull(
+        pipelineConfiguration,
+        "pipelineConfiguration cannot be null"
+    );
     issues = new Issues();
     openLanes = new ArrayList<>();
     this.constants = ElUtil.getConstants(pipelineConfiguration);
   }
 
-  boolean sortStages() {
+  private boolean sortStages() {
     boolean ok = true;
     List<StageConfiguration> original = new ArrayList<>(pipelineConfiguration.getStages());
     List<StageConfiguration> sorted = new ArrayList<>();
@@ -169,15 +169,15 @@ public class PipelineConfigurationValidator {
     return pipelineConfiguration;
   }
 
-  boolean isLibraryAlias(String name) {
+  private boolean isLibraryAlias(String name) {
     return stageLibrary.getLibraryNameAliases().containsKey(name);
   }
 
-  String resolveLibraryAlias(String name) {
+  private String resolveLibraryAlias(String name) {
     return stageLibrary.getLibraryNameAliases().get(name);
   }
 
-  void resolveStageAlias(StageConfiguration stageConf) {
+  private void resolveStageAlias(StageConfiguration stageConf) {
     String aliasKey = Joiner.on(",").join(stageConf.getLibrary(), stageConf.getStageName());
     String aliasValue = Strings.nullToEmpty(stageLibrary.getStageNameAliases().get(aliasKey));
     if (LOG.isTraceEnabled()) {
@@ -198,7 +198,7 @@ public class PipelineConfigurationValidator {
     }
   }
 
-  boolean resolveLibraryAliases() {
+  private boolean resolveLibraryAliases() {
     List<StageConfiguration> stageConfigurations = new ArrayList<>();
     if(pipelineConfiguration.getStatsAggregatorStage() != null) {
       stageConfigurations.add(pipelineConfiguration.getStatsAggregatorStage());
@@ -222,7 +222,7 @@ public class PipelineConfigurationValidator {
     return PipelineConfigurationUpgrader.get();
   }
 
-  boolean upgradePipeline() {
+  private boolean upgradePipeline() {
     List<Issue> upgradeIssues = new ArrayList<>();
     PipelineConfiguration pConf = getUpgrader().upgradeIfNecessary(
         stageLibrary,
@@ -236,7 +236,7 @@ public class PipelineConfigurationValidator {
     return upgradeIssues.isEmpty();
   }
 
-  boolean addMissingConfigs() {
+  private boolean addMissingConfigs() {
     for (ConfigDefinition configDef : stageLibrary.getPipeline().getConfigDefinitions()) {
       String configName = configDef.getName();
       Config config = pipelineConfiguration.getConfiguration(configName);
