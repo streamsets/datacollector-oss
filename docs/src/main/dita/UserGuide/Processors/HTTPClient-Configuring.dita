@@ -131,17 +131,13 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-UseProxy">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Rate Limit</entry>
-                                    <entry>Maximum number of requests to make per second. Set a rate
-                                        limit when sending requests to a rate-limited API.
-                                            <p>Default is 0, which means there is no delay between
-                                            requests.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-MaxRequestTime">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Maximum Request Time</entry>
-                                    <entry>Maximum number of seconds to wait for a request to
-                                        complete.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-RateLimit">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

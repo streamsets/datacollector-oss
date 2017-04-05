@@ -383,7 +383,8 @@
    </tgroup>
   </table>
   <p>
-   <draft-comment author="Loretta">HTTP Client origin and processor rows:</draft-comment>
+   <draft-comment author="Loretta">HTTP Client origin, processor, and destination
+    rows:</draft-comment>
   </p>
   <p>
    <table frame="all" rowsep="1" colsep="1" id="table_jf4_g24_jw">
@@ -440,12 +441,22 @@
         <p>Enables using an HTTP proxy to connect to the system. </p>
        </entry>
       </row>
+      <row id="HTTP-MaxRequestTime">
+       <entry>Maximum Request Time</entry>
+       <entry>Maximum number of seconds to wait for a request to complete.</entry>
+      </row>
+      <row id="HTTP-RateLimit">
+       <entry>Rate Limit</entry>
+       <entry>Maximum number of requests to make per second. Set a rate limit when sending requests
+        to a rate-limited API. <p>Default is 0, which means there is no delay between
+        requests.</p></entry>
+      </row>
      </tbody>
     </tgroup>
    </table>
   </p>
-  <draft-comment author="alisontaylor">OAuth 2 table for HTTP Client origin and
-   processor</draft-comment>
+  <draft-comment author="alisontaylor">OAuth 2 table for HTTP Client origin, processor, and
+   destination</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="HTTP_OAuth2">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -472,36 +483,37 @@
      </row>
      <row>
       <entry>Client ID</entry>
-      <entry>Client ID that the HTTP service uses to identify the HTTP client.<p>For client
-        credentials grant that uses a client ID and secret for authentication. Or, for resource
-        owner password credentials grant that requires a client ID and secret.</p></entry>
+      <entry>Client ID that the HTTP service uses to identify the HTTP client.<p>Enter for the
+        client credentials grant that uses a client ID and secret for authentication. Or, for the
+        resource owner password credentials grant that requires a client ID and secret.</p></entry>
      </row>
      <row>
       <entry>Client Secret</entry>
-      <entry>Client secret that the HTTP service uses to authenticate the HTTP client.<p>For client
-        credentials grant that uses a client ID and secret for authentication. Or, for resource
-        owner password credentials grant that requires a client ID and secret.</p><note
+      <entry>Client secret that the HTTP service uses to authenticate the HTTP client.<p>Enter for
+        the client credentials grant that uses a client ID and secret for authentication. Or, for
+        the resource owner password credentials grant that requires a client ID and secret.</p><note
         conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_ClientID"/></entry>
      </row>
      <row>
       <entry>User Name</entry>
-      <entry>Resource owner user name.<p>For resource owner password credentials grant.</p></entry>
+      <entry>Resource owner user name.<p>Enter for the resource owner password credentials
+        grant.</p></entry>
      </row>
      <row>
       <entry>Password</entry>
-      <entry>Resource owner password.<p>For resource owner password credentials grant.</p><note
-        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
+      <entry>Resource owner password.<p>Enter for the resource owner password credentials
+        grant.</p><note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
      </row>
      <row>
       <entry>JWT Signing Algorithm</entry>
-      <entry>Algorithm used to sign the JSON Web Token (JWT).<p>Default is none. For JSON Web Tokens
-        grant.</p></entry>
+      <entry>Algorithm used to sign the JSON Web Token (JWT).<p>Default is none. Enter for the JSON
+        Web Tokens grant.</p></entry>
      </row>
      <row>
       <entry>JWT Signing Key</entry>
       <entry>Base64 encoded key used to sign the JSON Web Token, if you selected a signing
-        algorithm.<note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_JWTKey"/><p>For JSON Web
-        Tokens grant.</p></entry>
+        algorithm.<note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_JWTKey"/><p>Enter for
+        the JSON Web Tokens grant.</p></entry>
      </row>
      <row>
       <entry>JWT Claims</entry>
@@ -515,8 +527,8 @@
   "aud":"https://www.googleapis.com/oauth2/v4/token",
   "exp":${(time:dateTimeToMilliseconds(time:now())/1000) + 50 * 60},
   "iat":${time:dateTimeToMilliseconds(time:now())/1000}
-}</codeblock><p>For
-        JSON Web Tokens grant.</p></entry>
+}</codeblock><p>Enter
+        for the JSON Web Tokens grant.</p></entry>
      </row>
      <row>
       <entry>Request Transfer Encoding</entry>

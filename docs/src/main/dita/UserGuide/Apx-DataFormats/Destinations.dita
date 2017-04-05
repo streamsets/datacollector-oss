@@ -155,6 +155,21 @@
                                                   Applicable * * *</entry>
                                                   <entry/>
                                                 </row>
+            <row>
+              <entry>HTTP Client</entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_mlf_smv_lz"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_olf_smv_lz"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rlf_smv_lz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qlf_smv_lz"
+                /></entry>
+              <entry/>
+            </row>
                                                 <row>
                                                   <entry>InfluxDB</entry>
                                                   <entry namest="c2" nameend="c9">* * * Not

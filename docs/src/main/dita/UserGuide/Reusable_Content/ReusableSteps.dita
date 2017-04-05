@@ -1484,8 +1484,8 @@
                         following handful of steps are for origin/origin, origin/processor or
                         possibly origin/destination reuse. In alphabetical order.</draft-comment>
                     <draft-comment author="Loretta"><uicontrol>HTTPClient-Credentials</uicontrol> -
-                        The following steps are used in HTTP Client origin and processor Configuring
-                        topics:</draft-comment>
+                        The following steps are used in HTTP Client origin, processor, and
+                        destination Configuring topics:</draft-comment>
                 </cmd>
             </step>
             <step id="HTTPClient-Credentials">
@@ -1538,8 +1538,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>HTTPClient-Proxy</uicontrol> - - The
-                        following steps are used in HTTP Client origin and processor Configuring
-                        topics:</draft-comment>
+                        following steps are used in HTTP Client origin, processor, and destination
+                        Configuring topics:</draft-comment>
                 </cmd>
             </step>
             <step id="HTTPClient-Proxy">
