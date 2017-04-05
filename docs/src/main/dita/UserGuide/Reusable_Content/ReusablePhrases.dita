@@ -108,6 +108,7 @@
             <p>
                   <ul id="BasicDestinations">
                         <li>Local FS</li>
+                        <li>HTTP Client</li>
                         <li>SDC RPC</li>
                         <li>To Error</li>
                         <li>Trash</li>
@@ -2534,7 +2535,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <p/>
             <p/>
             <draft-comment author="alisontaylor">Used in the OAuth 2 Authorization topic for HTTP
-                  Client origin and processor</draft-comment>
+                  Client origin, processor, and destination</draft-comment>
             <p id="OAuth2_Credentials">The credentials that you enter to request an access token
                   depend on the credentials grant type required by the HTTP service. You can define
                   the following OAuth 2 credentials grant types for HTTP Client: <dl>
@@ -2544,9 +2545,9 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                                     <p>HTTP Client sends its own credentials - the client ID and
                                           client secret or the basic, digest, or universal
                                           authentication credentials - to the HTTP service. For
-                                          example, use the client credentials grant to read from the
-                                          Twitter API or from the Microsoft Azure Active Directory
-                                          (Azure AD) API.</p>
+                                          example, use the client credentials grant to process data
+                                          from the Twitter API or from the Microsoft Azure Active
+                                          Directory (Azure AD) API.</p>
                                     <p>For more information about the client credentials grant, see
                                                 <xref
                                                 href="https://tools.ietf.org/html/rfc6749#section-4.4"
@@ -2562,10 +2563,9 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                                           existing clients using basic, digest, or universal
                                           authentication to OAuth 2 by converting the stored
                                           credentials to an access token.</p>
-                                    <p>For example, use the resource owner password credentials
-                                          grant to read from the Getty Images API. For more
-                                          information about using OAuth 2 to connect to the Getty
-                                          Images API, see <xref
+                                    <p>For example, use this grant to process data from the Getty
+                                          Images API. For more information about using OAuth 2 to
+                                          connect to the Getty Images API, see <xref
                                                 href="http://developers.gettyimages.com/api/docs/v3/oauth2.html"
                                                 format="html" scope="external"
                                                 >http://developers.gettyimages.com/api/docs/v3/oauth2.html</xref>.</p>
@@ -2579,14 +2579,14 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               <dt>JSON Web Tokens (JWT)</dt>
                               <dd>
                                     <p>HTTP Client sends a JSON-based security token encoding to the
-                                          HTTP service. For example, use JSON Web Tokens to read
-                                          from the Google API.</p>
+                                          HTTP service. For example, use JSON Web Tokens to process
+                                          data from the Google API.</p>
                               </dd>
                         </dlentry>
                   </dl></p>
             <p id="OAuth2_Examples">Let’s look at some examples of how to configure authentication
-                  and OAuth 2 authorization to read Twitter, Microsoft Azure AD, and Google
-                  APIs.</p>
+                  and OAuth 2 authorization to process data from Twitter, Microsoft Azure AD, and
+                  Google APIs.</p>
             <draft-comment author="alisontaylor">Note used 2 times in Aggregated Statistics for
                   Pipelines in DPM chapter</draft-comment>
             <note type="important" id="AggStatsNote">For a production environment, use a Kafka

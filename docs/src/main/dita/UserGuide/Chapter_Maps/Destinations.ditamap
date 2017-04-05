@@ -143,6 +143,22 @@
    <topicref href="../Destinations/Hive-HiveProperties.dita"/>
    <topicref href="../Destinations/Hive-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/HTTPClient.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/HTTPClient-DestinationMethods.dita">
+    <topicref href="../Destinations/HTTPClient-DestinationExpressionMethod.dita"/>
+   </topicref>
+   <topicref href="../Destinations/HTTPClient-DestinationParallelRequests.dita"/>
+   <topicref href="../Destinations/HTTPClient-DestinationOAuth2.dita">
+    <topicref href="../Destinations/HTTPClient-DestinationOAuth2Twitter.dita"/>
+    <topicref href="../Destinations/HTTPClient-DestinationOAuth2AzureAD.dita"/>
+    <topicref href="../Destinations/HTTPClient-DestinationOAuth2Google.dita"/>
+   </topicref>
+   <topicref href="../Destinations/HTTPClient-DataFormat.dita"/>
+   <topicref href="../Destinations/HTTPClient-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/InfluxDB.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
