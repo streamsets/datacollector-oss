@@ -54,7 +54,9 @@
           </row>
           <row>
             <entry>File descriptors</entry>
-            <entry>32768</entry>
+            <entry><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MinFileDescriptors"
+              /></entry>
           </row>
           <row>
             <entry>Java</entry>

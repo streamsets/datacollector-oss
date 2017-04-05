@@ -66,6 +66,9 @@
                               <xref
                               href="../Pipeline_Maintenance/SharingPipelines.dita#concept_jrg_1vy_wy"
                         />.</ph></p>
+            <draft-comment author="alisontaylor">The following number is used in Installation
+                  Requirements and Configuring the Open File Limit</draft-comment>
+            <p><ph id="ph-MinFileDescriptors">32768</ph></p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>ph-VaultFunctions-Usage</uicontrol> -
                         used in Vault-Step3-CallVault.dita</draft-comment>
