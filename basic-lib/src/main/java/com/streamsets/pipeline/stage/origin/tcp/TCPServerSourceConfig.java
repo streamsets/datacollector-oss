@@ -84,8 +84,8 @@ public class TCPServerSourceConfig {
       description = "The TCP syslog message transfer mode to be used, as defined in RFC 6587.  Method change is not" +
           " allowed (i.e. must be consistent between all clients and sessions).",
       defaultValue = "OCTET_COUNTING",
-      group = "TCP",
-      displayPosition = 25,
+      group = "SYSLOG",
+      displayPosition = 10,
       dependsOn = "tcpMode",
       triggeredByValue = "SYSLOG"
   )
@@ -99,12 +99,25 @@ public class TCPServerSourceConfig {
       description = "When using non-transparent-framing, this is the separator character that will appear between" +
           " separate syslog messages.  Specify using Java Unicode syntax (\"\\uxxxx\").  Defaults to line feed (000A).",
       defaultValue = "\\u000A",
-      group = "TCP",
+      group = "SYSLOG",
       dependsOn = "syslogFramingMode",
       triggeredByValue = "NON_TRANSPARENT_FRAMING",
-      displayPosition = 30
+      displayPosition = 20
   )
   public String nonTransparentFramingSeparatorCharStr;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTF-8",
+      label = "Charset",
+      displayPosition = 30,
+      group = "SYSLOG",
+      dependsOn = "tcpMode",
+      triggeredByValue = "SYSLOG"
+  )
+  @ValueChooserModel(CharsetChooserValues.class)
+  public String syslogCharset;
 
   @ConfigDef(
       required = true,
@@ -130,19 +143,6 @@ public class TCPServerSourceConfig {
       max = Integer.MAX_VALUE
   )
   public int maxWaitTime;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "UTF-8",
-      label = "Charset",
-      displayPosition = 60,
-      group = "SYSLOG",
-      dependsOn = "tcpMode",
-      triggeredByValue = "SYSLOG"
-  )
-  @ValueChooserModel(CharsetChooserValues.class)
-  public String syslogCharset;
 
   @ConfigDef(
       required = false,

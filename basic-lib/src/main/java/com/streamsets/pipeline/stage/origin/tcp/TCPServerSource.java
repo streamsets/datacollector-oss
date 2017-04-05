@@ -25,13 +25,18 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.parser.net.DelimitedLengthFieldBasedFrameDecoder;
 import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDecoder;
+import com.streamsets.pipeline.lib.parser.net.syslog.SyslogDecoder;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -186,6 +191,30 @@ public class TCPServerSource extends BasePushSource {
     switch (tcpMode) {
       case NETFLOW:
         decoderChain.add(new NetflowDecoder());
+        break;
+      case SYSLOG:
+        if (syslogFramingMode == SyslogFramingMode.OCTET_COUNTING) {
+          // first, a DelimitedLengthFieldBasedFrameDecoder to ensure we can capture a full message
+          decoderChain.add(new DelimitedLengthFieldBasedFrameDecoder(
+              maxMessageSize,
+              0,
+              false,
+              Unpooled.copiedBuffer(" ", charsetObj),
+              charsetObj,
+              true
+          ));
+          // next, decode the syslog message itself
+          decoderChain.add(new SyslogDecoder(charsetObj));
+        } else if (syslogFramingMode == SyslogFramingMode.NON_TRANSPARENT_FRAMING) {
+          // first, a DelimiterBasedFrameDecoder to ensure we can capture a full message
+          decoderChain.add(new DelimiterBasedFrameDecoder(maxMessageSize, true, Unpooled.copiedBuffer(
+              StringEscapeUtils.unescapeJava(nonTransparentFramingSeparatorChar).getBytes()
+          )));
+          // next, decode the syslog message itself
+          decoderChain.add(new SyslogDecoder(charsetObj));
+        } else {
+          throw new IllegalStateException("Unrecognized SyslogFramingMode: "+syslogFramingMode.name());
+        }
         break;
       default:
         issues.add(getContext().createConfigIssue(
