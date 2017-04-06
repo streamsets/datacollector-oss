@@ -38,13 +38,13 @@ angular.module('dataCollectorApp')
 
     // Default Timezone (local storage)
     $provide.decorator('dateFilter', ['$delegate', '$rootScope', function ($delegate, $rootScope) {
-      var clientTimezone = moment.tz.zone(moment.tz.guess()).abbr(moment().month());
+      var clientTimezone = moment().tz(moment.tz.guess()).format('z');
       return function (date, format, timezone) {
         return $delegate.call(
             this,
             date,
             format,
-            timezone || $rootScope.$storage.timezone || clientTimezone
+            timezone || $rootScope.$storage.preferredTimezone || clientTimezone
         );
       };
     }]);

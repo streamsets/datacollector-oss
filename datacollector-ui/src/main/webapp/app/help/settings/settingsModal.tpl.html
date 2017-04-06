@@ -12,9 +12,9 @@
       <label class="control-label" translate="home.header.timezone">Timezone</label>
       <select class="form-control"
               name="density"
-              ng-model="$storage.timezone">
+              ng-model="$storage.preferredTimezone">
         <option ng-repeat="timezone in timezoneOptions"
-                ng-selected="$storage.timezone === timezone"
+                ng-selected="$storage.preferredTimezone === timezone"
                 value="{{ timezone }}">{{ timezone }}</option>
       </select>
     </div>

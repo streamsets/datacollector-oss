@@ -27,11 +27,11 @@ angular
     .controller('SettingsModalInstanceController', function ($scope, $rootScope, $modalInstance) {
 
   // Default Timezone (local storage)
-  var clientTimezone = moment.tz.zone(moment.tz.guess()).abbr(moment().month()),
+  var clientTimezone = moment().tz(moment.tz.guess()).format('z'),
       timezoneOptions = _([clientTimezone, $rootScope.$storage.serverTimezone, 'UTC']).uniq();
 
-  if (!_.contains(timezoneOptions, $rootScope.$storage.timezone)) {
-    $rootScope.$storage.timezone = clientTimezone;
+  if (!_.contains(timezoneOptions, $rootScope.$storage.preferredTimezone)) {
+    $rootScope.$storage.preferredTimezone = clientTimezone;
   }
 
   angular.extend($scope, {
