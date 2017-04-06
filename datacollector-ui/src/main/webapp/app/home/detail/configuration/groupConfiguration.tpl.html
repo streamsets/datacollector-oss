@@ -156,7 +156,7 @@
         <table class="table table-bordered" ng-if="_.size(configDefinition.model.configDefinitions) > 4">
           <tbody>
           <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[configIndex].value track by $index"
-              ng-init="configIndex = $index">
+              ng-init="parentConfigIndex=configIndex; configIndex = $index">
 
             <td>
               <div class="form-group "
@@ -187,7 +187,7 @@
                 </button>
                 <button type="button" class="btn btn-default"
                         ng-show="$last"
-                        ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[configIndex], configDefinition.model.configDefinitions)">
+                        ng-click="addToCustomField(detailPaneConfig, detailPaneConfig.configuration[parentConfigIndex], configDefinition.model.configDefinitions)">
                   <i class="fa fa-plus pointer"></i>
                 </button>
               </div>
