@@ -56,7 +56,8 @@
                                     <entry>Number of Threads <xref
                                             href="MultiTableJDBCConsumer-Multithread.dita"><image
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_r2s_8lq_fs"/></xref></entry>
+                                                id="image_r2s_8lq_fs"/>
+                                    </xref></entry>
                                     <entry>Number of threads the origin generates and uses for
                                         multithreaded processing.<p>Configure the Maximum Pool Size
                                             property on the Advanced tab to be equal to or greater

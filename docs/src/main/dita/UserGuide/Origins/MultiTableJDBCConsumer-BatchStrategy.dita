@@ -45,28 +45,39 @@
                     <dd>Each thread creates a batch of data from one table, and then switches to the
                         next available table to create the next batch. The thread runs an initial
                         SQL query to create the first batch from the table. The database caches the
-                        remaining rows in a result set in the database. When the same thread
-                        switches back to the same table to create another batch, it retrieves the
-                        rows from the result set cache in the database rather than running another
-                        SQL query. No other thread can read from that table until the result set is
-                        closed. </dd>
+                        remaining rows in a result set in the database for the same thread to access
+                        again, and then the thread switches to the next available table. A table is
+                        available in the following situations:<ul id="ul_et1_zg4_lz">
+                            <li>The table does not have an open result set cache. In this case, the
+                                thread runs an initial SQL query to create the first batch, caching
+                                the remaining rows in a result set in the database.</li>
+                            <li>The table has an open result set cache created by that same thread.
+                                In this case, the thread creates the batch from the result set cache
+                                in the database rather than running another SQL query. </li>
+                        </ul></dd>
+                    <dd>A table is not available when the table has an open result set cache created
+                        by another thread. No other thread can read from that table until the result
+                        set is closed. </dd>
                     <dd>When you configure a switch table strategy, define the result set cache size
                         and the number of batches that a thread can create from the result set.
                         After a thread creates the configured number of batches, the database closes
                         the result set and then a different thread can read from the table.</dd>
-                    <dd><note>By default, the origin instructs the database to cache an unlimited number of result sets. A
-                            thread can create an unlimited number of batches from that result
-                            set.</note></dd>
+                    <dd>
+                        <note>By default, the origin instructs the database to cache an unlimited
+                            number of result sets. A thread can create an unlimited number of
+                            batches from that result set.</note>
+                    </dd>
                     <dd>For example, let's say that the batch size for the origin is set to 100. The
                         origin is configured to use two concurrent threads and to read from four
                         tables, each of which contains 10,000 rows. You set the result set cache
                         size to 500 and set the number of batches read from the result set to 5. </dd>
                     <dd>Thread1 runs an SQL query on table1, which returns all 10,000 rows. The
                         thread creates a batch when it reads the first 100 rows. The next 400 rows
-                        are cached as a result set in the database. Thread1 then switches to table3
-                        and repeats the same process. After creating a batch from table3, thread1
+                        are cached as a result set in the database. Since thread2 is similarly
+                        processing table2, thread1 switches to the next available table, table3, and
+                        repeats the same process. After creating a batch from table3, thread1
                         switches back to table1 and retrieves the next batch of rows from the result
-                        set cache in the database.</dd>
+                        set that it previously cached in the database.</dd>
                     <dd>After thread1 creates five batches using the result set cache for table1,
                         the database closes the result set cache. Thread1 switches to the next
                         available table. A different thread runs an SQL query to read additional
