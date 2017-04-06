@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.http;
 
+import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
@@ -28,9 +29,9 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
-import com.streamsets.pipeline.lib.http.HttpClientCommon;
 import com.streamsets.pipeline.lib.http.Errors;
 import com.streamsets.pipeline.lib.http.Groups;
+import com.streamsets.pipeline.lib.http.HttpClientCommon;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -41,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.AsyncInvoker;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -91,30 +93,77 @@ public class HttpClientTarget extends BaseTarget {
 
   @Override
   public void write(Batch batch) throws StageException {
+    if (conf.singleRequestPerBatch) {
+      writeOneRequestPerBatch(batch);
+    } else {
+      writeOneRequestPerRecord(batch);
+    }
+  }
+
+  private void writeOneRequestPerBatch(Batch batch) throws StageException {
+    Response response = null;
+    try {
+      if (batch.getRecords().hasNext()) {
+        // Use first record for resolving url, headers, ...
+        Record firstRecord = batch.getRecords().next();
+        Invocation.Builder builder = getBuilder(firstRecord);
+        HttpMethod method = httpClientCommon.getHttpMethod(conf.httpMethod, conf.methodExpression, firstRecord);
+
+        if (method == HttpMethod.POST || method == HttpMethod.PUT) {
+          StreamingOutput streamingOutput = outputStream -> {
+            try {
+              DataGenerator dataGenerator = generatorFactory.getGenerator(outputStream);
+              Iterator<Record> records = batch.getRecords();
+              while (records.hasNext()) {
+                Record record = records.next();
+                dataGenerator.write(record);
+              }
+              dataGenerator.flush();
+            } catch (DataGeneratorException e) {
+              throw new IOException(e);
+            }
+          };
+          response = builder.method(method.getLabel(), Entity.entity(streamingOutput, getContentType()));
+        } else {
+          response = builder.method(method.getLabel());
+        }
+
+        String responseBody = "";
+        if (response.hasEntity()) {
+          responseBody = response.readEntity(String.class);
+        }
+        if (conf.client.useOAuth2 && response.getStatus() == 403) {
+          HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, httpClientCommon.getClient());
+        } else if (response.getStatus() < 200 || response.getStatus() >= 300) {
+          errorRecordHandler.onError(
+              Lists.newArrayList(batch.getRecords()),
+              new OnRecordErrorException(
+                  Errors.HTTP_40,
+                  response.getStatus(),
+                  response.getStatusInfo().getReasonPhrase() + " " + responseBody
+              )
+          );
+        }
+      }
+    } catch (Exception ex) {
+      LOG.error(Errors.HTTP_41.getMessage(), ex.toString(), ex);
+      errorRecordHandler.onError(Lists.newArrayList(batch.getRecords()), new StageException(Errors.HTTP_41, ex, ex));
+    } finally {
+      if (response != null) {
+        response.close();
+      }
+    }
+  }
+
+  private void writeOneRequestPerRecord(Batch batch) throws StageException {
     List<Future<Response>> responses = new ArrayList<>();
     Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
       Record record = records.next();
-      String resolvedUrl = httpClientCommon.getResolvedUrl(conf.resourceUrl, record);
-      WebTarget target = httpClientCommon.getClient().target(resolvedUrl);
-
-      // If the request (headers or body) contain a known sensitive EL and we're not using https then fail the request.
-      if (httpClientCommon.requestContainsSensitiveInfo(conf.headers, null) &&
-          !target.getUri().getScheme().toLowerCase().startsWith("https")) {
-        throw new StageException(Errors.HTTP_07);
-      }
-
-      final MultivaluedMap<String, Object> resolvedHeaders =  httpClientCommon.resolveHeaders(conf.headers, record);
-
-      final AsyncInvoker asyncInvoker = target.request()
-          .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, httpClientCommon.getAuthToken())
-          .headers(resolvedHeaders)
-          .async();
-
+      AsyncInvoker asyncInvoker = getBuilder(record).async();
       HttpMethod method = httpClientCommon.getHttpMethod(conf.httpMethod, conf.methodExpression, record);
       String contentType = getContentType();
       rateLimiter.acquire();
-
       try {
         if (method == HttpMethod.POST || method == HttpMethod.PUT) {
           StreamingOutput streamingOutput = outputStream -> {
@@ -147,6 +196,20 @@ public class HttpClientTarget extends BaseTarget {
         ++recordNum;
       }
     }
+  }
+
+  private Invocation.Builder getBuilder(Record record) throws StageException {
+    String resolvedUrl = httpClientCommon.getResolvedUrl(conf.resourceUrl, record);
+    WebTarget target = httpClientCommon.getClient().target(resolvedUrl);
+    // If the request (headers or body) contain a known sensitive EL and we're not using https then fail the request
+    if (httpClientCommon.requestContainsSensitiveInfo(conf.headers, null) &&
+        !target.getUri().getScheme().toLowerCase().startsWith("https")) {
+      throw new StageException(Errors.HTTP_07);
+    }
+    MultivaluedMap<String, Object> resolvedHeaders =  httpClientCommon.resolveHeaders(conf.headers, record);
+    return target.request()
+        .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, httpClientCommon.getAuthToken())
+        .headers(resolvedHeaders);
   }
 
   /**
