@@ -45,9 +45,6 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     onlineHelpRefUrl = "index.html#Origins/MultiTableJDBCConsumer.html#task_kst_m4w_4y"
 )
 @ConfigGroups(value = Groups.class)
-@HideConfigs(value = {
-    "commonSourceConfigBean.numQueryErrorRetries"
-    })
 @GenerateResourceBundle
 public final class TableJdbcDSource extends DPushSource {
 

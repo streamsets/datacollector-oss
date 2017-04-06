@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 import java.util.List;
 
@@ -64,6 +65,12 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
         new Config(
             TableJdbcConfigBean.TABLE_JDBC_CONFIG_BEAN_PREFIX + TableJdbcConfigBean.QUOTE_CHAR,
             QuoteChar.NONE
+        )
+    );
+    configs.add(
+        new Config(
+            CommonSourceConfigBean.COMMON_SOURCE_CONFIG_BEAN_PREFIX + CommonSourceConfigBean.NUM_SQL_ERROR_RETRIES,
+            0
         )
     );
   }

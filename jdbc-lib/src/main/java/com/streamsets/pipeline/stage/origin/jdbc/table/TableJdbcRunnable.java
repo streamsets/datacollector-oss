@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -78,6 +79,9 @@ public final class TableJdbcRunnable implements Runnable {
   private TableContext tableContext;
   private long lastQueryIntervalTime;
 
+  private int numSQLErrors = 0;
+  private SQLException firstSqlException = null;
+
   TableJdbcRunnable(
       PushSource.Context context,
       int threadNumber,
@@ -100,6 +104,8 @@ public final class TableJdbcRunnable implements Runnable {
     this.connectionManager = connectionManager;
     this.tableReadContextCache = buildReadContextCache();
     this.errorRecordHandler = new DefaultErrorRecordHandler(context, (ToErrorContext) context);
+    this.numSQLErrors = 0;
+    this.firstSqlException = null;
 
     // Metrics
     String gaugeName = TABLE_METRICS + threadNumber;
@@ -183,9 +189,17 @@ public final class TableJdbcRunnable implements Runnable {
           createAndAddRecord(rs, tableContext, batchContext);
           recordCount++;
         }
+
+        //Reset numSqlErrors if we are able to read result set and add records to the batch context.
+        numSQLErrors = 0;
+        firstSqlException = null;
+
         //If exception happened we do not report anything about no more data event
         //We report noMoreData if either evictTableReadContext is true (result set no more rows) / record count is 0.
-        tableProvider.reportDataOrNoMoreData(tableContext, recordCount == 0 || evictTableReadContext);
+        tableProvider.reportDataOrNoMoreData(
+            tableContext,
+            recordCount == 0 || evictTableReadContext
+        );
       } finally {
         handlePostBatchAsNeeded(new AtomicBoolean(evictTableReadContext), recordCount, batchContext);
       }
@@ -193,13 +207,33 @@ public final class TableJdbcRunnable implements Runnable {
       //invalidate if the connection is closed
       tableReadContextCache.invalidateAll();
       connectionManager.closeConnection();
-      if (e instanceof SQLException) {
-        handleStageError(JdbcErrors.JDBC_34, e);
+      LOG.error("Error happened", e);
+      Throwable th = (e instanceof ExecutionException)? e.getCause() : e;
+      if (th instanceof SQLException) {
+        handleSqlException((SQLException)th);
       } else if (e instanceof InterruptedException) {
         LOG.error("Thread {} interrupted", gaugeMap.get(THREAD_NAME));
       } else {
         handleStageError(JdbcErrors.JDBC_67, e);
       }
+    }
+  }
+
+  private void handleSqlException(SQLException sqlE) {
+    numSQLErrors++;
+    if (numSQLErrors == 1) {
+      firstSqlException = sqlE;
+    }
+    if (numSQLErrors < commonSourceConfigBean.numSQLErrorRetries) {
+      LOG.error(
+          "SQL Exception happened : {}, will retry. Retries Count : {}, Max Retries Count : {}",
+          JdbcUtil.formatSqlException(sqlE),
+          numSQLErrors,
+          commonSourceConfigBean.numSQLErrorRetries
+      );
+    } else {
+      LOG.error("Maximum SQL Error Retries {} exhausted", commonSourceConfigBean.numSQLErrorRetries);
+      handleStageError(JdbcErrors.JDBC_78, firstSqlException);
     }
   }
 
@@ -284,6 +318,8 @@ public final class TableJdbcRunnable implements Runnable {
     //Check and then if we want to wait for query being issued do that
     TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableContext);
 
+    LOG.trace("Selected table : '{}' for generating records", tableContext.getQualifiedName());
+
     if (tableReadContext == null) {
       //Wait before issuing query (Optimization instead of waiting during each batch)
       waitIfNeeded();
@@ -293,7 +329,6 @@ public final class TableJdbcRunnable implements Runnable {
           tableContext,
           Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID))
       );
-      LOG.debug("Selected table : '{}' for generating records", tableContext.getQualifiedName());
       tableReadContext = tableReadContextCache.get(tableContext);
       //Record query time
       lastQueryIntervalTime = System.currentTimeMillis();

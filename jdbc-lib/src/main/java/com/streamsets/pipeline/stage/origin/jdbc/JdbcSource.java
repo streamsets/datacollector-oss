@@ -420,7 +420,7 @@ public class JdbcSource extends BaseSource {
             .with(SOURCE_OFFSET, nextSourceOffset)
             .createAndSend();
         LOG.debug("Query '{}' failed at: {}; {} errors so far", preparedQuery, lastQueryCompletedTime, numQueryErrors);
-        if (numQueryErrors > commonSourceConfigBean.numQueryErrorRetries) {
+        if (numQueryErrors > commonSourceConfigBean.numSQLErrorRetries) {
           throw new StageException(
               JdbcErrors.JDBC_77,
               e.getClass().getSimpleName(),
