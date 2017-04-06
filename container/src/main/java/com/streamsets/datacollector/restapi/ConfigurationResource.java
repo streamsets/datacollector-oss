@@ -36,6 +36,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -61,7 +62,8 @@ public class ConfigurationResource {
   public Response getUIConfiguration() throws PipelineStoreException {
     Configuration configuration = config.getSubSetConfiguration(UI_PREFIX);
     configuration.set("ui.debug", String.valueOf(new File("/.sdc.debug").exists()));
-    configuration.set("ui.server.timezone", TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT));
+    boolean inDaylight = TimeZone.getDefault().inDaylightTime(new Date());
+    configuration.set("ui.server.timezone", TimeZone.getDefault().getDisplayName(inDaylight, TimeZone.SHORT));
 
     return Response.ok().type(MediaType.APPLICATION_JSON)
         .entity(configuration).build();
