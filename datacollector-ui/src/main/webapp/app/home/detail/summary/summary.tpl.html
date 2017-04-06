@@ -247,6 +247,12 @@
         </button>
       </div>
       <div class="panel-body">
+          <ul class="properties">
+            <li>
+              <span class="properties-label">Current runners:</span>
+              <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.availableRunners}}/{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.totalRunners}}</span>
+            </li>
+          </ul>
         <nvd3 options="chartOptions" data="timerData" config="{ refreshDataOnly: true }"></nvd3>
       </div>
     </div>
