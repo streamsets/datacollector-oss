@@ -49,6 +49,7 @@ public class TableJdbcSourceTestBuilder {
   private int maximumPoolSize;
   private int numberOfBatchesFromResultset;
   private QuoteChar quoteChar;
+  private int numSQLErrorRetries;
 
 
   public TableJdbcSourceTestBuilder(String jdbcUrl, boolean useCredentials, String username, String password) {
@@ -73,6 +74,7 @@ public class TableJdbcSourceTestBuilder {
     this.maximumPoolSize = -1;
     this.numberOfBatchesFromResultset = -1;
     this.quoteChar = QuoteChar.NONE;
+    this.numSQLErrorRetries = 0;
   }
 
   public TableJdbcSourceTestBuilder() {
@@ -126,6 +128,11 @@ public class TableJdbcSourceTestBuilder {
 
   public TableJdbcSourceTestBuilder maxBlobSize(int maxBlobSize) {
     this.maxBlobSize = maxBlobSize;
+    return this;
+  }
+
+  public TableJdbcSourceTestBuilder numSQLErrorRetries(int numSQLErrorRetries) {
+    this.numSQLErrorRetries = numSQLErrorRetries;
     return this;
   }
 
@@ -203,9 +210,18 @@ public class TableJdbcSourceTestBuilder {
     tableJdbcConfigBean.numberOfBatchesFromRs = numberOfBatchesFromResultset;
     tableJdbcConfigBean.quoteChar = quoteChar;
 
+    CommonSourceConfigBean commonSourceConfigBean =  new CommonSourceConfigBean(
+        queryInterval,
+        maxBatchSize,
+        maxClobSize,
+        maxBlobSize
+    );
+
+    commonSourceConfigBean.numSQLErrorRetries = numSQLErrorRetries;
+
     return new TableJdbcSource(
         hikariPoolConfigBean,
-        new CommonSourceConfigBean(queryInterval, maxBatchSize, maxClobSize, maxBlobSize),
+        commonSourceConfigBean,
         tableJdbcConfigBean
     );
   }

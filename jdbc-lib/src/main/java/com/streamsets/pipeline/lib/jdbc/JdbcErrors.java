@@ -102,6 +102,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_75("Jdbc Runner Failed. Reason {}"),
   JDBC_76("Invalid value '0' for Batches From Result Set"),
   JDBC_77("{} attempting to execute query '{}'. Giving up after {} errors as per stage configuration. First error: {}"),
+  JDBC_78("Retries exhausted, giving up after as per stage configuration. First error: {}"),
   ;
 
   private final String msg;

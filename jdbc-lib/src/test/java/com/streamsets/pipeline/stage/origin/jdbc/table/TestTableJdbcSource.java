@@ -21,10 +21,8 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.PushSource;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
-import com.streamsets.pipeline.sdk.SourceRunner;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;

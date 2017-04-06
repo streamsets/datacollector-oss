@@ -37,6 +37,7 @@ public final class CommonSourceConfigBean {
     this.maxBatchSize = maxBatchSize;
     this.maxClobSize = maxClobSize;
     this.maxBlobSize = maxBlobSize;
+    this.numSQLErrorRetries = 0;
   }
 
   @ConfigDef(
@@ -85,8 +86,8 @@ public final class CommonSourceConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
-      label = "Number of Retries on Query Error",
-      description = "The number of times a query will be retried upon an error.  To allow for the possibility of" +
+      label = "Number of Retries on SQL Error",
+      description = "The number of retries upon a SQL Error.  To allow for the possibility of" +
           " handling transient errors (ex: connection issues, deadlock, etc.), provide a positive value here.  After" +
           " the specified number of retries is reached, the stage will fail upon the next error and pipeline error" +
           " handling behavior will take over.",
@@ -94,11 +95,12 @@ public final class CommonSourceConfigBean {
       displayPosition = 160,
       group = "JDBC"
   )
-  public int numQueryErrorRetries;
+  public int numSQLErrorRetries;
 
   private static final String MAX_BATCH_SIZE = "maxBatchSize";
   private static final String MAX_CLOB_SIZE = "maxClobSize";
   private static final String MAX_BLOB_SIZE = "maxBlobSize";
+  public static final String NUM_SQL_ERROR_RETRIES = "numSQLErrorRetries";
   public static final String COMMON_SOURCE_CONFIG_BEAN_PREFIX = "commonSourceConfigBean.";
 
   public List<Stage.ConfigIssue> validateConfigs(Stage.Context context, List<Stage.ConfigIssue> issues) {
