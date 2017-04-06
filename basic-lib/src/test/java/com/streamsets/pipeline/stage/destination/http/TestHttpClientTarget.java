@@ -19,30 +19,86 @@
  */
 package com.streamsets.pipeline.stage.destination.http;
 
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.AbstractHttpStageTest;
 import com.streamsets.pipeline.lib.http.HttpMethod;
-import com.streamsets.pipeline.lib.http.JerseyClientUtil;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import org.junit.runner.RunWith;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.List;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.management.*")
-@PrepareForTest({HttpClientTarget.class, JerseyClientUtil.class})
 public class TestHttpClientTarget extends AbstractHttpStageTest {
+  private Server server;
+  private static boolean serverRequested = false;
+  private static String requestPayload = null;
+  private static boolean returnErrorResponse = false;
+
+  @Before
+  public void setUp() throws Exception {
+    int port =  getFreePort();
+    server = new Server(port);
+    server.setHandler(new AbstractHandler() {
+      @Override
+      public void handle(
+          String target,
+          Request baseRequest,
+          HttpServletRequest request,
+          HttpServletResponse response
+      ) throws IOException, ServletException {
+        serverRequested = true;
+
+        if (returnErrorResponse) {
+          response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+          return;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String line = null;
+        try {
+          BufferedReader reader = request.getReader();
+          while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+          }
+          requestPayload = stringBuilder.toString();
+        } catch (Exception e) { /*report an error*/ }
+        response.setStatus(HttpServletResponse.SC_OK);
+        baseRequest.setHandled(true);
+      }
+    });
+    server.start();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    server.stop();
+  }
 
   public HttpClientTargetConfig getConf(String url) {
     HttpClientTargetConfig conf = new HttpClientTargetConfig();
-    conf.httpMethod = HttpMethod.GET;
+    conf.httpMethod = HttpMethod.POST;
     conf.dataFormat = DataFormat.TEXT;
+    conf.dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    conf.dataGeneratorFormatConfig.textFieldPath = "/";
     conf.resourceUrl = url;
     return conf;
   }
@@ -53,12 +109,126 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     config.client.useProxy = true;
     config.client.proxy.uri = url;
 
-    HttpClientTarget processor = PowerMockito.spy(new HttpClientTarget(config));
+    HttpClientTarget target = PowerMockito.spy(new HttpClientTarget(config));
 
-    TargetRunner runner = new TargetRunner.Builder(HttpClientDTarget.class, processor)
+    TargetRunner runner = new TargetRunner.Builder(HttpClientDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
 
     return runner.runValidateConfigs();
+  }
+
+  public static int getFreePort() throws IOException {
+    ServerSocket serverSocket = new ServerSocket(0);
+    int port = serverSocket.getLocalPort();
+    serverSocket.close();
+    return port;
+  }
+
+  @Test
+  public void testSingleRequestPerBatch() throws Exception {
+    HttpClientTargetConfig config = getConf(server.getURI().toString());
+    config.singleRequestPerBatch = true;
+    serverRequested = false;
+    requestPayload = null;
+    returnErrorResponse = false;
+    testHttpTarget(config);
+    Assert.assertTrue(serverRequested);
+    Assert.assertNotNull(requestPayload);
+    Assert.assertTrue(requestPayload.contains("ab"));
+  }
+
+  @Test
+  public void testSingleRequestPerRecord() throws Exception {
+    HttpClientTargetConfig config = getConf(server.getURI().toString());
+    config.singleRequestPerBatch = false;
+    serverRequested = false;
+    requestPayload = null;
+    returnErrorResponse = false;
+    testHttpTarget(config);
+    Assert.assertTrue(serverRequested);
+    Assert.assertNotNull(requestPayload);
+    Assert.assertTrue(requestPayload.contains("a") || requestPayload.contains("b"));
+  }
+
+
+  private void testHttpTarget(HttpClientTargetConfig config) throws Exception {
+    HttpClientTarget target = new HttpClientTarget(config);
+    TargetRunner runner = new TargetRunner.Builder(HttpClientDTarget.class, target)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    List<Record> input = new ArrayList<>();
+    input.add(createRecord("a"));
+    input.add(createRecord("b"));
+    Assert.assertTrue(runner.runValidateConfigs().isEmpty());
+    runner.runInit();
+    try {
+      runner.runWrite(input);
+      Assert.assertTrue(runner.getErrorRecords().isEmpty());
+      Assert.assertTrue(runner.getErrors().isEmpty());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private Record createRecord(String str) {
+    Record record = RecordCreator.create();
+    record.set(Field.create(str));
+    return record;
+  }
+
+
+  @Test
+  public void testSingleRequestPerBatchInvalidURL() throws Exception {
+    HttpClientTargetConfig config = getConf("http://localho:2344");
+    config.singleRequestPerBatch = true;
+    testErrorHandling(config);
+  }
+
+  @Test
+  public void testSingleRequestPerRecordInvalidURL() throws Exception {
+    HttpClientTargetConfig config = getConf("http://localho:2344");
+    config.singleRequestPerBatch = false;
+    returnErrorResponse = true;
+    testErrorHandling(config);
+  }
+
+  @Test
+  public void testSingleRequestPerBatchServerError() throws Exception {
+    HttpClientTargetConfig config = getConf(server.getURI().toString());
+    config.singleRequestPerBatch = true;
+    returnErrorResponse = true;
+    testErrorHandling(config);
+  }
+
+  @Test
+  public void testSingleRequestPerRecordServerError() throws Exception {
+    HttpClientTargetConfig config = getConf(server.getURI().toString());
+    config.singleRequestPerBatch = false;
+    returnErrorResponse = true;
+    testErrorHandling(config);
+  }
+
+
+  private void testErrorHandling(HttpClientTargetConfig config) throws Exception {
+    HttpClientTarget target = new HttpClientTarget(config);
+    TargetRunner runner = new TargetRunner.Builder(HttpClientDTarget.class, target)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    List<Record> input = new ArrayList<>();
+    input.add(createRecord("a"));
+    input.add(createRecord("b"));
+    Assert.assertTrue(runner.runValidateConfigs().isEmpty());
+    runner.runInit();
+    try {
+      runner.runWrite(input);
+      Assert.assertFalse(runner.getErrorRecords().isEmpty());
+      List<Record> records = runner.getErrorRecords();
+      Assert.assertEquals(records.size(), 2);
+    } finally {
+      runner.runDestroy();
+    }
   }
 }

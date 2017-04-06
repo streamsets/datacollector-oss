@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.destination.http;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -32,7 +31,6 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.processor.http.HttpMethodChooserValues;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -126,12 +124,19 @@ public class HttpClientTargetConfig {
       label = "Maximum Request Time (sec)",
       defaultValue = "60",
       description = "Maximum time to wait for each request completion.",
-      displayPosition = 999,
+      displayPosition = 250,
       group = "HTTP"
   )
   public long maxRequestCompletionSecs = 60L;
 
-  public void init(Stage.Context context, String group, String prefix, List<Stage.ConfigIssue> issues) {
-    client.init(context, group, prefix + "client", issues);
-  }
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "One Request per Batch",
+      description = "Generates a single http request with all records in the batch",
+      displayPosition = 350,
+      group = "HTTP"
+  )
+  public boolean singleRequestPerBatch;
 }
