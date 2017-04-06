@@ -133,6 +133,7 @@ public class OracleCDCSource extends BaseSource {
     STARTUP, // Represents event sent at startup.
     UNKNOWN
   }
+
   private static final Map<Integer, String> JDBCTypeNames = new HashMap<>();
 
   static {
@@ -140,7 +141,7 @@ public class OracleCDCSource extends BaseSource {
       try {
         JDBCTypeNames.put((Integer) jdbcType.get(null), jdbcType.getName());
       } catch (Exception ex) {
-        LOG.warn ("JDBC Type Name access error", ex);
+        LOG.warn("JDBC Type Name access error", ex);
       }
     }
   }
@@ -153,7 +154,7 @@ public class OracleCDCSource extends BaseSource {
   private static final Pattern TO_DATE_PATTERN = Pattern.compile("TO_DATE\\('(.*)',.*");
   // If a date is set into a timestamp column (or a date field is widened to a timestamp,
   // a timestamp ending with "." is returned (like 2016-04-15 00:00:00.), so we should also ignore the trailing ".".
-  private static final Pattern TO_TIMESTAMP_PATTERN =  Pattern.compile("TO_TIMESTAMP\\('(.*[^\\.]).*'");
+  private static final Pattern TO_TIMESTAMP_PATTERN = Pattern.compile("TO_TIMESTAMP\\('(.*[^\\.]).*'");
   private static final Pattern DDL_PATTERN = Pattern.compile("(CREATE|ALTER|DROP|TRUNCATE).*", Pattern.CASE_INSENSITIVE);
   public static final String OFFSET_DELIM = "::";
   public static final int RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED = 1306;
@@ -351,102 +352,108 @@ public class OracleCDCSource extends BaseSource {
   ) throws SQLException, StageException, ParseException {
     String operation;
     selectChanges.setMaxRows(batchSize);
+    StringBuilder query = new StringBuilder();
     try (ResultSet resultSet = selectChanges.executeQuery()) {
       while (resultSet.next()) {
-        BigDecimal scnDecimal = resultSet.getBigDecimal(1);
-        String scn = scnDecimal.toPlainString();
-        String username = resultSet.getString(2);
-        short op = resultSet.getShort(3);
-        String timestamp = resultSet.getString(4);
-        String redoSQL = resultSet.getString(5);
-        String table = resultSet.getString(6).trim();
-        BigDecimal commitSCN = resultSet.getBigDecimal(7);
-        long seq = resultSet.getLong(8);
-        String scnSeq = null;
-        if (LOG.isDebugEnabled()) {
-          LOG.debug("Commit SCN = " + commitSCN + ", SCN = " + scn + ", Redo SQL = " + redoSQL);
-        }
-        sqlListener.reset();
-        plsqlLexer lexer = new plsqlLexer(new ANTLRInputStream(redoSQL));
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        plsqlParser parser = new plsqlParser(tokenStream);
-        ParserRuleContext ruleContext = null;
-        int operationCode = -1;
-        switch (op) {
-          case OracleCDCOperationCode.UPDATE_CODE:
-          case OracleCDCOperationCode.SELECT_FOR_UPDATE_CODE:
-            ruleContext = parser.update_statement();
-            operationCode = OperationType.UPDATE_CODE;
-            break;
-          case OracleCDCOperationCode.INSERT_CODE:
-            ruleContext = parser.insert_statement();
-            operationCode = OperationType.INSERT_CODE;
-            break;
-          case OracleCDCOperationCode.DELETE_CODE:
-            ruleContext = parser.delete_statement();
-            operationCode = OperationType.DELETE_CODE;
-            break;
-          case OracleCDCOperationCode.DDL_CODE:
-            break;
-          default:
-            errorRecordHandler.onError(JDBC_43, redoSQL);
-            continue;
-        }
-        if (op != OracleCDCOperationCode.DDL_CODE) {
-          operation = OperationType.getLabelFromIntCode(operationCode);
-          scnSeq = commitSCN + OFFSET_DELIM + seq;
-          // Walk it and attach our sqlListener
-          parseTreeWalker.walk(sqlListener, ruleContext);
-          Map<String, String> columns = sqlListener.getColumns();
-          Map<String, Field> fields = new HashMap<>();
-
-          Record record = getContext().createRecord(scnSeq);
-          Record.Header recordHeader = record.getHeader();
-
-          for (Map.Entry<String, String> column : columns.entrySet()) {
-            String columnName = column.getKey();
-            fields.put(columnName, objectToField(table, columnName, column.getValue()));
-
-            if (decimalColumns.containsKey(table) && decimalColumns.get(table).containsKey(columnName)) {
-              int precision = decimalColumns.get(table).get(columnName).precision;
-              int scale = decimalColumns.get(table).get(columnName).scale;
-              recordHeader.setAttribute("jdbc." + columnName + ".precision", String.valueOf(precision));
-              recordHeader.setAttribute("jdbc." + columnName + ".scale", String.valueOf(scale));
-            }
-          }
-          recordHeader.setAttribute(SCN, scn);
-          recordHeader.setAttribute(USER, username);
-          recordHeader.setAttribute(OracleCDCOperationCode.OPERATION, operation);
-          recordHeader.setAttribute(TIMESTAMP_HEADER, timestamp);
-          recordHeader.setAttribute(TABLE, table);
-          recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationCode));
-          record.set(Field.create(fields));
+        query.append(resultSet.getString(5));
+        // CSF is 1 if the query is incomplete, so read the next row before parsing
+        // CSF being 0 means query is complete, generate the record
+        if (resultSet.getInt(9) == 0) {
+          BigDecimal scnDecimal = resultSet.getBigDecimal(1);
+          String scn = scnDecimal.toPlainString();
+          String username = resultSet.getString(2);
+          short op = resultSet.getShort(3);
+          String timestamp = resultSet.getString(4);
+          String table = resultSet.getString(6).trim();
+          BigDecimal commitSCN = resultSet.getBigDecimal(7);
+          String queryString = query.toString();
+          long seq = resultSet.getLong(8);
+          String scnSeq;
           if (LOG.isDebugEnabled()) {
-            LOG.debug(Utils.format("Adding {} to batchmaker: {}", record, batchMaker.toString()));
+            LOG.debug("Commit SCN = " + commitSCN + ", SCN = " + scn + ", Redo SQL = " + queryString);
           }
-          batchMaker.addRecord(record);
-        } else {
-          scnSeq = scn + OFFSET_DELIM + ZERO;
-          boolean sendSchema = false;
-          // Event is sent on every DDL, but schema is not always sent.
-          // Schema sending logic:
-          // CREATE/ALTER: Schema is sent if the schema after the ALTER is newer than the cached schema
-          // (which we would have sent as an event earlier, at the last alter)
-          // DROP/TRUNCATE: Schema is not sent, since they don't change schema.
-          DDL_EVENT type = getDdlType(redoSQL);
-          if (type == DDL_EVENT.ALTER || type == DDL_EVENT.CREATE) {
-            sendSchema = refreshSchema(scnDecimal, table);
+          sqlListener.reset();
+          plsqlLexer lexer = new plsqlLexer(new ANTLRInputStream(queryString));
+          CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+          plsqlParser parser = new plsqlParser(tokenStream);
+          ParserRuleContext ruleContext = null;
+          int operationCode = -1;
+          switch (op) {
+            case OracleCDCOperationCode.UPDATE_CODE:
+            case OracleCDCOperationCode.SELECT_FOR_UPDATE_CODE:
+              ruleContext = parser.update_statement();
+              operationCode = OperationType.UPDATE_CODE;
+              break;
+            case OracleCDCOperationCode.INSERT_CODE:
+              ruleContext = parser.insert_statement();
+              operationCode = OperationType.INSERT_CODE;
+              break;
+            case OracleCDCOperationCode.DELETE_CODE:
+              ruleContext = parser.delete_statement();
+              operationCode = OperationType.DELETE_CODE;
+              break;
+            case OracleCDCOperationCode.DDL_CODE:
+              break;
+            default:
+              errorRecordHandler.onError(JDBC_43, queryString);
+              continue;
           }
-          getContext().toEvent(createEventRecord(type, redoSQL, table, scnSeq, sendSchema));
+          if (op != OracleCDCOperationCode.DDL_CODE) {
+            operation = OperationType.getLabelFromIntCode(operationCode);
+            scnSeq = commitSCN + OFFSET_DELIM + seq;
+            // Walk it and attach our sqlListener
+            parseTreeWalker.walk(sqlListener, ruleContext);
+            Map<String, String> columns = sqlListener.getColumns();
+            Map<String, Field> fields = new HashMap<>();
+
+            Record record = getContext().createRecord(scnSeq);
+            Record.Header recordHeader = record.getHeader();
+
+            for (Map.Entry<String, String> column : columns.entrySet()) {
+              String columnName = column.getKey();
+              fields.put(columnName, objectToField(table, columnName, column.getValue()));
+
+              if (decimalColumns.containsKey(table) && decimalColumns.get(table).containsKey(columnName)) {
+                int precision = decimalColumns.get(table).get(columnName).precision;
+                int scale = decimalColumns.get(table).get(columnName).scale;
+                recordHeader.setAttribute("jdbc." + columnName + ".precision", String.valueOf(precision));
+                recordHeader.setAttribute("jdbc." + columnName + ".scale", String.valueOf(scale));
+              }
+            }
+            recordHeader.setAttribute(SCN, scn);
+            recordHeader.setAttribute(USER, username);
+            recordHeader.setAttribute(OracleCDCOperationCode.OPERATION, operation);
+            recordHeader.setAttribute(TIMESTAMP_HEADER, timestamp);
+            recordHeader.setAttribute(TABLE, table);
+            recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationCode));
+            record.set(Field.create(fields));
+            if (LOG.isDebugEnabled()) {
+              LOG.debug(Utils.format("Adding {} to batchmaker: {}", record, batchMaker.toString()));
+            }
+            batchMaker.addRecord(record);
+          } else {
+            scnSeq = scn + OFFSET_DELIM + ZERO;
+            boolean sendSchema = false;
+            // Event is sent on every DDL, but schema is not always sent.
+            // Schema sending logic:
+            // CREATE/ALTER: Schema is sent if the schema after the ALTER is newer than the cached schema
+            // (which we would have sent as an event earlier, at the last alter)
+            // DROP/TRUNCATE: Schema is not sent, since they don't change schema.
+            DDL_EVENT type = getDdlType(queryString);
+            if (type == DDL_EVENT.ALTER || type == DDL_EVENT.CREATE) {
+              sendSchema = refreshSchema(scnDecimal, table);
+            }
+            getContext().toEvent(createEventRecord(type, queryString, table, scnSeq, sendSchema));
+          }
+          this.nextOffsetReference.set(scnSeq);
+          query.setLength(0);
         }
-        this.nextOffsetReference.set(scnSeq);
       }
     } catch (SQLException ex) {
       if (ex.getErrorCode() != RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED) {
         LOG.warn("SQL Exception while retrieving records", ex);
       }
     }
-
   }
 
   private EventRecord createEventRecord(
@@ -570,7 +577,7 @@ public class OracleCDCSource extends BaseSource {
       if (LOG.isDebugEnabled()) {
         LOG.debug(
             Utils.format("Started LogMiner with start offset: {} and end offset: {}",
-            oldestSCN.toPlainString(), endSCN.toPlainString()));
+                oldestSCN.toPlainString(), endSCN.toPlainString()));
       }
     } catch (SQLException ex) {
       LOG.debug("SQLException while starting LogMiner", ex);
@@ -725,7 +732,7 @@ public class OracleCDCSource extends BaseSource {
 
     final String ddlTracking = shouldTrackDDL ? " + DBMS_LOGMNR.DDL_DICT_TRACKING" : "";
 
-    this.logMinerProcedure =  "BEGIN"
+    this.logMinerProcedure = "BEGIN"
         + " DBMS_LOGMNR.START_LOGMNR("
         + " STARTSCN => ?,"
         + " ENDSCN => ?,"
@@ -741,11 +748,11 @@ public class OracleCDCSource extends BaseSource {
     // ORDER BY is not required, since log miner returns all records from a transaction once it is committed, in the
     // order of statement execution. Not having ORDER BY also increases performance a whole lot.
     baseLogEntriesSql = Utils.format(
-        "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, COMMIT_SCN, SEQUENCE#" +
+        "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, COMMIT_SCN, SEQUENCE#, CSF" +
             " FROM V$LOGMNR_CONTENTS" +
             " WHERE" +
             " SEG_OWNER='{}' AND TABLE_NAME IN ({})" +
-            " AND {}" ,
+            " AND {}",
         configBean.baseConfigBean.database, formatTableList(tables) // the final one is filled in differently by each one
     );
 
@@ -860,8 +867,8 @@ public class OracleCDCSource extends BaseSource {
   private Map<String, Integer> getTableSchema(String tableName) throws SQLException {
     Map<String, Integer> columns = new HashMap<>();
     String query = "SELECT * FROM \"" + configBean.baseConfigBean.database + "\".\"" + tableName + "\" WHERE 1 = 0";
-    try(Statement schemaStatement = connection.createStatement();
-        ResultSet rs = schemaStatement.executeQuery(query)) {
+    try (Statement schemaStatement = connection.createStatement();
+         ResultSet rs = schemaStatement.executeQuery(query)) {
       ResultSetMetaData md = rs.getMetaData();
       int colCount = md.getColumnCount();
       for (int i = 1; i <= colCount; i++) {
@@ -892,8 +899,8 @@ public class OracleCDCSource extends BaseSource {
   private int getDBVersion(List<ConfigIssue> issues) {
     // Getting metadata version using connection.getMetaData().getDatabaseProductVersion() returns 12c which makes
     // comparisons brittle, so use the actual numerical versions.
-    try(Statement statement = connection.createStatement();
-        ResultSet versionSet = statement.executeQuery("SELECT version FROM product_component_version")) {
+    try (Statement statement = connection.createStatement();
+         ResultSet versionSet = statement.executeQuery("SELECT version FROM product_component_version")) {
       if (versionSet.next()) {
         String versionStr = versionSet.getString("version");
         if (versionStr != null) {
@@ -914,7 +921,7 @@ public class OracleCDCSource extends BaseSource {
 
     try {
       if (endLogMnr != null && !endLogMnr.isClosed())
-      endLogMnr.execute();
+        endLogMnr.execute();
     } catch (SQLException ex) {
       LOG.warn("Error while stopping LogMiner", ex);
     }
@@ -941,14 +948,14 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private void closeStatements(Statement ...statements) {
-    if(statements == null) {
+  private void closeStatements(Statement... statements) {
+    if (statements == null) {
       return;
     }
 
-    for(Statement stmt : statements) {
+    for (Statement stmt : statements) {
       try {
-        if(stmt != null) {
+        if (stmt != null) {
           stmt.close();
         }
       } catch (SQLException e) {
@@ -1104,6 +1111,7 @@ public class OracleCDCSource extends BaseSource {
   private class PrecisionAndScale {
     int precision;
     int scale;
+
     PrecisionAndScale(int precision, int scale) {
       this.precision = precision;
       this.scale = scale;
