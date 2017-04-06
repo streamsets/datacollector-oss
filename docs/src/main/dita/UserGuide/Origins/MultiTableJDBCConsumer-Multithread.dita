@@ -23,11 +23,11 @@
                     Multitable Consumer</indexterm></indexterm>When you start the pipeline, the JDBC
             Multitable Consumer origin retrieves the list of tables defined in the table
             configuration. The origin then creates multiple concurrent threads based on the Number
-            of Threads property. Each thread reads data from a single table.<note>The Maximum Pool
+            of Threads property. Each thread reads data from a single table. <note>The Maximum Pool
                 Size property on the Advanced tab defines the maximum number of connections the
                 origin can make to the database. It must be equal to or greater than the value
                 defined for the Number of Threads property.</note></p>
-        <p><ph
+        <p>After the origin creates multiple concurrent threads, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def1_JDBCModified"
             /></p>
         <p>Each pipeline runner can process one batch at a time, just like a pipeline that runs on a
