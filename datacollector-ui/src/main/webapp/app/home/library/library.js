@@ -211,7 +211,8 @@ angular
           // Virtual paths are unique paths to any given point in the tree, e.g. "grand/parent"
           var vPath = parts.slice(0, j + 1).join('/');
           var level = vPath.split('/').length;
-          var isExpanded = $scope.$storage.pipelineListState.selectedLabel.indexOf(vPath) === 0;
+          var selectedLabel = $scope.$storage.pipelineListState.selectedLabel;
+          var isExpanded = selectedLabel && selectedLabel.indexOf(vPath) === 0;
 
           // Build the node. By default, only visible nodes are top-level or
           // parents of the currently selected node for better contextualization
