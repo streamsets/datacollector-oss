@@ -35,6 +35,9 @@
           string data.</li>
         <li><xref href="FieldMerger.dita#concept_pgm_tsl_gt">Field Merger</xref> - Merges fields in
           complex lists or maps.</li>
+        <li><xref href="FieldOrder.dita#concept_krp_5fv_vy">Field Order</xref> - Orders fields in a
+          map or list-map root field type and outputs the fields into a list-map or list root field
+          type. </li>
         <li><xref href="ListPivoter.dita#concept_ekg_313_qw">Field Pivoter</xref> - Pivots data in a
           list, map, or list-map field and creates a record for each item in the field.</li>
         <li><xref href="FieldRemover.dita#concept_jdd_blr_wq">Field Remover</xref> - Removes fields

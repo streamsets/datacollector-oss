@@ -55,6 +55,11 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldMerger-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/FieldOrder.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/FieldOrder-MissingExtra.dita"/>
+   <topicref href="../Processors/FieldOrder-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/ListPivoter.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
