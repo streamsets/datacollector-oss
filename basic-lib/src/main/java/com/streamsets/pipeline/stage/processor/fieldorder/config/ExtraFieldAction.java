@@ -22,7 +22,7 @@ package com.streamsets.pipeline.stage.processor.fieldorder.config;
 import com.streamsets.pipeline.api.Label;
 
 public enum ExtraFieldAction implements Label {
-  TO_ERROR("Send record to error lane"),
+  TO_ERROR("Send record to error"),
   DISCARD("Discard all extra fields"),
   ;
 
