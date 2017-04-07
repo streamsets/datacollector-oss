@@ -20,7 +20,6 @@
 
 package com.streamsets.pipeline.stage.destination.kudu;
 
-
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -52,16 +51,17 @@ public class KuduRecordConverter {
       if (operation == KuduOperationType.DELETE.code){
         for(ColumnSchema col : schema.getPrimaryKeyColumns()) {
           if (col.getName().equals(column))
-            recordToRow(record, row, fieldName, column);
+            recordToRow(record, row, fieldName, column, operation);
         }
       } else {
-        // For other operations, we need all column names & values.
-        recordToRow(record, row, fieldName, column);
+        // For other operations, we need to know the operation
+        // to correctly fill the record.
+        recordToRow(record, row, fieldName, column, operation);
       }
     }
   }
 
-  private void recordToRow(Record record, PartialRow row, String fieldName, String column) throws OnRecordErrorException {
+  private void recordToRow(Record record, PartialRow row, String fieldName, String column, int operation) throws OnRecordErrorException {
     Field.Type type = columnsToFieldTypes.get(column);
     ColumnSchema columnSchema = schema.getColumn(column);
     if (record.has(fieldName)) {
@@ -109,10 +109,14 @@ public class KuduRecordConverter {
         }
       }
     } else {
-      if (!columnSchema.isNullable()) {
-        throw new OnRecordErrorException(record, Errors.KUDU_06, column, fieldName);
+      // SDC-5816.  do not null out columns in UPDATE or UPSERT mode.
+      // if the columns are not specified - they should not be changed.
+      if(operation == KuduOperationType.INSERT.code) {
+        if (!columnSchema.isNullable()) {
+          throw new OnRecordErrorException(record, Errors.KUDU_06, column, fieldName);
+        }
+        row.setNull(column);
       }
-      row.setNull(column);
     }
   }
 
