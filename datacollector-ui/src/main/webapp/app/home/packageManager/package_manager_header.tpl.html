@@ -18,7 +18,7 @@
     </div>
 
     <div ng-if="selectedNavigationItem !== extrasNavigationItem">
-      <div class="pull-right" ng-if="!isManagedByClouderaManager">
+      <div class="pull-right">
 
         <a ng-disabled="hasSelectedLibrary(true)"
            ng-if="isAuthorized([userRoles.admin])"
@@ -80,7 +80,7 @@
     </div>
 
     <div ng-if="selectedNavigationItem === extrasNavigationItem">
-      <div class="pull-right" ng-if="!isManagedByClouderaManager">
+      <div class="pull-right">
 
         <a ng-if="isAuthorized([userRoles.admin])"
            ng-click="onUploadExtrasClick()"
