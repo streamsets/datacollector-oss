@@ -56,7 +56,6 @@ import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.validation.Issue;
-import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -447,6 +446,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
               RuleDefinitionsJson ruleDefinitionsJsonBean =
                   ObjectMapperFactory.get().readValue(is, RuleDefinitionsJson.class);
               ruleDefinitions = ruleDefinitionsJsonBean.getRuleDefinitions();
+
+              if (ruleDefinitions.getConfiguration() == null) {
+                ruleDefinitions.setConfiguration(stageLibrary.getPipelineRules().getPipelineRulesDefaultConfigs());
+              }
             }
           }
         } catch (IOException ex) {
@@ -464,7 +467,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
               new ArrayList<DriftRuleDefinition>(),
               new ArrayList<String>(),
               UUID.randomUUID(),
-              new ArrayList<Config>()
+              stageLibrary.getPipelineRules().getPipelineRulesDefaultConfigs()
           );
         }
         pipelineToRuleDefinitionMap.put(getPipelineKey(name, tagOrRev), ruleDefinitions);
