@@ -65,7 +65,6 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.datacollector.validation.RuleDefinitionValidator;
 import com.streamsets.lib.security.http.SSOPrincipal;
-import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.impl.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -616,7 +615,7 @@ public class PipelineStoreResource {
         Collections.<DriftRuleDefinition>emptyList(),
         Collections.<String>emptyList(),
         null,
-        Collections.<Config>emptyList()
+        stageLibrary.getPipelineRules().getPipelineRulesDefaultConfigs()
     );
     store.storeRules(pipelineId, "0", ruleDefinitions);
 
