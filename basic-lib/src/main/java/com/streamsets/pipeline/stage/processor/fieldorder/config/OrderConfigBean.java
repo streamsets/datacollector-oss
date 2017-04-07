@@ -57,8 +57,8 @@ public class OrderConfigBean {
     required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue="TO_ERROR",
-    label = "Missing Field",
-    description = "Action that should be performed if the record doesn't have all the required fields",
+    label = "Missing Fields",
+    description = "Action to perform if the record doesn't have all the fields specified in the order list",
     group = "ORDER",
     displayPosition = 30
   )
@@ -70,7 +70,7 @@ public class OrderConfigBean {
     type = ConfigDef.Type.STRING,
     defaultValue = "",
     label = "Default Value",
-    description = "Default value that should be inserted if a required field is missing",
+    description = "Default value to be inserted for missing fields",
     dependencies = {
       @Dependency(configName = "missingFieldAction", triggeredByValues = "USE_DEFAULT")
     },
@@ -98,7 +98,7 @@ public class OrderConfigBean {
     type = ConfigDef.Type.MODEL,
     defaultValue="TO_ERROR",
     label = "Extra Fields",
-    description = "Action that should be performed if record has additional fields that were not specified in the order list",
+    description = "Action to perform if the record has additional fields that weren't specified in the order list",
     group = "ORDER",
     displayPosition = 60
   )
