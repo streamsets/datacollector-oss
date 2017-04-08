@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 @SuppressWarnings({"squid:S2226", "squid:S1989", "squid:S1948"})
 public class HttpReceiverServlet extends HttpServlet {
@@ -131,10 +132,16 @@ public class HttpReceiverServlet extends HttpServlet {
         try (InputStream in = req.getInputStream()) {
           InputStream is = in;
           String compression = req.getHeader(HttpConstants.X_SDC_COMPRESSION_HEADER);
+          if (compression == null) {
+            compression = req.getHeader(HttpConstants.CONTENT_ENCODING_HEADER);
+          }
           if (compression != null) {
             switch (compression) {
               case HttpConstants.SNAPPY_COMPRESSION:
                 is = new SnappyFramedInputStream(is, true);
+                break;
+              case HttpConstants.GZIP_COMPRESSION:
+                is = new GZIPInputStream(is);
                 break;
               default:
                 throw new IOException(Utils.format("It shouldn't happen, unexpected compression '{}'", compression));
