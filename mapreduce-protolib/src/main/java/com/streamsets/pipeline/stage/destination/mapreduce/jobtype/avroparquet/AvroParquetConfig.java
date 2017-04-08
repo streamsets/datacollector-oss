@@ -131,4 +131,17 @@ public class AvroParquetConfig {
     triggeredByValue = "AVRO_PARQUET"
   )
   public int maxPaddingSize = -1;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    label = "Overwrite Temporary File",
+    description = "If the temporary file exists, overwrite it.",
+    defaultValue = "false",
+    displayPosition = 80,
+    group = "AVRO_PARQUET",
+    dependsOn = "jobType^",
+    triggeredByValue = "AVRO_PARQUET"
+  )
+  public boolean overwriteTmpFile = false;
 }

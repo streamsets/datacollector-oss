@@ -29,6 +29,7 @@ import com.streamsets.pipeline.sdk.ExecutorRunner;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceDExecutor;
 import com.streamsets.pipeline.stage.destination.mapreduce.MapReduceExecutor;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConfig;
+import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet.AvroParquetConstants;
 import org.apache.avro.Schema;
 import org.apache.avro.util.Utf8;
 import org.apache.hadoop.fs.Path;
@@ -158,6 +159,90 @@ public class AvroParquetConvertIT extends BaseAvroParquetConvertIT {
 
     validateParquetFile(new Path(getOutputDir(), "input.parquet"), data);
     Assert.assertTrue(inputFile.exists());
+  }
+
+  @Test
+  public void testFailIfTmpFileExists() throws Exception {
+    File inputFile = new File(getInputDir(), "input.avro");
+
+    List<Map<String, Object>> data = ImmutableList.of(
+      new ImmutableMap.Builder<String, Object>()
+        .put("id", new Utf8("mouse"))
+        .put("price", -2)
+        .build()
+    );
+
+    // Create colliding tmp file
+    File tmpFile = new File(getOutputDir() + "/" + AvroParquetConstants.TMP_PREFIX + inputFile.getName());
+    tmpFile.getParentFile().mkdirs();
+    Assert.assertTrue(tmpFile.createNewFile());
+
+    generateAvroFile(AVRO_SCHEMA, inputFile, data);
+
+    AvroParquetConfig conf = new AvroParquetConfig();
+    conf.inputFile = inputFile.getAbsolutePath();
+    conf.outputDirectory = getOutputDir();
+    conf.overwriteTmpFile = false;
+
+    MapReduceExecutor executor = generateExecutor(conf, Collections.emptyMap());
+
+    ExecutorRunner runner = new ExecutorRunner.Builder(MapReduceDExecutor.class, executor)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    record.set(Field.create(Collections.emptyMap()));
+
+    runner.runWrite(ImmutableList.of(record));
+    Assert.assertEquals(0, runner.getErrorRecords().size());
+    runner.runDestroy();
+
+    // Temp file should still exists, the final parquet file should not
+    Assert.assertTrue(tmpFile.exists());
+    Assert.assertFalse(new File(getOutputDir(), "input.parquet").exists());
+  }
+
+  @Test
+  public void testOverwriteTmpFileExists() throws Exception {
+    File inputFile = new File(getInputDir(), "input.avro");
+
+    List<Map<String, Object>> data = ImmutableList.of(
+      new ImmutableMap.Builder<String, Object>()
+        .put("id", new Utf8("mouse"))
+        .put("price", -2)
+        .build()
+    );
+
+    // Create colliding tmp file
+    File tmpFile = new File(getOutputDir() + "/" + AvroParquetConstants.TMP_PREFIX + inputFile.getName());
+    tmpFile.getParentFile().mkdirs();
+    Assert.assertTrue(tmpFile.createNewFile());
+
+    generateAvroFile(AVRO_SCHEMA, inputFile, data);
+
+    AvroParquetConfig conf = new AvroParquetConfig();
+    conf.inputFile = inputFile.getAbsolutePath();
+    conf.outputDirectory = getOutputDir();
+    conf.overwriteTmpFile = true;
+
+    MapReduceExecutor executor = generateExecutor(conf, Collections.emptyMap());
+
+    ExecutorRunner runner = new ExecutorRunner.Builder(MapReduceDExecutor.class, executor)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    runner.runInit();
+
+    Record record = RecordCreator.create();
+    record.set(Field.create(Collections.emptyMap()));
+
+    runner.runWrite(ImmutableList.of(record));
+    Assert.assertEquals(0, runner.getErrorRecords().size());
+    runner.runDestroy();
+
+    // Temp file should be gone and input file should be properly converted
+    Assert.assertFalse(tmpFile.exists());
+    validateParquetFile(new Path(getOutputDir(), "input.parquet"), data);
   }
 
 }

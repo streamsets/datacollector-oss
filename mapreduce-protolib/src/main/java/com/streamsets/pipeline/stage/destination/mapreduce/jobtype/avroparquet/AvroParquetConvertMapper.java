@@ -109,9 +109,13 @@ public class AvroParquetConvertMapper extends Mapper<String, String, NullWritabl
     Path outputDir = new Path(output);
     fs.mkdirs(outputDir);
 
-    Path tempFile = new Path(outputDir, ".tmp_" + inputPath.getName());
+    Path tempFile = new Path(outputDir, AvroParquetConstants.TMP_PREFIX + inputPath.getName());
     if(fs.exists(tempFile)) {
-      throw new IOException("Temporary file " + tempFile + " already exists.");
+      if(conf.getBoolean(AvroParquetConstants.OVERWRITE_TMP_FILE, false)) {
+        fs.delete(tempFile, true);
+      } else {
+        throw new IOException("Temporary file " + tempFile + " already exists.");
+      }
     }
     LOG.info("Using temp file: {}", tempFile);
 

@@ -60,4 +60,14 @@ public class AvroParquetConstants {
    * Max padding size that will be passed down to Parquet writer.
    */
   public final static String MAX_PADDING_SIZE = AvroParquetConstants.class.getCanonicalName() + ".max_padding_size";
+
+  /**
+   * Overwrite tmp file - if the tmp file exists it will be removed.
+   */
+  public final static String OVERWRITE_TMP_FILE = AvroParquetConstants.class.getCanonicalName() + ".overwrite_tmp_file";
+
+  /**
+   * Prefix that will be used for temporary file that is just being converted.
+   */
+  public final static String TMP_PREFIX = ".avro_to_parquet_tmp_conversion_";
 }

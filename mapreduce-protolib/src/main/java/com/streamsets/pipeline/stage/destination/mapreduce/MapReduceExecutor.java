@@ -144,6 +144,7 @@ public class MapReduceExecutor extends BaseExecutor {
           jobConfiguration.setInt(AvroParquetConstants.PAGE_SIZE, jobConfig.avroParquetConfig.pageSize);
           jobConfiguration.setInt(AvroParquetConstants.DICTIONARY_PAGE_SIZE, jobConfig.avroParquetConfig.dictionaryPageSize);
           jobConfiguration.setInt(AvroParquetConstants.MAX_PADDING_SIZE, jobConfig.avroParquetConfig.maxPaddingSize);
+          jobConfiguration.setBoolean(AvroParquetConstants.OVERWRITE_TMP_FILE, jobConfig.avroParquetConfig.overwriteTmpFile);
           break;
         case CUSTOM:
           // Nothing because custom is generic one that have no special config properties
