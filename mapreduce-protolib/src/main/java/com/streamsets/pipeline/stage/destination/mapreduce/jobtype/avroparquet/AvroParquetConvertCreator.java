@@ -53,6 +53,7 @@ public class AvroParquetConvertCreator implements Configurable, Callable<Job> {
   public Job call() throws Exception {
     // We're explicitly disabling speculative execution
     conf.set("mapreduce.map.speculative", "false");
+    conf.set("mapreduce.map.maxattempts", "1");
     MapreduceUtils.addJarsToJob(conf,
       SemanticVersion.class,
       ParquetWriter.class,
