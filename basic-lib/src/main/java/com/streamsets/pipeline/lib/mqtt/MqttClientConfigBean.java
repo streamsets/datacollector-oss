@@ -69,10 +69,9 @@ public class MqttClientConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Client Persistence Mechanism",
       defaultValue = "MEMORY",
-      description = "A persistence mechanism is used to enable reliable messaging. " +
-          "For messages sent at qualities of service (QoS) 1 or 2 to be reliably delivered, " +
-          "messages must be stored (on both the client and server) until the delivery of the message" +
-          "is complete.",
+      description = "Specify the persistence mechanism used to enable reliable messaging. For messages sent " +
+          "at least once (1) or exactly once (2) to be reliably delivered, messages must be stored on both the " +
+          "client and server until the delivery of the message is complete.",
       displayPosition = 50,
       group = "MQTT"
   )
@@ -82,7 +81,7 @@ public class MqttClientConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Client Persistence Data directory",
+      label = "Client Persistence Data Directory",
       defaultValue = "/tmp",
       description = "Specify the directory for file-based Persistence Mechanism",
       displayPosition = 51,
@@ -96,7 +95,7 @@ public class MqttClientConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "60",
-      label = "Keep Alive Interval (in secs)",
+      label = "Keep Alive Interval (secs)",
       description = "This value defines the maximum time interval between messages sent or received. ",
       displayPosition = 60,
       group = "MQTT"
@@ -106,7 +105,7 @@ public class MqttClientConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Use Auth",
+      label = "Use Credentials",
       description = "Use Username and Password Authentication",
       defaultValue = "false",
       displayPosition = 70,
