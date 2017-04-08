@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
+import com.streamsets.pipeline.lib.http.HttpCompressionType;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
 
 import java.util.ArrayList;
@@ -72,6 +73,12 @@ public class HttpProcessorUpgrader implements StageUpgrader {
         }
       case 6:
         upgradeV6ToV7(configs);
+        if (toVersion == 7) {
+          break;
+        }
+        break;
+      case 7:
+        upgradeV7ToV8(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -114,6 +121,10 @@ public class HttpProcessorUpgrader implements StageUpgrader {
 
   private void upgradeV6ToV7(List<Config> configs) {
     configs.add(new Config(joiner.join(CONF, "rateLimit"), 0));
+  }
+
+  private void upgradeV7ToV8(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF, CLIENT, "httpCompression"), HttpCompressionType.NONE));
   }
 
 }

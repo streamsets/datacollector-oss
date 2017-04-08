@@ -1,5 +1,5 @@
-/**
- * Copyright 2016 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,20 +19,10 @@
  */
 package com.streamsets.pipeline.lib.http;
 
-// copied from com.streamsets.pipeline.stage.destination.sdcipc.Constants
-public interface HttpConstants {
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-  String X_SDC_APPLICATION_ID_HEADER = "X-SDC-APPLICATION-ID";
-  String SDC_APPLICATION_ID_QUERY_PARAM = "sdcApplicationId";
-
-  String X_SDC_PING_HEADER = "X-SDC-PING";
-  String X_SDC_PING_VALUE = "ping";
-
-  String X_SDC_COMPRESSION_HEADER = "X-SDC-COMPRESSION";
-  String SNAPPY_COMPRESSION = "snappy";
-
-  String GZIP_COMPRESSION = "gzip";
-
-  String CONTENT_ENCODING_HEADER = "Content-Encoding";
-
+public class HttpCompressionChooserValues extends BaseEnumChooserValues<HttpCompressionType> {
+  public HttpCompressionChooserValues() {
+    super (HttpCompressionType.class);
+  }
 }

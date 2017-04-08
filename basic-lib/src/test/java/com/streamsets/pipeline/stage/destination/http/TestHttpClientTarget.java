@@ -25,13 +25,17 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.AbstractHttpStageTest;
+import com.streamsets.pipeline.lib.http.HttpCompressionType;
+import com.streamsets.pipeline.lib.http.HttpConstants;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.iq80.snappy.SnappyFramedInputStream;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,17 +45,19 @@ import org.powermock.api.mockito.PowerMockito;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 public class TestHttpClientTarget extends AbstractHttpStageTest {
   private Server server;
   private static boolean serverRequested = false;
   private static String requestPayload = null;
   private static boolean returnErrorResponse = false;
+  private static String compressionType = null;
 
   @Before
   public void setUp() throws Exception {
@@ -66,21 +72,19 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
           HttpServletResponse response
       ) throws IOException, ServletException {
         serverRequested = true;
-
         if (returnErrorResponse) {
           response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
           return;
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
-        String line = null;
-        try {
-          BufferedReader reader = request.getReader();
-          while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line);
-          }
-          requestPayload = stringBuilder.toString();
-        } catch (Exception e) { /*report an error*/ }
+        compressionType = request.getHeader(HttpConstants.CONTENT_ENCODING_HEADER);
+        InputStream is = request.getInputStream();
+        if (compressionType != null && compressionType.equals(HttpConstants.SNAPPY_COMPRESSION)) {
+          is = new SnappyFramedInputStream(is, true);
+        } else if (compressionType != null && compressionType.equals(HttpConstants.GZIP_COMPRESSION)) {
+          is = new GZIPInputStream(is);
+        }
+        requestPayload = IOUtils.toString(is);
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
       }
@@ -135,7 +139,7 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     testHttpTarget(config);
     Assert.assertTrue(serverRequested);
     Assert.assertNotNull(requestPayload);
-    Assert.assertTrue(requestPayload.contains("ab"));
+    Assert.assertTrue(requestPayload.contains("a\nb\n"));
   }
 
   @Test
@@ -151,6 +155,36 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     Assert.assertTrue(requestPayload.contains("a") || requestPayload.contains("b"));
   }
 
+  @Test
+  public void testSnappyHttpCompression() throws Exception {
+    HttpClientTargetConfig config = getConf(server.getURI().toString());
+    config.singleRequestPerBatch = true;
+    config.client.httpCompression = HttpCompressionType.SNAPPY;
+    serverRequested = false;
+    requestPayload = null;
+    returnErrorResponse = false;
+    testHttpTarget(config);
+    Assert.assertTrue(serverRequested);
+    Assert.assertNotNull(requestPayload);
+    Assert.assertTrue(requestPayload.contains("a\nb\n"));
+    Assert.assertEquals(compressionType, HttpConstants.SNAPPY_COMPRESSION);
+  }
+
+
+  @Test
+  public void testGZipHttpCompression() throws Exception {
+    HttpClientTargetConfig config = getConf(server.getURI().toString());
+    config.singleRequestPerBatch = true;
+    config.client.httpCompression = HttpCompressionType.GZIP;
+    serverRequested = false;
+    requestPayload = null;
+    returnErrorResponse = false;
+    testHttpTarget(config);
+    Assert.assertTrue(serverRequested);
+    Assert.assertNotNull(requestPayload);
+    Assert.assertTrue(requestPayload.contains("a\nb\n"));
+    Assert.assertEquals(compressionType, HttpConstants.GZIP_COMPRESSION);
+  }
 
   private void testHttpTarget(HttpClientTargetConfig config) throws Exception {
     HttpClientTarget target = new HttpClientTarget(config);

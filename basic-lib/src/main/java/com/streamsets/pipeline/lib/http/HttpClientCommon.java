@@ -31,8 +31,10 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.filter.EncodingFilter;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
+import org.glassfish.jersey.message.GZipEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,9 +102,12 @@ public class HttpClientCommon {
           .property(ClientProperties.READ_TIMEOUT, jerseyClientConfig.readTimeoutMillis)
           .property(ClientProperties.ASYNC_THREADPOOL_SIZE, jerseyClientConfig.numThreads)
           .property(ClientProperties.REQUEST_ENTITY_PROCESSING, jerseyClientConfig.transferEncoding)
+          .property(ClientProperties.USE_ENCODING, jerseyClientConfig.httpCompression.getValue())
           .connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(jerseyClientConfig)));
 
       ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
+
+      configureCompression(clientBuilder);
 
       if (jerseyClientConfig.useProxy) {
         JerseyClientUtil.configureProxy(jerseyClientConfig.proxy, clientBuilder);
@@ -114,6 +119,20 @@ public class HttpClientCommon {
     }
 
     return issues;
+  }
+
+  private void configureCompression(ClientBuilder clientBuilder) {
+    if (jerseyClientConfig.httpCompression != null) {
+      switch (jerseyClientConfig.httpCompression) {
+        case SNAPPY:
+          clientBuilder.register(SnappyEncoder.class);
+          break;
+        case GZIP:
+          clientBuilder.register(GZipEncoder.class);
+          break;
+      }
+      clientBuilder.register(EncodingFilter.class);
+    }
   }
 
   /**

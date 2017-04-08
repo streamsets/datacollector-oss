@@ -50,6 +50,18 @@ public class JerseyClientConfigBean {
   @ValueChooserModel(RequestEntityProcessingChooserValues.class)
   public RequestEntityProcessing transferEncoding = CHUNKED;
 
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "Http Compression",
+      defaultValue = "NONE",
+      displayPosition = 110,
+      group = "#0"
+  )
+  @ValueChooserModel(HttpCompressionChooserValues.class)
+  public HttpCompressionType httpCompression = HttpCompressionType.NONE;
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
