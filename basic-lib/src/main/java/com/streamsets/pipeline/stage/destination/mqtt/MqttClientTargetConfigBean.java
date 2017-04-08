@@ -43,7 +43,7 @@ public class MqttClientTargetConfigBean {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Retain the message",
+      label = "Retain the Message",
       description = "Whether or not the publish message should be retained by the messaging engine",
       displayPosition = 70,
       group = "MQTT"

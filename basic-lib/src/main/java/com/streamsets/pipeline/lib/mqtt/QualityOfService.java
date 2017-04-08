@@ -22,9 +22,9 @@ package com.streamsets.pipeline.lib.mqtt;
 import com.streamsets.pipeline.api.Label;
 
 public enum QualityOfService implements Label {
-  AT_MOST_ONCE("At Most Once", 0),
-  AT_LEAST_ONCE("At Least Once", 1),
-  EXACTLY_ONCE("Exactly Once", 2);
+  AT_MOST_ONCE("At Most Once (0)", 0),
+  AT_LEAST_ONCE("At Least Once (1)", 1),
+  EXACTLY_ONCE("Exactly Once (2)", 2);
 
   private final String label;
   private final int value;
