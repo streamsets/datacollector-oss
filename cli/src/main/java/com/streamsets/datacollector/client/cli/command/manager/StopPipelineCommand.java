@@ -42,6 +42,13 @@ public class StopPipelineCommand extends BaseCommand {
   )
   public String pipelineRev;
 
+  @Option(
+      name = {"--forceStop"},
+      description = "Force stop the pipeline.",
+      required = false
+  )
+  public boolean forceStop = false;
+
   @Override
   public void run() {
     if(pipelineRev == null) {
@@ -51,7 +58,11 @@ public class StopPipelineCommand extends BaseCommand {
       ManagerApi managerApi = new ManagerApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-      System.out.println(mapper.writeValueAsString(managerApi.stopPipeline(pipelineName, pipelineRev)));
+      if (!forceStop) {
+        System.out.println(mapper.writeValueAsString(managerApi.stopPipeline(pipelineName, pipelineRev)));
+      } else {
+        System.out.println(mapper.writeValueAsString(managerApi.forceStopPipeline(pipelineName, pipelineRev)));
+      }
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();
