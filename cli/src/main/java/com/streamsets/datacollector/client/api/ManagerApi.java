@@ -1017,10 +1017,51 @@ public class ManagerApi {
 
     queryParams.addAll(apiClient.parameterToPairs("", "rev", rev));
 
+    final String[] accepts = {
+        "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    String[] authNames = new String[] { "basic" };
+
+    TypeRef returnType = new TypeRef<PipelineStateJson>() {};
+    return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
+  }
 
 
+  /**
+   * Force Stop Pipeline
+   *
+   * @param pipelineName
+   * @param rev
+   * @return PipelineStateJson
+   */
+  public PipelineStateJson forceStopPipeline (String pipelineName, String rev) throws ApiException {
+    Object postBody = null;
+    byte[] postBinaryBody = null;
+
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling stopPipeline");
+    }
+
+    // create path and map variables
+    String path = "/v1/pipeline/{pipelineName}/forceStop".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, Object> formParams = new HashMap<String, Object>();
 
 
+    queryParams.addAll(apiClient.parameterToPairs("", "rev", rev));
 
     final String[] accepts = {
         "application/json"
@@ -1034,17 +1075,9 @@ public class ManagerApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<PipelineStateJson>() {};
     return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
         contentType, authNames, returnType);
-
-
-
-
   }
 
   /**
