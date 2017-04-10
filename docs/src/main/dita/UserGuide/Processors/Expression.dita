@@ -27,9 +27,8 @@
         <p>To create an expression, you define the name of the field, record header attribute, or
             field attribute to receive the results of the expression. And then, use the expression
             language to define the expression to use.</p>
-  <p>You can use pipeline constants in expressions. Define a pipeline constant when you have a
-            constant value that you use in more than one expression in the pipeline or that you want
-            to change easily. </p>
+  <p>You can use runtime parameters in expressions. Define a runtime parameter when you want to
+            specify the value for a pipeline property when you start the pipeline. </p>
         <p>You can also use the time:now() function to include the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             server time in the record.</p>
@@ -37,6 +36,6 @@
   <related-links>
     <link href="../Pipeline_Configuration/Expressions.dita#concept_ofb_1cm_xq"/>
     <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
-    <link href="../Pipeline_Configuration/PipelineConstants.dita#concept_rjh_ntz_qr"/>
+    <link href="../Pipeline_Configuration/RuntimeParameters.dita#concept_rjh_ntz_qr"/>
   </related-links>
 </concept>

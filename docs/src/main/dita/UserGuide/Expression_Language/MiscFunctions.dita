@@ -115,7 +115,7 @@
        sdc.properties file. </li>
      </ul></dd>
         <dd>For more information, see <xref
-            href="../Configuration/RuntimeProperties.dita#concept_fjx_g31_1s"/>.</dd>
+            href="../Pipeline_Configuration/RuntimeProperties.dita#concept_fjx_g31_1s"/>.</dd>
    </dlentry>
       <dlentry>
         <dt>runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)</dt>
@@ -140,7 +140,7 @@
           JDBCpassword.txt file, stripping any leading or trailing white space
           characters:<codeblock>${str:trim(runtime:loadResource("JDBCpassword.txt", true))}</codeblock></dd>
         <dd>For more information about runtime resources, see <xref
-            href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>.</dd>
+            href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>.</dd>
       </dlentry>
       <dlentry>
         <dt>sdc:hostname()</dt>

@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dys_tp1_1s">
- <title>Step 1. Define a Runtime Property</title>
+ <title>Step 1. Define Runtime Properties</title>
  <conbody>
     <p><indexterm>runtime properties<indexterm>defining</indexterm></indexterm>You can define
       runtime properties in the <ph
@@ -74,6 +74,6 @@
   </p>
  </conbody>
   <related-links>
-    <link href="DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
+    <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
   </related-links>
 </concept>

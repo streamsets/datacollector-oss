@@ -31,7 +31,8 @@
                         <dd>
                             <p>For a pipeline, displays the record count for the pipeline, record
                                 and batch throughput, batch processing statistics, and heap memory
-                                usage.</p>
+                                usage. For a pipeline started with runtime parameters, displays the
+                                parameter values that the pipeline is currently using.</p>
                             <p>For a stage, displays record and batch throughput, batch processing
                                 statistics, and heap memory usage.</p>
                             <note outputclass="" type="tip">You can hover over different parts of

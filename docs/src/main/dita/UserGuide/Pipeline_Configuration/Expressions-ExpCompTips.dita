@@ -27,9 +27,10 @@
               id="image_ctc_rs5_tr"/></p><p>You can invoke expression completion anywhere where you
             can use an expression.</p></li>
     <li>Field names display at the top of the list when data preview is available. When defined,
-          pipeline constants display in the list with a purple Constants icon.<p>In the following
-            example, Bonus is a pipeline constant:</p><p><image
-              href="../Graphics/ExComp-FieldsConstants.png" id="image_cvp_sdv_tr"/></p></li>
+          runtime parameters display in the list with a purple Parameters icon.<p>In the following
+            example, DirectoryRoot is a runtime parameter:</p><p><image
+              href="../Graphics/ExComp-FieldsConstants.png" id="image_cvp_sdv_tr" scale="80"
+          /></p></li>
     <li>To view more information about an element, click the element name: <p><image
               href="../Graphics/ExComp-ListInfo.png" id="image_m2v_ht5_tr"/></p></li>
     <li>To add an element to an expression, double-click the element name or hit

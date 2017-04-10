@@ -32,10 +32,24 @@
    <shortdesc/>
   </topicmeta>
  </topicref>
-  <topicref href="../Pipeline_Configuration/PipelineConstants.dita">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
+  <topicref href="../Pipeline_Configuration/RuntimeValues.dita">
+   <topicref href="../Pipeline_Configuration/RuntimeParameters.dita">
+    <topicmeta>
+     <shortdesc/>
+    </topicmeta>
+    <topicref href="../Pipeline_Configuration/RuntimeParameters-Defining.dita"/>
+    <topicref href="../Pipeline_Configuration/RuntimeParameters-Calling.dita"/>
+    <topicref href="../Pipeline_Configuration/RuntimeParameters-Starting.dita"/>
+    <topicref href="../Pipeline_Configuration/RuntimeParameters-Viewing.dita"/>
+   </topicref>
+   <topicref href="../Pipeline_Configuration/RuntimeProperties.dita">
+    <topicref href="../Pipeline_Configuration/RuntimeProperties-Defining.dita"/>
+    <topicref href="../Pipeline_Configuration/RuntimeProperties-Calling.dita"/>
+   </topicref>
+   <topicref href="../Pipeline_Configuration/RuntimeResources.dita">
+    <topicref href="../Pipeline_Configuration/RuntimeResources-Defining.dita"/>
+    <topicref href="../Pipeline_Configuration/RuntimeResources-Calling.dita"/>
+   </topicref>
   </topicref>
   <topicref href="../Pipeline_Configuration/Validation.dita">
    <topicmeta>

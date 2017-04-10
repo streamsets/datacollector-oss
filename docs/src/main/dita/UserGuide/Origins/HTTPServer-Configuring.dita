@@ -75,7 +75,7 @@
                                             />.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Allow Application ID through Query Param</entry>
+                                    <entry>Application ID in URL</entry>
                                     <entry>Enables reading the application ID from the URL. Use when
                                         HTTP clients include the application ID in the URL query
                                         parameter instead of in the request header.<p>For more

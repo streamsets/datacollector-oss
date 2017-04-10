@@ -187,9 +187,11 @@
                 </info>
             </step>
             <step>
-                <cmd>To define pipeline constants, on the <wintitle>Constants</wintitle> tab, click
-                    the <uicontrol>Add</uicontrol> icon and define the name and the value for each
-                    constant.</cmd>
+                <cmd>To define runtime parameters, on the <wintitle>Parameters</wintitle> tab, click
+                    the <uicontrol>Add</uicontrol> icon and define the name and the default value
+                    for each parameter.</cmd>
+                <info>For more information, see <xref
+                        href="RuntimeParameters.dita#concept_rjh_ntz_qr"/>.</info>
             </step>
             <step>
                 <cmd>Click the <wintitle>Error Records</wintitle> tab and configure the following

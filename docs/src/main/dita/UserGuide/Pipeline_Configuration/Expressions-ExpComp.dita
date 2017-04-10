@@ -17,10 +17,11 @@
  <title>Expression Completion in Properties</title>
  <conbody>
     <p><indexterm>pipelines<indexterm>expression
-        completion</indexterm></indexterm><indexterm>expression
-          completion<indexterm>overview</indexterm></indexterm>Expression completion provides a list
-      of data types, constants, fields, and functions that you can use. The list includes pipeline
-      constants when defined, and available fields when the pipeline is valid for data preview.</p>
+                completion</indexterm></indexterm><indexterm>expression
+                    completion<indexterm>overview</indexterm></indexterm>Expression completion
+            provides a list of data types, runtime parameters, fields, and functions that you can
+            use. The list includes runtime parameters when defined, and available fields when the
+            pipeline is valid for data preview.</p>
     <p>When an element does not display in the list, it is not a valid element at the specified
       location.</p>
   </conbody>

@@ -15,8 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ybc_ly4_yt">
  <title>Constants</title>
- <shortdesc>The expression language provides constants for use in expressions. In a pipeline, you
-        can also create constants for use within the pipeline.</shortdesc>
+ <shortdesc>The expression language provides constants for use in expressions.</shortdesc>
  <conbody>
         <p><indexterm>expression
                     language<indexterm>constants</indexterm></indexterm><indexterm>constants<indexterm>in

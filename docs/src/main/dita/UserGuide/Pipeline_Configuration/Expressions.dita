@@ -21,8 +21,8 @@
  </conbody>
   <related-links>
     <link href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"/>
-    <link href="PipelineConstants.dita#concept_rjh_ntz_qr"/>
-    <link href="../Configuration/RuntimeProperties.dita#concept_fjx_g31_1s"/>
-    <link href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>
+    <link href="RuntimeParameters.dita#concept_rjh_ntz_qr"/>
+    <link href="RuntimeProperties.dita#concept_fjx_g31_1s"/>
+    <link href="RuntimeResources.dita#concept_bs4_5nm_2s"/>
   </related-links>
 </concept>
