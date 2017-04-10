@@ -145,6 +145,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
     public JavaStreamingContext create() {
 
       sparkConf.set("spark.streaming.kafka.maxRatePerPartition", String.valueOf(maxRatePerPartition));
+      sparkConf.set("spark.locality.wait", "30s");
       sparkConf.set("spark.cleaner.ttl", "60s"); // force all old RDD metadata out
       JavaStreamingContext result = new JavaStreamingContext(sparkConf, new Duration(duration));
       Map<String, String> props = new HashMap<>();

@@ -80,9 +80,7 @@ public class EmbeddedSDCPool {
    *
    */
   private Set<EmbeddedSDC> notStarted = new HashSet<>();
-  private Map<Integer, Deque<EmbeddedSDC>> waitingForBatchToBeRead = new HashMap<>();
   private Map<Integer, Deque<EmbeddedSDC>> batchRead = new HashMap<>();
-  private Map<Integer, Deque<EmbeddedSDC>> errorsWritten = new HashMap<>();
   private Set<EmbeddedSDC> used = new HashSet<>();
   private int sparkProcessorCount;
 
@@ -177,20 +175,6 @@ public class EmbeddedSDCPool {
     return sdc;
   }
 
-  public synchronized EmbeddedSDC getSDCWaitingForBatchRead(int id) throws Exception {
-    if (IS_TRACE_ENABLED) {
-      LOG.trace("Getting SDC whose batch has not been read for id: " + id);
-    }
-    return getOrCreate(id, waitingForBatchToBeRead);
-  }
-
-  public synchronized void checkInAfterReadingBatch(int id, EmbeddedSDC sdc) throws Exception {
-    if (IS_TRACE_ENABLED) {
-      LOG.trace("Checking SDC in after reading batch for id: " + id);
-    }
-    checkInAtId(id, sdc, batchRead);
-  }
-
   public synchronized EmbeddedSDC getSDCBatchRead(int id) throws Exception {
     if (IS_TRACE_ENABLED) {
       LOG.trace("Getting SDC whose batch been read for id: " + id);
@@ -200,22 +184,7 @@ public class EmbeddedSDCPool {
     return getOrCreate(id, batchRead);
   }
 
-
-  public synchronized EmbeddedSDC getSDCErrorsWritten(int id) throws Exception {
-    if (IS_TRACE_ENABLED) {
-      LOG.trace("Getting SDC to which errors have been written for id: " + id);
-    }
-    return getOrCreate(id, errorsWritten);
-  }
-
-  public synchronized void checkInAfterWritingErrors(int id, EmbeddedSDC sdc) throws Exception {
-    if (IS_TRACE_ENABLED) {
-      LOG.trace("Checking SDC in after errors written for id: " + id);
-    }
-    checkInAtId(id, sdc, errorsWritten);
-  }
-
-  public synchronized void checkInAfterWritingTransformedBatch(int id, EmbeddedSDC sdc) throws Exception {
+  public synchronized void checkInAfterReadingBatch(int id, EmbeddedSDC sdc) throws Exception {
     if (IS_TRACE_ENABLED) {
       LOG.trace("Checking SDC in after batch written for id: " + id);
     }
@@ -224,7 +193,7 @@ public class EmbeddedSDCPool {
       notStarted.add(sdc);
       used.remove(sdc);
     } else {
-      checkInAtId(id, sdc, waitingForBatchToBeRead);
+      checkInAtId(id, sdc, batchRead);
     }
   }
 
@@ -293,8 +262,6 @@ public class EmbeddedSDCPool {
   public synchronized void shutdown() {
     this.open = false;
     used.forEach(sdc -> sdc.getSource().shutdown());
-    shutdownAllInMap(waitingForBatchToBeRead);
-    shutdownAllInMap(errorsWritten);
     shutdownAllInMap(batchRead);
     notStarted.forEach(sdc -> sdc.getSource().shutdown());
   }

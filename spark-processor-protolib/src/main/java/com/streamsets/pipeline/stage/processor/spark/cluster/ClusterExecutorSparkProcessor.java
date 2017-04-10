@@ -43,6 +43,7 @@ import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_04;
 public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(ClusterExecutorSparkProcessor.class);
+  public static final String CLUSTER_ERROR_REASON_HDR = "streamsetsInternalClusterErrorReason";
 
   private final Semaphore batchReceived = new Semaphore(0);
   private final Semaphore batchTransformed = new Semaphore(0);
@@ -68,8 +69,10 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
       if (IS_DEBUG_ENABLED) {
         LOG.debug("Trying to read batch at " + System.currentTimeMillis());
       }
-      if (batch != null) {
-        return toIterable(batch); // no waiting, if batch was already set.
+      synchronized (this) {
+        if (batch != null) {
+          return toIterable(batch); // no waiting, if batch was already set.
+        }
       }
       batchReceived.acquire();
     } catch (InterruptedException ex) { // NOSONAR
@@ -79,10 +82,12 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
     if (IS_DEBUG_ENABLED) {
       LOG.debug("Returning received batch");
     }
-    if (batch == null) {
-      return Collections.emptyList();
+    synchronized (this) {
+      if (batch == null) {
+        return Collections.emptyList();
+      }
+      return toIterable(batch);
     }
-    return toIterable(batch);
   }
 
   private Iterable<Record> toIterable(Iterator<Record> recordIterator) {
@@ -95,7 +100,9 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
 
   @Override
   public void process(Batch batch, SingleLaneBatchMaker singleLaneBatchMaker) throws StageException {
-    this.batch = batch.getRecords();
+    synchronized (this) {
+      this.batch = batch.getRecords();
+    }
     this.currentBatchMaker = singleLaneBatchMaker;
     batchReceived.release();
 
@@ -106,16 +113,6 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
       throw new RuntimeException(ex);
     }
 
-    if (IS_DEBUG_ENABLED) {
-      LOG.debug("Errors size: " + errors.size());
-    }
-
-    for (Map.Entry<Record, String> error : errors.entrySet()) {
-      errorRecordHandler.onError(
-          new OnRecordErrorException(RecordCloner.clone(error.getKey(), getContext()), SPARK_04, error.getValue()));
-    }
-    errors.clear();
-
   }
 
   private Iterator<Record> clone(Iterator<Object> records) {
@@ -125,9 +122,17 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
   }
 
   @SuppressWarnings("unchecked")
-  public void setErrors(Map errors) throws StageException {
-    LOG.info("Errors set: " + errors.size());
-    errors.forEach((error, reason) -> this.errors.put(RecordCloner.clone(error, getContext()), (String) reason));
+  public void setErrors(List errors) throws StageException {
+    errors.forEach(error -> {
+      try {
+        Record cloned = RecordCloner.clone(error, getContext());
+        String reason = cloned.getHeader().getAttribute(CLUSTER_ERROR_REASON_HDR);
+        errorRecordHandler.onError(
+            new OnRecordErrorException(cloned, SPARK_04, reason));
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    });
   }
 
   public void continueProcessing(Iterator<Object> transformed) {
@@ -136,7 +141,9 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
       currentBatchMaker.addRecord(newBatch.next());
     }
     currentBatchMaker = null;
-    batch = null;
+    synchronized (this) {
+      batch = null;
+    }
     batchTransformed.release();
   }
 
