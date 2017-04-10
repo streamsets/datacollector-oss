@@ -96,6 +96,16 @@
           </ul></dd>
         <dd>Return type: String.</dd>
       </dlentry>
+      <dlentry>
+        <dt>runtime:availableProcessors()</dt>
+        <dd>
+          <p>Returns the number of processors available to the Java virtual machine. You can use
+            this function when you want to configure multithreaded processing based on the number of
+            processors available to <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</p>
+          <p>Return type: Integer.</p>
+        </dd>
+      </dlentry>
    <dlentry>
     <dt>runtime:conf(&lt;runtime property>)</dt>
     <dd>Returns the value for the specified runtime configuration. Use to call a runtime property. </dd>

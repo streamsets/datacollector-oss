@@ -22,6 +22,8 @@
           Consumer</indexterm></indexterm>When you configure Kinesis Consumer, you specify the
       Amazon Web Services connection information for your Kinesis cluster and the data format of
       source data.</p>
+        <p>The Kinesis Consumer origin can use multiple threads to enable parallel processing of
+            data from the cluster. </p>
         <p>You can optionally use a proxy to connect to Kinesis Streams.</p>
  </conbody>
 </concept>

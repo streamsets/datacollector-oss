@@ -199,6 +199,7 @@
          <li>field:field()</li>
          <li>jvm:maxMemoryMB()</li>
          <li>offset:column(&lt;position>)</li>
+         <li>runtime:availableProcessors()</li>
          <li>runtime:conf(&lt;runtime property>)</li>
          <li>runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)</li>
          <li>sdc:hostname()</li>

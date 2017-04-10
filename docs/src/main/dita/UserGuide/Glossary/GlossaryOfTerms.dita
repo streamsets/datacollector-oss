@@ -202,6 +202,12 @@
           one pipeline to another without writing to an intermediary system. </dd>
       </dlentry>
       <dlentry>
+        <dt>sourceless pipeline instance</dt>
+        <dd>An instance of the pipeline that includes all of the processors and destinations in the
+          pipeline and represents all pipeline processing after the origin. Used in multithreaded
+          pipelines.</dd>
+      </dlentry>
+      <dlentry>
         <dt>snapshot</dt>
         <dd>A set of data captured as a pipeline runs. You can step through the snapshot like data
           preview. You can also use it as a source for data preview.</dd>

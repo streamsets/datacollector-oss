@@ -32,10 +32,11 @@
                 <li>Elasticsearch origin</li>
                 <li>HTTP Server origin</li>
                 <li>JDBC Multitable Consumer origin</li>
+                <li>Kinesis Consumer origin</li>
                 <li>WebSocket Server origin</li>
             </ul></p>
-        <p>You can also use the Dev Data Generator development origin to test a multithreaded
-            pipeline. </p>
+        <p>You can also use the Dev Data Generator development origin to test multithreaded
+            pipelines. </p>
         <p>A multithreaded pipeline honors the configured delivery guarantee for the pipeline, but
             does not guarantee the order in which batches of data are processed. </p>
  </conbody>

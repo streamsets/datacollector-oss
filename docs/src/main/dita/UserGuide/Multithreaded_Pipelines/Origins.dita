@@ -28,12 +28,17 @@
                 <li><xref href="../Origins/MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y">JDBC
                         Multitable Consumer</xref> - Reads database data from multiple tables
                     through a JDBC connection.</li>
+                <li><xref href="../Origins/KinConsumer.dita#concept_anh_4y3_yr">Kinesis
+                        Consumer</xref> - Reads data from a Kinesis cluster.</li>
                 <li><xref href="../Origins/WebSocketServer.dita#concept_u2r_gpc_3z">WebSocket
                         Server</xref> - Listens on a WebSocket endpoint and processes the contents
                     of all authorized WebSocket requests. </li>
                 <li><xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht">Dev Data
                         Generator</xref> - Generates random data for development and testing.</li>
             </ul></p>
+        <p>The origins use different properties and perform processing differently based on the
+            origin systems they work with. For details on how an origin performs multithreaded
+            processing, see "Multithreaded Processing" in the origin documentation.</p>
         <p>Note that <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             provides several "to Kafka" multithreaded origins: <xref

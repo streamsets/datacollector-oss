@@ -106,25 +106,26 @@
                                                 placement="inline" id="image_hbn_t1x_yr"
                                         /></xref></entry>
                                     <entry>Milliseconds to wait before requesting additional data
-                                        from a shard. <p>Amazon recommends 250, minimum is
+                                        from a shard. <p>Amazon recommends 1,000. The minimum is
                                             200.</p><p>Default is 1,000. </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Wait Time (ms) <xref
-                                            href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+                                    <entry>Max Threads <xref
+                                            href="KinConsumer-MultithreadProc.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_mgp_2q3_br" placement="inline"
+                                                placement="inline" id="image_d5x_vnc_mz"
                                         /></xref></entry>
-                                    <entry>Milliseconds to wait before sending a partial or empty
-                                        batch. <p>Default is 1,000.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Preview Batch Wait Time (ms)</entry>
-                                    <entry>Milliseconds to wait for data for a data preview.
-                                            <p>Amazon Kinesis can take 10-30 seconds to enable
-                                            initial access. Configure this property as needed to
-                                            avoid data preview timeouts.</p><p>Default is
-                                            60,000.</p></entry>
+                                    <entry>The number of threads that the origin generates and uses
+                                        for multithreaded processing. Enter a positive integer or an
+                                        expression that evaluates to a positive integer.<p>By
+                                            default, the origin uses the following expression to
+                                            configure the property based on the number of available
+                                            CPU cores on the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            />
+                                            machine:<codeblock>${runtime:availableProcessors()}</codeblock></p><p>This
+                                            expression is evaluated when you start the
+                                        pipeline.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

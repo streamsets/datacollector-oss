@@ -21,10 +21,12 @@
                     pipelines</indexterm></indexterm>When you monitor a multithreaded pipeline, the
             pipeline and stage statistics that display are for the entire pipeline, aggregated
             across all pipeline runners.</p>
-        <p>You can view the number of pipeline runners associated with a pipeline and the number of
-            idle runners that are available for use. The number of pipeline runners is based on the
-            number of threads that you configured for the origin.</p>
-        <p>The pipeline runner information displays in the Runtime Statistics, as shown below:</p>
+        <p>Monitor mode provides the following Available Pipeline Runners Histogram: </p>
         <p><image href="../Graphics/Multithreaded-Stats.png" id="image_bzb_yxf_sy" scale="70"/></p>
+        <p>The histogram shows a changing snapshot of the frequency of available pipeline runners and
+            the number of runners that are currently available. If you are uncertain of the number
+            that a column displays, hover over it to view the column detail.</p>
+        <p>For example, the histogram above indicates that the mean is 1.4 available runners, and
+            the standard deviation is one runner.</p>
     </conbody>
 </concept>

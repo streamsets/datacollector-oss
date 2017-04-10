@@ -28,6 +28,9 @@
                                 Server</xref></li>
                         <li><xref href="../Origins/MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y"
                                 >JDBC Multitable Consumer</xref></li>
+                        <li><xref href="../Origins/KinConsumer.dita#concept_anh_4y3_yr">Kinesis
+                                Consumer</xref>
+                        </li>
                         <li><xref href="../Origins/WebSocketServer.dita#concept_u2r_gpc_3z"
                                 >WebSocket Server</xref></li>
                         <li><xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"> Dev
@@ -38,10 +41,13 @@
                         since batches are created quickly and passed to different threads, the order
                         of batches can change as they are written to pipeline destinations.
                     </p></li>
-                <li>Processors that cache information have a separate cache for each instance of the
-                    pipeline at this time.</li>
+                <li>Processors that cache information generally have a separate cache for each
+                    instance of the pipeline. The exception is the Record Deduplicator, which can
+                    identify duplicate records across all pipeline runners. </li>
                 <li>The pipeline and stage statistics that display during monitoring are aggregated
                     across all threads. </li>
+                <li>To optimize performance and resource usage, check the Available Pipeline Runners
+                    histogram to see if pipeline runners are being used effectively.</li>
                 <li>We recommend monitoring the resource usage of the pipeline and the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> heap usage, increasing them as needed.</li>

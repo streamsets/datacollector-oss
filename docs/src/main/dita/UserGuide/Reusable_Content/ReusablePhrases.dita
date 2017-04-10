@@ -932,35 +932,49 @@ web-0011.log</codeblock></dd>
             <draft-comment author="Loretta">Used in Pipeline Concepts &amp; Design > Single &amp;
                   Multithreaded Pipes, and Multithreaded > Overview. And in Multithreaded Processing
                   topics in origin sections.</draft-comment>
-            <p><ph id="ph-MultiThread-def1">When you start the pipeline, the origin creates the
-                        specified number of threads and <ph
+            <p><ph id="ph-MultiThread-PipeRunnerDef">A pipeline runner is a <term>sourceless
+                              pipeline instance</term> - an instance of the pipeline that includes
+                        all of the processors and destinations in the pipeline and represents all
+                        pipeline processing after the origin.</ph></p>
+            <p><ph id="ph-MultiThread-def1">And <ph
                               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> creates a matching number of <term>pipeline runners</term> to perform
-                        pipeline processing. The origin creates batches and passes each batch to a
-                        pipeline runner. Each pipeline runner runs a <term>sourceless pipeline
-                              instance</term> - an instance of the pipeline that includes all of the
-                        processors and destinations in the pipeline and performs all pipeline
-                        processing after the origin.</ph></p>
-            <p><ph id="ph-MultiThread-def1_JDBCModified"><ph
-                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> creates a matching number of <term>pipeline runners</term> to perform
-                        pipeline processing. The origin creates batches and passes each batch to a
-                        pipeline runner. Each pipeline runner runs a <term>sourceless pipeline
-                              instance</term> - an instance of the pipeline that includes all of the
-                        processors and destinations in the pipeline and performs all pipeline
-                        processing after the origin.</ph></p>
-            <p><ph id="ph-MultiThread-def2"> Each pipeline runner can process one batch at a time,
+                        /> creates a number of pipeline runners based on the pipeline Max Runners
+                        property to perform pipeline processing. <ph id="ph-MultiThread-origin">Each
+                              thread connects to the origin system and creates a batch of data, and
+                              passes the batch to an available pipeline runner.</ph></ph></p>
+            <p><ph id="ph-MultiThread-def2"> Each pipeline runner processes one batch at a time,
                         just like a pipeline that runs on a single thread. When the flow of data
                         slows, the pipeline runners wait idly until they are needed.</ph></p>
+            <p><ph id="ph-MultiThread-batchorder">Multithreaded pipelines preserve the order of
+                        records within each batch, just like a single-threaded pipeline. But since
+                        batches are processed by different pipeline instances, the order that
+                        batches are written to destinations is not ensured.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">next couple are used in origin versions of
+                        Multithreaded Processing</draft-comment>
+            </p>
+            <p><ph id="ph-MultiThread-def1_JDBCModified">each thread connects to the origin system
+                        and creates a batch of data, and passes the batch to an available pipeline
+                        runner. A pipeline runner is a <term>sourceless pipeline instance</term> -
+                        an instance of the pipeline that includes all of the processors and
+                        destinations in the pipeline and performs all pipeline processing after the
+                        origin.</ph></p>
+            <p><ph id="ph-MultiThread-def3">Each pipeline runner performs the processing associated
+                        with the rest of the pipeline. After a batch is written to pipeline
+                        destinations, the pipeline runner becomes available for another batch of
+                        data. Each batch is processed and written as quickly as possible,
+                        independent from other batches processed by other pipeline runners, so
+                        batches may be written differently from the read-order.</ph></p>
             <p>
                   <draft-comment author="Loretta">Used in Multithreaded > How it works and origins >
                         HTTP Server > Multithreaded Processing and JDBC Multitable Consumer >
                         Multithreaded Processing</draft-comment>
             </p>
-            <p><ph id="HTTPServer-process-ph">the origin creates five threads, and <ph
+            <p><ph id="HTTPServer-process-ph">the origin creates five threads, and by default <ph
                               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> creates five pipeline runners. Upon receiving data, the origin passes a
-                        batch to each of the pipeline runners for processing. </ph></p>
+                        /> creates a matching number of pipeline runners. Upon receiving data, the
+                        origin passes a batch to each of the pipeline runners for processing.
+                  </ph></p>
             <p id="HTTPServer-process-p">At any given moment, the five pipeline runners can each
                   process a batch, so this multithreaded pipeline processes up to five batches at a
                   time. When incoming data slows, the pipeline runners sit idle, available for use

@@ -22,8 +22,8 @@
   <p><indexterm>Kinesis Consumer origin<indexterm>read interval</indexterm></indexterm>Adjust the
    read interval to adapt to the Kinesis data load. For example, you might reduce the wait time to
    enable higher throughput or increase the wait time when the stream of data slows. </p>
-  <p>Amazon recommends 250 millisecond read intervals. The minimum read interval for the Kinesis
-   Consumer is 200 milliseconds. If the stream of data requires a shorter read interval, you might
-   want to create additional shards for the cluster. </p>
+  <p>Amazon recommends 1 second read intervals. The minimum read interval for the Kinesis Consumer
+            is 200 milliseconds which enables polling five times a second. To increase total
+            capacity, you can create additional shards for the cluster. </p>
  </conbody>
 </concept>

@@ -17,25 +17,40 @@
     <title>How It Works</title>
     <conbody>
         <p><indexterm>multithreaded pipelines<indexterm>how it works</indexterm></indexterm>When you
-            configure a multithreaded origin, you specify the amount of concurrency or number of
-            threads that the origin should use. </p>
+            configure a multithreaded pipeline, you specify the number of threads that the origin
+            should use to generate batches of data. You can also configure the maximum number of
+                <term>pipeline runners</term> that <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            uses to perform pipeline processing. </p>
         <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-PipeRunnerDef"
+            /></p>
+        <p>Origins perform multithreaded processing based on the origin systems they work with, but
+            the following is true for all origins that generate multithreaded pipelines: </p>
+        <p>When you start the pipeline, the origin creates a number of threads based on the
+            multithreaded property configured in the origin. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def1"
             /></p>
         <p><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def2"
             /></p>
-        <p>Multithreaded pipelines preserve the order of records within each batch, just like a
-            single-threaded pipeline. But since batches are processed by different pipeline
-            instances, the order that batches are written to destinations is not ensured.</p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-batchorder"
+            /></p>
         <p>For example, take the following multithreaded pipeline. The HTTP Server origin processes
             HTTP POST requests passed from HTTP clients. When you configure the origin, you specify
             the number of threads to use - in this case, the Max Concurrent Requests property:</p>
         <p><image href="../Graphics/Multithread-HTTPPipeline.png" id="image_mxx_5sd_ry" scale="45"
             /></p>
-        <p>With Max Concurrent Requests set to 5, when you start the pipeline <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HTTPServer-process-ph"
-            /></p>
+        <p>Let's say you configure the pipeline to opt out of the Max Runners property. When you do
+            this, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            generates a matching number of pipeline runners for the number of threads.</p>
+        <p>With Max Concurrent Requests set to 5, when you start the pipeline the origin creates
+            five threads and <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            creates five pipeline runners. Upon receiving data, the origin passes a batch to each of
+            the pipeline runners for processing.</p>
         <p>Conceptually, the multithreaded pipeline looks like this:</p>
         <p><image href="../Graphics/Multithread-HTTPThreads.png" id="image_r5x_532_ry" scale="70"
             /></p>
