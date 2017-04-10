@@ -1579,7 +1579,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>HTTPClient-SSLTLS</uicontrol> - same
-                        as above</draft-comment>
+                        as above, plus WebSocket Client destination uses this step
+                        also</draft-comment>
                 </cmd>
             </step>
             <step id="HTTPClient-SSLTLS">
