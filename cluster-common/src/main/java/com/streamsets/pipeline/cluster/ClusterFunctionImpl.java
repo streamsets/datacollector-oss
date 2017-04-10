@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.cluster;
 
-import com.google.common.collect.Iterators;
 import com.streamsets.pipeline.BootstrapCluster;
 import com.streamsets.pipeline.EmbeddedSDC;
 import com.streamsets.pipeline.EmbeddedSDCPool;
@@ -90,7 +89,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   }
 
   @Override
-  public Object startBatch(List<Map.Entry> batch, boolean waitForCompletion) throws Exception {
+  public Iterable startBatch(List<Map.Entry> batch) throws Exception {
     if (IS_TRACE_ENABLED) {
       LOG.trace("In executor function " + " " + Thread.currentThread().getName() + ": " + batch.size());
     }
@@ -103,7 +102,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
       sdc = sdcPool.getNotStartedSDC();
       ClusterSource source = sdc.getSource();
       offset = source.put(batch);
-      return offset;
+      return getNextBatch(0, sdc);
     } catch (Exception | Error e) {
       // Get the stacktrace as string as the spark driver wont have the jars
       // required to deserialize the classes from the exception cause
@@ -114,35 +113,12 @@ public class ClusterFunctionImpl implements ClusterFunction  {
         if (IS_TRACE_ENABLED) {
           LOG.trace("Checking SDC: " + sdc + " back in after starting batch");
         }
-        sdcPool.checkInAfterWritingTransformedBatch(0, sdc);
-      }
-    }
-  }
-
-  @Override
-  public Iterable<Object> getNextBatchFromSparkProcessor(int id) throws Exception {
-    EmbeddedSDC sdc = sdcPool.getSDCWaitingForBatchRead(id);
-    try {
-      if (IS_TRACE_ENABLED) {
-        LOG.trace("Getting next batch from ID " + id);
-      }
-      if (sdc == null) {
-        if (IS_TRACE_ENABLED) {
-          LOG.trace("No SDC for ID " + id + ". Returning empty batch");
+        try {
+          sdcPool.checkInAfterReadingBatch(0, sdc);
+        } catch (Exception ex) {
+          errorStackTrace = getErrorStackTrace(ex);
+          throw new RuntimeException(errorStackTrace);
         }
-        return Collections.emptyList();
-      }
-      Iterable<Object> batch = getNextBatch(id, sdc);
-      if (IS_TRACE_ENABLED) {
-        LOG.trace("Returning " + Iterators.toArray(batch.iterator(), Object.class).length);
-      }
-      return batch;
-    } finally {
-      if (sdc != null) {
-        if (IS_TRACE_ENABLED) {
-          LOG.trace("Checking SDC: " + sdc + " back in after getting batch for id " + id);
-        }
-        sdcPool.checkInAfterReadingBatch(id, sdc);
       }
     }
   }
@@ -165,7 +141,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   }
 
   @Override
-  public void writeErrorRecords(Map errors, int id) throws Exception {
+  public void writeErrorRecords(List errors, int id) throws Exception {
     EmbeddedSDC sdc = sdcPool.getSDCBatchRead(id);
     try {
       if (IS_TRACE_ENABLED) {
@@ -181,16 +157,17 @@ public class ClusterFunctionImpl implements ClusterFunction  {
         if (IS_TRACE_ENABLED) {
           LOG.trace("Checking SDC: " + sdc +" back in after writing errors for id " + id);
         }
-        sdcPool.checkInAfterWritingErrors(id, sdc);
+        // No exception since this does not proceed to next batch, so no waitForCommit call.
+        sdcPool.checkInAfterReadingBatch(id, sdc);
       }
     }
   }
 
-  public static void writeErrorsToProcessor(Map errors, int id, EmbeddedSDC sdc) {
+  public static void writeErrorsToProcessor(List errors, int id, EmbeddedSDC sdc) {
     Optional.ofNullable(sdc.getSparkProcessorAt(id)).ifPresent(t -> {
       try {
         Object processor = t.getClass().getMethod("get").invoke(t);
-        final Method setErrors = processor.getClass().getDeclaredMethod(SET_ERRORS, Map.class);
+        final Method setErrors = processor.getClass().getDeclaredMethod(SET_ERRORS, List.class);
         setErrors.invoke(processor, errors);
       } catch (Exception ex) {
         throw new RuntimeException(ex);
@@ -199,8 +176,8 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   }
 
   @Override
-  public void forwardTransformedBatch(Iterator<Object> batch, int id) throws Exception {
-    EmbeddedSDC sdc = sdcPool.getSDCErrorsWritten(id);
+  public Iterable forwardTransformedBatch(Iterator<Object> batch, int id) throws Exception {
+    EmbeddedSDC sdc = sdcPool.getSDCBatchRead(id);
     try {
       if (IS_TRACE_ENABLED) {
         if (sdc == null) {
@@ -209,30 +186,36 @@ public class ClusterFunctionImpl implements ClusterFunction  {
           LOG.trace("Writing batch to SDC " + sdc.toString());
         }
       }
-      writeTransformedToProcessor(batch, id, sdc);
+      return writeTransformedToProcessor(batch, id, sdc);
     } finally {
       if (sdc != null) {
         if (IS_TRACE_ENABLED) {
           LOG.trace("Checking SDC: " + sdc +" back in after writing batch for id " + id + 1);
         }
-        sdcPool.checkInAfterWritingTransformedBatch(id + 1, sdc);
+        try {
+          sdcPool.checkInAfterReadingBatch(id + 1, sdc);
+        } catch (Exception ex) {
+          errorStackTrace = getErrorStackTrace(ex);
+          throw new RuntimeException(errorStackTrace);
+        }
       }
     }
 
   }
 
   @SuppressWarnings("unchecked")
-  public static void writeTransformedToProcessor(Iterator<Object> batch, int id, EmbeddedSDC sdc) {
-    Optional.ofNullable(sdc.getSparkProcessorAt(id)).ifPresent(t -> {
+  public static Iterable<Object> writeTransformedToProcessor(Iterator<Object> batch, int id, EmbeddedSDC sdc) {
+    return Optional.ofNullable(sdc.getSparkProcessorAt(id)).map(t -> {
       try {
         Class sparkDProcessorClass = t.getClass();
         Object processor = sparkDProcessorClass.getMethod("get").invoke(t);
         final Method continueProcessing = processor.getClass().getDeclaredMethod(CONTINUE_PROCESSING, Iterator.class);
         continueProcessing.invoke(processor, batch);
+        return getNextBatch(id + 1, sdc);
       } catch (Exception ex) {
         throw new RuntimeException(ex);
       }
-    });
+    }).orElse(Collections.emptyList());
   }
 
   private String getErrorStackTrace(Throwable e) {

@@ -71,6 +71,7 @@ public class DriverFunctionImpl {
     previousBatch.addFirst(nextResult);
 
     nextResult.cache();
+    nextResult.count();
     if (transformers != null && !transformers.isEmpty()) {
       for (int i = 0; i < transformers.size(); i++) {
         SparkTransformer transformer = transformers.get(i);

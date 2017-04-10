@@ -49,8 +49,6 @@ public class SparkProcessorMappingFunction implements FlatMapFunction<Iterator<R
     // is there a current spark processor? if there is then submit the incoming records to that one
     List<Object> batchToForward = new ArrayList<>();
     batch.forEachRemaining(batchToForward::add);
-    fn.forwardTransformedBatch(batchToForward.iterator(), id);
-    // get the records from the next one to send to SparkTransformer
-    return (Iterable<Record>) fn.getNextBatchFromSparkProcessor(id + 1);
+    return (Iterable<Record>) fn.forwardTransformedBatch(batchToForward.iterator(), id);
   }
 }

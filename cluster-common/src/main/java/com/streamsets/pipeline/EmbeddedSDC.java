@@ -56,7 +56,7 @@ public class EmbeddedSDC {
   }
 
   public Object getSparkProcessorAt(int id) {
-    return sparkProcessors.get(id);
+    return id < sparkProcessors.size() ? sparkProcessors.get(id) : null;
   }
 
   public boolean inErrorState() {

@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.processor.spark.cluster;
 
-import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Iterators;
 import com.streamsets.pipeline.api.Field;
@@ -32,14 +31,11 @@ import com.streamsets.pipeline.stage.processor.spark.SparkDProcessor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
@@ -48,6 +44,7 @@ public class TestClusterExecutorSparkProcessor {
   private static final String LANE = "spark";
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testProcessor() throws Exception {
     final OnRecordError onRecordError = OnRecordError.TO_ERROR;
 
@@ -57,7 +54,7 @@ public class TestClusterExecutorSparkProcessor {
     for (int i = 0; i < 100; i++) {
       Record r = RecordCreator.create();
       records.add(r);
-      r.set(Field.create(new HashMap<String, Field>()));
+      r.set(Field.create(new HashMap<>()));
       r.set("/value", Field.create(i));
     }
 
@@ -67,14 +64,11 @@ public class TestClusterExecutorSparkProcessor {
     final AtomicReference<StageRunner.Output> output = new AtomicReference<>();
     runner.runInit();
     Executor executor = Executors.newSingleThreadExecutor();
-    executor.execute(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          output.set(runner.runProcess(records));
-        } catch (Exception ex) {
-          throw Throwables.propagate(ex);
-        }
+    executor.execute(() -> {
+      try {
+        output.set(runner.runProcess(records));
+      } catch (Exception ex) {
+        throw Throwables.propagate(ex);
       }
     });
     Record[] dataFromProcessor = Iterators.toArray(processor.getBatch().iterator(), Record.class);
@@ -86,24 +80,16 @@ public class TestClusterExecutorSparkProcessor {
 
     Iterator transformed = Iterators.transform(
         Iterators.forArray(Arrays.copyOfRange(dataFromProcessor, 0, dataFromProcessor.length - 5)),
-        new Function<Record, Record>() {
-          @Nullable
-          @Override
-          public Record apply(@Nullable Record record) {
-            Record newR = RecordCreator.create();
-            newR.set(Field.create(new HashMap<>()));
-            newR.set("/value", Field.create(record.get("/value").getValueAsInteger() + 100));
-            return newR;
-          }
+        record -> {
+          Record newR = RecordCreator.create();
+          newR.set(Field.create(new HashMap<>()));
+          newR.set("/value", Field.create(record.get("/value").getValueAsInteger() + 100));
+          return newR;
         });
 
     Record[] errors = Arrays.copyOfRange(dataFromProcessor, dataFromProcessor.length - 5, dataFromProcessor.length);
 
-    Map<Record, String> errorMap = new LinkedHashMap<>();
-    for (Record error : errors) {
-      errorMap.put(error, "");
-    }
-    processor.setErrors(errorMap);
+    processor.setErrors(Arrays.asList(errors));
     processor.continueProcessing(transformed);
 
     Thread.sleep(1000);

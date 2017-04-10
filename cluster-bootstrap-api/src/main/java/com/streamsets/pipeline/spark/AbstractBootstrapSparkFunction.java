@@ -50,7 +50,6 @@ public abstract class AbstractBootstrapSparkFunction<T1, T2>
   private ClusterFunction clusterFunction;
   private Properties properties;
   private volatile static boolean isPreprocessingMesosDone;
-  private boolean waitForCompletion;
   private static final Object lockObject = new Object();
 
   public AbstractBootstrapSparkFunction() {
@@ -81,7 +80,6 @@ public abstract class AbstractBootstrapSparkFunction<T1, T2>
     }
     clusterFunction = ClusterFunctionProvider.getClusterFunction();
     properties = BootstrapCluster.getProperties();
-    waitForCompletion = BootstrapCluster.getSparkProcessorLibraryNames().isEmpty();
     initialized = true;
   }
 
@@ -97,9 +95,7 @@ public abstract class AbstractBootstrapSparkFunction<T1, T2>
       }
       batch.add(new Pair(tuple._1() != null ? tuple._1(): "UNKNOWN_PARTITION".getBytes(), tuple._2()));
     }
-
-    clusterFunction.startBatch(batch, waitForCompletion);
-    Iterable<Record> transformed = (Iterable<Record>) clusterFunction.getNextBatchFromSparkProcessor(0);
+    Iterable<Record> transformed = (Iterable<Record>) clusterFunction.startBatch(batch);
     return transformed == null ? Collections.emptyList() : transformed;
   }
 

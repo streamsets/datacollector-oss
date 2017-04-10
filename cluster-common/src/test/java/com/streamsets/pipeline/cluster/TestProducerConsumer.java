@@ -154,6 +154,7 @@ public class TestProducerConsumer {
       @Override
       public Object call() throws Exception {
         producer.put(new OffsetAndResult<>("123", createBatch(size)));
+        producer.waitForCommit();
         return null;
       }
     });

@@ -27,13 +27,14 @@ import com.streamsets.pipeline.impl.ClusterFunction;
 import org.apache.spark.api.java.function.VoidFunction;
 import scala.Tuple2;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 public class SparkProcessorErrorMappingFunction implements VoidFunction<Iterator<Tuple2<Record, String>>> {
 
   private int id;
+  private static final String ERROR_HEADER = "streamsetsInternalClusterErrorReason";
 
   private SparkProcessorErrorMappingFunction() {
 
@@ -46,8 +47,11 @@ public class SparkProcessorErrorMappingFunction implements VoidFunction<Iterator
   @Override
   public void call(Iterator<Tuple2<Record, String>> errors) throws Exception {
     ClusterFunction fn = ClusterFunctionProvider.getClusterFunction();
-    Map<Record, String> errorsToForward = new LinkedHashMap<>();
-    errors.forEachRemaining(x -> errorsToForward.put(x._1(), x._2()));
+    List<Record> errorsToForward = new ArrayList<>();
+    errors.forEachRemaining(x -> {
+      x._1().getHeader().setAttribute(ERROR_HEADER, x._2());
+      errorsToForward.add(x._1());
+    });
     fn.writeErrorRecords(errorsToForward, id);
   }
 }

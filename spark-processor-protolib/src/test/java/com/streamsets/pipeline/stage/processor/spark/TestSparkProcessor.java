@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_00;
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_01;
@@ -74,35 +75,35 @@ public class TestSparkProcessor {
     Assert.assertTrue(((SparkDProcessor) runner.getStage()).createProcessor() instanceof DelegatingSparkProcessor);
 
     runner =
-        new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), null))
+        new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0)))
             .addOutputLane(LANE)
             .setExecutionMode(ExecutionMode.STANDALONE)
             .setOnRecordError(onRecordError)
             .build();
 
-    DelegatingSparkProcessor sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), null);
+    DelegatingSparkProcessor sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0));
     sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
     Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof StandaloneSparkProcessor);
     sparkProcessor.destroy();
 
-    runner = new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), null))
+    runner = new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0)))
         .addOutputLane(LANE)
         .setOnRecordError(onRecordError)
         .setExecutionMode(ExecutionMode.CLUSTER_MESOS_STREAMING)
         .build();
 
-    sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), null);
+    sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0));
     sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
     Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof ClusterExecutorSparkProcessor);
     sparkProcessor.destroy();
 
-    runner = new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), null))
+    runner = new ProcessorRunner.Builder(DProcessorClass, new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0)))
         .addOutputLane(LANE)
         .setOnRecordError(onRecordError)
         .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
         .build();
 
-    sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), null);
+    sparkProcessor = new DelegatingSparkProcessor(getConfigBean(), new Semaphore(0));
     sparkProcessor.init(runner.getInfo(), (Processor.Context) runner.getContext());
     Assert.assertTrue(sparkProcessor.getUnderlyingProcessor() instanceof ClusterExecutorSparkProcessor);
     sparkProcessor.destroy();
