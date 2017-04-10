@@ -63,20 +63,6 @@
    <topicref href="../Configuration/JavaSecurityManager.dita"/>
    <topicref href="../Configuration/RootClassloader.dita"/>
   </topicref>
-  <topicref href="../Configuration/RuntimeProperties.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Configuration/RuntimeProperties-Defining.dita"/>
-   <topicref href="../Configuration/RuntimeProperties-Calling.dita"/>
-  </topicref>
-  <topicref href="../Configuration/RuntimeResources.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Configuration/RuntimeResources-Defining.dita"/>
-   <topicref href="../Configuration/RuntimeResources-Calling.dita"/>
-  </topicref>
   <topicref href="../Configuration/ExternalLibs.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

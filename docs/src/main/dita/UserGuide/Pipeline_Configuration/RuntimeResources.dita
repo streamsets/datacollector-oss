@@ -22,10 +22,10 @@
         for the files to secure sensitive information. Use runtime resources to load sensitive
         information from files at runtime.</shortdesc>
  <conbody>
-  <p><indexterm>runtime resources<indexterm>overview</indexterm></indexterm>You can use runtime
-      resources for any pipeline property that allows the use of the expression language. You can,
-      for example, use runtime resources to represent user names and passwords, or OAuth
-      authentication information. </p>
+  <p><indexterm>runtime resources<indexterm>overview</indexterm></indexterm>Use runtime resources to
+            define sensitive values for stage and pipeline properties. You can, for example, use
+            runtime resources to represent user names and passwords, or OAuth authentication
+            information. </p>
   <p>To implement runtime resources, perform the following steps: <ol id="ol_jzr_4sm_2s">
     <li>Define each runtime resource. </li>
     <li>Use an expression in the pipeline to call a runtime resource.</li>

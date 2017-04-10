@@ -493,7 +493,7 @@
                     <tbody>
                         <row>
                             <entry>runtime.conf.location <xref
-                                    href="RuntimeProperties.dita#concept_fjx_g31_1s"><image
+                                    href="../Pipeline_Configuration/RuntimeProperties.dita#concept_fjx_g31_1s"><image
                                         href="../Graphics/icon_moreInfo.png" scale="10"/>
                                 </xref></entry>
                             <entry>Location of runtime properties. Use to declare where runtime

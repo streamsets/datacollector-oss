@@ -150,11 +150,6 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</dd>
       </dlentry>
       <dlentry>
-        <dt>pipeline constant</dt>
-        <dd>A constant that you define for the pipeline and that you can use in any stage in the
-          pipeline. </dd>
-      </dlentry>
-      <dlentry>
         <dt>pipeline runner</dt>
         <dd>Used in multithreaded pipelines to run a sourceless instance of a pipeline. </dd>
       </dlentry>
@@ -177,6 +172,11 @@
           destination to write to the origin.</dd>
       </dlentry>
       <dlentry>
+        <dt>runtime parameters</dt>
+        <dd>Parameters that you define for the pipeline and call from within that same pipeline. Use
+          to specify values for pipeline properties when you start the pipeline.</dd>
+      </dlentry>
+      <dlentry>
         <dt>runtime properties</dt>
         <dd>Properties that you define in a file local to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
@@ -186,8 +186,8 @@
       </dlentry>
       <dlentry>
         <dt>runtime resources</dt>
-        <dd>Runtime resources are values that you can define in a restricted file local to the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>and
+        <dd>Values that you define in a restricted file local to the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
           call from within a pipeline. Use to load sensitive information from files at runtime.</dd>
       </dlentry>
       <dlentry>

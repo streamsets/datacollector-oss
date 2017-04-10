@@ -45,7 +45,7 @@
                                     targetDirectory header attribute. Unlike directory templates,
                                     the directory specified in the targetDirectory attribute should
                                     not include any components that require evaluation, such as
-                                    constants, variables, or runtime properties. </p>
+                                    runtime parameters, variables, or runtime properties. </p>
                             </li>
                             <li>
                                 <p>When you define the expression that evaluates to a directory, you

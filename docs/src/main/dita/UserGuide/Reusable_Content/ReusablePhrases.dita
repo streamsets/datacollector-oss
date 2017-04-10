@@ -103,10 +103,10 @@
             <draft-comment author="Loretta">Core install includes all processors except... </draft-comment>
             <p><ph id="CoreNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase
                         Lookup, Redis Lookup, and Spark Evaluator.</ph></p>
+           
             <p>
                   <draft-comment author="Loretta">List of destinations that are part of the Core
-                        installation. Used in CoreInstall_Overview and CoreInstall-LibList.
-                  </draft-comment>
+                        installation. Used in CoreInstall_Overview and CoreInstall-LibList. </draft-comment>
             </p>
             <p>
                   <ul id="BasicDestinations">
@@ -351,7 +351,7 @@
             </p>
             <p>
                   <draft-comment author="Loretta">AVRO-HadoopFS - used by Hadoop FS origin - Not
-                        adding the non-avro-compression-codec compression info</draft-comment>
+                        adding the non-avro-compression-codec  compression info</draft-comment>
             </p>
             <p>
                   <dl>
@@ -756,9 +756,8 @@
                   When you use another prefix, enter the prefix. When you use another bucket, enter
                   a prefix and bucket.</p>
             <p id="S3origin-CopyMove2">Copying the object leaves the original object in place. </p>
-            <p>
-                  <draft-comment author="Loretta"><uicontrol>ul-S3-custSSE</uicontrol> is used by
-                        Amazon S3 origin and destination in the SSE topic:</draft-comment>
+            <p>                  <draft-comment author="Loretta"><uicontrol>ul-S3-custSSE</uicontrol> is used by
+                  Amazon S3 origin and destination in the SSE topic:</draft-comment>
             </p>
             <p>
                   <ul id="ul-S3-custSSE">
@@ -878,6 +877,7 @@ web-0011.log</codeblock></dd>
                               href="../Origins/Origins-HTTPComparison.dita#concept_rsz_cnw_qy"
                         />.</note>
             </p>
+            
             <p>
                   <draft-comment author="Loretta"><uicontrol>O-EventHandling-overview</uicontrol> -
                         used by Directory and File Tail</draft-comment>
@@ -901,7 +901,7 @@ web-0011.log</codeblock></dd>
                         href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"
                   />.</p>
             <p>
-                  <draft-comment author="Loretta">Event Generation topic. Hadoop FS and MapR FS use
+                  <draft-comment author="Loretta">Event Generation topic.  Hadoop FS and MapR FS use
                         ph and ul. Local FS uses ph and some bullets in the list.</draft-comment>
             </p>
             <p><ph id="D-ph-EventGen1">can generate events that you can use in an event stream. When
@@ -980,7 +980,7 @@ web-0011.log</codeblock></dd>
                   time. When incoming data slows, the pipeline runners sit idle, available for use
                   as soon as the data flow increases.</p>
             <p>
-                  <draft-comment author="Loretta">JDBC Consumer, Oracle CDC Client origin, and JDBC
+                  <draft-comment author="Loretta">JDBC Consumer,  Oracle CDC Client origin, and JDBC
                         Query executor use these in the overview:</draft-comment>
             </p>
             <p id="JDBC-legacyInfo"><ph id="ph-JDBC-legacyInfo">To use a JDBC version older than
@@ -1617,7 +1617,7 @@ input_stream.read()</codeblock></p>
                   for Hadoop FS or Local FS. </p>
             <p id="EXP-p2">Optionally, you can use the expression language to define any stage or
                   pipeline property that represents a numeric or string value. This allows you to
-                  use constants or runtime properties throughout the pipeline. You can use
+                  use runtime parameters or runtime properties throughout the pipeline. You can use
                   expression completion to determine where you can use an expression and the
                   expression elements that you can use in that location. </p>
             <p id="EXP-p3">You can use the following elements in an expression:<ul
@@ -1628,6 +1628,7 @@ input_stream.read()</codeblock></p>
                         <li>Functions</li>
                         <li>Literals</li>
                         <li>Operators</li>
+                        <li>Runtime parameters</li>
                         <li>Runtime properties</li>
                         <li>Runtime resources</li>
                   </ul></p>
@@ -2362,45 +2363,40 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <note type="tip" id="Tip_Usernames">To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
                   information, see <xref
-                        href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
+                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
                         href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
             <note type="tip" id="Tip_AccessKeys">To secure sensitive information such as access key
                   pairs, you can use runtime resources or Hashicorp Vault secrets. For more
                   information, see <xref
-                        href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
+                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
                         href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
             <note type="tip" id="Tip_Passwords">To secure sensitive information such as passwords,
                   you can use runtime resources or Hashicorp Vault secrets. For more information,
-                  see <xref href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                        <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
-                  />.</note>
-            <note type="tip" id="Tip_ConsumerKey">To secure sensitive information such as the
-                  consumer key and secret, you can use runtime resources or Hashicorp Vault secrets.
-                  For more information, see <xref
-                        href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
-            <note type="tip" id="Tip_ClientID">To secure sensitive information such as the client ID
-                  and secret, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <xref
-                        href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
-            <note type="tip" id="Tip_JWTKey">To secure sensitive information such as the JWT signing
-                  key, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <xref
-                        href="../Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
-            <p>
-                  <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka (Yarn)
-                        requirements:</draft-comment>
-            </p>
-            <p>
-                  <ol id="ol-Clust-Stream-loglevel">
-                        <li>Edit the log4j.properties file, located in the following directory:
-                              <codeblock>&lt;spark-home>/conf/log4j.properties</codeblock></li>
-                        <li>Set the <uicontrol>log4j.rootCategory</uicontrol> property to a severity
-                              of INFO or lower, such as DEBUG or TRACE.</li>
-                  </ol>
-            </p>
+                  see <xref href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
+                        <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_ConsumerKey">To secure sensitive information such as the consumer key and secret,
+                  you can use runtime resources or Hashicorp Vault secrets. For more information,
+                  see <xref href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
+                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_ClientID">To secure sensitive information such as the client ID and secret,
+                  you can use runtime resources or Hashicorp Vault secrets. For more information,
+                  see <xref href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
+                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_JWTKey">To secure sensitive information such as the JWT signing key,
+                  you can use runtime resources or Hashicorp Vault secrets. For more information,
+                  see <xref href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
+                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note><p>
+                        <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka
+                              (Yarn) requirements:</draft-comment>
+                  </p><p>
+                        <ol id="ol-Clust-Stream-loglevel">
+                              <li>Edit the log4j.properties file, located in the following
+                                    directory:
+                                    <codeblock>&lt;spark-home>/conf/log4j.properties</codeblock></li>
+                              <li>Set the <uicontrol>log4j.rootCategory</uicontrol> property to a
+                                    severity of INFO or lower, such as DEBUG or TRACE.</li>
+                        </ol>
+                  </p>
             <p>
                   <draft-comment author="Loretta">EXECUTORS</draft-comment>
             </p>

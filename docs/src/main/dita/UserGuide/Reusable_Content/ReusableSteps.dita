@@ -3847,10 +3847,10 @@
                                 <row id="row_ElasticIndex">
                                     <entry>Index</entry>
                                     <entry>Index information for the generated documents. You can
-                                        use a constant, datetime variables, a field that includes
-                                        the index information, or any valid combination. <p>When
-                                            using datetime variables, make sure to configure the
-                                            time basis appropriately. For details about datetime
+                                        use constants, datetime variables, a field that includes the
+                                        index information, or any valid combination. <p>When using
+                                            datetime variables, make sure to configure the time
+                                            basis appropriately. For details about datetime
                                             variables, see <xref
                                                 href="../Expression_Language/DateTimeVariables.dita#concept_gh4_qd2_sv"
                                             />.</p></entry>
@@ -4534,7 +4534,26 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
                 </info>
             </step>
             <step>
-                <cmd> </cmd>
+                <cmd>
+                    <draft-comment author="alisontaylor">Use in Starting Pipelines with Parameters
+                        in the Pipeline Configuration chapter and the Pipeline Maintenance
+                        chapter</draft-comment>
+                </cmd>
+            </step>
+            <step id="step_StartPipelineParams1">
+                <cmd>From the pipeline canvas, click the <uicontrol>More</uicontrol> icon, and then
+                    click <uicontrol>Start with Parameters</uicontrol>.</cmd>
+                <info>If <uicontrol>Start with Parameters</uicontrol> is not enabled, the pipeline
+                    is not valid.<p>The <uicontrol>Start with Parameters</uicontrol> dialog box
+                        lists all parameters defined for the pipeline and their default
+                    values.</p></info>
+            </step>
+            <step id="step_StartPipelineParams2">
+                <cmd>Override any default values with the values you want to use for this pipeline
+                    run.</cmd>
+            </step>
+            <step id="step_StartPipelineParams3">
+                <cmd>Click <uicontrol>Start</uicontrol>.</cmd>
             </step>
         </steps>
     </taskbody>

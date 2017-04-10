@@ -46,7 +46,8 @@
                         syntax:<codeblock>manager start \
 (-n &lt;pipelineName> | --name &lt;pipelineName>) \
 [--stack] \
-[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]</codeblock></dd>
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]
+[(-R &lt;runtimeParametersString> | --runtimeParameters &lt;runtimeParametersString>)]</codeblock></dd>
                     <dd>
                         <table frame="all" rowsep="1" colsep="1" id="table_q2d_1pq_yt">
                             <tgroup cols="2">
@@ -80,6 +81,21 @@
                                             an older version of the pipeline. <p>By default, the <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> starts the most recent version.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>-R &lt;runtimeParametersString>
+                                                <p>or</p><p>--runtimeParameters
+                                                &lt;runtimeParametersString></p></entry>
+                                        <entry>Optional. Runtime parameter values to start the
+                                            pipeline with. Overrides the parameter default values
+                                            defined for the pipeline.<p>Enter the runtime parameters
+                                                using the following
+                                                format:<codeblock>'
+{"&lt;runtime parameter1": "&lt;value1>", "&lt;runtime parameter2>": "&lt;value2>"}
+'</codeblock></p><p>For
+                                                example:<codeblock>'
+{"RootDir": "/error", "JDBCConnection": "jdbc:mysql://localhost:3306/customers"}
+'</codeblock></p></entry>
                                     </row>
                                 </tbody>
                             </tgroup>
