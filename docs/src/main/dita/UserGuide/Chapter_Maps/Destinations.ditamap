@@ -342,5 +342,12 @@
    <topicref href="../Destinations/WaveAnalytics-Dataflow.dita"/>
    <topicref href="../Destinations/WaveAnalytics-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/WebSocketClient.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/WebSocketClient-DataFormat.dita"/>
+   <topicref href="../Destinations/WebSocketClient-Configuring.dita"/>
+  </topicref>
  </topicref>
 </map>

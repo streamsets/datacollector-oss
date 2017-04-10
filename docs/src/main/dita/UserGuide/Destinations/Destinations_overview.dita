@@ -80,6 +80,8 @@
           pipeline.</li>
         <li><xref href="WaveAnalytics.dita#concept_hlx_r53_rx">Wave Analytics</xref> - Writes data
           to Salesforce Wave Analytics.</li>
+        <li><xref href="WebSocketClient.dita#concept_l4d_mjn_lz">WebSocket Client</xref> - Writes
+          data to a WebSocket endpoint.</li>
       </ul>To help create or test pipelines, you can use the following development destination:<ul
         id="ul_wvk_p3f_lx">
         <li>To Event</li>
