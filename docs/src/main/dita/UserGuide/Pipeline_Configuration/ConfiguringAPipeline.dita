@@ -168,6 +168,19 @@
                                         second. Use 0 or no value to set no rate limit.<p>Default is
                                             0.</p></entry>
                                 </row>
+                                <row>
+                                    <entry>Max Runners </entry>
+                                    <entry>The maximum number of pipeline runners to use in a
+                                        multithreaded pipeline. <p>Use 0 for no limit. When set to
+                                            0, <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> generates up to the maximum number of threads or
+                                            concurrency configured in the origin. </p><p>You can use
+                                            this property to help tune pipeline performance. For
+                                            more information, see <xref
+                                                href="../Multithreaded_Pipelines/Tuning.dita#concept_fmg_pjd_mz"
+                                            />.</p><p>Default is 0. </p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

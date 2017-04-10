@@ -19,19 +19,17 @@
   <p><indexterm>multithreaded pipelines<indexterm>thread-based
                 caching</indexterm></indexterm><indexterm>processor caching<indexterm>multithreaded
                     pipeline</indexterm></indexterm>Since multithreaded pipelines use multiple
-            pipeline runners to run different instances of the pipeline, processor caching in a
-            multithreaded pipeline differs from a pipeline that runs on a single thread.</p>
-        <p>When a processor caches record data, each instance of the processor keeps a separate
-            cache. Each processor instance can only cache the data that passes through that
-            particular pipeline runner. Be sure to consider this behavior when configuring
-            multithreaded pipelines. </p>
+            pipeline runners to run multiple sourceless pipeline instances, processor caching in a
+            multithreaded pipeline can differ from a pipeline that runs on a single thread.</p>
+        <p>Generally, when a processor caches data, each instance of the processor can only cache
+            the data that passes through that particular pipeline runner. Be sure to consider this
+            behavior when configuring multithreaded pipelines. </p>
         <p>For example, if you configure a lookup processor to create a local cache, each instance
             of the lookup processor creates its own local cache. This should not be a problem since
             the cache is generally used to improve pipeline performance. </p>
-        <p>However, if you use the Record Deduplicator processor to remove duplicate records, the
-            processor can only remove duplicate records from within a pipeline instance. The
-            processor cannot locate records with duplicates in other pipeline instances. </p>
-        <p>The ability for a processor to share a cache across all pipeline instances is planned for
-            future releases. </p>
+        <p>The exception is the Record Deduplicator processor. The Record Deduplicator caches
+            records for comparison for up to a specified number of records or amount of time. When
+            used in a multithreaded pipeline, the records in the cache are shared across pipeline
+            runners. </p>
  </conbody>
 </concept>

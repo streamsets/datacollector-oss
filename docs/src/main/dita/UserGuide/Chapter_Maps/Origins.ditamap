@@ -189,6 +189,7 @@
   </topicref>
   <topicref href="../Origins/KinConsumer.dita" chunk="to-content">  
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/KinConsumer-MultithreadProc.dita"/>
    <topicref href="../Origins/KinConsumer-AWSCredentials.dita"/>
    <topicref href="../Origins/KinConsumer-ReadInterval.dita"/>
    <topicref href="../Origins/KinConsumer-DataFormats.dita"/>
