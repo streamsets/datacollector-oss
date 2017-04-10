@@ -14,6 +14,7 @@
    </topicmeta>
    <topicref href="../Upgrade/PreUpgrade-InstallRequirements.dita"/>
    <topicref href="../Upgrade/PreUpgrade-Java8.dita"/>
+   <topicref href="../Upgrade/PreUpgrade-Cluster.dita"/>
   </topicref>
   <topicref href="../Upgrade/Tarball.dita" chunk="to-content">
    <topicmeta>
