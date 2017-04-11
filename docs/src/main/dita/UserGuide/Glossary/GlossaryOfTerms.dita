@@ -155,7 +155,8 @@
       </dlentry>
       <dlentry>
         <dt>preconditions</dt>
-        <dd>Conditions that a record must satisfy to enter the stage for processing. </dd>
+        <dd>Conditions that a record must satisfy to enter the stage for processing. Records that
+          don't meet all preconditions are processed based on stage error handling.</dd>
       </dlentry>
       <dlentry>
         <dt>processors</dt>
@@ -164,7 +165,8 @@
       <dlentry>
         <dt>required fields</dt>
         <dd>A required field is a field that must exist in a record to allow it into the stage for
-          processing. </dd>
+          processing. Records that don't have all required fields are processed based on pipeline
+          error handling.</dd>
       </dlentry>
       <dlentry>
         <dt>RPC ID</dt>
