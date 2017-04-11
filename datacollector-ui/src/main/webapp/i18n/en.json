@@ -830,7 +830,7 @@
   "sdcSettings": {
     "title": "Settings",
     "helpBar": "Hide Pipeline Creation Help Bar",
-    "lineWrapping": "Whether input text should scroll or wrap for long lines.",
+    "lineWrapping": "Wrap Long Lines",
     "restResponse": "Hide REST Response Menu",
     "runPreviewForFieldPaths": "Run preview in background for fetching fields paths"
   },
