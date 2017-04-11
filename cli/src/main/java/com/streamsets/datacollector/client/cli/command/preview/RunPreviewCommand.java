@@ -36,7 +36,7 @@ public class RunPreviewCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -62,7 +62,7 @@ public class RunPreviewCommand extends BaseCommand {
       PreviewApi previewApi = new PreviewApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-      System.out.println(mapper.writeValueAsString(previewApi.previewWithOverride(pipelineName,
+      System.out.println(mapper.writeValueAsString(previewApi.previewWithOverride(pipelineId,
         Collections.<StageOutputJson>emptyList(), pipelineRev, 10, 1, skipTargets, null, null)));
     } catch (Exception ex) {
       if(printStackTrace) {

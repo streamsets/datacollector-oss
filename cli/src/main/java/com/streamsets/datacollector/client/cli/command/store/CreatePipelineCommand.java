@@ -33,7 +33,7 @@ public class CreatePipelineCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-d", "--description"},
@@ -49,7 +49,7 @@ public class CreatePipelineCommand extends BaseCommand {
       StoreApi storeApi = new StoreApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-      System.out.println(mapper.writeValueAsString(storeApi.createPipeline(pipelineName, pipelineDescription)));
+      System.out.println(mapper.writeValueAsString(storeApi.createPipeline(pipelineId, pipelineDescription)));
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();

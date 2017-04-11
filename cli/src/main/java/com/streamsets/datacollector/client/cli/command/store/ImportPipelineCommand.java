@@ -37,7 +37,7 @@ public class ImportPipelineCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-d", "--description"},
@@ -70,12 +70,12 @@ public class ImportPipelineCommand extends BaseCommand {
         TypeRef returnType = new TypeRef<PipelineEnvelopeJson>() {};
         PipelineEnvelopeJson pipelineEnvelopeJson = json.deserialize(new File(fileName), returnType);
         storeApi.importPipeline(
-            pipelineName,
+            pipelineId,
             "0",
             overwrite,
             pipelineEnvelopeJson
         );
-        System.out.println("Successfully imported from file '" + fileName + "' to pipeline - " + pipelineName );
+        System.out.println("Successfully imported from file '" + fileName + "' to pipeline - " + pipelineId );
       }
     } catch (Exception ex) {
       if(printStackTrace) {

@@ -31,14 +31,14 @@ public class DeletePipelineCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Override
   public void run() {
     try {
       StoreApi storeApi = new StoreApi(getApiClient());
-      storeApi.deletePipeline(pipelineName);
-      System.out.println("Deleted Pipeline - '" + pipelineName + "' successfully");
+      storeApi.deletePipeline(pipelineId);
+      System.out.println("Deleted Pipeline - '" + pipelineId + "' successfully");
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();

@@ -36,7 +36,7 @@ public class ExportPipelineCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -70,12 +70,12 @@ public class ExportPipelineCommand extends BaseCommand {
       StoreApi storeApi = new StoreApi(apiClient);
       ObjectMapper mapper = apiClient.getJson().getMapper();
       PipelineEnvelopeJson pipelineEnvelopeJson = storeApi.exportPipeline(
-          pipelineName,
+          pipelineId,
           pipelineRev,
           false,
           includeLibraryDefinitions);
       mapper.writeValue(new File(fileName), pipelineEnvelopeJson);
-      System.out.println("Successfully exported pipeline '" + pipelineName + "' to file - " + fileName );
+      System.out.println("Successfully exported pipeline '" + pipelineId + "' to file - " + fileName );
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();

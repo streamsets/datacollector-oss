@@ -31,7 +31,7 @@ public class DeleteAlertCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -52,7 +52,7 @@ public class DeleteAlertCommand extends BaseCommand {
   public void run() {
     try {
       ManagerApi managerApi = new ManagerApi(getApiClient());
-      boolean deleted = managerApi.deleteAlert(pipelineName, pipelineRev, ruleId);
+      boolean deleted = managerApi.deleteAlert(pipelineId, pipelineRev, ruleId);
 
       if(deleted) {
         System.out.println("Successfully deleted alert");
