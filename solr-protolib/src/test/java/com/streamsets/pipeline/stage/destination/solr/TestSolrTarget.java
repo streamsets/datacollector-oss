@@ -56,7 +56,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(TestSolrTarget.class);
   private static JettySolrRunner jetty;
-  private static OptionalFieldAction emptyFieldRecordError = OptionalFieldAction.TO_ERROR;
+  private static MissingFieldAction emptyFieldRecordError = MissingFieldAction.TO_ERROR;
 
   private static SdcSolrTestUtil sdcSolrTestUtil;
 
@@ -360,7 +360,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     String solrURI = jetty.getBaseUrl().toString() + "/" + "collection1";
     List<SolrFieldMappingConfig> fieldNamesMap = new ArrayList<>();
     fieldNamesMap.add(new SolrFieldMappingConfig("/a", "id"));
-    final OptionalFieldAction emptyFieldRecordError = OptionalFieldAction.STOP_PIPELINE;
+    final MissingFieldAction emptyFieldRecordError = MissingFieldAction.STOP_PIPELINE;
     Target target = new SolrTarget(
         InstanceTypeOptions.SINGLE_NODE,
         solrURI,
@@ -393,7 +393,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     String solrURI = jetty.getBaseUrl().toString() + "/" + "collection1";
     List<SolrFieldMappingConfig> fieldNamesMap = new ArrayList<>();
     fieldNamesMap.add(new SolrFieldMappingConfig("/a", "id"));
-    final OptionalFieldAction emptyFieldRecordError = OptionalFieldAction.TO_ERROR;
+    final MissingFieldAction emptyFieldRecordError = MissingFieldAction.TO_ERROR;
     Target target = new SolrTarget(
         InstanceTypeOptions.SINGLE_NODE,
         solrURI,
@@ -427,7 +427,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
     String solrURI = jetty.getBaseUrl().toString() + "/" + "collection1";
     List<SolrFieldMappingConfig> fieldNamesMap = new ArrayList<>();
     fieldNamesMap.add(new SolrFieldMappingConfig("/a", "id"));
-    OptionalFieldAction emptyFieldRecordError = OptionalFieldAction.DISCARD;
+    MissingFieldAction emptyFieldRecordError = MissingFieldAction.DISCARD;
     Target target = new SolrTarget(
         InstanceTypeOptions.SINGLE_NODE,
         solrURI,
