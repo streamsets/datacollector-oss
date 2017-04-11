@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,12 +20,24 @@
 
 package com.streamsets.pipeline.stage.destination.solr;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class OptionalFieldActionChooserValues extends BaseEnumChooserValues {
+@GenerateResourceBundle
+public enum MissingFieldAction implements Label {
+  DISCARD("Discard"),
+  TO_ERROR("Send to Error"),
+  STOP_PIPELINE("Stop Pipeline"),
+  ;
 
-  public OptionalFieldActionChooserValues() {
-    super(OptionalFieldAction.class);
+  private final String label;
+  MissingFieldAction(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
   }
 
 }

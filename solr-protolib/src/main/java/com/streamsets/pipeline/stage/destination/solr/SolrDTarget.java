@@ -121,26 +121,26 @@ public class SolrDTarget extends DTarget {
   @ListBeanModel
   public List<SolrFieldMappingConfig> fieldNamesMap;
 
-  @ConfigDef(required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Kerberos Authentication",
-      displayPosition = 60,
-      group = "SOLR"
-  )
-  public boolean kerberosAuth;
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue= "TO_ERROR",
-      label = "Optional Fields",
+      label = "Missing Fields",
       description = "Action to take when fields are empty",
+      displayPosition = 60,
+      group = "SOLR"
+  )
+  @ValueChooserModel(MissingFieldActionChooserValues.class)
+  public MissingFieldAction missingFieldAction = MissingFieldAction.TO_ERROR;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Kerberos Authentication",
       displayPosition = 70,
       group = "SOLR"
   )
-  @ValueChooserModel(OptionalFieldActionChooserValues.class)
-  public OptionalFieldAction optionalFieldAction = OptionalFieldAction.TO_ERROR;
+  public boolean kerberosAuth;
 
   @Override
   protected Target createTarget() {
@@ -152,7 +152,7 @@ public class SolrDTarget extends DTarget {
         fieldNamesMap,
         defaultCollection,
         kerberosAuth,
-        optionalFieldAction
+        missingFieldAction
     );
   }
 
