@@ -36,13 +36,15 @@ import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
-import com.streamsets.datacollector.vault.Vault;
+import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.vault.Vault;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -286,6 +288,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
       final Vault vault = new Vault(configuration);
       DataCollectorServices.instance().put(VAULT_SERVICE_KEY, vault);
+      DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
     } catch (IOException e) {
       throw new RuntimeException(
         Utils.format("Could not load runtime configuration, '{}'", e.toString()), e);

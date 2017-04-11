@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
@@ -39,7 +40,6 @@ import com.streamsets.pipeline.kafka.common.DataType;
 import com.streamsets.pipeline.kafka.common.ProducerRunnable;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.lib.udp.UDPConstants;
 import com.streamsets.pipeline.lib.util.ProtobufTestUtil;
@@ -329,7 +329,7 @@ public class TestKafkaSource {
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC3, SINGLE_PARTITION, producer, startLatch, DataType.JSON,
-      StreamingJsonParser.Mode.MULTIPLE_OBJECTS, -1, null));
+      Mode.MULTIPLE_OBJECTS, -1, null));
 
     KafkaConfigBean conf = new KafkaConfigBean();
     conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
@@ -371,7 +371,7 @@ public class TestKafkaSource {
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC4, SINGLE_PARTITION, producer, startLatch, DataType.JSON,
-      StreamingJsonParser.Mode.MULTIPLE_OBJECTS, -1, null));
+      Mode.MULTIPLE_OBJECTS, -1, null));
 
     KafkaConfigBean conf = new KafkaConfigBean();
     conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
@@ -412,7 +412,7 @@ public class TestKafkaSource {
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC5, SINGLE_PARTITION, producer, startLatch, DataType.JSON,
-      StreamingJsonParser.Mode.ARRAY_OBJECTS, -1, null));
+      Mode.ARRAY_OBJECTS, -1, null));
 
     KafkaConfigBean conf = new KafkaConfigBean();
     conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();

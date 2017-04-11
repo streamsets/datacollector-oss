@@ -24,7 +24,6 @@
     <version>2.6.0.0-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
-  <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-commonlib</artifactId>
   <version>2.6.0.0-SNAPSHOT</version>
   <description>StreamSets Data Collector CommonLib</description>
@@ -33,12 +32,10 @@
 
   <properties>
     <avro.version>1.7.7</avro.version>
-    <confluent.version>3.0.1</confluent.version>
     <commons-compress.version>1.10</commons-compress.version>
     <commons-codec.version>1.9</commons-codec.version>
     <commons-csv.version>1.1</commons-csv.version>
     <commons-io.version>2.4</commons-io.version>
-    <jackson.version>2.4.3</jackson.version>
     <xz.version>1.5</xz.version>
     <snappy.version>0.4</snappy.version>
     <netty.version>4.0.41.Final</netty.version>
@@ -74,30 +71,6 @@
       <artifactId>streamsets-datacollector-net-commonlib</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.dataformat</groupId>
-      <artifactId>jackson-dataformat-xml</artifactId>
-      <version>${jackson.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-      <version>${jackson.version}</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -147,11 +120,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.dataformat</groupId>
-      <artifactId>jackson-dataformat-avro</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
       <version>${commons-compress.version}</version>
@@ -178,7 +146,14 @@
     <dependency>
       <groupId>io.confluent</groupId>
       <artifactId>kafka-schema-registry-client</artifactId>
-      <version>${confluent.version}</version>
+      <!-- Exclude the Confluent Schema Registry Client's Jackson library -->
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+        </exclusion>
+      </exclusions>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
@@ -229,6 +204,12 @@
     </dependency>
 
     <!-- Test Dependencies -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -30,8 +30,11 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.mongodb.MongoDBSource;
@@ -178,6 +181,10 @@ public class MongoDBOplogSourceIT {
   private void checkRecord(Record record, Document document) throws Exception {
     Field expectedField = Field.create(MongoDBSourceUtil.createFieldFromDocument(document));
     walkAndCheckField("", expectedField, record.get());
+  }
+
+  private Stage.Context getContext() {
+    return ContextInfoCreator.createSourceContext("mongo", false, OnRecordError.DISCARD, Collections.emptyList());
   }
 
   private Pair<String, List<Record>> runSourceAndGetOp(SourceRunner runner, String offset) throws Exception {

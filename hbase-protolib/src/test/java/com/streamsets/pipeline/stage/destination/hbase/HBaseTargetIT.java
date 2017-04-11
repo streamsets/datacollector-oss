@@ -19,10 +19,12 @@
  */
 package com.streamsets.pipeline.stage.destination.hbase;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
+import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
@@ -33,6 +35,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.hbase.common.Errors;
 import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
@@ -87,6 +91,8 @@ import static org.junit.Assert.fail;
 @Category(SingleForkNoReuseTest.class)
 public class HBaseTargetIT {
   private static final Logger LOG = LoggerFactory.getLogger(HBaseTargetIT.class);
+
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static HBaseTestingUtility utility;
   private static MiniZooKeeperCluster miniZK;
   private static final String tableName = "TestHBaseSink";
@@ -96,6 +102,7 @@ public class HBaseTargetIT {
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     try {
+      DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
       UserGroupInformation.createUserForTesting("foo", new String[]{"all"});
       utility = new HBaseTestingUtility(conf);
       utility.startMiniCluster();
@@ -255,7 +262,7 @@ public class HBaseTargetIT {
     String rowKeyFieldPath = "/row_key";
     String rowKey = "testImplicitFieldMappingNullField";
     TargetRunner targetRunner = buildRunner(
-        new ArrayList<HBaseFieldMappingConfig>(),
+        new ArrayList<>(),
         StorageType.TEXT,
         OnRecordError.DISCARD,
         "",
@@ -405,7 +412,7 @@ public class HBaseTargetIT {
   public void testWriteWrongColumn() throws Exception {
     String rowKeyFieldPath = "/row_key";
     String rowKey = "testWriteWrongColumn";
-    TargetRunner targetRunner = buildRunner(new ArrayList<HBaseFieldMappingConfig>(), StorageType.TEXT,  OnRecordError.TO_ERROR, "", true, rowKeyFieldPath, true, false);
+    TargetRunner targetRunner = buildRunner(new ArrayList<>(), StorageType.TEXT,  OnRecordError.TO_ERROR, "", true, rowKeyFieldPath, true, false);
     Record record = RecordCreator.create();
     Map<String, Field> map = new HashMap<>();
     map.put("invalidcf:a", Field.create("value_a"));
@@ -430,7 +437,7 @@ public class HBaseTargetIT {
   @Test
   public void testInvalidRowKey() throws Exception {
     String rowKeyFieldPath = "/row_key";
-    TargetRunner targetRunner = buildRunner(new ArrayList<HBaseFieldMappingConfig>(), StorageType.TEXT,  OnRecordError.TO_ERROR, "", true, rowKeyFieldPath, true, false);
+    TargetRunner targetRunner = buildRunner(new ArrayList<>(), StorageType.TEXT,  OnRecordError.TO_ERROR, "", true, rowKeyFieldPath, true, false);
 
     Record record1 = RecordCreator.create();
     Map<String, Field> map = new HashMap<>();
@@ -459,7 +466,7 @@ public class HBaseTargetIT {
     String rowKeyFieldPath = "/row_key";
     String rowKey = "testNotFlatMapError";
     TargetRunner targetRunner =
-      buildRunner(new ArrayList<HBaseFieldMappingConfig>(), StorageType.TEXT, OnRecordError.DISCARD, "", true, rowKeyFieldPath, false, false);
+      buildRunner(new ArrayList<>(), StorageType.TEXT, OnRecordError.DISCARD, "", true, rowKeyFieldPath, false, false);
     Record record = RecordCreator.create();
     Map<String, Field> map = new HashMap<>();
     map.put("cf:a", Field.create("value_a"));
@@ -478,7 +485,10 @@ public class HBaseTargetIT {
     assertTrue(!r.isEmpty());
     assertEquals("value_a", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("a"))));
     assertEquals("value_b", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
-    Field field = JsonUtil.bytesToField(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("c")));
+    Field field = JsonUtil.jsonToField(OBJECT_MAPPER.readValue(r.getValue(
+        Bytes.toBytes(familyName),
+        Bytes.toBytes("c")
+    ), Object.class));
     assertTrue(field.getType() == Type.MAP);
     map = field.getValueAsMap();
     assertEquals(60, map.get("key_1").getValueAsInteger());
@@ -489,7 +499,7 @@ public class HBaseTargetIT {
   public void testNotMapError() throws Exception {
     String rowKey = "testNotMapError";
     TargetRunner targetRunner =
-      buildRunner(new ArrayList<HBaseFieldMappingConfig>(), StorageType.TEXT, OnRecordError.TO_ERROR, "", true, "[0]", false, true);
+      buildRunner(new ArrayList<>(), StorageType.TEXT, OnRecordError.TO_ERROR, "", true, "[0]", false, true);
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<Field>();
     fields.add(Field.create(rowKey));
@@ -685,13 +695,19 @@ public class HBaseTargetIT {
     assertEquals(20, Bytes.toInt(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("a"))));
     assertEquals("30", Bytes.toString(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("b"))));
     // deserialize to json
-    Field field = JsonUtil.bytesToField(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("c")));
+    Field field = JsonUtil.jsonToField(OBJECT_MAPPER.readValue(r.getValue(
+        Bytes.toBytes(familyName),
+        Bytes.toBytes("c")
+    ), Object.class));
     assertTrue(field.getType() == Type.LIST);
     List<Field> list = field.getValueAsList();
     assertEquals(40, list.get(0).getValueAsInteger());
     assertEquals(50, list.get(1).getValueAsInteger());
 
-    field = JsonUtil.bytesToField(r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("d")));
+    field = JsonUtil.jsonToField(OBJECT_MAPPER.readValue(
+        r.getValue(Bytes.toBytes(familyName), Bytes.toBytes("d")),
+        Object.class
+    ));
     assertTrue(field.getType() == Type.MAP);
     Map<String, Field> map = field.getValueAsMap();
     assertEquals(60, map.get("key_1").getValueAsInteger());
@@ -1127,9 +1143,9 @@ public class HBaseTargetIT {
     target.hBaseConnectionConfig.tableName = tableName;
     target.hbaseRowKey = "[0]";
     target.rowKeyStorageType = StorageType.BINARY;
-    target.hBaseConnectionConfig.hbaseConfigs = new HashMap<String, String>();
+    target.hBaseConnectionConfig.hbaseConfigs = new HashMap<>();
     target.hBaseConnectionConfig.hbaseConfigs.put("x", "X");
-    target.hbaseFieldColumnMapping = new ArrayList<HBaseFieldMappingConfig>();
+    target.hbaseFieldColumnMapping = new ArrayList<>();
     target.hbaseFieldColumnMapping
         .add(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT));
     target.hBaseConnectionConfig.kerberosAuth = false;
@@ -1259,14 +1275,4 @@ public class HBaseTargetIT {
     );
   }
 
-  private HBaseConnectionConfig getDefaultConfig() {
-    HBaseConnectionConfig config = new HBaseConnectionConfig();
-    config.zookeeperQuorum = "127.0.0.1";
-    config.clientPort = miniZK.getClientPort();
-    config.zookeeperParentZNode = "/hbase";
-    config.tableName = tableName;
-    config.hbaseUser = "";
-    config.hbaseConfigs = new HashMap<String, String>();
-    return config;
-  }
 }

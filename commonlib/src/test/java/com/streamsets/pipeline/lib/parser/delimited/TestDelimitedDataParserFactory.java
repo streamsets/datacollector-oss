@@ -39,7 +39,7 @@ import java.util.Collections;
 public class TestDelimitedDataParserFactory {
 
   private Stage.Context getContext() {
-    return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
+    return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.emptyList());
   }
 
   /*@Test
@@ -66,7 +66,7 @@ public class TestDelimitedDataParserFactory {
   public void testGetParserReader() throws Exception {
     Map<String, Object> configs = new HashMap<>(JsonCharDataParserFactory.CONFIGS);
     CharDataParserFactory factory = new JsonCharDataParserFactory(getContext(), 10,
-                                                                  StreamingJsonParser.Mode.MULTIPLE_OBJECTS, configs);
+                                                                  Mode.MULTIPLE_OBJECTS, configs);
     OverrunReader reader = new OverrunReader(new StringReader("[\"Hello\"]\n"), 1000, true);
     DataParser parser = factory.getParser("id", reader, 0);
     Assert.assertEquals(0, parser.getOffset());
@@ -80,7 +80,7 @@ public class TestDelimitedDataParserFactory {
   public void testGetParserReaderWithOffset() throws Exception {
     Map<String, Object> configs = new HashMap<>(JsonCharDataParserFactory.CONFIGS);
     CharDataParserFactory factory = new JsonCharDataParserFactory(getContext(), 10,
-                                                                  StreamingJsonParser.Mode.ARRAY_OBJECTS, configs);
+                                                                  Mode.ARRAY_OBJECTS, configs);
     OverrunReader reader = new OverrunReader(new StringReader("[[\"Hello\"],[\"Bye\"]]\n"), 1000, true);
     DataParser parser = factory.getParser("id", reader, 10);
     Assert.assertEquals(10, parser.getOffset());

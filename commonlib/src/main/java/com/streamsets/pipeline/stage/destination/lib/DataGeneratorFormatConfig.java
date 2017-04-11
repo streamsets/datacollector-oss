@@ -609,7 +609,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
         builder.setConfig(TextDataGeneratorFactory.RECORD_SEPARATOR_KEY, textRecordSeparator);
         break;
       case JSON:
-        builder.setMode(jsonMode);
+        builder.setMode(jsonMode.getFormat());
         break;
       case AVRO:
         valid &= configureAvroDataGenerator(context, configPrefix, issues, builder);

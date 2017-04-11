@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
   JSON_GENERATOR_00("Record '{}' root field should be List instead of '{}'"),
-  JSON_GENERATOR_01("Record Field '{}' of type Field Ref is unsupported for json serialization"),
+  JSON_GENERATOR_01("Record Field of type FileRef is unsupported for JSON serialization"),
 
   ;
 

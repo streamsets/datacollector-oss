@@ -32,8 +32,9 @@
   <packaging>pom</packaging>
 
   <properties>
-    <mockserver.version>3.10.4</mockserver.version>
     <awaitility.version>2.0.0</awaitility.version>
+    <confluent.version>3.0.1</confluent.version>
+    <mockserver.version>3.10.4</mockserver.version>
   </properties>
 
   <!-- Required dependencies for all Libraries ONLY -->
@@ -60,6 +61,11 @@
         <version>${project.version}</version>
         <type>test-jar</type>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.confluent</groupId>
+        <artifactId>kafka-schema-registry-client</artifactId>
+        <version>${confluent.version}</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>

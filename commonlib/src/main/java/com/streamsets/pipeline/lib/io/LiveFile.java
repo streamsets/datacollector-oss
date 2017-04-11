@@ -19,8 +19,8 @@
  */
 package com.streamsets.pipeline.lib.io;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -71,7 +71,7 @@ public class LiveFile {
   public LiveFile(Path path) throws IOException {
     Utils.checkNotNull(path, "path");
     this.path = path.toAbsolutePath();
-    if (!Files.isRegularFile(this.path)) {
+    if (!this.path.toFile().isFile()) {
       throw new NoSuchFileException(Utils.format("Path '{}' is not a file", this.path));
     }
     BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
@@ -144,8 +144,6 @@ public class LiveFile {
     return String.format("LiveFile[path=%s, iNode=%s, headHash=%s]", path, iNode, headHash);
   }
 
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
   /**
    * Serializes the <code>LiveFile</code> as a string.
    *
@@ -159,7 +157,8 @@ public class LiveFile {
     map.put("headLen", headLen);
     map.put("inode", iNode);
     try {
-      return OBJECT_MAPPER.writeValueAsString(map);
+      JsonMapper objectMapper = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
+      return objectMapper.writeValueAsString(map);
     } catch (Exception ex) {
       throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
     }
@@ -176,13 +175,14 @@ public class LiveFile {
   public static LiveFile deserialize(String str) throws IOException {
     Utils.checkNotNull(str, "str");
     try {
-      Map map = OBJECT_MAPPER.readValue(str, Map.class);
+      JsonMapper objectMapper = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
+      Map map = objectMapper.readValue(str, Map.class);
       Path path = Paths.get((String) map.get("path"));
       String headHash = (map.containsKey("headHash")) ? (String) map.get("headHash") : "";
       int headLen = (map.containsKey("headLen")) ? (int) map.get("headLen") : 0;
       String inode = (String) map.get("inode");
       return new LiveFile(path, inode, headHash, headLen);
-    } catch (RuntimeException|JsonParseException ex) {
+    } catch (RuntimeException|IOException ex) {
       throw new IllegalArgumentException(Utils.format("Invalid LiveFile serialized string '{}': {}", str,
                                                       ex.toString()), ex);
     }

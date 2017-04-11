@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,11 +19,12 @@
  */
 package com.streamsets.pipeline.lib.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.IOException;
@@ -39,8 +40,6 @@ import java.util.UUID;
 public class JsonUtil {
 
   private JsonUtil() {}
-
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   @SuppressWarnings("unchecked")
   public static Field jsonToField(Object json) throws IOException {
@@ -140,43 +139,37 @@ public class JsonUtil {
       }
       obj = toReturn;
     } else {
-      throw new StageException(CommonError.CMN_0100, field.getType(), field.getValue(),
-        record.getHeader().getSourceId());
+      throw new StageException(
+          CommonError.CMN_0100, field.getType(), field.getValue(),
+          record.getHeader().getSourceId());
     }
     return obj;
   }
 
-  public static String jsonRecordToString(Record r) throws StageException {
+  public static String jsonRecordToString(ContextExtensions ext, Record r) throws StageException {
     try {
-      return OBJECT_MAPPER.writeValueAsString(JsonUtil.fieldToJsonObject(r, r.get()));
-    } catch (JsonProcessingException e) {
+      JsonMapper jsonMapper = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
+      return jsonMapper.writeValueAsString(JsonUtil.fieldToJsonObject(r, r.get()));
+    } catch (IOException e) {
       throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.toString(), e);
     }
   }
 
-  public static byte[] jsonRecordToBytes(Record r, Field f) throws StageException {
+  public static byte[] jsonRecordToBytes(ContextExtensions ext, Record r, Field f) throws StageException {
     try {
-      return OBJECT_MAPPER.writeValueAsBytes(JsonUtil.fieldToJsonObject(r, f));
-    } catch (JsonProcessingException e) {
+      JsonMapper jsonMapper = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
+      return jsonMapper.writeValueAsBytes(JsonUtil.fieldToJsonObject(r, f));
+    } catch (IOException e) {
       throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.toString(), e);
     }
   }
 
-  public static Field bytesToField(byte[] bytes) throws StageException {
+  public static Field bytesToField(ContextExtensions ext, byte[] bytes) throws StageException {
     try {
-      return jsonToField(OBJECT_MAPPER.readValue(bytes, Object.class));
+      JsonMapper jsonMapper = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
+      return jsonToField(jsonMapper.readValue(bytes, Object.class));
     } catch (Exception e) {
       throw new StageException(CommonError.CMN_0101, new String(bytes, StandardCharsets.UTF_8), e.toString(), e);
     }
   }
-
-  public static boolean isJSONValid(String jsonString) {
-    try {
-      OBJECT_MAPPER.readTree(jsonString);
-    } catch (IOException e) {
-      return false;
-    }
-    return true;
-  }
-
 }

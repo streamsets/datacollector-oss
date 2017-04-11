@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.google.common.base.Strings;
+import com.streamsets.pipeline.api.ext.io.OverrunException;
 import org.junit.Assert;
 import org.junit.Test;
 

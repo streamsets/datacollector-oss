@@ -23,10 +23,13 @@ import com.github.fommil.ssh.SshRsaCrypto;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
+import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
@@ -53,6 +56,7 @@ import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -115,6 +119,11 @@ public class TestRemoteDownloadSource {
     }
 
     System.setProperty("user.dir", path);
+  }
+
+  @BeforeClass
+  public static void setUpClass() {
+    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
   }
 
   @Before

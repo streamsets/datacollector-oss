@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.io;
 
+import com.streamsets.pipeline.api.ext.io.CountingReader;
 import org.apache.commons.io.input.ProxyReader;
 
 import java.io.IOException;
@@ -35,8 +36,9 @@ public abstract class AbstractOverrunDelimitedReader extends ProxyReader {
 
   protected final int maxLine;
 
-  protected char cb[];
-  protected int nChars, nextChar;
+  protected char[] cb;
+  protected int nChars;
+  protected int nextChar;
 
   AbstractOverrunDelimitedReader(Reader reader, int maxLine, int bufferSize) {
     super(reader);

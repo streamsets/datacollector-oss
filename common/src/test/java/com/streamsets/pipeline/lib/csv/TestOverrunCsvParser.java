@@ -20,8 +20,8 @@
 package com.streamsets.pipeline.lib.csv;
 
 import com.google.common.base.Strings;
-import com.streamsets.pipeline.lib.io.OverrunException;
-import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.io.OverrunException;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import org.apache.commons.csv.CSVFormat;
 import org.junit.After;
 import org.junit.Assert;

@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.kafka.common;
 
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
@@ -50,7 +50,7 @@ public class PublishToKafkaIT {
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC, MULTIPLE_PARTITIONS, producer, startProducing, DataType.JSON,
-      StreamingJsonParser.Mode.ARRAY_OBJECTS, -1, null));
+      Mode.ARRAY_OBJECTS, -1, null));
 
     startProducing.countDown();
 

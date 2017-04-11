@@ -20,9 +20,9 @@
 package com.streamsets.pipeline.lib.parser.json;
 
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -38,8 +38,7 @@ public class JsonDataParserFactory extends DataParserFactory {
   public static final Map<String, Object> CONFIGS = Collections.emptyMap();
 
   @SuppressWarnings("umchecked")
-  public static final Set<Class<? extends Enum>> MODES =
-      (Set<Class<? extends Enum>>) (Set) ImmutableSet.of(JsonMode.class);
+  public static final Set<Class<? extends Enum>> MODES = ImmutableSet.of(JsonMode.class);
 
   public JsonDataParserFactory(Settings settings) {
     super(settings);

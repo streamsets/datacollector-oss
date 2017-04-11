@@ -76,9 +76,16 @@
             <artifactId>streamsets-datacollector-common</artifactId>
             <scope>compile</scope>
         </dependency>
+        <!-- Exclude the Confluent Schema Registry Client's Jackson library since this one ships its own -->
         <dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-commonlib</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>compile</scope>
         </dependency>
         <!-- azure -->

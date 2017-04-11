@@ -22,10 +22,11 @@ package com.streamsets.pipeline.lib.parser.json;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.lib.io.ObjectLengthException;
-import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.api.ext.JsonObjectReader;
+import com.streamsets.pipeline.api.ext.io.ObjectLengthException;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 
@@ -42,15 +43,21 @@ public class JsonCharDataParser extends AbstractDataParser {
   private final Stage.Context context;
   private final String readerId;
   private final int maxObjectLen;
-  private final OverrunStreamingJsonParser parser;
+  private final JsonObjectReader parser;
   private boolean eof;
 
   public JsonCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-                            StreamingJsonParser.Mode mode, int maxObjectLen) throws IOException {
+                            Mode mode, int maxObjectLen) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.maxObjectLen = maxObjectLen;
-    parser = new OverrunStreamingJsonParser(reader, readerOffset, mode, maxObjectLen);
+    parser = ((ContextExtensions) context).createJsonObjectReader(
+        reader,
+        readerOffset,
+        maxObjectLen,
+        mode,
+        Object.class
+    );
   }
 
   @Override

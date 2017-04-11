@@ -19,9 +19,9 @@
  */
 package com.streamsets.pipeline.lib.csv;
 
-import com.streamsets.pipeline.lib.io.CountingReader;
-import com.streamsets.pipeline.lib.io.ObjectLengthException;
-import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.io.ObjectLengthException;
+import com.streamsets.pipeline.api.ext.io.CountingReader;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import org.apache.commons.csv.CSVFormat;
 import org.junit.Assert;
 import org.junit.Test;

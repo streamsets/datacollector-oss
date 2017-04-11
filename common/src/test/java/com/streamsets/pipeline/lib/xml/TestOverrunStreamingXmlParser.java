@@ -21,9 +21,9 @@ package com.streamsets.pipeline.lib.xml;
 
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.lib.io.ObjectLengthException;
-import com.streamsets.pipeline.lib.io.OverrunException;
-import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.io.ObjectLengthException;
+import com.streamsets.pipeline.api.ext.io.OverrunException;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

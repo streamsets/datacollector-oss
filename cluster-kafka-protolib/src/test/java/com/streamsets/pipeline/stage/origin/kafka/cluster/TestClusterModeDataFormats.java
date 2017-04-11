@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.origin.kafka.cluster;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
@@ -32,7 +33,6 @@ import com.streamsets.pipeline.kafka.common.DataType;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -179,10 +180,11 @@ public class TestClusterModeDataFormats {
     Thread th = null;
     try {
       sourceRunner.runInit();
-      String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
+      String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, Mode.MULTIPLE_OBJECTS);
       th =
-        createThreadForAddingBatch(sourceRunner,
-          new ArrayList<Map.Entry>(Arrays.asList(new Pair("1".getBytes(), jsonData.getBytes()))));
+        createThreadForAddingBatch(sourceRunner, new ArrayList<>(Collections.singletonList(new Pair("1".getBytes(),
+            jsonData.getBytes()
+        ))));
       StageRunner.Output output = sourceRunner.runProduce(null, 10);
 
       String newOffset = output.getNewOffset();
@@ -224,7 +226,7 @@ public class TestClusterModeDataFormats {
     boolean error = true;
     try {
       sourceRunner.runInit();
-      String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS);
+      String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, Mode.ARRAY_OBJECTS);
       th =
         createThreadForAddingBatch(sourceRunner,
           new ArrayList<Map.Entry>(Arrays.asList(new Pair("1".getBytes(), jsonData.getBytes()))));
@@ -276,7 +278,7 @@ public class TestClusterModeDataFormats {
     boolean error = true;
     try {
       sourceRunner.runInit();
-      String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, StreamingJsonParser.Mode.ARRAY_OBJECTS);
+      String jsonData = KafkaTestUtil.generateTestData(DataType.JSON, Mode.ARRAY_OBJECTS);
       th = createThreadForAddingBatch(
         sourceRunner,
         new ArrayList<Map.Entry>(Arrays.asList(new Pair("1"

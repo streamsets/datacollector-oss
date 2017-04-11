@@ -186,12 +186,6 @@
       <version>${hive.version}</version>
       <scope>provided</scope>
       <exclusions>
-        <!-- Excluded because calcite is having non-relocated copy of jackson that
-             is affecting our own code -->
-        <exclusion>
-          <groupId>org.apache.calcite</groupId>
-          <artifactId>calcite-avatica</artifactId>
-        </exclusion>
         <exclusion>
           <groupId>javax.servlet</groupId>
           <artifactId>servlet-api</artifactId>

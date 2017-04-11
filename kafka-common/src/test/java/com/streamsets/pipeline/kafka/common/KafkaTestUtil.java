@@ -24,8 +24,8 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordWriter;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import kafka.admin.AdminUtils;
@@ -445,11 +445,7 @@ public class KafkaTestUtil {
     TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(kafkaServers), topic, 0, timeout);
   }
 
-  /*public static String generateTestData(DataType dataType) {
-    return generateTestData(dataType, StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
-  }*/
-
-  public static String generateTestData(DataType dataType, StreamingJsonParser.Mode jsonMode) {
+  public static String generateTestData(DataType dataType, Mode jsonMode) {
     switch (dataType) {
       case TEXT:
         return "Hello Kafka";
@@ -477,7 +473,7 @@ public class KafkaTestUtil {
 
 
 
-  private static String createJson(StreamingJsonParser.Mode jsonMode) {
+  private static String createJson(Mode jsonMode) {
     switch (jsonMode) {
       case MULTIPLE_OBJECTS:
         return "{\"menu\": {\n" +

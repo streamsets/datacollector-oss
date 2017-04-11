@@ -144,7 +144,10 @@ public class SolrTarget extends BaseTarget {
                 throw new OnRecordErrorException(record, Errors.SOLR_06, fieldMapping.field);
             }
           } else {
-            fieldMap.put(fieldMapping.solrFieldName, JsonUtil.fieldToJsonObject(record, field));
+            fieldMap.put(
+                fieldMapping.solrFieldName,
+                JsonUtil.fieldToJsonObject(record, field)
+            );
           }
         }
       } catch (OnRecordErrorException ex) {

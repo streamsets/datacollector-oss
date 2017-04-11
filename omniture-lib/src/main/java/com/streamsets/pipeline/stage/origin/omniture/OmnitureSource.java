@@ -23,6 +23,8 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -30,7 +32,6 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
-import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
@@ -63,6 +64,7 @@ public class OmnitureSource extends BaseSource {
   private final HttpClientMode httpMode;
   private final long pollingInterval;
   private final HttpProxyConfigBean proxySettings;
+  private final JsonMapper jsonMapper;
 
   private ScheduledExecutorService executorService;
 
@@ -88,13 +90,14 @@ public class OmnitureSource extends BaseSource {
     this.sharedSecret = config.getSharedSecret();
     this.reportDescription = config.getReportDescription();
     this.proxySettings = config.getProxySettings();
+    this.jsonMapper = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
   }
 
   /**
    * Validate Ominture Report Description.
    */
   private void validateReportDescription(List<ConfigIssue> issues){
-    if(!JsonUtil.isJSONValid(this.reportDescription)) {
+    if(!jsonMapper.isValidJson(this.reportDescription)) {
       issues.add(
           getContext().createConfigIssue(
               Groups.REPORT.name(),

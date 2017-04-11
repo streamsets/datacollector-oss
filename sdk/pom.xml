@@ -255,6 +255,8 @@
                     <exclude>com.streamsets.pipeline.api.*</exclude>
                     <exclude>com.streamsets.pipeline.api.el.*</exclude>
                     <exclude>com.streamsets.pipeline.api.ext.*</exclude>
+                    <exclude>com.streamsets.pipeline.api.ext.json.*</exclude>
+                    <exclude>com.streamsets.pipeline.api.ext.io.*</exclude>
                     <exclude>com.streamsets.pipeline.api.base.*</exclude>
                     <exclude>com.streamsets.pipeline.api.impl.*</exclude>
                     <exclude>com.streamsets.pipeline.api.impl.annotationsprocessor.*</exclude>

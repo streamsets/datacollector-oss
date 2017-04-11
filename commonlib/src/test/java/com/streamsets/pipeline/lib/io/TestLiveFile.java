@@ -19,8 +19,12 @@
  */
 package com.streamsets.pipeline.lib.io;
 
+import com.streamsets.datacollector.json.JsonMapperImpl;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -35,6 +39,11 @@ import java.util.UUID;
 
 public class TestLiveFile {
   private File testDir;
+
+  @BeforeClass
+  public static void setUpClass() {
+    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
+  }
 
   @Before
   public void setUp() {

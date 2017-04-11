@@ -19,100 +19,54 @@
  */
 package com.streamsets.pipeline.lib.generator.json;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.streamsets.pipeline.api.Field;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.api.ext.JsonRecordWriter;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 public class JsonCharDataGenerator implements DataGenerator {
-  final static String EOL = System.getProperty("line.separator");
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-  private static final JsonFactory JSON_FACTORY = OBJECT_MAPPER.getFactory();
 
-  static {
-    OBJECT_MAPPER.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+  private final JsonRecordWriter recordWriter;
+  private final Mode mode;
+
+  public JsonCharDataGenerator(Stage.Context context, Writer writer, Mode mode) throws IOException {
+    this.mode = mode;
+    ContextExtensions ext = ((ContextExtensions) context);
+    recordWriter = ext.createJsonRecordWriter(writer, mode);
   }
 
-  private final boolean isArray;
-  private final JsonGenerator generator;
-  private boolean closed;
-
-  public JsonCharDataGenerator(Writer writer, JsonMode jsonMode) throws IOException {
-    isArray = jsonMode == JsonMode.ARRAY_OBJECTS;
-    generator = JSON_FACTORY.createGenerator(writer);
-    if (isArray) {
-      generator.writeStartArray();
-    }
-  }
-
-  //VisibleForTesting
+  @VisibleForTesting
   boolean isArrayObjects() {
-    return isArray;
+    return mode == Mode.ARRAY_OBJECTS;
   }
 
   @Override
   public void write(Record record) throws IOException, DataGeneratorException {
-    if (closed) {
-      throw new IOException("generator has been closed");
-    }
-    generator.writeObject(fieldToJsonObject(record, record.get()));
-    if (!isArray) {
-      generator.writeRaw(EOL);
+    try {
+      recordWriter.write(record);
+    } catch (IOException e) {
+      if (e.getMessage().contains("FileRef")) {
+        throw new DataGeneratorException(Errors.JSON_GENERATOR_01);
+      } else {
+        throw e;
+      }
     }
   }
 
   @Override
   public void flush() throws IOException {
-    if (closed) {
-      throw new IOException("generator has been closed");
-    }
-    generator.flush();
+    recordWriter.flush();
   }
 
   @Override
   public void close() throws IOException {
-    closed = true;
-    if (isArray) {
-      generator.writeEndArray();
-    }
-    generator.close();
-  }
-
-  public static Object fieldToJsonObject(Record record, Field field) throws DataGeneratorException {
-    Object obj;
-    if (field == null || field.getValue() == null) {
-      obj = null;
-    } else if(field.getType() == Field.Type.FILE_REF) {
-       throw new DataGeneratorException(Errors.JSON_GENERATOR_01, field);
-    } else if (field.getType() == Field.Type.LIST) {
-      List<Field> list = field.getValueAsList();
-      List<Object> toReturn = new ArrayList<>(list.size());
-      for (Field f : list) {
-        toReturn.add(fieldToJsonObject(record, f));
-      }
-      obj = toReturn;
-    } else if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST_MAP) {
-      Map<String, Field> map = field.getValueAsMap();
-      Map<String, Object> toReturn = new LinkedHashMap<>();
-      for (Map.Entry<String, Field> entry : map.entrySet()) {
-        toReturn.put(entry.getKey(), fieldToJsonObject(record, entry.getValue()));
-      }
-      obj = toReturn;
-    } else {
-      obj = field.getValue();
-    }
-    return obj;
+    recordWriter.close();
   }
 }

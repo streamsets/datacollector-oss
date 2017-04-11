@@ -21,9 +21,12 @@ package com.streamsets.pipeline.lib.parser.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
+import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -32,6 +35,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -43,6 +47,11 @@ public class TestJsonDataParserWithCompression {
 
   private Stage.Context getContext() {
     return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
+  }
+
+  @BeforeClass
+  public static void setUpClass() {
+    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
   }
 
   @Test

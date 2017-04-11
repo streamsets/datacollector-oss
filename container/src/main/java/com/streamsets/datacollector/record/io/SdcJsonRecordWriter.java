@@ -33,13 +33,13 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-public class JsonRecordWriter implements RecordWriter {
-  private final static Logger LOG = LoggerFactory.getLogger(JsonRecordWriter.class);
+public class SdcJsonRecordWriter implements RecordWriter {
+  private final static Logger LOG = LoggerFactory.getLogger(SdcJsonRecordWriter.class);
   private final Writer writer;
   private final JsonGenerator generator;
   private boolean closed;
 
-  public JsonRecordWriter(OutputStream outputStream) throws IOException {
+  public SdcJsonRecordWriter(OutputStream outputStream) throws IOException {
     writer = new OutputStreamWriter(outputStream, "UTF-8");
     generator = ObjectMapperFactory.getOneLine().getFactory().createGenerator(writer);
   }

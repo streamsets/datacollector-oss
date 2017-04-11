@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
@@ -54,19 +54,23 @@ import java.util.UUID;
 
 public class TestJsonDataGenerator {
 
+  private Stage.Context getContext() {
+    return ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
+  }
+
   @Test
   public void testFactory() throws Exception {
     Stage.Context context = ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
 
     DataFactory dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.JSON)
-      .setMode(JsonMode.ARRAY_OBJECTS).setCharset(Charset.forName("UTF-16")).build();
+      .setMode(Mode.ARRAY_OBJECTS).setCharset(Charset.forName("UTF-16")).build();
     Assert.assertTrue(dataFactory instanceof JsonDataGeneratorFactory);
     JsonDataGeneratorFactory factory = (JsonDataGeneratorFactory) dataFactory;
     JsonCharDataGenerator generator = (JsonCharDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
     Assert.assertEquals(true, generator.isArrayObjects());
 
     dataFactory = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.JSON)
-      .setMode(JsonMode.MULTIPLE_OBJECTS).setCharset(Charset.forName("UTF-16")).build();
+      .setMode(Mode.MULTIPLE_OBJECTS).setCharset(Charset.forName("UTF-16")).build();
     Assert.assertTrue(dataFactory instanceof JsonDataGeneratorFactory);
     factory = (JsonDataGeneratorFactory) dataFactory;
     generator = (JsonCharDataGenerator) factory.getGenerator(new ByteArrayOutputStream());
@@ -81,7 +85,7 @@ public class TestJsonDataGenerator {
   @Test
   public void testGeneratorArrayObjects() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.ARRAY_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(getContext(), writer, Mode.ARRAY_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -103,7 +107,7 @@ public class TestJsonDataGenerator {
   @Test
   public void testGeneratorMultipleObjects() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(getContext(), writer, Mode.MULTIPLE_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -126,7 +130,7 @@ public class TestJsonDataGenerator {
   @Test
   public void testFlush() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(getContext(), writer, Mode.MULTIPLE_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -142,7 +146,7 @@ public class TestJsonDataGenerator {
   @Test
   public void testClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(getContext(), writer, Mode.MULTIPLE_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -153,7 +157,7 @@ public class TestJsonDataGenerator {
   @Test(expected = IOException.class)
   public void testWriteAfterClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(getContext(), writer, Mode.MULTIPLE_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();
@@ -163,7 +167,7 @@ public class TestJsonDataGenerator {
   @Test(expected = IOException.class)
   public void testFlushAfterClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    DataGenerator gen = new JsonCharDataGenerator(getContext(), writer, Mode.MULTIPLE_OBJECTS);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();
@@ -180,9 +184,13 @@ public class TestJsonDataGenerator {
     Record record = RecordCreator.create();
     record.set(listMapField);
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
-    gen.write(record);
-    gen.close();
+    try {
+      DataGenerator gen = new JsonCharDataGenerator(getContext(), writer, Mode.MULTIPLE_OBJECTS);
+      gen.write(record);
+      gen.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     JsonParser parser = new ObjectMapper().getFactory().createParser(writer.toString());
     Iterator<Object> it = parser.readValuesAs(Object.class);
@@ -205,7 +213,7 @@ public class TestJsonDataGenerator {
       Map<String, Object> metadata = FileRefTestUtil.getFileMetadata(testDir);
       FileRef fileRef = FileRefTestUtil.getLocalFileRef(testDir, false, null, null);
       record.set(FileRefUtil.getWholeFileRecordRootField(fileRef, metadata));
-      DataGenerator gen = new JsonCharDataGenerator(new StringWriter(), JsonMode.MULTIPLE_OBJECTS);
+      DataGenerator gen = new JsonCharDataGenerator(getContext(), new StringWriter(), Mode.MULTIPLE_OBJECTS);
       gen.write(record);
       Assert.fail("Json should not process FileRef field");
     } catch (DataGeneratorException e) {

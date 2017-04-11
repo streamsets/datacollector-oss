@@ -19,24 +19,38 @@
  */
 package com.streamsets.datacollector.record.io;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.json.OverrunJsonObjectReaderImpl;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.RecordJson;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.ext.JsonObjectReader;
 import com.streamsets.pipeline.api.ext.RecordReader;
-import com.streamsets.pipeline.lib.io.CountingReader;
-import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.json.Mode;
+import com.streamsets.pipeline.api.ext.io.CountingReader;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class JsonRecordReader extends OverrunStreamingJsonParser implements RecordReader {
+public class SdcJsonRecordReader implements RecordReader {
+  private final JsonObjectReader reader;
 
-  public JsonRecordReader(InputStream inputStream, long initialPosition, int maxObjectLen) throws IOException {
-    super(new CountingReader(new InputStreamReader(inputStream, "UTF-8")), initialPosition,
-          Mode.MULTIPLE_OBJECTS, maxObjectLen);
+  public SdcJsonRecordReader(InputStream inputStream, long initialPosition, int maxObjectLen) throws IOException {
+    reader = new OverrunJsonObjectReaderImpl(
+        new OverrunReader(
+            new CountingReader(new InputStreamReader(inputStream, "UTF-8")),
+          OverrunReader.getDefaultReadLimit(),
+          false,
+          false
+        ),
+        initialPosition,
+        maxObjectLen,
+        Mode.MULTIPLE_OBJECTS,
+        RecordJson.class,
+        ObjectMapperFactory.get()
+    );
   }
 
   @Override
@@ -45,23 +59,18 @@ public class JsonRecordReader extends OverrunStreamingJsonParser implements Reco
   }
 
   @Override
-  protected ObjectMapper getObjectMapper() {
-    return ObjectMapperFactory.get();
-  }
-
-  @Override
-  protected Class<?> getExpectedClass() {
-    return RecordJson.class;
-  }
-
-  @Override
   public long getPosition() {
-    return getReaderPosition();
+    return reader.getReaderPosition();
   }
 
   @Override
   public Record readRecord() throws IOException {
-    RecordJson recordJson = (RecordJson) read();
+    RecordJson recordJson = (RecordJson) reader.read();
     return BeanHelper.unwrapRecord(recordJson);
+  }
+
+  @Override
+  public void close() throws IOException {
+    reader.close();
   }
 }

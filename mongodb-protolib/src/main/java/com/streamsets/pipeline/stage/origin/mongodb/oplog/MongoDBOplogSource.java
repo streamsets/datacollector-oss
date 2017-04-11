@@ -78,6 +78,7 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+
     if (issues.isEmpty()) {
       extraInit(getContext(), issues);
     }
@@ -218,7 +219,7 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
       throw new IllegalArgumentException(Utils.format("Unsupported Op Log Op type : {}", opType));
     }
     //All operation types in OperationType are positive, so using -1 to indicate no matching operation type
-    int operationType = -1;
+    int operationType;
     switch (oplogOpType) {
       case INSERT:
         operationType = OperationType.INSERT_CODE;
@@ -237,9 +238,7 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
         break;
       default: throw new IllegalArgumentException(Utils.format("Unsupported Op Log Op type : {}", opType));
     }
-    if (operationType != -1) {
-      record.getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationType));
-    }
+    record.getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationType));
   }
 
   private Record getOplogRecord() throws IOException {

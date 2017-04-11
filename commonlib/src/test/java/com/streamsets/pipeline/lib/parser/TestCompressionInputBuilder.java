@@ -20,7 +20,10 @@
 package com.streamsets.pipeline.lib.parser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.commons.compress.archivers.ArchiveEntry;
@@ -30,6 +33,7 @@ import org.apache.commons.compress.compressors.CompressorOutputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -49,6 +53,11 @@ public class TestCompressionInputBuilder {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+  @BeforeClass
+  public static void setUpClass() {
+    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
+  }
+  
   @Test
   public void testCompressionInput() throws Exception {
 

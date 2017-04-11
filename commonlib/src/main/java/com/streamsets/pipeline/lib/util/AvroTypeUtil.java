@@ -52,7 +52,7 @@ import java.util.concurrent.TimeUnit;
 
 public class AvroTypeUtil {
 
-  private static Logger LOG = LoggerFactory.getLogger(AvroTypeUtil.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AvroTypeUtil.class);
 
   private static final long MILLIS_PER_DAY = TimeUnit.DAYS.toMillis(1);
   private static TimeZone localTimeZone = Calendar.getInstance().getTimeZone();
@@ -268,7 +268,7 @@ public class AvroTypeUtil {
           object = ByteBuffer.wrap(new byte[]{});
         }
         if(field.getType() == Field.Type.DATE) {
-          object = new Integer(0);
+          object = 0;
         }
 
         try {

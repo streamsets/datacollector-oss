@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
@@ -480,7 +481,7 @@ public class HBaseTarget extends BaseTarget {
       // only map and list can be converted to json string
       if (field.getType() == Type.MAP || field.getType() == Type.LIST || field.getType() == Type.LIST_MAP) {
         try {
-          value = JsonUtil.jsonRecordToBytes(record, field);
+          value = JsonUtil.jsonRecordToBytes(((ContextExtensions) getContext()), record, field);
         } catch (StageException se) {
           throw new OnRecordErrorException(record, Errors.HBASE_31, field.getType(), StorageType.JSON_STRING.getLabel(), se);
         }

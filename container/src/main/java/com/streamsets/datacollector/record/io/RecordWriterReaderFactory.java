@@ -48,7 +48,7 @@ public class RecordWriterReaderFactory {
         RecordEncoding encoding = RecordEncoding.getEncoding(magicNumber);
         switch (encoding) {
           case JSON1:
-            reader = new JsonRecordReader(is, initialPosition, maxObjectLen);
+            reader = new SdcJsonRecordReader(is, initialPosition, maxObjectLen);
             break;
           case KRYO1:
             reader = new KryoRecordReader(is, initialPosition);
@@ -79,7 +79,7 @@ public class RecordWriterReaderFactory {
     switch (encoding) {
       case JSON1:
         os.write(RecordEncodingConstants.JSON1_MAGIC_NUMBER);
-        writer = new JsonRecordWriter(os);
+        writer = new SdcJsonRecordWriter(os);
         break;
       case KRYO1:
         os.write(RecordEncodingConstants.KRYO1_MAGIC_NUMBER);

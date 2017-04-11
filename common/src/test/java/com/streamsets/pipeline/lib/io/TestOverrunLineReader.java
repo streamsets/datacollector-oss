@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.io;
 
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;

@@ -33,16 +33,16 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
-import com.streamsets.pipeline.lib.operation.OperationType;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
@@ -103,7 +103,7 @@ public class MongoDBTarget extends BaseTarget {
         DataFormat.JSON.getGeneratorFormat()
     );
     builder.setCharset(StandardCharsets.UTF_8);
-    builder.setMode(JsonMode.MULTIPLE_OBJECTS);
+    builder.setMode(Mode.MULTIPLE_OBJECTS);
     generatorFactory = builder.build();
 
     return issues;

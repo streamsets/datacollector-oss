@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.AbstractOverrunDelimitedReader;
 import com.streamsets.pipeline.lib.io.OverrunCustomDelimiterReader;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;
-import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import org.apache.commons.io.IOUtils;

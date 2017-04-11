@@ -24,8 +24,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.lib.parser.json.JsonCharDataParser;
 
 import java.io.IOException;
@@ -54,8 +54,7 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
         throw new OnRecordErrorException(Errors.JSONP_01, record.getHeader().getSourceId(), fieldPathToParse);
       }
       try (OverrunReader reader = new OverrunReader(new StringReader(value), -1, false, removeCtrlChars)) {
-        JsonCharDataParser parser = new JsonCharDataParser(getContext(), "", reader, 0,
-                                                           StreamingJsonParser.Mode.MULTIPLE_OBJECTS, -1);
+        JsonCharDataParser parser = new JsonCharDataParser(getContext(), "", reader, 0, Mode.MULTIPLE_OBJECTS, -1);
         Field parsed = parser.parseAsField();
         if (parsed != null) {
           record.set(parsedFieldPath, parsed);

@@ -25,6 +25,7 @@ import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConfigDefinition;
@@ -39,6 +40,7 @@ import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
+import com.streamsets.datacollector.record.io.JsonWriterReaderFactory;
 import com.streamsets.datacollector.record.io.RecordWriterReaderFactory;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.util.Configuration;
@@ -62,9 +64,12 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
+import com.streamsets.pipeline.api.ext.JsonObjectReader;
+import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.api.ext.Sampler;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.sampling.RecordSampler;
@@ -74,6 +79,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -313,6 +320,30 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   public RecordWriter createRecordWriter(OutputStream outputStream) throws IOException {
     return RecordWriterReaderFactory.createRecordWriter(this, outputStream);
   }
+
+  /* JSON Methods */
+  @Override
+  public JsonObjectReader createJsonObjectReader(
+      Reader reader, long initialPosition, Mode mode, Class<?> objectClass
+  ) throws IOException {
+    return JsonWriterReaderFactory.createObjectReader(reader, initialPosition, mode, objectClass);
+  }
+
+  @Override
+  public JsonObjectReader createJsonObjectReader(
+      Reader reader, long initialPosition, int maxObjectLen, Mode mode, Class<?> objectClass
+  ) throws IOException {
+    return JsonWriterReaderFactory.createObjectReader(reader, initialPosition, mode, objectClass, maxObjectLen);
+  }
+
+  @Override
+  public JsonRecordWriter createJsonRecordWriter(
+      Writer writer, Mode mode
+  ) throws IOException {
+    return JsonWriterReaderFactory.createRecordWriter(writer, mode);
+  }
+
+  /* End JSON Methods */
 
   @Override
   public void notify(List<String> addresses, String subject, String body) throws StageException {

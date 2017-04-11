@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.io;
 
+import com.streamsets.pipeline.api.ext.io.OverrunException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
 

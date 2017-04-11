@@ -241,14 +241,6 @@
       <artifactId>hive-hcatalog-streaming</artifactId>
       <version>${hive.version}</version>
       <scope>compile</scope>
-      <exclusions>
-        <!-- Excluded because calcite is having non-relocated copy of jackson that
-             is affecting our own code -->
-        <exclusion>
-          <groupId>org.apache.calcite</groupId>
-          <artifactId>calcite-avatica</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>

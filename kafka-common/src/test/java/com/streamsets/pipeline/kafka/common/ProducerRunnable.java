@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.kafka.common;
 
-import com.streamsets.pipeline.lib.json.StreamingJsonParser;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import org.slf4j.Logger;
@@ -37,13 +37,13 @@ public class ProducerRunnable implements Runnable {
   private final DataType dataType;
   private final int partitions;
   private int lastPartition;
-  private final StreamingJsonParser.Mode jsonMode;
+  private final Mode jsonMode;
   private int noOfRecords;
   private final CountDownLatch doneSignal;
 
   public ProducerRunnable(String topic, int partitions,
                           Producer<String, String> producer, CountDownLatch startLatch, DataType dataType,
-                          StreamingJsonParser.Mode jsonMode, int noOfRecords, CountDownLatch doneSignal) {
+                          Mode jsonMode, int noOfRecords, CountDownLatch doneSignal) {
     this.topic = topic;
     this.partitions = partitions;
     this.producer = producer;

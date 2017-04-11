@@ -23,8 +23,8 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.json.OverrunStreamingJsonParser;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
@@ -37,14 +37,14 @@ import java.util.Collections;
 public class TestJsonCharDataParser {
 
   private Stage.Context getContext() {
-    return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
+    return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.emptyList());
   }
 
   @Test
   public void testParseMultipleObjects() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("[\"Hello\"]\n[\"Bye\"]"), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 0,
-                                           OverrunStreamingJsonParser.Mode.MULTIPLE_OBJECTS, 100);
+                                           Mode.MULTIPLE_OBJECTS, 100);
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -66,7 +66,7 @@ public class TestJsonCharDataParser {
   public void testParseMultipleObjectsWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("[\"Hello\"]\n[\"Bye\"]"), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 10,
-                                           OverrunStreamingJsonParser.Mode.MULTIPLE_OBJECTS, 100);
+                                           Mode.MULTIPLE_OBJECTS, 100);
     Assert.assertEquals(10, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -84,7 +84,7 @@ public class TestJsonCharDataParser {
   @Test
   public void testParseMultipleStringObjects() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("\"Hello\"\"Bye\""), 1000, true);
-    DataParser parser = new JsonDataParser(getContext(), "id", reader, 0, OverrunStreamingJsonParser.Mode.MULTIPLE_OBJECTS, 100);
+    DataParser parser = new JsonDataParser(getContext(), "id", reader, 0, Mode.MULTIPLE_OBJECTS, 100);
     Assert.assertEquals(0, Long.parseLong(parser.getOffset())); // "HELLO""
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -108,7 +108,7 @@ public class TestJsonCharDataParser {
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("\"Hello\"\"Bye\""), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 0,
-                                           OverrunStreamingJsonParser.Mode.MULTIPLE_OBJECTS, 10);
+                                           Mode.MULTIPLE_OBJECTS, 10);
     parser.close();
     parser.parse();
   }
@@ -118,7 +118,7 @@ public class TestJsonCharDataParser {
     //TODO: investigate SDC-265, if the elements of the array are Strings the same issue shows up
     OverrunReader reader = new OverrunReader(new StringReader("[[\"Hello\"],[\"Bye\"]]"), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 0,
-                                           OverrunStreamingJsonParser.Mode.ARRAY_OBJECTS, 10);
+                                           Mode.ARRAY_OBJECTS, 10);
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -140,7 +140,7 @@ public class TestJsonCharDataParser {
   public void testParseArrayWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("[[\"Hello\"],[\"Bye\"]]"), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 9,
-                                           OverrunStreamingJsonParser.Mode.ARRAY_OBJECTS, 10);
+                                           Mode.ARRAY_OBJECTS, 10);
     Assert.assertEquals(9, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -157,7 +157,7 @@ public class TestJsonCharDataParser {
   public void testParseCtrlCharFilter() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("[[\"He\0llo\"],[\"Bye\"]]"), 1000, true, true);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 9,
-                                               OverrunStreamingJsonParser.Mode.ARRAY_OBJECTS, 10);
+                                               Mode.ARRAY_OBJECTS, 10);
     Assert.assertEquals("9", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -174,7 +174,7 @@ public class TestJsonCharDataParser {
   public void testParseCtrlCharFilterFail() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("[[\"He\0llo\"],[\"Bye\"]]"), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 9,
-                                               OverrunStreamingJsonParser.Mode.ARRAY_OBJECTS, 10);
+                                               Mode.ARRAY_OBJECTS, 10);
     try {
       parser.parse();
     } finally {
@@ -186,7 +186,7 @@ public class TestJsonCharDataParser {
   public void testParseCtrlCharFilterMultipleCtrls() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("{\"a\" :\0 \"foo\2ba\3r\4\"}"), 1000, true, true);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 0,
-                                               OverrunStreamingJsonParser.Mode.MULTIPLE_OBJECTS, 1000);
+                                               Mode.MULTIPLE_OBJECTS, 1000);
     Record record = parser.parse();
     Assert.assertNotNull(record);
     Assert.assertEquals("id::0", record.getHeader().getSourceId());
@@ -209,7 +209,7 @@ public class TestJsonCharDataParser {
         "id",
         reader,
         0,
-        OverrunStreamingJsonParser.Mode.MULTIPLE_OBJECTS, 1000
+        Mode.MULTIPLE_OBJECTS, 1000
     );
     Record record = parser.parse();
     Assert.assertNotNull(record);

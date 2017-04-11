@@ -19,9 +19,10 @@
  */
 package com.streamsets.pipeline.lib.parser;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
 import org.apache.commons.compress.archivers.ArchiveEntry;
@@ -306,7 +307,7 @@ public class CompressionDataParser extends AbstractDataParser {
       public static final String FILE_NAME_INSIDE_ARCHIVE = "fileNameInsideArchive";
       public static final String FILE_OFFSET_INSIDER_ARCHIVE = "fileOffsetInsideArchive";
 
-      private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+      private static final JsonMapper objectMapper = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
 
       private final PathMatcher pathMatcher;
       private ArchiveEntry currentEntry;
@@ -337,7 +338,7 @@ public class CompressionDataParser extends AbstractDataParser {
         Map<String, Object> archiveOffset = new HashMap<>();
         archiveOffset.put(FILE_NAME, fileName);
         archiveOffset.put(FILE_OFFSET, offset);
-        return OBJECT_MAPPER.writeValueAsString(archiveOffset);
+        return objectMapper.writeValueAsString(archiveOffset);
       }
 
       @SuppressWarnings("unchecked")
@@ -346,7 +347,7 @@ public class CompressionDataParser extends AbstractDataParser {
         if(archiveInputStream == null) {
           // Very first call to getNextInputStream, initialize archiveInputStream using the wrappedOffset
           wrappedOffset = wrappedOffset.equals(ZERO) ? wrapOffset(wrappedOffset) : wrappedOffset;
-          Map<String, Object> archiveInputOffset = OBJECT_MAPPER.readValue(wrappedOffset, Map.class);
+          Map<String, Object> archiveInputOffset = objectMapper.readValue(wrappedOffset, Map.class);
           try {
             archiveInputStream = new ArchiveStreamFactory().createArchiveInputStream(
                 new BufferedInputStream(compressionInput.getNextInputStream()));
@@ -376,7 +377,7 @@ public class CompressionDataParser extends AbstractDataParser {
         if(ZERO.equals(offset)) {
           return ZERO;
         }
-        Map<String, Object> map = OBJECT_MAPPER.readValue(offset, Map.class);
+        Map<String, Object> map = objectMapper.readValue(offset, Map.class);
         return (String)map.get(FILE_OFFSET);
       }
 
@@ -392,7 +393,7 @@ public class CompressionDataParser extends AbstractDataParser {
       public void wrapRecordHeaders(Record.Header header, String offset) {
         if (currentEntry != null) {
           String fullPathToFile = currentEntry.getName();
-          int lastPathIndex = fullPathToFile.lastIndexOf("/");
+          int lastPathIndex = fullPathToFile.lastIndexOf('/');
           String fileName = fullPathToFile.substring(lastPathIndex + 1);
           String filePath = (lastPathIndex != -1)? fullPathToFile.substring(0, lastPathIndex) : "";
           header.setAttribute(FILE_PATH_INSIDE_ARCHIVE, filePath);

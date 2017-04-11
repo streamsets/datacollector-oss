@@ -20,9 +20,10 @@
 package com.streamsets.pipeline.lib.parser;
 
 import com.streamsets.pipeline.api.FileRef;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.data.DataFactory;
-import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
@@ -85,18 +86,27 @@ public abstract class DataParserFactory extends DataFactory {
 
   protected OverrunReader createReader(InputStream is) {
     Reader bufferedReader = new BufferedReader(new InputStreamReader(is, getSettings().getCharset()));
-    OverrunReader overrunReader = new OverrunReader(bufferedReader, getSettings().getOverRunLimit(), false,
-                                                    getSettings().getRemoveCtrlChars());
-    return overrunReader;
+    return new OverrunReader(bufferedReader,
+        getSettings().getOverRunLimit(),
+        false,
+        getSettings().getRemoveCtrlChars()
+    );
   }
 
   protected OverrunReader createReader(Reader reader) {
-    if (!(reader instanceof BufferedReader)) {
-      reader = new BufferedReader(reader);
+    return new OverrunReader(
+        bufferReader(reader),
+        getSettings().getOverRunLimit(),
+        false,
+        getSettings().getRemoveCtrlChars()
+    );
+  }
+
+  private Reader bufferReader(Reader reader) {
+    if (reader instanceof BufferedReader) {
+      return reader;
     }
-    OverrunReader overrunReader = new OverrunReader(reader, getSettings().getOverRunLimit(), false,
-                                                    getSettings().getRemoveCtrlChars());
-    return overrunReader;
+    return new BufferedReader(reader);
   }
 
   protected GenericObjectPool<StringBuilder> getStringBuilderPool(Settings settings) {

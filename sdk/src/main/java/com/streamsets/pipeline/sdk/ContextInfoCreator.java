@@ -125,18 +125,18 @@ public class ContextInfoCreator {
         instanceName,
         isPreview,
         onRecordError,
-        Collections.EMPTY_LIST,
+        Collections.emptyList(),
         resourcesDir,
         StageType.TARGET
     );
   }
 
   public static Target.Context createTargetContext(String instanceName, boolean isPreview, OnRecordError onRecordError) {
-    return createContext(null, instanceName, isPreview, onRecordError, Collections.EMPTY_LIST, null, StageType.TARGET);
+    return createContext(null, instanceName, isPreview, onRecordError, Collections.emptyList(), null, StageType.TARGET);
   }
 
   public static Processor.Context createProcessorContext(String instanceName, boolean isPreview, OnRecordError onRecordError) {
-    return createContext(null, instanceName, isPreview, onRecordError, Collections.EMPTY_LIST, null, StageType.TARGET);
+    return createContext(null, instanceName, isPreview, onRecordError, Collections.emptyList(), null, StageType.TARGET);
   }
 
   public static void setLastBatch(Stage.Context context, long lastBatch) {

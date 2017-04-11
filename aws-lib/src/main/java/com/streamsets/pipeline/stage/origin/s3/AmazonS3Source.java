@@ -33,8 +33,8 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
-import com.streamsets.pipeline.lib.io.ObjectLengthException;
-import com.streamsets.pipeline.lib.io.OverrunException;
+import com.streamsets.pipeline.api.ext.io.ObjectLengthException;
+import com.streamsets.pipeline.api.ext.io.OverrunException;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -53,7 +53,7 @@ import java.util.Map;
 public class AmazonS3Source extends AbstractAmazonS3Source {
 
   private final static Logger LOG = LoggerFactory.getLogger(AmazonS3Source.class);
-  private static final long DEFAULT_FETCH_SIZE = 1 * 1024 * 1024;
+  private static final long DEFAULT_FETCH_SIZE = 1024 * 1024L;
   private static final String BUCKET = "bucket";
   private static final String OBJECT_KEY = "objectKey";
   private static final String OWNER = "owner";
