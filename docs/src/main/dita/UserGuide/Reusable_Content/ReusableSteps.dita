@@ -2324,9 +2324,12 @@
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h4p_p5v_yq"/></xref></entry>
-                                    <entry>Fields that must include data to be passed into the
-                                        stage. <note outputclass="" type="tip">You might include
-                                            fields that the stage uses.</note></entry>
+                                    <entry>Fields that must include data for the record to be passed
+                                        into the stage. <note outputclass="" type="tip">You might
+                                            include fields that the stage uses.</note><p>Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Preconditions <xref
@@ -2336,7 +2339,9 @@
                                     <entry>Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
-                                        preconditions. </entry>
+                                        preconditions. <p>Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p></entry>
                                 </row>
                                 <row>
                                     <entry>On Record Error <xref
@@ -2395,9 +2400,12 @@
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h2p_p1v_yq"/></xref></entry>
-                                    <entry>Fields that must include data to be passed into the
-                                        stage. <note outputclass="" type="tip">You might include
-                                            fields that the stage uses.</note></entry>
+                                    <entry>Fields that must include data for the record to be passed
+                                        into the stage. <note outputclass="" type="tip">You might
+                                            include fields that the stage uses.</note><p>Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Preconditions <xref
@@ -2407,7 +2415,9 @@
                                     <entry>Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
-                                        preconditions. </entry>
+                                        preconditions. <p>Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p></entry>
                                 </row>
                                 <row>
                                     <entry>On Record Error <xref
@@ -2471,9 +2481,12 @@
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_fnz_31h_cy"/></xref></entry>
-                                    <entry>Fields that must include data to be passed into the
-                                        stage. <note outputclass="" type="tip">You might include
-                                            fields that the stage uses.</note></entry>
+                                    <entry>Fields that must include data for the record to be passed
+                                        into the stage. <note outputclass="" type="tip">You might
+                                            include fields that the stage uses.</note><p>Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p></entry>
                                 </row>
                                 <row id="P-row-1stS-PreCond">
                                     <entry>Preconditions <xref
@@ -2483,7 +2496,9 @@
                                     <entry>Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
-                                        preconditions. </entry>
+                                        preconditions. <p>Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p></entry>
                                 </row>
                                 <row id="P-row-1stS-Error">
                                     <entry>On Record Error <xref
@@ -2538,9 +2553,12 @@
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_nkk_pfh_hr"/></xref></entry>
-                                    <entry>Fields that must include data to be passed into the
-                                        stage. <note outputclass="" type="tip">You might include
-                                            fields that the stage uses.</note></entry>
+                                    <entry>Fields that must include data for the record to be passed
+                                        into the stage. <note outputclass="" type="tip">You might
+                                            include fields that the stage uses.</note><p>Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Preconditions <xref
@@ -2550,7 +2568,9 @@
                                     <entry>Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
-                                        preconditions. </entry>
+                                        preconditions. <p>Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2597,9 +2617,12 @@
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_lww_4kg_j5"/></xref></entry>
-                                    <entry>Fields that must include data to be passed into the
-                                        stage. <note outputclass="" type="tip">You might include
-                                            fields that the stage uses.</note></entry>
+                                    <entry>Fields that must include data for the record to be passed
+                                        into the stage. <note outputclass="" type="tip">You might
+                                            include fields that the stage uses.</note><p>Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Preconditions <xref
@@ -2609,7 +2632,9 @@
                                     <entry>Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
-                                        preconditions. </entry>
+                                        preconditions. <p>Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p></entry>
                                 </row>
                                 <row>
                                     <entry>On Record Error <xref
@@ -2670,9 +2695,12 @@
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_hwy_43h_hr"/></xref></entry>
-                                    <entry>Fields that must include data to be passed into the
-                                        stage. <note outputclass="" type="tip">You might include
-                                            fields that the stage uses.</note></entry>
+                                    <entry>Fields that must include data for the record to be passed
+                                        into the stage. <note outputclass="" type="tip">You might
+                                            include fields that the stage uses.</note><p>Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Preconditions <xref
@@ -2682,7 +2710,9 @@
                                     <entry>Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
-                                        preconditions. </entry>
+                                        preconditions. <p>Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p></entry>
                                 </row>
                                 <row id="row-RecordError">
                                     <entry>On Record Error <xref
@@ -2752,9 +2782,12 @@
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_xsl_2rx_mx"/></xref></entry>
-                                    <entry>Fields that must include data to be passed into the
-                                        stage. <note outputclass="" type="tip">You might include
-                                            fields that the stage uses.</note></entry>
+                                    <entry>Fields that must include data for the record to be passed
+                                        into the stage. <note outputclass="" type="tip">You might
+                                            include fields that the stage uses.</note><p>Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Preconditions <xref
@@ -2764,7 +2797,9 @@
                                     <entry>Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
-                                        preconditions. </entry>
+                                        preconditions. <p>Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p></entry>
                                 </row>
                                 <row>
                                     <entry>On Record Error <xref

@@ -15,15 +15,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dnj_bkm_vq">
  <title>Required Fields</title>
- <shortdesc>A required field is a field that must exist in a record to allow it into the stage for
-        processing. When a record does not include a required field, the record is diverted to the
-        pipeline for error handling. You can define required fields for any processor and most
-        destination stages. </shortdesc>
  <conbody>
   <p><indexterm>pipeline design<indexterm>required fields</indexterm></indexterm><indexterm>required
-     fields<indexterm>overview</indexterm></indexterm>Configure required fields as part of the
-   overall pipeline logic or to minimize processing errors. For example, if a Field Hasher encodes
-   social security data in the /SSN field. To ensure all records include social security numbers,
-   you can make /SSN a required field for the stage.</p>
+          fields<indexterm>overview</indexterm></indexterm>A required field is a field that must
+      exist in a record to allow it into the stage for processing. When a record does not include
+      all required fields, it is processed based on the error handling configured for the pipeline.
+      You can define required fields for any processor, executor, and most destination stages. </p>
+    <p>Configure required fields as part of the overall pipeline logic or to minimize processing
+      errors. For example, if a Field Hasher encodes social security data in the /SSN field. To
+      ensure all records include social security numbers, you can make /SSN a required field for the
+      stage.</p>
  </conbody>
 </concept>
