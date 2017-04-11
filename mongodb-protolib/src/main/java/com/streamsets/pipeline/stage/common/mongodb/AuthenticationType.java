@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Label;
 public enum AuthenticationType implements Label {
   NONE("None"),
   USER_PASS("Username/Password"),
+  LDAP("LDAP"),
   ;
 
   private final String label;

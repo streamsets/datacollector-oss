@@ -428,6 +428,11 @@ public class MongoDBConfig {
 
     MongoClient mongoClient = null;
     List<MongoCredential> credentials = createCredentials();
+
+    if (credentials.size() < 1) {
+      credentials.add(mongoURI.getCredentials());
+    }
+
     try {
       if(isSingleMode) {
         mongoClient = new MongoClient(servers.get(0), credentials, mongoURI.getOptions());
@@ -503,6 +508,8 @@ public class MongoDBConfig {
       case USER_PASS:
         credential = MongoCredential.createCredential(username, database, password.toCharArray());
         break;
+      case LDAP:
+        credential = MongoCredential.createCredential(username, "$external", password.toCharArray());
       case NONE:
       default:
         break;
