@@ -31,7 +31,7 @@ public class ResetOriginCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -47,7 +47,7 @@ public class ResetOriginCommand extends BaseCommand {
     }
     try {
       ManagerApi managerApi = new ManagerApi(getApiClient());
-      managerApi.resetOffset(pipelineName, pipelineRev);
+      managerApi.resetOffset(pipelineId, pipelineRev);
       System.out.println("Reset Origin is successful.");
     } catch (Exception ex) {
       if(printStackTrace) {

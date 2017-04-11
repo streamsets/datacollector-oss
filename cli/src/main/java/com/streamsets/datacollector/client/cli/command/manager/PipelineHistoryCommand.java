@@ -33,7 +33,7 @@ public class PipelineHistoryCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -52,7 +52,7 @@ public class PipelineHistoryCommand extends BaseCommand {
       ManagerApi managerApi = new ManagerApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-      System.out.println(mapper.writeValueAsString(managerApi.getHistory(pipelineName, pipelineRev, true)));
+      System.out.println(mapper.writeValueAsString(managerApi.getHistory(pipelineId, pipelineRev, true)));
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();

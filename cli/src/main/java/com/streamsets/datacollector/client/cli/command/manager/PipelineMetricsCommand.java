@@ -33,7 +33,7 @@ public class PipelineMetricsCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -52,7 +52,7 @@ public class PipelineMetricsCommand extends BaseCommand {
       ManagerApi managerApi = new ManagerApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-      System.out.println(mapper.writeValueAsString(managerApi.getMetrics(pipelineName, pipelineRev)));
+      System.out.println(mapper.writeValueAsString(managerApi.getMetrics(pipelineId, pipelineRev)));
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();

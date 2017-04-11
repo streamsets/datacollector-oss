@@ -33,7 +33,7 @@ public class PreviewDataCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-p", "--previewerId"},
@@ -48,7 +48,7 @@ public class PreviewDataCommand extends BaseCommand {
       PreviewApi previewApi = new PreviewApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-      System.out.println(mapper.writeValueAsString(previewApi.getPreviewData(pipelineName, previewerId)));
+      System.out.println(mapper.writeValueAsString(previewApi.getPreviewData(pipelineId, previewerId)));
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();

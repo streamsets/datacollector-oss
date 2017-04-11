@@ -31,7 +31,7 @@ public class SnapshotDeleteCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -55,7 +55,7 @@ public class SnapshotDeleteCommand extends BaseCommand {
 
     try {
       ManagerApi managerApi = new ManagerApi(getApiClient());
-      managerApi.deleteSnapshot(pipelineName, snapshotName, pipelineRev);
+      managerApi.deleteSnapshot(pipelineId, snapshotName, pipelineRev);
       System.out.println("Deleted Snapshot successfully");
     } catch (Exception ex) {
       if(printStackTrace) {

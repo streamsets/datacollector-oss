@@ -39,7 +39,7 @@ public class UpdatePipelineConfigCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -82,7 +82,7 @@ public class UpdatePipelineConfigCommand extends BaseCommand {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        System.out.println(mapper.writeValueAsString(storeApi.savePipeline(pipelineName, pipelineConfigurationJson,
+        System.out.println(mapper.writeValueAsString(storeApi.savePipeline(pipelineId, pipelineConfigurationJson,
           pipelineRev, pipelineDescription)));
       }
 

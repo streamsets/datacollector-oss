@@ -31,7 +31,7 @@ public class DeletePipelineHistoryCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -47,7 +47,7 @@ public class DeletePipelineHistoryCommand extends BaseCommand {
     }
     try {
       ManagerApi managerApi = new ManagerApi(getApiClient());
-      managerApi.deleteHistory(pipelineName, pipelineRev);
+      managerApi.deleteHistory(pipelineId, pipelineRev);
       System.out.println("Pipeline history deleted successfully");
     } catch (Exception ex) {
       if(printStackTrace) {

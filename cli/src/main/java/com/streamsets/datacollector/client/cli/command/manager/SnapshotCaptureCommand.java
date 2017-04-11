@@ -31,7 +31,7 @@ public class SnapshotCaptureCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -88,7 +88,7 @@ public class SnapshotCaptureCommand extends BaseCommand {
 
     try {
       ManagerApi managerApi = new ManagerApi(getApiClient());
-      managerApi.captureSnapshot(pipelineName, snapshotName, snapshotLabel, pipelineRev, batches, batchSize);
+      managerApi.captureSnapshot(pipelineId, snapshotName, snapshotLabel, pipelineRev, batches, batchSize);
       System.out.println("Capture Snapshot command executed successfully");
     } catch (Exception ex) {
       if(printStackTrace) {

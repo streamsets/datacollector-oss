@@ -33,7 +33,7 @@ public class StopPipelineCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -59,9 +59,9 @@ public class StopPipelineCommand extends BaseCommand {
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       if (!forceStop) {
-        System.out.println(mapper.writeValueAsString(managerApi.stopPipeline(pipelineName, pipelineRev)));
+        System.out.println(mapper.writeValueAsString(managerApi.stopPipeline(pipelineId, pipelineRev)));
       } else {
-        System.out.println(mapper.writeValueAsString(managerApi.forceStopPipeline(pipelineName, pipelineRev)));
+        System.out.println(mapper.writeValueAsString(managerApi.forceStopPipeline(pipelineId, pipelineRev)));
       }
     } catch (Exception ex) {
       if(printStackTrace) {

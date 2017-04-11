@@ -33,7 +33,7 @@ public class ErrorRecordsCommand extends BaseCommand {
     description = "Pipeline ID",
     required = true
   )
-  public String pipelineName;
+  public String pipelineId;
 
   @Option(
     name = {"-r", "--revision"},
@@ -70,7 +70,7 @@ public class ErrorRecordsCommand extends BaseCommand {
       ManagerApi managerApi = new ManagerApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-      System.out.println(mapper.writeValueAsString(managerApi.getErrorRecords(pipelineName, pipelineRev,
+      System.out.println(mapper.writeValueAsString(managerApi.getErrorRecords(pipelineId, pipelineRev,
         stageInstanceName, size)));
     } catch (Exception ex) {
       if(printStackTrace) {
