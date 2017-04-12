@@ -54,7 +54,7 @@ public class JerseyClientConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      label = "Http Compression",
+      label = "HTTP Compression",
       defaultValue = "NONE",
       displayPosition = 110,
       group = "#0"
