@@ -75,8 +75,11 @@ public class TestPreviewApi {
     String pipelineName = "testValidationConfig";
 
     //Create Pipeline
-    PipelineConfigurationJson pipelineConfig = storeApi.createPipeline(pipelineName,
-      "Testing getPipeline test case");
+    PipelineConfigurationJson pipelineConfig = storeApi.createPipeline(
+        pipelineName,
+      "Testing getPipeline test case",
+        false
+    );
     Assert.assertNotNull(pipelineConfig);
 
     PreviewInfoJson previewInfoJson = previewApi.validateConfigs(pipelineName, "0", 5000l);
@@ -106,8 +109,11 @@ public class TestPreviewApi {
     String pipelineName = "testRunningPreview";
 
     //Create Pipeline
-    PipelineConfigurationJson pipelineConfig = storeApi.createPipeline(pipelineName,
-      "Testing getPipeline test case");
+    PipelineConfigurationJson pipelineConfig = storeApi.createPipeline(
+        pipelineName,
+      "Testing getPipeline test case",
+        false
+    );
     Assert.assertNotNull(pipelineConfig);
 
     PreviewInfoJson previewInfoJson = previewApi.previewWithOverride(pipelineName,

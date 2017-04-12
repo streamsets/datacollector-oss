@@ -582,7 +582,7 @@ angular.module('dataCollectorApp.common')
        * @param description
        */
       createNewPipelineConfig: function(name, description) {
-        var url = apiBase + '/pipeline/' + encodeURIComponent(name) + '?autoGenerateName=true&description=' + description;
+        var url = apiBase + '/pipeline/' + encodeURIComponent(name) + '?autoGeneratePipelineId=true&description=' + description;
 
         return $http({
           method: 'PUT',
@@ -712,7 +712,7 @@ angular.module('dataCollectorApp.common')
        * @param overwrite
        */
       importPipelineConfig: function(pipelineName, pipelineEnvelope, overwrite) {
-        var url = apiBase + '/pipeline/' + pipelineName + '/import?autoGenerateName=true';
+        var url = apiBase + '/pipeline/' + pipelineName + '/import?autoGeneratePipelineId=true';
         if (overwrite) {
           url += '&overwrite=' + overwrite;
         }

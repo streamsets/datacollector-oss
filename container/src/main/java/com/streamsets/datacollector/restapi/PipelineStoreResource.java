@@ -575,10 +575,10 @@ public class PipelineStoreResource {
   public Response createPipeline(
       @PathParam("pipelineTitle") String pipelineTitle,
       @QueryParam("description") @DefaultValue("") String description,
-      @QueryParam("autoGenerateName") @DefaultValue("false") boolean autoGenerateName
+      @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId
   ) throws URISyntaxException, PipelineException {
     String pipelineId = pipelineTitle;
-    if (autoGenerateName) {
+    if (autoGeneratePipelineId) {
       pipelineId = pipelineTitle.replaceAll("[\\W]|_", "") + UUID.randomUUID().toString();
     }
     RestAPIUtils.injectPipelineInMDC(pipelineTitle + "/" + pipelineId);

@@ -34,10 +34,10 @@ import java.io.File;
 public class ImportPipelineCommand extends BaseCommand {
   @Option(
     name = {"-n", "--name"},
-    description = "Pipeline ID",
+    description = "Pipeline Title",
     required = true
   )
-  public String pipelineId;
+  public String pipelineTitle;
 
   @Option(
     name = {"-d", "--description"},
@@ -60,6 +60,14 @@ public class ImportPipelineCommand extends BaseCommand {
   )
   public boolean overwrite;
 
+
+  @Option(
+      name = {"--autoGeneratePipelineId"},
+      description = "Auto generate pipeline Id",
+      required = false
+  )
+  public boolean autoGeneratePipelineId;
+
   @Override
   public void run() {
     try {
@@ -70,12 +78,13 @@ public class ImportPipelineCommand extends BaseCommand {
         TypeRef returnType = new TypeRef<PipelineEnvelopeJson>() {};
         PipelineEnvelopeJson pipelineEnvelopeJson = json.deserialize(new File(fileName), returnType);
         storeApi.importPipeline(
-            pipelineId,
+            pipelineTitle,
             "0",
             overwrite,
+            autoGeneratePipelineId,
             pipelineEnvelopeJson
         );
-        System.out.println("Successfully imported from file '" + fileName + "' to pipeline - " + pipelineId );
+        System.out.println("Successfully imported from file '" + fileName + "' to pipeline - " + pipelineTitle );
       }
     } catch (Exception ex) {
       if(printStackTrace) {

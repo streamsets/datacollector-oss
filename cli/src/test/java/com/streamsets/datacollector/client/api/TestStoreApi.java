@@ -89,8 +89,11 @@ public class TestStoreApi {
     String pipelineName = "testGetPipeline";
 
     //Create Pipeline
-    PipelineConfigurationJson pipelineConfig = storeApi.createPipeline(pipelineName,
-      "Testing getPipeline test case");
+    PipelineConfigurationJson pipelineConfig = storeApi.createPipeline(
+        pipelineName,
+      "Testing getPipeline test case",
+        false
+    );
     Assert.assertNotNull(pipelineConfig);
 
     //Fetch Pipeline Configuration
