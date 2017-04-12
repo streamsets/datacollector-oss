@@ -108,7 +108,7 @@ public class MapRStreamsSourceConfigBean {
       label = "Rate Limit Per Partition (Kafka messages)",
       description = "Max number of messages to read per batch per partition(Cluster Mode only)",
       displayPosition = 65,
-      group = "KAFKA",
+      group = "MAPR_STREAMS",
       min = 1,
       max = Integer.MAX_VALUE
   )
