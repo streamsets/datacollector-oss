@@ -15,7 +15,7 @@
       <input type="text" class="form-control" required
              ng-disabled="operationInProgress"
              placeholder="{{'home.library.namePlaceholder' | translate}}"
-             ng-model="newConfig.name"
+             ng-model="newConfig.title"
              focus-me="true">
     </div>
 
@@ -38,7 +38,7 @@
   <div class="modal-footer">
     <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!operationInProgress"
             translate="global.form.cancel">Cancel</button>
-    <button type="submit" class="btn btn-primary" ng-disabled="!newConfig.name" ng-if="!operationInProgress"
+    <button type="submit" class="btn btn-primary" ng-disabled="!newConfig.title" ng-if="!operationInProgress"
             translate="global.form.duplicate">Duplicate</button>
     <button type="submit" class="btn btn-primary" ng-if="operationInProgress" disabled
             translate="global.form.duplicating">Duplicating...</button>

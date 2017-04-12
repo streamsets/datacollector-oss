@@ -30,7 +30,7 @@ angular
         errors: []
       },
       newConfig : {
-        name: pipelineInfo.title + 'copy',
+        title: pipelineInfo.title + 'copy',
         description: pipelineInfo.description,
         numberOfCopies: 1
       },
@@ -45,7 +45,7 @@ angular
             var pipelineObject = results[0].data;
             var pipelineRulesObject = results[1].data;
             return api.pipelineAgent.duplicatePipelineConfig(
-              $scope.newConfig.name,
+              $scope.newConfig.title,
               $scope.newConfig.description,
               pipelineObject,
               pipelineRulesObject
@@ -71,7 +71,7 @@ angular
             for (var i = 0; i < $scope.newConfig.numberOfCopies; i++) {
               deferList.push(
                 api.pipelineAgent.duplicatePipelineConfig(
-                  $scope.newConfig.pipelineId + (i + 1),
+                  $scope.newConfig.title + (i + 1),
                   $scope.newConfig.description,
                   pipelineObject,
                   pipelineRulesObject
