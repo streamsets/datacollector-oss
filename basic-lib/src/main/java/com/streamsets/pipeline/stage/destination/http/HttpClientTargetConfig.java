@@ -108,6 +108,17 @@ public class HttpClientTargetConfig {
   public JerseyClientConfigBean client = new JerseyClientConfigBean();
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "One Request per Batch",
+      description = "Generates a single HTTP request with all records in the batch",
+      displayPosition = 141,
+      group = "HTTP"
+  )
+  public boolean singleRequestPerBatch;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.NUMBER,
       label = "Rate Limit (Requests/sec)",
@@ -129,14 +140,5 @@ public class HttpClientTargetConfig {
   )
   public long maxRequestCompletionSecs = 60L;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "One Request per Batch",
-      description = "Generates a single http request with all records in the batch",
-      displayPosition = 350,
-      group = "HTTP"
-  )
-  public boolean singleRequestPerBatch;
+
 }
