@@ -20,8 +20,9 @@
   <p><indexterm>Solr
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Solr</indexterm></indexterm>When
             you configure the Solr destination, you configure connection information for the node or
-            cluster. You also define the indexing mode and map incoming fields to Solr fields. You
-            can configure the destination to index records individually or in batches. </p>
+            cluster. You can configure the destination to index records individually or in batches. </p>
+        <p>You map incoming fields to Solr fields, and configure the action that the destination
+            takes if any of the incoming fields are missing in the record. </p>
         <p>When necessary, you can enable the destination to use Kerberos authentication.</p>
         
  </conbody>
