@@ -30,10 +30,10 @@ import io.airlift.airline.Option;
 public class CreatePipelineCommand extends BaseCommand {
   @Option(
     name = {"-n", "--name"},
-    description = "Pipeline ID",
+    description = "Pipeline Title",
     required = true
   )
-  public String pipelineId;
+  public String pipelineTitle;
 
   @Option(
     name = {"-d", "--description"},
@@ -42,6 +42,12 @@ public class CreatePipelineCommand extends BaseCommand {
   )
   public String pipelineDescription;
 
+  @Option(
+      name = {"--autoGeneratePipelineId"},
+      description = "Auto generate pipeline Id",
+      required = false
+  )
+  public boolean autoGeneratePipelineId;
 
   @Override
   public void run() {
@@ -49,7 +55,11 @@ public class CreatePipelineCommand extends BaseCommand {
       StoreApi storeApi = new StoreApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-      System.out.println(mapper.writeValueAsString(storeApi.createPipeline(pipelineId, pipelineDescription)));
+      System.out.println(mapper.writeValueAsString(storeApi.createPipeline(
+          pipelineTitle,
+          pipelineDescription,
+          autoGeneratePipelineId
+      )));
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();

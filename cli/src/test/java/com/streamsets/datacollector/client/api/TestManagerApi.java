@@ -70,8 +70,11 @@ public class TestManagerApi {
     String pipelineName = "testManagerAPI";
 
     //Create Pipeline
-    PipelineConfigurationJson pipelineConfig = storeApi.createPipeline(pipelineName,
-      "Testing getPipeline test case");
+    PipelineConfigurationJson pipelineConfig = storeApi.createPipeline(
+        pipelineName,
+      "Testing getPipeline test case",
+        false
+    );
     Assert.assertNotNull(pipelineConfig);
 
     //Get Pipeline Status

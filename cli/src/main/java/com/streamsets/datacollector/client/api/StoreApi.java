@@ -119,9 +119,14 @@ public class StoreApi {
    *
    * @param pipelineName
    * @param description
+   * @param autoGeneratePipelineId
    * @return PipelineConfigurationJson
    */
-  public PipelineConfigurationJson createPipeline (String pipelineName, String description) throws ApiException {
+  public PipelineConfigurationJson createPipeline (
+      String pipelineName,
+      String description,
+      boolean autoGeneratePipelineId
+  ) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -140,6 +145,8 @@ public class StoreApi {
     Map<String, Object> formParams = new HashMap<String, Object>();
 
     queryParams.addAll(apiClient.parameterToPairs("", "description", description));
+
+    queryParams.addAll(apiClient.parameterToPairs("", "autoGeneratePipelineId", autoGeneratePipelineId));
 
     final String[] accepts = {
         "application/json"
@@ -467,13 +474,14 @@ public class StoreApi {
    * @param pipelineName
    * @param rev
    * @param overwrite
-   * @param includeLibraryDefinitions
+   * @param autoGeneratePipelineId
    * @return PipelineEnvelopeJson
    */
   public PipelineEnvelopeJson importPipeline (
       String pipelineName,
       String rev,
       Boolean overwrite,
+      Boolean autoGeneratePipelineId,
       PipelineEnvelopeJson pipelineEnvelope
   ) throws ApiException {
     Object postBody = pipelineEnvelope;
@@ -502,6 +510,8 @@ public class StoreApi {
     queryParams.addAll(apiClient.parameterToPairs("", "rev", rev));
 
     queryParams.addAll(apiClient.parameterToPairs("", "overwrite", overwrite));
+
+    queryParams.addAll(apiClient.parameterToPairs("", "autoGeneratePipelineId", autoGeneratePipelineId));
 
     final String[] accepts = {
         "application/json"
