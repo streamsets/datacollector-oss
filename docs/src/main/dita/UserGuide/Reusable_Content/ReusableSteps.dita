@@ -2636,6 +2636,7 @@
                                         preconditions. <p>Records that do not meet all preconditions
                                             are processed based on the error handling configured for
                                             the stage.</p></entry>
+                                       
                                 </row>
                                 <row>
                                     <entry>On Record Error <xref

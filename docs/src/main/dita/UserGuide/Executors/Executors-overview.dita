@@ -17,11 +17,10 @@
  <title>Executors</title>
  <conbody>
   <p><indexterm>executors<indexterm>overview</indexterm></indexterm>An executor stage triggers a
-            task in an external system when it receives an event. Executors do not write or store
-            events. </p>
+            task when it receives an event. Executors do not write or store events. </p>
         <p>Use executors as part of a dataflow trigger in an event stream to perform event-driven,
             pipeline-related tasks, such as moving a fully-written file when a destination closes
-            it.</p>
+            it. </p>
         <p>For more information about the event framework, see <xref
                 href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
         <p>You can use the following executors in a pipeline:<ul id="ul_htl_4dr_mx">
@@ -33,6 +32,9 @@
                     user-defined SQL query upon receiving an event record.</li>
                 <li><xref href="MapReduce.dita#concept_bj2_zlk_fx">MapReduce</xref> - Starts the
                     specified MapReduce job upon receiving an event record. </li>
+                <li><xref href="PipelineFinisher.dita#concept_qzm_l4r_kz">Pipeline Finisher</xref> -
+                    Stops and transitions the pipeline to a Finished state upon receiving an event
+                    record.</li>
                 <li><xref href="Spark.dita#concept_cvy_vxb_1z">Spark</xref> - Starts the specified
                     Spark application upon receiving an event record.</li>
             </ul></p>

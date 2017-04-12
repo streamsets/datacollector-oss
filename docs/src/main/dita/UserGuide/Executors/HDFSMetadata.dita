@@ -33,8 +33,6 @@
         <p>When you configure the HDFS File Metadata executor, you configure an expression that
             represents the location and name of the file to process, and the changes you want to
             perform. </p>
-        <p>You can also configure the executor to generate events for another event stream. For more
-            information about the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-Executor-EventXref"/>
  </conbody>
 </concept>

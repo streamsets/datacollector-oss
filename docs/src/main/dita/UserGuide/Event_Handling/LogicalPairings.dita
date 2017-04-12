@@ -20,7 +20,7 @@
                     executors</indexterm></indexterm><indexterm>event framework<indexterm>logical
                     pairings</indexterm></indexterm>Some origins and destinations can generate
             events, and executors and destinations can consume events. You can use event generating
-            stages and event records in any logical way. </p>
+            stages and event records in any way that works for your needs.</p>
         <p>The following tables outline some logical pairings of event generating stages with
             executors and destinations:<table frame="all" rowsep="1" colsep="1"
                 id="table_pwj_d4p_1y">
@@ -51,9 +51,42 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>JDBC Query Consumer</entry>
+                            <entry>
+                                <ul id="ul_rpk_gx5_lz">
+                                    <li>Route the no-more-data event to the Pipeline Finisher
+                                        executor to stop and transition the pipeline to a Finished
+                                        state after processing queried data.</li>
+                                    <li>Any destination for event storage.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>JDBC Multitable Consumer</entry>
+                            <entry>
+                                <ul id="ul_a1m_jx5_lz">
+                                    <li>Pipeline Finisher executor to stop and transition the
+                                        pipeline to a Finished state after processing queried data
+                                        from all tables.</li>
+                                    <li>Any destination for event storage.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>Oracle CDC Client</entry>
                             <entry>
                                 <ul id="ul_xdj_1x1_vy">
+                                    <li>Any destination for event storage.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Salesforce</entry>
+                            <entry>
+                                <ul>
+                                    <li>Pipeline Finisher executor to stop and transition the
+                                        pipeline to a Finished state after processing queried
+                                        data.</li>
                                     <li>Any destination for event storage.</li>
                                 </ul>
                             </entry>

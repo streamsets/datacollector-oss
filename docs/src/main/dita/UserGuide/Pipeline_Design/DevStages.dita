@@ -36,7 +36,9 @@
           <dd>The origin can generate events to test event handling functionality. To generate event
             records, select the <uicontrol>Produce Events</uicontrol> property. </dd>
           <dd>When generating events, the origin uses the configured fields as the body of the event
-            record and adds event record header attributes. For more information about the event
+            record and adds event record header attributes. You can also specify the event type with
+            the <uicontrol>Event Name</uicontrol> property. For example, to create a no-more-data
+            event, enter "no-more-data" for the event name. For more information about the event
             framework and event record header attributes, see <xref
               href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</dd>
           <dd>The origin can also generate multiple threads for testing for a multithreaded

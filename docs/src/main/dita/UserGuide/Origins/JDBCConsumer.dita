@@ -40,5 +40,7 @@
         <p>When reading changed data from Microsoft SQL Server, the origin <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-CDCoverview"
             /></p>
+        <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventHandling-overview"/>
     </conbody>
 </concept>

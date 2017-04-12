@@ -26,5 +26,6 @@
             and advanced connection properties. </p>
         <p>To use a JDBC version older than 4.0, you can specify the driver class name and define a
             health check query.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
  </conbody>
 </concept>

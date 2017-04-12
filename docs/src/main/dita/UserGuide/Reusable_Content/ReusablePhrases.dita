@@ -883,11 +883,13 @@ web-0011.log</codeblock></dd>
                         used by Directory and File Tail</draft-comment>
             </p>
             <p id="O-EventHandling-overview">The origin can also generate events for an event
-                  stream. For more information about the event framework, see <xref
+                  stream. For more information about dataflow triggers and the event framework, see
+                        <xref
                         href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>. </p>
             <p>
                   <draft-comment author="Loretta">Event Generation topic with multiple ph and p used
-                        by Directory and File Tail. </draft-comment>
+                        by Directory and File Tail. Last xref also used in executor
+                        overviews.</draft-comment>
             </p>
             <p><ph id="O-ph-EventGen1">can generate events that you can use in an event stream. When
                         you enable event generation, the origin generates event records each time
@@ -897,7 +899,17 @@ web-0011.log</codeblock></dd>
                         file processing information for later use. For an example, see <xref
                               href="../Event_Handling/CaseStudy-EventStorage.dita#concept_ocb_nnl_px"
                         />.</ph></p>
-            <p id="O-EventGen-xref">For more information about the event framework, see <xref
+            <p id="O-EventGen-xref">For more information about dataflow triggers and the event
+                  framework, see <xref
+                        href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"
+                  />.</p>
+            <p>
+                  <draft-comment author="Loretta">next one used in executor overviews that generate
+                        events.</draft-comment>
+            </p>
+            <p id="p-Executor-EventXref">You can also configure the executor to generate events for
+                  another event stream. For more information about dataflow triggers and the event
+                  framework, see <xref
                         href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"
                   />.</p>
             <p>
@@ -928,7 +940,30 @@ web-0011.log</codeblock></dd>
                                     />.</p></li>
                   </ul>
             </p>
+            <p>
+                  <draft-comment author="Loretta">Event Generation topic - Used for JDBC Query and
+                        Salesforce, JDBC Multitable uses the mini ph.</draft-comment>
+            </p>
+            <p>The Salesforce origin <ph id="EventGen-PipeFin-Ph1"><ph id="EventGen-PipeFin-mini"
+                              >can generate events that you can use in an event stream. When you
+                              enable event generation, the origin generates an event when it
+                              completes processing  the data returned by the specified</ph> query.
+                  </ph></p>
+            <p>If the origin is configured to repeat the query, it generates an event each time it
+                  completes a query.</p>
+            <p>You can use Salesforce events in the following ways:<ul id="EventGen-UseCase-ul">
+                        <li>
+                              <p>With a destination to store information about completed queries. </p>
+                              <p>For an example, see <xref
+                                          href="../Event_Handling/CaseStudy-EventStorage.dita#concept_ocb_nnl_px"
+                                    />.</p>
+                        </li>
+                  </ul></p>
+            <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
             <p/>
+            <draft-comment author="Loretta">Event Record topics for JDBC Multitable and
+                  Salesforce.</draft-comment>
+            <p id="p-ERec-NoMoreData">The no-more-data event record includes no record fields.</p>
             <draft-comment author="Loretta">Used in Pipeline Concepts &amp; Design > Single &amp;
                   Multithreaded Pipes, and Multithreaded > Overview. And in Multithreaded Processing
                   topics in origin sections.</draft-comment>
