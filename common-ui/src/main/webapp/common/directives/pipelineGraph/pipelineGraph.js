@@ -1671,11 +1671,11 @@ angular.module('pipelineGraphDirectives', [])
       var atLeastOneRuleDefined = false,
         atLeastOneRuleActive = false,
         triggeredAlert = _.filter(triggeredAlerts, function(triggered) {
-          return triggered.ruleDefinition.lane === d.outputLane;
+          return triggered.ruleDefinition.lane === d.outputLane || triggered.ruleDefinition.lane === d.eventLane;
         });
 
       _.each(pipelineRules.dataRuleDefinitions, function(ruleDefn) {
-        if (ruleDefn.lane === d.outputLane) {
+        if (ruleDefn.lane === d.outputLane || ruleDefn.lane === d.eventLane) {
           if (ruleDefn.enabled) {
             atLeastOneRuleActive = true;
           }
@@ -1684,7 +1684,7 @@ angular.module('pipelineGraphDirectives', [])
       });
 
       _.each(pipelineRules.driftRuleDefinitions, function(ruleDefn) {
-        if (ruleDefn.lane === d.outputLane) {
+        if (ruleDefn.lane === d.outputLane || ruleDefn.lane === d.eventLane) {
           if (ruleDefn.enabled) {
             atLeastOneRuleActive = true;
           }
