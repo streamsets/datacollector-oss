@@ -37,7 +37,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = TCPServerSourceUpgrader.class,
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Origins/TCPServer.html#task_w2y_yb1_4z"
 )
 
 @ConfigGroups(Groups.class)
