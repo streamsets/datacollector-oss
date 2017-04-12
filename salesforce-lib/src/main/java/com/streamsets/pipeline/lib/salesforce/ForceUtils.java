@@ -340,7 +340,7 @@ public class ForceUtils {
   }
 
   public static String getSobjectTypeFromQuery(String query) {
-    Matcher m = sObjectFromQueryPattern.matcher(query);
+    Matcher m = sObjectFromQueryPattern.matcher(query.toUpperCase());
     if (m.matches()) {
       return m.group(1).toLowerCase();
     }
@@ -352,7 +352,7 @@ public class ForceUtils {
       String sobjectType,
       Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap
   ) {
-    Matcher m = ForceUtils.WILDCARD_SELECT_PATTERN.matcher(query);
+    Matcher m = ForceUtils.WILDCARD_SELECT_PATTERN.matcher(query.toUpperCase());
     if (m.matches()) {
       // Query is SELECT * FROM... - substitute in list of field names
       StringBuilder fieldsString = new StringBuilder();
