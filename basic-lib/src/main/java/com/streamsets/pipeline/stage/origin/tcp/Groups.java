@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   TCP("TCP"),
+  SYSLOG("Syslog"),
   DATA_FORMAT("Delimited records format"),
   SSL("SSL"),
   ;
