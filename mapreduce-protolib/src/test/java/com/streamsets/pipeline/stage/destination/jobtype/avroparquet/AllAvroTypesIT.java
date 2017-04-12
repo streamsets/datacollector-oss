@@ -79,6 +79,8 @@ public class AllAvroTypesIT extends BaseAvroParquetConvertIT {
 
   private final static Schema UNION = Schema.parse("[\"long\", \"string\"]");
 
+  private final static Schema UNION_WITH_NULL = Schema.parse("[\"null\", \"string\"]");
+
   private final static Schema FIXED = Schema.parse("{\"type\": \"fixed\", \"size\": 2, \"name\": \"bb\"}");
 
   private final static Schema DECIMAL = Schema.parse("{\"type\" : \"bytes\", \"logicalType\": \"decimal\", \"precision\": 2, \"scale\": 1}");
@@ -108,6 +110,7 @@ public class AllAvroTypesIT extends BaseAvroParquetConvertIT {
       {ARRAY.toString(),    new ArrayList<>(ImmutableList.of(new Utf8("a"), new Utf8("b"), new Utf8("c"))), ImmutableList.of("repeated binary array (UTF8);")},
       {MAP.toString(),      ImmutableMap.of(new Utf8("key"), 1L),              ImmutableList.of("repeated group map (MAP_KEY_VALUE)", "required binary key (UTF8);", "required int64 value;")},
       {UNION.toString(),    new Utf8("union"),                                 ImmutableList.of("optional int64 member0;", "optional binary member1 (UTF8);")},
+      {UNION_WITH_NULL.toString(),    null,                                 ImmutableList.of("optional binary value (UTF8);")},
       {FIXED.toString(),    new GenericData.Fixed(FIXED, new byte[]{(byte)0x00, (byte)0xFF}), ImmutableList.of("required fixed_len_byte_array(2) value;")},
 
       // Logical types
@@ -139,11 +142,7 @@ public class AllAvroTypesIT extends BaseAvroParquetConvertIT {
       "]" +
       "}");
 
-    List<Map<String, Object>> data = ImmutableList.of(
-      (Map<String, Object>)new ImmutableMap.Builder<String, Object>()
-        .put("value", value)
-        .build()
-    );
+    List<Map<String, Object>> data = ImmutableList.of(Collections.singletonMap("value", value));
 
     generateAvroFile(avroSchema, inputFile, data);
 
