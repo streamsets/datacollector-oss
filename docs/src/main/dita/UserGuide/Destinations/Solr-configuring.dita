@@ -83,6 +83,17 @@
                                             field mappings.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Missing Fields</entry>
+                                    <entry>Action to take if any of the mapped fields are missing in
+                                        the record:<ul id="ul_xqp_qk5_nz">
+                                            <li>Discard - Discards any missing mapped fields and
+                                                writes the record to Solr without the fields.</li>
+                                            <li>Send to Error - Processes the record based on the
+                                                error handling configured for the stage.</li>
+                                            <li>Stop Pipeline - Stops the pipeline.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
                                     <entry>Kerberos Authentication
                                         <xref
                                             href="Solr-Kerberos.dita">
