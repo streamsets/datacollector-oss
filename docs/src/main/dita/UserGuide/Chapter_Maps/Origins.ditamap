@@ -142,6 +142,9 @@
    </topicref>
    <topicref href="../Origins/MultiTableJDBCConsumer-TableOrder.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-HeaderAtts.dita"/>
+   <topicref href="../Origins/MultiTableJDBCConsumer-EventGen.dita">
+    <topicref href="../Origins/MultitableJDBCConsumer-EventRecord.dita"/>
+   </topicref>
    <topicref href="../Origins/MultiTableJDBCConsumer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/JDBCConsumer.dita" chunk="to-content"> <topicmeta><shortdesc></shortdesc></topicmeta>
@@ -160,6 +163,9 @@
    <topicref href="../Origins/JDBCConsumer-CDCMSSQLOverview.dita">
     <topicref href="../Origins/JDBCConsumer-CRUDRecordHeader.dita"/>
     <topicref href="../Origins/JDBCConsumer-CDCGroupTransactions.dita"/>
+   </topicref>
+   <topicref href="../Origins/JDBCConsumer-EventGen.dita">
+    <topicref href="../Origins/JDBCConsumer-EventRecord.dita"/>
    </topicref>
    <topicref href="../Origins/JDBCConsumer-Configuring.dita"/>
   </topicref>
@@ -299,6 +305,9 @@
     <topicref href="../Origins/Salesforce-HeaderAttributes.dita"/>
     <topicref href="../Origins/Salesforce-CRUDHeaderAttribute.dita"/>
     <topicref href="../Origins/Salesforce-FieldAttributes.dita"/>
+   </topicref>
+   <topicref href="../Origins/Salesforce-EventGen.dita">
+    <topicref href="../Origins/Salesforce-EventRecord.dita"/>
    </topicref>
    <topicref href="../Origins/Salesforce-APIVersion.dita"/>
    <topicref href="../Origins/Salesforce-Configuring.dita"/>

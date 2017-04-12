@@ -61,6 +61,11 @@
             <topicref href="../Executors/MapReduce-User.dita"/>
             <topicref href="../Executors/MapReduce-Configuring.dita"/>
         </topicref>
+        <topicref href="../Executors/PipelineFinisher.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../Executors/PipelineFinisher-Implementation.dita"/>
+            <topicref href="../Executors/PipelineFinisher-Configuring.dita"/>
+        </topicref>
         <topicref href="../Executors/Spark.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Executors/Spark-YARN.dita">

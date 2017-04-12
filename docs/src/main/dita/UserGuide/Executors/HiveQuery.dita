@@ -33,9 +33,7 @@
             Hive, and optionally add additional HDFS configuration properties to use. You specify
             the queries that you want to run and indicate whether to run the remaining queries after
             a query fails.</p>
-        <p>You can also configure the executor to generate events for another event stream. For more
-            information about the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-Executor-EventXref"/>
  </conbody>
     <related-links>
         <link href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>

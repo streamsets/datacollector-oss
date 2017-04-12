@@ -36,5 +36,7 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-CDCoverview"
             /></p>
         <p>You can optionally use an HTTP proxy to connect to Salesforce.</p>
+        <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventHandling-overview"/>
     </conbody>
 </concept>

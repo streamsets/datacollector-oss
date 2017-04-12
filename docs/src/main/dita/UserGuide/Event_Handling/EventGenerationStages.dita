@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zrl_mhn_lx">
- <title>Event Generation Stages</title>
+ <title>Event Generating Stages</title>
  <conbody>
   <p><indexterm>event framework<indexterm>event generating
                 stages</indexterm></indexterm><indexterm>event generating
@@ -52,10 +52,37 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>JDBC Query Consumer origin</entry>
+                            <entry>
+                                <ul id="ul_fsn_ct5_lz">
+                                    <li>Completes processing all data returned by a query. </li>
+                                    <li>Successfully completes a query.</li>
+                                    <li>Fails to complete a query.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>JDBC Multitable Consumer origin</entry>
+                            <entry>
+                                <ul>
+                                    <li>Completes processing the data returned by the queries for
+                                        all tables.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>Oracle CDC Client origin</entry>
                             <entry>
                                 <ul id="ul_brj_zv1_vy">
                                     <li>Reads DDL statements in the redo log. </li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Salesforce origin</entry>
+                            <entry>
+                                <ul id="ul_djn_rfb_mz">
+                                    <li>Completes processing all data returned by a query. </li>
                                 </ul>
                             </entry>
                         </row>

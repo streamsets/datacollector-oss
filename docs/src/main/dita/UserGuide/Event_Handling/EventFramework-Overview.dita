@@ -14,18 +14,21 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_cph_5h4_lx">
-    <title>Event Framework Overview</title>
+    <title>Dataflow Triggers Overview</title>
     <conbody>
-        <p><indexterm>event framework<indexterm>overview</indexterm></indexterm>The <term>event
-                framework</term> enables the use of <term>dataflow triggers</term> -  instructions
-            for the pipeline to kick off asynchronous tasks in external systems in response to
-            events that occur in the pipeline. With the event framework, you can configure dataflow
-            triggers such as running a MapReduce job after the pipeline writes a file to HDFS. </p>
-        <p>You can also use the event framework to store event information, such as when an origin
-            starts or completes reading a file. </p>
-        <p>Event handling begins with enabling event generation for a stage in the pipeline, then
-            configuring the rest of the event stream to do your bidding. You can add an event stream
-            to any pipeline that includes an event-generating stage. </p>
+        <p><indexterm>dataflow triggers<indexterm>overview</indexterm></indexterm><indexterm>event
+                    framework<indexterm>overview</indexterm></indexterm><term>Dataflow
+                triggers</term> are instructions for the pipeline to kick off tasks in response to
+            events that occur in the pipeline. For example, you can use dataflow triggers to start a
+            MapReduce job after the pipeline writes a file to HDFS. Or you might use a dataflow
+            trigger to stop a pipeline after the JDBC Query Consumer origin processes all available
+            data. </p>
+        <p>Configure dataflow triggers with the event framework. You can also use the event
+            framework to store event information, such as when an origin starts or completes reading
+            a file. </p>
+        <p>To use the event framework, first enable event generation for a stage in the pipeline,
+            then configure the rest of the event stream to do your bidding. You can add an event
+            stream to any pipeline that includes an event-generating stage. </p>
         <p>Event streams consist of the following conceptual components:<dl>
                 <dlentry>
                     <dt>event generation</dt>
@@ -42,14 +45,18 @@
                 </dlentry>
                 <dlentry>
                     <dt>task execution</dt>
-                    <dd>To use events to trigger a task, connect the event stream to an
-                            <term>executor</term>. Executor stages perform tasks in external
-                        systems.</dd>
+                    <dd>To trigger a task, connect an event stream to an <term>executor</term>.
+                        Executor stages perform tasks in <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> or external systems.</dd>
                     <dd>Each time an executor receives an event record, it performs the specified
                         task.</dd>
                     <dd>For example, the Hive Query executor runs user-defined Hive or Impala
-                        queries each time it receives an event. Similarly, the MapReduce executor
-                        triggers a MapReduce job when it receives events. </dd>
+                        queries each time it receives an event, and the MapReduce executor triggers
+                        a MapReduce job when it receives events. Within <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />, the Pipeline Finisher executor stops a pipeline upon receiving an event,
+                        transitioning the pipeline to a Finished state. </dd>
                 </dlentry>
                 <dlentry>
                     <dt>event storage</dt>

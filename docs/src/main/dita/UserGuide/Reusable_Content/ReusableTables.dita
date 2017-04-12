@@ -748,9 +748,38 @@
    </table>
   </p>
   <p>
-   <draft-comment author="Loretta">Hadoop FS, Local FS, MapR FS</draft-comment>
+   <draft-comment author="Loretta">Table used by Salesforce Event Record and Multitable JDBC. JDBC
+    Query uses the no-more-data bullet.</draft-comment>
   </p>
-  <p/>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="EventHead-NoMoreData-table">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+     <thead>
+      <row>
+       <entry>Record Header Attribute</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-eventType"/>
+       <entry>Event type. Uses the following type:<ul id="ul_f4w_xrs_kz">
+         <li id="noMoreData-bullet">no-more-data - Generated when the origin completes processing
+          all data returned by a query.</li>
+        </ul></entry>
+      </row>
+      <row conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-eventVersion">
+       <entry/>
+      </row>
+      <row conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-eventTimestamp">
+       <entry/>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
   <p>
    <draft-comment author="Loretta">DESTINATION rows</draft-comment>
   </p>

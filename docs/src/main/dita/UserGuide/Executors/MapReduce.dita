@@ -30,8 +30,6 @@
             details. For the Avro to Parquet job, you specify details such as the output file
             directory and optional compression codec. For other types of jobs, you enter the
             key-value pairs to use. </p>
-        <p>You can also configure the executor to generate events for another event stream. For more
-            information about the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-Executor-EventXref"/>
  </conbody>
 </concept>

@@ -14,10 +14,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_azz_tq4_lx">
- <title>Event Framework Summary</title>
+ <title>Summary</title>
  <conbody>
-        <p><indexterm>event framework<indexterm>summary</indexterm></indexterm>To summarize the key
-            points of the event framework: <ol id="ol_fz4_ygh_tx">
+        <p><indexterm>dataflow triggers<indexterm>summary</indexterm></indexterm><indexterm>event
+                    framework<indexterm>summary</indexterm></indexterm>Here's are the key points
+            about dataflow triggers and the event framework: <ol id="ol_fz4_ygh_tx">
                 <li>You can use the event framework to any pipeline that includes a stage that
                     generates events. </li>
                 <li>The event-generating stage generates events at logical moments related to stage
@@ -29,8 +30,9 @@
                         /></p></li>
                 <li>In the simplest use case, you can route event records to a destination to save
                     event information.</li>
-                <li>You can also use event records to trigger tasks, such as changing permissions
-                    for closed files. </li>
+                <li>You can also use event records as dataflow triggers - to perform tasks like
+                    changing permissions for closed files, starting a MapReduce job, or stopping the
+                    pipeline.</li>
                 <li>To trigger a task, connect the event stream to an executor stage.<p>For a list
                         of logical event generation and executor pairings, see <xref
                             href="LogicalPairings.dita#concept_scs_3hh_tx"/>.</p></li>
