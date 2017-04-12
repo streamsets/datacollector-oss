@@ -21,8 +21,8 @@
 package com.streamsets.pipeline.stage.origin.tcp;
 
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogMessage;
-import com.streamsets.pipeline.lib.parser.net.syslog.TCPFramingMode;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.embedded.EmbeddedChannel;
@@ -33,8 +33,10 @@ import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 public class TestTCPServerSource {
 
@@ -65,7 +67,7 @@ public class TestTCPServerSource {
     config.numThreads = 1;
     config.syslogCharset = charset.name();
     config.tcpMode = TCPMode.SYSLOG;
-    config.tcpFramingMode = TCPFramingMode.NON_TRANSPARENT_FRAMING;
+    config.syslogFramingMode= SyslogFramingMode.NON_TRANSPARENT_FRAMING;
     config.nonTransparentFramingSeparatorCharStr = "\n";
     config.maxMessageSize = 4096;
     return config;
