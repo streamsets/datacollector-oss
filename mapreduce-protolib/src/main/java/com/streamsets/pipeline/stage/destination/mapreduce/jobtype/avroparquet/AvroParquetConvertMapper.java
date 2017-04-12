@@ -181,11 +181,19 @@ public class AvroParquetConvertMapper extends Mapper<String, String, NullWritabl
       .build();
 
     LOG.info("Started reading input file");
-    while (fileReader.hasNext()) {
-      GenericRecord record = fileReader.next();
-      parquetWriter.write(record);
+    long recordCount = 0;
+    try {
+      while (fileReader.hasNext()) {
+        GenericRecord record = fileReader.next();
+        parquetWriter.write(record);
 
-      context.getCounter(Counters.PROCESSED_RECORDS).increment(1);
+        context.getCounter(Counters.PROCESSED_RECORDS).increment(1);
+        recordCount++;
+      }
+    } catch(Exception e) {
+      // Various random stuff can happen while converting, so we wrap the underlying exception with more details
+      String message = "Exception at offset " + fileReader.tell() + " (record " + recordCount + "): " + e.toString();
+      throw new IOException(message, e);
     }
     LOG.info("Done reading input file");
     parquetWriter.close();
