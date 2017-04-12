@@ -52,7 +52,7 @@
                                             /> machine.</p><note>Not used when the processor is
                                             included in a cluster pipeline. The Spark Transformer
                                             uses the number of partitions defined in the Kafka
-                                            Consumer origin.</note></entry>
+                                            Consumer or MapR Streams Consumer origin.</note></entry>
                                 </row>
                                 <row>
                                     <entry>Application Name</entry>
