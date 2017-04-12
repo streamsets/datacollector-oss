@@ -47,6 +47,21 @@
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>Title</entry>
+                                    <entry>Title of the pipeline. <p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> uses the alphanumeric characters entered for the
+                                            pipeline title as a prefix for the generated pipeline
+                                            ID. For example, if you enter “My Pipeline
+                                            *&amp;%&amp;^^ 123” as the pipeline title, then the
+                                            pipeline ID has the following value:
+                                            MyPipeline123tad9f592-5f02-4695-bb10-127b2e41561c.</p><p>You
+                                            can edit the pipeline title. However, because the
+                                            pipeline ID is used to identify the pipeline, any
+                                            changes to the pipeline title are not reflected in the
+                                            pipeline ID.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Description</entry>
                                     <entry>Optional description of the pipeline.</entry>
                                 </row>

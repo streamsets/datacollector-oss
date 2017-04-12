@@ -26,8 +26,9 @@
                         following syntax:<codeblock>store list</codeblock></dd>
                     <dd>Returns the following information for each
                         pipeline:<codeblock> {
-  "name" : "&lt;pipeline name>",
-  "title" : "&lt;pipeline title>"
+  "name" : "&lt;pipeline ID>",
+  "pipelineId" : "&lt;pipeline ID>",
+  "title" : "&lt;pipeline title>",
   "description" : "&lt; >",
   "created" : &lt;created time>,
   "lastModified" : &lt;last modified time>,
@@ -62,7 +63,7 @@
                     <dd>The <codeph>import</codeph> argument uses the following syntax:</dd>
                     <dd>
                         <codeblock>store import \
-(-n &lt;pipelineName> | --name &lt;pipelineName>) \
+(-n &lt;pipelineTitle> | --name &lt;pipelineTitle>) \
 [--stack] \
 [(-f &lt;fileName> | --file &lt;fileName>)]</codeblock>
                     </dd>
@@ -79,12 +80,11 @@
                                 </thead>
                                 <tbody>
                                     <row>
-                                        <entry>-n &lt;pipelineName><p>or </p><p>--name
-                                                &lt;pipelineName></p></entry>
-                                        <entry>Required. Name for the imported pipeline. Also used
-                                            for the title of the pipeline.<p>If the name includes
-                                                spaces, surround the name in quotation
-                                            marks.</p></entry>
+                                        <entry>-n &lt;pipelineTitle><p>or </p><p>--name
+                                                &lt;pipelineTitle></p></entry>
+                                        <entry>Required. Title for the imported pipeline. <p>If the
+                                                title includes spaces, surround the title in
+                                                quotation marks.</p></entry>
                                     </row>
                                     <row>
                                         <entry>--stack</entry>
@@ -105,15 +105,15 @@
                             </tgroup>
                         </table>
                     </dd>
-                    <dd>For example, the following command creates a pipeline with the name "Files
+                    <dd>For example, the following command creates a pipeline with the title "Files
                         to HDFS" based on the files2hdfs.json file when the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is not registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                         />:
                         <codeblock>bin/streamsets cli -U http://localhost:18630 store import -n "Files to HDFS" -f ../../exported_pipelines/files2hdfs.json</codeblock></dd>
-                    <dd>The following command creates a pipeline with the name "Files to HDFS" based
-                        on the files2hdfs.json file when the <ph
+                    <dd>The following command creates a pipeline with the title "Files to HDFS"
+                        based on the files2hdfs.json file when the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"

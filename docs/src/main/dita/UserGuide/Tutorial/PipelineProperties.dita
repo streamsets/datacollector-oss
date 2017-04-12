@@ -39,7 +39,7 @@
                 </info>
             </step>
             <step>
-                <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
+                <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline title and
                     optional description, and click <uicontrol>Save</uicontrol>.</cmd>
                 <info>An empty canvas displays:<p><image href="../Graphics/Tutorial-Canvas.png"
                             id="image_jnr_wtk_5s" scale="50"/></p></info>
@@ -90,13 +90,11 @@
                                 </row>
                                 <row>
                                     <entry>5</entry>
-                                    <entry>
-                                        <p>Properties panel / Preview panel / Monitor panel </p>
+                                    <entry>Properties panel / Preview panel / Monitor panel
                                     </entry>
-                                    <entry>
-                                        <p>When you configure a pipeline, the Properties panel
+                                    <entry>When you configure a pipeline, the Properties panel
                                             displays the properties of the pipeline or selected
-                                            stage. You can resize, minimize and maximize the panel. </p>
+                                            stage. You can resize, minimize and maximize the panel. 
                                         <p>When you preview data, the Preview panel displays the
                                             input and output data for the selected stage or group of
                                             stages. </p>
