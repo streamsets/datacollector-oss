@@ -254,6 +254,11 @@
                                     <entry>Parquet maximum padding size. Use -1 to use the Parquet
                                         default.</entry>
                                 </row>
+                                <row>
+                                    <entry>Overwrite Temporary File</entry>
+                                    <entry>Enables overwriting any existing temporary files that
+                                        remain from a previous run of the job. </entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
