@@ -4358,14 +4358,16 @@
                                 <row id="row-BackOffPeriod">
                                     <entry>Back Off Period</entry>
                                     <entry>Milliseconds to wait before retrying writing a batch to
-                                        the SDC RPC origin.<p id="p-BackOffExample">The value that you enter increases
-                                            exponentially after each retry. For example, if you set
-                                            the back off period to 10, the destination attempts the
-                                            first retry after waiting 10 milliseconds, attempts the
-                                            second retry after waiting 100 milliseconds, and
-                                            attempts the third retry after waiting 1,000
-                                            milliseconds. Set to 0 to retry
-                                            immediately.</p><p id="p-BackOffDefault">Default is 0.</p></entry>
+                                        the SDC RPC origin.<p id="p-BackOffExample">The value that
+                                            you enter increases exponentially after each retry,
+                                            until it reaches the maximum wait time of 5 minutes. For
+                                            example, if you set the back off period to 10, the
+                                            destination attempts the first retry after waiting 10
+                                            milliseconds, attempts the second retry after waiting
+                                            100 milliseconds, and attempts the third retry after
+                                            waiting 1,000 milliseconds. </p><p>Set to 0 to retry
+                                            immediately.</p><p id="p-BackOffDefault">Default is
+                                            0.</p></entry>
                                 </row>
                                 <row id="row-ConTimeout">
                                     <entry>Connection Timeout (ms)</entry>
