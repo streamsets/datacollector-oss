@@ -1933,7 +1933,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   and 02:59 that arrive after the one hour time limit are considered late. The late
                   records are sent to the stage for error handling.</p>
             <draft-comment author="alisontaylor">Timeout to Close Idle Files - used for Hadoop FS,
-                  Local FS, and MapR FS destinations</draft-comment>
+                  Local FS, and MapR FS destinations  – also Azure Data Lake Store
+                  (lc)</draft-comment>
             <p id="IdleTimeoutOverview">You might want to configure an idle timeout when output
                   files remain open and idle for too long, thus delaying another system from
                   processing the files.</p>
@@ -1959,9 +1960,11 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   </ul></p>
             <p id="IdleTimeoutSummary">In either situation, configure an idle timeout so that other
                   systems can process the files sooner, instead of waiting for the configured
-                  maximum records, maximum file size, or late records conditions to occur.
-                        <draft-comment author="alisontaylor">Recovery - used for Hadoop FS, Local
-                        FS, and MapR FS destinations</draft-comment></p>
+                  maximum records, maximum file size, or late records conditions to occur. </p>
+            <p>
+                  <draft-comment author="alisontaylor">Recovery - used for Hadoop FS, Local FS, and
+                        MapR FS destinations</draft-comment>
+            </p>
             <p id="RecoveryIntro">The destination names temporary open output files using the
                   following format:<codeblock>_tmp_&lt;prefix>_&lt;runnerId></codeblock>Where
                         <codeph>&lt;prefix></codeph> is the file prefix defined for the destination
