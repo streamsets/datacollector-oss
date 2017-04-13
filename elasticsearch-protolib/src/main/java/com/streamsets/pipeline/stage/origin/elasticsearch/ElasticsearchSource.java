@@ -107,7 +107,7 @@ public class ElasticsearchSource extends BasePushSource {
 
     delegate = new ElasticsearchStageDelegate(getContext(), conf);
 
-    issues = delegate.init(issues);
+    issues = delegate.init("conf", issues);
 
     return issues;
   }
