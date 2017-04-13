@@ -326,7 +326,7 @@ public abstract class TestPreviewer {
     Assert.assertEquals(ID, previewer.getId());
     Assert.assertEquals(NAME, previewer.getName());
     Assert.assertEquals(REV, previewer.getRev());
-    Assert.assertNull(previewer.getStatus());
+    Assert.assertEquals(PreviewStatus.CREATED, previewer.getStatus());
 
     //start preview
     previewer.start(1, 10, false, null, new ArrayList<StageOutput>(), 5000);
@@ -388,7 +388,7 @@ public abstract class TestPreviewer {
     Assert.assertEquals(ID, previewer.getId());
     Assert.assertEquals(NAME, previewer.getName());
     Assert.assertEquals(REV, previewer.getRev());
-    Assert.assertNull(previewer.getStatus());
+    Assert.assertEquals(PreviewStatus.CREATED, previewer.getStatus());
 
     //start preview
     previewer.start(1, 10, false, null, new ArrayList<StageOutput>(), 5000);

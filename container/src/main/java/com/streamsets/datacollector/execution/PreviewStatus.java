@@ -20,6 +20,8 @@
 package com.streamsets.datacollector.execution;
 
 public enum PreviewStatus {
+  CREATED(false),       // The preview was just created and nothing else has happened yet
+
   VALIDATING(true),     // validating the configuration, during preview
   VALID(false),          // configuration is valid, during preview
   INVALID(false),        // configuration is invalid, during preview
