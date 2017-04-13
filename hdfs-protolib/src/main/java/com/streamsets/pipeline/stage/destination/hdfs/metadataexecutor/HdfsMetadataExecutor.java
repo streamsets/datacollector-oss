@@ -122,14 +122,14 @@ public class HdfsMetadataExecutor extends BaseExecutor {
             LOG.info("Working on file: " + workingFile);
 
             // Create empty file if configured
-            if(actions.createFile) {
+            if(actions.taskType == TaskType.CREATE_EMPTY_FILE) {
               ensureDirectoryExists(fs, workingFile.getParent());
               if(!fs.createNewFile(workingFile)) {
                 throw new IOException("Can't create file (probably already exists): " + workingFile);
               }
             }
 
-            if(!actions.createFile && (actions.shouldMoveFile || actions.shouldRename)) {
+            if(actions.taskType == TaskType.CHANGE_EXISTING_FILE && (actions.shouldMoveFile || actions.shouldRename)) {
               Path newPath = workingFile.getParent();
               String newName = workingFile.getName();
               if(actions.shouldMoveFile) {

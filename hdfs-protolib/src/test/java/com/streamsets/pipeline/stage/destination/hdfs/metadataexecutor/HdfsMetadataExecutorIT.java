@@ -270,7 +270,7 @@ public class HdfsMetadataExecutorIT {
 
     HdfsActionsConfig actions = new HdfsActionsConfig();
     actions.filePath = "${record:value('/new_dir')}/" + INPUT_FILE;
-    actions.createFile = true;
+    actions.taskType = TaskType.CREATE_EMPTY_FILE;
 
     HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
 

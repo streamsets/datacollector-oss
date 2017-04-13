@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.hdfs.metadataexecutor;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 
 import java.util.List;
@@ -33,14 +34,15 @@ public class HdfsActionsConfig {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "Create File",
-    description = "Create empty file in specified location.",
-    displayPosition = 90,
-    group = "TASKS"
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "CHANGE_EXISTING_FILE",
+    label = "Task",
+    description = "Task that should be performed.",
+    group = "TASKS",
+    displayPosition = 90
   )
-  public boolean createFile;
+  @ValueChooserModel(TaskTypeChooserValues.class)
+  public TaskType taskType = TaskType.CHANGE_EXISTING_FILE;
 
   @ConfigDef(
     required = false,
@@ -64,7 +66,7 @@ public class HdfsActionsConfig {
     displayPosition = 110,
     group = "TASKS",
     dependencies = {
-      @Dependency(configName = "createFile", triggeredByValues = "false")
+      @Dependency(configName = "taskType", triggeredByValues = "CHANGE_EXISTING_FILE")
     }
   )
   public boolean shouldMoveFile;
@@ -93,7 +95,7 @@ public class HdfsActionsConfig {
     displayPosition = 120,
     group = "TASKS",
     dependencies = {
-      @Dependency(configName = "createFile", triggeredByValues = "false")
+      @Dependency(configName = "taskType", triggeredByValues = "CHANGE_EXISTING_FILE")
     }
   )
   public boolean shouldRename;
