@@ -105,6 +105,7 @@ public class SyncPreviewer implements Previewer {
     this.name = name;
     this.rev = rev;
     this.previewerListener = previewerListener;
+    this.previewStatus = PreviewStatus.CREATED;
     objectGraph.inject(this);
   }
 
