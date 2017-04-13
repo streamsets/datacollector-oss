@@ -134,7 +134,7 @@ public class ElasticsearchTarget extends BaseTarget {
     validateEL(
         indexEval,
         conf.indexTemplate,
-        ElasticsearchConfig.CONF_PREFIX + "indexTemplate",
+        "elasticSearchConfig.indexTemplate",
         Errors.ELASTICSEARCH_00,
         Errors.ELASTICSEARCH_01,
         issues
@@ -142,7 +142,7 @@ public class ElasticsearchTarget extends BaseTarget {
     validateEL(
         typeEval,
         conf.typeTemplate,
-        ElasticsearchConfig.CONF_PREFIX + "typeTemplate",
+        "elasticSearchConfig.typeTemplate",
         Errors.ELASTICSEARCH_02,
         Errors.ELASTICSEARCH_03,
         issues
@@ -151,7 +151,7 @@ public class ElasticsearchTarget extends BaseTarget {
       validateEL(
           typeEval,
           conf.docIdTemplate,
-          ElasticsearchConfig.CONF_PREFIX + "docIdTemplate",
+          "elasticSearchConfig.docIdTemplate",
           Errors.ELASTICSEARCH_04,
           Errors.ELASTICSEARCH_05,
           issues
@@ -161,7 +161,7 @@ public class ElasticsearchTarget extends BaseTarget {
         issues.add(
             getContext().createConfigIssue(
                 Groups.ELASTIC_SEARCH.name(),
-                ElasticsearchConfig.CONF_PREFIX + "docIdTemplate",
+                "elasticSearchConfig.docIdTemplate",
                 Errors.ELASTICSEARCH_19,
                 conf.defaultOperation.getLabel()
             )
@@ -171,7 +171,7 @@ public class ElasticsearchTarget extends BaseTarget {
 
     delegate = new ElasticsearchStageDelegate(getContext(), conf);
 
-    issues = delegate.init(issues);
+    issues = delegate.init("elasticSearchConfig", issues);
 
     generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.JSON)
         .setMode(JsonMode.MULTIPLE_OBJECTS)

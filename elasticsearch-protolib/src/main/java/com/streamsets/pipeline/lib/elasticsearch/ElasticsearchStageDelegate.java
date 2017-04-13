@@ -73,18 +73,18 @@ public class ElasticsearchStageDelegate {
     this.conf = conf;
   }
 
-  public List<Stage.ConfigIssue> init(List<Stage.ConfigIssue> issues) {
+  public List<Stage.ConfigIssue> init(String prefix, List<Stage.ConfigIssue> issues) {
     if (conf.httpUris.isEmpty()) {
       issues.add(
           context.createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
-              ElasticsearchConfig.CONF_PREFIX + "httpUris",
+              prefix + ".httpUris",
               Errors.ELASTICSEARCH_06
           )
       );
     } else {
       for (String uri : conf.httpUris) {
-        validateUri(uri, issues, ElasticsearchConfig.CONF_PREFIX + "httpUris");
+        validateUri(uri, issues, prefix + ".httpUris");
       }
     }
 
@@ -122,7 +122,7 @@ public class ElasticsearchStageDelegate {
       issues.add(
           context.createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
-              ElasticsearchConfig.CONF_PREFIX + "httpUris",
+              prefix + ".httpUris",
               Errors.ELASTICSEARCH_09,
               e.toString(),
               e

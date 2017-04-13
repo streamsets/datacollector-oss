@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ElasticsearchConfig {
-  public static final String CONF_PREFIX = "conf.";
   public static final String DEFAULT_HTTP_URI = "hostname:port";
 
   @ConfigDefBean
