@@ -127,6 +127,7 @@
                     <dd>Stops a pipeline. Returns the pipeline status when successful. </dd>
                     <dd>The <codeph>stop</codeph> argument uses the following
                         syntax:<codeblock>manager stop \
+[--forceStop] \
 (-n &lt;pipelineID> | --name &lt;pipelineID>) \
 [--stack] \
 [(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]</codeblock></dd>
@@ -142,6 +143,18 @@
                                     </row>
                                 </thead>
                                 <tbody>
+                                    <row>
+                                        <entry>--forceStop</entry>
+                                        <entry>Optional. Forces the pipeline to stop
+                                                immediately.<p>In some situations, a pipeline can
+                                                remain in a Stopping state for up to five minutes.
+                                                For example, if a scripting processor in the
+                                                pipeline includes code with a timed wait or an
+                                                infinite loop, <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> waits for five minutes before forcing the
+                                                pipeline to stop.</p></entry>
+                                    </row>
                                     <row>
                                         <entry>-n &lt;pipelineID><p>or </p><p>--name
                                                 &lt;pipelineID></p></entry>
@@ -181,12 +194,12 @@
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                         />:<codeblock>bin/streamsets cli -U http://localhost:18630  -a dpm -u user1@mycompany -p MyPassword \
 --dpmURL https://cloud.streamsets.com manager stop -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
-                    <dd>The following command stops the first version of the pipeline with an ID of
-                        MyPipelinejh65k1f8-dfc1-603h-8124-718nj6e561db when the <ph
+                    <dd>The following command forces the first version of a pipeline to stop
+                        immediately when the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is not registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                        />:<codeblock>bin/streamsets cli -U http://localhost:18630  manager stop -n MyPipelinejh65k1f8-dfc1-603h-8124-718nj6e561db -r 1</codeblock></dd>
+                        />:<codeblock>bin/streamsets cli -U http://localhost:18630  manager stop --forceStop -n MyPipelinejh65k1f8-dfc1-603h-8124-718nj6e561db -r 1</codeblock></dd>
                     <dd> </dd>
                 </dlentry>
                 <dlentry>
