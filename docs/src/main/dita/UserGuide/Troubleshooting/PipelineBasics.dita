@@ -40,16 +40,25 @@
         <dlentry>
           <dt>Why doesn't the Select Fields with Preview Data option work? No preview data
             displays.</dt>
-          <dd>Select Fields with Preview Data works when the pipeline is valid for data preview.
-            Make sure all stages are connected. You might also need to enter temporary values for
-            required properties to enable data preview.</dd>
+          <dd>Select Fields with Preview Data works when the pipeline is valid for data preview and
+            when <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> is configured to run preview in the background. Make sure all stages are connected
+            and required properties are configured. Also verify that preview is running in the
+            background by clicking <menucascade>
+              <uicontrol>Help</uicontrol>
+              <uicontrol> Settings</uicontrol>
+            </menucascade>.</dd>
         </dlentry>
         <dlentry>
           <dt>Sometimes I get a list of available fields and sometimes I don't. What's up with
             that?</dt>
           <dd>The pipeline can display a list of available fields when the pipeline is valid for
-            data preview. Make sure all stages are connected. You might also need to enter temporary
-            values for required properties to enable data preview.</dd>
+            data preview and when Data Collector is configured to run preview in the background.
+            Make sure all stages are connected and required properties are configured. Also verify
+            that preview is running in the background by clicking <menucascade>
+              <uicontrol>Help</uicontrol>
+              <uicontrol> Settings</uicontrol>
+            </menucascade>.</dd>
         </dlentry>
         <dlentry>
           <dt>The data reaching the destination is not what I expect - what do I do?</dt>

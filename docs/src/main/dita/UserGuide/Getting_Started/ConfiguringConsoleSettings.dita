@@ -100,6 +100,24 @@
                                     <entry>Hides the REST Response menu so you cannot request REST
                                         API response information.</entry>
                                 </row>
+                                <row>
+                                    <entry>Run preview in background to display available
+                                        fields</entry>
+                                    <entry>Runs preview in the background to display lists of
+                                        available fields and the Select Fields with Preview Data
+                                        option as you configure pipeline and stage properties.
+                                            <p>Running preview in the background can freeze the
+                                            browser if the preview results in a large record. To
+                                            resolve this issue, clear the property.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Wrap long lines in properties</entry>
+                                    <entry>Wraps long lines of text that you enter in properties.
+                                        For example, you might enter a long line of text when you
+                                        configure the preconditions for a stage. <p>When cleared,
+                                            displays long lines of text with a scroll
+                                        bar.</p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
