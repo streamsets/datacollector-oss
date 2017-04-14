@@ -52,7 +52,7 @@ public class RuntimeModule {
   public static final String SDC_PROPERTY_PREFIX = "sdc";
   public static final String PIPELINE_EXECUTION_MODE_KEY = "pipeline.execution.mode";
   public static final String PIPELINE_ACCESS_CONTROL_ENABLED = "pipeline.access.control.enabled";
-  public static final boolean PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT = true;
+  public static final boolean PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT = false;
   private static List<ClassLoader> stageLibraryClassLoaders = Collections.emptyList();//ImmutableList.of(RuntimeModule.class.getClassLoader());
 
   public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
