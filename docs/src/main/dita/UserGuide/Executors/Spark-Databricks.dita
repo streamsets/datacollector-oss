@@ -21,7 +21,11 @@
             the Spark executor with Databricks, you can run jobs based on notebooks or JARs.</p>
         <p>Before you use the Spark executor, perform the necessary prerequisites. </p>
         <p>When you configure the executor, you specify the cluster base URL, job type, job ID, and
-            user credentials. You can optionally configure job parameters. And you can configure an
-            HTTP proxy and SSL/TLS details.</p>
+            user credentials. You can optionally configure job parameters and you can use the
+            expression language in job parameters. For example, when performing post-processing on
+            an Amazon S3 object, you could use the following expression to retrieve the object key
+            name from the event record:
+            <codeblock><codeph>${record:field('/objectKey')}</codeph></codeblock></p>
+        <p>You also can configure an HTTP proxy and SSL/TLS details.</p>
  </conbody>
 </concept>
