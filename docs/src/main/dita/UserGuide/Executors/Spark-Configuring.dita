@@ -245,7 +245,12 @@
                                     <entry>Parameters</entry>
                                     <entry>Parameters to pass to the job. Enter the parameters
                                         exactly as expected, and in the expected order. The executor
-                                        does not validate the parameters.</entry>
+                                        does not validate the parameters.<p>You can use the
+                                            expression language in job parameters. For example, when
+                                            performing post-processing on an Amazon S3 object, you
+                                            can use the following expression to retrieve the object
+                                            key name from the event record:
+                                            <codeblock><codeph>${record:field('/objectKey')}</codeph></codeblock></p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -257,10 +262,9 @@
                         Details</wintitle> tab, select the <uicontrol>Language</uicontrol> used to
                     write the application, and then configure the following properties:</cmd>
                 <info>For applications written in Java or Scala, configure the following
-                        properties:<draft-comment author="Loretta">I need to review all these labels
-                        after HS does SDC-5746.</draft-comment><draft-comment author="Loretta">doc
-                        note: Make sure any changes to this table are replicated as needed in the
-                        Python table below.</draft-comment><table frame="all" rowsep="1" colsep="1"
+                        properties:<draft-comment author="Loretta">doc note: Make sure any changes
+                        to this table are replicated as needed in the Python table
+                        below.</draft-comment><table frame="all" rowsep="1" colsep="1"
                         id="table_udj_yyx_jz">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -320,11 +324,10 @@
                         </tgroup>
                     </table></info>
                 <info>For applications written in Python, configure the following
-                        properties:<draft-comment author="Loretta">I need to review all these labels
-                        after HS does SDC-5746.</draft-comment><draft-comment author="Loretta">doc
-                        note: Make sure any changes to this table are replicated as needed in the
-                        Java/Scala table above.</draft-comment><table frame="all" rowsep="1"
-                        colsep="1" id="table_uzz_qr2_kz">
+                        properties:<draft-comment author="Loretta">doc note: Make sure any changes
+                        to this table are replicated as needed in the Java/Scala table
+                        above.</draft-comment><table frame="all" rowsep="1" colsep="1"
+                        id="table_uzz_qr2_kz">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
