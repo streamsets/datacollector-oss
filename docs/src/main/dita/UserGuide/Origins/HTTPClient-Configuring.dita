@@ -172,6 +172,17 @@
                                             specified field.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Keep All Fields <xref
+                                            href="HTTPClient-KeepAllFields.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_srd_5bg_4z"
+                                        /></xref></entry>
+                                    <entry>Includes all fields from the response in the resulting
+                                        record when enabled. <p>By default, only the fields in the
+                                            specified result field path are included in the
+                                            record.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Wait Time Between Pages (ms)</entry>
                                     <entry>The number of milliseconds to wait before requesting the
                                         next page of data.</entry>
@@ -263,7 +274,15 @@
                                         /></xref></entry>
                                     <entry>Format of data. Use one of the following options:<ul
                                             id="ul_zbw_szg_j5">
+                                            <li>Binary</li>
+                                            <li>Delimited</li>
                                             <li>JSON</li>
+                                            <li>Log</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_wjh_ycl_br"
+                                                  placement="inline"/></xref></li>
                                             <li>Text</li>
                                             <li>XML</li>
                                         </ul></entry>
@@ -272,6 +291,12 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-Binary">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">
+                <cmd/>
             </step>
             <step>
                 <cmd>For JSON data, on the <wintitle>Data Format</wintitle> tab, configure the
@@ -312,6 +337,12 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-SDCRecord">
+                <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
                 <cmd/>

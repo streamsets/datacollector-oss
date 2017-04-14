@@ -22,25 +22,47 @@
         <p>The result field path must be a list or array. The origin creates a record for each
             object in the array. </p>
         <p>For example, to process the following response, you would use /results for the result
-            field path, and the origin would generate three
-            records:<codeblock>{
-	"count": "1023",
-	"startAt": "2",
-	"maxResults": "2",
-	"total": "6",
-	"results": [{
-		"field1": "data",
-		"field2": "more_data",
-		"field3": "even_more_data"
-	}, {
-		"field1": "data1",
-		"field2": "more_data1",
-		"field3": "even_more_data1"
-	}, {
-		"field1": "data2",
-		"field2": "more_data2",
-		"field3": "even_more_data2"
-	}]
+			field
+			path:<codeblock>{  
+   "count":"1023",
+   "startAt":"2",
+   "maxResults":"2",
+   "total":"6",
+   "results":[  
+      {  
+         "firstName":"Joe",
+         "lastName":"Smith",
+         "phone":"555-555-5555"
+      },
+      {  
+         "firstName":"Jimmy",
+         "lastName":"Smott",
+         "phone":"333-333-3333"
+      },
+      {  
+         "firstName":"Joanne",
+         "lastName":"Smythe",
+         "phone":"777-777-7777"
+      }
+   ]
+}</codeblock></p>
+        <p>From this data, the origin creates three records. The first
+			record:<codeblock>{  
+   "firstName":"Joe",
+   "lastName":"Smith",
+   "phone":"555-555-5555"
+}</codeblock></p>
+        <p>The second
+			record:<codeblock>{  
+   "firstName":"Jimmy",
+   "lastName":"Smott",
+   "phone":"333-333-3333"
+}</codeblock></p>
+        <p>And the third
+			record:<codeblock>{  
+   "firstName":"Joanne",
+   "lastName":"Smythe",
+   "phone":"777-777-7777"
 }</codeblock></p>
  </conbody>
 </concept>

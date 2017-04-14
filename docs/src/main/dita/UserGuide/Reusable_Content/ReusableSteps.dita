@@ -608,7 +608,7 @@
                 </cmd>
             </step>
             <step id="O-Binary">
-                <cmd>For binary data, on the <wintitle>Data Format</wintitle> tab and configure the
+                <cmd>For binary data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_dpx_kdm_35">
