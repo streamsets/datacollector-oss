@@ -136,14 +136,18 @@
             <row>
               <entry>HTTP Client</entry>
               <entry/>
-              <entry/>
-              <entry/>
-              <entry/>
-              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_vwy_q2c_kv"
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_eqm_nkj_4z"
                 /></entry>
               <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ph4_nkj_4z"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_vwy_q2c_kv"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_tcq_nkj_4z"
+                /></entry>
               <entry/>
-              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_svr_nkj_4z"
+                /></entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_fw1_r2c_kv"
                 /></entry>
               <entry/>
