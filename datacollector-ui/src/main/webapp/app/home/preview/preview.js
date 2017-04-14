@@ -498,9 +498,9 @@ angular
             newRecords: $scope.recordMaxLimit
           };
           if(options.selectedObject.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE &&
-            currentStage.instanceName != options.selectedObject.instanceName &&
+            currentStage.instanceName !== options.selectedObject.instanceName &&
             currentStage.inputLanes && currentStage.inputLanes.length && options.selectedObject.inputLanes &&
-            currentStage.inputLanes[0] == options.selectedObject.inputLanes[0]) {
+            currentStage.inputLanes[0] === options.selectedObject.inputLanes[0]) {
 
             //If coming same input lanes force preview view refresh by setting to empty and filling preview data
             $scope.stagePreviewData = {
