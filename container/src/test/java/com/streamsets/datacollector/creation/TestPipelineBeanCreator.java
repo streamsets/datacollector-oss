@@ -31,18 +31,18 @@ import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.validation.Issue;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.MultiValueChooserModel;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.api.base.BasePushSource;
@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -551,9 +552,15 @@ public class TestPipelineBeanCreator {
       .thenReturn(aggStageDef);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
 
+    List<Map<String, Object>> constants = new ArrayList<>();
+    Map<String, Object> constantValue = new LinkedHashMap<>();
+    constantValue.put("key", "MEMORY_LIMIT");
+    constantValue.put("value", 1000);
+    constants.add(constantValue);
     List<Config> pipelineConfigs = ImmutableList.of(
         new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()),
-        new Config("memoryLimit", 1000)
+        new Config("memoryLimit", "${MEMORY_LIMIT}"),
+        new Config("constants", constants)
     );
 
     StageConfiguration sourceConf = new StageConfigurationBuilder("si", "s")
@@ -589,6 +596,7 @@ public class TestPipelineBeanCreator {
 
     // pipeline configs
     Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
+    Assert.assertEquals(1000, bean.getConfig().memoryLimit);
 
     // Origin
     Assert.assertNotNull(bean.getOrigin());

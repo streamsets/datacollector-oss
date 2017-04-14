@@ -62,7 +62,8 @@ import java.util.Properties;
 public abstract class PipelineBeanCreator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineBeanCreator.class);
   public static final String PIPELINE_LIB_DEFINITION = "Pipeline";
-  public static final String RULE_DEFINITIONS_LIB_DEFINITION = "RuleDefinitions";
+  private static final String RULE_DEFINITIONS_LIB_DEFINITION = "RuleDefinitions";
+  private static final String PARAMETERS = "constants";
 
   private static final PipelineBeanCreator CREATOR = new PipelineBeanCreator() {
   };
@@ -86,7 +87,7 @@ public abstract class PipelineBeanCreator {
     return StageDefinitionExtractor.get().extract(libraryDef, PipelineConfigBean.class, "Pipeline Config Definitions");
   }
 
-  public static final StageDefinition RULES_DEFINITION = getRulesDefinition();
+  private static final StageDefinition RULES_DEFINITION = getRulesDefinition();
 
   static private StageDefinition getRulesDefinition() {
     StageLibraryDefinition libraryDef = new StageLibraryDefinition(
@@ -123,7 +124,7 @@ public abstract class PipelineBeanCreator {
           "", RULES_DEFINITION.getConfigDefinitionsMap(),
           RULES_DEFINITION,
           getRulesConfAsStageConf(ruleDefinitions),
-          Collections.EMPTY_MAP,
+          Collections.emptyMap(),
           errors
       );
     }
@@ -335,7 +336,7 @@ public abstract class PipelineBeanCreator {
     return value;
   }
 
-  StageBean createStageBean(boolean forExecution, StageLibraryTask library, StageConfiguration stageConf,
+  private StageBean createStageBean(boolean forExecution, StageLibraryTask library, StageConfiguration stageConf,
       boolean errorStage, Map<String, Object> constants, List<Issue> errors) {
     IssueCreator issueCreator = IssueCreator.getStage(stageConf.getInstanceName());
     StageBean bean = null;
@@ -367,7 +368,7 @@ public abstract class PipelineBeanCreator {
 
 
   @SuppressWarnings("unchecked")
-  public static StageConfiguration getRulesConfAsStageConf(RuleDefinitions ruleDefinitions) {
+  private static StageConfiguration getRulesConfAsStageConf(RuleDefinitions ruleDefinitions) {
     return new StageConfiguration(
         null,
         "none",
@@ -382,11 +383,46 @@ public abstract class PipelineBeanCreator {
   }
 
   @SuppressWarnings("unchecked")
-  PipelineConfigBean createPipelineConfigs(PipelineConfiguration pipelineConf, List<Issue> errors) {
+  private PipelineConfigBean createPipelineConfigs(PipelineConfiguration pipelineConf, List<Issue> errors) {
     PipelineConfigBean pipelineConfigBean = new PipelineConfigBean();
     if (createConfigBeans(pipelineConfigBean, "", PIPELINE_DEFINITION, "pipeline", errors)) {
-      injectConfigs(pipelineConfigBean, "", PIPELINE_DEFINITION.getConfigDefinitionsMap(), PIPELINE_DEFINITION,
-                    getPipelineConfAsStageConf(pipelineConf), Collections.EMPTY_MAP, errors);
+
+      // To support parameters in Pipeline Configuration inject "parameters" (constants) field first
+      StageConfiguration stageConf = getPipelineConfAsStageConf(pipelineConf);
+      Config parametersConfigConf = stageConf.getConfig(PARAMETERS);
+      ConfigDefinition parametersConfigDef = PIPELINE_DEFINITION.getConfigDefinitionsMap().get(PARAMETERS);
+      if (parametersConfigConf != null) {
+        try {
+          injectConfigValue(
+              pipelineConfigBean,
+              PipelineConfigBean.class.getField(PARAMETERS),
+              PIPELINE_DEFINITION,
+              stageConf,
+              parametersConfigDef,
+              parametersConfigConf,
+              Collections.EMPTY_MAP,
+              errors
+          );
+        } catch (NoSuchFieldException ex) {
+          IssueCreator issueCreator = IssueCreator.getStage(stageConf.getStageName());
+          errors.add(issueCreator.create(CreationError.CREATION_000, parametersConfigDef.getLabel(), ex.toString()));
+          pipelineConfigBean.constants = Collections.EMPTY_MAP;
+        }
+      }
+
+      if (pipelineConfigBean.constants == null) {
+        pipelineConfigBean.constants = Collections.emptyMap();
+      }
+
+      injectConfigs(
+          pipelineConfigBean,
+          "",
+          PIPELINE_DEFINITION.getConfigDefinitionsMap(),
+          PIPELINE_DEFINITION,
+          stageConf,
+          pipelineConfigBean.constants,
+          errors
+      );
     }
     return pipelineConfigBean;
   }
@@ -409,10 +445,10 @@ public abstract class PipelineBeanCreator {
     return (errors.isEmpty()) ? new StageBean(stageDef, stageConf, stageConfigBean, stage, classLoaderReleaser) : null;
   }
 
-  Stage createStageInstance(StageDefinition stageDef, String stageName, List<Issue> errors) {
+  private Stage createStageInstance(StageDefinition stageDef, String stageName, List<Issue> errors) {
     Stage stage = null;
     try {
-      stage = (Stage) stageDef.getStageClass().newInstance();
+      stage = stageDef.getStageClass().newInstance();
     } catch (InstantiationException | IllegalAccessException ex) {
       IssueCreator issueCreator = IssueCreator.getStage(stageName);
       errors.add(issueCreator.create(CreationError.CREATION_000, stageDef.getLabel(), ex.toString()));
@@ -420,7 +456,7 @@ public abstract class PipelineBeanCreator {
     return stage;
   }
 
-  Stage injectStageConfigs(Stage stage, StageDefinition stageDef, StageConfiguration stageConf,
+  private Stage injectStageConfigs(Stage stage, StageDefinition stageDef, StageConfiguration stageConf,
       Map<String, Object> pipelineConstants, List<Issue> errors) {
     if (createConfigBeans(stage, "", stageDef, stageConf.getInstanceName(), errors)) {
       injectConfigs(stage, "", stageDef.getConfigDefinitionsMap(), stageDef, stageConf, pipelineConstants, errors);
@@ -428,7 +464,7 @@ public abstract class PipelineBeanCreator {
     return stage;
   }
 
-  StageConfigBean createAndInjectStageBeanConfigs(StageDefinition stageDef, StageConfiguration stageConf,
+  private StageConfigBean createAndInjectStageBeanConfigs(StageDefinition stageDef, StageConfiguration stageConf,
       Map<String, Object> pipelineConstants, List<Issue> errors) {
     StageConfigBean stageConfigBean = new StageConfigBean();
     if (createConfigBeans(stageConfigBean, "", stageDef, stageConf.getInstanceName(), errors)) {
@@ -439,7 +475,7 @@ public abstract class PipelineBeanCreator {
     return stageConfigBean;
   }
 
-  boolean createConfigBeans(Object obj, String configPrefix, StageDefinition stageDef, String stageName,
+  private boolean createConfigBeans(Object obj, String configPrefix, StageDefinition stageDef, String stageName,
       List<Issue> errors) {
     boolean ok = true;
     Class klass = obj.getClass();
@@ -461,7 +497,7 @@ public abstract class PipelineBeanCreator {
     return ok;
   }
 
-  void injectConfigs(Object obj, Map<String, Object> valueMap, String configPrefix,
+  private void injectConfigs(Object obj, Map<String, Object> valueMap, String configPrefix,
       Map<String, ConfigDefinition> configDefMap, StageDefinition stageDef, StageConfiguration stageConf,
       Map<String, Object> pipelineConstants, List<Issue> errors) {
     String stageName = stageConf.getInstanceName();
@@ -493,7 +529,7 @@ public abstract class PipelineBeanCreator {
 
   }
 
-  void injectConfigs(Object obj, String configPrefix, Map<String, ConfigDefinition> configDefMap,
+  private void injectConfigs(Object obj, String configPrefix, Map<String, ConfigDefinition> configDefMap,
       StageDefinition stageDef, StageConfiguration stageConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     String stageName = stageConf.getInstanceName();
@@ -522,7 +558,7 @@ public abstract class PipelineBeanCreator {
     }
   }
 
-  void injectDefaultValue(Object obj, Field field, StageDefinition stageDef, StageConfiguration stageConf,
+  private void injectDefaultValue(Object obj, Field field, StageDefinition stageDef, StageConfiguration stageConf,
       ConfigDefinition configDef, Map<String, Object> pipelineConstants, String stageName, List<Issue> errors) {
     Object defaultValue = configDef.getDefaultValue();
     if (defaultValue != null) {
@@ -533,7 +569,7 @@ public abstract class PipelineBeanCreator {
     }
   }
 
-  boolean hasJavaDefault(Object obj, Field field) {
+  private boolean hasJavaDefault(Object obj, Field field) {
     try {
       return field.get(obj) != null;
     } catch (Exception ex) {
@@ -731,7 +767,7 @@ public abstract class PipelineBeanCreator {
   }
 
   @SuppressWarnings("unchecked")
-  Object toComplexField(Object value, StageDefinition stageDef, StageConfiguration stageConf,
+  private Object toComplexField(Object value, StageDefinition stageDef, StageConfiguration stageConf,
       ConfigDefinition configDef, Config configConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     String stageName = stageConf.getInstanceName();
@@ -781,7 +817,7 @@ public abstract class PipelineBeanCreator {
     return value;
   }
 
-  Object resolveIfImplicitEL(Object value, StageDefinition stageDef, ConfigDefinition configDef,
+  private Object resolveIfImplicitEL(Object value, StageDefinition stageDef, ConfigDefinition configDef,
       Map<String, Object> pipelineConstants, String stageName, List<Issue> errors) {
     IssueCreator issueCreator = IssueCreator.getStage(stageName);
     if (configDef.getEvaluation() == ConfigDef.Evaluation.IMPLICIT && value instanceof String &&
@@ -797,7 +833,7 @@ public abstract class PipelineBeanCreator {
     return value;
   }
 
-  void injectConfigValue(Object obj, Field field, StageDefinition stageDef, StageConfiguration stageConf,
+  private void injectConfigValue(Object obj, Field field, StageDefinition stageDef, StageConfiguration stageConf,
       ConfigDefinition configDef, Config configConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     Object value = configConf.getValue();
@@ -810,7 +846,7 @@ public abstract class PipelineBeanCreator {
   }
 
 
-  void injectConfigValue(Object obj, Field field, Object value, StageDefinition stageDef, StageConfiguration stageConf,
+  private void injectConfigValue(Object obj, Field field, Object value, StageDefinition stageDef, StageConfiguration stageConf,
       ConfigDefinition configDef, Config configConf, Map<String, Object> pipelineConstants,
       List<Issue> errors) {
     String stageName = stageConf.getInstanceName();
