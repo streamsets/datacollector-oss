@@ -830,9 +830,9 @@
   "sdcSettings": {
     "title": "Settings",
     "helpBar": "Hide Pipeline Creation Help Bar",
-    "lineWrapping": "Wrap Long Lines",
+    "lineWrapping": "Wrap long lines in properties",
     "restResponse": "Hide REST Response Menu",
-    "runPreviewForFieldPaths": "Run preview in background for fetching fields paths"
+    "runPreviewForFieldPaths": "Run preview in background to display available fields"
   },
   "sdcDirectories" : {
     "title": "SDC Directories",
