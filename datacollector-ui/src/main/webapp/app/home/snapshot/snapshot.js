@@ -41,6 +41,14 @@ angular
         output: []
       },
       snapshotsInfo: [],
+      recordMaxLimit: 10,
+      recordPagination: {
+        inputRecords: 10,
+        outputRecords: 10,
+        errorRecords: 10,
+        eventRecords: 10,
+        newRecords: 10
+      },
 
       /**
        * Preview Data for previous stage instance.
@@ -155,6 +163,13 @@ angular
     $scope.$on('onSelectionChange', function(event, options) {
       if($scope.snapshotMode) {
         if (options.type === pipelineConstant.STAGE_INSTANCE) {
+          $scope.recordPagination = {
+            inputRecords: $scope.recordMaxLimit,
+            outputRecords: $scope.recordMaxLimit,
+            errorRecords: $scope.recordMaxLimit,
+            eventRecords: $scope.recordMaxLimit,
+            newRecords: $scope.recordMaxLimit
+          };
           updateSnapshotDataForStage(options.selectedObject);
         } else {
           $scope.stagePreviewData = {
