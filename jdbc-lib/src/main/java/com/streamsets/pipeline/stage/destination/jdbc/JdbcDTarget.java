@@ -96,7 +96,7 @@ public class JdbcDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Enclose Table Name",
+      label = "Enclose Object Names",
       description = "Use for lower or mixed-case database, table and field names. " +
           "Select only when the database or tables were created with quotation marks around the names.",
       displayPosition = 40,
