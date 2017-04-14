@@ -47,7 +47,7 @@ public class SlaveRuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(SlaveRuntimeModule.class);
   public static final String SDC_PROPERTY_PREFIX = "sdc";
   public static final String PIPELINE_ACCESS_CONTROL_ENABLED = "pipeline.access.control.enabled";
-  public static final boolean PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT = true;
+  public static final boolean PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT = false;
   private static List<ClassLoader> stageLibraryClassLoaders = Collections.emptyList();
 
   // Called by BootstrapCluster through reflection
