@@ -24,7 +24,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('WebHookController', function ($scope, pipelineService) {
+  .controller('WebHookController', function ($rootScope, $scope, pipelineService) {
     angular.extend($scope, {
       pipelineRulesConfigDefinition: pipelineService.getPipelineRulesConfigDefinition(),
       detailPaneConfig: $scope.pipelineRules,
@@ -75,11 +75,13 @@ angular
 
         if (configDefinition.type !== 'TEXT') {
           codeMirrorOptions = {
-            dictionary: $scope.getCodeMirrorHints(configDefinition)
+            dictionary: $scope.getCodeMirrorHints(configDefinition),
+            lineWrapping: $rootScope.$storage.lineWrapping
           };
         } else {
           codeMirrorOptions = {
-            dictionary: $scope.getTextCodeMirrorHints(configDefinition)
+            dictionary: $scope.getTextCodeMirrorHints(configDefinition),
+            lineWrapping: $rootScope.$storage.lineWrapping
           };
         }
 
