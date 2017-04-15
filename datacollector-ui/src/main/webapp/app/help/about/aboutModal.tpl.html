@@ -10,9 +10,9 @@
 
     <div>
       <label translate="about.version">Version:</label>
-      <span>
-        {{'about.productName' | translate}} {{buildInfo.version}} ( {{'about.builtBy' | translate}} {{buildInfo.builtBy}} {{'about.on' | translate}} {{buildInfo.builtDate}} git: {{buildInfo.builtRepoSha}} )
-      </span>
+      <div>
+        {{'about.productName' | translate}} {{buildInfo.version}} ( {{'about.builtBy' | translate}} {{buildInfo.builtBy}} {{'about.on' | translate}} {{buildInfo.builtDate}} git: <a href="https://github.com/streamsets/datacollector/commit/{{buildInfo.builtRepoSha}}" target="_blank">{{buildInfo.builtRepoSha}}</a>)
+      </div>
     </div>
 
     <br>
