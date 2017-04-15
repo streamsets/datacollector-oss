@@ -71,6 +71,10 @@ public class EventCreator {
     this.requiredAndOptionalFields = requiredAndOptionalFields;
   }
 
+  public String getName() {
+    return name;
+  }
+
   /**
    * Builder interface for creating the EventCreator instance itself.
    */

@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.hdfs.util.HdfsUtils;
@@ -170,8 +171,16 @@ public class HdfsMetadataExecutor extends BaseExecutor {
               fs.setAcl(workingFile, acls);
             }
 
+            // Pick the right event based on our main action
+            EventCreator event;
+            if(actions.taskType == TaskType.CREATE_EMPTY_FILE) {
+              event = HdfsMetadataExecutorEvents.FILE_CREATED;
+            } else {
+              event = HdfsMetadataExecutorEvents.FILE_CHANGED;
+            }
+
             // Issue event with the final file name (e.g. the renamed one if applicable)
-            HdfsMetadataExecutorEvents.FILE_CHANGED.create(getContext())
+            event.create(getContext())
               .with("filepath", workingFile.toString())
               .with("filename", workingFile.getName())
               .createAndSend();

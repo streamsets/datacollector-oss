@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.destination.hdfs.metadataexecutor;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -186,7 +187,7 @@ public class HdfsMetadataExecutorIT {
   /**
    * Assert proper event for the changed file.
    */
-  private void assertEvent(List<Record> events, Path expectedPath) {
+  private void assertEvent(String eventType, List<Record> events, Path expectedPath) {
     assertNotNull(events);
     Assert.assertEquals(1, events.size());
 
@@ -194,6 +195,7 @@ public class HdfsMetadataExecutorIT {
     assertNotNull(event);
     assertNotNull(event.get());
     Assert.assertEquals(Field.Type.MAP, event.get().getType());
+    Assert.assertEquals(eventType, event.getHeader().getAttribute(EventRecord.TYPE));
 
     Field path = event.get("/filepath");
     assertNotNull(path);
@@ -280,7 +282,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
-    assertEvent(runner.getEventRecords(), outputPath);
+    assertEvent(HdfsMetadataExecutorEvents.FILE_CREATED.getName(), runner.getEventRecords(), outputPath);
     runner.runDestroy();
 
     assertFile(outputPath, "");
@@ -306,7 +308,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
-    assertEvent(runner.getEventRecords(), outputPath);
+    assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), outputPath);
     runner.runDestroy();
 
     assertFile(outputPath, CONTENT);
@@ -332,7 +334,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
-    assertEvent(runner.getEventRecords(), outputPath);
+    assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), outputPath);
     runner.runDestroy();
 
     assertFile(outputPath, CONTENT);
@@ -360,7 +362,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
-    assertEvent(runner.getEventRecords(), outputPath);
+    assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), outputPath);
     runner.runDestroy();
 
     assertFile(outputPath, CONTENT);
@@ -385,7 +387,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
-    assertEvent(runner.getEventRecords(), inputPath);
+    assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
     assertFile(inputPath, CONTENT);
@@ -410,7 +412,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
-    assertEvent(runner.getEventRecords(), inputPath);
+    assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
     assertFile(inputPath, CONTENT);
@@ -435,7 +437,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
-    assertEvent(runner.getEventRecords(), inputPath);
+    assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
     assertFile(inputPath, CONTENT);
@@ -460,7 +462,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
-    assertEvent(runner.getEventRecords(), inputPath);
+    assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
     assertFile(inputPath, CONTENT);
@@ -485,7 +487,7 @@ public class HdfsMetadataExecutorIT {
     runner.runInit();
 
     runner.runWrite(ImmutableList.of(getTestRecord()));
-    assertEvent(runner.getEventRecords(), inputPath);
+    assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), inputPath);
     runner.runDestroy();
 
 
