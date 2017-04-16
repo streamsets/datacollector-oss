@@ -28,7 +28,6 @@ import com.streamsets.datacollector.pipeline.executor.spark.ClusterManager;
 import com.streamsets.datacollector.pipeline.executor.spark.DeployMode;
 import com.streamsets.datacollector.pipeline.executor.spark.SparkExecutor;
 import com.streamsets.datacollector.pipeline.executor.spark.SparkExecutorConfigBean;
-import com.streamsets.datacollector.pipeline.executor.spark.yarn.YarnAppLauncher;
 import org.apache.spark.launcher.SparkAppHandle;
 import org.apache.spark.launcher.SparkLauncher;
 import org.junit.Before;
@@ -76,6 +75,7 @@ public class BaseSparkExecutorTest { //NOSONAR
     conf.yarnConfigBean.args = ImmutableMap.of("--tower1", "orthanc", "--tower2", "barad-dur");
     conf.yarnConfigBean.noValueArgs = ImmutableList.of("sauron", "saruman");
     conf.yarnConfigBean.env = ImmutableMap.of("king", "aragon", "status", "returned");
+    conf.yarnConfigBean.language = Language.JVM;
   }
 
   private SparkLauncher getSparkLauncher() throws Exception {
