@@ -88,7 +88,7 @@ public class YarnAppLauncher implements AppLauncher {
     verifyAllFileProperties(context, issues);
 
     if(!StringUtils.isEmpty(configs.credentialsConfigBean.principal)) {
-      if (StringUtils.isEmpty(configs.credentialsConfigBean.keytab)) {
+      if (!StringUtils.isEmpty(configs.credentialsConfigBean.keytab)) {
         verifyFileIsAccessible(
             configs.credentialsConfigBean.keytab, context, issues, SPARK_GROUP, PREFIX + "keytab");
       } else {
@@ -219,9 +219,13 @@ public class YarnAppLauncher implements AppLauncher {
   public Optional<String> launchApp(Record record)
       throws ApplicationLaunchFailureException, ELEvalException {
 
-    SparkLauncher launcher = getLauncher()
-        .setMainClass(yarnConfigs.mainClass)
-        .setAppResource(yarnConfigs.appResource)
+    SparkLauncher launcher = getLauncher();
+
+    if (yarnConfigs.language == Language.JVM) {
+      launcher.setMainClass(yarnConfigs.mainClass);
+    }
+
+    launcher.setAppResource(yarnConfigs.appResource)
         .setAppName(yarnConfigs.appName)
         .setMaster(YARN)
         .setDeployMode(yarnConfigs.deployMode.getLabel().toLowerCase())

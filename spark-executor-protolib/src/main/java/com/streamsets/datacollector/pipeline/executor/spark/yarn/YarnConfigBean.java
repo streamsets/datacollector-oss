@@ -210,7 +210,7 @@ public class YarnConfigBean {
 
   @ConfigDef(
       type = ConfigDef.Type.STRING,
-      required = false,
+      required = true,
       label = "Main Class",
       group = "APPLICATION",
       dependsOn = "language",
