@@ -195,12 +195,12 @@ public class FilePipelineStateStore implements PipelineStateStore {
 
   @Override
   public void deleteHistory(String pipelineName, String rev) {
+    LogUtil.resetRollingFileAppender(pipelineName, rev, STATE);
     for (File f : getHistoryStateFiles(pipelineName, rev)) {
       if (!f.delete()) {
         LOG.warn("Failed to delete history file " + f);
       }
     }
-    LogUtil.resetRollingFileAppender(pipelineName, rev, STATE);
   }
 
   private void register(String pipelineName, String rev) {
