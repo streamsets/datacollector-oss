@@ -171,11 +171,10 @@ angular
 
     var getNewSnapshotName = function() {
       if($scope.snapshotsInfo.length) {
-        var lastSnapshot = $scope.snapshotsInfo[$scope.snapshotsInfo.length - 1],
-          lastName = lastSnapshot ? lastSnapshot.label : '0',
-          indexStrArr = lastName.match(/\d+/),
-          index = indexStrArr.length ? parseInt(indexStrArr[0]) : 0;
-
+        var lastSnapshot = $scope.snapshotsInfo[$scope.snapshotsInfo.length - 1];
+        var lastName = lastSnapshot ? lastSnapshot.label : '0';
+        var indexStrArr = lastName.match(/\d+/);
+        var index = indexStrArr && indexStrArr.length ? parseInt(indexStrArr[0]) : 0;
         return 'Snapshot' + (++index);
       }
 
