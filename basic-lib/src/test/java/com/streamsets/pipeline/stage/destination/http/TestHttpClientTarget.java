@@ -206,7 +206,7 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     }
   }
 
-  private Record createRecord(String str) {
+  public static Record createRecord(String str) {
     Record record = RecordCreator.create();
     record.set(Field.create(str));
     return record;
