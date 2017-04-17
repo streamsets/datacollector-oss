@@ -20,9 +20,13 @@
             <p><indexterm>Wave Analytics destination<indexterm>API
                     version</indexterm></indexterm><ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> ships with version 38.0 of the Salesforce Web Services Connector libraries. You
-                can use a different Salesforce API version if you need to access functionality not
-                present in version 38.0.</p>
+                /> ships with version <ph
+                    conref="../Reusable_Content/Reusable_Topics/Salesforce-APIVersion.dita#task_qzy_4ck_dy/ph_SalesforceAPIVersion"
+                /> of the Salesforce Web Services Connector libraries. You can use a different
+                Salesforce API version if you need to access functionality not present in version
+                    <ph
+                    conref="../Reusable_Content/Reusable_Topics/Salesforce-APIVersion.dita#task_qzy_4ck_dy/ph_SalesforceAPIVersion"
+                />.</p>
         </context>
         <steps
             conref="../Reusable_Content/Reusable_Topics/Salesforce-APIVersion.dita#task_qzy_4ck_dy/ChangeAPIVersion"

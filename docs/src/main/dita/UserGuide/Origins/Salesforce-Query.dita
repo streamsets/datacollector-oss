@@ -24,6 +24,10 @@
             process large sets of data. The SOAP API supports more complex queries, but is less
             practical when processing large sets of data. For more information about when to use the
             Bulk or SOAP API, see the Salesforce Developer documentation. </p>
+        <p>If the origin uses the SOAP API or uses the Bulk API version <ph
+                conref="../Reusable_Content/Reusable_Topics/Salesforce-APIVersion.dita#task_qzy_4ck_dy/ph_SalesforceAPIVersion"
+            /> or later, you can configure the origin to retrieve deleted records from the
+            Salesforce recycle bin.</p>
         <p>The Salesforce origin uses an offset field and initial offset value to determine where to
             start reading data within an object. Include both the offset field and the offset value
             in the WHERE clause of the SOQL query. By default, the offset field is defined as the

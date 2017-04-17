@@ -17,6 +17,9 @@
     <title>Salesforce API Version</title>
     <taskbody>
         <context>
+            <draft-comment author="alisontaylor">This version number is conref'd from all the
+                Salesforce stages</draft-comment>
+            <p><ph id="ph_SalesforceAPIVersion">39.0</ph></p>
             <p>
                 <draft-comment author="alisontaylor">These steps are used in the Changing the API
                     Version topic for the Salesforce origin and destination</draft-comment>
@@ -49,7 +52,7 @@
             <step>
                 <cmd>In the following <ph
                         conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> directory,
-                    replace the default force-wsc-38.0.0.jar and force-partner-api-38.0.0.jar files
+                    replace the default force-wsc-39.0.0.jar and force-partner-api-39.0.0.jar files
                     with the versioned JAR files that you downloaded:</cmd>
                 <info>
                     <codeblock>$SDC_DIST/streamsets-libs/streamsets-datacollector-salesforce-lib/lib/</codeblock>
