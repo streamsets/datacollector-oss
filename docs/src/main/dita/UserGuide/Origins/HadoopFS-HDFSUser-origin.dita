@@ -15,23 +15,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_u4h_lwt_ls">
  <title>Using a Hadoop User</title>
- <shortdesc>You can configure the Hadoop FS origin to use a Hadoop user to read data from HDFS. </shortdesc>
  <conbody>
-  <p><indexterm>Hadoop FS origin<indexterm>using a Hadoop user to write to
-        Hadoop</indexterm></indexterm>By default, <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
-      user account who started it to connect to external systems. When using Kerberos, <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
-      Kerberos principal. <draft-comment author="Loretta">Make sure updates to this topic go into
-        the destination version of the file.</draft-comment></p>
-  <p>To use a Hadoop user to connect to HDFS, perform the following tasks:<ol id="ul_mb1_xpt_ls">
-        <li>On HDFS, configure the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user
-          as a proxy user and authorize the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user
-          to impersonate the Hadoop user. <p>For more information, see the HDFS documentation.
-          </p></li>
-        <li>In the Hadoop FS origin, enter the Hadoop user name.</li>
+  <p><indexterm>Hadoop FS origin<indexterm>using a Hadoop user to read from
+        HDFS</indexterm></indexterm><ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-Intro"/> origin to
+      read from HDFS. </p>
+    <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ImpProperty"/>
+    <p>Note that the origin <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ConnectUser"
+        /><draft-comment author="Loretta">Make sure updates to this topic go into the destination
+        version of the file.</draft-comment></p>
+  <p>To configure a user in the origin to read from HDFS, perform the following tasks:<ol
+        id="ul_mb1_xpt_ls">
+        <li conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-Step1"/>
+        <li>In the Hadoop FS origin, on the <wintitle>Hadoop FS</wintitle> tab, configure the
+            <uicontrol>Hadoop FS User</uicontrol> property.</li>
       </ol></p>
  </conbody>
 </concept>

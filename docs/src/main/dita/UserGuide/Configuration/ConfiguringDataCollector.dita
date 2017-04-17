@@ -493,8 +493,8 @@
                     <tbody>
                         <row>
                             <entry>runtime.conf.location <xref
-                                    href="../Pipeline_Configuration/RuntimeProperties.dita#concept_fjx_g31_1s"><image
-                                        href="../Graphics/icon_moreInfo.png" scale="10"/>
+                                    href="../Pipeline_Configuration/RuntimeProperties.dita#concept_fjx_g31_1s"
+                                        ><image href="../Graphics/icon_moreInfo.png" scale="10"/>
                                 </xref></entry>
                             <entry>Location of runtime properties. Use to declare where runtime
                                 properties are defined:<ul id="ul_mh4_rrn_1s">
@@ -515,6 +515,37 @@
                     </tbody>
                 </tgroup>
             </table><p>The <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> configuration file includes the following stage-specific property:<table
+                    frame="all" rowsep="1" colsep="1" id="table_y2g_rx5_nz">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1"/>
+                        <colspec colname="c2" colnum="2"/>
+                        <thead>
+                            <row>
+                                <entry>Stage-Specific Properties</entry>
+                                <entry>Description</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>stage.conf_hadoop.always.impersonate.current.user</entry>
+                                <entry>Ensures that Hadoop-related stages use the currently logged
+                                    in <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> user to perform tasks, such as writing data, in Hadoop
+                                    systems. With this property enabled, <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> prevents configuring an alternate user in Hadoop-related
+                                    stages. <p>To use this property, uncomment the property and set
+                                        it to true.</p><p>For more information and a list of
+                                        affected stages, see <xref
+                                            href="HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
+                                        />.</p></entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table></p><p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration file includes the following observer properties, used to process
                 data rules and alerts:<table frame="all" rowsep="1" colsep="1" id="table_hwc_b5z_pv">

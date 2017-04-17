@@ -15,25 +15,22 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bzv_cdy_bw">
  <title>Using an HBase User</title>
- <shortdesc>You can configure the processor to use an HBase user to look up data in HBase. </shortdesc>
     <conbody>
         <p><indexterm>HBase Lookup processor<indexterm>using an HBase user to write to
-                    HBase</indexterm></indexterm>By default, <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses the user account who started it to connect to external systems. When using
-            Kerberos, <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses the Kerberos principal. <draft-comment author="alisontaylor">Very similar to the
-                Hadoop FS User (origin &amp; dest) and HBase destination topics. Check all for
-                updates.</draft-comment></p>
-        <p>To use an HBase user to connect to HBase, perform the following tasks:<ol id="ul_mb1_xpt_ls">
-            <li>On HBase, configure the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user
-                as a proxy user and authorize the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user
-                to impersonate the HBase user.<p>For more information, see the HBase
-                    documentation.</p></li>
-            <li>In the HBase Lookup processor, enter the HBase user name.</li>
-        </ol></p>
+                    HBase</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-Intro"/>
+            processor to look up data in HBase. </p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ImpProperty"/>
+        <p>Note that the processor <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ConnectUser"
+                /><draft-comment author="alisontaylor">Very similar to the Hadoop FS User (origin
+                &amp; dest) and HBase destination topics. Check all for updates.</draft-comment></p>
+        <p>To configure a user in the processor to look up data in HBase, perform the following
+                tasks:<ol id="ul_mb1_xpt_ls">
+                <li>On HBase, configure the user as a proxy user and authorize the user to
+                    impersonate the HBase user.<p>For more information, see the HBase
+                        documentation.</p></li>
+                <li>In the HBase Lookup processor, enter the HBase user name.</li>
+            </ol></p>
     </conbody>
 </concept>

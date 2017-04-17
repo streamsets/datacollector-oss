@@ -18,7 +18,9 @@
  <shortdesc>You can use Kerberos authentication to connect to MapR. When you use Kerberos
         authentication, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
-        the Kerberos principal and keytab to connect to MapR. </shortdesc>
+        the Kerberos principal and keytab to connect to MapR.  By default, <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
+        the user account who started it to connect.</shortdesc>
  <conbody>
   <p><indexterm>MapR FS origin<indexterm>Kerberos
                 authentication</indexterm></indexterm><indexterm>Kerberos

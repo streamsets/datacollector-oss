@@ -30,7 +30,7 @@
         <p>You can configure the processor to locally cache the key-value pairs to improve
             performance.</p>
         <p>You also specify the HBase configuration properties, including the ZooKeeper Quorum,
-            parent znode, and table name. When necessary, you can enable Kerberos authentication and
-            add additional HBase configuration properties.</p>
+            parent znode, and table name. When necessary, you can enable Kerberos authentication,
+            specify an HBase user, and add additional HBase configuration properties.</p>
     </conbody>
 </concept>

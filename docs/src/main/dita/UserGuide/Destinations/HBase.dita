@@ -24,8 +24,8 @@
          you configure the HBase destination, you specify the HBase configuration properties,
          including the ZooKeeper Quorum, parent znode, and table name. You specify the row key for
          the table, and then map fields from the pipeline to HBase columns.</p>
-      <p>When necessary, you can enable Kerberos authentication, configure a time basis, and add
-         additional HBase configuration properties.</p>
+      <p>When necessary, you can enable Kerberos authentication and specify an HBase user. You can
+         also configure a time basis and add additional HBase configuration properties.</p>
       <draft-comment author="alisontaylor">Make sure changes in HBase topics go into MapR DB. </draft-comment>
    </conbody>
 </concept>

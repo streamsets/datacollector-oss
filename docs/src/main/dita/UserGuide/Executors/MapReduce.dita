@@ -30,6 +30,9 @@
             details. For the Avro to Parquet job, you specify details such as the output file
             directory and optional compression codec. For other types of jobs, you enter the
             key-value pairs to use. </p>
+        <p>When necessary, you can enable Kerberos authentication and specify a MapReduce user. You
+            can also use MapReduce configuration files and add other MapReduce configuration
+            properties as needed. </p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-Executor-EventXref"/>
  </conbody>
 </concept>

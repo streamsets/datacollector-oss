@@ -119,8 +119,15 @@
                                         <p>The MapReduce user to use to connect to the external
                                             system. When using this property, make sure the external
                                             system is configured appropriately. </p>
-                                        <p>By default, the pipeline uses the Data Collector user.
-                                        </p>
+                                        <p>When not configured, the pipeline uses the currently
+                                            logged in <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> user. </p>
+                                        <p>Not configurable when Data Collector is configured to use
+                                            the currently logged in Data Collector user. For more
+                                            information, see <xref
+                                                href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
+                                            />. </p>
                                     </entry>
                                 </row>
                                 <row>

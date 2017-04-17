@@ -46,6 +46,7 @@
     <topicref href="../Configuration/HTTP_protocolsClusterKeystore.dita"/>
     <topicref href="../Configuration/HTTP_protocolsClusterTruststore.dita"/>
    </topicref>
+   <topicref href="../Configuration/HadoopImpersonationMode.dita"/>
    <topicref href="../Configuration/BlacklistWhitelist.dita"/>
    <topicref href="../Configuration/ConfiguringDataCollector.dita"/>
   </topicref>
