@@ -155,6 +155,10 @@
                                     <entry>SOQL query to use when reading existing data from
                                         Salesforce.</entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceIncludeDeleted">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Repeat Query <xref href="Salesforce-RepeatQuery.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"

@@ -84,6 +84,10 @@
                                             Location__Longitude__s rather than
                                         Location__c.</p></entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/SalesforceIncludeDeleted">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Field Mappings</entry>
                                     <entry>Use to override the default field mappings. By default,

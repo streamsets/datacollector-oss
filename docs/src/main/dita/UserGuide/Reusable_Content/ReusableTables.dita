@@ -1342,7 +1342,8 @@
     </table>
   <draft-comment author="alisontaylor">Salesforce origin, Salesforce Lookup processor, and
    Salesforce destination use the first three rows in this table, and use the description of the
-   last row. Wave Analytics destination uses the first two rows in the table.</draft-comment>
+   last row. Wave Analytics destination uses the first two rows in the table. Salesforce origin and
+   Lookup processor use the last row.</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table_fg1_cbc_tx">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1376,8 +1377,17 @@
      <row>
       <entry>API Version</entry>
       <entry id="SalesforceAPIVersion">Salesforce API version to use to connect to Salesforce.
-        <p>Default is 38.0. If you change the version, you also must download the relevant JAR files
-        from Salesforce Web Services Connector (WSC).</p></entry>
+        <p>Default is <ph
+         conref="Reusable_Topics/Salesforce-APIVersion.dita#task_qzy_4ck_dy/ph_SalesforceAPIVersion"
+        />. If you change the version, you also must download the relevant JAR files from Salesforce
+        Web Services Connector (WSC).</p></entry>
+     </row>
+     <row id="SalesforceIncludeDeleted">
+      <entry>Include Deleted Records</entry>
+      <entry>Determines whether the SOQL query also retrieves deleted records from the Salesforce
+       recycle bin. <p>The query can retrieve deleted records when the stage uses the Salesforce
+        SOAP API or the Bulk API version 39.0 or later. Earlier versions of the Bulk API do not
+        support retrieving deleted records.</p></entry>
      </row>
     </tbody>
    </tgroup>
