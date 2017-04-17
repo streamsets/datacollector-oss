@@ -24,6 +24,10 @@
         <p>You specify the Salesforce object to write to by entering the object name or by defining
             an expression that evaluates to the object name. You also map incoming fields in the
             record to existing fields in the Salesforce object.</p>
+        <p>The Salesforce destination <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"
+                /><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"
+            /></p>
         <p>You can optionally use an HTTP proxy to connect to Salesforce.</p>
  </conbody>
 </concept>

@@ -26,7 +26,8 @@
                 <li>1 for INSERT</li>
                 <li>2 for DELETE</li>
                 <li>3 for UPDATE</li>
-                <li>5 for unsupported operations, such as UNDELETED</li>
+                <li>5 for unsupported operations</li>
+                <li>6 for UNDELETED</li>
             </ul><note type="tip">Records that are undeleted contain only the record ID. If you need
                 the record data, you can use the Salesforce Lookup to retrieve it. </note></p>
     </conbody>

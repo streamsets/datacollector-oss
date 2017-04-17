@@ -126,6 +126,25 @@
                                         href="../Destinations/MongoDB-CRUDOperation.dita#concept_bkc_m24_4v"
                                     />.</p></entry>
                         </row>
+                        <row>
+                            <entry>Salesforce destination</entry>
+                            <entry>
+                                <ul id="ul_bm4_yxg_4z">
+                                    <li>INSERT</li>
+                                    <li>UPDATE</li>
+                                    <li>UPSERT</li>
+                                    <li>DELETE</li>
+                                    <li>UNDELETE</li>
+                                </ul>
+                            </entry>
+                            <entry>Determines the operation to use based on:<ul id="ul_rdx_zxg_4z">
+                                    <li>sdc.operation.type record header attribute</li>
+                                    <li>Default Operation and Unsupported Operation Handling
+                                        properties in the stage</li>
+                                </ul><p>For more information, see <xref
+                                        href="../Destinations/Salesforce-DefineOperation.dita#concept_opg_tyg_4z"
+                                    />.</p></entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table>
