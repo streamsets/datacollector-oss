@@ -307,6 +307,21 @@
                                                   Applicable * * *</entry>
                                                   <entry/>
                                                 </row>
+            <row>
+              <entry>MQTT Publisher</entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qww_vxq_mz"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rww_vxq_mz"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_sww_vxq_mz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_tww_vxq_mz"
+                /></entry>
+              <entry/>
+            </row>
                                                 <row>
                                                   <entry>RabbitMQ Producer</entry>
                                                   <entry><image href="../Graphics/CheckIcon.png"

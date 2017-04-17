@@ -1695,5 +1695,52 @@
     </tbody>
    </tgroup>
   </table>
+  <draft-comment author="alisontaylor">These rows are used by the MQTT Subscriber and MQTT
+   Publisher</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_yhx_fwr_mz">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry>MQTT Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row id="row_MQTTBrokerURL">
+      <entry>Broker URL</entry>
+      <entry>MQTT Broker URL. Enter in the following
+        format:<codeblock>&lt;tcp | ssl>://&lt;hostname>:&lt;port></codeblock><p>Use ssl for secure
+        connections to the broker.</p><p>For
+       example:<codeblock>tcp://localhost:1883</codeblock></p></entry>
+     </row>
+     <row id="row_MQTTClientID">
+      <entry>Client ID</entry>
+      <entry>MQTT Client ID. The ID must be unique across all clients connecting to the same
+        broker.<p>You can define an expression that evaluates to the client ID. For example, you can
+        enter the following expression to use the unique pipeline ID as the client
+        ID:<codeblock>${pipeline:id()}</codeblock></p></entry>
+     </row>
+     <row id="row_MQTTQoS">
+      <entry>Quality of Service</entry>
+      <entry>Determines the quality of service level used to guarantee message delivery:<ul
+        id="ul_gc5_mcr_mz">
+        <li>At Most Once (0)</li>
+        <li>At Least Once (1)</li>
+        <li>Exactly Once (2)</li>
+       </ul><p>For more information, see the <xref
+         href="http://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels"
+         format="html" scope="external">HiveMQ documentation on quality of service
+        levels</xref>.</p></entry>
+     </row>
+     <row id="row_MQTTUseCredentials">
+      <entry>Use Credentials</entry>
+      <entry>Enables entering credentials on the Credentials tab. Use when the MQTT broker requires
+       a user name and password.</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>

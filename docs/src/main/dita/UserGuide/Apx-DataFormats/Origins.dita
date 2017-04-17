@@ -308,6 +308,29 @@
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
             <row>
+              <entry>MQTT Subscriber</entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qqt_bxq_mz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rqt_bxq_mz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_sqt_bxq_mz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_tqt_bxq_mz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_lh5_cxq_mz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_uqt_bxq_mz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_vqt_bxq_mz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_jdf_dxq_mz"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_wqt_bxq_mz"
+                /></entry>
+            </row>
+            <row>
               <entry>MySQL Binary Log</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>

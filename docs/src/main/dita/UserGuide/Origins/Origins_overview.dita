@@ -58,6 +58,8 @@
           MongoDB.</li>
         <li><xref href="MongoDBOplog.dita#concept_mjn_yqw_4y">MongoDB Oplog</xref> - Reads entries
           from a MongoDB Oplog.</li>
+        <li><xref href="MQTTSubscriber.dita#concept_ukz_3vt_lz">MQTT Subscriber</xref> - Subscribes
+          to a topic on an MQTT broker to read messages from the broker.</li>
         <li><xref href="MySQLBinaryLog.dita#concept_kqg_1yh_xx">MySQL Binary Log</xref> - Reads
           MySQL binary logs to generate change data capture records. </li>
         <li><xref href="Omniture.dita#concept_dsr_xmw_1s">Omniture</xref> - Reads web usage reports
