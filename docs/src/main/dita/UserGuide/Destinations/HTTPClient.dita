@@ -22,10 +22,12 @@
   <p><indexterm>HTTP Client
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>HTTP
                     Client</indexterm></indexterm>When you configure the HTTP Client destination,
-            you define the resource URL, headers, and method to use for the requests. </p>
-        <p>You can also configure the timeout, request transfer encoding, maximum number of parallel
-            requests, and authentication type. You can optionally use a truststore and keystore, and
-            proxy.</p>
+            you define the resource URL, headers, and method to use for the requests. You configure
+            the destination to generate one request for each record or it to generate a single
+            request containing all records in the batch. </p>
+        <p>You can configure the timeout, request transfer encoding, and authentication type. You
+            can configure the destination to use the Gzip or Snappy compression format to write the
+            messages. You can optionally use a truststore and keystore, and proxy.</p>
         <p>You can also configure the destination to use the OAuth 2 protocol to connect to an HTTP
             service.</p>
  </conbody>
