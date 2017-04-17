@@ -72,7 +72,7 @@
           Salesforce.</li>
         <li><xref href="SDC_RPCdest.dita#concept_lfk_hx2_ct">SDC RPC</xref> - Passes data to an SDC
           RPC origin in an SDC RPC pipeline.</li>
-        <li><xref href="Solr.dita#concept_lfk_hx2_ct">Solr</xref> - Writes data to a Solr node or
+        <li><xref href="Solr.dita">Solr</xref> - Writes data to a Solr node or
           cluster.</li>
         <li><xref href="ToError.dita#concept_ryn_v3z_lr">To Error</xref> - Passes records to the
           pipeline for error handling.</li>
