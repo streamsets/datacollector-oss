@@ -161,6 +161,7 @@
                                 <ul id="ul_fmy_4t4_qx">
                                     <li>Changes file metadata, such as the file name, location, or
                                         permissions.</li>
+                                    <li>Creates an empty file.</li>
                                 </ul>
                             </entry>
                         </row>

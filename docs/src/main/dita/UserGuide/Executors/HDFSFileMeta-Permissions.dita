@@ -17,12 +17,13 @@
  <title>Defining the Owner, Group, Permissions, and ACLs</title>
  <conbody>
   <p><indexterm>HDFS File Metadata executor<indexterm>defining the owner, group, permissions, and
-                    ACLs</indexterm></indexterm>You can use HDFS File Metadata executor to change
-            the file owner, group, file permissions, and the access control list (ACL) for closed
-            files. <note type="important">When the executor changes permissions, it removes existing
-                permissions and implements the requested permissions. The executor does not add
-                permissions to the existing permissions, so be sure to configure permissions exactly
-                how you want them.</note></p>
+                    ACLs</indexterm></indexterm>You can use the HDFS File Metadata executor to
+            define the file owner, group, file permissions, and the access control list (ACL) for
+            existing files or the empty file created by the executor.<note type="important">When the
+                executor changes permissions, it removes existing permissions and implements the
+                requested permissions. The executor does not add permissions to the existing
+                permissions, so be sure to configure permissions exactly how you want
+            them.</note></p>
         <p>You can set permissions using any combination of the following methods: <dl>
                 <dlentry>
                     <dt>Define a new owner and group</dt>

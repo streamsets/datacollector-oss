@@ -44,8 +44,9 @@
             <li>Configure the HDFS File Metadata executor to move the files to the directory that
                 you want and set the permissions for the file.<p>In the HDFS File Metadata executor,
                     configure the HDFS configuration details on the <wintitle>HDFS</wintitle> tab.
-                    Then, on the <wintitle>Tasks</wintitle> tab, configure the changes that you want
-                    to make. </p><p>In this case, you want to move files to
+                    Then, on the <wintitle>Tasks</wintitle> tab, select <uicontrol>Change Metadata
+                        on Existing File</uicontrol> configure the changes that you want to make.
+                    </p><p>In this case, you want to move files to
                         <filepath>/new/location</filepath>, and set the file permissions to 0440 to
                     allow the user and group read access to the files:</p><p><image
                         href="../Graphics/Event-Move-FileMetadata-props.png" id="image_uk1_l1c_tx"
