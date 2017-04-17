@@ -57,6 +57,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Upgrade/PostUpgrade-JDBCProducer.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Preconditions.dita"/>
    <topicref href="../Upgrade/2410DockerAuthentication.dita"/>
    <topicref href="../Upgrade/2400-PipelinePermissions.dita"/>

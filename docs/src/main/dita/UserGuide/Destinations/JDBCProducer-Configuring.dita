@@ -42,17 +42,33 @@
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCConnectString_row">
                                     <entry/>
+                                </row>    <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Schema Name</entry>
+                                    <entry>Optional database or schema name to use. <p>Use when the
+                                            database requires a fully-qualified table
+                                        name.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Table Name</entry>
-                                    <entry>Database table to write to. <p>Some databases require a
-                                            fully-qualified table name, such as &lt;schema |
-                                            database>:&lt;tablename>. Use the table name format
-                                            required by the database. </p></entry>
+                                    <entry>Database table to use. Use the table name format required
+                                        by the database. </entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/FieldToColumnJDBC_row">
                                     <entry/>
+                                </row>
+                                <row>
+                                    <entry>Enclose Object Names</entry>
+                                    <entry>Encloses the database or schema name, table name, and
+                                        column names in quotation marks when writing to the
+                                            database.<p>Use when the database/schema or table was
+                                            created with quotation marks to allow for lower case,
+                                            mixed-case, or special characters in the names.
+                                        </p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/LogFormat_row">
@@ -82,10 +98,7 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ParamLimit_row">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
-                                    <entry/>
-                                </row>
+                            
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCAddtitionalProps_row">
                                     <entry/>
