@@ -344,9 +344,9 @@
                                     permissions to view or work with a pipeline. Only Admin users
                                     and pipeline owners have full access to pipelines. <p><ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-PermissionsDisabled"
-                                        /></p><p>For more information about pipeline permissions,
-                                        see <xref href="Permissions.dita#concept_i1p_hzd_yy"
-                                    />.</p></entry>
+                                        /> For more information about pipeline permissions, see
+                                            <xref href="Permissions.dita#concept_i1p_hzd_yy"
+                                        />.</p><p>Default is false.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.header.title</entry>
