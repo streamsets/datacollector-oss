@@ -26,9 +26,9 @@
             multiple objects. </p>
         <p>The origin reads compressed data based on file extension for all Hadoop-supported
             compression codecs.</p>
-        <p>When necessary, you can enable Kerberos authentication or use a Hadoop user to connect to
-            MapR. You can also use Hadoop configuration files and add other Hadoop configuration
-            properties as needed.</p>
+        <p>When necessary, you can enable Kerberos authentication or specify a Hadoop FS user. You
+            can also use Hadoop configuration files and add other Hadoop configuration properties as
+            needed.</p>
      <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
     </conbody>
     <related-links>

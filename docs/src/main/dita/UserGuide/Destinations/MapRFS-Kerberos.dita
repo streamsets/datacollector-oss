@@ -18,15 +18,17 @@
     <shortdesc>You can use Kerberos authentication to connect to MapR. When you use Kerberos
         authentication, the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
-        the Kerberos principal and keytab to connect to MapR. </shortdesc>
+        the Kerberos principal and keytab to connect to MapR. By default, <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
+        the user account who started it to connect.</shortdesc>
  <conbody>
         <p><indexterm>MapR FS destination<indexterm>Kerberos
                 authentication</indexterm></indexterm><indexterm>Kerberos
                     authentication<indexterm>using for MapR FS
             destination</indexterm></indexterm>The Kerberos principal and keytab are defined in the
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. To use Kerberos authentication, configure all Kerberos properties
-            in the <ph
+            /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. To use Kerberos
+            authentication, configure all Kerberos properties in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, and then enable Kerberos in the MapR FS destination.</p>
     </conbody>

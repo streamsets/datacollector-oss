@@ -26,9 +26,12 @@
                     DB</indexterm></indexterm>When you configure the MapR DB destination, you
             specify the MapR DB configuration properties, including the table name. You specify the
             row key for the table, and then map fields from the pipeline to MapR DB columns.</p>
-     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
+        <p>When necessary, you can enable Kerberos authentication and specify an HBase user. You can
+            also use HDFS configuration files and add other HDFS configuration properties as
+            needed.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
         <note>The MapR DB destination currently supports the HBase APIs only.</note>
         <draft-comment author="alisontaylor">These MapR topics are basically copied from HBase. Make
             sure changes here go there.</draft-comment>
- </conbody>
+    </conbody>
 </concept>

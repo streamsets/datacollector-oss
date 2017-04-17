@@ -155,8 +155,18 @@
                                     <entry>HBase User <xref href="HBaseLookup-HBaseUser.dita">
                                         <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             id="image_ytm_zzx_kt"/></xref></entry>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-HBaseUser"/>
+                                    <entry>The HBase user to use to look up data from HBase. When
+                                        using this property, make sure HBase is configured
+                                            appropriately.<p>When not configured, the pipeline uses
+                                            the currently logged in <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> user. </p><p>Not configurable when <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> is configured to use the currently logged in <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> user. For more information, see <xref
+                                                href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>HBase Configuration Directory <xref

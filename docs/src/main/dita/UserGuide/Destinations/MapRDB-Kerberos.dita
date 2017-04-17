@@ -18,7 +18,9 @@
  <shortdesc>You can use Kerberos authentication to connect to MapR DB. When you use Kerberos
         authentication, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
-        the Kerberos principal and keytab to connect to MapR DB.</shortdesc>
+        the Kerberos principal and keytab to connect to MapR DB. By default, <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
+        the user account who started it to connect.</shortdesc>
  <conbody>
   <p><indexterm>MapR DB destination<indexterm>Kerberos
                 authentication</indexterm></indexterm><indexterm>Kerberos

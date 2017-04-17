@@ -33,6 +33,8 @@
         <p>When you configure the HDFS File Metadata executor, you configure an expression that
             represents the location and name of the file to process, and the changes you want to
             perform. </p>
+        <p>When necessary, you can enable Kerberos authentication and specify an HDFS user. You can
+            also use HDFS configuration files and add other HDFS configuration properties as needed. </p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-Executor-EventXref"/>
  </conbody>
 </concept>

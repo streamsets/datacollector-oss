@@ -106,11 +106,18 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_t3x_4qg_xs"
                                         /></xref></entry>
-                                    <entry>The Hadoop user to use to connect to HDFS. When using
-                                        this property, make sure HDFS is configured
-                                            appropriately.<p>By default, the pipeline uses the <ph
+                                    <entry>The Hadoop user to use to read from HDFS. When using this
+                                        property, make sure HDFS is configured appropriately.<p>When
+                                            not configured, the pipeline uses the currently logged
+                                            in <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> user to connect to HDFS.</p></entry>
+                                            /> user. </p><p>Not configurable when <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> is configured to use the currently logged in <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> user. For more information, see <xref
+                                                href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Hadoop FS Configuration  <xref

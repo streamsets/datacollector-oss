@@ -15,22 +15,20 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_gbt_fpt_ls">
  <title>Using an HBase User</title>
- <shortdesc>You can configure the destination to use an HBase user to write data to HBase. </shortdesc>
  <conbody>
   <p><indexterm>HBase destination<indexterm>using an HBase user to write to
-        HBase</indexterm></indexterm>By default, <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
-      user account who started it to connect to external systems. When using Kerberos, <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
-      Kerberos principal. <draft-comment author="Loretta">Very similar to the Hadoop FS User (origin
-        &amp; dest) and HBase Lookup topics. Check all for updates.</draft-comment></p>
-  <p>To use an HBase user to connect to HBase, perform the following tasks:<ol id="ul_mb1_xpt_ls">
-        <li>On HBase, configure the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user
-          as a proxy user and authorize the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user
-          to impersonate the HBase user.<p>For more information, see the HBase
-          documentation.</p></li>
+        HBase</indexterm></indexterm><ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-Intro"/>
+      destination to write to HBase. </p>
+    <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ImpProperty"/>
+    <p>Note that the destination uses a different user account to connect to HBase. <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ConnectGeneric"
+        /><draft-comment author="Loretta">Very similar to the Hadoop FS User (origin &amp; dest) and
+        HBase Lookup topics. Check all for updates.</draft-comment></p>
+  <p>To configure a user in the destination to write to HBase, perform the following tasks:<ol
+        id="ul_mb1_xpt_ls">
+        <li>On HBase, configure the user as a proxy user and authorize the user to impersonate the
+          HBase user.<p>For more information, see the HBase documentation.</p></li>
         <li>In the HBase destination, enter the HBase user name.</li>
       </ol></p>
  </conbody>

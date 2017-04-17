@@ -152,8 +152,13 @@
                                 </row>
                                 <row>
                                     <entry>HDFS User</entry>
-                                    <entry>Optional HDFS user for the destination to use when
-                                        generating schemas.</entry>
+                                    <entry>
+                                        <p>Optional HDFS user for the destination to use when
+                                            generating schemas. <draft-comment author="Loretta">doc
+                                                note: We are deliberately not using the same
+                                                language here as other stages. And deliberately not
+                                                adding a HDFS User topic. 4/17.</draft-comment></p>
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>Max Cache Size (entries) <xref

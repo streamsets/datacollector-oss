@@ -19,8 +19,8 @@
         <context>
             <p><indexterm>HDFS File Metadata
                 executor<indexterm>configuring</indexterm></indexterm>Configure an HDFS File
-                Metadata executor to change file metadata for output files closed by the Hadoop FS,
-                Local FS, or MapR FS destinations.</p>
+                Metadata executor to create empy files or change file metadata for existing files
+                upon receiving an event.</p>
         </context>
         <steps>
             <step>
@@ -113,19 +113,25 @@
                                 </row>
                                 <row>
                                     <entry>
-                                        <p>HDFS User </p>
+                                        <p>HDFS User <xref href="HDFSFileMeta-HDFSUser.dita">
+                                                <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" placement="inline"
+                                                  id="image_ugp_4xk_pz"/></xref></p>
                                     </entry>
                                     <entry>
-                                        <p>The HDFS user to use when connecting to HDFS or MapR FS.
-                                            When you use this property, make sure the external
-                                            system is configured appropriately. For information
-                                            about HDFS, see <xref
-                                                href="../Destinations/HadoopFS-HDFSUser-dest.dita#concept_u4h_lwt_ls"
-                                            />. For information about MapR FS, see <xref
-                                                href="../Destinations/MapRFS-HDFSUser.dita#concept_kls_lqc_fv"
-                                            />.</p>
-                                        <p>By default, the pipeline uses the Data Collector user to
-                                            connect. </p>
+                                        <p>The HDFS user to use to create empty files or change file
+                                            metadata in the external system. When you use this
+                                            property, make sure the external system is configured
+                                            appropriately. </p>
+                                        <p>When not configured, the pipeline uses the currently
+                                            logged in <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> user. </p>
+                                        <p>Not configurable when Data Collector is configured to use
+                                            the currently logged in Data Collector user. For more
+                                            information, see <xref
+                                                href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
+                                            />. </p>
                                     </entry>
                                 </row>
                                 <row>
@@ -139,8 +145,9 @@
                                         <p>Uses Kerberos credentials to connect to the external
                                             system. </p>
                                         <p>When selected, uses the Kerberos principal and keytab
-                                            defined in the Data Collector configuration file,
-                                            $SDC_CONF/sdc.properties. </p>
+                                            defined in the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> configuration file, $SDC_CONF/sdc.properties. </p>
                                     </entry>
                                 </row>
                                 <row>

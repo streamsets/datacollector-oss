@@ -29,6 +29,7 @@
                 <topicref href="../Executors/HDFSFileMeta-EventRecords.dita"/>
             </topicref>
             <topicref href="../Executors/HDFSFileMeta-Kerberos.dita"/>
+            <topicref href="../Executors/HDFSFileMeta-HDFSUser.dita"/>
             <topicref href="../Executors/HDFSFileMeta-HDFSProperties.dita"/>
             <topicref href="../Executors/HDFSFileMeta-Configuring.dita"/>
         </topicref>

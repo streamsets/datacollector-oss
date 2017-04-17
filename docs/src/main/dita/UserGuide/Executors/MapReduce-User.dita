@@ -16,24 +16,19 @@
 <concept id="concept_akp_p3m_zx">
  <title>Using a MapReduce User</title>
  <conbody>
-  <p><indexterm>MapReduce executor<indexterm>using a MapReduce user</indexterm></indexterm>You can
-            configure MapReduce executor to use a MapReduce user to submit jobs.</p>
-        <p>By default, the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses the user account who started it to connect to external systems. When using
-            Kerberos, the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses the Kerberos principal. </p>
-        <p>To use a MapReduce user, perform the following tasks:<ol id="ul_mb1_xpt_ls">
-                <li>On the external system, configure the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> user as a proxy user and authorize the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> user to impersonate the MapReduce user. <p>For more information, see the
+  <p><indexterm>MapReduce executor<indexterm>using a MapReduce user</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-Intro"/>
+            executor to submit jobs.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ImpProperty"/>
+        <p>Note that the executor uses a different user account to connect. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ConnectGeneric"
+            /></p>
+        <p>To configure a user in the executor, perform the following tasks:<ol id="ul_mb1_xpt_ls">
+                <li>On the external system, configure the  user as a proxy user and authorize the
+                    user to impersonate the MapReduce user. <p>For more information, see the
                         MapReduce documentation. </p></li>
                 <li>In the MapReduce executor, on the <uicontrol>MapReduce</uicontrol> tab,
-                    configure the <uicontrol>MapReduce User</uicontrol> property to use the
-                    MapReduce user name.</li>
+                    configure the <uicontrol>MapReduce User</uicontrol> property.</li>
             </ol></p>
  </conbody>
 </concept>

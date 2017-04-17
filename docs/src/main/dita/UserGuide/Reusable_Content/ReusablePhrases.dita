@@ -1684,9 +1684,43 @@ input_stream.read()</codeblock></p>
                   we need here. </p>
             <draft-comment author="Loretta">The following is used in HDFS origin and destination
                   overviews:</draft-comment>
-            <p id="HDFS_user_props">When necessary, you can enable Kerberos authentication or use an
-                  HDFS user to connect to HDFS. You can also use Hadoop configuration files and add
-                  other Hadoop configuration properties as needed. </p>
+            <p id="HDFS_user_props">When necessary, you can enable Kerberos authentication and
+                  specify a Hadoop user. You can also use Hadoop configuration files and add other
+                  Hadoop configuration properties as needed. </p>
+            <p>
+                  <draft-comment author="Loretta">The following p's and ph's are used in
+                        Hadoop-related stages in the Hadoop User (or similar)
+                        topics.</draft-comment>
+            </p>
+            <p><ph id="HUser-Intro"><ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> can either use the currently logged in <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> user or a user configured in the</ph> origin to read from HDFS. </p>
+            <p id="HUser-ImpProperty">A <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                  /> configuration property can be set that requires using the currently logged in
+                        <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                  /> user. When this property is not set, you can specify a user in the origin. For
+                  more information about Hadoop impersonation and the Data Collector property, see
+                        <xref
+                        href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"/>. </p>
+            <p>Note that the origin <ph id="HUser-ConnectUser">uses a different user account to
+                        connect to HDFS. <ph id="HUser-ConnectGeneric">By default, <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> uses the user account who started it to connect to external
+                              systems. When using Kerberos, <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> uses the Kerberos principal.</ph>
+                  </ph></p>
+            <p>
+                  <ol>
+                        <li id="HUser-Step1">On Hadoop, configure the user as a proxy user and
+                              authorize the user to impersonate a Hadoop user. <p>For more
+                                    information, see the Hadoop documentation. </p></li>
+                  </ol>
+            </p>
             <draft-comment author="Loretta">list of HDFS configuration files used by Hadoop FS
                   origin - used in Hadoop Properties and Configuring Hadoop FS
                   origin.</draft-comment>

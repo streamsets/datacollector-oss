@@ -19,7 +19,8 @@
   <p><indexterm>Hive Metastore destination<indexterm>Kerberos
             authentication</indexterm></indexterm>When you use Kerberos authentication, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses the Kerberos principal and keytab to connect to HiveServer2. </p>
+            uses the Kerberos principal and keytab to connect to HiveServer2. By default, Data
+            Collector uses the user account who started it to connect. </p>
         <p>The Kerberos principal and keytab are defined in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file,<codeph> $SDC_CONF/sdc.properties</codeph>. To use Kerberos

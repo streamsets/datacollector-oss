@@ -15,26 +15,23 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ymk_4h4_lx">
  <title>Using a Hadoop User</title>
- <shortdesc>You can configure the MapR FS origin to use a Hadoop user to read files from MapR
-        FS.</shortdesc>
  <conbody>
   <p><indexterm>MapR FS origin<indexterm>using a Hadoop user to read from MapR
-                FS</indexterm></indexterm>By default, <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses the user account who started it to connect to external systems. When using
-            Kerberos, the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses the Kerberos principal. <draft-comment author="alisontaylor">Make sure updates to
-                this topic go into the destination version of the file.</draft-comment></p>
-            <p>To use a Hadoop user to connect to MapR FS, perform the following tasks:<ol
-                id="ul_mb1_xpt_ls">
-                <li>On MapR, configure the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> user as a proxy user and authorize the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> user to impersonate the Hadoop user. <p>For more information, see the MapR
+                FS</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-Intro"/>
+            origin to read files from MapR FS.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ImpProperty"/>
+        <p>Note that the origin uses a different user account to connect to MapR FS. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ConnectGeneric"/>
+            <draft-comment author="alisontaylor">Make sure updates to this topic go into the
+                destination version of the file.</draft-comment></p>
+            <p>To configure a user in the origin to read from MapR FS, perform the following
+                tasks:<ol id="ul_mb1_xpt_ls">
+                <li>On MapR, configure the user as a proxy user and authorize the user to
+                    impersonate the Hadoop user. <p>For more information, see the MapR
                         documentation. </p></li>
-                <li>In the MapR FS origin, enter the Hadoop user name.</li>
+                <li>In the MapR FS origin, on the <wintitle>Hadoop FS</wintitle> tab, configure the
+                        <uicontrol>Hadoop FS User</uicontrol> property.</li>
             </ol></p>
         </conbody>
 </concept>

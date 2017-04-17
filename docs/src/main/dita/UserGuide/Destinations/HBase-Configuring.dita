@@ -123,11 +123,18 @@
                                     <entry>HBase User <xref href="HBase-HBaseUser.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_ytm_zzx_kt"/></xref></entry>
-                                    <entry>The HBase user to use to connect to HBase. When using
-                                        this property, make sure HBase is configured
-                                            appropriately.<p>By default, the pipeline uses the <ph
+                                    <entry>The HBase user to use to write to HBase. When using this
+                                        property, make sure HBase is configured
+                                            appropriately.<p>When not configured, the pipeline uses
+                                            the currently logged in <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> user to connect to HBase.</p></entry>
+                                            /> user. </p><p>Not configurable when <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> is configured to use the currently logged in <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> user. For more information, see <xref
+                                                href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Time Basis
