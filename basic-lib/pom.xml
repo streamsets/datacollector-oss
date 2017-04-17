@@ -24,7 +24,6 @@
     <version>2.6.0.0-SNAPSHOT</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
-  <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-basic-lib</artifactId>
   <version>2.6.0.0-SNAPSHOT</version>
   <description>StreamSets Data Collector Basic Lib</description>
@@ -32,6 +31,7 @@
   <packaging>jar</packaging>
 
   <properties>
+    <californium.version>1.0.4</californium.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-lang.version>3.4</commons-lang.version>
     <geoip2.version>2.1.0</geoip2.version>
@@ -221,6 +221,12 @@
       <groupId>org.eclipse.paho</groupId>
       <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
       <version>${paho.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.californium</groupId>
+      <artifactId>californium-core</artifactId>
+      <version>${californium.version}</version>
     </dependency>
 
     <dependency>
