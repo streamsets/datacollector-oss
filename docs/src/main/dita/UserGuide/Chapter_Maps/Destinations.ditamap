@@ -151,7 +151,7 @@
    <topicref href="../Destinations/HTTPClient-DestinationMethods.dita">
     <topicref href="../Destinations/HTTPClient-DestinationExpressionMethod.dita"/>
    </topicref>
-   <topicref href="../Destinations/HTTPClient-DestinationParallelRequests.dita"/>
+   <topicref href="../Destinations/HTTPClient-DestinationRequests.dita"/>
    <topicref href="../Destinations/HTTPClient-DestinationOAuth2.dita">
     <topicref href="../Destinations/HTTPClient-DestinationOAuth2Twitter.dita"/>
     <topicref href="../Destinations/HTTPClient-DestinationOAuth2AzureAD.dita"/>

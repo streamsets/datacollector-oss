@@ -15,14 +15,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_s2p_5hb_4y">
  <title>HTTP Server</title>
+    <shortdesc>The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and
+        processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to
+        read high volumes of HTTP POST requests using multiple threads. </shortdesc>
  <conbody>
         <p><indexterm>HTTP Server
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>HTTP
                     Server</indexterm></indexterm><indexterm>multithreaded origins<indexterm>HTTP
-                    Server</indexterm></indexterm>The HTTP Server origin is a multithreaded origin
-            that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST
-            requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using
-            multiple threads. </p>
+                    Server</indexterm></indexterm>The HTTP Server origin can read requests
+            containing messages with no compression or with the Gzip or Snappy compression format. </p>
         <p>The HTTP Server origin can use multiple threads to enable parallel processing of data
             from multiple HTTP clients. Before you configure the origin, perform additional steps to
             configure the HTTP clients. </p>

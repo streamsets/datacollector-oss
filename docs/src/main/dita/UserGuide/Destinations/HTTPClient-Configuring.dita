@@ -73,6 +73,15 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-ReqTransferEncod">
                                     <entry/>
                                 </row>
+                                <row>
+                                    <entry>HTTP Compression</entry>
+                                    <entry>Compression format for the messages:<ul
+                                            id="ul_t5n_3hb_4z">
+                                            <li>None</li>
+                                            <li>Snappy</li>
+                                            <li>Gzip</li>
+                                        </ul></entry>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-ConnectTimeout">
                                     <entry/>
@@ -83,12 +92,22 @@
                                 </row>
                                 <row>
                                     <entry>Maximum Parallel Requests <xref
-                                            href="HTTPClient-DestinationParallelRequests.dita">
+                                            href="HTTPClient-DestinationRequests.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mgp_9q4_hl" placement="inline"
                                         /></xref></entry>
                                     <entry>Maximum number of requests to send to the server at one
-                                        time. </entry>
+                                        time when the destination generates one request for each
+                                        record in the batch. </entry>
+                                </row>
+                                <row>
+                                    <entry>One Request per Batch <xref
+                                            href="HTTPClient-DestinationRequests.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_mhl_5q8_hl" placement="inline"
+                                            /></xref></entry>
+                                    <entry>Enables generating a single request containing all
+                                        records in the batch. </entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/HTTP-AuthType">
