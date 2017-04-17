@@ -33,15 +33,15 @@
             read and write permission on the pipeline. Without write permission, the user cannot
             edit the pipeline. Without read permission, the user cannot see the pipeline at all. It
             does not display in the list of available pipelines. </p>
-        <p>With pipeline permissions enabled, all upgraded pipelines are initially visible only to
-            users with the Admin role and the pipeline owner - the user who created the pipeline. </p>
-        <p>To enable other users to work with pipelines, have an Admin user configure the
-            appropriate permissions for each pipeline. </p>
-        <p>To retain pre-2.4.0.0 behavior, you can disable pipeline permissions by setting the
-                <uicontrol>pipeline.access.control.enabled property</uicontrol> to
-                <uicontrol>false</uicontrol> in the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration file.</p>
+        <p>
+            <note>With pipeline permissions enabled, all upgraded pipelines are initially visible
+                only to users with the Admin role and the pipeline owner - the user who created the
+                pipeline. To enable other users to work with pipelines, have an Admin user configure
+                the appropriate permissions for each pipeline. </note>
+        </p>
+        <p>In Data Collector version 2.5.0.0, pipeline permissions are disabled by default. To
+            enable pipeline permissions, set the pipeline.access.control.enabled property to true in
+            the Data Collector configuration file.</p>
         <note type="tip">You can configure pipeline permissions when permissions are disabled. Then,
             you can enable the pipeline permissions property after pipeline permissions are properly
             configured. </note>
