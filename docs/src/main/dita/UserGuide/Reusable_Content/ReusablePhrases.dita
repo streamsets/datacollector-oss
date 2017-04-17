@@ -2480,6 +2480,15 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             </p>
             <p><ph id="EX-ph-FileSystems">HDFS, MapR FS, or a local file system</ph></p>
             <p>
+                  <draft-comment author="Loretta">The note is used in HDFS File Metadata executor
+                        File Path topic and Configuring</draft-comment>
+            </p>
+            <p>
+                  <note id="FileMetadataEx-BadDefault">In most cases, you will not want to use the
+                        default expression. The default expression is more appropriate for changing
+                        file metadata.</note>
+            </p>
+            <p>
                   <draft-comment author="Loretta">note and ph- <uicontrol>HiveQuery</uicontrol>-
                         Used in Hive Query overview and Query topics. </draft-comment>
             </p>

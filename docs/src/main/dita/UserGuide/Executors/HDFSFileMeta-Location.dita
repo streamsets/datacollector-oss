@@ -17,10 +17,10 @@
     <title>Changing the File Name or Location</title>
     <conbody>
         <p><indexterm>HDFS File Metadata executor<indexterm>changing file names and
-                    locations</indexterm></indexterm>You can use the HDFS File Metadata executor to
-            change file names and locations after they close. When you specify new file names and
-            locations, you can enter constants or expressions. Use any expression that evaluates to
-            the values that you want to use. </p>
+                    locations</indexterm></indexterm>When changing file metadata, you can use the
+            HDFS File Metadata executor to change the name or location of files after they close.
+            When you specify new file names and locations, you can enter constants or expressions.
+            Use any expression that evaluates to the values that you want to use. </p>
         <p>When needed, you can use the file functions in expressions to use part of the existing
             filepath. File functions can return any part of a path, file name, or extension. <dl>
                 <dlentry>
@@ -28,22 +28,26 @@
                     <dd>Say you have Hadoop FS writing JSON files to the following directory
                         structure:<codeblock>/server1/weblogs/&lt;subdir>/&lt;filename></codeblock></dd>
                     <dd>After the files are written, you want HDFS File Metadata executor to move
-                        the files to a different root directory. So you configure the executor to
+                        the files to a different root directory. When moving files you need to
+                        specify the new location for the files. So you configure the executor to
                         move files to a different directory while still using the rest of the path
-                        to the file:
-                        <codeblock>/newDir/${file:pathElement(record:value('/filepath'),1)}/${file:pathElement(record:value('/filepath'),2)}/</codeblock></dd>
+                        to the file as
+                        follows:<codeblock>/newDir/${file:pathElement(record:value('/filepath'),1)}/${file:pathElement(record:value('/filepath'),2)}/</codeblock></dd>
                     <dd>
                         <p>This expression uses newDir as the new root directory, then uses two
-                            levels of subdirectories. Do not include file names when moving files. </p>
+                            levels of subdirectories. Do not include file names when moving files.
+                        </p>
                     </dd>
                 </dlentry>
                 <dlentry>
                     <dt>Example for renaming files</dt>
-                    <dd>If you wanted to add the .json suffix to the original filename, you could
-                        use the following
+                    <dd>Say you want to add the .json suffix to the original filename. When you
+                        rename files, you need specify the new name for the files, so you use the
+                        following
                         expression:<codeblock>${file:fileName(record:value('/filepath'))}.json</codeblock></dd>
                     <dd>This expression returns the file name from the filepath field in the event
-                        record and adds .json to the file name, e.g. &lt;filename>.json</dd>
+                        record and adds .json to the file name, e.g.<codeph>
+                            &lt;filename>.json</codeph>.</dd>
                     <dd>If you wanted to strip the extension from written files, you could use the
                         following expression in the New Name field:
                         <codeblock>${file:removeExtension(file:fileName(record:value('/filepath')))}</codeblock></dd>
@@ -52,5 +56,7 @@
                         name.</dd>
                 </dlentry>
             </dl></p>
+        <p>For more information about file functions, see <xref
+                href="../Expression_Language/FileFunctions.dita#concept_kxj_nyl_5x"/>.</p>
     </conbody>
 </concept>

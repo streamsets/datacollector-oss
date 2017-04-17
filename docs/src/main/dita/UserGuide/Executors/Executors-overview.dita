@@ -25,7 +25,8 @@
                 href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
         <p>You can use the following executors in a pipeline:<ul id="ul_htl_4dr_mx">
                 <li><xref href="HDFSMetadata.dita#concept_wgj_slk_fx">HDFS File Metadata</xref> -
-                    Changes file metadata upon receiving an event record.</li>
+                    Changes file metadata or creates an empty file upon receiving an event
+                    record.</li>
                 <li><xref href="HiveQuery.dita#concept_kjw_llk_fx">Hive Query</xref> - Runs
                     user-defined Hive or Impala queries upon receiving an event record. </li>
                 <li><xref href="JDBCQuery.dita#concept_j3r_gcv_sx">JDBC Query</xref> - Runs a

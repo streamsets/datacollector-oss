@@ -19,8 +19,8 @@
         <context>
             <p><indexterm>HDFS File Metadata
                 executor<indexterm>configuring</indexterm></indexterm>Configure an HDFS File
-                Metadata executor to create empy files or change file metadata for existing files
-                upon receiving an event.</p>
+                Metadata executor to create an empty file or to change file metadata upon receiving
+                an event.</p>
         </context>
         <steps>
             <step>
@@ -190,8 +190,7 @@
                 </info>
             </step>
             <step>
-                <cmd>On the <wintitle>Tasks</wintitle> tab, configure the following properties as
-                    needed:</cmd>
+                <cmd>On the <wintitle>Tasks</wintitle> tab, configure the following property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_tcf_bhj_rx">
                         <tgroup cols="2">
@@ -205,10 +204,105 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Input File <xref
-                                            href="HDFSFileMeta-InputFile.dita">
+                                    <entry>Task</entry>
+                                    <entry>Determines the type of task that the executor performs.
+                                        You can either create an empty file or change file metadata.
+                                            <p>To do both, use an additional HDFS File Metadata
+                                            executor.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To create an empty file, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_bdr_hp5_4z">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Task Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>File Path</entry>
+                                    <entry>Expression that represents the full path to the file that
+                                        you want to create.<p>By default, the property uses
+                                                <codeph>${record:value('/filepath')}</codeph>. <note
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FileMetadataEx-BadDefault"
+                                            /></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Set Ownership <xref href="HDFSFileMeta-Permissions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_xsl_2rx_mx"/></xref></entry>
+                                                id="image_ddr_hp5_4z"/></xref></entry>
+                                    <entry>Select to specify a file owner or group. </entry>
+                                </row>
+                                <row>
+                                    <entry>New Owner</entry>
+                                    <entry>The user name to become the new owner of the file.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>New Group</entry>
+                                    <entry>The group to become the new group owner of the file.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Set Permissions <xref
+                                            href="HDFSFileMeta-Permissions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_edr_hp5_4z"/></xref></entry>
+                                    <entry>Select to set file permissions in an octal or symbolic
+                                        format.</entry>
+                                </row>
+                                <row>
+                                    <entry>New Permissions</entry>
+                                    <entry>File permissions in octal or symbolic format.</entry>
+                                </row>
+                                <row>
+                                    <entry>Set ACLs <xref href="HDFSFileMeta-Permissions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_fdr_hp5_4z"/></xref></entry>
+                                    <entry>Select to define access control list (ACL) permissions.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>New ACLs</entry>
+                                    <entry>Define ACLs for the owner, group, and other. You can
+                                        optionally define other user and group permissions. For
+                                        details, see <xref
+                                            href="HDFSFileMeta-Permissions.dita#concept_zr1_5ck_rx"
+                                        />.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To change file metadata, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_dr2_ns5_4z">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Task Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>File Path <xref href="HDFSFileMeta-FilePath.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_er2_ns5_4z"/></xref></entry>
                                     <entry>Expression that represents the full path to the file.
                                             <p>By default, the property uses
                                             ${record:value('/filepath')}, which processes data in
@@ -234,23 +328,27 @@
                                     <entry>New name for the file. </entry>
                                 </row>
                                 <row>
-                                    <entry>Change Ownership <xref href="HDFSFileMeta-Permissions.dita">
+                                    <entry>Change Ownership <xref
+                                            href="HDFSFileMeta-Permissions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_o44_lqk_rx"/></xref></entry>
+                                                id="image_fr2_ns5_4z"/></xref></entry>
                                     <entry>Select to change the file owner or group. </entry>
                                 </row>
                                 <row>
                                     <entry>New Owner</entry>
-                                    <entry>The user name to become the new owner of the file. </entry>
+                                    <entry>The user name to become the new owner of the file.
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>New Group</entry>
-                                    <entry>The group to become the new group owner of the file. </entry>
+                                    <entry>The group to become the new group owner of the file.
+                                    </entry>
                                 </row>
                                 <row>
-                                    <entry>Set Permissions <xref href="HDFSFileMeta-Permissions.dita">
+                                    <entry>Set Permissions <xref
+                                            href="HDFSFileMeta-Permissions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_ajs_lqk_rx"/></xref></entry>
+                                                id="image_gr2_ns5_4z"/></xref></entry>
                                     <entry>Select to set file permissions in an octal or symbolic
                                         format.</entry>
                                 </row>
@@ -261,8 +359,9 @@
                                 <row>
                                     <entry>Set ACLs <xref href="HDFSFileMeta-Permissions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_yf1_mqk_rx"/></xref></entry>
-                                    <entry>Select to define access control list (ACL) permissions. </entry>
+                                                id="image_hr2_ns5_4z"/></xref></entry>
+                                    <entry>Select to define access control list (ACL) permissions.
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>New ACLs</entry>

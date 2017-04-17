@@ -18,15 +18,9 @@
  <conbody>
   <p><indexterm>HDFS File Metadata executor<indexterm>event generating
                 stages</indexterm></indexterm>Use the HDFS File Metadata executor in the event
-            stream in a pipeline. The HDFS File Metadata executor is designed to update file
-            metadata for output files written to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EX-ph-FileSystems"
-            /> by default. You can also use the executor to update file metadata for whole files
-            written to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EX-ph-FileSystems"
-            />.</p>
-        <p>Use the HDFS File Metadata executor to change file metadata for files written by the
-            following stages:<ul id="ul_tt4_41l_rx">
+            stream in a pipeline. Though you can use the executor in any logical way, the HDFS File
+            Metadata executor is optimized to update file metadata for output files or whole files
+            written by the following stages: <ul id="ul_j1c_bn5_4z">
                 <li>Hadoop FS destination</li>
                 <li>Local FS destination</li>
                 <li>MapR FS destination</li>
