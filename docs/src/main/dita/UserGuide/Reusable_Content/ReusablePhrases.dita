@@ -94,6 +94,7 @@
                         <li>File Tail</li>
                         <li>HTTP Client</li>
                         <li>HTTP Server</li>
+                        <li>MQTT Subscriber</li>
                         <li>SDC RPC</li>
                         <li>SFTP/FTP Client</li>
                         <li>UDP Source</li>
@@ -112,6 +113,7 @@
                   <ul id="BasicDestinations">
                         <li>Local FS</li>
                         <li>HTTP Client</li>
+                        <li>MQTT Publisher</li>
                         <li>SDC RPC</li>
                         <li>To Error</li>
                         <li>Trash</li>

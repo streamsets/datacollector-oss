@@ -65,6 +65,8 @@
           Writes data to MapR Streams.</li>
         <li><xref href="MongoDB.dita#concept_eth_k5n_4v">MongoDB</xref> - Writes data to
           MongoDB.</li>
+        <li><xref href="MQTTPublisher.dita#concept_odz_txt_lz">MQTT Publisher</xref> - Publishes
+          messages to a topic on an MQTT broker.</li>
         <li><xref href="MongoDB.dita#concept_eth_k5n_4v">Rabbit MQ Producer</xref> - Writes data to
           RabbitMQ.</li>
         <li><xref href="Redis.dita#concept_ktc_gw2_gw">Redis</xref> - Writes data to Redis.</li>

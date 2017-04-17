@@ -42,6 +42,7 @@
         <li>Kinesis Consumer origin</li>
         <li>MapR FS origin</li>
         <li>MapR Streams Consumer origin</li>
+        <li>MQTT Subscriber origin</li>
         <li>RabbitMQ Consumer origin</li>
         <li>Redis Consumer origin</li>
         <li>SFTP/FTP Client origin</li>

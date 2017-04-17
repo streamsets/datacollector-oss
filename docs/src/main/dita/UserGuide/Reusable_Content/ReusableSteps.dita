@@ -1579,9 +1579,10 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>HTTPClient-SSLTLS</uicontrol> - same
-                        as above, plus WebSocket Client destination uses this step
-                        also</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>HTTPClient-SSLTLS</uicontrol> - The
+                        following steps are used in HTTP Client origin, processor, and destination
+                        Configuring topics. Also used in the MQTT Subscriber origin and MQTT
+                        Publisher destination configuring topics.</draft-comment>
                 </cmd>
             </step>
             <step id="HTTPClient-SSLTLS">

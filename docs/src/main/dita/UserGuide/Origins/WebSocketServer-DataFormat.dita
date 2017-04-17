@@ -16,9 +16,9 @@
 <concept id="concept_wlh_mtc_3z">
  <title>Data Formats</title>
  <conbody>
-        <p><indexterm>WebSocket Server<indexterm>data formats</indexterm></indexterm>The WebSocket
-            Server origin processes data differently based on the data format that you select. The
-            origin processes the following types of data: </p>
+        <p><indexterm>WebSocket Server origin<indexterm>data formats</indexterm></indexterm>The
+            WebSocket Server origin processes data differently based on the data format that you
+            select. The origin processes the following types of data: </p>
         <dl>
             <dlentry
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-Binary">

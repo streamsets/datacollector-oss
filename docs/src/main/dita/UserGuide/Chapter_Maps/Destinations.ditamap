@@ -285,6 +285,14 @@
    <topicref href="../Destinations/MongoDB-EnableSSL.dita"/>
    <topicref href="../Destinations/MongoDB-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/MQTTPublisher.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/MQTTPublisher-Topic.dita"/>
+   <topicref href="../Destinations/MQTTPublisher-DataFormats.dita"/>
+   <topicref href="../Destinations/MQTTPublisher-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/RabbitMQ.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

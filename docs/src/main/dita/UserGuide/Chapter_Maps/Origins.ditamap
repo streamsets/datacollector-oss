@@ -241,6 +241,12 @@
    <topicref href="../Origins/MongoDBOplog-EnableSSL.dita"/>
    <topicref href="../Origins/MongoDBOplog-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/MQTTSubscriber.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MQTTSubscriber-Topics.dita"/>
+   <topicref href="../Origins/MQTTSubscriber-DataFormat.dita"/>
+   <topicref href="../Origins/MQTTSubscriber-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/MySQLBinaryLog.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/MySQLBinaryLog-DriverInstall.dita"/>
