@@ -43,25 +43,22 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.websockets.SDCWebSocketServlet;
-
 import com.streamsets.lib.security.http.CORSConstants;
 import com.streamsets.pipeline.http.MDCFilter;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Provides.Type;
-
+import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
-import org.eclipse.jetty.servlets.GzipFilter;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 
 import javax.servlet.DispatcherType;
-
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -120,12 +117,11 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator provideGzipFilter() {
+  ContextConfigurator provideGzipHandler() {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
-        FilterHolder filter = new FilterHolder(GzipFilter.class);
-        context.addFilter(filter, "/*", EnumSet.of(DispatcherType.REQUEST));
+        context.setGzipHandler(new GzipHandler());
       }
     };
   }
