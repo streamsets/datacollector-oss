@@ -30,6 +30,13 @@ import java.util.List;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_04;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_05;
 
+/**
+ * <p>
+ * Use {@link com.streamsets.pipeline.lib.tls.TlsConfigBean} instead going forward.  This class is kept
+ * around for now due to test code dependencies.
+ * </p>
+ */
+@Deprecated
 public class SslConfigBean {
   @ConfigDef(
       required = false,

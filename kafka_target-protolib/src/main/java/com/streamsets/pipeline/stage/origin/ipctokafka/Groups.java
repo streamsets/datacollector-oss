@@ -27,6 +27,7 @@ public enum Groups implements Label {
   KAFKA("Kafka"),
   RPC("RPC"),
   DATA_FORMAT("Data Format"),
+  TLS("TLS"),
   ;
 
   private final String label;

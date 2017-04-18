@@ -18,36 +18,11 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.lib.parser.net.ssl;
+package com.streamsets.pipeline.lib.tls;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.impl.ErrorMessage;
-
-@GenerateResourceBundle
-public enum SslConfigErrors implements ErrorCode {
-  SSL_01("{} keystore file does not exist at {}"),
-  SSL_02("Password file ({}) for {} keystore invalid: {}"),
-  SSL_03("Error reading password file at {} for {} keystore: {}"),
-  SSL_10("{} file does not exist at {}"),
-  SSL_20("Error initializing {} keystore: {}"),
-  SSL_30("Error reading certificate chain file at {}: {}"),
-  ;
-
-  SslConfigErrors(String msg) {
-    this.msg = msg;
-  }
-
-  private final String msg;
-
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
-  }
-
+public enum TlsConnectionType {
+  NEITHER,
+  CLIENT,
+  SERVER,
+  BOTH
 }

@@ -37,6 +37,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.epoll.Epoll;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.ssl.SslHandler;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +73,9 @@ public class TCPServerSource extends BasePushSource {
     this.recordSeparatorStr = config.tcpMode == TCPMode.SYSLOG
         ? config.nonTransparentFramingSeparatorCharStr
         : config.recordSeparatorStr;
+
+
+    this.config.tlsConfigBean.hasKeyStore = true;
   }
 
   @Override
@@ -107,8 +111,8 @@ public class TCPServerSource extends BasePushSource {
         issues.add(getContext().createConfigIssue(Groups.TCP.name(), portsField, Errors.TCP_12));
       } else {
         if (config.tlsEnabled) {
-          boolean sslValid = config.sslConfigBean.init(getContext(), Groups.SSL.name(), "conf.sslConfigBean.", issues);
-          if (!sslValid) {
+          boolean tlsValid = config.tlsConfigBean.init(getContext(), Groups.TLS.name(), "conf.tlsConfigBean.", issues);
+          if (!tlsValid) {
             return issues;
           }
         }
@@ -121,8 +125,8 @@ public class TCPServerSource extends BasePushSource {
               @Override
               public void initChannel(SocketChannel ch) throws Exception {
                 if (config.tlsEnabled) {
-                  // Add SSL handler into pipeline in the first position
-                  config.sslConfigBean.bindToChannel(ch);
+                  // Add TLS handler into pipeline in the first position
+                  ch.pipeline().addFirst("TLS", new SslHandler(config.tlsConfigBean.getSslEngine()));
                 }
 
                 ch.pipeline().addLast(

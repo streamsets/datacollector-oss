@@ -34,13 +34,14 @@ import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 @StageDef(
-    version = 9,
+    version = 10,
     label = "HTTP Server",
     description = "HTTP Server [Multi-Threaded Pipeline]",
     icon="httpserver.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/HTTPServer.html#task_pgw_b3b_4y"
+    onlineHelpRefUrl = "index.html#Origins/HTTPServer.html#task_pgw_b3b_4y",
+    upgrader = HttpServerPushSourceUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {

@@ -20,13 +20,13 @@
 package com.streamsets.pipeline.stage.origin.sdcipc;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 public class Configs extends HttpConfigs {
   private static final Logger LOG = LoggerFactory.getLogger(Configs.class);
@@ -34,6 +34,9 @@ public class Configs extends HttpConfigs {
   private static final String CONFIG_PREFIX = "config.";
   private static final String PORT = CONFIG_PREFIX + "port";
   private static final String KEY_STORE_FILE = CONFIG_PREFIX + "keyStoreFile";
+
+  @ConfigDefBean(groups = "TLS")
+  public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.SERVER);
 
   @ConfigDef(
       required = true,
@@ -81,34 +84,7 @@ public class Configs extends HttpConfigs {
       displayPosition = 40,
       group = "RPC"
   )
-  public boolean sslEnabled;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Keystore File",
-      description = "The keystore file is expected in the Data Collector resources directory",
-      displayPosition = 50,
-      group = "RPC",
-      dependsOn = "sslEnabled",
-      triggeredByValue = "true"
-  )
-  public String keyStoreFile;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Keystore Password",
-      displayPosition = 60,
-      elDefs = VaultEL.class,
-      group = "RPC",
-      dependsOn = "sslEnabled",
-      triggeredByValue = "true"
-  )
-  public String keyStorePassword;
-
+  public boolean tlsEnabled;
 
   @ConfigDef(
       required = true,
@@ -122,10 +98,6 @@ public class Configs extends HttpConfigs {
       max = 100
   )
   public int maxRecordSize;
-
-  File getKeyStoreFile(Stage.Context context) {
-    return new File(context.getResourcesDirectory(), keyStoreFile);
-  }
 
   public Configs() {
     super("RPC", "config.");
@@ -152,8 +124,8 @@ public class Configs extends HttpConfigs {
   }
 
   @Override
-  public boolean isSslEnabled() {
-    return sslEnabled;
+  public boolean isTlsEnabled() {
+    return tlsEnabled;
   }
 
   @Override
@@ -162,12 +134,7 @@ public class Configs extends HttpConfigs {
   }
 
   @Override
-  public String getKeyStoreFile() {
-    return keyStoreFile;
-  }
-
-  @Override
-  public String getKeyStorePassword() {
-    return keyStorePassword;
+  public TlsConfigBean getTlsConfigBean() {
+    return tlsConfigBean;
   }
 }

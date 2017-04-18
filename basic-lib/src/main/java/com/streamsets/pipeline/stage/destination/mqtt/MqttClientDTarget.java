@@ -30,13 +30,14 @@ import com.streamsets.pipeline.lib.mqtt.Groups;
 import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "MQTT Publisher",
     description = "Uses an MQTT Client to publish data to a topic on the MQTT Broker",
     icon = "mqtt.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Destinations/MQTTPublisher.html#task_vbn_cyt_lz"
+    onlineHelpRefUrl = "index.html#Destinations/MQTTPublisher.html#task_vbn_cyt_lz",
+    upgrader = MqttClientTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

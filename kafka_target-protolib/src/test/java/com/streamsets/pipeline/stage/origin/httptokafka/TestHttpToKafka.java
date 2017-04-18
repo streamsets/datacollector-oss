@@ -88,7 +88,7 @@ public class TestHttpToKafka {
     final RawHttpConfigs configs = new RawHttpConfigs();
     configs.appId = "test";
     configs.maxConcurrentRequests = 10;
-    configs.sslEnabled = false;
+    configs.tlsEnabled = false;
     configs.port = randomPort;
 
     KafkaTargetConfig kafkaConfigBean = new KafkaTargetConfig();

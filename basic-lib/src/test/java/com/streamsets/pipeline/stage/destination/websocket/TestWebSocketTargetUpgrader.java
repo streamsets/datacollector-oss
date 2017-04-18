@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -17,27 +17,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.stage.destination.websocket;
 
-package com.streamsets.pipeline.lib.parser.net.ssl;
+import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
+import org.junit.Test;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+public class TestWebSocketTargetUpgrader {
 
-@GenerateResourceBundle
-public enum CertificateType implements Label {
-  JKS("Java Keystore file (JKS)"),
-  PKCS8("PKCS-8 (PEM file)"),
-  PKCS12("PKCS-12 (p12 file)"),
-  ;
-
-  private final String label;
-
-  CertificateType(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+  @Test
+  public void testV1ToV2() throws Exception {
+    TlsConfigBeanUpgraderTestUtil.testHttpSslConfigBeanToTlsConfigBeanUpgrade(
+        "conf.",
+        new WebSocketTargetUpgrader(),
+        2
+    );
   }
 }

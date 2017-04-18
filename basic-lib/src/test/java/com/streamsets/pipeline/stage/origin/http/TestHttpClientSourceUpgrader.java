@@ -30,6 +30,8 @@ import com.streamsets.pipeline.lib.http.HttpProxyConfigBean;
 import com.streamsets.pipeline.lib.http.OAuthConfigBean;
 import com.streamsets.pipeline.lib.http.PasswordAuthConfigBean;
 import com.streamsets.pipeline.lib.http.SslConfigBean;
+import com.streamsets.pipeline.stage.origin.mqtt.MqttClientSourceUpgrader;
+import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -262,6 +264,15 @@ public class TestHttpClientSourceUpgrader {
     assertEquals(HttpResponseActionConfigBean.DEFAULT_BACKOFF_INTERVAL_MS, defaultStatusAction.get("backoffInterval"));
     assertEquals(HttpStatusResponseActionConfigBean.DEFAULT_ACTION, defaultStatusAction.get("action"));
     assertEquals(HttpStatusResponseActionConfigBean.DEFAULT_STATUS_CODE, defaultStatusAction.get("statusCode"));
+  }
+
+  @Test
+  public void testV12ToV13() throws Exception {
+    TlsConfigBeanUpgraderTestUtil.testHttpSslConfigBeanToTlsConfigBeanUpgrade(
+        "conf.client.",
+        new HttpClientSourceUpgrader(),
+        13
+    );
   }
 
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {

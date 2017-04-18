@@ -98,7 +98,7 @@ public class TestSdcIpcToKafka {
     configs.appId = "test";
     configs.maxConcurrentRequests = 10;
     configs.maxRpcRequestSize = 10000;
-    configs.sslEnabled = false;
+    configs.tlsEnabled = false;
     configs.port = randomPort;
 
     KafkaTargetConfig kafkaConfigBean = new KafkaTargetConfig();

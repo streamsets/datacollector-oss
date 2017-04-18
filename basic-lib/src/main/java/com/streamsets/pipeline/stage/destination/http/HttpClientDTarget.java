@@ -28,12 +28,13 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.http.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "HTTP Client",
     description = "Uses an HTTP client to write data.",
     icon = "httpclient.png",
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Destinations/HTTPClient.html#task_bdf_fk5_lz"
+    onlineHelpRefUrl = "index.html#Destinations/HTTPClient.html#task_bdf_fk5_lz",
+    upgrader = HttpClientTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

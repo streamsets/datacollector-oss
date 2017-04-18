@@ -39,6 +39,7 @@ import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,9 +51,10 @@ public class TestConfigs {
     config.readTimeOutMs = 200;
     config.hostPorts = Arrays.asList("localhost:10000");
     config.retriesPerBatch = 2;
-    config.sslEnabled = false;
-    config.trustStoreFile = "";
-    config.trustStorePassword = "";
+    config.tlsEnabled = false;
+    config.tlsConfigBean.hasTrustStore = true;
+    config.tlsConfigBean.trustStoreFilePath = "";
+    config.tlsConfigBean.trustStorePassword = "";
     config.hostVerification = true;
   }
 
@@ -73,7 +75,7 @@ public class TestConfigs {
     HttpsURLConnection sconn = Mockito.mock(MockHttpsURLConnection.class);
     config = new ForTestConfigs(sconn);
     injectConfigsHttp(config);
-    config.sslEnabled = true;
+    config.tlsEnabled = true;
     config.createConnection("localhost:10000");
     Mockito.verify(sconn).setConnectTimeout(Mockito.eq(config.connectionTimeOutMs));
     Mockito.verify(sconn).setReadTimeout(Mockito.eq(config.readTimeOutMs));
@@ -86,7 +88,7 @@ public class TestConfigs {
     Mockito.reset(sconn);
     config = new ForTestConfigs(sconn);
     injectConfigsHttp(config);
-    config.sslEnabled = true;
+    config.tlsEnabled = true;
     config.hostVerification = false;
     config.createConnection("localhost:10000");
     Mockito.verify(sconn).setHostnameVerifier(Mockito.eq(ForTestConfigs.ACCEPT_ALL_HOSTNAME_VERIFIER));
@@ -99,9 +101,10 @@ public class TestConfigs {
     config.readTimeOutMs = 200;
     config.hostPorts = Arrays.asList("localhost:10000");
     config.retriesPerBatch = 2;
-    config.sslEnabled = true;
-    config.trustStoreFile = trustStoreFile;
-    config.trustStorePassword = trustStorePassword;
+    config.tlsEnabled = true;
+    config.tlsConfigBean.hasTrustStore = true;
+    config.tlsConfigBean.trustStoreFilePath = trustStoreFile;
+    config.tlsConfigBean.trustStorePassword = trustStorePassword;
     config.hostVerification = hostnameVerification;
   }
 
@@ -120,6 +123,9 @@ public class TestConfigs {
 
     ForTestConfigs target = new ForTestConfigs(null);
     injectConfigsHttps(target, truststoreFile, "password", true);
+    List<Stage.ConfigIssue> issues = new LinkedList<>();
+    target.tlsConfigBean.init(getContext(), "TLS", "tlsConfigBean.", issues);
+    Assert.assertEquals(0, issues.size());
     SSLSocketFactory factory = target.createSSLSocketFactory(getContext());
     Assert.assertNotNull(factory);
   }
@@ -216,13 +222,13 @@ public class TestConfigs {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
     // no path is not a file
-    config.trustStoreFile = testDir.toString();
+    config.tlsConfigBean.trustStoreFilePath = testDir.toString();
     config.validateSecurity(getContext(), issues);
     Assert.assertEquals(1, issues.size());
     issues.clear();
 
     // file does not exist
-    config.trustStoreFile = UUID.randomUUID().toString();
+    config.tlsConfigBean.trustStoreFilePath = UUID.randomUUID().toString();
     config.validateSecurity(getContext(), issues);
     Assert.assertEquals(1, issues.size());
     issues.clear();
@@ -230,7 +236,7 @@ public class TestConfigs {
     // invalid trust store file
     File invalidStore = new File(testDir, "invalid.jks");
     Files.touch(invalidStore);
-    config.trustStoreFile = invalidStore.toString();
+    config.tlsConfigBean.trustStoreFilePath = invalidStore.toString();
     config.validateSecurity(getContext(), issues);
     Assert.assertEquals(1, issues.size());
     issues.clear();
@@ -241,14 +247,14 @@ public class TestConfigs {
     String trustStoreLocation = new File(testDir, "truststore.jks").toString();
     SSLTestUtils.createTrustStore(trustStoreLocation, "password", "cert1", cert1);
 
-    config.trustStoreFile = trustStoreLocation;
-    config.trustStorePassword = "password";
+    config.tlsConfigBean.trustStoreFilePath = trustStoreLocation;
+    config.tlsConfigBean.trustStorePassword = "password";
     config.validateSecurity(getContext(), issues);
     Assert.assertEquals(0, issues.size());
 
     // valid trust store file, invalid password
-    config.trustStoreFile = trustStoreLocation;
-    config.trustStorePassword = "invalid";
+    config.tlsConfigBean.trustStoreFilePath = trustStoreLocation;
+    config.tlsConfigBean.trustStorePassword = "invalid";
     config.validateSecurity(getContext(), issues);
     Assert.assertEquals(1, issues.size());
     issues.clear();

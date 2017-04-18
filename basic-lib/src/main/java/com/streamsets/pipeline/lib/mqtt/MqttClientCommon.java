@@ -21,8 +21,7 @@
 package com.streamsets.pipeline.lib.mqtt;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.lib.http.SslConfigBean;
-import org.apache.commons.lang3.StringUtils;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClientPersistence;
@@ -38,7 +37,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 public class MqttClientCommon {
-  private static final String SSL_CONFIG_PREFIX = "conf.sslConfig.";
+  private static final String SSL_CONFIG_PREFIX = "conf.tlsConfig.";
   private final MqttClientConfigBean commonConf;
   private MqttClient mqttClient;
 
@@ -47,12 +46,15 @@ public class MqttClientCommon {
   }
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    commonConf.sslConfig.init(
-        context,
-        Groups.SSL.name(),
-        SSL_CONFIG_PREFIX,
-        issues
-    );
+    if (commonConf.tlsConfig.isEitherStoreEnabled()) {
+      // this configuration has no separate "tlsEnabled" field on the bean level, so need to do it this way
+      commonConf.tlsConfig.init(
+          context,
+          Groups.TLS.name(),
+          SSL_CONFIG_PREFIX,
+          issues
+      );
+    }
   }
 
   public MqttClient createMqttClient(MqttCallback mqttCallback) throws MqttException {
@@ -71,26 +73,17 @@ public class MqttClientCommon {
       connOpts.setUserName(commonConf.username);
       connOpts.setPassword(commonConf.password.toCharArray());
     }
-    configureSslContext(commonConf.sslConfig, connOpts);
+    configureSslContext(commonConf.tlsConfig, connOpts);
     mqttClient.connect(connOpts);
     return mqttClient;
   }
 
 
-  private void configureSslContext(SslConfigBean conf, MqttConnectOptions connOpts) {
+  private void configureSslContext(TlsConfigBean conf, MqttConnectOptions connOpts) {
     try {
       URI vURI = new URI(commonConf.brokerUrl);
       if (vURI.getScheme().equals("ssl")) {
-        SslConfigurator sslConfig = SslConfigurator.newInstance();
-        if (!StringUtils.isEmpty(conf.trustStorePath) && !StringUtils.isEmpty(conf.trustStorePassword)) {
-          sslConfig.trustStoreFile(conf.trustStorePath).trustStorePassword(conf.trustStorePassword);
-        }
-
-        if (!StringUtils.isEmpty(conf.keyStorePath) && !StringUtils.isEmpty(conf.keyStorePassword)) {
-          sslConfig.keyStoreFile(conf.keyStorePath).keyStorePassword(conf.keyStorePassword);
-        }
-
-        SSLContext sslContext = sslConfig.createSSLContext();
+        SSLContext sslContext = conf.getSslContext();
         connOpts.setSocketFactory(sslContext.getSocketFactory());
       }
     } catch (URISyntaxException e) {

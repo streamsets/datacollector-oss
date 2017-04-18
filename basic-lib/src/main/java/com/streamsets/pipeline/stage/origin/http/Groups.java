@@ -30,7 +30,7 @@ public enum Groups implements Label {
   CREDENTIALS("Credentials"),
   OAUTH2("OAuth 2"),
   PROXY("Proxy"),
-  SSL("SSL/TLS"),
+  TLS("TLS"),
   TIMEOUT("Timeout Handling"),
   DATA_FORMAT("Data Format"),
   ;

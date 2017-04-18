@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.sdcipc;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import com.streamsets.pipeline.stage.destination.sdcipc.Constants;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -88,14 +89,18 @@ public class IpcServer {
     Server server = new Server(threadPool);
 
     ServerConnector connector;
-    if (configs.sslEnabled) {
+    if (configs.tlsEnabled) {
       LOG.debug("Configuring over HTTPS");
       HttpConfiguration httpsConf = new HttpConfiguration();
       httpsConf.addCustomizer(new SecureRequestCustomizer());
       SslContextFactory sslContextFactory = new SslContextFactory();
-      sslContextFactory.setKeyStorePath(configs.getKeyStoreFile(context).getAbsolutePath());
-      sslContextFactory.setKeyStorePassword(configs.keyStorePassword);
-      sslContextFactory.setKeyManagerPassword(configs.keyStorePassword);
+      final TlsConfigBean tlsConfig = configs.getTlsConfigBean();
+
+      sslContextFactory.setKeyStore(tlsConfig.getKeyStore());
+      sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword);
+      sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword);
+      sslContextFactory.setSslContext(tlsConfig.getSslContext());
+
       connector = new ServerConnector(server, new SslConnectionFactory(sslContextFactory, "http/1.1"),
                                       new HttpConnectionFactory(httpsConf));
     } else {
@@ -115,7 +120,7 @@ public class IpcServer {
 
     server.start();
 
-    LOG.info("Running, port '{}', TLS '{}'", configs.port, configs.sslEnabled);
+    LOG.info("Running, port '{}', TLS '{}'", configs.port, configs.tlsEnabled);
 
     httpServer = server;
   }
@@ -145,7 +150,7 @@ public class IpcServer {
   }
 
   public void stop() {
-    LOG.info("Shutting down, port '{}', TLS '{}'", configs.port, configs.sslEnabled);
+    LOG.info("Shutting down, port '{}', TLS '{}'", configs.port, configs.tlsEnabled);
     if (httpServer != null) {
       try {
         servlet.setShuttingDown();

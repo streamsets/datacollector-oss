@@ -96,7 +96,7 @@ public class HttpClientSource extends BaseSource {
   private static final String REQUEST_BODY_CONFIG_NAME = "requestBody";
   private static final String HEADER_CONFIG_NAME = "headers";
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
-  private static final String SSL_CONFIG_PREFIX = "conf.sslConfig.";
+  private static final String TLS_CONFIG_PREFIX = "conf.tlsConfig.";
   private static final String BASIC_CONFIG_PREFIX = "conf.basic.";
   private static final String VAULT_EL_PREFIX = VaultEL.PREFIX + ":";
   private static final HashFunction HF = Hashing.sha256();
@@ -159,7 +159,9 @@ public class HttpClientSource extends BaseSource {
     conf.basic.init(getContext(), Groups.HTTP.name(), BASIC_CONFIG_PREFIX, issues);
     conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.HTTP.name(), DATA_FORMAT_CONFIG_PREFIX, issues);
     conf.init(getContext(), Groups.HTTP.name(), "conf.", issues);
-    conf.client.sslConfig.init(getContext(), Groups.SSL.name(), SSL_CONFIG_PREFIX, issues);
+    if (conf.client.tlsConfig.isEitherStoreEnabled()) {
+      conf.client.tlsConfig.init(getContext(), Groups.TLS.name(), TLS_CONFIG_PREFIX, issues);
+    }
 
     resourceVars = getContext().createELVars();
     resourceEval = getContext().createELEval(RESOURCE_CONFIG_NAME);
@@ -242,7 +244,7 @@ public class HttpClientSource extends BaseSource {
       JerseyClientUtil.configureProxy(conf.client.proxy, clientBuilder);
     }
 
-    JerseyClientUtil.configureSslContext(conf.client.sslConfig, clientBuilder);
+    JerseyClientUtil.configureSslContext(conf.client.tlsConfig, clientBuilder);
 
     configureAuthAndBuildClient(clientBuilder, issues);
 

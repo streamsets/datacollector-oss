@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.http;
 
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,26 +50,18 @@ public abstract class HttpConfigs {
 
   public abstract int getMaxHttpRequestSizeKB();
 
-  public abstract boolean isSslEnabled();
+  public abstract boolean isTlsEnabled();
 
   public abstract boolean isAppIdViaQueryParamAllowed();
 
-  public abstract String getKeyStoreFile();
-
-  public abstract String getKeyStorePassword();
-
-  private String keyStoreFilePath;
-
-  public String getKeyStoreFilePath() {
-    return keyStoreFilePath;
-  }
+  public abstract TlsConfigBean getTlsConfigBean();
 
   public List<Stage.ConfigIssue> init(Stage.Context context) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
     validatePort(context, issues);
 
-    if (isSslEnabled()) {
+    if (isTlsEnabled()) {
       validateSecurity(context, issues);
     }
 
@@ -93,49 +86,8 @@ public abstract class HttpConfigs {
   }
 
   void validateSecurity(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    keyStoreFilePath = new File(context.getResourcesDirectory(), getKeyStoreFile()).getAbsolutePath();
-    if (!keyStoreFilePath.isEmpty()) {
-      File file = new File(keyStoreFilePath);
-      if (!file.exists()) {
-        issues.add(context.createConfigIssue(gropuName,
-            configPrefix + KEY_STORE_FILE_CONFIG,
-            HttpServerErrors.HTTP_SERVER_ORIG_07
-        ));
-      } else {
-        if (!file.isFile()) {
-          issues.add(context.createConfigIssue(gropuName,
-              configPrefix + KEY_STORE_FILE_CONFIG,
-              HttpServerErrors.HTTP_SERVER_ORIG_08
-          ));
-        } else {
-          if (!file.canRead()) {
-            issues.add(context.createConfigIssue(gropuName,
-                configPrefix + KEY_STORE_FILE_CONFIG,
-                HttpServerErrors.HTTP_SERVER_ORIG_09
-            ));
-          } else {
-            try {
-              KeyStore keystore = KeyStore.getInstance("jks");
-              try (InputStream is = new FileInputStream(file)) {
-                keystore.load(is, getKeyStorePassword().toCharArray());
-              }
-            } catch (Exception ex) {
-              issues.add(context.createConfigIssue(gropuName,
-                  configPrefix + KEY_STORE_FILE_CONFIG,
-                  HttpServerErrors.HTTP_SERVER_ORIG_10,
-                  ex.toString()
-              ));
-            }
-          }
-        }
-      }
-    } else {
-      issues.add(context.createConfigIssue(
-          gropuName,
-          configPrefix + KEY_STORE_FILE_CONFIG,
-          HttpServerErrors.HTTP_SERVER_ORIG_11
-      ));
-    }
+    TlsConfigBean tlsConfigBean = getTlsConfigBean();
+    tlsConfigBean.init(context, "TLS", configPrefix+"tlsConfigBean.", issues);
   }
 
   public void destroy() {

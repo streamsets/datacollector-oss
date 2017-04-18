@@ -33,13 +33,14 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 @StageDef(
-    version = 9,
+    version = 10,
     label = "WebSocket Server",
     description = "WebSocket Server [Multi-Threaded Pipeline]",
     icon="websockets.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/WebSocketServer.html#task_mzv_cvc_3z"
+    onlineHelpRefUrl = "index.html#Origins/WebSocketServer.html#task_mzv_cvc_3z",
+    upgrader = WebSocketServerPushSourceUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {

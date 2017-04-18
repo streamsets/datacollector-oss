@@ -31,13 +31,14 @@ import com.streamsets.pipeline.lib.mqtt.Groups;
 import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "MQTT Subscriber",
     description = "Uses an MQTT client to subscribe to a topic on the MQTT Broker",
     icon = "mqtt.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/MQTTSubscriber.html#task_wnz_mxt_lz"
+    onlineHelpRefUrl = "index.html#Origins/MQTTSubscriber.html#task_wnz_mxt_lz",
+    upgrader = MqttClientSourceUpgrader.class
 )
 @HideConfigs(value = {"subscriberConf.dataFormatConfig.jsonContent"})
 @ConfigGroups(Groups.class)

@@ -74,9 +74,9 @@ public class TestSdcIpcSource {
 
     final Configs configs = new Configs();
     configs.appId = "appId";
-    configs.sslEnabled = ssl;
-    configs.keyStoreFile = keyStore.toString();
-    configs.keyStorePassword = "keystore";
+    configs.tlsEnabled = ssl;
+    configs.tlsConfigBean.keyStoreFilePath = keyStore.toString();
+    configs.tlsConfigBean.keyStorePassword = "keystore";
     configs.port = randomPort;
     configs.maxWaitTimeSecs = 2;
     Source source = new SdcIpcSource(configs);
@@ -162,10 +162,12 @@ public class TestSdcIpcSource {
     config.connectionTimeOutMs = 1000;
     config.readTimeOutMs = 1000;
     config.hostPorts = ImmutableList.of(hostPort);
-    config.sslEnabled = ssl;
+    config.tlsEnabled = ssl;
     config.hostVerification = false;
-    config.trustStoreFile = trustStoreFile;
-    config.trustStorePassword = trustStorePassword;
+    config.tlsConfigBean.trustStoreFilePath = trustStoreFile;
+    config.tlsConfigBean.trustStorePassword = trustStorePassword;
+    config.tlsConfigBean.useDefaultCiperSuites = true;
+    config.tlsConfigBean.cipherSuites.add("TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256");
     List<Stage.ConfigIssue> issues = config.init(context);
     // now setting the appId we want to test
     config.appId = appId;

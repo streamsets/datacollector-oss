@@ -26,9 +26,10 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
-import com.streamsets.pipeline.lib.parser.net.ssl.SslConfigBean;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingModeChooserValues;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.List;
@@ -50,8 +51,8 @@ public class TCPServerSourceConfig {
   @ConfigDefBean(groups = "DATA_FORMAT")
   public DataParserFormatConfig dataFormatConfig;
 
-  @ConfigDefBean(groups = "SSL")
-  public SslConfigBean sslConfigBean = new SslConfigBean();
+  @ConfigDefBean(groups = "TLS")
+  public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.SERVER);
 
   @ConfigDef(
       required = true,

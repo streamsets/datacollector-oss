@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,14 +17,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.stage.origin.websocketserver;
 
-package com.streamsets.pipeline.lib.parser.net.ssl;
+import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.stage.origin.mqtt.MqttClientSourceUpgrader;
+import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
+import org.junit.Assert;
+import org.junit.Test;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CertificateTypeChooserValues extends BaseEnumChooserValues<CertificateType> {
+public class TestWebSocketServerPushSourceUpgrader {
 
-  public CertificateTypeChooserValues() {
-    super(CertificateType.class);
+  @Test
+  public void testV1ToV10() throws Exception {
+    TlsConfigBeanUpgraderTestUtil.testRawKeyStoreConfigsToTlsConfigBeanUpgrade(
+        "webSocketConfigs.",
+        new WebSocketServerPushSourceUpgrader(),
+        10
+    );
   }
 }

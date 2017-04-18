@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.slf4j.Logger;
@@ -141,8 +143,8 @@ public class JerseyClientConfigBean {
   @ConfigDefBean(groups = "PROXY")
   public HttpProxyConfigBean proxy = new HttpProxyConfigBean();
 
-  @ConfigDefBean(groups = "SSL")
-  public SslConfigBean sslConfig = new SslConfigBean();
+  @ConfigDefBean(groups = "TLS")
+  public TlsConfigBean tlsConfig = new TlsConfigBean(TlsConnectionType.NEITHER);
 
   public void init(Stage.Context context, String groupName, String prefix, List<Stage.ConfigIssue> issues) {
     if (useProxy && !StringUtils.isEmpty(proxy.uri)) {

@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   WEB_SOCKET("WebSocket"),
-  SSL("SSL/TLS"),
+  TLS("TLS"),
   DATA_FORMAT("Data Format"),
   ;
 

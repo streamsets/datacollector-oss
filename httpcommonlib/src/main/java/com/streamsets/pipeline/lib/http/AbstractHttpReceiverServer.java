@@ -21,6 +21,7 @@ package com.streamsets.pipeline.lib.http;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -93,14 +94,18 @@ public abstract class AbstractHttpReceiverServer {
       Server server = new Server(threadPool);
 
       ServerConnector connector;
-      if (configs.isSslEnabled()) {
+      if (configs.isTlsEnabled()) {
         LOG.debug("Configuring HTTPS");
         HttpConfiguration httpsConf = new HttpConfiguration();
         httpsConf.addCustomizer(new SecureRequestCustomizer());
         SslContextFactory sslContextFactory = new SslContextFactory();
-        sslContextFactory.setKeyStorePath(configs.getKeyStoreFilePath());
-        sslContextFactory.setKeyStorePassword(configs.getKeyStorePassword());
-        sslContextFactory.setKeyManagerPassword(configs.getKeyStorePassword());
+
+        TlsConfigBean tlsConfig = configs.getTlsConfigBean();
+        sslContextFactory.setKeyStorePath(tlsConfig.keyStoreFilePath);
+        sslContextFactory.setKeyStoreType(tlsConfig.keyStoreType.getJavaValue());
+        sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword);
+        sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword);
+
         connector = new ServerConnector(server,
             new SslConnectionFactory(sslContextFactory, "http/1.1"),
             new HttpConnectionFactory(httpsConf)
@@ -127,7 +132,7 @@ public abstract class AbstractHttpReceiverServer {
       server.setHandler(contextHandler);
       server.start();
 
-      LOG.debug("Running, port '{}', TLS '{}'", configs.getPort(), configs.isSslEnabled());
+      LOG.debug("Running, port '{}', TLS '{}'", configs.getPort(), configs.isTlsEnabled());
 
       httpServer = server;
     } catch (Exception ex) {
@@ -137,7 +142,7 @@ public abstract class AbstractHttpReceiverServer {
   }
 
   public void destroy() {
-    LOG.debug("Shutting down, port '{}', TLS '{}'", configs.getPort(), configs.isSslEnabled());
+    LOG.debug("Shutting down, port '{}', TLS '{}'", configs.getPort(), configs.isTlsEnabled());
     if (httpServer != null) {
       try {
         setShuttingDown();

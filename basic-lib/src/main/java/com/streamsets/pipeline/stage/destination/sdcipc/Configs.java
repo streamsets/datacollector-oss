@@ -21,10 +21,13 @@ package com.streamsets.pipeline.stage.destination.sdcipc;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.math.IntMath;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +63,9 @@ public class Configs {
   private static final String TRUST_STORE_FILE = CONFIG_PREFIX + "trustStoreFile";
   private static final int MAX_BACKOFF_WAIT = 5 * 60 * 1000; // 5 minutes in milliseconds
 
+  @ConfigDefBean(groups = "TLS")
+  public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.CLIENT);
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.LIST,
@@ -91,33 +97,7 @@ public class Configs {
       displayPosition = 30,
       group = "RPC"
   )
-  public boolean sslEnabled;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Truststore File",
-      description = "The truststore file is expected in the Data Collector resources directory. Leave empty if none.",
-      displayPosition = 40,
-      group = "RPC",
-      dependsOn = "sslEnabled",
-      triggeredByValue = "true"
-  )
-  public String trustStoreFile;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Truststore Password",
-      displayPosition = 50,
-      elDefs = VaultEL.class,
-      group = "RPC",
-      dependsOn = "sslEnabled",
-      triggeredByValue = "true"
-  )
-  public String trustStorePassword;
+  public boolean tlsEnabled;
 
   @ConfigDef(
       required = true,
@@ -127,7 +107,7 @@ public class Configs {
       description = "Disables server certificate hostname verification",
       displayPosition = 60,
       group = "RPC",
-      dependsOn = "sslEnabled",
+      dependsOn = "tlsEnabled",
       triggeredByValue = "true"
   )
   public boolean hostVerification;
@@ -201,7 +181,7 @@ public class Configs {
     boolean ok = validateHostPorts(context, issues);
     ok |= validateSecurity(context, issues);
     if (ok) {
-      if (sslEnabled) {
+      if (tlsEnabled) {
         try {
           sslSocketFactory = createSSLSocketFactory(context);
         } catch (Exception ex) {
@@ -325,74 +305,14 @@ public class Configs {
 
   boolean validateSecurity(Stage.Context context, List<Stage.ConfigIssue> issues) {
     boolean ok = true;
-    if (sslEnabled) {
-      if (!trustStoreFile.isEmpty()) {
-        File file = getTrustStoreFile(context);
-        if (!file.exists()) {
-          issues.add(context.createConfigIssue(Groups.RPC.name(), TRUST_STORE_FILE,
-                                               Errors.IPC_DEST_07));
-          ok = false;
-        } else {
-          if (!file.isFile()) {
-            issues.add(context.createConfigIssue(Groups.RPC.name(), TRUST_STORE_FILE,
-                                                 Errors.IPC_DEST_08));
-            ok = false;
-          } else {
-            if (!file.canRead()) {
-              issues.add(context.createConfigIssue(Groups.RPC.name(), TRUST_STORE_FILE,
-                                                   Errors.IPC_DEST_09));
-              ok = false;
-            } else {
-              try {
-                KeyStore keystore = KeyStore.getInstance("jks");
-                try (InputStream is = new FileInputStream(getTrustStoreFile(context))) {
-                  keystore.load(is, trustStorePassword.toCharArray());
-                }
-              } catch (Exception ex) {
-                issues.add(context.createConfigIssue(Groups.RPC.name(), TRUST_STORE_FILE,
-                                                     Errors.IPC_DEST_10, ex.toString()));
-              }
-            }
-          }
-        }
-      }
+    if (tlsEnabled) {
+      ok &= tlsConfigBean.init(context, "TLS", "tlsConfigBean.", issues);
     }
     return ok;
   }
 
-  File getTrustStoreFile(Stage.Context context) {
-    return new File(context.getResourcesDirectory(), trustStoreFile);
-  }
-
   SSLSocketFactory createSSLSocketFactory(Stage.Context context) throws Exception {
-    SSLSocketFactory sslSocketFactory;
-    if (trustStoreFile.isEmpty()) {
-      sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-    } else {
-      KeyStore keystore = KeyStore.getInstance("jks");
-      try (InputStream is = new FileInputStream(getTrustStoreFile(context))) {
-        keystore.load(is, trustStorePassword.toCharArray());
-      }
-
-      KeyManagerFactory keyMgrFactory = KeyManagerFactory.getInstance(Constants.SSL_CERTIFICATE);
-      keyMgrFactory.init(keystore, trustStorePassword.toCharArray());
-      KeyManager[] keyManagers = keyMgrFactory.getKeyManagers();
-
-      TrustManager[] trustManagers = new TrustManager[1];
-      TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(Constants.SSL_CERTIFICATE);
-      trustManagerFactory.init(keystore);
-      for (TrustManager trustManager1 : trustManagerFactory.getTrustManagers()) {
-        if (trustManager1 instanceof X509TrustManager) {
-          trustManagers[0] = trustManager1;
-          break;
-        }
-      }
-      SSLContext sslContext = SSLContext.getInstance("TLS");
-      sslContext.init(keyManagers, trustManagers, null);
-      sslContext.getDefaultSSLParameters().setProtocols(Constants.SSL_ENABLED_PROTOCOLS);
-      sslSocketFactory = sslContext.getSocketFactory();
-    }
-    return sslSocketFactory;
+    return tlsConfigBean.getSslContext().getSocketFactory();
   }
 
   HttpURLConnection createConnection(URL url) throws IOException {
@@ -413,12 +333,12 @@ public class Configs {
 
     @VisibleForTesting
   public HttpURLConnection createConnection(String hostPort, String path) throws IOException {
-    String scheme = (sslEnabled) ? "https://" : "http://";
+    String scheme = (tlsEnabled) ? "https://" : "http://";
     URL url = new URL(scheme + hostPort.trim()  + path);
     HttpURLConnection conn = createConnection(url);
     conn.setConnectTimeout(connectionTimeOutMs);
     conn.setReadTimeout(readTimeOutMs);
-    if (sslEnabled) {
+    if (tlsEnabled) {
       HttpsURLConnection sslConn = (HttpsURLConnection) conn;
       sslConn.setSSLSocketFactory(sslSocketFactory);
       if (!hostVerification) {

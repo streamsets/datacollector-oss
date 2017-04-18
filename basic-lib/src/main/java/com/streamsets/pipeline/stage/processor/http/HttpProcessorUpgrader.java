@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.lib.http.HttpCompressionType;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
+import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgradeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,9 @@ public class HttpProcessorUpgrader implements StageUpgrader {
       case 7:
         upgradeV7ToV8(configs);
         break;
+      case 8:
+        upgradeV8ToV9(configs);
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -127,4 +131,7 @@ public class HttpProcessorUpgrader implements StageUpgrader {
     configs.add(new Config(joiner.join(CONF, CLIENT, "httpCompression"), HttpCompressionType.NONE));
   }
 
+  private void upgradeV8ToV9(List<Config> configs) {
+    TlsConfigBeanUpgradeUtil.upgradeHttpSslConfigBeanToTlsConfigBean(configs, "conf.client.");
+  }
 }

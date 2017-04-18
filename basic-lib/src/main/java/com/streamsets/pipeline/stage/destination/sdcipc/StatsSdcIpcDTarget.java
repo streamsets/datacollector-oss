@@ -33,11 +33,12 @@ import com.streamsets.pipeline.lib.el.VaultEL;
 import java.util.Arrays;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Write to SDC RPC",
     description = "Writes pipeline Statistic records to another pipeline over SDC RPC",
     icon="sdcipc.png",
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "",
+    upgrader = StatsSdcIpcTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @StatsAggregatorStage

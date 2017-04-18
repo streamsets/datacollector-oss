@@ -20,14 +20,20 @@
 package com.streamsets.pipeline.lib.httpsource;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 
 public class RawHttpConfigs extends HttpConfigs {
 
   public RawHttpConfigs() {
     super("HTTP", "config.");
   }
+
+  @ConfigDefBean(groups = "TLS")
+  public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.SERVER);
 
   @ConfigDef(
       required = true,
@@ -85,33 +91,7 @@ public class RawHttpConfigs extends HttpConfigs {
       displayPosition = 40,
       group = "HTTP"
   )
-  public boolean sslEnabled;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Keystore File",
-      description = "The keystore file is expected in the Data Collector resources directory",
-      displayPosition = 50,
-      group = "HTTP",
-      dependsOn = "sslEnabled",
-      triggeredByValue = "true"
-  )
-  public String keyStoreFile;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Keystore Password",
-      displayPosition = 60,
-      elDefs = VaultEL.class,
-      group = "HTTP",
-      dependsOn = "sslEnabled",
-      triggeredByValue = "true"
-  )
-  public String keyStorePassword;
+  public boolean tlsEnabled;
 
   @Override
   public int getPort() {
@@ -141,8 +121,8 @@ public class RawHttpConfigs extends HttpConfigs {
   }
 
   @Override
-  public boolean isSslEnabled() {
-    return sslEnabled;
+  public boolean isTlsEnabled() {
+    return tlsEnabled;
   }
 
   @Override
@@ -151,13 +131,8 @@ public class RawHttpConfigs extends HttpConfigs {
   }
 
   @Override
-  public String getKeyStorePassword() {
-    return keyStorePassword;
-  }
-
-  @Override
-  public String getKeyStoreFile() {
-    return keyStoreFile;
+  public TlsConfigBean getTlsConfigBean() {
+    return tlsConfigBean;
   }
 
 }

@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   HTTP("HTTP"),
   DATA_FORMAT("Data Format"),
+  TLS("TLS"),
   ;
 
   private final String label;

@@ -27,12 +27,13 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "WebSocket Client",
     description = "Uses an WebSocket client to write data.",
     icon = "websockets.png",
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Destinations/WebSocketClient.html#task_erb_pjn_lz"
+    onlineHelpRefUrl = "index.html#Destinations/WebSocketClient.html#task_erb_pjn_lz",
+    upgrader = WebSocketTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

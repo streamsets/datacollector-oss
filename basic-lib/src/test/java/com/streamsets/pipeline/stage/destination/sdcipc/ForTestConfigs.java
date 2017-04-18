@@ -31,12 +31,7 @@ class ForTestConfigs extends Configs {
 
   public ForTestConfigs(HttpURLConnection conn) {
     this.conn = conn;
-  }
-
-  // not to depend on resources dir for testing
-  @Override
-  File getTrustStoreFile(Stage.Context context) {
-    return new File(trustStoreFile);
+    this.tlsConfigBean.pathRelativeToResourcesDir = false;
   }
 
   // injecting a mock connection instance

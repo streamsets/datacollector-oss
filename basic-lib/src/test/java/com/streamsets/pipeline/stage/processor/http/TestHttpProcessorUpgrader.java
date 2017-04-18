@@ -26,6 +26,8 @@ import com.streamsets.pipeline.lib.http.HttpProxyConfigBean;
 import com.streamsets.pipeline.lib.http.OAuthConfigBean;
 import com.streamsets.pipeline.lib.http.PasswordAuthConfigBean;
 import com.streamsets.pipeline.lib.http.SslConfigBean;
+import com.streamsets.pipeline.stage.origin.mqtt.MqttClientSourceUpgrader;
+import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,5 +134,14 @@ public class TestHttpProcessorUpgrader {
 
     assertTrue(configValues.containsKey("conf.rateLimit"));
     assertEquals(configValues.get("conf.rateLimit"), 0);
+  }
+
+  @Test
+  public void testV8ToV9() throws Exception {
+    TlsConfigBeanUpgraderTestUtil.testHttpSslConfigBeanToTlsConfigBeanUpgrade(
+        "conf.client.",
+        new HttpProcessorUpgrader(),
+        9
+    );
   }
 }

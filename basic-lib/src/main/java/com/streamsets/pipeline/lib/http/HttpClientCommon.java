@@ -57,7 +57,7 @@ public class HttpClientCommon {
   private static final String HTTP_METHOD_CONFIG_NAME = "httpMethod";
   private static final String HEADER_CONFIG_NAME = "headers";
   public static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
-  private static final String SSL_CONFIG_PREFIX = "conf.sslConfig.";
+  private static final String SSL_CONFIG_PREFIX = "conf.tlsConfig.";
   private static final String VAULT_EL_PREFIX = VaultEL.PREFIX + ":read";
   private static final String OAUTH2_GROUP = "OAUTH2";
   private static final String CONF_CLIENT_OAUTH2_TOKEN_URL = "conf.client.oauth2.tokenUrl";
@@ -78,12 +78,14 @@ public class HttpClientCommon {
   }
 
   public List<Stage.ConfigIssue> init(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    jerseyClientConfig.sslConfig.init(
-        context,
-        Groups.SSL.name(),
-        SSL_CONFIG_PREFIX,
-        issues
-    );
+    if (jerseyClientConfig.tlsConfig.isEitherStoreEnabled()) {
+      jerseyClientConfig.tlsConfig.init(
+          context,
+          Groups.TLS.name(),
+          SSL_CONFIG_PREFIX,
+          issues
+      );
+    }
 
     resourceVars = context.createELVars();
     resourceEval = context.createELEval(RESOURCE_CONFIG_NAME);
@@ -113,7 +115,7 @@ public class HttpClientCommon {
         JerseyClientUtil.configureProxy(jerseyClientConfig.proxy, clientBuilder);
       }
 
-      JerseyClientUtil.configureSslContext(jerseyClientConfig.sslConfig, clientBuilder);
+      JerseyClientUtil.configureSslContext(jerseyClientConfig.tlsConfig, clientBuilder);
 
       configureAuthAndBuildClient(clientBuilder, issues, context);
     }

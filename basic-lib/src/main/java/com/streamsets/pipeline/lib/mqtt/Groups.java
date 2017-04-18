@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   MQTT("MQTT"),
   CREDENTIALS("Credentials"),
-  SSL("SSL/TLS"),
+  TLS("TLS"),
   DATA_FORMAT("Data Format"),
   ;
 

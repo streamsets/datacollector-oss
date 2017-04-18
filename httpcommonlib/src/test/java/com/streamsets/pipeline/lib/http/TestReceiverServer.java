@@ -22,6 +22,8 @@ package com.streamsets.pipeline.lib.http;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.testing.NetworkUtils;
 import org.junit.Assert;
@@ -52,6 +54,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -84,7 +87,7 @@ public class TestReceiverServer {
       }
 
       @Override
-      public boolean isSslEnabled() {
+      public boolean isTlsEnabled() {
         return false;
       }
 
@@ -94,12 +97,7 @@ public class TestReceiverServer {
       }
 
       @Override
-      public String getKeyStoreFile() {
-        return null;
-      }
-
-      @Override
-      public String getKeyStorePassword() {
+      public TlsConfigBean getTlsConfigBean() {
         return null;
       }
     };
@@ -174,10 +172,11 @@ public class TestReceiverServer {
     File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     final File keyStore = new File(testDir, "keystore.jks");
     Assert.assertTrue(testDir.mkdirs());
+    final String keyStorePassword = "keystore";
     final File trustStore = new File(testDir, "truststore.jks");
     KeyPair keyPair = SSLTestUtils.generateKeyPair();
     Certificate cert = SSLTestUtils.generateCertificate("CN=" + hostname, keyPair, 30);
-    SSLTestUtils.createKeyStore(keyStore.toString(), "keystore", "web", keyPair.getPrivate(), cert);
+    SSLTestUtils.createKeyStore(keyStore.toString(), keyStorePassword, "web", keyPair.getPrivate(), cert);
     SSLTestUtils.createTrustStore(trustStore.toString(), "truststore", "web", cert);
 
     final int port = NetworkUtils.getRandomPort();
@@ -203,7 +202,7 @@ public class TestReceiverServer {
       }
 
       @Override
-      public boolean isSslEnabled() {
+      public boolean isTlsEnabled() {
         return true;
       }
 
@@ -213,13 +212,11 @@ public class TestReceiverServer {
       }
 
       @Override
-      public String getKeyStoreFile() {
-        return keyStore.getAbsolutePath();
-      }
-
-      @Override
-      public String getKeyStorePassword() {
-        return "keystore";
+      public TlsConfigBean getTlsConfigBean() {
+        final TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.SERVER);
+        tlsConfigBean.keyStoreFilePath = keyStore.getAbsolutePath();
+        tlsConfigBean.keyStorePassword = keyStorePassword;
+        return tlsConfigBean;
       }
     };
 
@@ -289,7 +286,7 @@ public class TestReceiverServer {
   }
 
   private String SSL_CERTIFICATE = "SunX509";
-  private String[] SSL_ENABLED_PROTOCOLS = {"TLSv1"};
+  private String[] SSL_ENABLED_PROTOCOLS = {"TLSv1.2"};
 
   private SSLSocketFactory createSSLSocketFactory(
       Stage.Context context, String trustStoreFile, String trustStorePassword
