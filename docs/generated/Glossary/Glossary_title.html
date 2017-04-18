@@ -113,7 +113,7 @@
         <dt class="dt dlterm">dataflow triggers</dt>
 
         <dd class="dd">Instructions for the pipeline to kick off asynchronous tasks in external systems in
-          response to events that occur in the pipeline. For more information, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Event Framework Overview</a>.</dd>
+          response to events that occur in the pipeline. For more information, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</dd>
 
       
       
@@ -219,13 +219,6 @@
 
       
       
-        <dt class="dt dlterm">pipeline constant</dt>
-
-        <dd class="dd">A constant that you define for the pipeline and that you can use in any stage in the
-          pipeline. </dd>
-
-      
-      
         <dt class="dt dlterm">pipeline runner</dt>
 
         <dd class="dd">Used in multithreaded pipelines to run a sourceless instance of a pipeline. </dd>
@@ -234,7 +227,8 @@
       
         <dt class="dt dlterm">preconditions</dt>
 
-        <dd class="dd">Conditions that a record must satisfy to enter the stage for processing. </dd>
+        <dd class="dd">Conditions that a record must satisfy to enter the stage for processing. Records that
+          don't meet all preconditions are processed based on stage error handling.</dd>
 
       
       
@@ -247,7 +241,8 @@
         <dt class="dt dlterm">required fields</dt>
 
         <dd class="dd">A required field is a field that must exist in a record to allow it into the stage for
-          processing. </dd>
+          processing. Records that don't have all required fields are processed based on pipeline
+          error handling.</dd>
 
       
       
@@ -255,6 +250,13 @@
 
         <dd class="dd">A user-defined identifier configured in the SDC RPC origin and destination to allow the
           destination to write to the origin.</dd>
+
+      
+      
+        <dt class="dt dlterm">runtime parameters</dt>
+
+        <dd class="dd">Parameters that you define for the pipeline and call from within that same pipeline. Use
+          to specify values for pipeline properties when you start the pipeline.</dd>
 
       
       
@@ -270,8 +272,8 @@
       
         <dt class="dt dlterm">runtime resources</dt>
 
-        <dd class="dd">Runtime resources are values that you can define in a restricted file local to the <span class="ph">Data
-                  Collector</span>and
+        <dd class="dd">Values that you define in a restricted file local to the <span class="ph">Data
+                  Collector</span> and
           call from within a pipeline. Use to load sensitive information from files at runtime.</dd>
 
       
@@ -288,6 +290,14 @@
 
         <dd class="dd">A set of pipelines that use the SDC RPC destination and SDC RPC origin to pass data from
           one pipeline to another without writing to an intermediary system. </dd>
+
+      
+      
+        <dt class="dt dlterm">sourceless pipeline instance</dt>
+
+        <dd class="dd">An instance of the pipeline that includes all of the processors and destinations in the
+          pipeline and represents all pipeline processing after the origin. Used in multithreaded
+          pipelines.</dd>
 
       
       

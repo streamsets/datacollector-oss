@@ -35,11 +35,62 @@
       Amazon Web Services connection information for your Kinesis cluster and the data format of
       source data.</p>
 
+        <p class="p">The Kinesis Consumer origin can use multiple threads to enable parallel processing of
+            data from the cluster. </p>
+
         <p class="p">You can optionally use a proxy to connect to Kinesis Streams.</p>
 
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_jhh_psb_mz">
+ <h2 class="title topictitle2">Multithreaded Processing</h2>
+
+ <div class="body conbody">
+        <p class="p">The Kinesis
+            Consumer origin can perform parallel processing and enables the creation of a
+            multithreaded pipeline. The origin uses multiple concurrent threads based on the Max
+            Threads property.</p>
+
+        <p class="p">When you start the pipeline, <span class="ph">each thread connects to the origin system
+                        and creates a batch of data, and passes the batch to an available pipeline
+                        runner. A pipeline runner is a <dfn class="term">sourceless pipeline instance</dfn> -
+                        an instance of the pipeline that includes all of the processors and
+                        destinations in the pipeline and performs all pipeline processing after the
+                        origin.</span></p>
+
+        <p class="p"><span class="ph"> Each pipeline runner processes one batch at a time,
+                        just like a pipeline that runs on a single thread. When the flow of data
+                        slows, the pipeline runners wait idly until they are needed.</span></p>
+
+        <p class="p"><span class="ph">Multithreaded pipelines preserve the order of
+                        records within each batch, just like a single-threaded pipeline. But since
+                        batches are processed by different pipeline instances, the order that
+                        batches are written to destinations is not ensured.</span></p>
+
+        <p class="p">For example, say you set the Max Threads property to 5. When you start the pipeline, <span class="ph">the origin creates five threads, and by default <span class="ph">Data
+                  Collector</span> creates a matching number of pipeline runners. Upon receiving data, the
+                        origin passes a batch to each of the pipeline runners for processing.
+                  </span>
+        </p>
+
+        <p class="p"><span class="ph">Each pipeline runner performs the processing associated
+                        with the rest of the pipeline. After a batch is written to pipeline
+                        destinations, the pipeline runner becomes available for another batch of
+                        data. Each batch is processed and written as quickly as possible,
+                        independent from other batches processed by other pipeline runners, so
+                        batches may be written differently from the read-order.</span></p>
+
+        <p class="p">At any given moment, the five pipeline runners can each
+                  process a batch, so this multithreaded pipeline processes up to five batches at a
+                  time. When incoming data slows, the pipeline runners sit idle, available for use
+                  as soon as the data flow increases.</p>
+
+        <p class="p">For more information about multithreaded pipelines, see <a class="xref" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_zpp_2xc_py">Multithreaded Pipeline Overview</a>.</p>
+
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_oxv_t5g_vw">
  <h2 class="title topictitle2">AWS Credentials</h2>
 
@@ -82,7 +133,7 @@
 
      <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as access key
                   pairs, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 
  </div>
 
@@ -99,9 +150,9 @@
    read interval to adapt to the Kinesis data load. For example, you might reduce the wait time to
    enable higher throughput or increase the wait time when the stream of data slows. </p>
 
-  <p class="p">Amazon recommends 250 millisecond read intervals. The minimum read interval for the Kinesis
-   Consumer is 200 milliseconds. If the stream of data requires a shorter read interval, you might
-   want to create additional shards for the cluster. </p>
+  <p class="p">Amazon recommends 1 second read intervals. The minimum read interval for the Kinesis Consumer
+            is 200 milliseconds which enables polling five times a second. To increase total
+            capacity, you can create additional shards for the cluster. </p>
 
  </div>
 
@@ -121,7 +172,7 @@
                               <dd class="dd">Generates a record for every message.</dd>
 
                               <dd class="dd">You can use one of the following methods to specify the location
-                                    of the Avro schema definition:<ul class="ul" id="concept_cwg_r2m_35__d26255e507">
+                                    of the Avro schema definition:<ul class="ul" id="concept_cwg_r2m_35__d28249e527">
                                           <li class="li"><span class="ph uicontrol">Message/Data Includes Schema</span> -
                                                 Use the schema in the message.</li>
 
@@ -164,7 +215,7 @@
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul class="ul" id="concept_cwg_r2m_35__d26255e694">
+                                    following delimited format types:<ul class="ul" id="concept_cwg_r2m_35__d28249e715">
                                           <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
                                                 includes comma-separated values. Ignores empty lines
                                                 in the file.</li>
@@ -317,14 +368,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e331" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d189453e457">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d203677e522">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d189453e460">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d203677e525">Description</th>
 
                                 </tr>
 
@@ -332,24 +383,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d189453e457 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d203677e522 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d189453e460 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d189453e457 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d189453e460 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d203677e525 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d189453e457 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_p4b_vv4_yr__d26353e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d203677e522 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d189453e460 ">Error record handling for the stage: <ul class="ul" id="task_p4b_vv4_yr__d26353e381">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d203677e525 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d203677e522 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_p4b_vv4_yr__d28347e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d203677e525 ">Error record handling for the stage: <ul class="ul" id="task_p4b_vv4_yr__d28347e381">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -379,9 +430,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="31.746031746031743%" id="d189453e542">Kinesis Property</th>
+                                    <th class="entry" valign="top" width="31.746031746031743%" id="d203677e607">Kinesis Property</th>
 
-                                    <th class="entry" valign="top" width="68.25396825396825%" id="d189453e545"> </th>
+                                    <th class="entry" valign="top" width="68.25396825396825%" id="d203677e610"> </th>
 
                                 </tr>
 
@@ -389,12 +440,12 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Access Key ID
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d203677e607 ">Access Key ID
                                         <a class="xref" href="KinConsumer.html#concept_oxv_t5g_vw" title="When Data Collector reads data from a Kinesis Consumer origin, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_p4b_vv4_yr__image_v83_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d203677e610 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -404,12 +455,12 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Secret Access Key
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d203677e607 ">Secret Access Key
                                         <a class="xref" href="KinConsumer.html#concept_oxv_t5g_vw" title="When Data Collector reads data from a Kinesis Consumer origin, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_p4b_vv4_yr__image_v75_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d203677e610 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -419,40 +470,40 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Region</td>
+      <td class="entry" valign="top" width="31.746031746031743%" headers="d203677e607 ">Region</td>
 
-      <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
+      <td class="entry" valign="top" width="68.25396825396825%" headers="d203677e610 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Endpoint</td>
+      <td class="entry" valign="top" width="31.746031746031743%" headers="d203677e607 ">Endpoint</td>
 
-      <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+      <td class="entry" valign="top" width="68.25396825396825%" headers="d203677e610 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
        name.</td>
 
      </tr>
 
                                 
                                 <tr>
-      <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Stream Name</td>
+      <td class="entry" valign="top" width="31.746031746031743%" headers="d203677e607 ">Stream Name</td>
 
-      <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">Kinesis stream name.</td>
+      <td class="entry" valign="top" width="68.25396825396825%" headers="d203677e610 ">Kinesis stream name.</td>
 
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Application Name</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d203677e607 ">Application Name</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">Kinesis application name. The application name is the
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d203677e610 ">Kinesis application name. The application name is the
                                         equivalent to a Kafka consumer group.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Initial Position</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d203677e607 ">Initial Position</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">Determines where the data <span class="ph">Data
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d203677e610 ">Determines where the data <span class="ph">Data
                   Collector</span> starts reading. Use one of the following options:<ul class="ul" id="task_p4b_vv4_yr__ul_xdq_ktk_35">
                                             <li class="li">LATEST - Reads messages that arrive after the
                                                 pipeline starts.</li>
@@ -465,9 +516,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Max Batch Size (messages)</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d203677e607 ">Max Batch Size (messages)</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">Maximum amount of messages to include in a batch. Honors
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d203677e610 ">Maximum amount of messages to include in a batch. Honors
                                         values up to the <span class="ph">Data
                   Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default is 1000.</p>
@@ -476,11 +527,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Read Interval (ms) <a class="xref" href="KinConsumer.html#concept_y55_dz4_yr" title="You can configure the read interval for the Kinesis Consumer. The read interval determines how long Kinesis Consumer waits before requesting additional data from Kinesis shards. By default, the Kinesis Consumer waits one second between requests.">
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d203677e607 ">Read Interval (ms) <a class="xref" href="KinConsumer.html#concept_y55_dz4_yr" title="You can configure the read interval for the Kinesis Consumer. The read interval determines how long Kinesis Consumer waits before requesting additional data from Kinesis shards. By default, the Kinesis Consumer waits one second between requests.">
                                             <img class="image" id="task_p4b_vv4_yr__image_hbn_t1x_yr" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">Milliseconds to wait before requesting additional data
-                                        from a shard. <p class="p">Amazon recommends 250, minimum is
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d203677e610 ">Milliseconds to wait before requesting additional data
+                                        from a shard. <p class="p">Amazon recommends 1,000. The minimum is
                                             200.</p>
 <p class="p">Default is 1,000. </p>
 </td>
@@ -488,24 +539,21 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
-                                            <img class="image" id="task_p4b_vv4_yr__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d203677e607 ">Max Threads <a class="xref" href="KinConsumer.html#concept_jhh_psb_mz">
+                                            <img class="image" id="task_p4b_vv4_yr__image_d5x_vnc_mz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">Milliseconds to wait before sending a partial or empty
-                                        batch. <p class="p">Default is 1,000.</p>
-</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d189453e542 ">Preview Batch Wait Time (ms)</td>
-
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d189453e545 ">Milliseconds to wait for data for a data preview.
-                                            <p class="p">Amazon Kinesis can take 10-30 seconds to enable
-                                            initial access. Configure this property as needed to
-                                            avoid data preview timeouts.</p>
-<p class="p">Default is
-                                            60,000.</p>
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d203677e610 ">The number of threads that the origin generates and uses
+                                        for multithreaded processing. Enter a positive integer or an
+                                        expression that evaluates to a positive integer.<div class="p">By
+                                            default, the origin uses the following expression to
+                                            configure the property based on the number of available
+                                            CPU cores on the <span class="ph">Data
+                  Collector</span>
+                                            machine:<pre class="pre codeblock">${runtime:availableProcessors()}</pre>
+</div>
+<p class="p">This
+                                            expression is evaluated when you start the
+                                        pipeline.</p>
 </td>
 
                                 </tr>
@@ -527,9 +575,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e755">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e811">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e758">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e814">Description</th>
 
                                 </tr>
 
@@ -537,40 +585,40 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d189453e755 ">Use Proxy</td>
+                                    <td class="entry" valign="top" width="30%" headers="d203677e811 ">Use Proxy</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e758 ">Specifies whether to use a proxy to connect to Kinesis
+                                    <td class="entry" valign="top" width="70%" headers="d203677e814 ">Specifies whether to use a proxy to connect to Kinesis
                                         Streams.</td>
 
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d189453e755 ">Proxy Host</td>
+      <td class="entry" valign="top" width="30%" headers="d203677e811 ">Proxy Host</td>
 
-      <td class="entry" valign="top" width="70%" headers="d189453e758 ">Proxy host.</td>
-
-     </tr>
-
-                                <tr>
-      <td class="entry" valign="top" width="30%" headers="d189453e755 ">Proxy Port</td>
-
-      <td class="entry" valign="top" width="70%" headers="d189453e758 ">Proxy port.</td>
+      <td class="entry" valign="top" width="70%" headers="d203677e814 ">Proxy host.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d189453e755 ">Proxy User</td>
+      <td class="entry" valign="top" width="30%" headers="d203677e811 ">Proxy Port</td>
 
-      <td class="entry" valign="top" width="70%" headers="d189453e758 ">User name for proxy credentials.</td>
+      <td class="entry" valign="top" width="70%" headers="d203677e814 ">Proxy port.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d189453e755 ">Proxy Password</td>
+      <td class="entry" valign="top" width="30%" headers="d203677e811 ">Proxy User</td>
 
-      <td class="entry" valign="top" width="70%" headers="d189453e758 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+      <td class="entry" valign="top" width="70%" headers="d203677e814 ">User name for proxy credentials.</td>
+
+     </tr>
+
+                                <tr>
+      <td class="entry" valign="top" width="30%" headers="d203677e811 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="70%" headers="d203677e814 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
      </tr>
@@ -592,9 +640,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e861">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e917">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e864">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e920">Description</th>
 
                                 </tr>
 
@@ -602,10 +650,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d189453e861 ">Data Format <a class="xref" href="KinConsumer.html#concept_cwg_r2m_35">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e917 ">Data Format <a class="xref" href="KinConsumer.html#concept_cwg_r2m_35">
                                             <img class="image" id="task_p4b_vv4_yr__image_bmy_h5q_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e864 ">Type of data to be read. Use one of the following
+                                    <td class="entry" valign="top" width="70%" headers="d203677e920 ">Type of data to be read. Use one of the following
                                             options:<ul class="ul" id="task_p4b_vv4_yr__ul_www_ncj_vx">
                                             <li class="li">Avro</li>
 
@@ -643,25 +691,25 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e754" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e754" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e954">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e1010">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e957">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e1013">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_p4b_vv4_yr__d26353e776">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e954 ">Avro Schema Location</td>
+                                <tr id="task_p4b_vv4_yr__d28347e776">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1010 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e957 ">Location of the Avro schema definition to use when
-                                        processing data:<ul class="ul" id="task_p4b_vv4_yr__d26353e783">
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1013 ">Location of the Avro schema definition to use when
+                                        processing data:<ul class="ul" id="task_p4b_vv4_yr__d28347e783">
                                             <li class="li">Message/Data Includes Schema - Use the schema in the
                                                 message.</li>
 
@@ -679,10 +727,10 @@
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e798">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e954 ">Avro Schema</td>
+                                <tr id="task_p4b_vv4_yr__d28347e798">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1010 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e957 ">Avro schema definition used to process the data.
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1013 ">Avro schema definition used to process the data.
                                         Overrides any existing schema definitions associated with
                                         the data. <p class="p">You can optionally use the runtime:loadResource
                                             function to use a schema definition stored in a runtime
@@ -691,10 +739,10 @@
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e809">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e954 ">Schema Registry URLs</td>
+                                <tr id="task_p4b_vv4_yr__d28347e809">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1010 ">Schema Registry URLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e957 ">Confluent Schema Registry URLs used to look up the
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1013 ">Confluent Schema Registry URLs used to look up the
                                         schema. To add a URL, click <span class="ph uicontrol">Add</span>. Use
                                         the following format to enter the
                                         URL:<pre class="pre codeblock">http://&lt;host name&gt;:&lt;port number&gt;</pre>
@@ -702,11 +750,11 @@
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e823">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e954 ">Lookup Schema By</td>
+                                <tr id="task_p4b_vv4_yr__d28347e823">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1010 ">Lookup Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e957 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_p4b_vv4_yr__d26353e830">
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1013 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_p4b_vv4_yr__d28347e830">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -721,10 +769,10 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e844">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e954 ">Schema Subject</td>
+                                <tr id="task_p4b_vv4_yr__d28347e844">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1010 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e957 ">Avro schema subject to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1013 ">Avro schema subject to look up in the Confluent Schema
                                             Registry.<p class="p">If the specified subject has multiple schema
                                             versions, the origin uses the latest schema version for
                                             that subject. To use an older version, find the
@@ -735,10 +783,10 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e859">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e954 ">Schema ID</td>
+                                <tr id="task_p4b_vv4_yr__d28347e859">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1010 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e957 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1013 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
@@ -751,18 +799,18 @@ Overrides any existing schema definitions associated
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">For binary data, on the <span class="keyword wintitle">Data Format</span> tab and configure the
+                <span class="ph cmd">For binary data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e1063" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e1063" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e1084">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e1140">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e1087">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e1143">Description</th>
 
                                 </tr>
 
@@ -770,10 +818,10 @@ Overrides any existing schema definitions associated
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1084 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1140 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1087 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d26366e545">
+       <td class="entry" valign="top" width="70%" headers="d203677e1143 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d28360e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -789,19 +837,19 @@ Overrides any existing schema definitions associated
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1084 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1140 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1087 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d203677e1143 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1095">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1084 ">Max Data Size (bytes)</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1095">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1140 ">Max Data Size (bytes)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1087 ">Maximum number of bytes in the message. Larger messages
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1143 ">Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </td>
 
                                 </tr>
@@ -818,14 +866,14 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e1246" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e1246" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e1171">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e1227">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e1174">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e1230">Description</th>
 
                                 </tr>
 
@@ -833,10 +881,10 @@ Overrides any existing schema definitions associated
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1174 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d26366e545">
+       <td class="entry" valign="top" width="70%" headers="d203677e1230 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d28360e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -852,19 +900,19 @@ Overrides any existing schema definitions associated
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1171 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1227 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1174 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d203677e1230 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1278">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Delimiter Format Type</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1278">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_p4b_vv4_yr__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -888,26 +936,26 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1291">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Header Line</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1291">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1300">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Max Record Length (chars)</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1300">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Maximum length of a record in characters. Longer records
                                         are not read. </td>
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1310">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Delimiter Character</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1310">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -921,25 +969,25 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1329">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Escape Character</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1329">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Escape Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Escape character for a custom file type.</td>
-
-                                </tr>
-
-                                <tr id="task_p4b_vv4_yr__d26353e1338">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Quote Character</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Quote character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Escape character for a custom file type.</td>
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1347">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
-                                            <img class="image" id="task_p4b_vv4_yr__d26353e1353" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_p4b_vv4_yr__d28347e1338">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Root field type to use:<ul class="ul" id="task_p4b_vv4_yr__d26353e1357">
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr id="task_p4b_vv4_yr__d28347e1347">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
+                                            <img class="image" id="task_p4b_vv4_yr__d28347e1353" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Root field type to use:<ul class="ul" id="task_p4b_vv4_yr__d28347e1357">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -954,40 +1002,40 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1367">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Lines to Skip</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1367">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Lines to Skip</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Lines to skip before reading data. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Lines to skip before reading data. </td>
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1376">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Parse NULLs</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1376">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Parse NULLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Replaces the specified string constant with null
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Replaces the specified string constant with null
                                         values.</td>
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1386">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1171 ">NULL Constant</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1386">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1227 ">NULL Constant</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1174 ">String constant to replace with null values.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1230 ">String constant to replace with null values.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1171 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1227 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1174 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d203677e1230 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1004,14 +1052,14 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e1431" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e1431" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e1421">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e1477">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e1424">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e1480">Description</th>
 
                                 </tr>
 
@@ -1019,10 +1067,10 @@ Overrides any existing schema definitions associated
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1421 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1477 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1424 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d26366e545">
+       <td class="entry" valign="top" width="70%" headers="d203677e1480 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d28360e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1038,20 +1086,20 @@ Overrides any existing schema definitions associated
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1421 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1477 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1424 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d203677e1480 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1463">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1421 ">JSON Content</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1463">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1477 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1424 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_p4b_vv4_yr__d26353e1472">
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1480 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_p4b_vv4_yr__d28347e1472">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -1063,10 +1111,10 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1483">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1421 ">Maximum Object Length (chars)</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1483">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1477 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1424 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1480 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                         </p>
 </td>
@@ -1074,17 +1122,17 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1421 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1477 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1424 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d203677e1480 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1421 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1477 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1424 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d203677e1480 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1101,14 +1149,14 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e1541" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e1541" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e1556">Log Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e1612">Log Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e1559">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e1615">Description</th>
 
                                 </tr>
 
@@ -1116,10 +1164,10 @@ Overrides any existing schema definitions associated
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1556 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1612 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1559 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d26366e545">
+       <td class="entry" valign="top" width="70%" headers="d203677e1615 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d28360e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1135,20 +1183,20 @@ Overrides any existing schema definitions associated
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1556 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1612 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1559 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d203677e1615 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1573">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1556 ">Log Format</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1573">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1612 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1559 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_p4b_vv4_yr__d26353e1580">
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1615 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_p4b_vv4_yr__d28347e1580">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -1168,18 +1216,18 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1606">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1556 ">Max Line Length</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1606">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1612 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1559 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1615 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1615">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1556 ">Retain Original Line</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1615">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1612 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1559 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1615 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -1188,17 +1236,17 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1556 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1612 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1559 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d203677e1615 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1556 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1612 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1559 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d203677e1615 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1208,7 +1256,7 @@ Overrides any existing schema definitions associated
                         </table>
 </div>
 
-                    <ul class="ul" id="task_p4b_vv4_yr__d26353e1640">
+                    <ul class="ul" id="task_p4b_vv4_yr__d28347e1640">
                         <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
                             use Apache log format strings to define the <span class="ph uicontrol">Custom Log
                                 Format</span>.</li>
@@ -1231,14 +1279,14 @@ Overrides any existing schema definitions associated
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e1685" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e1685" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
                                             <tr>
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d189453e1751">Log4j Property</th>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d203677e1807">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d189453e1754">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d203677e1810">Description</th>
 
                                             </tr>
 
@@ -1246,10 +1294,10 @@ Overrides any existing schema definitions associated
 
                                         <tbody class="tbody">
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d189453e1751 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d203677e1807 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d189453e1754 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_p4b_vv4_yr__d26353e1714">
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d203677e1810 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_p4b_vv4_yr__d28347e1714">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -1268,17 +1316,17 @@ Overrides any existing schema definitions associated
                                             </tr>
 
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d189453e1751 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d203677e1807 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d189453e1754 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d203677e1810 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d189453e1751 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d203677e1807 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d189453e1754 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d203677e1810 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -1300,14 +1348,14 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e1780" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e1780" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e1828">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e1884">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e1831">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e1887">Description</th>
 
                                 </tr>
 
@@ -1315,10 +1363,10 @@ Overrides any existing schema definitions associated
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1828 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1884 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1831 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d26366e545">
+       <td class="entry" valign="top" width="70%" headers="d203677e1887 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d28360e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1334,19 +1382,19 @@ Overrides any existing schema definitions associated
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1828 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e1884 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1831 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d203677e1887 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1812">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1828 ">Protobuf Descriptor File </td>
+                                <tr id="task_p4b_vv4_yr__d28347e1812">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1884 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1831 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1887 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory,
                                             <samp class="ph codeph">$SDC_RESOURCES</samp>.<p class="p">For information about
@@ -1356,10 +1404,10 @@ Overrides any existing schema definitions associated
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1832">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1828 ">Message Type</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1832">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1884 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1831 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1887 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -1368,10 +1416,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e1847">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e1828 ">Delimited Messages</td>
+                                <tr id="task_p4b_vv4_yr__d28347e1847">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e1884 ">Delimited Messages</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e1831 ">Indicates if a message might include more than one
+                                    <td class="entry" valign="top" width="70%" headers="d203677e1887 ">Indicates if a message might include more than one
                                         protobuf message.</td>
 
                                 </tr>
@@ -1388,14 +1436,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e1987" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e1987" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e1992">SDC Record Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e2048">SDC Record Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e1995">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e2051">Description</th>
 
                                 </tr>
 
@@ -1403,10 +1451,10 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1992 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e2048 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1995 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d26366e545">
+       <td class="entry" valign="top" width="70%" headers="d203677e2051 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d28360e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1422,9 +1470,9 @@ Use a message type defined in the
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e1992 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e2048 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e1995 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d203677e2051 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
@@ -1443,14 +1491,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e2135" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e2135" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e2071">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e2127">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e2074">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e2130">Description</th>
 
                                 </tr>
 
@@ -1458,10 +1506,10 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e2071 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e2127 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e2074 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d26366e545">
+       <td class="entry" valign="top" width="70%" headers="d203677e2130 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d28360e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1477,19 +1525,19 @@ Use a message type defined in the
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e2071 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e2127 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e2074 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d203677e2130 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e2167">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e2071 ">Max Line Length</td>
+                                <tr id="task_p4b_vv4_yr__d28347e2167">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e2127 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e2074 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d203677e2130 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -1497,41 +1545,41 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e2178">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e2071 ">Use Custom Delimiter <a class="xref" href="../Pipeline_Design/TextCDelim.html#concept_lg2_gcg_jx">
-                                            <img class="image" id="task_p4b_vv4_yr__d26353e2184" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_p4b_vv4_yr__d28347e2178">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e2127 ">Use Custom Delimiter <a class="xref" href="../Pipeline_Design/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_p4b_vv4_yr__d28347e2184" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e2074 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry" valign="top" width="70%" headers="d203677e2130 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e2190">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e2071 ">Custom Delimiter</td>
+                                <tr id="task_p4b_vv4_yr__d28347e2190">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e2127 ">Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e2074 ">One or more characters to use to define records. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d203677e2130 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e2200">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e2071 ">Include Custom Delimiter</td>
+                                <tr id="task_p4b_vv4_yr__d28347e2200">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e2127 ">Include Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e2074 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d203677e2130 ">Includes delimiter characters in the record.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e2071 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e2127 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e2074 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d203677e2130 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e2071 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e2127 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e2074 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d203677e2130 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -1548,14 +1596,14 @@ Use a message type defined in the
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d26353e2401" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d28347e2401" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d189453e2217">XML Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d203677e2273">XML Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d189453e2220">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d203677e2276">Description</th>
 
                                 </tr>
 
@@ -1563,10 +1611,10 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e2217 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e2273 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e541" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e2220 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d26366e545">
+       <td class="entry" valign="top" width="70%" headers="d203677e2276 ">The compression format of the files:<ul class="ul" id="task_p4b_vv4_yr__d28360e545">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -1581,14 +1629,14 @@ Use a message type defined in the
 
       </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e2428">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e2217 ">Delimiter Element <a class="xref" href="../Pipeline_Design/XMLDFormat.html#concept_tmc_4bc_dy">
-                                            <img class="image" id="task_p4b_vv4_yr__d26353e2434" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_p4b_vv4_yr__d28347e2428">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e2273 ">Delimiter Element <a class="xref" href="../Pipeline_Design/XMLDFormat.html#concept_tmc_4bc_dy">
+                                            <img class="image" id="task_p4b_vv4_yr__d28347e2434" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e2220 ">
+                                    <td class="entry" valign="top" width="70%" headers="d203677e2276 ">
                                         <div class="p">Delimiter to use to generate records. Omit a delimiter to
                                             treat the entire XML document as one record. Use one of
-                                            the following:<ul class="ul" id="task_p4b_vv4_yr__d26353e2440">
+                                            the following:<ul class="ul" id="task_p4b_vv4_yr__d28347e2440">
                                                 <li class="li">An XML element directly under the root element.
                                                   <p class="p">Use the XML element name without surrounding
                                                   angle brackets ( &lt; &gt; ) . For example, msg
@@ -1611,10 +1659,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e2459">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e2217 ">Namespaces </td>
+                                <tr id="task_p4b_vv4_yr__d28347e2459">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e2273 ">Namespaces </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e2220 ">Namespace prefix and URI to use when parsing the XML
+                                    <td class="entry" valign="top" width="70%" headers="d203677e2276 ">Namespace prefix and URI to use when parsing the XML
                                         document. Define namespaces when the XML element being used
                                         includes a namespace prefix or when the XPath expression
                                         includes namespaces.<p class="p">For information about using
@@ -1627,10 +1675,10 @@ Use a message type defined in the
 
                                 </tr>
 
-                                <tr id="task_p4b_vv4_yr__d26353e2481">
-                                    <td class="entry" valign="top" width="30%" headers="d189453e2217 ">Max Record Length (chars)</td>
+                                <tr id="task_p4b_vv4_yr__d28347e2481">
+                                    <td class="entry" valign="top" width="30%" headers="d203677e2273 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d189453e2220 ">
+                                    <td class="entry" valign="top" width="70%" headers="d203677e2276 ">
                                         <p class="p">The maximum number of characters in a record. Longer
                                             records are diverted to the pipeline for error handling.
                                         </p>
@@ -1640,17 +1688,17 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e2217 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d203677e2273 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e2220 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d203677e2276 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d189453e2217 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_p4b_vv4_yr__d26366e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d203677e2273 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_p4b_vv4_yr__d28360e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d189453e2220 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d203677e2276 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>

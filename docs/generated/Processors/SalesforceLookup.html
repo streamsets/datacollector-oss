@@ -41,10 +41,13 @@
             that the processor uses to connect to Salesforce, including the Salesforce API
             version.</p>
 
-        <p class="p">You configure the query to define the data to look up in Salesforce, and specify the
-            output fields to write the lookup values to. You can optionally define a default value
-            to use for fields with missing values. You can also configure the processor to locally
-            cache the lookup values to improve performance. </p>
+        <p class="p">You configure the query to define the data to look up in Salesforce. If the processor
+            uses the SOAP API or uses the Bulk API version <span class="ph">39.0</span> or later, you can configure the processor to retrieve deleted records from the
+            Salesforce recycle bin.</p>
+
+        <p class="p">and specify the output fields to write the lookup values to. You can optionally define a
+            default value to use for fields with missing values. You can also configure the
+            processor to locally cache the lookup values to improve performance. </p>
 
         <p class="p">The processor generates Salesforce field attributes that provide additional information
             about each field. </p>
@@ -127,9 +130,9 @@
     
     <thead class="thead" align="left">
      <tr>
-      <th class="entry" valign="top" width="30%" id="d292139e153">Salesforce Field Attribute</th>
+      <th class="entry" valign="top" width="30%" id="d314545e160">Salesforce Field Attribute</th>
 
-      <th class="entry" valign="top" width="70%" id="d292139e156">Description</th>
+      <th class="entry" valign="top" width="70%" id="d314545e163">Description</th>
 
      </tr>
 
@@ -137,40 +140,40 @@
 
     <tbody class="tbody">
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e153 ">&lt;Salesforce prefix&gt;salesforceType</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e160 ">&lt;Salesforce prefix&gt;salesforceType</td>
 
-      <td class="entry" id="concept_nl4_3q2_kz__d43985e3082" valign="top" width="70%" headers="d292139e156 ">Provides the original Salesforce data type
+      <td class="entry" id="concept_nl4_3q2_kz__d48320e3176" valign="top" width="70%" headers="d314545e163 ">Provides the original Salesforce data type
        for the field.</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e153 ">&lt;Salesforce prefix&gt;length</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e160 ">&lt;Salesforce prefix&gt;length</td>
 
-      <td class="entry" id="concept_nl4_3q2_kz__d43985e3091" valign="top" width="70%" headers="d292139e156 ">Provides the original length for all
+      <td class="entry" id="concept_nl4_3q2_kz__d48320e3185" valign="top" width="70%" headers="d314545e163 ">Provides the original length for all
        string and textarea fields. </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e153 ">&lt;Salesforce prefix&gt;precision</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e160 ">&lt;Salesforce prefix&gt;precision</td>
 
-      <td class="entry" valign="top" width="70%" headers="d292139e156 ">Provides the original precision for all double fields. </td>
+      <td class="entry" valign="top" width="70%" headers="d314545e163 ">Provides the original precision for all double fields. </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e153 ">&lt;Salesforce prefix&gt;scale</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e160 ">&lt;Salesforce prefix&gt;scale</td>
 
-      <td class="entry" id="concept_nl4_3q2_kz__d43985e3109" valign="top" width="70%" headers="d292139e156 ">Provides the original scale for all double
+      <td class="entry" id="concept_nl4_3q2_kz__d48320e3203" valign="top" width="70%" headers="d314545e163 ">Provides the original scale for all double
        fields. </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e153 ">&lt;Salesforce prefix&gt;digits</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e160 ">&lt;Salesforce prefix&gt;digits</td>
 
-      <td class="entry" valign="top" width="70%" headers="d292139e156 ">Provides the maximum number of digits for all integer
+      <td class="entry" valign="top" width="70%" headers="d314545e163 ">Provides the maximum number of digits for all integer
        fields.</td>
 
      </tr>
@@ -191,9 +194,9 @@
     <div class="body taskbody">
         <div class="section context">
             <p class="p"><span class="ph">Data
-                  Collector</span> ships with version 38.0 of the Salesforce Web Services Connector libraries. You
-                can use a different Salesforce API version if you need to access functionality not
-                present in version 38.0.</p>
+                  Collector</span> ships with version <span class="ph">39.0</span> of the Salesforce Web Services Connector libraries. You can use a different
+                Salesforce API version if you need to access functionality not present in version
+                    <span class="ph">39.0</span>.</p>
 
         </div>
 
@@ -205,7 +208,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Download the relevant version of the following JAR files from Salesforce Web
                     Services Connector (WSC):</span>
-                <ul class="ul choices" id="task_rjz_lck_fy__d47816e41">
+                <ul class="ul choices" id="task_rjz_lck_fy__d52282e48">
                     <li class="li choice">
                         <p class="p">WSC JAR file - force-wsc-&lt;version&gt;.0.0.jar </p>
 
@@ -228,7 +231,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">In the following <span class="ph">Data
                   Collector</span> directory,
-                    replace the default force-wsc-38.0.0.jar and force-partner-api-38.0.0.jar files
+                    replace the default force-wsc-39.0.0.jar and force-partner-api-39.0.0.jar files
                     with the versioned JAR files that you downloaded:</span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">$SDC_DIST/streamsets-libs/streamsets-datacollector-salesforce-lib/lib/</pre>
@@ -260,14 +263,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fhn_yrk_yx__d43796e3993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fhn_yrk_yx__d48131e3993" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d292139e363">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d314545e376">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d292139e366">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d314545e379">Description</th>
 
                                 </tr>
 
@@ -275,46 +278,53 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d292139e363 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314545e376 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d292139e366 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d292139e363 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d292139e366 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d314545e379 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d292139e363 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_fhn_yrk_yx__d43796e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d314545e376 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d292139e366 ">Fields that must include data to be passed into the
-                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
-                                            fields that the stage uses.</div>
+                                    <td class="entry" valign="top" width="70%" headers="d314545e379 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d314545e376 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_fhn_yrk_yx__d48131e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d314545e379 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d292139e363 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_fhn_yrk_yx__d43796e4053" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d314545e376 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_fhn_yrk_yx__d48131e4055" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d292139e366 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d314545e379 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
-                                        preconditions. </td>
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d292139e363 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_fhn_yrk_yx__d43796e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d314545e376 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_fhn_yrk_yx__d48131e4072" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d292139e366 ">Error record handling for the stage: <ul class="ul" id="task_fhn_yrk_yx__d43796e4072">
+                                    <td class="entry" valign="top" width="70%" headers="d314545e379 ">Error record handling for the stage: <ul class="ul" id="task_fhn_yrk_yx__d48131e4076">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -345,9 +355,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d292139e485">Salesforce Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d314545e496">Salesforce Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d292139e488">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d314545e499">Description</th>
 
                                 </tr>
 
@@ -355,27 +365,27 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e485 ">Username</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e496 ">Username</td>
 
-      <td class="entry" valign="top" width="70%" headers="d292139e488 ">Salesforce username in the following email format:
+      <td class="entry" valign="top" width="70%" headers="d314545e499 ">Salesforce username in the following email format:
        <samp class="ph codeph">&lt;text&gt;@&lt;text&gt;.com</samp>. </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e485 ">Password</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e496 ">Password</td>
 
-      <td class="entry" valign="top" width="70%" headers="d292139e488 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+      <td class="entry" valign="top" width="70%" headers="d314545e499 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e485 ">Auth Endpoint</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e496 ">Auth Endpoint</td>
 
-      <td class="entry" valign="top" width="70%" headers="d292139e488 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_fhn_yrk_yx__d43985e2561">
+      <td class="entry" valign="top" width="70%" headers="d314545e499 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_fhn_yrk_yx__d48320e2642">
         <li class="li">login.salesforce.com - Use to connect to a Production or Developer Edition
          organization.</li>
 
@@ -388,22 +398,22 @@
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d292139e485 ">API Version
+                                    <td class="entry" valign="top" width="30%" headers="d314545e496 ">API Version
                                         <a class="xref" href="SalesforceLookup.html#task_rjz_lck_fy">
                                             <img class="image" id="task_fhn_yrk_yx__image_whh_bch_er" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d292139e488 ">Salesforce API version to use to connect to Salesforce.
-        <p class="p">Default is 38.0. If you change the version, you also must download the relevant JAR files
-        from Salesforce Web Services Connector (WSC).</p>
+                                    <td class="entry" valign="top" width="70%" headers="d314545e499 ">Salesforce API version to use to connect to Salesforce.
+        <p class="p">Default is <span class="ph">39.0</span>. If you change the version, you also must download the relevant JAR files from Salesforce
+        Web Services Connector (WSC).</p>
 </td>
 
                                     
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d292139e485 ">SOQL Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d314545e496 ">SOQL Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d292139e488 ">SOQL query to use to look up data in Salesforce. Use the
+                                    <td class="entry" valign="top" width="70%" headers="d314545e499 ">SOQL query to use to look up data in Salesforce. Use the
                                         following syntax for the
                                             query:<pre class="pre codeblock">SELECT &lt;field1 name&gt;, &lt;field2 name&gt; FROM &lt;object name&gt; WHERE &lt;field3 name&gt; &lt;operator&gt; &lt;expression&gt;</pre>
 <div class="p">For
@@ -429,9 +439,20 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d292139e485 ">Field Mappings</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e496 ">Include Deleted Records</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d292139e488 ">Use to override the default field mappings. By default,
+      <td class="entry" valign="top" width="70%" headers="d314545e499 ">Determines whether the SOQL query also retrieves deleted records from the Salesforce
+       recycle bin. <p class="p">The query can retrieve deleted records when the stage uses the Salesforce
+        SOAP API or the Bulk API version 39.0 or later. Earlier versions of the Bulk API do not
+        support retrieving deleted records.</p>
+</td>
+
+     </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d314545e496 ">Field Mappings</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d314545e499 ">Use to override the default field mappings. By default,
                                         Salesforce fields are written to <span class="ph">Data
                   Collector</span> fields of the same name. <div class="p">Enter the following:<ul class="ul" id="task_fhn_yrk_yx__ul_jvy_5mm_xw">
                                                 <li class="li">Salesforce Field - Name of the Salesforce field
@@ -464,29 +485,29 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d292139e485 ">Enable Local Caching
+                                    <td class="entry" valign="top" width="30%" headers="d314545e496 ">Enable Local Caching
                                         <a class="xref" href="SalesforceLookup.html#concept_s1h_1mk_fy">
                                             <img class="image" id="task_fhn_yrk_yx__image_h5p_p3v_uh" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d292139e488 ">Specifies whether to locally cache the returned
+                                    <td class="entry" valign="top" width="70%" headers="d314545e499 ">Specifies whether to locally cache the returned
        values.</td>
 
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e485 ">Maximum Entries to Cache</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e496 ">Maximum Entries to Cache</td>
 
-      <td class="entry" valign="top" width="70%" headers="d292139e488 ">Maximum number of values to cache. When the maximum number is reached, the processor
+      <td class="entry" valign="top" width="70%" headers="d314545e499 ">Maximum number of values to cache. When the maximum number is reached, the processor
        evicts the oldest values from the cache. <p class="p">Default is -1, which means unlimited.</p>
 </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e485 ">Eviction Policy Type</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e496 ">Eviction Policy Type</td>
 
-      <td class="entry" valign="top" width="70%" headers="d292139e488 ">Policy used to evict values from the local cache when the expiration time has
-        passed:<ul class="ul" id="task_fhn_yrk_yx__d43985e2056">
+      <td class="entry" valign="top" width="70%" headers="d314545e499 ">Policy used to evict values from the local cache when the expiration time has
+        passed:<ul class="ul" id="task_fhn_yrk_yx__d48320e2129">
         <li class="li">Expire After Last Access - Measures the expiration time since the value was last
          accessed by a read or a write.</li>
 
@@ -499,18 +520,18 @@
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e485 ">Expiration Time</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e496 ">Expiration Time</td>
 
-      <td class="entry" valign="top" width="70%" headers="d292139e488 ">Amount of time that a value can remain in the local cache without being accessed or
+      <td class="entry" valign="top" width="70%" headers="d314545e499 ">Amount of time that a value can remain in the local cache without being accessed or
        written to. <p class="p">Default is 1 second.</p>
 </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d292139e485 ">Time Unit</td>
+      <td class="entry" valign="top" width="30%" headers="d314545e496 ">Time Unit</td>
 
-      <td class="entry" valign="top" width="70%" headers="d292139e488 ">Unit of time for the expiration time. <p class="p">Default is
+      <td class="entry" valign="top" width="70%" headers="d314545e499 ">Unit of time for the expiration time. <p class="p">Default is
        seconds.</p>
 </td>
 
@@ -533,9 +554,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d292139e721">Advanced Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d314545e747">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d292139e724">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d314545e750">Description</th>
 
                                 </tr>
 
@@ -543,57 +564,57 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d292139e721 ">Create Salesforce Attributes <a class="xref" href="SalesforceLookup.html#concept_nl4_3q2_kz" title="The Salesforce Lookup processor generates Salesforce field attributes that provide additional information about each field. The origin receives these details from Salesforce.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d314545e747 ">Create Salesforce Attributes <a class="xref" href="SalesforceLookup.html#concept_nl4_3q2_kz" title="The Salesforce Lookup processor generates Salesforce field attributes that provide additional information about each field. The origin receives these details from Salesforce.">
                                             <img class="image" id="task_fhn_yrk_yx__image_wsg_gwh_er" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d292139e724 ">Adds Salesforce field attributes to fields. The origin
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d314545e750 ">Adds Salesforce field attributes to fields. The origin
                                         creates Salesforce attributes by default. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d292139e721 ">Salesforce Attribute Prefix</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d314545e747 ">Salesforce Attribute Prefix</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d292139e724 ">Prefix for Salesforce attributes.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d314545e750 ">Prefix for Salesforce attributes.</td>
 
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d292139e721 ">Use Proxy</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d314545e747 ">Use Proxy</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d292139e724 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
-
-     </tr>
-<tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d292139e721 ">Proxy Hostname</td>
-
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d292139e724 ">Proxy host.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d314545e750 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d292139e721 ">Proxy Port</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d314545e747 ">Proxy Hostname</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d292139e724 ">Proxy port.</td>
-
-     </tr>
-<tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d292139e721 ">Proxy Requires Credentials</td>
-
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d292139e724 ">Specifies whether the proxy requires a user name and password.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d314545e750 ">Proxy host.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d292139e721 ">Proxy Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d314545e747 ">Proxy Port</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d292139e724 ">User name for proxy credentials.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d314545e750 ">Proxy port.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d292139e721 ">Proxy Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d314545e747 ">Proxy Requires Credentials</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d292139e724 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d314545e750 ">Specifies whether the proxy requires a user name and password.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d314545e747 ">Proxy Username</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d314545e750 ">User name for proxy credentials.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d314545e747 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d314545e750 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
      </tr>

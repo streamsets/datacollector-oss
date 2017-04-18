@@ -59,6 +59,10 @@
 
         <p class="p">You can optionally use an HTTP proxy to connect to Salesforce.</p>
 
+        <p class="p">The origin can also generate events for an event
+                  stream. For more information about dataflow triggers and the event framework, see
+                        <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>. </p>
+
     </div>
 
 <div class="related-links"></div>
@@ -75,6 +79,9 @@
             process large sets of data. The SOAP API supports more complex queries, but is less
             practical when processing large sets of data. For more information about when to use the
             Bulk or SOAP API, see the Salesforce Developer documentation. </p>
+
+        <p class="p">If the origin uses the SOAP API or uses the Bulk API version <span class="ph">39.0</span> or later, you can configure the origin to retrieve deleted records from the
+            Salesforce recycle bin.</p>
 
         <p class="p">The Salesforce origin uses an offset field and initial offset value to determine where to
             start reading data within an object. Include both the offset field and the offset value
@@ -364,9 +371,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d230950e458">Salesforce Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d250294e472">Salesforce Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d230950e461">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d250294e475">Description</th>
 
                         </tr>
 
@@ -374,9 +381,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d230950e458 ">&lt;Salesforce prefix&gt;.sobjectType</td>
+                            <td class="entry" valign="top" width="30%" headers="d250294e472 ">&lt;Salesforce prefix&gt;.sobjectType</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d230950e461 ">Provides the Salesforce source object for the record.
+                            <td class="entry" valign="top" width="70%" headers="d250294e475 ">Provides the Salesforce source object for the record.
                                     <p class="p">Generated when the origin executes a query or subscribes to
                                     notifications.</p>
 </td>
@@ -384,9 +391,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d230950e458 ">&lt;Salesforce prefix&gt;.cdc.createdDate</td>
+                            <td class="entry" valign="top" width="30%" headers="d250294e472 ">&lt;Salesforce prefix&gt;.cdc.createdDate</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d230950e461 ">Provides the date that the Salesforce PushTopic encountered the
+                            <td class="entry" valign="top" width="70%" headers="d250294e475 ">Provides the date that the Salesforce PushTopic encountered the
                                 change event.<p class="p">Generated when the origin subscribes to
                                     notifications.</p>
 </td>
@@ -394,9 +401,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d230950e458 ">&lt;Salesforce prefix&gt;.cdc.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d250294e472 ">&lt;Salesforce prefix&gt;.cdc.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d230950e461 ">Provides the type of change that the Salesforce PushTopic
+                            <td class="entry" valign="top" width="70%" headers="d250294e475 ">Provides the type of change that the Salesforce PushTopic
                                 encountered - created, updated, deleted, or undeleted.<p class="p">Generated
                                     when the origin subscribes to notifications.</p>
 </td>
@@ -439,7 +446,9 @@
 
                 <li class="li">3 for UPDATE</li>
 
-                <li class="li">5 for unsupported operations, such as UNDELETED</li>
+                <li class="li">5 for unsupported operations</li>
+
+                <li class="li">6 for UNDELETED</li>
 
             </ul>
 <div class="note tip"><span class="tiptitle">Tip:</span> Records that are undeleted contain only the record ID. If you need
@@ -470,9 +479,9 @@
     
     <thead class="thead" align="left">
      <tr>
-      <th class="entry" valign="top" width="30%" id="d230950e606">Salesforce Field Attribute</th>
+      <th class="entry" valign="top" width="30%" id="d250294e623">Salesforce Field Attribute</th>
 
-      <th class="entry" valign="top" width="70%" id="d230950e609">Description</th>
+      <th class="entry" valign="top" width="70%" id="d250294e626">Description</th>
 
      </tr>
 
@@ -480,40 +489,40 @@
 
     <tbody class="tbody">
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d230950e606 ">&lt;Salesforce prefix&gt;salesforceType</td>
+      <td class="entry" valign="top" width="30%" headers="d250294e623 ">&lt;Salesforce prefix&gt;salesforceType</td>
 
-      <td class="entry" id="concept_ysd_532_kz__d26366e3082" valign="top" width="70%" headers="d230950e609 ">Provides the original Salesforce data type
+      <td class="entry" id="concept_ysd_532_kz__d28360e3176" valign="top" width="70%" headers="d250294e626 ">Provides the original Salesforce data type
        for the field.</td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d230950e606 ">&lt;Salesforce prefix&gt;length</td>
+      <td class="entry" valign="top" width="30%" headers="d250294e623 ">&lt;Salesforce prefix&gt;length</td>
 
-      <td class="entry" id="concept_ysd_532_kz__d26366e3091" valign="top" width="70%" headers="d230950e609 ">Provides the original length for all
+      <td class="entry" id="concept_ysd_532_kz__d28360e3185" valign="top" width="70%" headers="d250294e626 ">Provides the original length for all
        string and textarea fields. </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d230950e606 ">&lt;Salesforce prefix&gt;precision</td>
+      <td class="entry" valign="top" width="30%" headers="d250294e623 ">&lt;Salesforce prefix&gt;precision</td>
 
-      <td class="entry" valign="top" width="70%" headers="d230950e609 ">Provides the original precision for all double fields. </td>
+      <td class="entry" valign="top" width="70%" headers="d250294e626 ">Provides the original precision for all double fields. </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d230950e606 ">&lt;Salesforce prefix&gt;scale</td>
+      <td class="entry" valign="top" width="30%" headers="d250294e623 ">&lt;Salesforce prefix&gt;scale</td>
 
-      <td class="entry" id="concept_ysd_532_kz__d26366e3109" valign="top" width="70%" headers="d230950e609 ">Provides the original scale for all double
+      <td class="entry" id="concept_ysd_532_kz__d28360e3203" valign="top" width="70%" headers="d250294e626 ">Provides the original scale for all double
        fields. </td>
 
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="30%" headers="d230950e606 ">&lt;Salesforce prefix&gt;digits</td>
+      <td class="entry" valign="top" width="30%" headers="d250294e623 ">&lt;Salesforce prefix&gt;digits</td>
 
-      <td class="entry" valign="top" width="70%" headers="d230950e609 ">Provides the maximum number of digits for all integer
+      <td class="entry" valign="top" width="70%" headers="d250294e626 ">Provides the maximum number of digits for all integer
        fields.</td>
 
      </tr>
@@ -529,15 +538,113 @@
 
 </div>
 </div>
+<div class="topic concept nested1" id="concept_cvb_bvr_kz">
+ <h2 class="title topictitle2">Event Generation</h2>
+
+    <div class="body conbody">
+        <p class="p">The Salesforce origin <span class="ph"><span class="ph" id="concept_cvb_bvr_kz__d28249e1485">can generate events that you can use in an event stream. When you
+                              enable event generation, the origin generates an event when it
+                              completes processing  the data returned by the specified</span> query.
+                  </span></p>
+
+        <div class="p">You can use Salesforce events in the following ways:<ul class="ul" id="concept_cvb_bvr_kz__ul_znq_hf1_4z">
+                <li class="li">With the Pipeline Finisher executor to stop the pipeline and transition the
+                    pipeline to a Finished state when the origin completes processing available
+                        data.<p class="p">When you restart a pipeline stopped by the Pipeline Finisher
+                        executor, the origin processes data based on how you configured the origin.
+                        For example, if you configure the origin to repeat an incremental query, the
+                        origin saves the offset when the executor stops the pipeline. When it
+                        restarts, the origin continues processing from the last-saved offset. If you
+                        configure the origin to repeat a full query, when you restart the pipeline,
+                        the origin uses the initial offset.</p>
+<p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_kff_ykv_lz">Case Study: Stop the Pipeline</a>.</p>
+</li>
+
+            </ul>
+<ul class="ul" id="concept_cvb_bvr_kz__ul_fjm_fhs_kz">
+                        <li class="li">
+                              <p class="p">With a destination to store information about completed queries. </p>
+
+                              <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
+
+                        </li>
+
+                  </ul>
+</div>
+
+        <p class="p">For more information about dataflow triggers and the event
+                  framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_gym_czr_kz">
+ <h3 class="title topictitle3">Event Record</h3>
+
+ <div class="body conbody">
+        <div class="p">Event records generated by the Salesforce origin
+            have the following event-related record header attributes:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_gym_czr_kz__table_x35_bzs_kz" class="table" frame="border" border="1" rules="all">
+     
+     
+     <thead class="thead" align="left">
+      <tr>
+       <th class="entry" valign="top" width="30%" id="d250294e788">Record Header Attribute</th>
+
+       <th class="entry" valign="top" width="70%" id="d250294e791">Description</th>
+
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td class="entry" valign="top" width="30%" headers="d250294e788 ">sdc.event.type</td>
+
+       <td class="entry" valign="top" width="70%" headers="d250294e791 ">Event type. Uses the following type:<ul class="ul" id="concept_gym_czr_kz__d28360e1454">
+         <li class="li" id="concept_gym_czr_kz__d28360e1456">no-more-data - Generated when the origin completes processing
+          all data returned by a query.</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="30%" headers="d250294e788 ">sdc.event.version</td>
+
+       <td class="entry" valign="top" width="70%" headers="d250294e791 ">An integer that indicates the version of the event record type.</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" valign="top" width="30%" headers="d250294e788 ">sdc.event.creation_timestamp</td>
+
+       <td class="entry" id="concept_gym_czr_kz__d28360e1409" valign="top" width="70%" headers="d250294e791 ">Epoch timestamp when the stage created the event.
+       </td>
+
+      </tr>
+
+     </tbody>
+
+    </table>
+</div>
+</div>
+
+        <p class="p">The no-more-data event record includes no record fields.</p>
+
+ </div>
+
+</div>
+</div>
 <div class="topic task nested1" id="task_ssp_krd_dy">
     <h2 class="title topictitle2">Changing the API Version</h2>
 
     <div class="body taskbody">
         <div class="section context">
             <p class="p"><span class="ph">Data
-                  Collector</span> ships with version 38.0 of the Salesforce Web Services Connector libraries. You
-                can use a different Salesforce API version if you need to access functionality not
-                present in version 38.0.</p>
+                  Collector</span> ships with version <span class="ph">39.0</span> of the Salesforce Web Services Connector libraries. You can use a different
+                Salesforce API version if you need to access functionality not present in version
+                    <span class="ph">39.0</span>.</p>
 
         </div>
 
@@ -549,7 +656,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Download the relevant version of the following JAR files from Salesforce Web
                     Services Connector (WSC):</span>
-                <ul class="ul choices" id="task_ssp_krd_dy__d39659e41">
+                <ul class="ul choices" id="task_ssp_krd_dy__d43320e48">
                     <li class="li choice">
                         <p class="p">WSC JAR file - force-wsc-&lt;version&gt;.0.0.jar </p>
 
@@ -572,7 +679,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">In the following <span class="ph">Data
                   Collector</span> directory,
-                    replace the default force-wsc-38.0.0.jar and force-partner-api-38.0.0.jar files
+                    replace the default force-wsc-39.0.0.jar and force-partner-api-39.0.0.jar files
                     with the versioned JAR files that you downloaded:</span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">$SDC_DIST/streamsets-libs/streamsets-datacollector-salesforce-lib/lib/</pre>
@@ -604,14 +711,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_h1n_bs3_rx__d26353e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_h1n_bs3_rx__table_ac1_hss_5x" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d230950e816">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d250294e984">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d230950e819">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d250294e987">Description</th>
 
                                 </tr>
 
@@ -619,35 +726,44 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d230950e816 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d250294e984 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d230950e819 ">Stage name.</td>
+       <td class="entry" valign="top" width="70%" headers="d250294e987 ">Stage name.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d250294e984 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d250294e987 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d250294e984 ">Produce Events <a class="xref" href="Salesforce.html#concept_cvb_bvr_kz">
+                                            <img class="image" id="task_h1n_bs3_rx__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d250294e987 ">Generates event records when events occur. Use for event
+        handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
+         <img class="image" id="task_h1n_bs3_rx__d28360e103" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d230950e816 ">Description</td>
+       <td class="entry" valign="top" width="30%" headers="d250294e984 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+         <img class="image" id="task_h1n_bs3_rx__d28360e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d230950e819 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d250294e987 ">Error record handling for the stage: <ul class="ul" id="task_h1n_bs3_rx__d28360e116">
+         <li class="li">Discard - Discards the record.</li>
 
-                                </tr>
+         <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
 
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d230950e816 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_h1n_bs3_rx__d26353e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <li class="li">Stop Pipeline - Stops the pipeline. </li>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d230950e819 ">Error record handling for the stage: <ul class="ul" id="task_h1n_bs3_rx__d26353e381">
-                                            <li class="li">Discard - Discards the record.</li>
-
-                                            <li class="li">Send to Error - Sends the record to the pipeline for
-                                                error handling.</li>
-
-                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
-
-                                        </ul>
+        </ul>
 </td>
 
-                                </tr>
+      </tr>
 
                             </tbody>
 
@@ -666,9 +782,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d230950e901">Salesforce Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d250294e1086">Salesforce Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d230950e904">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d250294e1089">Description</th>
 
                                 </tr>
 
@@ -676,27 +792,27 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e901 ">Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1086 ">Username</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e904 ">Salesforce username in the following email format:
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1089 ">Salesforce username in the following email format:
        <samp class="ph codeph">&lt;text&gt;@&lt;text&gt;.com</samp>. </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e901 ">Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1086 ">Password</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e904 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1089 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e901 ">Auth Endpoint</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1086 ">Auth Endpoint</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e904 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_h1n_bs3_rx__d26366e2561">
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1089 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_h1n_bs3_rx__d28360e2642">
         <li class="li">login.salesforce.com - Use to connect to a Production or Developer Edition
          organization.</li>
 
@@ -709,39 +825,39 @@
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e901 ">API Version
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1086 ">API Version
                                         <a class="xref" href="Salesforce.html#task_ssp_krd_dy">
                                             <img class="image" id="task_h1n_bs3_rx__image_wgh_xch_er" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e904 ">Salesforce API version to use to connect to Salesforce.
-        <p class="p">Default is 38.0. If you change the version, you also must download the relevant JAR files
-        from Salesforce Web Services Connector (WSC).</p>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1089 ">Salesforce API version to use to connect to Salesforce.
+        <p class="p">Default is <span class="ph">39.0</span>. If you change the version, you also must download the relevant JAR files from Salesforce
+        Web Services Connector (WSC).</p>
 </td>
 
                                     
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e901 ">Query Existing Data</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1086 ">Query Existing Data</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e904 ">Determines whether to execute a query to read existing
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1089 ">Determines whether to execute a query to read existing
                                         data from Salesforce.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e901 ">Subscribe to Notifications</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1086 ">Subscribe to Notifications</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e904 ">Determines whether to subscribe to the Force.com
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1089 ">Determines whether to subscribe to the Force.com
                                         Streaming API to receive notifications for changes to
                                         Salesforce data.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e901 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1086 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e904 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1089 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -751,10 +867,10 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e901 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
-         <img class="image" id="task_h1n_bs3_rx__d26366e199" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1086 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_h1n_bs3_rx__d28360e199" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e904 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1089 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
 
       </tr>
 
@@ -775,10 +891,10 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d230950e1069">Query Property <a class="xref" href="Salesforce.html#concept_djn_x4c_tx" title="The Salesforce origin can execute a query to read existing data from Salesforce. Use the Salesforce Object Query Language (SOQL) to write the query.">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d250294e1257">Query Property <a class="xref" href="Salesforce.html#concept_djn_x4c_tx" title="The Salesforce origin can execute a query to read existing data from Salesforce. Use the Salesforce Object Query Language (SOQL) to write the query.">
                                             <img class="image" id="task_h1n_bs3_rx__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d230950e1079">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d250294e1267">Description</th>
 
                                 </tr>
 
@@ -786,28 +902,39 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1069 ">Use Bulk API</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1257 ">Use Bulk API</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1079 ">Determines whether the stage uses the Salesforce Bulk API
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1267 ">Determines whether the stage uses the Salesforce Bulk API
                                         or SOAP API to write to Salesforce. Select to use the Bulk
                                         API. Clear to use the SOAP API.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1069 ">SOQL Query <a class="xref" href="Salesforce.html#concept_vdt_dxc_tx" title="When you configure the Salesforce origin to query existing data, you define the SOQL query that the origin uses to return data from Salesforce. The Salesforce origin requires a WHERE and ORDER BY clause in the query.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1257 ">SOQL Query <a class="xref" href="Salesforce.html#concept_vdt_dxc_tx" title="When you configure the Salesforce origin to query existing data, you define the SOQL query that the origin uses to return data from Salesforce. The Salesforce origin requires a WHERE and ORDER BY clause in the query.">
                                             <img class="image" id="task_h1n_bs3_rx__image_wch_xcl_zr" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1079 ">SOQL query to use when reading existing data from
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1267 ">SOQL query to use when reading existing data from
                                         Salesforce.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1069 ">Repeat Query <a class="xref" href="Salesforce.html#concept_owv_nj5_2z">
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1257 ">Include Deleted Records</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1267 ">Determines whether the SOQL query also retrieves deleted records from the Salesforce
+       recycle bin. <p class="p">The query can retrieve deleted records when the stage uses the Salesforce
+        SOAP API or the Bulk API version 39.0 or later. Earlier versions of the Bulk API do not
+        support retrieving deleted records.</p>
+</td>
+
+     </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1257 ">Repeat Query <a class="xref" href="Salesforce.html#concept_owv_nj5_2z">
                                             <img class="image" id="task_h1n_bs3_rx__image_fxy_vkw_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1079 ">Determines whether the origin runs the query more than
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1267 ">Determines whether the origin runs the query more than
                                         once. Available when the origin processes existing data and
                                         is not subscribed to notifications. Uses one of the
                                         following properties:<ul class="ul" id="task_h1n_bs3_rx__ul_zkg_qkw_2z">
@@ -825,9 +952,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1069 ">Query Interval</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1257 ">Query Interval</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1079 ">Amount of time to wait between queries. Enter an
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1267 ">Amount of time to wait between queries. Enter an
                                         expression based on a unit of time. You can use SECONDS,
                                         MINUTES, or HOURS. <p class="p">Default is 1 minute: ${1 * MINUTES}.
                                         </p>
@@ -836,18 +963,18 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1069 ">Initial Offset</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1257 ">Initial Offset</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1079 ">Offset value to use when the pipeline starts.<p class="p">Default
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1267 ">Offset value to use when the pipeline starts.<p class="p">Default
                                             is <samp class="ph codeph">000000000000000</samp>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1069 ">Offset Field </td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1257 ">Offset Field </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1079 ">Field to use for the offset value.<p class="p">Default is the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1267 ">Field to use for the offset value.<p class="p">Default is the
                                                 <samp class="ph codeph">Id</samp> field.</p>
 </td>
 
@@ -870,9 +997,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d230950e1199">Subscribe Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d250294e1398">Subscribe Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d230950e1202">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d250294e1401">Description</th>
 
                                 </tr>
 
@@ -880,11 +1007,11 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1199 ">Push Topic
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1398 ">Push Topic
                                         <a class="xref" href="Salesforce.html#concept_nnd_y4c_tx" title="The Salesforce origin can subscribe to the Force.com Streaming API to receive notifications for changes to Salesforce data.">
                                             <img class="image" id="task_h1n_bs3_rx__image_sch_nol_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1202 ">Name of the existing Salesforce PushTopic to subscribe
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1401 ">Name of the existing Salesforce PushTopic to subscribe
                                         to.</td>
 
                                 </tr>
@@ -906,9 +1033,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d230950e1252">Advanced Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d250294e1451">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d230950e1255">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d250294e1454">Description</th>
 
                                 </tr>
 
@@ -916,58 +1043,58 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1252 ">Create Salesforce Attributes <a class="xref" href="Salesforce.html#concept_qgj_hd2_kz" title="The Salesforce origin generates Salesforce record header attributes and Salesforce field attributes that provide additional information about each record and field. The origin receives these details from Salesforce.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1451 ">Create Salesforce Attributes <a class="xref" href="Salesforce.html#concept_qgj_hd2_kz" title="The Salesforce origin generates Salesforce record header attributes and Salesforce field attributes that provide additional information about each record and field. The origin receives these details from Salesforce.">
                                             <img class="image" id="task_h1n_bs3_rx__image_fjk_vkg_6z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1255 ">Adds Salesforce header attributes to records and field
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1454 ">Adds Salesforce header attributes to records and field
                                         attributes to fields. The origin creates Salesforce
                                         attributes by default. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1252 ">Salesforce Attribute Prefix</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1451 ">Salesforce Attribute Prefix</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1255 ">Prefix for Salesforce attributes.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1454 ">Prefix for Salesforce attributes.</td>
 
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1252 ">Use Proxy</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1451 ">Use Proxy</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1255 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
-
-     </tr>
-<tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1252 ">Proxy Hostname</td>
-
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1255 ">Proxy host.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1454 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1252 ">Proxy Port</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1451 ">Proxy Hostname</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1255 ">Proxy port.</td>
-
-     </tr>
-<tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1252 ">Proxy Requires Credentials</td>
-
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1255 ">Specifies whether the proxy requires a user name and password.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1454 ">Proxy host.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1252 ">Proxy Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1451 ">Proxy Port</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1255 ">User name for proxy credentials.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1454 ">Proxy port.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d230950e1252 ">Proxy Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1451 ">Proxy Requires Credentials</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d230950e1255 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1454 ">Specifies whether the proxy requires a user name and password.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1451 ">Proxy Username</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1454 ">User name for proxy credentials.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d250294e1451 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d250294e1454 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
      </tr>

@@ -51,14 +51,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kwz_lg2_zq__d43796e3993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kwz_lg2_zq__d48131e3993" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d282575e79">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d304919e79">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d282575e82">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d304919e82">Description</th>
 
                                 </tr>
 
@@ -66,46 +66,53 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d282575e79 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d304919e79 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d282575e82 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d282575e79 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d282575e82 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d304919e82 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d282575e79 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_kwz_lg2_zq__d43796e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d304919e79 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d282575e82 ">Fields that must include data to be passed into the
-                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
-                                            fields that the stage uses.</div>
+                                    <td class="entry" valign="top" width="70%" headers="d304919e82 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d304919e79 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_kwz_lg2_zq__d48131e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d304919e82 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d282575e79 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_kwz_lg2_zq__d43796e4053" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d304919e79 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_kwz_lg2_zq__d48131e4055" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d282575e82 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d304919e82 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
-                                        preconditions. </td>
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d282575e79 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_kwz_lg2_zq__d43796e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d304919e79 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_kwz_lg2_zq__d48131e4072" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d282575e82 ">Error record handling for the stage: <ul class="ul" id="task_kwz_lg2_zq__d43796e4072">
+                                    <td class="entry" valign="top" width="70%" headers="d304919e82 ">Error record handling for the stage: <ul class="ul" id="task_kwz_lg2_zq__d48131e4076">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -136,9 +143,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d282575e201">JSON Parser Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d304919e199">JSON Parser Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d282575e204">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d304919e202">Description</th>
 
                                 </tr>
 
@@ -146,25 +153,25 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d282575e201 ">Field to Parse</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d304919e199 ">Field to Parse</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d282575e204 ">Field that contains the JSON object.</td>
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d304919e202 ">Field that contains the JSON object.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="27.77777777777778%" headers="d282575e201 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_kwz_lg2_zq__d43985e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d304919e199 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_kwz_lg2_zq__d48320e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="72.22222222222221%" headers="d282575e204 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d304919e202 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d282575e201 ">Target Field</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d304919e199 ">Target Field</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d282575e204 ">Output field for the parsed JSON object.<p class="p">You can
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d304919e202 ">Output field for the parsed JSON object.<p class="p">You can
                                             specify the same field to replace the original data with
                                             the parsed data. Or you can specify another existing
                                             field or a new field. If the field does not exist, JSON

@@ -60,6 +60,10 @@
         <p class="p">To use a JDBC version older than 4.0, you can specify the driver class name and define a
             health check query.</p>
 
+        <p class="p">The origin can also generate events for an event
+                  stream. For more information about dataflow triggers and the event framework, see
+                        <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>. </p>
+
  </div>
 
 <div class="related-links"></div>
@@ -119,31 +123,28 @@
 
   <div class="p">When you start the pipeline, the JDBC
             Multitable Consumer origin retrieves the list of tables defined in the table
-            configuration. The origin then creates multiple concurrent threads based on the Number
-            of Threads property. Each thread reads data from a single table.<div class="note note"><span class="notetitle">Note:</span> The Maximum Pool
+            configuration. The origin then uses multiple concurrent threads based on the Number of
+            Threads property. Each thread reads data from a single table. <div class="note note"><span class="notetitle">Note:</span> The Maximum Pool
                 Size property on the Advanced tab defines the maximum number of connections the
                 origin can make to the database. It must be equal to or greater than the value
                 defined for the Number of Threads property.</div>
 </div>
 
-        <p class="p"><span class="ph"><span class="ph">Data
-                  Collector</span> creates a matching number of <dfn class="term">pipeline runners</dfn> to perform
-                        pipeline processing. The origin creates batches and passes each batch to a
-                        pipeline runner. Each pipeline runner runs a <dfn class="term">sourceless pipeline
-                              instance</dfn> - an instance of the pipeline that includes all of the
-                        processors and destinations in the pipeline and performs all pipeline
-                        processing after the origin.</span></p>
+        <p class="p">As the pipeline runs, <span class="ph">each thread connects to the origin system
+                        and creates a batch of data, and passes the batch to an available pipeline
+                        runner. A pipeline runner is a <dfn class="term">sourceless pipeline instance</dfn> -
+                        an instance of the pipeline that includes all of the processors and
+                        destinations in the pipeline and performs all pipeline processing after the
+                        origin.</span></p>
 
-        <p class="p">Each pipeline runner can process one batch at a time, just like a pipeline that runs on a
-            single thread. Each batch is processed and written as quickly as possible, independent
-            from other batches processed by other pipeline runners, so batches may be written
-            differently from the read-order. When the flow of data slows, the pipeline runners wait
-            idly until they are needed.</p>
+        <p class="p"><span class="ph"> Each pipeline runner processes one batch at a time,
+                        just like a pipeline that runs on a single thread. When the flow of data
+                        slows, the pipeline runners wait idly until they are needed.</span></p>
 
-        <p class="p">When a thread finishes reading from a table, it switches to the next available table and
-            continues to pass batches to a pipeline runner. The <a class="xref" href="MultiTableJDBCConsumer.html#concept_n5t_zgx_4y">batch
-                strategy</a> that you define for the origin determines when a thread switches to
-            the next table.</p>
+        <p class="p"><span class="ph">Multithreaded pipelines preserve the order of
+                        records within each batch, just like a single-threaded pipeline. But since
+                        batches are processed by different pipeline instances, the order that
+                        batches are written to destinations is not ensured.</span></p>
 
         <p class="p">For more information about multithreaded pipelines, see <a class="xref" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_zpp_2xc_py">Multithreaded Pipeline Overview</a>.</p>
 
@@ -152,21 +153,14 @@
             <p class="p">Say you are reading from ten tables. You set the Number of Threads property to 5 and
                 the Maximum Pool Size property to 6. When you start the pipeline, the origin
                 retrieves the list of tables. The origin then creates five threads to read from the
-                first five tables, and <span class="ph">Data
-                  Collector</span> creates five pipeline runners. Upon receiving data, a thread passes a batch to
-                one of the pipeline runners for processing.</p>
-
-            <p class="p">Each pipeline runner performs the processing associated with the rest of the
-                pipeline. After a batch is written to pipeline destinations, the pipeline runner
-                becomes available for another batch of data. </p>
+                first five tables, and by default <span class="ph">Data
+                  Collector</span> creates a matching number of pipeline runners. Upon receiving data, a thread
+                passes a batch to each of the pipeline runners for processing.</p>
 
             <p class="p">At any given moment, the five pipeline runners can each
                   process a batch, so this multithreaded pipeline processes up to five batches at a
                   time. When incoming data slows, the pipeline runners sit idle, available for use
                   as soon as the data flow increases.</p>
-
-            <p class="p">When a thread finishes reading from a table, it switches to the next available table
-                and continues to pass batches to a pipeline runner.</p>
 
         </div>
 
@@ -209,21 +203,35 @@
                     <dd class="dd">Each thread creates a batch of data from one table, and then switches to the
                         next available table to create the next batch. The thread runs an initial
                         SQL query to create the first batch from the table. The database caches the
-                        remaining rows in a result set in the database. When the same thread
-                        switches back to the same table to create another batch, it retrieves the
-                        rows from the result set cache in the database rather than running another
-                        SQL query. No other thread can read from that table until the result set is
-                        closed. </dd>
+                        remaining rows in a result set in the database for the same thread to access
+                        again, and then the thread switches to the next available table. A table is
+                        available in the following situations:<ul class="ul" id="concept_n5t_zgx_4y__ul_et1_zg4_lz">
+                            <li class="li">The table does not have an open result set cache. In this case, the
+                                thread runs an initial SQL query to create the first batch, caching
+                                the remaining rows in a result set in the database.</li>
+
+                            <li class="li">The table has an open result set cache created by that same thread.
+                                In this case, the thread creates the batch from the result set cache
+                                in the database rather than running another SQL query. </li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd">A table is not available when the table has an open result set cache created
+                        by another thread. No other thread can read from that table until the result
+                        set is closed. </dd>
 
                     <dd class="dd">When you configure a switch table strategy, define the result set cache size
                         and the number of batches that a thread can create from the result set.
                         After a thread creates the configured number of batches, the database closes
                         the result set and then a different thread can read from the table.</dd>
 
-                    <dd class="dd"><div class="note note"><span class="notetitle">Note:</span> By default, the origin instructs the database to cache an unlimited number of result sets. A
-                            thread can create an unlimited number of batches from that result
-                            set.</div>
-</dd>
+                    <dd class="dd">
+                        <div class="note note"><span class="notetitle">Note:</span> By default, the origin instructs the database to cache an unlimited
+                            number of result sets. A thread can create an unlimited number of
+                            batches from that result set.</div>
+
+                    </dd>
 
                     <dd class="dd">For example, let's say that the batch size for the origin is set to 100. The
                         origin is configured to use two concurrent threads and to read from four
@@ -232,10 +240,11 @@
 
                     <dd class="dd">Thread1 runs an SQL query on table1, which returns all 10,000 rows. The
                         thread creates a batch when it reads the first 100 rows. The next 400 rows
-                        are cached as a result set in the database. Thread1 then switches to table3
-                        and repeats the same process. After creating a batch from table3, thread1
+                        are cached as a result set in the database. Since thread2 is similarly
+                        processing table2, thread1 switches to the next available table, table3, and
+                        repeats the same process. After creating a batch from table3, thread1
                         switches back to table1 and retrieves the next batch of rows from the result
-                        set cache in the database.</dd>
+                        set that it previously cached in the database.</dd>
 
                     <dd class="dd">After thread1 creates five batches using the result set cache for table1,
                         the database closes the result set cache. Thread1 switches to the next
@@ -507,9 +516,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="40%" id="d205258e626">JDBC Header Attribute</th>
+                            <th class="entry" valign="top" width="40%" id="d224273e634">JDBC Header Attribute</th>
 
-                            <th class="entry" valign="top" width="60%" id="d205258e629">Description</th>
+                            <th class="entry" valign="top" width="60%" id="d224273e637">Description</th>
 
                         </tr>
 
@@ -517,9 +526,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d205258e626 "> jdbc.tables</td>
+                            <td class="entry" valign="top" width="40%" headers="d224273e634 "> jdbc.tables</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d205258e629 ">Provides a comma-separated list of source tables for the fields in
+                            <td class="entry" valign="top" width="60%" headers="d224273e637 ">Provides a comma-separated list of source tables for the fields in
                             the record.<div class="note note"><span class="notetitle">Note:</span> Not all JDBC drivers provide this
                             information.</div>
 </td>
@@ -527,25 +536,25 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d205258e626 ">jdbc.&lt;column name&gt;.jdbcType</td>
+                            <td class="entry" valign="top" width="40%" headers="d224273e634 ">jdbc.&lt;column name&gt;.jdbcType</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d205258e629 ">Provides the original SQL data type for each field in the
+                            <td class="entry" valign="top" width="60%" headers="d224273e637 ">Provides the original SQL data type for each field in the
                             record.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d205258e626 ">jdbc.&lt;column name&gt;.precision</td>
+                            <td class="entry" valign="top" width="40%" headers="d224273e634 ">jdbc.&lt;column name&gt;.precision</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d205258e629 ">Provides the original precision for all numeric and decimal fields.
+                            <td class="entry" valign="top" width="60%" headers="d224273e637 ">Provides the original precision for all numeric and decimal fields.
                         </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d205258e626 ">jdbc.&lt;column name&gt;.scale</td>
+                            <td class="entry" valign="top" width="40%" headers="d224273e634 ">jdbc.&lt;column name&gt;.scale</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d205258e629 ">Provides the original scale for all numeric and decimal fields.
+                            <td class="entry" valign="top" width="60%" headers="d224273e637 ">Provides the original scale for all numeric and decimal fields.
                         </td>
 
                         </tr>
@@ -559,6 +568,102 @@
      
  </div>
 
+</div>
+<div class="topic concept nested1" id="concept_wjj_gzs_kz">
+ <h2 class="title topictitle2">Event Generation</h2>
+
+    <div class="body conbody">
+        <p class="p">The JDBC
+            Multitable Consumer origin <span class="ph">can generate events that you can use in an event stream. When you
+                              enable event generation, the origin generates an event when it
+                              completes processing  the data returned by the specified</span> queries for all tables.</p>
+
+        <div class="p">You can use JDBC Multitable Consumer events in the following ways:<ul class="ul" id="concept_wjj_gzs_kz__ul_xjk_kf1_4z">
+                <li class="li">With the Pipeline Finisher executor to stop the pipeline and transition the
+                    pipeline to a Finished state when the origin completes processing available
+                        data.<p class="p">When you restart a pipeline stopped by the Pipeline Finisher
+                        executor, the origin continues processing from the last-saved offset unless
+                        you reset the origin.</p>
+<p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_kff_ykv_lz">Case Study: Stop the Pipeline</a>.</p>
+</li>
+
+            </ul>
+<ul class="ul" id="concept_wjj_gzs_kz__ul_fjm_fhs_kz">
+                        <li class="li">
+                              <p class="p">With a destination to store information about completed queries. </p>
+
+                              <p class="p">For an example, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_ocb_nnl_px">Case Study: Event Storage</a>.</p>
+
+                        </li>
+
+                  </ul>
+</div>
+
+        <p class="p">For more information about dataflow triggers and the event
+                  framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_h4j_4zs_kz">
+ <h3 class="title topictitle3">Event Record</h3>
+
+    <div class="body conbody">
+        <div class="p">Event records generated by JDBC
+            Multitable Consumer origin have the following event-related record header
+                attributes:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_h4j_4zs_kz__EventHead-NoMoreData-table" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="30%" id="d224273e782">Record Header Attribute</th>
+
+                            <th class="entry" valign="top" width="70%" id="d224273e785">Description</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d224273e782 ">sdc.event.type</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d224273e785 ">Event type. Uses the following type:<ul class="ul" id="concept_h4j_4zs_kz__ul_f4w_xrs_kz">
+                                    <li class="li" id="concept_h4j_4zs_kz__noMoreData-bullet">no-more-data - Generated when the
+                                        origin completes processing all data returned by the queries
+                                        for all tables.</li>
+
+                                </ul>
+</td>
+
+                        </tr>
+
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d224273e782 ">sdc.event.version</td>
+
+       <td class="entry" valign="top" width="70%" headers="d224273e785 ">An integer that indicates the version of the event record type.</td>
+
+      </tr>
+
+                        <tr>
+       <td class="entry" valign="top" width="30%" headers="d224273e782 ">sdc.event.creation_timestamp</td>
+
+       <td class="entry" id="concept_h4j_4zs_kz__d28360e1409" valign="top" width="70%" headers="d224273e785 ">Epoch timestamp when the stage created the event.
+       </td>
+
+      </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+        <p class="p">The no-more-data event record includes no record fields.</p>
+
+    </div>
+
+</div>
 </div>
 <div class="topic task nested1" id="task_kst_m4w_4y">
     <h2 class="title topictitle2">Configuring a JDBC Multitable Consumer</h2>
@@ -575,14 +680,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kst_m4w_4y__d26353e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kst_m4w_4y__table_ac1_hss_5x" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d205258e723">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d224273e875">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d205258e726">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d224273e878">Description</th>
 
                                 </tr>
 
@@ -590,35 +695,44 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e723 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d224273e875 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e726 ">Stage name.</td>
+       <td class="entry" valign="top" width="70%" headers="d224273e878 ">Stage name.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d224273e875 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d224273e878 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d224273e875 ">Produce Events <a class="xref" href="MultiTableJDBCConsumer.html#concept_wjj_gzs_kz">
+                                            <img class="image" id="task_kst_m4w_4y__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d224273e878 ">Generates event records when events occur. Use for event
+        handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
+         <img class="image" id="task_kst_m4w_4y__d28360e103" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e723 ">Description</td>
+       <td class="entry" valign="top" width="30%" headers="d224273e875 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+         <img class="image" id="task_kst_m4w_4y__d28360e112" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e726 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d224273e878 ">Error record handling for the stage: <ul class="ul" id="task_kst_m4w_4y__d28360e116">
+         <li class="li">Discard - Discards the record.</li>
 
-                                </tr>
+         <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
 
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e723 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_kst_m4w_4y__d26353e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <li class="li">Stop Pipeline - Stops the pipeline. </li>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e726 ">Error record handling for the stage: <ul class="ul" id="task_kst_m4w_4y__d26353e381">
-                                            <li class="li">Discard - Discards the record.</li>
-
-                                            <li class="li">Send to Error - Sends the record to the pipeline for
-                                                error handling.</li>
-
-                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
-
-                                        </ul>
+        </ul>
 </td>
 
-                                </tr>
+      </tr>
 
                             </tbody>
 
@@ -636,9 +750,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d205258e808">JDBC Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d224273e977">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d205258e811">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d224273e980">Description</th>
 
                                 </tr>
 
@@ -646,9 +760,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">JDBC Connection String</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">JDBC Connection String</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Connection string to use to connect to the database.<p class="p">Some databases, such as
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Connection string to use to connect to the database.<p class="p">Some databases, such as
          Postgres, require the schema in the connection string. Use the connection string format
          required by the database.</p>
 </td>
@@ -656,17 +770,17 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Use Credentials</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Use Credentials</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Enables entering credentials on the Credentials tab. Use when you do not include
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Enables entering credentials on the Credentials tab. Use when you do not include
         credentials in the JDBC connection string.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Query Interval</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Query Interval</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Amount of time to wait between queries. Enter an expression based on a unit of time.
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Amount of time to wait between queries. Enter an expression based on a unit of time.
         You can use SECONDS, MINUTES, or HOURS.<p class="p">Default is 10 seconds: ${10 * SECONDS}.
         </p>
 </td>
@@ -674,9 +788,10 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Number of Threads <a class="xref" href="MultiTableJDBCConsumer.html#concept_tz5_fw5_gz" title="The JDBC Multitable Consumer origin performs parallel processing and enables the creation of a multithreaded pipeline."><img class="image" id="task_kst_m4w_4y__image_r2s_8lq_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Number of Threads <a class="xref" href="MultiTableJDBCConsumer.html#concept_tz5_fw5_gz" title="The JDBC Multitable Consumer origin performs parallel processing and enables the creation of a multithreaded pipeline."><img class="image" id="task_kst_m4w_4y__image_r2s_8lq_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Number of threads the origin generates and uses for
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Number of threads the origin generates and uses for
                                         multithreaded processing.<p class="p">Configure the Maximum Pool Size
                                             property on the Advanced tab to be equal to or greater
                                             than this value.</p>
@@ -685,10 +800,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Per Batch Strategy <a class="xref" href="MultiTableJDBCConsumer.html#concept_n5t_zgx_4y"><img class="image" id="task_kst_m4w_4y__image_r3s_7rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Per Batch Strategy <a class="xref" href="MultiTableJDBCConsumer.html#concept_n5t_zgx_4y"><img class="image" id="task_kst_m4w_4y__image_r3s_7rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Strategy to create each batch of data:<ul class="ul" id="task_kst_m4w_4y__ul_fk4_11f_py">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Strategy to create each batch of data:<ul class="ul" id="task_kst_m4w_4y__ul_fk4_11f_py">
                                             <li class="li">Switch Tables - Each thread creates a batch of data
                                                 from one table, and then switches to the next
                                                 available table to create the next batch. Define the
@@ -707,17 +822,17 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Maximum number of records to include in a batch.</td>
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Maximum number of records to include in a batch.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Batches from Result Set <a class="xref" href="MultiTableJDBCConsumer.html#concept_n5t_zgx_4y"><img class="image" id="task_kst_m4w_4y__image_h3m_wkh_hz" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Batches from Result Set <a class="xref" href="MultiTableJDBCConsumer.html#concept_n5t_zgx_4y"><img class="image" id="task_kst_m4w_4y__image_h3m_wkh_hz" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Number of batches to create from the result set when
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Number of batches to create from the result set when
                                         using the switch tables batch strategy. After a thread
                                         creates this number of batches, the database closes the
                                         result set and then another thread can read from the same
@@ -733,10 +848,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Result Set Cache Size <a class="xref" href="MultiTableJDBCConsumer.html#concept_n5t_zgx_4y"><img class="image" id="task_kst_m4w_4y__image_r9h_3rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Result Set Cache Size <a class="xref" href="MultiTableJDBCConsumer.html#concept_n5t_zgx_4y"><img class="image" id="task_kst_m4w_4y__image_r9h_3rq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Number of result sets to cache in the database when using
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Number of result sets to cache in the database when using
                                         the switch tables batch strategy. Use a positive integer to
                                         set a limit on the number of cached result sets. Use -1 to
                                         opt out of this property.<p class="p">By default, the origin caches an
@@ -746,17 +861,17 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Max Clob Size (characters)</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Max Clob Size (characters)</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Maximum number of characters to be read in a Clob field. Larger data is
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Maximum number of characters to be read in a Clob field. Larger data is
         truncated.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Max Blob Size (bytes)</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Max Blob Size (bytes)</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">
         <p class="p">Maximum number of bytes to be read in a Blob field. </p>
 
        </td>
@@ -764,17 +879,17 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Data Time Zone</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Data Time Zone</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Time zone to use to evaluate datetime-based offset column
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Time zone to use to evaluate datetime-based offset column
                                         conditions. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Fetch Size</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Fetch Size</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Maximum number of rows to fetch for the JDBC statement
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Maximum number of rows to fetch for the JDBC statement
                                         and store in memory on the <span class="ph">Data
                   Collector</span> machine. The size cannot be zero.<p class="p">Default is 1,000.</p>
 <div class="p">
@@ -795,9 +910,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e808 ">Additional JDBC Configuration Properties</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e977 ">Additional JDBC Configuration Properties</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e811 ">Additional JDBC configuration properties to use. To add properties, click
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e980 ">Additional JDBC configuration properties to use. To add properties, click
          <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the property
          names and values as expected by JDBC. </p>
 </td>
@@ -821,10 +936,10 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d205258e1034">Tables Property <a class="xref" href="MultiTableJDBCConsumer.html#concept_rx3_3hx_4y" title="When you configure JDBC Multitable Consumer, you define a table configuration for each group of tables that you want to read. A table configuration defines a group of tables from the same schema, that have the same table name pattern, and that have proper primary keys or have the same defined offset columns."><img class="image" id="task_kst_m4w_4y__image_hvl_qp2_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d224273e1204">Tables Property <a class="xref" href="MultiTableJDBCConsumer.html#concept_rx3_3hx_4y" title="When you configure JDBC Multitable Consumer, you define a table configuration for each group of tables that you want to read. A table configuration defines a group of tables from the same schema, that have the same table name pattern, and that have proper primary keys or have the same defined offset columns."><img class="image" id="task_kst_m4w_4y__image_hvl_qp2_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d205258e1044">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d224273e1214">Description</th>
 
                                 </tr>
 
@@ -832,18 +947,18 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e1034 ">Schema Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e1204 ">Schema Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e1044 ">Name of the schema to use for this table
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e1214 ">Name of the schema to use for this table
                                         configuration.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e1034 ">Table Name Pattern <a class="xref" href="MultiTableJDBCConsumer.html#concept_ank_41x_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern."><img class="image" id="task_kst_m4w_4y__image_evl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e1204 ">Table Name Pattern <a class="xref" href="MultiTableJDBCConsumer.html#concept_ank_41x_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern."><img class="image" id="task_kst_m4w_4y__image_evl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e1044 ">Pattern of the table names to read for this table
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e1214 ">Pattern of the table names to read for this table
                                         configuration. Use the SQL LIKE syntax to define the
                                         pattern. <p class="p">Default is the percentage wildcard (%) which
                                             matches all tables in the schema.</p>
@@ -852,10 +967,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e1034 ">Table Exclusion Pattern <a class="xref" href="MultiTableJDBCConsumer.html#concept_ank_41x_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern."><img class="image" id="task_kst_m4w_4y__image_fvl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e1204 ">Table Exclusion Pattern <a class="xref" href="MultiTableJDBCConsumer.html#concept_ank_41x_4y" title="You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern."><img class="image" id="task_kst_m4w_4y__image_fvl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e1044 ">Pattern of the table names to exclude from being read for
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e1214 ">Pattern of the table names to exclude from being read for
                                         this table configuration. Use a Java-based regular
                                         expression, or regex, to define the pattern.<p class="p">Leave empty
                                             if you do not need to exclude any tables.</p>
@@ -864,10 +979,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e1034 ">Override Offset Columns <a class="xref" href="MultiTableJDBCConsumer.html#concept_yfx_mhx_4y" title="The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within the tables."><img class="image" id="task_kst_m4w_4y__image_gvl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e1204 ">Override Offset Columns <a class="xref" href="MultiTableJDBCConsumer.html#concept_yfx_mhx_4y" title="The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within the tables."><img class="image" id="task_kst_m4w_4y__image_gvl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e1044 ">Determines whether to use the primary key or other
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e1214 ">Determines whether to use the primary key or other
                                         columns as the offset columns for this table configuration.
                                             <p class="p">Select to override the primary key and define other
                                             offset columns. Clear to use the primary key as the
@@ -877,10 +992,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e1034 ">Initial Offset <a class="xref" href="MultiTableJDBCConsumer.html#concept_yfx_mhx_4y" title="The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within the tables."><img class="image" id="task_kst_m4w_4y__image_hvl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e1204 ">Initial Offset <a class="xref" href="MultiTableJDBCConsumer.html#concept_yfx_mhx_4y" title="The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within the tables."><img class="image" id="task_kst_m4w_4y__image_hvl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e1044 ">Offset value to use for this table configuration when the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e1214 ">Offset value to use for this table configuration when the
                                         pipeline starts. Enter the primary key name or offset column
                                         name and value. For Datetime columns, enter a Long
                                             value.<p class="p">When you define multiple offset columns, you
@@ -891,10 +1006,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d205258e1034 ">Offset Column Conditions <a class="xref" href="MultiTableJDBCConsumer.html#concept_yfx_mhx_4y" title="The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within the tables."><img class="image" id="task_kst_m4w_4y__image_ivl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d224273e1204 ">Offset Column Conditions <a class="xref" href="MultiTableJDBCConsumer.html#concept_yfx_mhx_4y" title="The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within the tables."><img class="image" id="task_kst_m4w_4y__image_ivl_qp5_qy" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d205258e1044 ">Additional conditions that the origin uses to determine
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d224273e1214 ">Additional conditions that the origin uses to determine
                                         where to start reading data for this table configuration.
                                         The origin adds the defined condition to the WHERE clause of
                                         the SQL query. <p class="p">Use the expression language to define the
@@ -917,14 +1032,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kst_m4w_4y__d26353e2807" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kst_m4w_4y__d28347e2807" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d205258e1177">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d224273e1347">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d205258e1180">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d224273e1350">Description</th>
 
                                 </tr>
 
@@ -932,18 +1047,18 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d205258e1177 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d224273e1347 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d205258e1180 ">User name for the JDBC connection.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d224273e1350 ">User name for the JDBC connection.</td>
 
                                 </tr>
 
-                                <tr id="task_kst_m4w_4y__d26353e2838">
-                                    <td class="entry" valign="top" width="30%" headers="d205258e1177 ">Password</td>
+                                <tr id="task_kst_m4w_4y__d28347e2838">
+                                    <td class="entry" valign="top" width="30%" headers="d224273e1347 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d205258e1180 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                                    <td class="entry" valign="top" width="70%" headers="d224273e1350 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
                                 </tr>
@@ -961,14 +1076,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kst_m4w_4y__d26353e2863" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kst_m4w_4y__d28347e2863" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d205258e1256">Legacy Driver Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d224273e1426">Legacy Driver Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d205258e1259">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d224273e1429">Description</th>
 
                                 </tr>
 
@@ -976,17 +1091,17 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d205258e1256 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d224273e1426 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d205258e1259 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry" valign="top" width="70%" headers="d224273e1429 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d205258e1256 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d224273e1426 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d205258e1259 ">Optional query to test the health of a connection.
+                                    <td class="entry" valign="top" width="70%" headers="d224273e1429 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -1008,9 +1123,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d205258e1312">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d224273e1482">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d205258e1315">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d224273e1485">Description</th>
 
                                 </tr>
 
@@ -1018,9 +1133,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d205258e1312 ">Maximum Pool Size</td>
+                                    <td class="entry" valign="top" width="30%" headers="d224273e1482 ">Maximum Pool Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d205258e1315 ">The maximum number of connections to create. Must be
+                                    <td class="entry" valign="top" width="70%" headers="d224273e1485 ">The maximum number of connections to create. Must be
                                         equal to or greater than the value of the Number of Threads
                                             property.<p class="p">Default is 1.</p>
 </td>
@@ -1028,18 +1143,18 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d205258e1312 ">Minimum Idle Connections</td>
+       <td class="entry" valign="top" width="30%" headers="d224273e1482 ">Minimum Idle Connections</td>
 
-       <td class="entry" valign="top" width="70%" headers="d205258e1315 ">The minimum number of connections to create and maintain. To define a fixed connection
+       <td class="entry" valign="top" width="70%" headers="d224273e1485 ">The minimum number of connections to create and maintain. To define a fixed connection
         pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d205258e1312 ">Connection Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d224273e1482 ">Connection Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d205258e1315 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+       <td class="entry" valign="top" width="70%" headers="d224273e1485 ">Maximum time to wait for a connection. Use a time constant in an expression to define
         the time increment. <div class="p">Default is 30 seconds, defined as follows:
          <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
@@ -1048,9 +1163,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d205258e1312 ">Idle Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d224273e1482 ">Idle Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d205258e1315 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+       <td class="entry" valign="top" width="70%" headers="d224273e1485 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
         define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is
          30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
@@ -1060,9 +1175,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d205258e1312 ">Max Connection Lifetime</td>
+       <td class="entry" valign="top" width="30%" headers="d224273e1482 ">Max Connection Lifetime</td>
 
-       <td class="entry" valign="top" width="70%" headers="d205258e1315 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+       <td class="entry" valign="top" width="70%" headers="d224273e1485 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
         time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
          seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
@@ -1072,30 +1187,30 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d205258e1312 ">Auto Commit</td>
+       <td class="entry" valign="top" width="30%" headers="d224273e1482 ">Auto Commit</td>
 
-       <td class="entry" valign="top" width="70%" headers="d205258e1315 ">Determines whether auto-commit mode is enabled or disabled for the
+       <td class="entry" valign="top" width="70%" headers="d224273e1485 ">Determines whether auto-commit mode is enabled or disabled for the
          connection.<p class="p">Disabled by default.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d205258e1312 ">Enforce Read-only Connection</td>
+       <td class="entry" valign="top" width="30%" headers="d224273e1482 ">Enforce Read-only Connection</td>
 
-       <td class="entry" valign="top" width="70%" headers="d205258e1315 ">Creates read-only connections to avoid any type of write. <p class="p">Enabled by default.
+       <td class="entry" valign="top" width="70%" headers="d224273e1485 ">Creates read-only connections to avoid any type of write. <p class="p">Enabled by default.
          Disabling this property is not recommended. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d205258e1312 ">Transaction Isolation</td>
+       <td class="entry" valign="top" width="30%" headers="d224273e1482 ">Transaction Isolation</td>
 
-       <td class="entry" valign="top" width="70%" headers="d205258e1315 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
+       <td class="entry" valign="top" width="70%" headers="d224273e1485 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
         default transaction isolation level set for the database. You can override the database
         default by setting the level to any of the following:</p>
-<ul class="ul" id="task_kst_m4w_4y__d26366e1768">
+<ul class="ul" id="task_kst_m4w_4y__d28360e1841">
          <li class="li">Read committed </li>
 
          <li class="li">Read uncommitted </li>
@@ -1110,10 +1225,10 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d205258e1312 ">Initial Table Order Strategy <a class="xref" href="MultiTableJDBCConsumer.html#concept_nff_2hx_4y" title="You can define the initial order that the origin uses to read the tables."><img class="image" id="task_kst_m4w_4y__image_r5t_0kq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d224273e1482 ">Initial Table Order Strategy <a class="xref" href="MultiTableJDBCConsumer.html#concept_nff_2hx_4y" title="You can define the initial order that the origin uses to read the tables."><img class="image" id="task_kst_m4w_4y__image_r5t_0kq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d205258e1315 ">Initial order used to read the tables:<ul class="ul" id="task_kst_m4w_4y__ul_opw_1jf_py">
+                                    <td class="entry" valign="top" width="70%" headers="d224273e1485 ">Initial order used to read the tables:<ul class="ul" id="task_kst_m4w_4y__ul_opw_1jf_py">
                                             <li class="li">None - Reads the tables in the order that they are
                                                 listed in the database.</li>
 

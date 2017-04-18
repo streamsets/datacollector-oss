@@ -33,13 +33,49 @@
         you upgrade.</p>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_cmh_ryd_pz">
+ <h2 class="title topictitle2">Configure JDBC Producer Schema Names</h2>
+
+    <div class="body conbody">
+        <p class="p">With Data Collector version 2.5.0.0, you can use a Schema Name property to specify the
+            database or schema name. In previous releases, you specified the database or schema name
+            in the Table Name property. </p>
+
+        <p class="p">Upgrading from a previous release does not require changing any existing configuration at
+            this time. But we recommend using the new Schema Name property, since the ability to
+            specify a database or schema name with the table name might be deprecated in the future. </p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_gk3_s5l_nz">
+ <h2 class="title topictitle2">Evaluate Precondition Error Handling</h2>
+
+ <div class="body conbody">
+  <p class="p">With Data Collector version 2.5.0.0, precondition error handling has changed. </p>
+
+        <p class="p">The Precondition stage property allows you to define conditions that must be met for a
+            record to enter the stage. Previously, records that did not meet all specified
+            preconditions were passed to the pipeline for error handling. That is, the records were
+            processed based on the Error Records pipeline property. </p>
+
+        <p class="p">With version 2.5.0.0, records that do not meet the specified preconditions are handled by
+            the error handling configured for the stage. Stage error handling occurs based on the On
+            Record Error property on the General tab of the stage.</p>
+
+        <p class="p">Review pipelines that use preconditions to verify that this change does not adversely
+            affect the behavior of the pipelines.</p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_czx_bbn_gz">
  <h2 class="title topictitle2">Authentication for Docker Image</h2>
 
  <div class="body conbody">
-  <p class="p"><span class="ph">Data
-                  Collector</span> version
-            2.4.1.0, the Docker image now uses the form type of file-based authentication by
+  <p class="p">With <span class="ph">Data
+                  Collector</span>
+            version 2.4.1.0, the Docker image now uses the form type of file-based authentication by
             default. As a result, you must use a <span class="ph">Data
                   Collector</span>
             user account to log in to the <span class="ph">Data
@@ -77,17 +113,17 @@
             edit the pipeline. Without read permission, the user cannot see the pipeline at all. It
             does not display in the list of available pipelines. </p>
 
-        <p class="p">With pipeline permissions enabled, all upgraded pipelines are initially visible only to
-            users with the Admin role and the pipeline owner - the user who created the pipeline. </p>
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> With pipeline permissions enabled, all upgraded pipelines are initially visible
+                only to users with the Admin role and the pipeline owner - the user who created the
+                pipeline. To enable other users to work with pipelines, have an Admin user configure
+                the appropriate permissions for each pipeline. </div>
 
-        <p class="p">To enable other users to work with pipelines, have an Admin user configure the
-            appropriate permissions for each pipeline. </p>
+        </div>
 
-        <p class="p">To retain pre-2.4.0.0 behavior, you can disable pipeline permissions by setting the
-                <span class="ph uicontrol">pipeline.access.control.enabled property</span> to
-                <span class="ph uicontrol">false</span> in the <span class="ph">Data
-                  Collector</span>
-            configuration file.</p>
+        <p class="p">In Data Collector version 2.5.0.0, pipeline permissions are disabled by default. To
+            enable pipeline permissions, set the pipeline.access.control.enabled property to true in
+            the Data Collector configuration file.</p>
 
         <div class="note tip"><span class="tiptitle">Tip:</span> You can configure pipeline permissions when permissions are disabled. Then,
             you can enable the pipeline permissions property after pipeline permissions are properly

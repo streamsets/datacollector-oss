@@ -52,13 +52,15 @@
 
                 <li class="li">JDBC Multitable Consumer origin</li>
 
+                <li class="li">Kinesis Consumer origin</li>
+
                 <li class="li">WebSocket Server origin</li>
 
             </ul>
 </div>
 
-        <p class="p">You can also use the Dev Data Generator development origin to test a multithreaded
-            pipeline. </p>
+        <p class="p">You can also use the Dev Data Generator development origin to test multithreaded
+            pipelines. </p>
 
         <p class="p">A multithreaded pipeline honors the configured delivery guarantee for the pipeline, but
             does not guarantee the order in which batches of data are processed. </p>
@@ -71,25 +73,35 @@
 
     <div class="body conbody">
         <p class="p">When you
-            configure a multithreaded origin, you specify the amount of concurrency or number of
-            threads that the origin should use. </p>
+            configure a multithreaded pipeline, you specify the number of threads that the origin
+            should use to generate batches of data. You can also configure the maximum number of
+                <dfn class="term">pipeline runners</dfn> that <span class="ph">Data
+                  Collector</span>
+            uses to perform pipeline processing. </p>
 
-        <p class="p"><span class="ph">When you start the pipeline, the origin creates the
-                        specified number of threads and <span class="ph">Data
-                  Collector</span> creates a matching number of <dfn class="term">pipeline runners</dfn> to perform
-                        pipeline processing. The origin creates batches and passes each batch to a
-                        pipeline runner. Each pipeline runner runs a <dfn class="term">sourceless pipeline
-                              instance</dfn> - an instance of the pipeline that includes all of the
-                        processors and destinations in the pipeline and performs all pipeline
-                        processing after the origin.</span></p>
+        <p class="p"><span class="ph">A pipeline runner is a <dfn class="term">sourceless
+                              pipeline instance</dfn> - an instance of the pipeline that includes
+                        all of the processors and destinations in the pipeline and represents all
+                        pipeline processing after the origin.</span></p>
 
-        <p class="p"><span class="ph"> Each pipeline runner can process one batch at a time,
+        <p class="p">Origins perform multithreaded processing based on the origin systems they work with, but
+            the following is true for all origins that generate multithreaded pipelines: </p>
+
+        <p class="p">When you start the pipeline, the origin creates a number of threads based on the
+            multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data
+                  Collector</span> creates a number of pipeline runners based on the pipeline Max Runners
+                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d28036e1534">Each
+                              thread connects to the origin system and creates a batch of data, and
+                              passes the batch to an available pipeline runner.</span></span></p>
+
+        <p class="p"><span class="ph"> Each pipeline runner processes one batch at a time,
                         just like a pipeline that runs on a single thread. When the flow of data
                         slows, the pipeline runners wait idly until they are needed.</span></p>
 
-        <p class="p">Multithreaded pipelines preserve the order of records within each batch, just like a
-            single-threaded pipeline. But since batches are processed by different pipeline
-            instances, the order that batches are written to destinations is not ensured.</p>
+        <p class="p"><span class="ph">Multithreaded pipelines preserve the order of
+                        records within each batch, just like a single-threaded pipeline. But since
+                        batches are processed by different pipeline instances, the order that
+                        batches are written to destinations is not ensured.</span></p>
 
         <p class="p">For example, take the following multithreaded pipeline. The HTTP Server origin processes
             HTTP POST requests passed from HTTP clients. When you configure the origin, you specify
@@ -97,9 +109,16 @@
 
         <p class="p"><img class="image" id="concept_xl3_ncd_py__image_mxx_5sd_ry" src="../Graphics/Multithread-HTTPPipeline.png" height="263" width="470" /></p>
 
-        <p class="p">With Max Concurrent Requests set to 5, when you start the pipeline <span class="ph">the origin creates five threads, and <span class="ph">Data
-                  Collector</span> creates five pipeline runners. Upon receiving data, the origin passes a
-                        batch to each of the pipeline runners for processing. </span></p>
+        <p class="p">Let's say you configure the pipeline to opt out of the Max Runners property. When you do
+            this, <span class="ph">Data
+                  Collector</span>
+            generates a matching number of pipeline runners for the number of threads.</p>
+
+        <p class="p">With Max Concurrent Requests set to 5, when you start the pipeline the origin creates
+            five threads and <span class="ph">Data
+                  Collector</span>
+            creates five pipeline runners. Upon receiving data, the origin passes a batch to each of
+            the pipeline runners for processing.</p>
 
         <p class="p">Conceptually, the multithreaded pipeline looks like this:</p>
 
@@ -127,13 +146,16 @@
             to create multithreaded pipelines:<ul class="ul" id="concept_wcz_tpd_py__ul_d2v_vpd_py">
                 <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch cluster.</li>
 
-                <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="Configure the HTTP clients to send data to the HTTP Server listening port.Configure the HTTP clients to include the HTTP Server application ID in each request.">HTTP Server</a> -
+                <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP Server</a> -
                     Listens on a HTTP endpoint and processes the contents of all authorized HTTP
                     POST requests. </li>
 
                 <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC
                         Multitable Consumer</a> - Reads database data from multiple tables
                     through a JDBC connection.</li>
+
+                <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis
+                        Consumer</a> - Reads data from a Kinesis cluster.</li>
 
                 <li class="li"><a class="xref" href="../Origins/WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket requests. Use the WebSocket Server origin to read high volumes of WebSocket requests using multiple threads.">WebSocket
                         Server</a> - Listens on a WebSocket endpoint and processes the contents
@@ -144,6 +166,10 @@
 
             </ul>
 </div>
+
+        <p class="p">The origins use different properties and perform processing differently based on the
+            origin systems they work with. For details on how an origin performs multithreaded
+            processing, see "Multithreaded Processing" in the origin documentation.</p>
 
         <p class="p">Note that <span class="ph">Data
                   Collector</span>
@@ -160,47 +186,121 @@
 
  <div class="body conbody">
   <p class="p">Since multithreaded pipelines use multiple
-            pipeline runners to run different instances of the pipeline, processor caching in a
-            multithreaded pipeline differs from a pipeline that runs on a single thread.</p>
+            pipeline runners to run multiple sourceless pipeline instances, processor caching in a
+            multithreaded pipeline can differ from a pipeline that runs on a single thread.</p>
 
-        <p class="p">When a processor caches record data, each instance of the processor keeps a separate
-            cache. Each processor instance can only cache the data that passes through that
-            particular pipeline runner. Be sure to consider this behavior when configuring
-            multithreaded pipelines. </p>
+        <p class="p">Generally, when a processor caches data, each instance of the processor can only cache
+            the data that passes through that particular pipeline runner. Be sure to consider this
+            behavior when configuring multithreaded pipelines. </p>
 
         <p class="p">For example, if you configure a lookup processor to create a local cache, each instance
             of the lookup processor creates its own local cache. This should not be a problem since
             the cache is generally used to improve pipeline performance. </p>
 
-        <p class="p">However, if you use the Record Deduplicator processor to remove duplicate records, the
-            processor can only remove duplicate records from within a pipeline instance. The
-            processor cannot locate records with duplicates in other pipeline instances. </p>
-
-        <p class="p">The ability for a processor to share a cache across all pipeline instances is planned for
-            future releases. </p>
+        <p class="p">The exception is the Record Deduplicator processor. The Record Deduplicator caches
+            records for comparison for up to a specified number of records or amount of time. When
+            used in a multithreaded pipeline, the records in the cache are shared across pipeline
+            runners. </p>
 
  </div>
 
 </div>
-<div class="topic concept nested2" id="concept_tdn_vwy_ry">
- <h3 class="title topictitle3">Monitoring</h3>
+</div>
+<div class="topic concept nested1" id="concept_tdn_vwy_ry">
+ <h2 class="title topictitle2">Monitoring</h2>
 
  <div class="body conbody">
         <p class="p">When you monitor a multithreaded pipeline, the
             pipeline and stage statistics that display are for the entire pipeline, aggregated
             across all pipeline runners.</p>
 
-        <p class="p">You can view the number of pipeline runners associated with a pipeline and the number of
-            idle runners that are available for use. The number of pipeline runners is based on the
-            number of threads that you configured for the origin.</p>
+        <p class="p">Monitor mode provides the following Available Pipeline Runners Histogram: </p>
 
-        <p class="p">The pipeline runner information displays in the Runtime Statistics, as shown below:</p>
+        <p class="p"><img class="image" id="concept_tdn_vwy_ry__image_bzb_yxf_sy" src="../Graphics/Multithreaded-Stats.png" height="270" width="284" /></p>
 
-        <p class="p"><img class="image" id="concept_tdn_vwy_ry__image_bzb_yxf_sy" src="../Graphics/Multithreaded-Stats.png" height="385" width="320" /></p>
+        <p class="p">The histogram shows a changing snapshot of the frequency of available pipeline runners and
+            the number of runners that are currently available. If you are uncertain of the number
+            that a column displays, hover over it to view the column detail.</p>
+
+        <p class="p">For example, the histogram above indicates that the mean is 1.4 available runners, and
+            the standard deviation is one runner.</p>
 
     </div>
 
 </div>
+<div class="topic concept nested1" id="concept_fmg_pjd_mz">
+ <h2 class="title topictitle2">Tuning Threads and Runners</h2>
+
+ <div class="body conbody">
+  <div class="p">To optimize pipeline performance and resource usage,
+            you can tune the number of threads and pipeline runners that a multithreaded pipeline
+            uses. <dl class="dl">
+                
+                    <dt class="dt dlterm">threads</dt>
+
+                    <dd class="dd">Configure the maximum number of threads or concurrency in the origin.</dd>
+
+                    <dd class="dd">Before specifying a number of threads, consider how the origin uses threads.
+                        All origins use threads to connect to the origin system and create batches
+                        of data, but they can perform this task differently. </dd>
+
+                    <dd class="dd">For example, the JDBC Multitable Consumer origin uses one thread for each
+                        table, so there's little point in configuring the origin to use more threads
+                        than the number of tables being queried. </dd>
+
+                    <dd class="dd">In contrast, the HTTP Server origin listens at an HTTP endpoint. When you
+                        configure the number of threads to use, you should consider the maximum
+                        number of threads you might feasibly use in relationship to the peak spikes
+                        and the number of available pipeline runners.</dd>
+
+                    <dd class="dd">Note that idle threads consume few resources, so little harm can come from
+                        configuring extra.</dd>
+
+                
+                
+                    <dt class="dt dlterm">pipeline runners</dt>
+
+                    <dd class="dd">Configure the maximum number of pipeline runners using the Max Runners
+                        pipeline property. </dd>
+
+                    <dd class="dd">Pipeline runners consume resources even when idle. So when considering the
+                        number of runners to use, you should decide if you want to optimize for
+                        performance, resource usage, or both.</dd>
+
+                    <dd class="dd">Pipeline runners process batches created by the origin threads. The speed of
+                        processing might differ based on the complexity of the pipeline logic, batch
+                        size, etc. </dd>
+
+                    <dd class="dd">So to determine the number of pipeline runners that you want to use, monitor
+                        the number of available runners when you run the pipeline. If you find that
+                        you have an abundance of available runners, you might reduce the number of
+                        runners that you allow. Conversely, if the pipeline runners are generally
+                        unavailable, increasing the number of pipeline runners can improve
+                        performance. </dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">For example, say you have a pipeline with the Kinesis Consumer reading from 4 shards. In
+            the origin, you set the number of threads to 4. You also leave the pipeline Max Runners
+            property with the default of 0, which creates a matching number of pipeline runners for
+            the threads - in this case, 4. After you start the pipeline and let it run for a while,
+            you check back and find the following histogram: </p>
+
+        <p class="p"><img class="image" id="concept_fmg_pjd_mz__image_av3_3rk_mz" src="../Graphics/Multithreaded-Stats.png" height="270" width="284" /></p>
+
+        <p class="p">The histogram shows that the mean is 1.4, which means at any time, it's likely that there
+            are 1.4 available runners.</p>
+
+        <p class="p">If this is the peak load for the pipeline, this means you can reduce the number of
+            pipeline runners used in the pipeline to 3 without sacrificing much performance. If <span class="ph">Data
+                  Collector</span>
+            resources are needed elsewhere and you don't mind a minor hit to pipeline performance,
+            you might reduce the number of pipeline runners to 2. </p>
+
+ </div>
+
 </div>
 <div class="topic concept nested1" id="concept_z25_ltd_ry">
  <h2 class="title topictitle2">Resource Usage</h2>
@@ -238,10 +338,14 @@
                     following origins at this time:<ul class="ul" id="concept_sfp_1nd_py__ul_exg_jym_3z">
                         <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a></li>
 
-                        <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="Configure the HTTP clients to send data to the HTTP Server listening port.Configure the HTTP clients to include the HTTP Server application ID in each request.">HTTP
+                        <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
                                 Server</a></li>
 
                         <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC Multitable Consumer</a></li>
+
+                        <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis
+                                Consumer</a>
+                        </li>
 
                         <li class="li"><a class="xref" href="../Origins/WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket requests. Use the WebSocket Server origin to read high volumes of WebSocket requests using multiple threads.">WebSocket Server</a></li>
 
@@ -258,11 +362,15 @@
                     </p>
 </li>
 
-                <li class="li">Processors that cache information have a separate cache for each instance of the
-                    pipeline at this time.</li>
+                <li class="li">Processors that cache information generally have a separate cache for each
+                    instance of the pipeline. The exception is the Record Deduplicator, which can
+                    identify duplicate records across all pipeline runners. </li>
 
                 <li class="li">The pipeline and stage statistics that display during monitoring are aggregated
                     across all threads. </li>
+
+                <li class="li">To optimize performance and resource usage, check the Available Pipeline Runners
+                    histogram to see if pipeline runners are being used effectively.</li>
 
                 <li class="li">We recommend monitoring the resource usage of the pipeline and the <span class="ph">Data
                   Collector</span> heap usage, increasing them as needed.</li>

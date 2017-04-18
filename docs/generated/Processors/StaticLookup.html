@@ -83,14 +83,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xk1_z4r_pv__d43796e3993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xk1_z4r_pv__d48131e3993" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d295014e104">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d317510e104">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d295014e107">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d317510e107">Description</th>
 
                                 </tr>
 
@@ -98,46 +98,53 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d295014e104 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d317510e104 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d295014e107 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d295014e104 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d295014e107 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d317510e107 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d295014e104 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_xk1_z4r_pv__d43796e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d317510e104 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d295014e107 ">Fields that must include data to be passed into the
-                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
-                                            fields that the stage uses.</div>
+                                    <td class="entry" valign="top" width="70%" headers="d317510e107 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d317510e104 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_xk1_z4r_pv__d48131e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d317510e107 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d295014e104 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_xk1_z4r_pv__d43796e4053" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d317510e104 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_xk1_z4r_pv__d48131e4055" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d295014e107 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d317510e107 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
-                                        preconditions. </td>
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d295014e104 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_xk1_z4r_pv__d43796e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d317510e104 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_xk1_z4r_pv__d48131e4072" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d295014e107 ">Error record handling for the stage: <ul class="ul" id="task_xk1_z4r_pv__d43796e4072">
+                                    <td class="entry" valign="top" width="70%" headers="d317510e107 ">Error record handling for the stage: <ul class="ul" id="task_xk1_z4r_pv__d48131e4076">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -168,9 +175,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d295014e226">Lookup Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d317510e224">Lookup Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d295014e229">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d317510e227">Description</th>
 
                                 </tr>
 
@@ -178,9 +185,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d295014e226 ">Mode</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d317510e224 ">Mode</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d295014e229 ">Mode used to perform the lookups:<ul class="ul" id="task_xk1_z4r_pv__d43985e1929">
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d317510e227 ">Mode used to perform the lookups:<ul class="ul" id="task_xk1_z4r_pv__d48320e2002">
        <li class="li">Per Batch - Performs a bulk lookup of all keys in a
         batch. The processor performs a single lookup for
         each batch.</li>
@@ -197,9 +204,9 @@
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d295014e226 ">Key Expression</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d317510e224 ">Key Expression</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d295014e229 ">Key to look up in local memory. Enter a key name or enter
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d317510e227 ">Key to look up in local memory. Enter a key name or enter
                                         an expression that defines the key.<div class="p">For example, enter the
                                             following expression to use the data in the hostname
                                             field as the lookup
@@ -210,9 +217,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d295014e226 ">Output Field</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d317510e224 ">Output Field</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d295014e229 ">Name of the String field in the record to pass the lookup
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d317510e227 ">Name of the String field in the record to pass the lookup
                                         value. You can specify an existing field or a new field. If
                                         the field does not exist, Static Lookup creates the field. </td>
 

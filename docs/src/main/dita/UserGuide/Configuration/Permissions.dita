@@ -31,7 +31,7 @@
             the users are in a single Operations group, you can simply assign read and execute
             access to the Operations group instead of assigning the permissions to each user
             individually. </p>
-        <p>To use pipeline permissions, enable the the pipeline.access.control.enabled <ph
+        <p>To use pipeline permissions, enable the pipeline.access.control.enabled <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration property, and configure the permissions on a pipeline-by-pipeline basis. </p>
         <p>
