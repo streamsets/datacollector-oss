@@ -23,6 +23,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Field;
@@ -34,6 +35,7 @@ import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
@@ -76,10 +78,13 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private static final String TIME_DRIVER = "timeDriver";
   private static final String SCALE_EXPRESSION = "scaleExpression";
   private static final String PRECISION_EXPRESSION = "precisionExpression";
+  private static final String TEMP_AVRO_DIR_NAME = "/.avro";
 
   protected static final String HDFS_HEADER_ROLL = "roll";
   protected static final String HDFS_HEADER_AVROSCHEMA = "avroSchema";
   protected static final String HDFS_HEADER_TARGET_DIRECTORY = "targetDirectory";
+
+
   public static final String DEFAULT_DB = "default";
   private final String databaseEL;
   private final String tableEL;
@@ -87,6 +92,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private final String timeDriver;
   private final DecimalDefaultsConfig decimalDefaultsConfig;
   private final TimeZone timeZone;
+  private final HMPDataFormat dataFormat;
 
   private HiveConfigBean hiveConfigBean;
 
@@ -146,7 +152,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       HiveConfigBean hiveConfig,
       String timeDriver,
       DecimalDefaultsConfig decimalDefaultsConfig,
-      TimeZone timezone
+      TimeZone timezone,
+      HMPDataFormat dataFormat
   ) {
     this.databaseEL = databaseEL;
     this.tableEL = tableEL;
@@ -161,6 +168,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     this.decimalDefaultsConfig = decimalDefaultsConfig;
     partitionTypeInfo = new LinkedHashMap<>();
     this.timeZone = timezone;
+    this.dataFormat = dataFormat;
   }
 
   @Override
@@ -375,14 +383,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
       );
 
       if (tblPropertiesInfo != null) {
-        if (!tblPropertiesInfo.getSerdeLibrary().equals(HiveMetastoreUtil.AVRO_SERDE)) {
-          throw new HiveStageCheckedException(
-              com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_32,
-              qualifiedName,
-              tblPropertiesInfo.getSerdeLibrary()
-          );
-        }
-        if (tblPropertiesInfo != null && tblPropertiesInfo.isExternal() != externalTable) {
+        HiveMetastoreUtil.validateTblPropertiesInfo(dataFormat, tblPropertiesInfo, tableName);
+
+        if (tblPropertiesInfo.isExternal() != externalTable) {
           throw new HiveStageCheckedException(
               com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_23,
               "EXTERNAL",
@@ -449,7 +452,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
         finalStructure = recordStructure;
       }
 
-      // Generate schema only if the table do not eexist or it's schema is changed.
+      // Generate schema only if the table do not exist or it's schema is changed.
       if (schemaDrift) {
         avroSchema = HiveMetastoreUtil.generateAvroSchema(finalStructure, qualifiedName);
         LOG.trace("Schema Drift. Generated new Avro schema for table {}: {}", qualifiedName, avroSchema);
@@ -480,7 +483,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
           handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
         }
       }
+
       // Send record to HDFS target.
+      if (dataFormat == HMPDataFormat.PARQUET) {
+        targetPath = targetPath + TEMP_AVRO_DIR_NAME;
+      }
+
       changeRecordFieldToLowerCase(record);
       updateRecordForHDFS(record, schemaDrift, avroSchema, targetPath);
       batchMaker.addRecord(record, hdfsLane);
@@ -522,7 +530,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
         partitionTypeList,
         !externalTable,  // need to flip boolean to send if this is internal table
         location,
-        avroSchema
+        avroSchema,
+        dataFormat
     );
     metadataRecord.set(metadataField);
     return metadataRecord;
@@ -532,13 +541,13 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String dbName,
       String tableName,
       LinkedHashMap<String, HiveTypeInfo> recordStructure,
-      String targetDir, String avroSchema,
+      String targetDir,
+      String avroSchema,
       BatchMaker batchMaker,
       String qualifiedName,
       TypeInfoCacheSupport.TypeInfo tableCache,
-      AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache)
-      throws StageException {
-
+      AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache
+  ) throws StageException {
     Record r = generateSchemaChangeRecord(dbName, tableName, recordStructure, partitionTypeInfo, targetDir, avroSchema);
     batchMaker.addRecord(r, hmsLane);
     // update or insert the new record structure to cache
@@ -627,7 +636,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
         database,
         tableName,
         partitionList,
-        location
+        location,
+        dataFormat
     );
     metadataRecord.set(metadataField);
     return metadataRecord;
@@ -642,7 +652,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       BatchMaker batchMaker,
       String qualifiedName,
       Map<PartitionInfoCacheSupport.PartitionValues, String> diff
-  ) throws StageException{
+  ) throws StageException {
 
     Record r = generateNewPartitionRecord(database, tableName, partitionValMap, location);
     batchMaker.addRecord(r, hmsLane);

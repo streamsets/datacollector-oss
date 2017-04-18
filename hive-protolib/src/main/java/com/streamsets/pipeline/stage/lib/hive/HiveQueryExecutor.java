@@ -29,6 +29,7 @@ import com.streamsets.pipeline.stage.lib.hive.cache.PartitionInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
+import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,7 @@ public final class HiveQueryExecutor {
   private static final String TBL_PROPERTIES = "TBLPROPERTIES";
   private static final String AVRO_SCHEMA_URL = "avro.schema.url";
   private static final String STORED_AS_AVRO = "STORED AS AVRO";
+  private static final String STORED_AS_PARQUET = "STORED AS PARQUET";
   private static final String OLD_WAY_AVRO_ROW_STORAGE_INPUT_OUPTUT_FORMAT =
       " ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'" +
           " STORED AS" +
@@ -185,13 +187,18 @@ public final class HiveQueryExecutor {
       String location,
       LinkedHashMap<String, HiveTypeInfo> columnTypeMap,
       LinkedHashMap<String, HiveTypeInfo> partitionTypeMap,
-      boolean isInternal
+      boolean isInternal,
+      HMPDataFormat dataFormat
   ) {
     StringBuilder sb = new StringBuilder();
     buildCreateTableQuery(sb, qualifiedTableName, columnTypeMap, partitionTypeMap, isInternal);
     sb.append(HiveMetastoreUtil.SPACE);
     //Stored as AVRO used for new way of creating a table.
-    sb.append(STORED_AS_AVRO);
+    if (dataFormat == HMPDataFormat.PARQUET) {
+      sb.append(STORED_AS_PARQUET);
+    } else if (dataFormat == HMPDataFormat.AVRO){
+      sb.append(STORED_AS_AVRO);
+    }
     sb.append(HiveMetastoreUtil.SPACE);
     sb.append(LOCATION);
     sb.append(HiveMetastoreUtil.SPACE);
@@ -337,16 +344,31 @@ public final class HiveQueryExecutor {
       LinkedHashMap<String, HiveTypeInfo> partitionTypeMap,
       boolean useAsAvro,
       String schemaLocation,
-      boolean isInternal
+      boolean isInternal,
+      HMPDataFormat dataFormat
   ) throws StageException {
-    Utils.checkArgument(
-        (useAsAvro || schemaLocation != null),
-        "Invalid configuration for table creation in use As Avro"
-    );
+    String sql = null;
+    if (dataFormat == HMPDataFormat.PARQUET) {
+      sql = buildCreateTableQueryNew(qualifiedTableName, tableLocation, columnTypeMap, partitionTypeMap, isInternal, dataFormat);
+    } else {
 
-    String sql = useAsAvro? buildCreateTableQueryNew(qualifiedTableName, tableLocation, columnTypeMap, partitionTypeMap, isInternal)
-        : buildCreateTableQueryOld(qualifiedTableName, tableLocation, columnTypeMap, partitionTypeMap, schemaLocation, isInternal);
-
+      Utils.checkArgument((useAsAvro || schemaLocation != null),
+          "Invalid configuration for table creation in use As Avro"
+      );
+      sql = useAsAvro ? buildCreateTableQueryNew(qualifiedTableName,
+          tableLocation,
+          columnTypeMap,
+          partitionTypeMap,
+          isInternal,
+          dataFormat
+      ) : buildCreateTableQueryOld(qualifiedTableName,
+          tableLocation,
+          columnTypeMap,
+          partitionTypeMap,
+          schemaLocation,
+          isInternal
+      );
+    }
     execute(sql);
   }
 

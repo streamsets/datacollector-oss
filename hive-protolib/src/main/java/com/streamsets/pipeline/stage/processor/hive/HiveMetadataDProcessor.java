@@ -164,6 +164,16 @@ public class HiveMetadataDProcessor extends DProcessor {
   @ConfigDefBean
   public DecimalDefaultsConfig decimalDefaultsConfig;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Data Format",
+      displayPosition = 150,
+      group = "DATA_FORMAT"
+  )
+  @ValueChooserModel(HMPDataFormatChooserValues.class)
+  public HMPDataFormat dataFormat = HMPDataFormat.AVRO;
+
   @Override
   protected Processor createProcessor() {
     return new HiveMetadataProcessor(
@@ -176,7 +186,8 @@ public class HiveMetadataDProcessor extends DProcessor {
         hiveConfigBean,
         timeDriver,
         decimalDefaultsConfig,
-        TimeZone.getTimeZone(timeZoneID)
+        TimeZone.getTimeZone(timeZoneID),
+        dataFormat
     );
   }
 

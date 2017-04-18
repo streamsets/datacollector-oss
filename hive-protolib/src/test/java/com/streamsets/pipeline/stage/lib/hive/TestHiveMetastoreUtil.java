@@ -26,6 +26,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
+import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -222,4 +223,39 @@ public class TestHiveMetastoreUtil {
       //Expected
     }
   }
+
+  @Test
+  public void testOldVersionDefault() throws Exception {
+    final int version = 1;
+    final String dataFormat = "Parquet";
+
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("version", Field.create(version));
+    map.put("dataFormat", Field.create(dataFormat));
+    record.set(Field.create(map));
+
+    Assert.assertEquals(HiveMetastoreUtil.getDataFormat(record), HMPDataFormat.AVRO.getLabel());
+  }
+
+  @Test
+  public void testEmptyDataFormatForNewVersion() throws Exception {
+    final int version = 2;
+    final String dataFormat = "Text";
+
+    Record record = RecordCreator.create();
+    Map<String, Field> map = new HashMap<>();
+    map.put("version", Field.create(version));
+    record.set(Field.create(map));
+
+
+    try {
+      HiveMetastoreUtil.getDataFormat(record);
+      Assert.fail("Should fail for unsupported dataFormat: '" + dataFormat + "'");
+    } catch (HiveStageCheckedException ex) {
+      // expected
+    }
+
+  }
+
 }

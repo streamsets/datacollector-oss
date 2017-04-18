@@ -43,6 +43,7 @@ import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSuppor
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
+import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -154,7 +155,8 @@ public class TestHiveMetastoreTarget {
         generatePartitionTypeInfo(),
         true,
         BaseHiveIT.getDefaultWareHouseDir() +"/sample",
-        ""
+        "",
+        HMPDataFormat.AVRO
     );
     Map<String, Field> fieldMap = f.getValueAsMap();
     fieldMap.remove(missingField);
@@ -168,7 +170,8 @@ public class TestHiveMetastoreTarget {
         "default",
         "sample",
         generatePartitionValueInfo("12-25-2015"),
-        "/user/hive/warehouse/sample"
+        "/user/hive/warehouse/sample",
+        HMPDataFormat.AVRO
     );
     Map<String, Field> fieldMap = f.getValueAsMap();
     fieldMap.remove(missingField);

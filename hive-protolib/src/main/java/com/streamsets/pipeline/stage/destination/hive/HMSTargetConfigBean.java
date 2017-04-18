@@ -57,23 +57,11 @@ public class HMSTargetConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Data Format",
-      displayPosition = 1,
-      group = "DATA_FORMAT"
-  )
-  @ValueChooserModel(HMSDataFormatChooserValues.class)
-  public DataFormat dataFormat = DataFormat.AVRO;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Stored as Avro",
-      description = "Use to include the Stored as Avro clause in the table creation SQL." +
+      description = "If the table is Avro, then use to include the Stored as Avro clause in the table creation SQL." +
           " When selected, the Avro schema URL will not be included in the query.",
       defaultValue = "true",
-      dependsOn = "dataFormat",
-      triggeredByValue = "AVRO",
       displayPosition = 30,
       group = "ADVANCED"
   )

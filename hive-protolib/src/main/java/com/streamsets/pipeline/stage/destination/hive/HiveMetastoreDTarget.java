@@ -28,11 +28,12 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Hive Metastore",
     description = "Updates the Hive Metastore.",
     icon = "hive.png",
     privateClassLoader = true,
+    upgrader = HiveMetastoreTargetUpgrader.class,
     onlineHelpRefUrl = "index.html#Destinations/HiveMetastore.html#task_a4n_1ft_zv",
     producesEvents = true
 )

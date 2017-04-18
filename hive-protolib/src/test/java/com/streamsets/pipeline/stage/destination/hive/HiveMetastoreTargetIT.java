@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
+import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
 import org.junit.Test;
@@ -81,7 +82,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         partitions,
         true,
         BaseHiveIT.getDefaultWareHouseDir(),
-        HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl"),
+        HMPDataFormat.AVRO
     );
 
     Record record = RecordCreator.create();
@@ -116,7 +118,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         null,
         true,
         BaseHiveIT.getDefaultWareHouseDir(),
-        HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl"),
+        HMPDataFormat.AVRO
     );
 
     Record record = RecordCreator.create();
@@ -132,7 +135,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         "default",
         "tbl",
         partitionVals,
-        "/user/hive/warehouse/tbl/dt=2016"
+        "/user/hive/warehouse/tbl/dt=2016",
+        HMPDataFormat.AVRO
     );
     record = RecordCreator.create();
     record.set(newPartitionField);
@@ -166,7 +170,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         partitions,
         true,
         BaseHiveIT.getDefaultWareHouseDir(),
-        HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl"),
+        HMPDataFormat.AVRO
     );
 
     Record record = RecordCreator.create();
@@ -186,7 +191,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         "default",
         "tbl",
         partitionVals,
-        "/user/hive/warehouse/tbl/dt1=2016/dt2=2017/dt3=2018"
+        "/user/hive/warehouse/tbl/dt1=2016/dt2=2017/dt3=2018",
+        HMPDataFormat.AVRO
     );
     record = RecordCreator.create();
     record.set(newPartitionField1);
@@ -205,7 +211,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         "default",
         "tbl",
         partitionVals,
-        "/user/hive/warehouse/tbl/dt1=2016/dt2=2017/dt3=2018"
+        "/user/hive/warehouse/tbl/dt1=2016/dt2=2017/dt3=2018",
+        HMPDataFormat.AVRO
     );
 
     record = RecordCreator.create();
@@ -239,7 +246,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         partitions,
         true,
         BaseHiveIT.getDefaultWareHouseDir(),
-        HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl"),
+        HMPDataFormat.AVRO
     );
 
     Record record = RecordCreator.create();
@@ -257,7 +265,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         "default",
         "tbl",
         partitionVals,
-        "/user/hive/external/tbl/location1"
+        "/user/hive/external/tbl/location1",
+        HMPDataFormat.AVRO
     );
     record = RecordCreator.create();
     record.set(newPartitionField1);
@@ -268,7 +277,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         "default",
         "tbl",
         partitionVals,
-        "/user/hive/external/tbl/location2"
+        "/user/hive/external/tbl/location2",
+        HMPDataFormat.AVRO
     );
 
     record = RecordCreator.create();
@@ -305,7 +315,8 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
         partitions,
         true,
         BaseHiveIT.getDefaultWareHouseDir(),
-        HiveMetastoreUtil.generateAvroSchema(columns, "tbl")
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl"),
+        HMPDataFormat.AVRO
     );
 
     Record record = RecordCreator.create();
@@ -317,6 +328,91 @@ public class HiveMetastoreTargetIT extends BaseHiveIT {
     Assert.assertEquals("There should be one error record", 1L, runner.getErrorRecords().size());
     Record errorRecord = runner.getErrorRecords().get(0);
     Assert.assertEquals("Error codes mismatch", Errors.HIVE_32.name(), errorRecord.getHeader().getErrorCode());
+  }
+
+  @Test
+  public void testNonParquetTable() throws Exception {
+    executeUpdate("CREATE  TABLE `tbl_csv` (id int, value string) partitioned by (dt String)" +
+        " ROW FORMAT DELIMITED " +
+        " FIELDS TERMINATED BY ',' " +
+        " STORED AS TEXTFILE ");
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
+
+    TargetRunner runner = new TargetRunner.Builder(HiveMetastoreTarget.class, hiveTarget)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+
+    LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
+    columns.put("name", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+    LinkedHashMap<String, HiveTypeInfo> partitions = new LinkedHashMap<>();
+    partitions.put("dt", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+    Field newTableField = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
+        "default",
+        "tbl_csv",
+        columns,
+        partitions,
+        true,
+        BaseHiveIT.getDefaultWareHouseDir(),
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl"),
+        HMPDataFormat.AVRO
+    );
+
+    Record record = RecordCreator.create();
+    record.set(newTableField);
+    Assert.assertTrue(HiveMetastoreUtil.isSchemaChangeRecord(record));
+
+    runner.runWrite(ImmutableList.of(record));
+
+    Assert.assertEquals("There should be one error record", 1L, runner.getErrorRecords().size());
+    Record errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals("Error codes mismatch", Errors.HIVE_32.name(), errorRecord.getHeader().getErrorCode());
+  }
+
+  @Test
+  public void testUnsupportedDataFormat() throws Exception {
+    executeUpdate("CREATE  TABLE `tbl_csv` (id int, value string) partitioned by (dt String)" +
+        " ROW FORMAT DELIMITED " +
+        " FIELDS TERMINATED BY ',' " +
+        " STORED AS TEXTFILE ");
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder().build();
+
+    TargetRunner runner = new TargetRunner.Builder(HiveMetastoreTarget.class, hiveTarget)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    runner.runInit();
+
+    LinkedHashMap<String, HiveTypeInfo> columns = new LinkedHashMap<>();
+    columns.put("name", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+    LinkedHashMap<String, HiveTypeInfo> partitions = new LinkedHashMap<>();
+    partitions.put("dt", HiveType.STRING.getSupport().generateHiveTypeInfoFromResultSet("STRING"));
+
+    Field newTableField = HiveMetastoreUtil.newSchemaMetadataFieldBuilder(
+        "default",
+        "tbl_csv",
+        columns,
+        partitions,
+        true,
+        BaseHiveIT.getDefaultWareHouseDir(),
+        HiveMetastoreUtil.generateAvroSchema(columns, "tbl"),
+        HMPDataFormat.AVRO
+    );
+
+    // change the dataFormat
+    newTableField.getValueAsMap().put(HiveMetastoreUtil.DATA_FORMAT, Field.create("Text"));
+
+    Record record = RecordCreator.create();
+    record.set(newTableField);
+    Assert.assertTrue(HiveMetastoreUtil.isSchemaChangeRecord(record));
+
+    runner.runWrite(ImmutableList.of(record));
+
+    Assert.assertEquals("There should be one error record", 1L, runner.getErrorRecords().size());
+    Record errorRecord = runner.getErrorRecords().get(0);
+    Assert.assertEquals("Error codes mismatch", Errors.HIVE_37.name(), errorRecord.getHeader().getErrorCode());
   }
 }
 

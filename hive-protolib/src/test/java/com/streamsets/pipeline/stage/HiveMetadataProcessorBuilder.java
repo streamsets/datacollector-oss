@@ -19,8 +19,10 @@
  */
 package com.streamsets.pipeline.stage;
 
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.processor.hive.DecimalDefaultsConfig;
+import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 
@@ -37,6 +39,7 @@ public class HiveMetadataProcessorBuilder {
   private String timeDriver;
   private DecimalDefaultsConfig decimalDefaultsConfig;
   private TimeZone timeZone;
+  private HMPDataFormat dataFormat;
 
   public HiveMetadataProcessorBuilder() {
     database = "default";
@@ -50,6 +53,7 @@ public class HiveMetadataProcessorBuilder {
     decimalDefaultsConfig.scaleExpression = String.valueOf(38);
     decimalDefaultsConfig.precisionExpression = String.valueOf(38);
     timeZone = TimeZone.getTimeZone("UTC");
+    dataFormat = HMPDataFormat.AVRO;
   }
 
   public HiveMetadataProcessorBuilder database(String database) {
@@ -110,6 +114,11 @@ public class HiveMetadataProcessorBuilder {
     return this;
   }
 
+  public HiveMetadataProcessorBuilder dataFormat(HMPDataFormat dataFormat) {
+    this.dataFormat = dataFormat;
+    return this;
+  }
+
   public HiveMetadataProcessor build() {
     return new HiveMetadataProcessor(
         database,
@@ -121,7 +130,8 @@ public class HiveMetadataProcessorBuilder {
         BaseHiveIT.getHiveConfigBean(),
         timeDriver,
         decimalDefaultsConfig,
-        timeZone
+        timeZone,
+        dataFormat
     );
   }
 }

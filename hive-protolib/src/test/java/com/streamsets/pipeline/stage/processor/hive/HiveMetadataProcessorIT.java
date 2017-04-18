@@ -83,13 +83,13 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
 
     Record newTableRecord = output.getRecords().get("hive").get(0);
     Assert.assertNotNull(newTableRecord);
-    Assert.assertEquals(1, newTableRecord.get("/version").getValueAsInteger());
+    Assert.assertEquals(2, newTableRecord.get("/version").getValueAsInteger());
     Assert.assertEquals("tbl", newTableRecord.get("/table").getValueAsString());
     Assert.assertEquals("TABLE", newTableRecord.get("/type").getValueAsString());
 
     Record newPartitionRecord = output.getRecords().get("hive").get(1);
     Assert.assertNotNull(newPartitionRecord);
-    Assert.assertEquals(1, newPartitionRecord.get("/version").getValueAsInteger());
+    Assert.assertEquals(2, newPartitionRecord.get("/version").getValueAsInteger());
     Assert.assertEquals("tbl", newPartitionRecord.get("/table").getValueAsString());
     Assert.assertEquals("PARTITION", newPartitionRecord.get("/type").getValueAsString());
 
@@ -403,7 +403,7 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
 
     Record newPartitionRecord = output.getRecords().get("hive").get(1);
     Assert.assertNotNull(newPartitionRecord);
-    Assert.assertEquals(1, newPartitionRecord.get("/version").getValueAsInteger());
+    Assert.assertEquals(2, newPartitionRecord.get("/version").getValueAsInteger());
     Assert.assertEquals("PARTITION", newPartitionRecord.get("/type").getValueAsString());
 
     String partitionValue = newPartitionRecord.get("/partitions[0]/value").getValueAsString();

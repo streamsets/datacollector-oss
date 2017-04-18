@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   HIVE("Hive"),
   ADVANCED("Advanced"),
+  DATA_FORMAT("Data Format")
   ;
 
   private final String label;

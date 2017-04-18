@@ -29,6 +29,7 @@ import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
+import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -668,6 +669,38 @@ public class DriftIT extends  BaseHiveMetadataPropagationIT {
                 .addPartition("dt", HiveType.STRING, "2016")
                 .build()
         )
+        .build();
+
+    HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()
+        .build();
+    List<Record> records = new LinkedList<>();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("id", Field.create(123));
+    map.put("value", Field.create("testtest"));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+    records.add(record);
+
+    try {
+      processRecords(processor, hiveTarget, records);
+      Assert.fail("Non Avro tables should not be processed");
+    } catch (StageException e) {
+      Assert.assertEquals("Error codes should match", Errors.HIVE_32, e.getErrorCode());
+    }
+
+  }
+
+  @Test
+  public void testNonParquetTable() throws Exception {
+    HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
+        .table("tbl_csv")
+        .partitions(
+            new PartitionConfigBuilder()
+                .addPartition("dt", HiveType.STRING, "2016")
+                .build()
+        )
+        .dataFormat(HMPDataFormat.PARQUET)
         .build();
 
     HiveMetastoreTarget hiveTarget = new HiveMetastoreTargetBuilder()

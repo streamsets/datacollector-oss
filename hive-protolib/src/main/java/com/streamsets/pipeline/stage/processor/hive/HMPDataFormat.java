@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,19 +17,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.hive;
+
+package com.streamsets.pipeline.stage.processor.hive;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  HIVE("Hive"),
-  ADVANCED("Advanced"),
+public enum HMPDataFormat implements Label {
+  AVRO("Avro"),
+  PARQUET("Parquet"),
   ;
 
-  private final String label;
-  Groups(String label) {
+  private String label;
+
+  HMPDataFormat(String label) {
     this.label = label;
   }
 
@@ -37,4 +39,5 @@ public enum Groups implements Label {
   public String getLabel() {
     return label;
   }
+
 }

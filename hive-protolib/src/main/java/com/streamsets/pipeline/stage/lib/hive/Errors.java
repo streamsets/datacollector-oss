@@ -55,11 +55,12 @@ public enum Errors implements ErrorCode {
   HIVE_29("Can't calculate {} for field '{}' - expression '{}' evaluated to '{}'"),
   HIVE_30("Invalid column name {}"),
   HIVE_31("Partition Location mismatch. Actual : {}, Expected: {}"),
-  HIVE_32("Table {} is created using unsupported Storage Format Type {} "),
+  HIVE_32("Table {} is created using Storage Format Type {}, but {} requested instead "),
   HIVE_33("Record {} have unsupported root type {}"),
   HIVE_34("Connection to Hive have failed: {}"),
   HIVE_35("Can't find database location: {}"),
   HIVE_36("Can't parse partition location as URI: {}"),
+  HIVE_37("Unsupported Data Format: {}"),
   ;
   private final String msg;
 

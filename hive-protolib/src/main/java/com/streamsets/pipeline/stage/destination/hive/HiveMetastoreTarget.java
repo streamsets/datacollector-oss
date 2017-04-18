@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
@@ -38,6 +39,7 @@ import com.streamsets.pipeline.stage.lib.hive.cache.TBLPropertiesInfoCacheSuppor
 import com.streamsets.pipeline.stage.lib.hive.cache.TypeInfoCacheSupport;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
+import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,15 +118,23 @@ public class HiveMetastoreTarget extends BaseTarget {
             qualifiedTableName
         );
 
+        // get dataFormat from metadataRecord
+        String dataFormat = HiveMetastoreUtil.getDataFormat(metadataRecord);
+        HMPDataFormat hmpDataFormat = null;
+
+        try {
+          hmpDataFormat = HMPDataFormat.valueOf(dataFormat);
+        } catch (Exception ex) {
+          throw new HiveStageCheckedException(
+              Errors.HIVE_37,
+              dataFormat
+          );
+        }
+
         if (tblPropertiesInfo != null) {
-          if (!tblPropertiesInfo.getSerdeLibrary().equals(HiveMetastoreUtil.AVRO_SERDE)) {
-            throw new HiveStageCheckedException(
-                Errors.HIVE_32,
-                qualifiedTableName,
-                tblPropertiesInfo.getSerdeLibrary()
-            );
-          }
-          if (tblPropertiesInfo.isStoredAsAvro() != conf.storedAsAvro) {
+          HiveMetastoreUtil.validateTblPropertiesInfo(hmpDataFormat, tblPropertiesInfo, qualifiedTableName);
+
+          if (hmpDataFormat == HMPDataFormat.AVRO && tblPropertiesInfo.isStoredAsAvro() != conf.storedAsAvro) {
             LOG.warn(
                 Utils.format(
                     Errors.HIVE_23.getMessage(),
@@ -143,7 +153,8 @@ public class HiveMetastoreTarget extends BaseTarget {
               databaseName,
               tableName,
               queryExecutor,
-              tblPropertiesInfo
+              tblPropertiesInfo,
+              hmpDataFormat
           );
         } else {
           handlePartitionAddition(metadataRecord, qualifiedTableName, location, queryExecutor);
@@ -167,7 +178,8 @@ public class HiveMetastoreTarget extends BaseTarget {
       String databaseName,
       String tableName,
       HiveQueryExecutor hiveQueryExecutor,
-      TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo
+      TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo,
+      HMPDataFormat dataFormat
   ) throws StageException {
     //Schema Change
     String qualifiedTableName = HiveMetastoreUtil.getQualifiedTableName(databaseName, tableName);
@@ -207,7 +219,8 @@ public class HiveMetastoreTarget extends BaseTarget {
           partitionTypeInfo,
           conf.storedAsAvro,
           schemaPath,
-          isInternal
+          isInternal,
+          dataFormat
       );
 
       hmsCache.put(
