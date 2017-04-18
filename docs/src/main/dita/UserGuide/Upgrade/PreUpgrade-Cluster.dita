@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_m3b_rnx_mz">
- <title>Upgrade Cluster Pipelines</title>
+ <title>Upgrade Cluster Streaming Pipelines</title>
  <shortdesc>If you use cluster pipelines that run in cluster streaming mode and you are upgrading
         from a version earlier than 2.3.0.0, you must upgrade to Data Collector version 2.3.0.0
         before upgrading to the latest version.</shortdesc>
