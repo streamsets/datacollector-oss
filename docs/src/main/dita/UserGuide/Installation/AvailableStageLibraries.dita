@@ -121,7 +121,7 @@
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicDestinations"
                                         id="ul_bps_cqh_cw">
                                         <li/>
-                                    </ul></p></entry>
+                                    </ul></p><p>Includes the Pipeline Finisher executor.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-bigtable-lib</entry>
@@ -388,6 +388,17 @@
                                     </ul></p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-cdh_kafka_2_1-lib </entry>
+                            <entry>For the Cloudera distribution of Apache Kafka 2.1 (0.9.0).
+                                    <p>Includes: <ul id="ul_scl_wym_pz">
+                                        <li>HTTP to Kafka origin</li>
+                                        <li>Kafka Consumer origin</li>
+                                        <li>SDC RPC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>Kafka Producer destination</li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-elasticsearch_5-lib</entry>
                             <entry>For Elasticsearch 1.x, 2.x, and 5.x.<p>Includes the Elasticsearch
                                     origin and destination.</p></entry>
@@ -614,14 +625,13 @@
                             <entry>streamsets-datacollector-stats-lib</entry>
                             <entry>
                                 <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
-                                    /> (<ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                    />) requires that the statistics stage library be installed on
-                                    each registered <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    />.
-                            </entry>
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
+                                /> (<ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                                />) requires that the statistics stage library be installed on each
+                                registered <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                />. </entry>
                         </row>
                     </tbody>
                 </tgroup>

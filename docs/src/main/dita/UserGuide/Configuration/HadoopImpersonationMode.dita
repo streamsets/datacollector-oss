@@ -20,8 +20,8 @@
                 stages</indexterm></indexterm><indexterm>Hadoop impersonation
                     mode<indexterm>overview</indexterm></indexterm>You can configure how <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            impersonates a Hadoop user when performing tasks, such as reading data, in Hadoop
-            systems. </p>
+            impersonates a Hadoop user when performing tasks, such as reading or writing data, in
+            Hadoop systems. </p>
         <p>By default, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             impersonates Hadoop users as follows:<ul id="ul_hj2_gs1_4z">

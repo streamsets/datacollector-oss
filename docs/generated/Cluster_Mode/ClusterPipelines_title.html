@@ -283,9 +283,9 @@
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d24201e475">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d25638e475">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d24201e478">Minimum Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d25638e478">Minimum Requirement</th>
 
                             </tr>
 
@@ -293,16 +293,16 @@
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d24201e475 ">Spark Streaming</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d25638e475 ">Spark Streaming</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d24201e478 ">Spark version 1.3 through 1.6</td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d25638e478 ">Spark version 1.3 through 1.6</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d24201e475 ">Apache Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d25638e475 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d24201e478 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d25638e478 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
                                     distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
                                         Mesos requires Apache Kafka on Apache Mesos.</p>
 </td>
@@ -374,14 +374,15 @@ If the script is not in this
                     lower.</span>
                 <div class="itemgroup info">YARN sets the Spark logging level to INFO by default. To change the logging
                         level:<ol class="ol" type="a" id="task_hhk_bfv_cy__ol_tzg_ggl_px">
-                        <li class="li">Edit the log4j.properties file, located in the following directory:
-                              <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
+                              <li class="li">Edit the log4j.properties file, located in the following
+                                    directory:
+                                    <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
 </li>
 
-                        <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a severity
-                              of INFO or lower, such as DEBUG or TRACE.</li>
+                              <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a
+                                    severity of INFO or lower, such as DEBUG or TRACE.</li>
 
-                  </ol>
+                        </ol>
 </div>
             </li>
 <li class="li step stepexpand">
@@ -487,9 +488,9 @@ If the script is not in this
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d24201e857">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d25638e857">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d24201e860">Minimum Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d25638e860">Minimum Requirement</th>
 
                         </tr>
 
@@ -497,16 +498,16 @@ If the script is not in this
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d24201e857 ">Spark Streaming (for cluster streaming mode)</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d25638e857 ">Spark Streaming (for cluster streaming mode)</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d24201e860 ">Spark version 1.5.2 through 1.6</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d25638e860 ">Spark version 1.5.2 through 1.6</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d24201e857 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d25638e857 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d24201e860 ">MapR version 5.1 or 5.2</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d25638e860 ">MapR version 5.1 or 5.2</td>
 
                         </tr>
 
@@ -666,14 +667,15 @@ If the script is not in this
                 <span class="ph cmd">If necessary, set the Spark logging level to a severity of INFO or lower.</span>
                 <div class="itemgroup info">By default, MapR sets the Spark logging level to WARN. To change the logging
                         level:<ol class="ol" type="a" id="task_i3h_q3w_hx__ol_nfd_jgl_px">
-                        <li class="li">Edit the log4j.properties file, located in the following directory:
-                              <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
+                              <li class="li">Edit the log4j.properties file, located in the following
+                                    directory:
+                                    <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
 </li>
 
-                        <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a severity
-                              of INFO or lower, such as DEBUG or TRACE.</li>
+                              <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a
+                                    severity of INFO or lower, such as DEBUG or TRACE.</li>
 
-                  </ol>
+                        </ol>
 </div>
                 <div class="itemgroup info">For example, when using Spark 1.6.1, you would edit
                         <samp class="ph codeph">/opt/mapr/spark/spark-1.6.1/conf/log4j.properties</samp>, and you

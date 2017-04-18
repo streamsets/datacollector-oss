@@ -59,14 +59,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c1j_btr_wq__d43796e4365" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c1j_btr_wq__d48131e4377" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d262108e90">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d284329e90">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d262108e93">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d284329e93">Description</th>
 
                                 </tr>
 
@@ -74,38 +74,45 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d262108e90 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d284329e90 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d262108e93 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d262108e90 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d262108e93 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d284329e93 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d262108e90 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_c1j_btr_wq__d43796e4411" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d284329e90 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d262108e93 ">Fields that must include data to be passed into the
-                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
-                                            fields that the stage uses.</div>
+                                    <td class="entry" valign="top" width="70%" headers="d284329e93 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d284329e90 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_c1j_btr_wq__d48131e4423" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d284329e93 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d262108e90 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_c1j_btr_wq__d43796e4425" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d284329e90 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_c1j_btr_wq__d48131e4439" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d262108e93 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d284329e93 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
-                                        preconditions. </td>
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
 
                                 </tr>
 
@@ -126,9 +133,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d262108e182">Field Remover Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d284329e180">Field Remover Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d262108e185">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d284329e183">Description</th>
 
                                 </tr>
 
@@ -136,9 +143,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d262108e182 ">Action</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d284329e180 ">Action</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d262108e185 ">Action to complete:<ul class="ul" id="task_c1j_btr_wq__ul_clq_bbx_hv">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d284329e183 ">Action to complete:<ul class="ul" id="task_c1j_btr_wq__ul_clq_bbx_hv">
                                             <li class="li">Keep listed fields</li>
 
                                             <li class="li">Remove listed fields</li>
@@ -151,10 +158,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d262108e182 ">Fields</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d284329e180 ">Fields</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d262108e185 ">List of fields to keep or remove.<p class="p"><span class="ph" id="task_c1j_btr_wq__d43858e311">You can use the asterisk wildcard to represent
-                        array indices and map elements. <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" id="task_c1j_btr_wq__d43858e314" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d284329e183 ">List of fields to keep or remove.<p class="p"><span class="ph" id="task_c1j_btr_wq__d48193e331">You can use the asterisk wildcard to represent
+                        array indices and map elements. <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" id="task_c1j_btr_wq__d48193e334" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" />
                         </a></span>
             </p>
 </td>

@@ -165,68 +165,75 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wq3_wkj_dy__d12211e4589" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wq3_wkj_dy__d12263e4609" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d95150e229">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d102305e229">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d95150e232">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d102305e232">Description</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody class="tbody">
-                                <tr id="task_wq3_wkj_dy__d12211e4611">
-                                    <td class="entry" valign="top" width="30%" headers="d95150e229 ">Name</td>
+                                <tr id="task_wq3_wkj_dy__d12263e4631">
+                                    <td class="entry" valign="top" width="30%" headers="d102305e229 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d95150e232 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_wq3_wkj_dy__d12211e4620">
-                                    <td class="entry" valign="top" width="30%" headers="d95150e229 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d95150e232 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d102305e232 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_wq3_wkj_dy__d12211e4629">
-                                    <td class="entry" valign="top" width="30%" headers="d95150e229 ">Stage Library</td>
+                                <tr id="task_wq3_wkj_dy__d12263e4640">
+                                    <td class="entry" valign="top" width="30%" headers="d102305e229 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d95150e232 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d102305e232 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_wq3_wkj_dy__d12263e4649">
+                                    <td class="entry" valign="top" width="30%" headers="d102305e229 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d102305e232 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d95150e229 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_wq3_wkj_dy__d12211e4644" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d102305e229 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_wq3_wkj_dy__d12263e4664" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d95150e232 ">Fields that must include data to be passed into the
-                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
-                                            fields that the stage uses.</div>
+                                    <td class="entry" valign="top" width="70%" headers="d102305e232 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d95150e229 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_wq3_wkj_dy__d12211e4658" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d102305e229 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_wq3_wkj_dy__d12263e4680" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d95150e232 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d102305e232 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
-                                        preconditions. </td>
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
 
                                 </tr>
 
-                                <tr id="task_wq3_wkj_dy__d12211e4668">
-                                    <td class="entry" valign="top" width="30%" headers="d95150e229 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_wq3_wkj_dy__d12211e4674" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_wq3_wkj_dy__d12263e4692">
+                                    <td class="entry" valign="top" width="30%" headers="d102305e229 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_wq3_wkj_dy__d12263e4698" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d95150e232 ">Error record handling for the stage: <ul class="ul" id="task_wq3_wkj_dy__d12211e4678">
+                                    <td class="entry" valign="top" width="70%" headers="d102305e232 ">Error record handling for the stage: <ul class="ul" id="task_wq3_wkj_dy__d12263e4702">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -256,9 +263,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d95150e361">MapR DB JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d102305e359">MapR DB JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d95150e364">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d102305e362">Description</th>
 
                                 </tr>
 
@@ -266,9 +273,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d95150e361 ">Table Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d102305e359 ">Table Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d95150e364 ">Name of the MapR DB JSON table to write to. Enter one of
+                                    <td class="entry" valign="top" width="70%" headers="d102305e362 ">Name of the MapR DB JSON table to write to. Enter one of
                                         the following:<ul class="ul" id="task_wq3_wkj_dy__ul_il5_wf4_hz">
                                             <li class="li">Name of a table.</li>
 
@@ -291,9 +298,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d95150e361 ">Create Table</td>
+                                    <td class="entry" valign="top" width="30%" headers="d102305e359 ">Create Table</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d95150e364 ">Determines whether the destination creates the table if
+                                    <td class="entry" valign="top" width="70%" headers="d102305e362 ">Determines whether the destination creates the table if
                                         it doesn't exist.<p class="p">When selected, the destination creates
                                             the table if it does not exist. When cleared, the
                                             destination produces an error when it attempts to write
@@ -303,21 +310,21 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d95150e361 ">Row Key
+                                    <td class="entry" valign="top" width="30%" headers="d102305e359 ">Row Key
                                         <a class="xref" href="MapRDBJSON.html#concept_mrg_nx3_4y" title="MapR DB uses a row key to uniquely identify each row in a JSON table. The row key is defined by the _id field of the JSON document stored in the row.">
                                             <img class="image" id="task_wq3_wkj_dy__image_a7z_jfn_ws" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d95150e364 ">Row key for the table. <p class="p">Define which field in the
+                                    <td class="entry" valign="top" width="70%" headers="d102305e362 ">Row key for the table. <p class="p">Define which field in the
                                             record to use as the row key. </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d95150e361 ">Process Row Key as Binary <a class="xref" href="MapRDBJSON.html#concept_etz_vd3_qy" title="You configure the MapR DB JSON destination to process row keys as string or binary data. If necessary, the MapR DB JSON destination converts the data type of the row key field and then writes the converted value to the _id field in the JSON document.">
+                                    <td class="entry" valign="top" width="30%" headers="d102305e359 ">Process Row Key as Binary <a class="xref" href="MapRDBJSON.html#concept_etz_vd3_qy" title="You configure the MapR DB JSON destination to process row keys as string or binary data. If necessary, the MapR DB JSON destination converts the data type of the row key field and then writes the converted value to the _id field in the JSON document.">
                                             <img class="image" id="task_wq3_wkj_dy__image_a9z_kfn_ws" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d95150e364 ">Determines whether the destination processes the row key
+                                    <td class="entry" valign="top" width="70%" headers="d102305e362 ">Determines whether the destination processes the row key
                                         as string or binary data.<p class="p">When cleared, the destination
                                             converts the row key field to String. When selected, the
                                             destination converts the row key field to Byte
@@ -327,9 +334,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d95150e361 ">Insert API</td>
+                                    <td class="entry" valign="top" width="30%" headers="d102305e359 ">Insert API</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d95150e364 ">Determines the MapR insert API used to write the
+                                    <td class="entry" valign="top" width="70%" headers="d102305e362 ">Determines the MapR insert API used to write the
                                             document:<ul class="ul" id="task_wq3_wkj_dy__ul_ng1_2gq_4y">
                                             <li class="li">Use MapR InsertOrReplace API - Inserts the JSON
                                                 document into the table if it has a unique _id

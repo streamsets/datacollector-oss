@@ -142,7 +142,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Define the following options in the SDC_JAVA_OPTS environment variable in the
                     Data Collector environment configuration file:</span>
-                <ul class="ul choices" id="task_d5l_qh2_ww__d12211e7639">
+                <ul class="ul choices" id="task_d5l_qh2_ww__d12263e7669">
                     <li class="li choice"><samp class="ph codeph">javax.net.ssl.trustStore</samp> - path to truststore
                         file</li>
 
@@ -196,14 +196,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mrc_k5n_4v__d12211e4470" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mrc_k5n_4v__d12263e4486" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d103961e326">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d111181e326">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d103961e329">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d111181e329">Description</th>
 
                                 </tr>
 
@@ -211,46 +211,54 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e326 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e326 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e329 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e326 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d103961e329 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d111181e329 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e326 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_mrc_k5n_4v__d12211e4516" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e326 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e329 ">Fields that must include data to be passed into the
-                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
-                                            fields that the stage uses.</div>
+                                    <td class="entry" valign="top" width="70%" headers="d111181e329 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e326 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_mrc_k5n_4v__d12263e4532" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d111181e329 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e326 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_mrc_k5n_4v__d12211e4530" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e326 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_mrc_k5n_4v__d12263e4548" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e329 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d111181e329 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
-                                        preconditions. </td>
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
 
+                                       
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e326 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_mrc_k5n_4v__d12211e4545" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e326 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mrc_k5n_4v__d12263e4565" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e329 ">Error record handling for the stage: <ul class="ul" id="task_mrc_k5n_4v__d12211e4549">
+                                    <td class="entry" valign="top" width="70%" headers="d111181e329 ">Error record handling for the stage: <ul class="ul" id="task_mrc_k5n_4v__d12263e4569">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -280,9 +288,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d103961e448">MongoDB Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d111181e446">MongoDB Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d103961e451">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d111181e449">Description</th>
 
                                 </tr>
 
@@ -290,9 +298,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e448 ">Connection String</td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e446 ">Connection String</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e451 ">Connection string for the MongoDB instance. Use the
+                                    <td class="entry" valign="top" width="70%" headers="d111181e449 ">Connection string for the MongoDB instance. Use the
                                         following
                                         format:<pre class="pre codeblock">mongodb://host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]</pre>
 When
@@ -302,32 +310,32 @@ When
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e448 ">Database</td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e446 ">Database</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e451 ">MongoDB database name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e448 ">Collection</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d103961e451 ">MongoDB collection name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d111181e449 ">MongoDB database name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e448 ">Unique Key Field</td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e446 ">Collection</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e451 ">Field in the record to be used to upsert records. When
+                                    <td class="entry" valign="top" width="70%" headers="d111181e449 ">MongoDB collection name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e446 ">Unique Key Field</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d111181e449 ">Field in the record to be used to upsert records. When
                                         not set, upsert records are sent to stage for error
                                         handling.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e448 ">Write Concern</td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e446 ">Write Concern</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e451 ">The acknowledgement level requested from the destination
+                                    <td class="entry" valign="top" width="70%" headers="d111181e449 ">The acknowledgement level requested from the destination
                                         system. <p class="p">For details about write concern levels, see the
                                             MongoDB documentation.</p>
 </td>
@@ -346,14 +354,14 @@ When
                     configure the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mrc_k5n_4v__d12211e7699" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mrc_k5n_4v__d12263e7729" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d103961e535">Credentials</th>
+                                    <th class="entry" valign="top" width="30%" id="d111181e533">Credentials</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d103961e538">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d111181e536">Description</th>
 
                                 </tr>
 
@@ -361,26 +369,26 @@ When
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e535 ">Authentication Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e533 ">Authentication Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e538 ">Authentication to use. To use authentication, select
+                                    <td class="entry" valign="top" width="70%" headers="d111181e536 ">Authentication to use. To use authentication, select
                                         Username/Password.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e535 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e533 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e538 ">MongoDB user name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d111181e536 ">MongoDB user name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d103961e535 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d111181e533 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d103961e538 ">MongoDB password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                                    <td class="entry" valign="top" width="70%" headers="d111181e536 ">MongoDB password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
                                 </tr>
@@ -402,9 +410,9 @@ When
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="34.01360544217687%" id="d103961e625">Advanced Property</th>
+                                        <th class="entry" valign="top" width="34.01360544217687%" id="d111181e623">Advanced Property</th>
 
-                                        <th class="entry" valign="top" width="65.98639455782312%" id="d103961e628">Description</th>
+                                        <th class="entry" valign="top" width="65.98639455782312%" id="d111181e626">Description</th>
 
                                     </tr>
 
@@ -412,34 +420,34 @@ When
 
                                 <tbody class="tbody">
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Connections Per Host</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Connections Per Host</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Min Connections Per Host</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Min Connections Per Host</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Connection Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Connection Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
        10,000.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Max Connection Idle Time</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Max Connection Idle Time</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
        connection exceeds the idle time, the connection is closed. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
@@ -447,9 +455,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Max Connection Lifetime</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Max Connection Lifetime</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Maximum time in milliseconds that a pooled connection can be active. When a pooled
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Maximum time in milliseconds that a pooled connection can be active. When a pooled
        connection exceeds the lifetime, the connection is closed. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
@@ -457,9 +465,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Max Wait Time</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Max Wait Time</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Maximum time in milliseconds that a thread can wait for a connection to become
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Maximum time in milliseconds that a thread can wait for a connection to become
        available. Use 0 to opt out of this property. Use a negative value to wait
         indefinitely.<p class="p">Default is 120,000.</p>
 </td>
@@ -467,9 +475,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Server Selection Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Server Selection Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Maximum time in milliseconds that <span class="ph">Data
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Maximum time in milliseconds that <span class="ph">Data
                   Collector</span> waits for a server selection
        before throwing an exception. If you use 0, an exception is thrown immediately if no server
        is available. Use a negative value to wait indefinitely.<p class="p">Default is 30,000.</p>
@@ -478,9 +486,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Threads Allowed to Block for Connection Multiplier</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Threads Allowed to Block for Connection Multiplier</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Multiplier that determines the maximum number of threads that can wait for a connection
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Multiplier that determines the maximum number of threads that can wait for a connection
        to become available from the pool. This number multiplied by the Connections Per Host value
        determines the maximum number of threads.<p class="p">Default is 5.</p>
 </td>
@@ -488,9 +496,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Heartbeat Frequency</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Heartbeat Frequency</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">The frequency in milliseconds at which <span class="ph">Data
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">The frequency in milliseconds at which <span class="ph">Data
                   Collector</span> attempts to determine the
        current state of each server in the cluster.<p class="p">Default is 10,000.</p>
 </td>
@@ -498,9 +506,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Min Heartbeat Frequency</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Min Heartbeat Frequency</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data
                   Collector</span> waits at least this long
        before checking the state of each server.<p class="p">Default is 500.</p>
 </td>
@@ -508,27 +516,27 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Heartbeat Connection Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Heartbeat Connection Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Maximum time in milliseconds to wait for a connection used for the cluster
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Maximum time in milliseconds to wait for a connection used for the cluster
         heartbeat.<p class="p">Default is 20,000.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Heartbeat Socket Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Heartbeat Socket Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Maximum time in milliseconds for a socket timeout for connections used for the cluster
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Maximum time in milliseconds for a socket timeout for connections used for the cluster
         heartbeat.<p class="p">Default is 20,000.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Local Threshold</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Local Threshold</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is less
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is less
        than or equal to the server with the fastest ping time plus the local threshold
         value.<p class="p">Default is 15.</p>
 </td>
@@ -536,39 +544,39 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Required Replica Set Name</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Required Replica Set Name</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Required replica set name to use for the cluster.</td>
-
-     </tr>
-
-                                    <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Cursor Finalizer Enabled</td>
-
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Specifies whether to enable cursor finalizers.</td>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Required replica set name to use for the cluster.</td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Socket Keep Alive</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Cursor Finalizer Enabled</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Specifies whether to enable socket keep alive. </td>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Specifies whether to enable cursor finalizers.</td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">Socket Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Socket Keep Alive</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Specifies whether to enable socket keep alive. </td>
+
+     </tr>
+
+                                    <tr>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">Socket Timeout</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
 
      </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">SSL Enabled</td>
+                                        <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">SSL Enabled</td>
 
-                                        <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Enables SSL/TLS between <span class="ph">Data
+                                        <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Enables SSL/TLS between <span class="ph">Data
                   Collector</span> and MongoDB.<p class="p">You also must define the truststore
                                                 file and password in the SDC_JAVA_OPTS environment
                                                 variable, as described in <a class="xref" href="MongoDB.html#task_d5l_qh2_ww">Enabling SSL/TLS</a>.</p>
@@ -577,9 +585,9 @@ When
                                     </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d103961e625 ">SSL Invalid Host Name Allowed</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d111181e623 ">SSL Invalid Host Name Allowed</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d103961e628 ">Specifies whether invalid host names are allowed in SSL/TLS certificates.</td>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d111181e626 ">Specifies whether invalid host names are allowed in SSL/TLS certificates.</td>
 
      </tr>
 

@@ -55,6 +55,10 @@
                   Collector</span>
         version ran on Java 7, you must migrate to Java 8 with version 2.5.0.0.</p>
 
+        <p class="p">All services that use Data Collector JAR files also must run on Java 8. This means that
+            your Hadoop cluster must run on Java 8 if you are using cluster pipelines, the Spark
+            Executor, or the MapReduce Executor. </p>
+
         <p class="p">To migrate to Java 8, complete the following steps before upgrading to <span class="ph">Data
                   Collector</span>
             version 2.5.0.0:</p>
@@ -77,6 +81,38 @@
                 validate the scripts on Java 8. </li>
 
         </ol>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_m3b_rnx_mz">
+ <h2 class="title topictitle2">Upgrade Cluster Pipelines</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">If you use cluster pipelines that run in cluster streaming mode and you are upgrading
+        from a version earlier than 2.3.0.0, you must upgrade to Data Collector version 2.3.0.0
+        before upgrading to the latest version.</p>
+
+        <div class="p">Prior to 2.3.0.0, <span class="ph">Data
+                  Collector</span>
+            used the Spark checkpoint mechanism to recover cluster pipelines after a failure.
+            Starting in version 2.3.0.0, Data Collector maintains the state of cluster pipelines
+            without relying on Spark checkpoints. <div class="note warning"><span class="warningtitle">Warning:</span> If you upgrade from a version
+                earlier than 2.3.0.0 directly to the latest version - without first upgrading to
+                version 2.3.0.0 - cluster pipelines fail when starting.</div>
+</div>
+
+        <div class="p">Before you upgrade to the latest version, complete the following general tasks:<ol class="ol" id="concept_m3b_rnx_mz__ol_yjz_24x_mz">
+                <li class="li">Upgrade to Data Collector version 2.3.0.0. For instructions, see <a class="xref" href="https://streamsets.com/documentation/datacollector/2.3.0.0/help/#Upgrade/Upgrade.html%23concept_a2n_3fk_5v" target="_blank">Upgrade to version 2.3.0.0</a>.</li>
+
+                <li class="li">Start the upgraded Data Collector version 2.3.0.0 and run the cluster pipelines
+                    so that they process some data.</li>
+
+            </ol>
+</div>
+
+        <p class="p">After verifying that the upgrade to Data Collector version 2.3.0.0 was successful,
+            upgrade to the latest version.</p>
 
  </div>
 

@@ -58,9 +58,9 @@
     <div class="body taskbody">
         <div class="section context">
             <p class="p"><span class="ph">Data
-                  Collector</span> ships with version 38.0 of the Salesforce Web Services Connector libraries. You
-                can use a different Salesforce API version if you need to access functionality not
-                present in version 38.0.</p>
+                  Collector</span> ships with version <span class="ph">39.0</span> of the Salesforce Web Services Connector libraries. You can use a different
+                Salesforce API version if you need to access functionality not present in version
+                    <span class="ph">39.0</span>.</p>
 
         </div>
 
@@ -72,7 +72,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Download the relevant version of the following JAR files from Salesforce Web
                     Services Connector (WSC):</span>
-                <ul class="ul choices" id="task_kff_4vn_jz__d21112e41">
+                <ul class="ul choices" id="task_kff_4vn_jz__d22302e48">
                     <li class="li choice">
                         <p class="p">WSC JAR file - force-wsc-&lt;version&gt;.0.0.jar </p>
 
@@ -95,7 +95,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">In the following <span class="ph">Data
                   Collector</span> directory,
-                    replace the default force-wsc-38.0.0.jar and force-partner-api-38.0.0.jar files
+                    replace the default force-wsc-39.0.0.jar and force-partner-api-39.0.0.jar files
                     with the versioned JAR files that you downloaded:</span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">$SDC_DIST/streamsets-libs/streamsets-datacollector-salesforce-lib/lib/</pre>
@@ -150,14 +150,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdt_dv3_rx__d12211e4470" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdt_dv3_rx__d12263e4486" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d115695e231">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d123261e237">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d115695e234">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d123261e240">Description</th>
 
                                 </tr>
 
@@ -165,46 +165,54 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d115695e231 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d123261e237 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d115695e234 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d115695e231 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d115695e234 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d123261e240 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d115695e231 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_mdt_dv3_rx__d12211e4516" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d123261e237 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d115695e234 ">Fields that must include data to be passed into the
-                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
-                                            fields that the stage uses.</div>
+                                    <td class="entry" valign="top" width="70%" headers="d123261e240 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d123261e237 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_mdt_dv3_rx__d12263e4532" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d123261e240 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d115695e231 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_mdt_dv3_rx__d12211e4530" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d123261e237 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_mdt_dv3_rx__d12263e4548" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d115695e234 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d123261e240 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
-                                        preconditions. </td>
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
 
+                                       
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d115695e231 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_mdt_dv3_rx__d12211e4545" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d123261e237 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_mdt_dv3_rx__d12263e4565" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d115695e234 ">Error record handling for the stage: <ul class="ul" id="task_mdt_dv3_rx__d12211e4549">
+                                    <td class="entry" valign="top" width="70%" headers="d123261e240 ">Error record handling for the stage: <ul class="ul" id="task_mdt_dv3_rx__d12263e4569">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -233,9 +241,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d115695e353">Wave Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d123261e357">Wave Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d115695e356">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d123261e360">Description</th>
 
                                 </tr>
 
@@ -243,27 +251,27 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e353 ">Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e357 ">Username</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e356 ">Salesforce username in the following email format:
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e360 ">Salesforce username in the following email format:
        <samp class="ph codeph">&lt;text&gt;@&lt;text&gt;.com</samp>. </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e353 ">Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e357 ">Password</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e356 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e360 ">Salesforce password. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e353 ">Auth Endpoint</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e357 ">Auth Endpoint</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e356 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_mdt_dv3_rx__d12073e2561">
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e360 ">Salesforce SOAP API authentication endpoint. Enter one of the following values:<ul class="ul" id="task_mdt_dv3_rx__d12125e2642">
         <li class="li">login.salesforce.com - Use to connect to a Production or Developer Edition
          organization.</li>
 
@@ -276,20 +284,20 @@
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e353 ">API Version <a class="xref" href="WaveAnalytics.html#task_kff_4vn_jz">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e357 ">API Version <a class="xref" href="WaveAnalytics.html#task_kff_4vn_jz">
                                             <img class="image" id="task_mdt_dv3_rx__image_weh_nch_er" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e356 ">Salesforce API version to use to connect to Salesforce.
-        <p class="p">Default is 38.0. If you change the version, you also must download the relevant JAR files
-        from Salesforce Web Services Connector (WSC).</p>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e360 ">Salesforce API version to use to connect to Salesforce.
+        <p class="p">Default is <span class="ph">39.0</span>. If you change the version, you also must download the relevant JAR files from Salesforce
+        Web Services Connector (WSC).</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e353 ">Edgemart Alias</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e357 ">Edgemart Alias</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e356 ">Dataset name. The alias must be unique across an
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e360 ">Dataset name. The alias must be unique across an
                                         organization. <p class="p">Each dataset is named with the edgemart
                                             alias and appended with the timestamp of when the
                                             dataset is uploaded. If you use a dataflow to combine
@@ -300,9 +308,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e353 ">Dataset Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e357 ">Dataset Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e356 ">Maximum time in seconds to wait for new data to arrive.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e360 ">Maximum time in seconds to wait for new data to arrive.
                                         After no data has arrived in this amount of time, the
                                         destination closes and uploads the dataset to Wave
                                         Analytics. When new data arrives, the destination creates a
@@ -314,35 +322,35 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e353 ">Use Dataflow <a class="xref" href="WaveAnalytics.html#concept_d4h_2lj_tx" title="The Wave Analytics destination typically creates multiple datasets, based on the configured dataset wait time. You can optionally configure the destination to use a Wave Analytics dataflow to combine multiple datasets together.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e357 ">Use Dataflow <a class="xref" href="WaveAnalytics.html#concept_d4h_2lj_tx" title="The Wave Analytics destination typically creates multiple datasets, based on the configured dataset wait time. You can optionally configure the destination to use a Wave Analytics dataflow to combine multiple datasets together.">
                                             <img class="image" id="task_mdt_dv3_rx__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e356 ">Determines whether to use a Wave Analytics dataflow to
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e360 ">Determines whether to use a Wave Analytics dataflow to
                                         combine multiple datasets together. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e353 ">Dataflow Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e357 ">Dataflow Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e356 ">Name of the existing dataflow. <p class="p">You must create the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e360 ">Name of the existing dataflow. <p class="p">You must create the
                                             dataflow in Wave Analytics. </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e353 ">Run Dataflow After Upload</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e357 ">Run Dataflow After Upload</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e356 ">Determines whether the destination runs the dataflow each
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e360 ">Determines whether the destination runs the dataflow each
                                         time that it uploads a dataset to Wave Analytics.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e353 ">Metadata JSON</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e357 ">Metadata JSON</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e356 ">Metadata in JSON format that describes the schema of the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e360 ">Metadata in JSON format that describes the schema of the
                                             dataset.<p class="p">Enter metadata so that Wave Analytics can
                                             correctly interpret the datatype of the data. If you do
                                             not enter metadata, then Wave Analytics treats every
@@ -372,9 +380,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="33.33333333333333%" id="d115695e541">Advanced Property</th>
+                                        <th class="entry" valign="top" width="33.33333333333333%" id="d123261e548">Advanced Property</th>
 
-                                        <th class="entry" valign="top" width="66.66666666666666%" id="d115695e544">Description</th>
+                                        <th class="entry" valign="top" width="66.66666666666666%" id="d123261e551">Description</th>
 
                                     </tr>
 
@@ -382,41 +390,41 @@
 
                                 <tbody class="tbody">
                                     <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e541 ">Use Proxy</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e548 ">Use Proxy</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e544 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
-
-     </tr>
-<tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e541 ">Proxy Hostname</td>
-
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e544 ">Proxy host.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e551 ">Specifies whether to use an HTTP proxy to connect to Salesforce.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e541 ">Proxy Port</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e548 ">Proxy Hostname</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e544 ">Proxy port.</td>
-
-     </tr>
-<tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e541 ">Proxy Requires Credentials</td>
-
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e544 ">Specifies whether the proxy requires a user name and password.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e551 ">Proxy host.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e541 ">Proxy Username</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e548 ">Proxy Port</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e544 ">User name for proxy credentials.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e551 ">Proxy port.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d115695e541 ">Proxy Password</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e548 ">Proxy Requires Credentials</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d115695e544 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e551 ">Specifies whether the proxy requires a user name and password.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e548 ">Proxy Username</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e551 ">User name for proxy credentials.</td>
+
+     </tr>
+<tr>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d123261e548 ">Proxy Password</td>
+
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d123261e551 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
      </tr>

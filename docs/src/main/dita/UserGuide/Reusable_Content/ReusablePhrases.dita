@@ -111,8 +111,8 @@
             </p>
             <p>
                   <ul id="BasicDestinations">
-                        <li>Local FS</li>
                         <li>HTTP Client</li>
+                        <li>Local FS</li>
                         <li>MQTT Publisher</li>
                         <li>SDC RPC</li>
                         <li>To Error</li>
@@ -208,7 +208,7 @@
             <p>
                   <draft-comment author="Loretta"><uicontrol>DataFormats-ALL</uicontrol> - <b>no
                               longer all - no datagram, no wholefile</b> As of 7/14, Kafka Consumer
-                        has datagram, but no one else does. Some origins hae whole file. Used in
+                        has datagram, but no one else does. Some origins have whole file. Used in
                         MapR Streams Consumer, possibly others.</draft-comment>
             </p>
             <p>
@@ -1795,7 +1795,7 @@ input_stream.read()</codeblock></p>
                   <draft-comment author="Loretta"><uicontrol>D-HM-HiveSolution</uicontrol>,
                               <uicontrol>D-HM-Overview2</uicontrol>
                         <uicontrol>D-HM-compression</uicontrol> - used by Hadoop FS and MapR FS
-                        oreviews</draft-comment>
+                        overviews</draft-comment>
             </p>
             <p id="D-HM-HiveSolutionOverview1">As part of the Drift Synchronization Solution for
                   Hive, you can alternatively use record header attributes to perform record-based

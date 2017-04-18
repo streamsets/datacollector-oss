@@ -93,7 +93,7 @@
 
      <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as access key
                   pairs, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 
  </div>
 
@@ -159,14 +159,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rpf_qbq_kv__d12211e3993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rpf_qbq_kv__d12263e3993" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d84094e258">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d89382e258">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d84094e261">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d89382e261">Description</th>
 
                                 </tr>
 
@@ -174,46 +174,53 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e258 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e258 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e261 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e258 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d84094e261 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d89382e261 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e258 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_rpf_qbq_kv__d12211e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e258 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e261 ">Fields that must include data to be passed into the
-                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
-                                            fields that the stage uses.</div>
+                                    <td class="entry" valign="top" width="70%" headers="d89382e261 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e258 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_rpf_qbq_kv__d12263e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d89382e261 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e258 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_rpf_qbq_kv__d12211e4053" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e258 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_rpf_qbq_kv__d12263e4055" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e261 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d89382e261 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
-                                        preconditions. </td>
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e258 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_rpf_qbq_kv__d12211e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e258 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_rpf_qbq_kv__d12263e4072" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e261 ">Error record handling for the stage: <ul class="ul" id="task_rpf_qbq_kv__d12211e4072">
+                                    <td class="entry" valign="top" width="70%" headers="d89382e261 ">Error record handling for the stage: <ul class="ul" id="task_rpf_qbq_kv__d12263e4076">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -244,9 +251,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d84094e380">Kinesis Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d89382e378">Kinesis Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d84094e383">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d89382e381">Description</th>
 
                                 </tr>
 
@@ -254,12 +261,12 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d84094e380 ">Access Key ID
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d89382e378 ">Access Key ID
                                         <a class="xref" href="KinFirehose.html#concept_b14_24g_vw" title="When Data Collector writes data to a Kinesis Firehose destination, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_rpf_qbq_kv__image_v53_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d84094e383 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d89382e381 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -269,12 +276,12 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d84094e380 ">Secret Access Key
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d89382e378 ">Secret Access Key
                                         <a class="xref" href="KinFirehose.html#concept_b14_24g_vw" title="When Data Collector writes data to a Kinesis Firehose destination, it must pass credentials to Amazon Web Services.">
                                             <img class="image" id="task_rpf_qbq_kv__image_v47_wcr_yv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d84094e383 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d89382e381 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -284,33 +291,33 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d84094e380 ">Destination Type</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d89382e378 ">Destination Type</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d84094e383 ">Type of Amazon destination to write to. Select
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d89382e381 ">Type of Amazon destination to write to. Select
                                             <span class="ph uicontrol">Existing Stream</span>. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d84094e380 ">Region</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d89382e378 ">Region</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d84094e383 ">Amazon Web Services region.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d89382e381 ">Amazon Web Services region.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d84094e380 ">Endpoint</td>
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d89382e378 ">Endpoint</td>
 
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d84094e383 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d89382e381 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
         name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d84094e380 ">Stream Name <a class="xref" href="KinFirehose.html#concept_fm4_txq_kv" title="The Kinesis Firehose destination writes data to an existing delivery stream in Amazon Kinesis Firehose. Before using the Kinesis Firehose destination, use the AWS Management Console to create a delivery stream to an Amazon S3 bucket or Amazon Redshift table.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d89382e378 ">Stream Name <a class="xref" href="KinFirehose.html#concept_fm4_txq_kv" title="The Kinesis Firehose destination writes data to an existing delivery stream in Amazon Kinesis Firehose. Before using the Kinesis Firehose destination, use the AWS Management Console to create a delivery stream to an Amazon S3 bucket or Amazon Redshift table.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d84094e383 ">Existing delivery stream to write to.<p class="p">Use the AWS
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d89382e381 ">Existing delivery stream to write to.<p class="p">Use the AWS
                                             Management Console to create the delivery stream to an
                                             Amazon S3 bucket or Amazon Redshift table. </p>
 </td>
@@ -318,9 +325,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d84094e380 ">Maximum Record Size (KB)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d89382e378 ">Maximum Record Size (KB)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d84094e383 ">Maximum size of a single record. When records exceed this
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d89382e381 ">Maximum size of a single record. When records exceed this
                                         size, the destination handles the records based on the error
                                         record handling configured for the stage.<div class="note warning"><span class="warningtitle">Warning:</span> A Firehose record can have a maximum size
                                             of 1,000 KB. If you configure a maximum size larger than
@@ -347,9 +354,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d84094e529">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d89382e527">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d84094e532">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d89382e530">Description</th>
 
                                 </tr>
 
@@ -357,11 +364,11 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e529 ">Data Format <a class="xref" href="KinFirehose.html#concept_wrk_rzp_kv">
+                                    <td class="entry" valign="top" width="30%" headers="d89382e527 ">Data Format <a class="xref" href="KinFirehose.html#concept_wrk_rzp_kv">
                                             <img class="image" id="task_rpf_qbq_kv__image_t1p_pgj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e532 ">Data format to use: <ul class="ul" id="task_rpf_qbq_kv__ul_g5w_kyy_kv">
+                                    <td class="entry" valign="top" width="70%" headers="d89382e530 ">Data format to use: <ul class="ul" id="task_rpf_qbq_kv__ul_g5w_kyy_kv">
                                             <li class="li">Delimited</li>
 
                                             <li class="li">JSON</li>
@@ -383,14 +390,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rpf_qbq_kv__d12211e5582" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rpf_qbq_kv__d12263e5610" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d84094e588">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d89382e586">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d84094e591">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d89382e589">Description</th>
 
                                 </tr>
 
@@ -398,9 +405,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e588 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e586 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e591 ">Format for delimited data:<ul class="ul" id="task_rpf_qbq_kv__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d89382e589 ">Format for delimited data:<ul class="ul" id="task_rpf_qbq_kv__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -424,16 +431,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e588 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e586 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e591 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d89382e589 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e588 ">Replace New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e586 ">Replace New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e591 ">Replaces new line characters with the configured
+                                    <td class="entry" valign="top" width="70%" headers="d89382e589 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -441,9 +448,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e588 ">New Line Character Replacement</td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e586 ">New Line Character Replacement</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e591 ">String to replace each new line character. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d89382e589 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -452,9 +459,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e588 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e586 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e591 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d89382e589 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -469,9 +476,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e588 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e586 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e591 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d89382e589 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -480,9 +487,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e588 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e586 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e591 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d89382e589 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -491,9 +498,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d84094e588 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d89382e586 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d84094e591 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d89382e589 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -514,9 +521,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d84094e749">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d89382e747">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d84094e752">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d89382e750">Description</th>
 
                                 </tr>
 
@@ -524,9 +531,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d84094e749 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d89382e747 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d84094e752 ">Determines how JSON data is written. Select Multiple JSON
+                                    <td class="entry" valign="top" width="70%" headers="d89382e750 ">Determines how JSON data is written. Select Multiple JSON
                                         Objects. Each file includes multiple JSON objects. Each
                                         object is a JSON representation of a record.<div class="note note"><span class="notetitle">Note:</span> The JSON
                                             array of objects format is not supported for the Kinesis
@@ -536,9 +543,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d84094e749 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d89382e747 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d84094e752 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d89382e750 ">Character set to use when writing data. </td>
 
       </tr>
 

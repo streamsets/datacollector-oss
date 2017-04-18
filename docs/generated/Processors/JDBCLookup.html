@@ -127,14 +127,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d43796e3993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d48131e3993" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d278766e185">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d301098e185">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d278766e188">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d301098e188">Description</th>
 
                                 </tr>
 
@@ -142,46 +142,53 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d278766e185 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d301098e185 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d278766e188 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d278766e185 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d278766e188 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d301098e188 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d278766e185 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_kbr_2cy_hw__d43796e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d301098e185 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d278766e188 ">Fields that must include data to be passed into the
-                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
-                                            fields that the stage uses.</div>
+                                    <td class="entry" valign="top" width="70%" headers="d301098e188 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d301098e185 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_kbr_2cy_hw__d48131e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d301098e188 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d278766e185 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_kbr_2cy_hw__d43796e4053" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d301098e185 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_kbr_2cy_hw__d48131e4055" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d278766e188 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d301098e188 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
-                                        preconditions. </td>
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d278766e185 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_kbr_2cy_hw__d43796e4068" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d301098e185 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_kbr_2cy_hw__d48131e4072" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d278766e188 ">Error record handling for the stage: <ul class="ul" id="task_kbr_2cy_hw__d43796e4072">
+                                    <td class="entry" valign="top" width="70%" headers="d301098e188 ">Error record handling for the stage: <ul class="ul" id="task_kbr_2cy_hw__d48131e4076">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -211,9 +218,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d278766e307">JDBC Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d301098e305">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d278766e310">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d301098e308">Description</th>
 
                                 </tr>
 
@@ -221,9 +228,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">JDBC Connection String</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">JDBC Connection String</td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Connection string to use to connect to the database.<p class="p">Some databases, such as
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Connection string to use to connect to the database.<p class="p">Some databases, such as
          Postgres, require the schema in the connection string. Use the connection string format
          required by the database.</p>
 </td>
@@ -231,9 +238,9 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">SQL Query</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">SQL Query</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">SQL query to use to look up data in the database. Use the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">SQL query to use to look up data in the database. Use the
                                         following syntax for the
                                             query:<pre class="pre codeblock">SELECT &lt;column1 name&gt;, &lt;column2 name&gt; FROM &lt;table name&gt; WHERE &lt;column3 name&gt; =
     '${record:value(&lt;field path&gt;)}'</pre>
@@ -246,19 +253,19 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">Enable Local Caching
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">Enable Local Caching
                                         <a class="xref" href="JDBCLookup.html#concept_jt5_kx2_px">
                                             <img class="image" id="task_kbr_2cy_hw__image_h2p_p7v_uh" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Specifies whether to locally cache the returned
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Specifies whether to locally cache the returned
        values.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">Column Mappings</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">Column Mappings</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Use to override the default column to field mappings. By
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Use to override the default column to field mappings. By
                                         default, columns are written to fields of the same name.
                                             <div class="p">Enter the following:<ul class="ul" id="task_kbr_2cy_hw__ul_jvy_5mm_xw">
                                                 <li class="li">Column Name - Name of the database column that
@@ -291,19 +298,19 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">Maximum Entries to Cache</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">Maximum Entries to Cache</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Maximum number of values to cache. When the maximum number is reached, the processor
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Maximum number of values to cache. When the maximum number is reached, the processor
        evicts the oldest values from the cache. <p class="p">Default is -1, which means unlimited.</p>
 </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">Eviction Policy Type</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">Eviction Policy Type</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Policy used to evict values from the local cache when the expiration time has
-        passed:<ul class="ul" id="task_kbr_2cy_hw__d43985e2056">
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Policy used to evict values from the local cache when the expiration time has
+        passed:<ul class="ul" id="task_kbr_2cy_hw__d48320e2129">
         <li class="li">Expire After Last Access - Measures the expiration time since the value was last
          accessed by a read or a write.</li>
 
@@ -316,50 +323,50 @@
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">Expiration Time</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">Expiration Time</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Amount of time that a value can remain in the local cache without being accessed or
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Amount of time that a value can remain in the local cache without being accessed or
        written to. <p class="p">Default is 1 second.</p>
 </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">Time Unit</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">Time Unit</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Unit of time for the expiration time. <p class="p">Default is
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Unit of time for the expiration time. <p class="p">Default is
        seconds.</p>
 </td>
 
      </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">Use Credentials</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">Use Credentials</td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Enables entering credentials on the Credentials tab. Use when you do not include
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Enables entering credentials on the Credentials tab. Use when you do not include
         credentials in the JDBC connection string.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">Max Clob Size (characters)</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">Max Clob Size (characters)</td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Maximum number of characters to be read in a Clob field. Larger data is
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Maximum number of characters to be read in a Clob field. Larger data is
         truncated.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">Max Blob Size (bytes)</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">Max Blob Size (bytes)</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Maximum number of bytes to be read in a Blob field. </td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Maximum number of bytes to be read in a Blob field. </td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d278766e307 ">Additional JDBC Configuration Properties</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d301098e305 ">Additional JDBC Configuration Properties</td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d278766e310 ">Additional JDBC configuration properties to use. To add properties, click
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d301098e308 ">Additional JDBC configuration properties to use. To add properties, click
          <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the property
          names and values as expected by JDBC. </p>
 </td>
@@ -379,14 +386,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d43796e2807" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d48131e2807" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d278766e506">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d301098e504">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d278766e509">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d301098e507">Description</th>
 
                                 </tr>
 
@@ -394,18 +401,18 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d278766e506 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d301098e504 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d278766e509 ">User name for the JDBC connection.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d301098e507 ">User name for the JDBC connection.</td>
 
                                 </tr>
 
-                                <tr id="task_kbr_2cy_hw__d43796e2838">
-                                    <td class="entry" valign="top" width="30%" headers="d278766e506 ">Password</td>
+                                <tr id="task_kbr_2cy_hw__d48131e2838">
+                                    <td class="entry" valign="top" width="30%" headers="d301098e504 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d278766e509 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                                    <td class="entry" valign="top" width="70%" headers="d301098e507 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Configuration/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
                                 </tr>
@@ -423,14 +430,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d43796e2863" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d48131e2863" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d278766e585">Legacy Driver Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d301098e583">Legacy Driver Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d278766e588">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d301098e586">Description</th>
 
                                 </tr>
 
@@ -438,17 +445,17 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d278766e585 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d301098e583 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d278766e588 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry" valign="top" width="70%" headers="d301098e586 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d278766e585 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d301098e583 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d278766e588 ">Optional query to test the health of a connection.
+                                    <td class="entry" valign="top" width="70%" headers="d301098e586 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -470,37 +477,37 @@
      
      <thead class="thead" align="left">
       <tr>
-       <th class="entry" valign="top" width="30%" id="d278766e640">Advanced Property</th>
+       <th class="entry" valign="top" width="30%" id="d301098e638">Advanced Property</th>
 
-       <th class="entry" valign="top" width="70%" id="d278766e643">Description</th>
+       <th class="entry" valign="top" width="70%" id="d301098e641">Description</th>
 
       </tr>
 
      </thead>
 
      <tbody class="tbody">
-      <tr id="task_kbr_2cy_hw__d43985e1671">
-       <td class="entry" valign="top" width="30%" headers="d278766e640 ">Maximum Pool Size </td>
+      <tr id="task_kbr_2cy_hw__d48320e1744">
+       <td class="entry" valign="top" width="30%" headers="d301098e638 ">Maximum Pool Size </td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e643 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
+       <td class="entry" valign="top" width="70%" headers="d301098e641 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
          1.</p>
 </td>
 
       </tr>
 
-      <tr id="task_kbr_2cy_hw__d43985e1682">
-       <td class="entry" valign="top" width="30%" headers="d278766e640 ">Minimum Idle Connections</td>
+      <tr id="task_kbr_2cy_hw__d48320e1755">
+       <td class="entry" valign="top" width="30%" headers="d301098e638 ">Minimum Idle Connections</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e643 ">The minimum number of connections to create and maintain. To define a fixed connection
+       <td class="entry" valign="top" width="70%" headers="d301098e641 ">The minimum number of connections to create and maintain. To define a fixed connection
         pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
       </tr>
 
-      <tr id="task_kbr_2cy_hw__d43985e1693">
-       <td class="entry" valign="top" width="30%" headers="d278766e640 ">Connection Timeout</td>
+      <tr id="task_kbr_2cy_hw__d48320e1766">
+       <td class="entry" valign="top" width="30%" headers="d301098e638 ">Connection Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e643 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+       <td class="entry" valign="top" width="70%" headers="d301098e641 ">Maximum time to wait for a connection. Use a time constant in an expression to define
         the time increment. <div class="p">Default is 30 seconds, defined as follows:
          <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
@@ -508,10 +515,10 @@
 
       </tr>
 
-      <tr id="task_kbr_2cy_hw__d43985e1706">
-       <td class="entry" valign="top" width="30%" headers="d278766e640 ">Idle Timeout</td>
+      <tr id="task_kbr_2cy_hw__d48320e1779">
+       <td class="entry" valign="top" width="30%" headers="d301098e638 ">Idle Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e643 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+       <td class="entry" valign="top" width="70%" headers="d301098e641 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
         define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is
          30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
@@ -520,10 +527,10 @@
 
       </tr>
 
-      <tr id="task_kbr_2cy_hw__d43985e1721">
-       <td class="entry" valign="top" width="30%" headers="d278766e640 ">Max Connection Lifetime</td>
+      <tr id="task_kbr_2cy_hw__d48320e1794">
+       <td class="entry" valign="top" width="30%" headers="d301098e638 ">Max Connection Lifetime</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e643 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+       <td class="entry" valign="top" width="70%" headers="d301098e641 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
         time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
          seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
@@ -532,31 +539,31 @@
 
       </tr>
 
-      <tr id="task_kbr_2cy_hw__d43985e1737">
-       <td class="entry" valign="top" width="30%" headers="d278766e640 ">Auto Commit</td>
+      <tr id="task_kbr_2cy_hw__d48320e1810">
+       <td class="entry" valign="top" width="30%" headers="d301098e638 ">Auto Commit</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e643 ">Determines whether auto-commit mode is enabled or disabled for the
+       <td class="entry" valign="top" width="70%" headers="d301098e641 ">Determines whether auto-commit mode is enabled or disabled for the
          connection.<p class="p">Disabled by default.</p>
 </td>
 
       </tr>
 
-      <tr id="task_kbr_2cy_hw__d43985e1748">
-       <td class="entry" valign="top" width="30%" headers="d278766e640 ">Enforce Read-only Connection</td>
+      <tr id="task_kbr_2cy_hw__d48320e1821">
+       <td class="entry" valign="top" width="30%" headers="d301098e638 ">Enforce Read-only Connection</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e643 ">Creates read-only connections to avoid any type of write. <p class="p">Enabled by default.
+       <td class="entry" valign="top" width="70%" headers="d301098e641 ">Creates read-only connections to avoid any type of write. <p class="p">Enabled by default.
          Disabling this property is not recommended. </p>
 </td>
 
       </tr>
 
-      <tr id="task_kbr_2cy_hw__d43985e1759">
-       <td class="entry" valign="top" width="30%" headers="d278766e640 ">Transaction Isolation</td>
+      <tr id="task_kbr_2cy_hw__d48320e1832">
+       <td class="entry" valign="top" width="30%" headers="d301098e638 ">Transaction Isolation</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e643 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
+       <td class="entry" valign="top" width="70%" headers="d301098e641 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
         default transaction isolation level set for the database. You can override the database
         default by setting the level to any of the following:</p>
-<ul class="ul" id="task_kbr_2cy_hw__d43985e1768">
+<ul class="ul" id="task_kbr_2cy_hw__d48320e1841">
          <li class="li">Read committed </li>
 
          <li class="li">Read uncommitted </li>
@@ -580,9 +587,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d278766e777">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d301098e775">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d278766e780">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d301098e778">Description</th>
 
                                 </tr>
 
@@ -590,27 +597,27 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d278766e777 ">Maximum Pool Size </td>
+       <td class="entry" valign="top" width="30%" headers="d301098e775 ">Maximum Pool Size </td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e780 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
+       <td class="entry" valign="top" width="70%" headers="d301098e778 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
          1.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d278766e777 ">Minimum Idle Connections</td>
+       <td class="entry" valign="top" width="30%" headers="d301098e775 ">Minimum Idle Connections</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e780 ">The minimum number of connections to create and maintain. To define a fixed connection
+       <td class="entry" valign="top" width="70%" headers="d301098e778 ">The minimum number of connections to create and maintain. To define a fixed connection
         pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d278766e777 ">Connection Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d301098e775 ">Connection Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e780 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+       <td class="entry" valign="top" width="70%" headers="d301098e778 ">Maximum time to wait for a connection. Use a time constant in an expression to define
         the time increment. <div class="p">Default is 30 seconds, defined as follows:
          <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
@@ -619,9 +626,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d278766e777 ">Idle Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d301098e775 ">Idle Timeout</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e780 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+       <td class="entry" valign="top" width="70%" headers="d301098e778 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
         define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is
          30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
@@ -631,9 +638,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d278766e777 ">Max Connection Lifetime</td>
+       <td class="entry" valign="top" width="30%" headers="d301098e775 ">Max Connection Lifetime</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e780 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+       <td class="entry" valign="top" width="70%" headers="d301098e778 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
         time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
          seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
@@ -643,30 +650,30 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d278766e777 ">Auto Commit</td>
+       <td class="entry" valign="top" width="30%" headers="d301098e775 ">Auto Commit</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e780 ">Determines whether auto-commit mode is enabled or disabled for the
+       <td class="entry" valign="top" width="70%" headers="d301098e778 ">Determines whether auto-commit mode is enabled or disabled for the
          connection.<p class="p">Disabled by default.</p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d278766e777 ">Enforce Read-only Connection</td>
+       <td class="entry" valign="top" width="30%" headers="d301098e775 ">Enforce Read-only Connection</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e780 ">Creates read-only connections to avoid any type of write. <p class="p">Enabled by default.
+       <td class="entry" valign="top" width="70%" headers="d301098e778 ">Creates read-only connections to avoid any type of write. <p class="p">Enabled by default.
          Disabling this property is not recommended. </p>
 </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d278766e777 ">Transaction Isolation</td>
+       <td class="entry" valign="top" width="30%" headers="d301098e775 ">Transaction Isolation</td>
 
-       <td class="entry" valign="top" width="70%" headers="d278766e780 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
+       <td class="entry" valign="top" width="70%" headers="d301098e778 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
         default transaction isolation level set for the database. You can override the database
         default by setting the level to any of the following:</p>
-<ul class="ul" id="task_kbr_2cy_hw__d43985e1768">
+<ul class="ul" id="task_kbr_2cy_hw__d48320e1841">
          <li class="li">Read committed </li>
 
          <li class="li">Read uncommitted </li>

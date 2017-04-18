@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The event framework enables the use of dataflow triggers - instructions for the pipeline to kick off asynchronous tasks in external systems in response to events that occur in the pipeline. With the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Event Framework" /><meta name="DC.Relation" scheme="URI" content="../DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" /><meta name="DC.Relation" scheme="URI" content="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_xxd_f5r_kx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Event Framework</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Dataflow triggers are instructions for the pipeline to kick off tasks in response to events that occur in the pipeline. For example, you can use dataflow triggers to start a MapReduce job after the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Dataflow Triggers (a.k.a. Event Framework)" /><meta name="DC.Relation" scheme="URI" content="../DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" /><meta name="DC.Relation" scheme="URI" content="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_xxd_f5r_kx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Dataflow Triggers (a.k.a. Event Framework)</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -26,25 +26,27 @@
 <span class="navprev"><a class="link" href="../DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" title="Unregister Data Collector from DPM"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Unregister Data Collector from DPM</span></a></span>  
 <span class="navnext"><a class="link" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Drift Synchronization Solution (a.k.a. Hive Drift Solution)"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution (a.k.a. Hive Drift Solution)</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_xxd_f5r_kx">
- <h1 class="title topictitle1">Event Framework</h1>
+ <h1 class="title topictitle1">Dataflow Triggers (a.k.a. Event Framework)</h1>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_cph_5h4_lx">
-    <h2 class="title topictitle2">Event Framework Overview</h2>
+    <h2 class="title topictitle2">Dataflow Triggers Overview</h2>
 
     <div class="body conbody">
-        <p class="p">The <dfn class="term">event
-                framework</dfn> enables the use of <dfn class="term">dataflow triggers</dfn> -  instructions
-            for the pipeline to kick off asynchronous tasks in external systems in response to
-            events that occur in the pipeline. With the event framework, you can configure dataflow
-            triggers such as running a MapReduce job after the pipeline writes a file to HDFS. </p>
+        <p class="p"><dfn class="term">Dataflow
+                triggers</dfn> are instructions for the pipeline to kick off tasks in response to
+            events that occur in the pipeline. For example, you can use dataflow triggers to start a
+            MapReduce job after the pipeline writes a file to HDFS. Or you might use a dataflow
+            trigger to stop a pipeline after the JDBC Query Consumer origin processes all available
+            data. </p>
 
-        <p class="p">You can also use the event framework to store event information, such as when an origin
-            starts or completes reading a file. </p>
+        <p class="p">Configure dataflow triggers with the event framework. You can also use the event
+            framework to store event information, such as when an origin starts or completes reading
+            a file. </p>
 
-        <p class="p">Event handling begins with enabling event generation for a stage in the pipeline, then
-            configuring the rest of the event stream to do your bidding. You can add an event stream
-            to any pipeline that includes an event-generating stage. </p>
+        <p class="p">To use the event framework, first enable event generation for a stage in the pipeline,
+            then configure the rest of the event stream to do your bidding. You can add an event
+            stream to any pipeline that includes an event-generating stage. </p>
 
         <div class="p">Event streams consist of the following conceptual components:<dl class="dl">
                 
@@ -67,16 +69,18 @@
                 
                     <dt class="dt dlterm">task execution</dt>
 
-                    <dd class="dd">To use events to trigger a task, connect the event stream to an
-                            <dfn class="term">executor</dfn>. Executor stages perform tasks in external
-                        systems.</dd>
+                    <dd class="dd">To trigger a task, connect an event stream to an <dfn class="term">executor</dfn>.
+                        Executor stages perform tasks in <span class="ph">Data
+                  Collector</span> or external systems.</dd>
 
                     <dd class="dd">Each time an executor receives an event record, it performs the specified
                         task.</dd>
 
                     <dd class="dd">For example, the Hive Query executor runs user-defined Hive or Impala
-                        queries each time it receives an event. Similarly, the MapReduce executor
-                        triggers a MapReduce job when it receives events. </dd>
+                        queries each time it receives an event, and the MapReduce executor triggers
+                        a MapReduce job when it receives events. Within <span class="ph">Data
+                  Collector</span>, the Pipeline Finisher executor stops a pipeline upon receiving an event,
+                        transitioning the pipeline to a Finished state. </dd>
 
                 
                 
@@ -96,7 +100,7 @@
     </div>
 
 <div class="topic concept nested2" id="concept_zrl_mhn_lx">
- <h3 class="title topictitle3">Event Generation Stages</h3>
+ <h3 class="title topictitle3">Event Generating Stages</h3>
 
  <div class="body conbody">
   <p class="p">You can configure certain
@@ -110,9 +114,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d117028e149">Stage</th>
+                            <th class="entry" valign="top" width="30%" id="d126010e155">Stage</th>
 
-                            <th class="entry" valign="top" width="70%" id="d117028e152">Generates event records when the stage...</th>
+                            <th class="entry" valign="top" width="70%" id="d126010e158">Generates event records when the stage...</th>
 
                         </tr>
 
@@ -120,9 +124,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">Directory origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Directory origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_opf_5ck_px">
                                     <li class="li">Starts processing a file.</li>
 
@@ -135,9 +139,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">File Tail origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">File Tail origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_as2_12n_qx">
                                     <li class="li">Starts processing a file.</li>
 
@@ -150,9 +154,40 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">Oracle CDC Client origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">JDBC Query Consumer origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_fsn_ct5_lz">
+                                    <li class="li">Completes processing all data returned by a query. </li>
+
+                                    <li class="li">Successfully completes a query.</li>
+
+                                    <li class="li">Fails to complete a query.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">JDBC Multitable Consumer origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
+                                <ul class="ul">
+                                    <li class="li">Completes processing the data returned by the queries for
+                                        all tables.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Oracle CDC Client origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_brj_zv1_vy">
                                     <li class="li">Reads DDL statements in the redo log. </li>
 
@@ -163,9 +198,22 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">Amazon S3 destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Salesforce origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_djn_rfb_mz">
+                                    <li class="li">Completes processing all data returned by a query. </li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Amazon S3 destination</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_lb3_zck_px">
                                     <li class="li">Completes writing to an object.</li>
 
@@ -178,9 +226,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">Hadoop FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Hadoop FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_x5c_cdk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -193,9 +241,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">Groovy Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Groovy Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_cj5_tnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -206,9 +254,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">JavaScript Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">JavaScript Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_qtz_vnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -219,9 +267,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">Jython Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Jython Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_ujt_wnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -232,9 +280,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">Hive Metastore destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Hive Metastore destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fgw_mt4_qx">
                                     <li class="li">Updates the Hive metastore by creating a table, adding
                                         columns, or creating a partition. </li>
@@ -246,9 +294,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">Local FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Local FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_flq_ddk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -261,9 +309,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">MapR FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">MapR FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_m11_gdk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -276,12 +324,14 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">HDFS File Metadata executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">HDFS File Metadata executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fmy_4t4_qx">
                                     <li class="li">Changes file metadata, such as the file name, location, or
                                         permissions.</li>
+
+                                    <li class="li">Creates an empty file.</li>
 
                                 </ul>
 
@@ -290,9 +340,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">Hive Query executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Hive Query executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_qsl_bsk_my">
                                     <li class="li">Determines if the submitted query has completed.</li>
 
@@ -303,9 +353,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">MapReduce executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">MapReduce executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fy2_qt4_qx">
                                     <li class="li">Starts a MapReduce job.</li>
 
@@ -316,9 +366,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e149 ">Spark executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e155 ">Spark executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e152 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_xyc_hyg_gz">
                                     <li class="li">Starts a Spark application.</li>
 
@@ -368,16 +418,35 @@
                 
                     <dt class="dt dlterm">HDFS File Metadata executor</dt>
 
-                    <dd class="dd">Connects to HDFS, MapR FS, or a local file system and performs file-based
-                        tasks for each event. Can rename, move, and define the owner, group,
-                        permissions and ACLs for files. </dd>
+                    <dd class="dd">Creates a new empty file or changes the metadata for an existing file upon
+                        receiving an event. When creating a new file, the executor can specify the
+                        owner and group and set permissions and ACLs for the file. When changing
+                        file metadata, the executor can rename and move the file, specify the owner
+                        and group, and update permissions and ACLs for files. </dd>
 
-                    <dd class="dd">Use with the Hadoop FS, Local FS, and MapR FS destinations, which generate
-                        events when they close an output file or finish streaming a whole file.</dd>
+                    <dd class="dd">You can use the executor in any logical way, but it is optimized to change
+                        file metadata after receiving file closure events from the Hadoop FS, Local
+                        FS, and MapR FS destinations. </dd>
 
-                    <dd class="dd">For example, you can use the HDFS File Metadata executor with the Local FS
+                    <dd class="dd">For example, you can use the HDFS File Metadata executor with the Mapr FS
                         destination to move and change the permissions of files when the destination
                         closes a file.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Pipeline Finisher executor</dt>
+
+                    <dd class="dd">Stops the pipeline when it receives an event, transitioning the pipeline to
+                        a Finished state.</dd>
+
+                    <dd class="dd">Use with the no-more-data events generated by the JDBC Query Consumer, JDBC
+                        Multitable Consumer, or Salesforce origins to achieve "batch" processing -
+                        stopping the pipeline when all available data is processed rather than
+                        leaving the pipeline to sit idle indefinitely. </dd>
+
+                    <dd class="dd">For example, you might use the Pipeline Finisher executor with the JDBC
+                        Multitable Consumer to stop the pipeline when it processes all queried data
+                        in the specified tables.</dd>
 
                 
                 
@@ -426,7 +495,7 @@
  <div class="body conbody">
   <p class="p">Some origins and destinations can generate
             events, and executors and destinations can consume events. You can use event generating
-            stages and event records in any logical way. </p>
+            stages and event records in any way that works for your needs.</p>
 
         <div class="p">The following tables outline some logical pairings of event generating stages with
             executors and destinations:
@@ -435,9 +504,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d117028e540">Event Generating Origin</th>
+                            <th class="entry" valign="top" width="30%" id="d126010e617">Event Generating Origin</th>
 
-                            <th class="entry" valign="top" width="70%" id="d117028e543">Event Consumer</th>
+                            <th class="entry" valign="top" width="70%" id="d126010e620">Event Consumer</th>
 
                         </tr>
 
@@ -445,9 +514,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e540 ">Directory</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e617 ">Directory</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e543 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e620 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_wvy_h4p_1y">
                                     <li class="li">Any destination for event storage.</li>
 
@@ -458,9 +527,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e540 ">File Tail</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e617 ">File Tail</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e543 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e620 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_hgh_34p_1y">
                                     <li class="li">Any destination for event storage.</li>
 
@@ -471,10 +540,61 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e540 ">Oracle CDC Client</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e617 ">JDBC Query Consumer</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e543 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e620 ">
+                                <ul class="ul" id="concept_scs_3hh_tx__ul_rpk_gx5_lz">
+                                    <li class="li">Route the no-more-data event to the Pipeline Finisher
+                                        executor to stop and transition the pipeline to a Finished
+                                        state after processing queried data.</li>
+
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d126010e617 ">JDBC Multitable Consumer</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d126010e620 ">
+                                <ul class="ul" id="concept_scs_3hh_tx__ul_a1m_jx5_lz">
+                                    <li class="li">Pipeline Finisher executor to stop and transition the
+                                        pipeline to a Finished state after processing queried data
+                                        from all tables.</li>
+
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d126010e617 ">Oracle CDC Client</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d126010e620 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_xdj_1x1_vy">
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d126010e617 ">Salesforce</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d126010e620 ">
+                                <ul class="ul">
+                                    <li class="li">Pipeline Finisher executor to stop and transition the
+                                        pipeline to a Finished state after processing queried
+                                        data.</li>
+
                                     <li class="li">Any destination for event storage.</li>
 
                                 </ul>
@@ -493,9 +613,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d117028e609">Event Generating Destination</th>
+                            <th class="entry" valign="top" width="30%" id="d126010e741">Event Generating Destination</th>
 
-                            <th class="entry" valign="top" width="70%" id="d117028e612">Event Consumer</th>
+                            <th class="entry" valign="top" width="70%" id="d126010e744">Event Consumer</th>
 
                         </tr>
 
@@ -503,9 +623,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e609 ">Amazon S3 </td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e741 ">Amazon S3 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e612 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e744 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_tyv_24p_1y">
                                     <li class="li">Any destination for event storage.</li>
 
@@ -519,9 +639,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e609 ">Hadoop FS</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e741 ">Hadoop FS</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e612 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e744 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_hbx_blh_tx">
                                     <li class="li">HDFS File Metadata executor to change file metadata for
                                         closed files.</li>
@@ -546,9 +666,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e609 ">Hive Metastore </td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e741 ">Hive Metastore </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e612 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e744 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_kkj_dlh_tx">
                                     <li class="li">Hive Query executor to run Hive or Impala queries after
                                         changing table structures. <p class="p">Particularly useful when using
@@ -565,9 +685,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e609 ">Local FS</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e741 ">Local FS</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e612 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e744 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_p3l_glh_tx">
                                     <li class="li">HDFS File Metadata executor to change file metadata for
                                         closed files.</li>
@@ -581,9 +701,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e609 ">MapR FS</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e741 ">MapR FS</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e612 ">
+                            <td class="entry" valign="top" width="70%" headers="d126010e744 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_rvh_dsq_tx">
                                     <li class="li">HDFS File Metadata executor to change file metadata for
                                         closed files.</li>
@@ -612,9 +732,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d117028e742">Event Generating Executor</th>
+                            <th class="entry" valign="top" width="30%" id="d126010e874">Event Generating Executor</th>
 
-                            <th class="entry" valign="top" width="70%" id="d117028e745">Event Consumer</th>
+                            <th class="entry" valign="top" width="70%" id="d126010e877">Event Consumer</th>
 
                         </tr>
 
@@ -622,30 +742,30 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e742 ">HDFS File Metadata executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e874 ">HDFS File Metadata executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e745 ">Any destination for event storage.</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e742 ">Hive Query executor</td>
-
-                            <td class="entry" valign="top" width="70%" headers="d117028e745 ">Any destination for event storage.</td>
+                            <td class="entry" valign="top" width="70%" headers="d126010e877 ">Any destination for event storage.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e742 ">MapReduce executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e874 ">Hive Query executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e745 ">Any destination for event storage.</td>
+                            <td class="entry" valign="top" width="70%" headers="d126010e877 ">Any destination for event storage.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e742 ">Spark executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e874 ">MapReduce executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e745 ">Any destination for event storage.</td>
+                            <td class="entry" valign="top" width="70%" headers="d126010e877 ">Any destination for event storage.</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d126010e874 ">Spark executor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d126010e877 ">Any destination for event storage.</td>
 
                         </tr>
 
@@ -772,7 +892,7 @@ You can, of course, configure an event stream to perform tasks and store events 
         <p class="p">Event records generated by the File Tail origin are the exception - they include all
             event information in record fields. </p>
 
-        <p class="p"><span class="ph"><span class="ph" id="concept_gvh_5wm_xx__d21482e3117">Event records differ from stage
+        <p class="p"><span class="ph"><span class="ph" id="concept_gvh_5wm_xx__d23012e3257">Event records differ from stage
                               to stage.</span> For a list of event header attributes and fields in an
                         event record, see "Event Record" in the documentation for the
                         event-generating stage.</span></p>
@@ -805,9 +925,9 @@ You can, of course, configure an event stream to perform tasks and store events 
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d117028e997">Event Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d126010e1129">Event Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d117028e1000">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d126010e1132">Description</th>
 
                         </tr>
 
@@ -815,9 +935,9 @@ You can, of course, configure an event stream to perform tasks and store events 
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d117028e997 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d126010e1129 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d117028e1000 ">Event type. Defined by the stage that generates the event. <p class="p">For
+                            <td class="entry" valign="top" width="70%" headers="d126010e1132 ">Event type. Defined by the stage that generates the event. <p class="p">For
                                     information about the event types available for an event
                                     generating stage, see the stage documentation.</p>
 </td>
@@ -825,16 +945,16 @@ You can, of course, configure an event stream to perform tasks and store events 
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d117028e997 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d126010e1129 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d117028e1000 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d126010e1132 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d117028e997 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d126010e1129 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_zft_rdq_tx__d21542e1385" valign="top" width="70%" headers="d117028e1000 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_zft_rdq_tx__d23099e1409" valign="top" width="70%" headers="d126010e1132 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -845,7 +965,7 @@ You can, of course, configure an event stream to perform tasks and store events 
 </div>
 </div>
 
-        <p class="p"><span class="ph"><span class="ph" id="concept_zft_rdq_tx__d21482e3117">Event records differ from stage
+        <p class="p"><span class="ph"><span class="ph" id="concept_zft_rdq_tx__d23012e3257">Event records differ from stage
                               to stage.</span> For a list of event header attributes and fields in an
                         event record, see "Event Record" in the documentation for the
                         event-generating stage.</span></p>
@@ -977,7 +1097,7 @@ You can, of course, configure an event stream to perform tasks and store events 
                     table name required by the Hive Query executor, but it contains the table name
                     in the file path. So add an Expression Evaluator processor to the event stream.
                     Create a new Table field and use the following
-                        expression:<pre class="pre codeblock"><span class="ph" id="concept_szz_xwm_lx__d21482e3309">`${file:pathElement(record:value('/filepath'), -3)}`.`${file:pathElement(record:value('/filepath'), -2)}`</span></pre>
+                        expression:<pre class="pre codeblock"><span class="ph" id="concept_szz_xwm_lx__d23012e3450">`${file:pathElement(record:value('/filepath'), -3)}`.`${file:pathElement(record:value('/filepath'), -2)}`</span></pre>
 <div class="p">This
                         expression uses the path in the Filepath field of the event record and
                         performs the following calculations:<ul class="ul" id="concept_szz_xwm_lx__ul_umt_2sm_5x">
@@ -1053,7 +1173,7 @@ You can, of course, configure an event stream to perform tasks and store events 
                     stream becomes available, and Hadoop FS generates an event record each time it
                     closes an output file. The Hadoop FS event record includes fields for the file
                     name, path, and size.</p>
-<p class="p"><img class="image" id="concept_d1q_xl4_lx__image_n5q_5p4_lx" src="../Graphics/Event-Move-HDFS.png" height="299" width="619" /></p>
+<p class="p"><img class="image" id="concept_d1q_xl4_lx__image_n5q_5p4_lx" src="../Graphics/Event-Move-HDFS.png" height="300" width="630" /></p>
 </li>
 
             <li class="li">Connect the Hadoop FS event output stream to a HDFS File Metadata executor.<p class="p">Now,
@@ -1065,8 +1185,9 @@ You can, of course, configure an event stream to perform tasks and store events 
             <li class="li">Configure the HDFS File Metadata executor to move the files to the directory that
                 you want and set the permissions for the file.<p class="p">In the HDFS File Metadata executor,
                     configure the HDFS configuration details on the <span class="keyword wintitle">HDFS</span> tab.
-                    Then, on the <span class="keyword wintitle">Tasks</span> tab, configure the changes that you want
-                    to make. </p>
+                    Then, on the <span class="keyword wintitle">Tasks</span> tab, select <span class="ph uicontrol">Change Metadata
+                        on Existing File</span> configure the changes that you want to make.
+                    </p>
 <p class="p">In this case, you want to move files to
                         <span class="ph filepath">/new/location</span>, and set the file permissions to 0440 to
                     allow the user and group read access to the files:</p>
@@ -1080,6 +1201,80 @@ You can, of course, configure an event stream to perform tasks and store events 
             event record, it moves the file and sets the file permissions. No muss, no fuss.</p>
 
     </div>
+
+</div>
+<div class="topic concept nested1" id="concept_kff_ykv_lz">
+ <h2 class="title topictitle2">Case Study: Stop the Pipeline</h2>
+
+ <div class="body conbody">
+  <p class="p">Say
+            your dataflow topology updates a database table daily at 4 am. Rather than have the
+            pipeline process the data in a few minutes and sit idle for the rest of the day, you
+            want to kick off the pipeline, have it process all data and then stop - just like old
+            school batch processing. </p>
+
+        <p class="p">To do this, simply route the no-more-data event record to the Pipeline Finisher executor. </p>
+
+        <p class="p">The JDBC Query Consumer, JDBC Multitable Consumer, and Salesforce origins all generate
+            the no-more-data event when they finish processing queried data. We'll use the JDBC
+            Query Consumer to show a more complex scenario. </p>
+
+        <p class="p">Here's the basic pipeline that reads from a database, performs some processing, and
+            writes to HDFS: </p>
+
+        <p class="p"><img class="image" id="concept_kff_ykv_lz__image_zy1_kkw_lz" src="../Graphics/Event-StopPipe-Basic.png" height="82" width="634" /></p>
+
+        <div class="p">To configure the pipeline to stop after processing all available queried data:<ol class="ol" id="concept_kff_ykv_lz__ol_ivb_qmw_lz">
+                <li class="li">Configure the origin to generate events:<p class="p">On the <span class="keyword wintitle">General</span>
+                        tab of the JDBC Query Consumer origin, select the <span class="ph uicontrol">Produce
+                            Events</span> property. </p>
+<p class="p">The event output stream becomes
+                        available:</p>
+<p class="p"><img class="image" id="concept_kff_ykv_lz__image_b5v_znw_lz" src="../Graphics/Event-StopPipe-Event.png" height="229" width="574" /></p>
+<p class="p">The JDBC Query Consumer
+                        generates several types of events: query success, query failure, and
+                        no-more-data. The query success and failure events can be useful, so you
+                        might use a Stream Selector to route those records to a separate event
+                        stream.</p>
+<p class="p">But let's say we don't care about those events, we just want
+                        the no-more-data event to pass to the Pipeline Finisher executor. </p>
+</li>
+
+                <li class="li">Connect the event output stream to the Pipeline Finisher executor. <p class="p">At this
+                        point, all events that the origin generates come to the executor. Since the
+                        JDBC Query Consumer origin generates multiple event types, this setup might
+                        cause the executor to stop the pipeline too soon.</p>
+</li>
+
+                <li class="li">To ensure that only the no-more-data event enters the executor, configure a
+                        precondition.<p class="p">With a precondition, only records that meet the specified
+                        condition can enter the stage. </p>
+<p class="p">We know that each event record
+                        includes the event type in the sdc.event.type record header attribute. So to
+                        ensure that only no-more-data events enter the stage, we can use the
+                        following expression in the
+                    precondition:</p>
+<pre class="pre codeblock">${record:eventType() == 'no-more-data'}</pre>
+</li>
+
+                <li class="li">Records that don't meet the precondition go to the stage for error handling, so
+                    to avoid storing error records that we don't care about – that is, the query
+                    success and failure events – let's also set the <span class="ph uicontrol">On Record
+                        Error</span> property to <span class="ph uicontrol">Discard</span>.<p class="p">There's
+                        nothing else to configure in the Pipeline Finisher executor, so here's the
+                        final pipeline:</p>
+<p class="p"><img class="image" id="concept_kff_ykv_lz__image_ucl_4qw_lz" src="../Graphics/Event-StopPipe-Finisher.png" height="354" width="563" /></p>
+</li>
+
+            </ol>
+Congratulations, you've configured a dataflow trigger! With this setup, the JDBC
+            Query Consumer passes a no-more-data event when it completes processing all data
+            returned by the query, and the Pipeline Finisher executor stops the pipeline and
+            transitions the pipeline to a Finished state. All other events generated by the origin
+            are discarded. And the next time you want to process more data, you just start the
+            pipeline again. </div>
+
+ </div>
 
 </div>
 <div class="topic concept nested1" id="concept_ocb_nnl_px">
@@ -1197,11 +1392,11 @@ You can, of course, configure an event stream to perform tasks and store events 
 </div>
 </div>
 <div class="topic concept nested1" id="concept_azz_tq4_lx">
- <h2 class="title topictitle2">Event Framework Summary</h2>
+ <h2 class="title topictitle2">Summary</h2>
 
  <div class="body conbody">
-        <div class="p">To summarize the key
-            points of the event framework: <ol class="ol" id="concept_azz_tq4_lx__ol_fz4_ygh_tx">
+        <div class="p">Here's are the key points
+            about dataflow triggers and the event framework: <ol class="ol" id="concept_azz_tq4_lx__ol_fz4_ygh_tx">
                 <li class="li">You can use the event framework to any pipeline that includes a stage that
                     generates events. </li>
 
@@ -1210,7 +1405,7 @@ You can, of course, configure an event stream to perform tasks and store events 
 
                 <li class="li">When generating an event, the stage creates an <dfn class="term">event record</dfn> that
                     contains relevant information regarding the event, such as the path to the file
-                    that was closed. <p class="p"><span class="ph"><span class="ph" id="concept_azz_tq4_lx__d21482e3117">Event records differ from stage
+                    that was closed. <p class="p"><span class="ph"><span class="ph" id="concept_azz_tq4_lx__d23012e3257">Event records differ from stage
                               to stage.</span> For a list of event header attributes and fields in an
                         event record, see "Event Record" in the documentation for the
                         event-generating stage.</span></p>
@@ -1219,8 +1414,9 @@ You can, of course, configure an event stream to perform tasks and store events 
                 <li class="li">In the simplest use case, you can route event records to a destination to save
                     event information.</li>
 
-                <li class="li">You can also use event records to trigger tasks, such as changing permissions
-                    for closed files. </li>
+                <li class="li">You can also use event records as dataflow triggers - to perform tasks like
+                    changing permissions for closed files, starting a MapReduce job, or stopping the
+                    pipeline.</li>
 
                 <li class="li">To trigger a task, connect the event stream to an executor stage.<p class="p">For a list
                         of logical event generation and executor pairings, see <a class="xref" href="EventFramework-Title.html#concept_scs_3hh_tx">Logical Pairings</a>.</p>

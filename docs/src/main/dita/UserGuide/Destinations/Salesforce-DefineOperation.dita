@@ -31,6 +31,7 @@
                             <li>2 for DELETE</li>
                             <li>3 for UPDATE</li>
                             <li>4 for UPSERT</li>
+                            <li>5 for unsupported operations</li>
                             <li>6 for UNDELETED</li>
                         </ul></dd>
                     <dd

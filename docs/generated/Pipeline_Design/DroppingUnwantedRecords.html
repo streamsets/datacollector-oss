@@ -35,16 +35,16 @@
 <div class="topic concept nested1" id="concept_dnj_bkm_vq">
  <h2 class="title topictitle2">Required Fields</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">A required field is a field that must exist in a record to allow it into the stage for
-        processing. When a record does not include a required field, the record is diverted to the
-        pipeline for error handling. You can define required fields for any processor and most
-        destination stages. </p>
+ <div class="body conbody">
+  <p class="p">A required field is a field that must
+      exist in a record to allow it into the stage for processing. When a record does not include
+      all required fields, it is processed based on the error handling configured for the pipeline.
+      You can define required fields for any processor, executor, and most destination stages. </p>
 
-  <p class="p">Configure required fields as part of the
-   overall pipeline logic or to minimize processing errors. For example, if a Field Hasher encodes
-   social security data in the /SSN field. To ensure all records include social security numbers,
-   you can make /SSN a required field for the stage.</p>
+    <p class="p">Configure required fields as part of the overall pipeline logic or to minimize processing
+      errors. For example, if a Field Hasher encodes social security data in the /SSN field. To
+      ensure all records include social security numbers, you can make /SSN a required field for the
+      stage.</p>
 
  </div>
 
@@ -52,15 +52,17 @@
 <div class="topic concept nested1" id="concept_msl_yd4_fs">
  <h2 class="title topictitle2">Preconditions</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">Preconditions are conditions that a record must satisfy to enter the stage for
-        processing. Like required fields, if a record does not meet a precondition, it is diverted
-        to the pipeline for error handling. You can define preconditions for any processor and most
-        destination stages. </p>
+  <div class="body conbody">
+     <p class="p">
+                   Preconditions are
+            conditions that a record must satisfy to enter the stage for processing. When you create
+            more than one precondition in a stage, a record must pass all conditions to enter the
+            stage. When a record does not meet all configured preconditions, it is processed based
+            on the error handling configured for the stage. </p>
 
-  <p class="p">When you create more than one
-      precondition in a stage, a record must pass all conditions to enter the stage. You can use
-      most functions, pipeline constants, and runtime properties in preconditions. </p>
+        <p class="p">You can define preconditions for any processor, executor, and most destination stages.
+            You can use most functions, pipeline constants, and runtime properties in preconditions. </p>
+
 
   <div class="p">Configure preconditions as part of the overall pipeline logic or to minimize processing errors.
             For example, you might use the following expression to exclude records that originate

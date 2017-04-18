@@ -37,11 +37,11 @@
                 </dlentry>
                 <dlentry>
                     <dt>HDFS File Metadata executor</dt>
-                    <dd>Creates a new empty file or changes the metadata for an existing file upon
-                        receiving an event. When creating a new file, the executor can specify the
-                        owner and group and set permissions and ACLs for the file. When changing
-                        file metadata, the executor can rename and move the file, specify the owner
-                        and group, and update permissions and ACLs for files. </dd>
+                    <dd>Creates an empty file or changes the metadata for an existing file upon
+                        receiving an event. When creating an empty file, the executor can specify
+                        the owner and group and set permissions and ACLs for the file. When changing
+                        file metadata, the executor can rename and move files in addition to
+                        specifying the owner and group, and updating permissions and ACLs for files. </dd>
                     <dd>You can use the executor in any logical way, but it is optimized to change
                         file metadata after receiving file closure events from the Hadoop FS, Local
                         FS, and MapR FS destinations. </dd>

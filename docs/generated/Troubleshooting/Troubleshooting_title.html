@@ -146,9 +146,11 @@
           <dt class="dt dlterm">Why doesn't the Select Fields with Preview Data option work? No preview data
             displays.</dt>
 
-          <dd class="dd">Select Fields with Preview Data works when the pipeline is valid for data preview.
-            Make sure all stages are connected. You might also need to enter temporary values for
-            required properties to enable data preview.</dd>
+          <dd class="dd">Select Fields with Preview Data works when the pipeline is valid for data preview and
+            when <span class="ph">Data
+                  Collector</span> is configured to run preview in the background. Make sure all stages are connected
+            and required properties are configured. Also verify that preview is running in the
+            background by clicking <span class="ph menucascade"><span class="ph uicontrol">Help</span> &gt; <span class="ph uicontrol"> Settings</span></span>.</dd>
 
         
         
@@ -156,8 +158,9 @@
             that?</dt>
 
           <dd class="dd">The pipeline can display a list of available fields when the pipeline is valid for
-            data preview. Make sure all stages are connected. You might also need to enter temporary
-            values for required properties to enable data preview.</dd>
+            data preview and when Data Collector is configured to run preview in the background.
+            Make sure all stages are connected and required properties are configured. Also verify
+            that preview is running in the background by clicking <span class="ph menucascade"><span class="ph uicontrol">Help</span> &gt; <span class="ph uicontrol"> Settings</span></span>.</dd>
 
         
         
@@ -355,29 +358,46 @@ name &lt;stage name&gt;, version &lt;version&gt;</pre>
 
 </div>
 <div class="topic concept nested2" id="concept_ggx_s23_ks">
- <h3 class="title topictitle3">JDBC</h3>
+ <h3 class="title topictitle3">JDBC Origins</h3>
 
  <div class="body conbody">
   <div class="p">
    <dl class="dl">
     
-     <dt class="dt dlterm">My MySQL JDBC Driver 5.0 fails to validate the query in my JBDC origin. </dt>
+     <dt class="dt dlterm">My MySQL JDBC Driver 5.0 fails to validate the query in my JBDC Query Consumer origin. </dt>
 
-     <dd class="dd">This can occur when you use a LIMIT clause in your query. Workaround: Upgrade to version
-      5.1.</dd>
+     <dd class="dd">This can occur when you use a LIMIT clause in your query. </dd>
+
+     <dd class="dd">Workaround: Upgrade to version 5.1.</dd>
 
     
     
-     <dt class="dt dlterm">I'm using the JDBC origin to read MySQL data. Why are datetime value set to zero being
+     <dt class="dt dlterm">I'm using a JDBC origin to read MySQL data. Why are datetime value set to zero being
       treated like error records?</dt>
 
-     <dd class="dd">MySQL treats invalid dates as an exception, so the JDBC origin creates error records for
-      invalid dates. You can override this behavior by setting a JDBC configuration property in the
-      JDBC origin. Add the <span class="ph uicontrol">zeroDateTimeBehavior</span> property and set the value to
-      "convertToNull".</dd>
+     <dd class="dd">MySQL treats invalid dates as an exception, so both the JDBC Query Consumer and the JDBC
+      Multitable Consumer create error records for invalid dates. </dd>
+
+     <dd class="dd">You can override this behavior by setting a JDBC configuration property in the origin. Add
+      the zeroDateTimeBehavior property and set the value to "convertToNull".</dd>
 
      <dd class="dd">For more information about this and other MySQL-specific JDBC configuration properties, see
        <a class="xref" href="http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html" target="_blank">http://dev.mysql.com/doc/connector-j/en/connector-j-reference-configuration-properties.html</a>.</dd>
+
+    
+    
+     <dt class="dt dlterm">A pipeline using the JDBC Query Consumer origin keeps stopping with the following
+      error:</dt>
+
+     <dd class="dd">
+      <pre class="pre codeblock">JDBC_77 &lt;db error message&gt; attempting to execute query '&lt;query&gt;'. Giving up 
+after &lt;error count&gt; errors as per stage configuration. First error: &lt;first db error&gt;.</pre>
+
+     </dd>
+
+     <dd class="dd">This occurs when the origin cannot successfully execute a query. To handle transient
+      connection or network errors, try increasing the value for the Number of Retries Upon Query
+      Error property on the JDBC tab of the origin. </dd>
 
     
    </dl>
@@ -507,7 +527,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested2" id="unique_881173052">
+<div class="topic concept nested2" id="unique_772472970">
  <h3 class="title topictitle3">Hadoop FS</h3>
 
  <div class="body conbody">
