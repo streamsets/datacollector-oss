@@ -297,10 +297,12 @@ export SDC_CONF=$CONF_DIR
 
 SDC_PROPERTIES=$SDC_CONF/sdc.properties
 if [ -f $SDC_PROPERTIES ]; then
+  # Default sdc.properties file (from the parcel)
+  SDC_PROP_FILE=$SDC_DIST/etc/sdc.properties
+
   # Propagate system white and black lists
   if ! grep -q "system.stagelibs.*list" $SDC_PROPERTIES; then
     echo "System white nor black list found in configuration"
-    SDC_PROP_FILE=$SDC_DIST/etc/sdc.properties
     if [ -f ${SDC_PROP_FILE} ]; then
       echo "Propagating default white and black list from parcel"
       line_nums=$(grep -n "system.stagelibs.*list" ${SDC_PROP_FILE} | cut -f1 -d:)
@@ -319,6 +321,11 @@ if [ -f $SDC_PROPERTIES ]; then
       echo "Parcel doesn't contain default configuration file, skipping white/black list propagation"
     fi
   fi
+
+  # Propagate alias configuration from the parcel. We don't offer safety valve for this one
+  # as it's extremely unlikely that someone would need to change those.
+  grep "^stage.alias.streamsets" $SDC_PROP_FILE >> $SDC_PROPERTIES
+  grep "^library.alias.streamsets" $SDC_PROP_FILE >> $SDC_PROPERTIES
 
   # Detect if this is a DPM enabled deployment
   if grep -q "dpm.enabled=true" $SDC_PROPERTIES; then
