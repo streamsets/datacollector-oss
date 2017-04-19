@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Licensed under the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+# Build and propagate change in sub-module of StreamSets Data collector
+#
+# 1) First run a full build of data collector (mvn install  -Pdist,ui -DskipTests)
+# 2) `cd` to desired maven module (must be a first-level module), for example hive-protolib
+#    and run this script.
+# 3) The script will build and then propagate the updated jar to all places in the dist/target/
+#    module so that you can run updated SDC from there.
+if [ ! -d ../dist/ ]; then
+	echo "Directory ../dist/ doesn't exists, running from the right sub-directory?"
+	return
+fi
+
+echo "Building the project"
+mvn install -Drelease -DskipTests
+if [ $? -ne 0 ]; then
+	echo "Build failed"
+	return
+fi
+
+jar=`find target -iname 'streamsets-datacollector-*.jar' -maxdepth 1 -not -iname '*-tests.jar' -exec basename {} \; `
+echo "Working on jar: $jar"
+count=0
+for target in `find ../dist/target -iname $jar`; do
+	echo "Replacing $target"
+	cp target/$jar $target
+	count=`expr $count + 1`
+done
+
+if [[ "$count" -eq 0 ]]; then
+	"Did not found the $jar inside release build, is the build correctly built?"
+	return
+fi
