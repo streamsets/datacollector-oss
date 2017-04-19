@@ -48,6 +48,7 @@ public class ProcessorRunner extends StageRunner<Processor> {
     boolean isPreview,
     OnRecordError onRecordError,
     Map<String, Object> constants,
+    Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir
@@ -61,6 +62,7 @@ public class ProcessorRunner extends StageRunner<Processor> {
       isPreview,
       onRecordError,
       constants,
+      stageSdcConf,
       executionMode,
       deliveryGuarantee,
       resourcesDir
@@ -74,6 +76,7 @@ public class ProcessorRunner extends StageRunner<Processor> {
     boolean isPreview,
     OnRecordError onRecordError,
     Map<String, Object> constants,
+    Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir
@@ -86,6 +89,7 @@ public class ProcessorRunner extends StageRunner<Processor> {
       isPreview,
       onRecordError,
       constants,
+      stageSdcConf,
       executionMode,
       deliveryGuarantee,
       resourcesDir
@@ -128,6 +132,7 @@ public class ProcessorRunner extends StageRunner<Processor> {
           isPreview,
           onRecordError,
           constants,
+          stageSdcConf,
           executionMode,
           deliveryGuarantee,
           resourcesDir
@@ -140,6 +145,7 @@ public class ProcessorRunner extends StageRunner<Processor> {
           isPreview,
           onRecordError,
           constants,
+          stageSdcConf,
           executionMode,
           deliveryGuarantee,
           resourcesDir

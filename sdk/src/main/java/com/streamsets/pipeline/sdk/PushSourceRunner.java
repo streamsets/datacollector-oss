@@ -58,6 +58,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
     boolean isPreview,
     OnRecordError onRecordError,
     Map<String, Object> constants,
+    Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir
@@ -70,6 +71,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
       isPreview,
       onRecordError,
       constants,
+      stageSdcConf,
       executionMode,
       deliveryGuarantee,
       resourcesDir
@@ -84,6 +86,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
     boolean isPreview,
     OnRecordError onRecordError,
     Map<String, Object> constants,
+    Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir
@@ -97,6 +100,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
       isPreview,
       onRecordError,
       constants,
+      stageSdcConf,
       executionMode,
       deliveryGuarantee,
       resourcesDir
@@ -242,6 +246,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
           isPreview,
           onRecordError,
           constants,
+          stageSdcConf,
           executionMode,
           deliveryGuarantee,
           resourcesDir
@@ -254,6 +259,7 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
           isPreview,
           onRecordError,
           constants,
+          stageSdcConf,
           executionMode,
           deliveryGuarantee,
           resourcesDir

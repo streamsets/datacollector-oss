@@ -40,17 +40,56 @@ public class TestStageRunner {
 
   public static class DummyStageRunner extends StageRunner<DummyStage> {
 
-    DummyStageRunner(Class<DummyStage> stageClass, Map<String, Object> configuration, List<String> outputLanes,
-        boolean isPreview, Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
-      super(stageClass, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR, constants,
-        executionMode, DeliveryGuarantee.AT_LEAST_ONCE, resourcesDir);
+    DummyStageRunner(
+      Class<DummyStage> stageClass,
+      Map<String, Object> configuration,
+      List<String> outputLanes,
+      boolean isPreview,
+      Map<String, Object> constants,
+      Map<String, String> stageSdcConf,
+      ExecutionMode executionMode,
+      String resourcesDir
+    ) {
+      super(
+        stageClass,
+        StageType.SOURCE,
+        configuration,
+        outputLanes,
+        isPreview,
+        OnRecordError.TO_ERROR,
+        constants,
+        stageSdcConf,
+        executionMode,
+        DeliveryGuarantee.AT_LEAST_ONCE,
+        resourcesDir
+      );
     }
 
-    DummyStageRunner(Class<DummyStage> stageClass, DummyStage stage, Map<String, Object> configuration,
-                     List<String> outputLanes, boolean isPreview, Map<String, Object> constants,
-                     ExecutionMode executionMode, String resourcesDir) {
-      super(stageClass, stage, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR,
-        constants, executionMode, DeliveryGuarantee.AT_LEAST_ONCE, resourcesDir);
+    DummyStageRunner(
+      Class<DummyStage> stageClass,
+      DummyStage stage,
+      Map<String, Object> configuration,
+      List<String> outputLanes,
+      boolean isPreview,
+      Map<String, Object> constants,
+      Map<String, String> stageSdcConf,
+      ExecutionMode executionMode,
+      String resourcesDir
+    ) {
+      super(
+        stageClass,
+        stage,
+        StageType.SOURCE,
+        configuration,
+        outputLanes,
+        isPreview,
+        OnRecordError.TO_ERROR,
+        constants,
+        stageSdcConf,
+        executionMode,
+        DeliveryGuarantee.AT_LEAST_ONCE,
+        resourcesDir
+      );
     }
 
     public static class Builder extends StageRunner.Builder<DummyStage, DummyStageRunner, Builder> {
@@ -67,9 +106,27 @@ public class TestStageRunner {
       @Override
       public DummyStageRunner build() {
         return (stage != null) ?
-          new DummyStageRunner(stageClass, stage, configs, outputLanes, isPreview, constants, executionMode,
-                               resourcesDir)
-          : new DummyStageRunner(stageClass, configs, outputLanes, isPreview, constants, executionMode, resourcesDir);
+          new DummyStageRunner(
+            stageClass,
+            stage,
+            configs,
+            outputLanes,
+            isPreview,
+            constants,
+            stageSdcConf,
+            executionMode,
+            resourcesDir
+          )
+          : new DummyStageRunner(
+            stageClass,
+            configs,
+            outputLanes,
+            isPreview,
+            constants,
+            stageSdcConf,
+            executionMode,
+            resourcesDir
+          );
       }
     }
   }

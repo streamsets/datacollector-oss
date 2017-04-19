@@ -47,6 +47,7 @@ public class TargetRunner extends StageRunner<Target> {
     boolean isPreview,
     OnRecordError onRecordError,
     Map<String, Object> constants,
+    Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir
@@ -60,6 +61,7 @@ public class TargetRunner extends StageRunner<Target> {
       isPreview,
       onRecordError,
       constants,
+      stageSdcConf,
       executionMode,
       deliveryGuarantee,
       resourcesDir
@@ -73,6 +75,7 @@ public class TargetRunner extends StageRunner<Target> {
     boolean isPreview,
     OnRecordError onRecordError,
     Map<String, Object> constants,
+    Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir
@@ -85,6 +88,7 @@ public class TargetRunner extends StageRunner<Target> {
       isPreview,
       onRecordError,
       constants,
+      stageSdcConf,
       executionMode,
       deliveryGuarantee,
       resourcesDir
@@ -121,6 +125,7 @@ public class TargetRunner extends StageRunner<Target> {
           isPreview,
           onRecordError,
           constants,
+          stageSdcConf,
           executionMode,
           deliveryGuarantee,
           resourcesDir
@@ -132,6 +137,7 @@ public class TargetRunner extends StageRunner<Target> {
           isPreview,
           onRecordError,
           constants,
+          stageSdcConf,
           executionMode,
           deliveryGuarantee,
           resourcesDir

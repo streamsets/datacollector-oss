@@ -58,6 +58,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public abstract class StageRunner<S extends Stage> {
@@ -220,6 +221,7 @@ public abstract class StageRunner<S extends Stage> {
     boolean isPreview,
     OnRecordError onRecordError,
     Map<String, Object> constants,
+    Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir
@@ -233,6 +235,7 @@ public abstract class StageRunner<S extends Stage> {
       isPreview,
       onRecordError,
       constants,
+      stageSdcConf,
       executionMode,
       deliveryGuarantee,
       resourcesDir
@@ -248,6 +251,7 @@ public abstract class StageRunner<S extends Stage> {
     boolean isPreview,
     OnRecordError onRecordError,
     Map<String, Object> constants,
+    Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
     String resourcesDir
@@ -272,6 +276,9 @@ public abstract class StageRunner<S extends Stage> {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    Configuration sdcConfiguration = new Configuration();
+    stageSdcConf.forEach((k, v) -> sdcConfiguration.set("stage.conf_" + k, v));
+
     context = new StageContext(
         instanceName,
         stageType,
@@ -285,7 +292,7 @@ public abstract class StageRunner<S extends Stage> {
         deliveryGuarantee,
         resourcesDir,
         new EmailSender(new Configuration()),
-        new Configuration()
+        sdcConfiguration
     );
     status = Status.CREATED;
   }
@@ -401,6 +408,7 @@ public abstract class StageRunner<S extends Stage> {
     final S stage;
     final Class<S> stageClass;
     final List<String> outputLanes;
+    final Map<String, String> stageSdcConf;
     final Map<String, Object> configs;
     final Map<String, Object> constants;
     boolean isPreview;
@@ -416,6 +424,7 @@ public abstract class StageRunner<S extends Stage> {
       configs = new HashMap<>();
       onRecordError = OnRecordError.STOP_PIPELINE;
       this.constants = new HashMap<>();
+      this.stageSdcConf = new HashMap<>();
     }
 
     @SuppressWarnings("unchecked")
@@ -458,6 +467,12 @@ public abstract class StageRunner<S extends Stage> {
     @SuppressWarnings("unchecked")
     public B addConfiguration(String name, Object value) {
       configs.put(Utils.checkNotNull(name, "name"), value);
+      return (B) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public B addStageSdcConfiguration(String name, String value) {
+      stageSdcConf.put(Utils.checkNotNull(name, "name"), value);
       return (B) this;
     }
 
