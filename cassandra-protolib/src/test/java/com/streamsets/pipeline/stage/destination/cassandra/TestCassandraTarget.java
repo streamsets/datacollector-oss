@@ -80,7 +80,6 @@ public class TestCassandraTarget {
 
   @AfterClass
   public static void tearDownClass() {
-    EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
     session.close();
     cluster.close();
   }

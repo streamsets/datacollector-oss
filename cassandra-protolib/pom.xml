@@ -96,10 +96,6 @@
           <groupId>com.datastax.cassandra</groupId>
           <artifactId>cassandra-driver-extras</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-handler</artifactId>
-        </exclusion>
       </exclusions>
       <scope>test</scope>
     </dependency>
