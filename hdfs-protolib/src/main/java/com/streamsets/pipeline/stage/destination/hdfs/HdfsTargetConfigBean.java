@@ -750,7 +750,7 @@ public class HdfsTargetConfigBean {
           });
         }
       } catch (Exception ex) {
-        LOG.error(Errors.HADOOPFS_59.getMessage(), ex);
+        LOG.error(Errors.HADOOPFS_59.getMessage(), ex.toString(), ex);
         issues.add(
             context.createConfigIssue(
               Groups.OUTPUT_FILES.name(),
