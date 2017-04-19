@@ -546,6 +546,8 @@ public abstract class ConfigDefinitionExtractor {
         return "text/x-scala";
       case SQL:
         return "text/x-sql";
+      case SHELL:
+        return "text/x-sh";
       default:
         return null;
     }

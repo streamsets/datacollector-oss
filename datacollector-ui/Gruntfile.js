@@ -123,6 +123,7 @@ module.exports = function(grunt) {
         'bower_components/codemirror/mode/groovy/groovy.js',
         'bower_components/codemirror/mode/javascript/javascript.js',
         'bower_components/codemirror/mode/properties/properties.js',
+        'bower_components/codemirror/mode/shell/shell.js',
         'bower_components/codemirror/mode/sql/sql.js',
         'bower_components/codemirror/mode/xml/xml.js',
         'bower_components/codemirror/addon/edit/closebrackets.js',
