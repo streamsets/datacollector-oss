@@ -322,8 +322,9 @@ public class RecordWriterManager {
       globPath = globPath.replace(matcher.group(), "*");
     }
     globPath = globPath.replaceAll("\\*+", "*");
-    globPath = globPath + TMP_FILE_PREFIX + uniquePrefix + "*";
+    globPath = globPath + "/" + TMP_FILE_PREFIX + uniquePrefix + "*";
 
+    LOG.info("Created the following glob path for file recovery: {}", globPath);
     FileStatus[] fileStatuses = fs.globStatus(new Path(globPath));
     for (FileStatus fileStatus : fileStatuses) {
       fsHelper.handleAlreadyExistingFile(fs, fileStatus.getPath());
