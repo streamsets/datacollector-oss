@@ -245,10 +245,11 @@
                                 the processor runs once when the pipeline stops. Use a destroy
                                 script to close any connections or resources opened by the
                                 processor.</p></li>
-                        <li>JDBC Lookup enhancement - Default value date formats. When the default
-                            value data type is Date, use the following format: yyyy/MM/dd . When the
-                            default value data type is Datetime, use the following format:
-                            yyyy/MM/dd HH:mm:ss.</li>
+                        <li><xref href="../Processors/JDBCLookup-Configuring.dita#task_kbr_2cy_hw"
+                                >JDBC Lookup enhancement</xref> - Default value date formats. When
+                            the default value data type is Date, use the following format:
+                            yyyy/MM/dd . When the default value data type is Datetime, use the
+                            following format: yyyy/MM/dd HH:mm:ss.</li>
                         <li><xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht">Record
                                 Deduplicator processor enhancement</xref> - The processor can now
                             deduplicate records across all pipeline runners in a multithreaded
