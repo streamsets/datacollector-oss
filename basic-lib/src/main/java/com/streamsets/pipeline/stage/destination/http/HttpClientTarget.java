@@ -111,8 +111,7 @@ public class HttpClientTarget extends BaseTarget {
 
         if (method == HttpMethod.POST || method == HttpMethod.PUT) {
           StreamingOutput streamingOutput = outputStream -> {
-            try {
-              DataGenerator dataGenerator = generatorFactory.getGenerator(outputStream);
+            try (DataGenerator dataGenerator = generatorFactory.getGenerator(outputStream)) {
               Iterator<Record> records = batch.getRecords();
               while (records.hasNext()) {
                 Record record = records.next();
@@ -167,8 +166,7 @@ public class HttpClientTarget extends BaseTarget {
       try {
         if (method == HttpMethod.POST || method == HttpMethod.PUT) {
           StreamingOutput streamingOutput = outputStream -> {
-            try {
-              DataGenerator dataGenerator = generatorFactory.getGenerator(outputStream);
+            try (DataGenerator dataGenerator = generatorFactory.getGenerator(outputStream)) {
               dataGenerator.write(record);
               dataGenerator.flush();
             } catch (DataGeneratorException e) {

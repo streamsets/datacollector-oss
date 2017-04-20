@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.http.AbstractHttpStageTest;
 import com.streamsets.pipeline.lib.http.HttpCompressionType;
 import com.streamsets.pipeline.lib.http.HttpConstants;
@@ -264,5 +265,41 @@ public class TestHttpClientTarget extends AbstractHttpStageTest {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  public HttpClientTargetConfig getJsonArrayConf(String url) {
+    HttpClientTargetConfig conf = new HttpClientTargetConfig();
+    conf.httpMethod = HttpMethod.POST;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    conf.dataGeneratorFormatConfig.jsonMode = JsonMode.ARRAY_OBJECTS;
+    conf.resourceUrl = url;
+    return conf;
+  }
+
+  @Test
+  public void testJSONArraryOfObjectsReqPerBatch() throws Exception {
+    HttpClientTargetConfig config = getJsonArrayConf(server.getURI().toString());
+    config.singleRequestPerBatch = true;
+    serverRequested = false;
+    requestPayload = null;
+    returnErrorResponse = false;
+    testHttpTarget(config);
+    Assert.assertTrue(serverRequested);
+    Assert.assertNotNull(requestPayload);
+    Assert.assertTrue(requestPayload.contains("[\"a\",\"b\"]"));
+  }
+
+  @Test
+  public void testJSONArraryOfObjectsReqPerRecord() throws Exception {
+    HttpClientTargetConfig config = getJsonArrayConf(server.getURI().toString());
+    config.singleRequestPerBatch = false;
+    serverRequested = false;
+    requestPayload = null;
+    returnErrorResponse = false;
+    testHttpTarget(config);
+    Assert.assertTrue(serverRequested);
+    Assert.assertNotNull(requestPayload);
+    Assert.assertTrue(requestPayload.contains("[\"a\"]") || requestPayload.contains("[\"b\"]"));
   }
 }
