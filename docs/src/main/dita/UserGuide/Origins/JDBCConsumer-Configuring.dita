@@ -146,12 +146,14 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Number of Retries on Query Error</entry>
+                                    <entry>Number of Retries on SQL Error</entry>
                                     <entry>Number of times the origin tries to execute the query
-                                        before causing the pipeline to stop and transition to a
-                                        Run_Error state. <p>Use to handle transient network or
-                                            connection issues that prevent the origin from
-                                            submitting a query.</p><p>Default is 0. </p></entry>
+                                        after receiving an SQL error. After retrying this number of
+                                        times, the origin handles the error based on the error
+                                        handling configured for the origin.<p>Use to handle
+                                            transient network or connection issues that prevent the
+                                            origin from submitting a query.</p><p>Default is 0.
+                                        </p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCAddtitionalProps_row">
