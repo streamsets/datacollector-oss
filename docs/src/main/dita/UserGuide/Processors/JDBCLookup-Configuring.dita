@@ -77,11 +77,14 @@
                                                   existing field or a new field. If the field does
                                                   not exist, JDBC Lookup creates the field. </li>
                                                 <li>Default Value - Optional default value to use
-                                                  when the query does not return a value for the
-                                                  field. If the query returns no value and this
+                                                  when the query does not return a value for the field. If the query returns no value and this
                                                   property is not defined, the processor sends the
-                                                  record to error.</li>
-                                                <li>Data Type - Data type to use for SDC Field.
+                                                  record to error.<p>To enter a default value for
+                                                  the Date data type, use the following format:
+                                                  yyyy/MM/dd. To enter a default value for the
+                                                  Datetime data type, use the following format:
+                                                  yyyy/MM/dd HH:mm:ss.</p></li>
+                                                <li>Data Type - Data type to use for the SDC Field.
                                                   Required when you specify a default value. The
                                                   processor uses the database column data type by
                                                   default. </li>
