@@ -142,6 +142,7 @@
          <li>pipeline:id()</li>
          <li>pipeline:name()</li>
          <li>pipeline:title()</li>
+         <li>pipeline:user()</li>
          <li>pipeline:version()</li>
         </ul>
        </entry>
@@ -154,6 +155,8 @@
           <li>str:concat(&lt;string1>, &lt;string2>)</li>
           <li>str:contains(&lt;string>, &lt;subset>) </li>
           <li>str:endsWith(&lt;string>, &lt;subset>)</li>
+          <li>str:escapeXML10(&lt;string>)</li>
+          <li>str:escapeXML11(&lt;string>)</li>
           <li>str:length(&lt;string>)</li>
           <li>str:matches(&lt;string>, &lt;regEx>)</li>
           <li>str:regexCapture(&lt;string>, &lt;regEx>, &lt;group>)</li>
@@ -165,6 +168,7 @@
           <li>str:toUpper(&lt;string>)</li>
           <li>str:trim(&lt;string>)</li>
           <li>str:truncate(&lt;string>, &lt;length>)</li>
+          <li>str:unescapeXML(&lt;string>)</li>
           <li>str:urlDecode(&lt;URL>, &lt;charset>)</li>
           <li>str:urlEncode(&lt;infoforURL>, &lt;charset>)</li>
          </ul>

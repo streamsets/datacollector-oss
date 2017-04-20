@@ -59,6 +59,11 @@
                 <dd>Return type: String.</dd>
             </dlentry>
             <dlentry>
+                <dt>pipeline:user()</dt>
+                <dd>Returns the user who started the pipeline. </dd>
+                <dd>Return type: String.</dd>
+            </dlentry>
+            <dlentry>
                 <dt>pipeline:version()</dt>
                 <dd>Returns the pipeline version when the pipeline has been published to <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
