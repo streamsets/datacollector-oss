@@ -33,14 +33,6 @@ import static org.junit.Assert.assertTrue;
 public class TestSupportBundleContentGeneratorProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(TestSupportBundleContentGeneratorProcessor.class);
 
-  @BundleContentGeneratorDef(
-    name = "Test",
-    description = "Still testing",
-    version = 666
-  )
-  private static class CustomGenerator {
-  }
-
   @Test
   public void testSerializingCustomGenerator() throws Exception {
     InputStream generatorResource = Thread.currentThread().getContextClassLoader().getResourceAsStream(SupportBundleContentGeneratorProcessor.RESOURCE_NAME);
@@ -51,7 +43,7 @@ public class TestSupportBundleContentGeneratorProcessor {
     boolean found = false;
     while((className = reader.readLine()) != null) {
       LOG.debug("Found class: " + className);
-      if(className.equals("com.streamsets.datacollector.bundles.TestSupportBundleContentGeneratorProcessor.CustomGenerator")) {
+      if(className.equals("com.streamsets.datacollector.bundles.content.SimpleGenerator")) {
         found = true;
         break;
       }
