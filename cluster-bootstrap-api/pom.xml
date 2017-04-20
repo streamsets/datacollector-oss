@@ -50,6 +50,11 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-container-common</artifactId>
+      <scope>test</scope> <!-- DO NOT CHANGE, tests which require this should be moved to integration tests -->
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-container</artifactId>
       <scope>test</scope> <!-- DO NOT CHANGE, tests which require this should be moved to integration tests -->
     </dependency>
