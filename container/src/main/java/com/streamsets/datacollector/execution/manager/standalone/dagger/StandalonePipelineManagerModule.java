@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.execution.manager.standalone.dagger;
 
+import com.streamsets.datacollector.bundles.SupportBundleModule;
 import com.streamsets.datacollector.execution.executor.ExecutorModule;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.preview.common.dagger.PreviewerProviderModule;
@@ -33,10 +34,18 @@ import dagger.Module;
 /**
  * Provides a singleton instance of Manager.
  */
-@Module(library = true, injects = {StandaloneAndClusterPipelineManager.class},
-    includes = {CachePipelineStateStoreModule.class, CachePipelineStoreModule.class, CacheAclStoreModule.class,
-        ExecutorModule.class, PreviewerProviderModule.class, StandaloneAndClusterRunnerProviderModule.class,
-        CacheSnapshotStoreModule.class
+@Module(
+  library = true,
+  injects = {StandaloneAndClusterPipelineManager.class},
+  includes = {
+    CachePipelineStateStoreModule.class,
+    CachePipelineStoreModule.class,
+    CacheAclStoreModule.class,
+    ExecutorModule.class,
+    PreviewerProviderModule.class,
+    StandaloneAndClusterRunnerProviderModule.class,
+    CacheSnapshotStoreModule.class,
+    SupportBundleModule.class
 })
 public class StandalonePipelineManagerModule {
 

@@ -20,12 +20,15 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
+import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
 import com.streamsets.datacollector.restapi.bean.MultiStatusResponseJson;
+import com.streamsets.datacollector.restapi.bean.SupportBundleContentDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AuthzRole;
@@ -53,6 +56,7 @@ import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -86,12 +90,19 @@ public class AdminResource {
   private final RuntimeInfo runtimeInfo;
   private final Configuration config;
   private final UserGroupManager userGroupManager;
+  private final SupportBundleManager supportBundleManager;
 
   @Inject
-  public AdminResource(RuntimeInfo runtimeInfo, Configuration config, UserGroupManager userGroupManager) {
+  public AdminResource(
+    RuntimeInfo runtimeInfo,
+    Configuration config,
+    UserGroupManager userGroupManager,
+    SupportBundleManager supportBundleManager
+  ) {
     this.runtimeInfo = runtimeInfo;
     this.config = config;
     this.userGroupManager = userGroupManager;
+    this.supportBundleManager = supportBundleManager;
   }
 
   @POST
@@ -574,6 +585,44 @@ public class AdminResource {
   })
   public Response getGroups() throws IOException {
     return Response.ok(userGroupManager.getGroups()).build();
+  }
+
+  @GET
+  @Path("/support/bundles")
+  @ApiOperation(
+      value = "Return list of available content generators for support bundles.",
+      response = SupportBundleContentDefinitionJson.class,
+      responseContainer = "List",
+      authorizations = @Authorization(value = "basic")
+  )
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response getSupportBundlesContentGenerators() throws IOException {
+    return Response.ok(BeanHelper.wrapSupportBundleDefinitions(supportBundleManager.getContentDefinitions())).build();
+  }
+
+  @POST
+  @Path("/support/bundles")
+  @ApiOperation(
+      value = "Generates a new support bundle.",
+      response = Object.class,
+      authorizations = @Authorization(value = "basic")
+  )
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces("application/octet-stream")
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response createSupportBundlesContentGenerators(List<String> generators) throws IOException {
+    return Response
+      .ok()
+      .header("content-disposition", "attachment; filename=\"support_bundle.zip\"")
+      .entity(supportBundleManager.generateNewBundle(generators))
+      .build();
   }
 
 }

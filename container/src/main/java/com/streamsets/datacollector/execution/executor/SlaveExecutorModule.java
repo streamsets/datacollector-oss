@@ -56,6 +56,14 @@ public class SlaveExecutorModule {
 
   @Provides
   @Singleton
+  @Named("supportBundleExecutor")
+  public SafeScheduledExecutorService provideSupportBundleExecutor(Configuration configuration) {
+    // Harcoding a single executor for generating support bundle at this time
+    return new SafeScheduledExecutorService(1, "supportBundleExecutor");
+  }
+
+  @Provides
+  @Singleton
   ResourceManager provideResourceManager(Configuration configuration) {
     return new ResourceManager(configuration);
   }

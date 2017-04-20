@@ -21,6 +21,7 @@ package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -36,6 +37,7 @@ import com.streamsets.datacollector.restapi.configuration.RestAPIResourceConfig;
 import com.streamsets.datacollector.restapi.configuration.RuntimeInfoInjector;
 import com.streamsets.datacollector.restapi.configuration.StageLibraryInjector;
 import com.streamsets.datacollector.restapi.configuration.StandAndClusterManagerInjector;
+import com.streamsets.datacollector.restapi.configuration.SupportBundleInjector;
 import com.streamsets.datacollector.restapi.configuration.UserGroupManagerInjector;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -278,6 +280,16 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(AclStoreInjector.ACL_STORE, aclStore);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideSupportBundleManager(final SupportBundleManager supportBundleManager) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(SupportBundleInjector.SUPPORT_BUNDLE_MANAGER, supportBundleManager);
       }
     };
   }

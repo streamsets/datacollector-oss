@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.streamsets.datacollector.bundles.BundleContentGeneratorDefinition;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.DataRuleDefinition;
@@ -55,6 +56,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1241,5 +1243,13 @@ public class BeanHelper {
       recordJsonList.add(new SampledRecordJson(sampledRecord));
     }
     return recordJsonList;
+  }
+
+  public static List<SupportBundleContentDefinitionJson> wrapSupportBundleDefinitions(Collection<BundleContentGeneratorDefinition> definitions) {
+    List<SupportBundleContentDefinitionJson> json = new ArrayList<>(definitions.size());
+    for(BundleContentGeneratorDefinition def : definitions) {
+      json.add(new SupportBundleContentDefinitionJson(def));
+    }
+    return json;
   }
 }

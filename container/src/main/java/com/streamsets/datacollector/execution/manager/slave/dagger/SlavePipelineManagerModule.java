@@ -32,9 +32,17 @@ import dagger.Module;
 /**
  * Provides a singleton instance of Manager.
  */
-@Module(library = true, injects = {SlavePipelineManager.class},
-  includes = {SlavePipelineStateStoreModule.class, SlavePipelineStoreModule.class, SlaveAclStoreModule.class,
-      SlaveExecutorModule.class, SlaveRunnerProviderModule.class, SlaveCacheSnapshotStoreModule.class})
+@Module(
+  library = true,
+  injects = {SlavePipelineManager.class},
+  includes = {
+    SlavePipelineStateStoreModule.class,
+    SlavePipelineStoreModule.class,
+    SlaveAclStoreModule.class,
+    SlaveExecutorModule.class,
+    SlaveRunnerProviderModule.class,
+    SlaveCacheSnapshotStoreModule.class
+})
 public class SlavePipelineManagerModule {
 
 }

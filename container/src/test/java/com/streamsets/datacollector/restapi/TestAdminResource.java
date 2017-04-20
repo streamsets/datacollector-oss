@@ -20,10 +20,14 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.bundles.SupportBundleManager;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
+import com.streamsets.datacollector.restapi.configuration.SupportBundleInjector;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -40,6 +44,8 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+
+import static org.mockito.Mockito.mock;
 
 public class TestAdminResource extends JerseyTest {
 
@@ -104,6 +110,7 @@ public class TestAdminResource extends JerseyTest {
       bindFactory(RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
       bindFactory(ConfigurationTestInjector.class).to(Configuration.class);
       bindFactory(UserGroupManagerTestInjector.class).to(UserGroupManager.class);
+      bindFactory(SupportBundleTestInjector.class).to(SupportBundleManager.class);
     }
   }
 
@@ -118,7 +125,7 @@ public class TestAdminResource extends JerseyTest {
       confDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
       confDir.mkdirs();
       Assert.assertTrue("Could not create: " + confDir, confDir.isDirectory());
-      RuntimeInfo mock = Mockito.mock(RuntimeInfo.class);
+      RuntimeInfo mock = mock(RuntimeInfo.class);
       Mockito.when(mock.getConfigDir()).thenReturn(confDir.getAbsolutePath());
       return mock;
     }
@@ -134,7 +141,7 @@ public class TestAdminResource extends JerseyTest {
     @Singleton
     @Override
     public Configuration provide() {
-      Configuration configuration = Mockito.mock(Configuration.class);
+      Configuration configuration = mock(Configuration.class);
       return configuration;
     }
 
@@ -148,7 +155,7 @@ public class TestAdminResource extends JerseyTest {
     @Singleton
     @Override
     public UserGroupManager provide() {
-      UserGroupManager userGroupManager = Mockito.mock(UserGroupManager.class);
+      UserGroupManager userGroupManager = mock(UserGroupManager.class);
       return userGroupManager;
     }
 
@@ -156,6 +163,22 @@ public class TestAdminResource extends JerseyTest {
     public void dispose(UserGroupManager userGroupManager) {
     }
 
+  }
+
+
+  public static class SupportBundleTestInjector implements Factory<SupportBundleManager> {
+    @Singleton
+    @Override
+    public SupportBundleManager provide() {
+      SafeScheduledExecutorService service = mock(SafeScheduledExecutorService.class);
+      RuntimeInfo runtimeInfo = mock(RuntimeInfo.class);
+      BuildInfo buildInfo = mock(BuildInfo.class);
+      return new SupportBundleManager(service, runtimeInfo, buildInfo);
+    }
+
+    @Override
+    public void dispose(SupportBundleManager manager) {
+    }
   }
 }
 
