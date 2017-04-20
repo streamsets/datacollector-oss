@@ -26,11 +26,12 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 
 interface OutputStreamHelper {
   final static String TMP_FILE_PREFIX = "_tmp_";
-  ADLFileOutputStream getOutputStream(String filePath)
+  OutputStream getOutputStream(String filePath)
       throws StageException, IOException;
   String getTempFilePath(String dirPath, Record record, Date recordTime) throws ELEvalException;
   void commitFile(String dirPath) throws IOException;

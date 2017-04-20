@@ -39,6 +39,7 @@ public class RecordWriterTestBuilder {
   boolean rollIfHeader;
   String rollHeaderName;
   long maxRecordsPerFile;
+  long maxFileSize;
   WholeFileExistsAction wholeFileExistsAction;
   String authTokenEndpoint;
   String clientId;
@@ -56,6 +57,7 @@ public class RecordWriterTestBuilder {
     this.rollIfHeader = false;
     this.rollHeaderName = "";
     this.maxRecordsPerFile = 1000;
+    this.maxFileSize = 0;
     this.wholeFileExistsAction = WholeFileExistsAction.OVERWRITE;
     this.authTokenEndpoint = "";
     this.clientId = "";
@@ -107,6 +109,7 @@ public class RecordWriterTestBuilder {
         rollIfHeader,
         rollHeaderName,
         maxRecordsPerFile,
+        maxFileSize,
         wholeFileExistsAction,
         authTokenEndpoint,
         clientId,

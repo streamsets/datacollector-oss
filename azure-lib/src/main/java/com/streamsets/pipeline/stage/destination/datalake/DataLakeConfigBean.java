@@ -181,6 +181,20 @@ public class DataLakeConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Max File Size (MB)",
+      description = "Exceeding this size triggers the creation of a new file. Use 0 to opt out.",
+      displayPosition = 136,
+      group = "OUTPUT",
+      min = 0,
+      dependsOn = "dataFormat",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
+  )
+  public long maxFileSize;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "${1 * HOURS}",
       label = "Idle Timeout",
@@ -188,7 +202,7 @@ public class DataLakeConfigBean {
           " specified time, the destination closes the file. Enter a number to specify a value in seconds. You" +
           " can also use the MINUTES or HOURS constants in an expression. Use -1 to opt out of a timeout.",
       group = "OUTPUT",
-      displayPosition = 136,
+      displayPosition = 137,
       elDefs = {TimeEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependsOn = "dataFormat",
@@ -202,7 +216,7 @@ public class DataLakeConfigBean {
       defaultValue = "false",
       label = "Use Roll Attribute",
       description = "Closes the current file and creates a new file when processing a record with the specified roll attribute",
-      displayPosition = 137,
+      displayPosition = 138,
       group = "OUTPUT"
   )
   public boolean rollIfHeader;
@@ -213,7 +227,7 @@ public class DataLakeConfigBean {
       defaultValue = "roll",
       label = "Roll Attribute Name",
       description = "Name of the roll attribute",
-      displayPosition = 137,
+      displayPosition = 138,
       group = "OUTPUT",
       dependsOn = "rollIfHeader",
       triggeredByValue = "true"

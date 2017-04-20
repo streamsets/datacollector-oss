@@ -63,6 +63,8 @@ import java.util.concurrent.Future;
 
 public class DataLakeTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(DataLakeTarget.class);
+  private static final int MEGA_BYTE = 1024 * 1024;
+
   private final DataLakeConfigBean conf;
   private final int threadPoolSize = 1;
   private static final String EL_PREFIX = "${";
@@ -203,6 +205,7 @@ public class DataLakeTarget extends BaseTarget {
           conf.rollIfHeader,
           conf.rollHeaderName,
           conf.maxRecordsPerFile,
+          conf.maxFileSize * MEGA_BYTE,
           conf.dataFormatConfig.wholeFileExistsAction,
           conf.authTokenEndpoint,
           conf.clientId,

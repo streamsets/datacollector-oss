@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.stage.destination.datalake.IdleClosedException;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import org.apache.commons.io.output.CountingOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,8 @@ public class DataLakeDataGenerator {
   private long idleTimeSecs = -1L;
   private boolean idleClosed = false;
   private Future<Void> currentIdleCloseFuture = null;
+
+  private CountingOutputStream textOutputStream;
 
   private ScheduledThreadPoolExecutor idleCloseExecutor = new ScheduledThreadPoolExecutor(
       1,

@@ -69,6 +69,7 @@ public class RecordWriter {
   private final boolean rollIfHeader;
   private final String rollHeaderName;
   private final long maxRecordsPerFile;
+  private final long maxFileSize;
   private final WholeFileExistsAction wholeFileExistsAction;
   private final OutputStreamHelper outputStreamHelper;
   private final String authTokenEndpoint;
@@ -88,6 +89,7 @@ public class RecordWriter {
       boolean rollIfHeader,
       String rollHeaderName,
       long maxRecordsPerFile,
+      long maxFileSize,
       WholeFileExistsAction wholeFileExistsAction,
       String authTokenEndpoint,
       String clientId,
@@ -111,6 +113,7 @@ public class RecordWriter {
     this.rollIfHeader = rollIfHeader;
     this.rollHeaderName = rollHeaderName;
     this.maxRecordsPerFile = maxRecordsPerFile;
+    this.maxFileSize = maxFileSize;
     this.wholeFileExistsAction = wholeFileExistsAction;
     this.authTokenEndpoint = authTokenEndpoint;
     this.clientId = clientId;
@@ -225,7 +228,8 @@ public class RecordWriter {
           uniquePrefix,
           fileNameSuffix,
           uniqueId,
-          maxRecordsPerFile
+          maxRecordsPerFile,
+          maxFileSize
       );
     } else {
       return new WholeFileFormatOutputStreamHandler(

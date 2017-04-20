@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.io.output.CountingOutputStream;
 
 import java.io.IOException;
 import java.util.Date;
@@ -42,15 +43,18 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
   private final String fileNameSuffix;
   private final Map<String, Long> filePathCount;
   private final long maxRecordsPerFile;
+  private final long maxFileSize;
   private final String tempFileName;
   private final String uniqueId;
+  private CountingOutputStream countingOutputStream;
 
   public DefaultOutputStreamHandler(
       ADLStoreClient client,
       String uniquePrefix,
       String fileNameSuffix,
       String uniqueId,
-      long maxRecordsPerFile
+      long maxRecordsPerFile,
+      long maxFileSize
   ) {
     filePathCount = new HashMap<>();
     this.client = client;
@@ -58,11 +62,12 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
     this.fileNameSuffix = fileNameSuffix;
     this.uniqueId = uniqueId;
     this.maxRecordsPerFile = maxRecordsPerFile;
+    this.maxFileSize = maxFileSize;
     this.tempFileName = TMP_FILE_PREFIX + uniquePrefix + "-" + uniqueId + getExtention();
   }
 
   @Override
-  public ADLFileOutputStream getOutputStream(String filePath)
+  public CountingOutputStream getOutputStream(String filePath)
       throws StageException, IOException {
     ADLFileOutputStream stream;
     if (!client.checkExists(filePath)) {
@@ -70,7 +75,10 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
     } else {
       stream = client.getAppendStream(filePath);
     }
-    return stream;
+
+    countingOutputStream = new CountingOutputStream(stream);
+
+    return countingOutputStream;
   }
 
   @Override
@@ -96,18 +104,24 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
 
   @Override
   public boolean shouldRoll(String dirPath) {
-    if (maxRecordsPerFile <= 0) {
+    if (maxRecordsPerFile <= 0 && maxFileSize <= 0) {
       return false;
     }
 
     Long count = filePathCount.get(dirPath);
+    long size = countingOutputStream.getByteCount();
 
     if (count == null) {
       filePathCount.put(dirPath, 1L);
       return false;
     }
 
-    if (count >= maxRecordsPerFile) {
+    if (maxRecordsPerFile > 0 && count >= maxRecordsPerFile) {
+      filePathCount.put(dirPath, 1L);
+      return true;
+    }
+
+    if (maxFileSize > 0 && size >= maxFileSize) {
       filePathCount.put(dirPath, 1L);
       return true;
     }
