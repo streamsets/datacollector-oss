@@ -1,0 +1,153 @@
+/**
+ * Copyright 2017 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.datacollector.bundles.content;
+
+import com.streamsets.datacollector.bundles.BundleContentGenerator;
+import com.streamsets.datacollector.bundles.BundleContentGeneratorDef;
+import com.streamsets.datacollector.bundles.BundleContext;
+import com.streamsets.datacollector.bundles.BundleWriter;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Properties;
+
+@BundleContentGeneratorDef(
+  name = "SDC Info",
+  description = "Various information about SDC itself. Precise build information, configuration, thread dump...",
+  version = 1,
+  enabledByDefault = true
+)
+public class SdcInfoContentGenerator implements BundleContentGenerator {
+  private static final String FILE = "F";
+  private static final String DIR = "D";
+
+  @Override
+  public void generateContent(BundleContext context, BundleWriter writer) throws IOException {
+    // Various properties
+    writeProperties(context.getBuildInfo().getInfo(), "build.properties", writer);
+    writeProperties(System.getProperties(), "system.properties", writer);
+
+    // Interesting directory listings
+    listDirectory(context.getRuntimeInfo().getConfigDir(), "conf.txt", writer);
+    listDirectory(context.getRuntimeInfo().getResourcesDir(), "resource.txt", writer);
+    listDirectory(context.getRuntimeInfo().getDataDir(), "data.txt", writer);
+    listDirectory(context.getRuntimeInfo().getLogDir(), "log.txt", writer);
+    listDirectory(context.getRuntimeInfo().getLibsExtraDir(), "lib_extra.txt", writer);
+    listDirectory(context.getRuntimeInfo().getRuntimeDir() + "/streamsets-libs/", "stagelibs.txt", writer);
+
+    // Interesting files
+    writeFile(context.getRuntimeInfo().getConfigDir() + "/sdc.properties", "conf", writer);
+    writeFile(context.getRuntimeInfo().getConfigDir() + "/sdc-log4j.properties", "conf", writer);
+    writeFile(context.getRuntimeInfo().getConfigDir() + "/dpm.properties", "conf", writer);
+    writeFile(context.getRuntimeInfo().getConfigDir() + "/ldap-login.conf", "conf", writer);
+    writeFile(context.getRuntimeInfo().getConfigDir() + "/sdc-security.policy", "conf", writer);
+    writeFile(context.getRuntimeInfo().getLibexecDir() + "/sdc-env.sh", "libexec", writer);
+    writeFile(context.getRuntimeInfo().getLibexecDir() + "/sdcd-env.sh", "libexec", writer);
+
+    // Thread dump
+    threadDump(writer);
+  }
+
+  private void writeFile(String path, String dir, BundleWriter writer) throws IOException {
+    File file = new File(path);
+    if(!file.exists()) {
+      return;
+    }
+
+    writer.markStartOfFile(dir + "/" + file.getName());
+    writer.writeFile(file);
+    writer.markEndOfFile();
+  }
+
+  public void threadDump(BundleWriter writer) throws IOException {
+    writer.markStartOfFile("runtime/threads.txt");
+
+    ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+    ThreadInfo[] threads = threadMXBean.dumpAllThreads(true, true);
+
+    for(ThreadInfo info: threads) {
+      writer.write(info.toString());
+    }
+
+    writer.markEndOfFile();
+  }
+
+  private void writeProperties(Properties properties, String name, BundleWriter writer) throws IOException {
+    writer.markStartOfFile("properties/" + name);
+    properties.store(writer, "");
+    writer.markEndOfFile();
+  }
+
+  private void listDirectory(String configDir, String name, BundleWriter writer) throws IOException {
+    writer.markStartOfFile("dir_listing/" + name);
+    Path prefix = Paths.get(configDir);
+
+    Files.walkFileTree(Paths.get(configDir), new FileVisitor<Path>() {
+      @Override
+      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+        printFile(dir, prefix, DIR, writer);
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        printFile(file, prefix, FILE, writer);
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+        return FileVisitResult.CONTINUE;
+      }
+
+      @Override
+      public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        return FileVisitResult.CONTINUE;
+      }
+    });
+    writer.markEndOfFile();
+  }
+
+  private void printFile(Path path, Path prefix, String type, BundleWriter writer) throws IOException {
+    writer.write(type);
+    writer.write(";");
+    writer.write(prefix.relativize(path).toString());
+    writer.write(";");
+    writer.write(Files.getOwner(path).getName());
+    writer.write(";");
+    if("F".equals(type)) {
+      writer.write(String.valueOf(Files.size(path)));
+    }
+    writer.write(";");
+    writer.write(StringUtils.join(Files.getPosixFilePermissions(path), ","));
+    writer.write("\n");
+  }
+
+}

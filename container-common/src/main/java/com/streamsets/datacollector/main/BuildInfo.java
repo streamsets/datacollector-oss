@@ -50,7 +50,7 @@ public abstract class BuildInfo {
     return props;
   }
 
-  protected Properties getInfo() {
+  public Properties getInfo() {
     return info;
   }
 
