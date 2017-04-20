@@ -4430,8 +4430,9 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
             </step>
             <step id="CSDInstallRestart">
                 <cmd>Use one of the following commands to restart Cloudera Manager Server:</cmd>
-                <info><p>For Ubuntu and CentOS 6:
-                        <codeblock>service cloudera-scm-server restart</codeblock></p>For CentOS 7:
+                <info><p>For Ubuntu 14.04, CentOS 6, or RedHat Enterprise Linux 6:
+                        <codeblock>service cloudera-scm-server restart</codeblock></p>For Ubuntu
+                    16.04, CentOS 7, or RedHat Enterprise Linux 7:
                     <codeblock>systemctl restart cloudera-scm-server</codeblock></info>
             </step>
             <step id="CSDInstallRestartService">
