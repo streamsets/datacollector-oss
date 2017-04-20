@@ -162,9 +162,39 @@
                                     <entry/>
                                 </row>
                                 <row>
+                                    <entry>Number of Retries on SQL Error</entry>
+                                    <entry>Number of times a thread tries to read a batch of data
+                                        after receiving an SQL error. After a thread retries this
+                                        number of times, the thread handles the error based on the
+                                        error handling configured for the origin.<p>Use to handle
+                                            transient network or connection issues that prevent a
+                                            thread from reading a batch of data.</p><p>Default is 0.
+                                        </p></entry>
+                                </row>
+                                <row>
                                     <entry>Data Time Zone</entry>
                                     <entry>Time zone to use to evaluate datetime-based offset column
                                         conditions. </entry>
+                                </row>
+                                <row>
+                                    <entry>Quote Character</entry>
+                                    <entry>Quote character to use around schema, table, and column
+                                        names in the query. Select the character used by the
+                                        database to allow for lower case, mixed-case, or special
+                                        characters in schema, table, or column names:<ul
+                                            id="ul_xrg_53s_pz">
+                                            <li>None - Uses no character around names in the query.
+                                                For example: <codeph>select * from mySchema.myTable
+                                                  order by myOffsetColumn</codeph>.</li>
+                                            <li>Backtick - Uses a backtick around names in the
+                                                query. For example: <codeph>select * from
+                                                  `mySchema`.`myTable` order by
+                                                  `myOffsetColumn`</codeph>.</li>
+                                            <li>Double Quotes - Uses double quotes around names in
+                                                the query. For example: <codeph>select * from
+                                                  "mySchema"."myTable" order by
+                                                  "myOffsetColumn"</codeph>.</li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Fetch Size</entry>

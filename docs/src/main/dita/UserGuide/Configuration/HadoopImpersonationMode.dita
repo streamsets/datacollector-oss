@@ -39,11 +39,11 @@
                 impersonation. </note></p>
         <p>You can configure <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            only use the currenty logged in <ph
+            only use the currently logged in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             user by enabling the stage.conf_hadoop.always.impersonate.current.user property in the
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> configuration file. When enabled, configuring a  user within a stage is not allowed. </p>
+            /> configuration file. When enabled, configuring a user within a stage is not allowed. </p>
         <p>Configure <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             always impersonate as the currently logged in <ph
