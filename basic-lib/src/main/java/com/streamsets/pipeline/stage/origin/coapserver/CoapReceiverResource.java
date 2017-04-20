@@ -58,11 +58,20 @@ public class CoapReceiverResource extends CoapResource {
 
   @Override
   public void handleGET(CoapExchange exchange) {
-    exchange.respond(CoAP.ResponseCode.VALID);
+    handle(exchange);
   }
 
   @Override
   public void handlePOST(CoapExchange exchange) {
+    handle(exchange);
+  }
+
+  @Override
+  public void handlePUT(CoapExchange exchange) {
+    handle(exchange);
+  }
+
+  public void handle(CoapExchange exchange) {
     if (shuttingDown) {
       LOG.debug("Shutting down, discarding incoming request from '{}'", exchange.getSourceAddress());
       exchange.respond(CoAP.ResponseCode.SERVICE_UNAVAILABLE);
@@ -72,8 +81,10 @@ public class CoapReceiverResource extends CoapResource {
       try {
         receiver.process(exchange.getRequestPayload());
         exchange.respond(CoAP.ResponseCode.VALID);
+        exchange.accept();
         requestMeter.mark();
       } catch (IOException ex) {
+        exchange.reject();
         errorQueue.offer(ex);
         errorRequestMeter.mark();
       } finally {

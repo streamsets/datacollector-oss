@@ -1,7 +1,7 @@
 /*
  * Copyright 2017 StreamSets Inc.
  *
- * Licensed under the Apache Software Foundation (ASF) under one
+ * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -17,32 +17,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.coap;
+package com.streamsets.pipeline.stage.destination.coap;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  COAP_00("Error sending resource. Status: {} Reason: {}"),
-  COAP_01("Error sending resource. Reason: {}"),
-  COAP_02("Error sending resource. Reason: Request timed out or has been rejected by the server"),
-  COAP_03("Invalid Resource URL. Reason : {}"),
+public enum RequestType implements Label {
+  CONFIRMABLE("Confirmable"),
+  NONCONFIRMABLE("NonConfirmable"),
   ;
 
-  private final String msg;
-  Errors(String msg) {
-    this.msg = msg;
+  private final String label;
+
+  RequestType(String label) {
+    this.label = label;
   }
 
   @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
+  public String getLabel() {
+    return label;
   }
 
 }

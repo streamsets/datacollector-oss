@@ -25,10 +25,10 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.generator.DataGenerator;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.coap.Errors;
 import com.streamsets.pipeline.lib.coap.Groups;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.http.HttpClientCommon;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -48,9 +48,11 @@ import java.util.List;
 public class CoapClientTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(CoapClientTarget.class);
+  private static final String CONF_RESOURCE_URL = "conf.resourceUrl";
   private final CoapClientTargetConfig conf;
   private DataGeneratorFactory generatorFactory;
   private ErrorRecordHandler errorRecordHandler;
+  private CoapClient coapClient;
 
   CoapClientTarget(CoapClientTargetConfig conf) {
     this.conf = conf;
@@ -69,6 +71,24 @@ public class CoapClientTarget extends BaseTarget {
           issues
       );
       generatorFactory = conf.dataGeneratorFormatConfig.getDataGeneratorFactory();
+      try {
+        coapClient = getCoapClient();
+        if (!coapClient.ping()) {
+          issues.add(getContext().createConfigIssue(
+              Groups.COAP.toString(),
+              CONF_RESOURCE_URL,
+              Errors.COAP_03,
+              "Ping to CoAP URL failed"
+          ));
+        }
+      } catch (URISyntaxException e) {
+        issues.add(getContext().createConfigIssue(
+            Groups.COAP.toString(),
+            CONF_RESOURCE_URL,
+            Errors.COAP_03,
+            e.getMessage())
+        );
+      }
     }
     return issues;
   }
@@ -79,10 +99,9 @@ public class CoapClientTarget extends BaseTarget {
     while (records.hasNext()) {
       Record record = records.next();
       CoapResponse response = null;
-      HttpMethod method = conf.httpMethod;
+      HttpMethod method = conf.coapMethod;
       int contentType = getContentType();
       try {
-        CoapClient coapClient = getCoapClient();
         if (method == HttpMethod.POST || method == HttpMethod.PUT) {
           ByteArrayOutputStream byteBufferOutputStream = new ByteArrayOutputStream();
           try (DataGenerator dataGenerator = generatorFactory.getGenerator(byteBufferOutputStream)) {
@@ -94,9 +113,9 @@ public class CoapClientTarget extends BaseTarget {
               response = coapClient.post(byteBufferOutputStream.toByteArray(), contentType);
             }
           }
-        } else if (method == HttpMethod.GET ){
+        } else if (method == HttpMethod.GET ) {
           response = coapClient.get();
-        } else if (method == HttpMethod.DELETE ){
+        } else if (method == HttpMethod.DELETE ) {
           response = coapClient.delete();
         }
 
@@ -129,6 +148,11 @@ public class CoapClientTarget extends BaseTarget {
     URI coapURI = new URI(conf.resourceUrl);
     CoapClient coapClient = new CoapClient(coapURI);
     coapClient.setTimeout(conf.connectTimeoutMillis);
+    if (conf.requestType == RequestType.NONCONFIRMABLE) {
+      coapClient.useNONs();
+    } else if (conf.requestType == RequestType.CONFIRMABLE) {
+      coapClient.useCONs();
+    }
     // TODO: coaps (DTLS Support) - https://issues.streamsets.com/browse/SDC-5893
     return coapClient;
   }

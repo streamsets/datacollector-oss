@@ -74,7 +74,7 @@ public class TestCoapClientTarget {
   public CoapClientTargetConfig getConf(String url) {
     CoapClientTargetConfig conf = new CoapClientTargetConfig();
     conf.resourceUrl = url;
-    conf.httpMethod = HttpMethod.POST;
+    conf.coapMethod = HttpMethod.POST;
     conf.dataFormat = DataFormat.TEXT;
     conf.dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     conf.dataGeneratorFormatConfig.textFieldPath = "/";

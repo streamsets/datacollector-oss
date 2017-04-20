@@ -22,6 +22,9 @@ package com.streamsets.pipeline.stage.origin.coapserver;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.VaultEL;
 
+import java.util.Collections;
+import java.util.Map;
+
 public class CoapServerConfigs {
 
   @ConfigDef(
@@ -62,5 +65,15 @@ public class CoapServerConfigs {
       group = "COAP"
   )
   public String resourceName;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = "Network Configuration",
+      description = "Additional network configuration properties. Values here override default values.",
+      displayPosition = 30,
+      group = "COAP"
+  )
+  public Map<String, Object> networkConfigs = Collections.emptyMap();
 
 }

@@ -45,7 +45,13 @@ public class CoapReceiverServer {
 
   public List<Stage.ConfigIssue> init(Stage.Context context) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
-    coapServer = new CoapServer(NetworkConfig.createStandardWithoutFile(), coAPServerConfigs.port);
+    NetworkConfig networkConfig = NetworkConfig.createStandardWithoutFile();
+    if (coAPServerConfigs.networkConfigs != null) {
+      for (String key: coAPServerConfigs.networkConfigs.keySet()) {
+        networkConfig.set(key, coAPServerConfigs.networkConfigs.get(key));
+      }
+    }
+    coapServer = new CoapServer(networkConfig, coAPServerConfigs.port);
     coapReceiverResource = new CoapReceiverResource(context, receiver, errorQueue);
     coapServer.add(coapReceiverResource);
     coapServer.start();

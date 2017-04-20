@@ -27,7 +27,6 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.stage.destination.http.DataFormatChooserValues;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
-import com.streamsets.pipeline.stage.processor.http.HttpMethodChooserValues;
 
 /**
  * Bean specifying the configuration for an CoapClientTarget instance.
@@ -72,8 +71,20 @@ public class CoapClientTargetConfig {
       displayPosition = 70,
       group = "COAP"
   )
-  @ValueChooserModel(HttpMethodChooserValues.class)
-  public HttpMethod httpMethod = HttpMethod.POST;
+  @ValueChooserModel(CoapMethodChooserValues.class)
+  public HttpMethod coapMethod = HttpMethod.POST;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Request Type",
+      defaultValue = "NONCONFIRMABLE",
+      description = "Specify the type of requests.",
+      displayPosition = 80,
+      group = "COAP"
+  )
+  @ValueChooserModel(RequestTypeChooserValues.class)
+  public RequestType requestType = RequestType.NONCONFIRMABLE;
 
   @ConfigDef(
       required = true,
@@ -81,9 +92,10 @@ public class CoapClientTargetConfig {
       label = "Connect Timeout",
       defaultValue = "2000",
       description = "CoAP connection timeout in milliseconds. 0 means no timeout.",
-      displayPosition = 80,
+      displayPosition = 90,
       group = "COAP"
   )
   public int connectTimeoutMillis = 2000;
+
 
 }
