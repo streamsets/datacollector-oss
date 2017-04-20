@@ -57,6 +57,28 @@
           <dd>For example, ${str:endsWith("32403-1001", "1001")} returns: true.</dd>
         </dlentry>
         <dlentry>
+          <dt>str:escapeXML10(&lt;string>)</dt>
+          <dd>Returns a string that you can embed in an XML 1.0 or 1.1 document. </dd>
+          <dd>Uses the following argument: <ul id="ul_e4m_kbb_qz">
+              <li>string - The string to escape.</li>
+            </ul></dd>
+          <dd>Return type: String.</dd>
+          <dd>For example, you can use the following expression to generate XML-safe string data
+            based on the XML in the XMLdata field: <codeph>
+              ${str:escapeXML10(record:value('/XMLdata'))}</codeph></dd>
+        </dlentry>
+        <dlentry>
+          <dt>str:escapeXML11(&lt;string>)</dt>
+          <dd>Returns a string that you can embed in an XML 1.1 document.</dd>
+          <dd>Uses the following argument: <ul id="ul_ewf_5bb_qz">
+              <li>string - The string to escape.</li>
+            </ul></dd>
+          <dd>Return type: String.</dd>
+          <dd>For example, you can use the following expression to generate XML-safe string data
+            based on the XML in the XMLdata field: <codeph>
+              ${str:escapeXML11(record:value('/XMLdata'))}</codeph></dd>
+        </dlentry>
+        <dlentry>
           <dt>str:length(&lt;string>)</dt>
           <dd>Returns the length of a string.</dd>
           <dd>Return type: Integer.</dd>
@@ -166,6 +188,16 @@
             ${str:truncate(record:value('/phone'),3)} returns the area code of the phone
             number.</dd>
     </dlentry>
+        <dlentry>
+          <dt>str:unescapeXML</dt>
+          <dd>Returns an unescaped string from a string that had XML data escaped.</dd>
+          <dd>Uses the following argument:<ul id="ul_stl_xcb_qz">
+              <li>string - The string that includes escaped XML data.</li>
+            </ul></dd>
+          <dd>For example, say you have escaped XML data  embedded within an XML document in an
+            additionalXML field. The following expression unescapes the XML:
+              <codeph>${str:unescapeXML(record:value('/additionalXML'))}</codeph></dd>
+        </dlentry>
         <dlentry>
           <dt>str:urlDecode(&lt;URL>, &lt;charset>)</dt>
           <dd>Converts characters from a URL to the specified character set, such as UTF-8. </dd>
