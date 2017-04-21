@@ -27,6 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 public class LookupUtils {
   private static final Logger LOG = LoggerFactory.getLogger(LookupUtils.class);
 
@@ -45,8 +48,18 @@ public class LookupUtils {
       conf.maxSize = Long.MAX_VALUE;
     }
 
+    // recordStats is available only in Guava 12.0 and above, but
+    // CDH still uses guava 11.0. Hence the reflection.
     if(LOG.isDebugEnabled()) {
-      cacheBuilder.recordStats();
+      try {
+        Method m = CacheBuilder.class.getMethod("recordStats");
+        if (m != null) {
+          m.invoke(cacheBuilder);
+        }
+      } catch (NoSuchMethodException|IllegalAccessException|InvocationTargetException e) {
+        // We're intentionally ignoring any reflection errors as we might be running
+        // with old guava on class path.
+      }
     }
 
     // CacheBuilder doesn't support specifying type thus suffers from erasure, so
