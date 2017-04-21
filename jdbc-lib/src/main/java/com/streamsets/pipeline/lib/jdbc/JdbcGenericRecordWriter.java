@@ -141,11 +141,12 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
               opCode,
               columnsToParameters
           );
+
+          setParameters(opCode, columnsToParameters, record, connection, statement);
+          statement.addBatch();
           if (!statementsToExecute.contains(statement)) {
             statementsToExecute.add(statement);
           }
-          setParameters(opCode, columnsToParameters, record, connection, statement);
-          statement.addBatch();
           if (LOG.isDebugEnabled()) {
             LOG.debug("Bound Query: {}", statement.toString());
           }
