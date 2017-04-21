@@ -39,6 +39,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MongoDBConfig {
 
@@ -429,8 +430,8 @@ public class MongoDBConfig {
     MongoClient mongoClient = null;
     List<MongoCredential> credentials = createCredentials();
 
-    if (credentials.size() < 1) {
-      credentials.add(mongoURI.getCredentials());
+    if (credentials.isEmpty()) {
+      Optional.ofNullable(mongoURI.getCredentials()).ifPresent(credentials::add);
     }
 
     try {
