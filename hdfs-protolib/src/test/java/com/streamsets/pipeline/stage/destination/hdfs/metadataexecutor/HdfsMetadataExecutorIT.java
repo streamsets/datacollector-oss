@@ -256,7 +256,6 @@ public class HdfsMetadataExecutorIT {
       .put("group", Field.create(Field.Type.STRING, "empire"))
       .put("perms_octal", Field.create(Field.Type.STRING, "777"))
       .put("perms_unix", Field.create(Field.Type.STRING, "rwxrwx---"))
-      .put("perms_string", Field.create(Field.Type.STRING, "a-rwx"))
       .put("acls", Field.create(Field.Type.STRING, "user::rwx,group::r--,other::---,user:sith:rw-"))
       .build()
     ));
@@ -442,31 +441,6 @@ public class HdfsMetadataExecutorIT {
 
     assertFile(inputPath, CONTENT);
     assertPermissions(inputPath, "770");
-  }
-
-  @Test
-  public void testSetPermissionsString() throws Exception {
-    HdfsConnectionConfig conn = new HdfsConnectionConfig();
-    conn.hdfsConfDir = confDir;
-
-    HdfsActionsConfig actions = new HdfsActionsConfig();
-    actions.filePath = "${record:value('/path')}";
-    actions.shouldSetPermissions = true;
-    actions.newPermissions = "${record:value('/perms_string')}";
-
-    HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
-
-    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
-      .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .build();
-    runner.runInit();
-
-    runner.runWrite(ImmutableList.of(getTestRecord()));
-    assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), inputPath);
-    runner.runDestroy();
-
-    assertFile(inputPath, CONTENT);
-    assertPermissions(inputPath, "777");
   }
 
   @Test

@@ -79,7 +79,7 @@ public abstract class BaseHiveIT {
   private static final String HIVE_JDBC_DRIVER = "org.apache.hive.jdbc.HiveDriver";
 
   private static int MINICLUSTER_BOOT_RETRY = Integer.getInteger("basehiveit.boot.retry", 5);
-  private static int MINICLUSTER_BOOT_SLEEP = Integer.getInteger("basehiveit.boot.sleep", 1000);
+  private static int MINICLUSTER_BOOT_SLEEP = Integer.getInteger("basehiveit.boot.sleep", 5000);
 
   // Mini cluster instances
   private static String confDir = "target/" + UUID.randomUUID().toString();

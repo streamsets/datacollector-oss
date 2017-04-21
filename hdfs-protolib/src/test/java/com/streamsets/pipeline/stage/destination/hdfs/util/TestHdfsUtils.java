@@ -31,11 +31,14 @@ public class TestHdfsUtils {
   public void testParseFsPermission() {
     FsPermission permission;
 
-    // HDFS format
-    permission = HdfsUtils.parseFsPermission("a-rwx");
+    /*
+    // Not testing string constants as they behave differently in different Hadoop versions
+    permission = HdfsUtils.parseFsPermission("a-rwx"); // Pre HADOOP-13508
+    permission = HdfsUtils.parseFsPermission("a=rwx"); // Post HADOOP-13508
     assertEquals(FsAction.ALL, permission.getUserAction());
     assertEquals(FsAction.ALL, permission.getGroupAction());
     assertEquals(FsAction.ALL, permission.getOtherAction());
+    */
 
     // Octal format
     permission = HdfsUtils.parseFsPermission("770");
