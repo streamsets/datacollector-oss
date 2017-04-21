@@ -138,6 +138,16 @@ public class MqttClientConfigBean {
   )
   public String password;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use TLS",
+      displayPosition = 80,
+      group = "MQTT"
+  )
+  public boolean tlsEnabled;
+
   @ConfigDefBean(groups = "TLS")
   public TlsConfigBean tlsConfig = new TlsConfigBean(TlsConnectionType.NEITHER);
 

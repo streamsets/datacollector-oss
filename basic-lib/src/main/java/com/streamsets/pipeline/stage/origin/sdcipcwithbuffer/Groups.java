@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   RPC("RPC"),
   ADVANCED("ADVANCED"),
+  TLS("TLS"),
   ;
 
   private final String label;

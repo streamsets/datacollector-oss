@@ -50,7 +50,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 @GenerateResourceBundle
 public class WebSocketServerDPushSource extends DPushSource {
 
-  @ConfigDefBean(groups = "WEB_SOCKET")
+  @ConfigDefBean
   public WebSocketConfigs webSocketConfigs;
 
   @ConfigDef(

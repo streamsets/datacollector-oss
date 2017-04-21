@@ -51,7 +51,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 @GenerateResourceBundle
 public class HttpServerDPushSource extends DPushSource {
 
-  @ConfigDefBean(groups = "HTTP")
+  @ConfigDefBean
   public RawHttpConfigs httpConfigs;
 
   @ConfigDef(

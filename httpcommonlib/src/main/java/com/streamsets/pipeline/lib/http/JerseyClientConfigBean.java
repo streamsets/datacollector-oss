@@ -140,6 +140,16 @@ public class JerseyClientConfigBean {
   )
   public boolean useProxy = false;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use HTTPS",
+      displayPosition = 170,
+      group = "HTTP"
+  )
+  public boolean tlsEnabled;
+
   @ConfigDefBean(groups = "PROXY")
   public HttpProxyConfigBean proxy = new HttpProxyConfigBean();
 

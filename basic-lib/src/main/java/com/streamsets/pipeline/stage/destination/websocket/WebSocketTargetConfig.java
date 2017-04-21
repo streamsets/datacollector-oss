@@ -77,6 +77,16 @@ public class WebSocketTargetConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use TLS",
+      displayPosition = 80,
+      group = "WEB_SOCKET"
+  )
+  public boolean tlsEnabled;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Maximum Request Time (sec)",
       defaultValue = "60",

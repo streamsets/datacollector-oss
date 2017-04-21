@@ -33,7 +33,6 @@ public class Configs extends HttpConfigs {
 
   private static final String CONFIG_PREFIX = "config.";
   private static final String PORT = CONFIG_PREFIX + "port";
-  private static final String KEY_STORE_FILE = CONFIG_PREFIX + "keyStoreFile";
 
   @ConfigDefBean(groups = "TLS")
   public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.SERVER);

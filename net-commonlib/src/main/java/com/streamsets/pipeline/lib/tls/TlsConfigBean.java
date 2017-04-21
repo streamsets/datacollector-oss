@@ -68,6 +68,10 @@ public class TlsConfigBean {
 
   private static final Logger LOGGER = Logger.getLogger(TlsConfigBean.class);
 
+  public TlsConfigBean() {
+    this(TlsConnectionType.NEITHER);
+  }
+
   public TlsConfigBean(TlsConnectionType connectionType) {
     switch (connectionType) {
       case NEITHER:

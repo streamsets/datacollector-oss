@@ -44,15 +44,14 @@ public class TlsConfigBeanUpgradeUtil {
     for (Config config : configs) {
       if (newKeyStorePath.equals(config.getName())) {
         hasKeyStore = !Strings.isNullOrEmpty((String) config.getValue());
-        break;
       } else if (newTrustStorePath.equals(config.getName())) {
         hasTrustStore = !Strings.isNullOrEmpty((String) config.getValue());
-        break;
       }
     }
 
     configs.add(new Config(configPrefix + "tlsConfig.hasTrustStore", hasTrustStore));
     configs.add(new Config(configPrefix + "tlsConfig.hasKeyStore", hasKeyStore));
+    configs.add(new Config(configPrefix + "tlsEnabled", hasTrustStore || hasKeyStore));
   }
 
   public static void upgradeRawKeyStoreConfigsToTlsConfigBean(

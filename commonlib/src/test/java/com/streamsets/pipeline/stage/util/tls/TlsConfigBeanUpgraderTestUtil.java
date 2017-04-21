@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.util.tls;
 
+import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -37,15 +38,21 @@ public abstract class TlsConfigBeanUpgraderTestUtil {
   )
       throws StageException {
     List<Config> configs = new ArrayList<>();
+
+    final String trustStoreFile = "/path/to/truststore";
+    final String trustStorePassword = null;
+    final String keyStoreFile = "/path/to/keystore";
+    final String keyStorePassword = "keyStorePassword";
+
     final String oldTrustStoreFile = confPrefix + "sslConfig.trustStorePath";
     final String oldTrustStorePW = confPrefix + "sslConfig.trustStorePassword";
     final String oldKeyStoreFile = confPrefix + "sslConfig.keyStorePath";
     final String oldKeyStorePW = confPrefix + "sslConfig.keyStorePassword";
 
-    configs.add(new Config(oldTrustStoreFile, "/path/to/truststore"));
-    configs.add(new Config(oldTrustStorePW, null));
-    configs.add(new Config(oldKeyStoreFile, "/path/to/keystore"));
-    configs.add(new Config(oldKeyStorePW, "keyStorePassword"));
+    configs.add(new Config(oldTrustStoreFile, trustStoreFile));
+    configs.add(new Config(oldTrustStorePW, trustStorePassword));
+    configs.add(new Config(oldKeyStoreFile, keyStoreFile));
+    configs.add(new Config(oldKeyStorePW, keyStorePassword));
 
     UpgraderTestUtils.UpgradeMoveWatcher watcher = UpgraderTestUtils.snapshot(configs);
 
@@ -59,13 +66,18 @@ public abstract class TlsConfigBeanUpgraderTestUtil {
         oldKeyStorePW, confPrefix + "tlsConfig.keyStorePassword"
     );
 
+    boolean tlsEnabledSeen = false;
     for (Config config : configs) {
-      if ((confPrefix+".tlsConfig.hasKeyStore").equals(config.getName())) {
-        Assert.assertEquals(true, config.getValue());
-      } else if ((confPrefix+".tlsConfig.hasTrustStore").equals(config.getName())) {
-        Assert.assertEquals(true, config.getValue());
+      final String name = config.getName();
+      if ((confPrefix+"tlsConfig.hasKeyStore").equals(name)) {
+        Assert.assertEquals(!Strings.isNullOrEmpty(keyStoreFile), config.getValue());
+      } else if ((confPrefix+"tlsConfig.hasTrustStore").equals(name)) {
+        Assert.assertEquals(!Strings.isNullOrEmpty(trustStoreFile), config.getValue());
+      } else if ((confPrefix+"tlsEnabled").equals(name)) {
+        tlsEnabledSeen = true;
       }
     }
+    Assert.assertTrue("tlsEnabled property not seen on parent bean of tlsConfig", tlsEnabledSeen);
   }
 
   public static void testRawKeyStoreConfigsToTlsConfigBeanUpgrade(
