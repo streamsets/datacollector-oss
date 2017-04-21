@@ -46,7 +46,7 @@ public class ShellConfig {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.NUMBER,
+    type = ConfigDef.Type.STRING,
     label = "Timeout (ms)",
     defaultValue = "1000",
     description = "How long will the script be allowed to run. The time is in milliseconds.",
