@@ -35,6 +35,7 @@ import com.streamsets.pipeline.stage.processor.kv.LookupMode;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.testcontainers.containers.GenericContainer;
@@ -55,6 +56,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@Ignore
 public class RedisLookupIT {
   private static final int REDIS_PORT = 6379;
   private Processor.Context context;
