@@ -174,23 +174,23 @@ public class SolrTarget extends BaseTarget {
               ex
           ));
         }
+      }
+    }
 
-        if (atLeastOne) {
-          try {
-            if (ProcessingMode.BATCH.equals(indexingMode)) {
-              sdcSolrTarget.add(batchFieldMap);
-            }
-            sdcSolrTarget.commit();
-          } catch (StageException ex) {
-            try {
-              if (instanceType != InstanceTypeOptions.SOLR_CLOUD) {
-                sdcSolrTarget.rollback();
-              }
-              errorRecordHandler.onError(recordsBackup, ex);
-            } catch (StageException ex2) {
-              errorRecordHandler.onError(recordsBackup, ex2);
-            }
+    if (atLeastOne) {
+      try {
+        if (ProcessingMode.BATCH.equals(indexingMode)) {
+          sdcSolrTarget.add(batchFieldMap);
+        }
+        sdcSolrTarget.commit();
+      } catch (StageException ex) {
+        try {
+          if (instanceType != InstanceTypeOptions.SOLR_CLOUD) {
+            sdcSolrTarget.rollback();
           }
+          errorRecordHandler.onError(recordsBackup, ex);
+        } catch (StageException ex2) {
+          errorRecordHandler.onError(recordsBackup, ex2);
         }
       }
     }
