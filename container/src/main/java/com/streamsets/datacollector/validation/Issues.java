@@ -60,15 +60,19 @@ public class Issues implements Serializable {
       pipeline.add(issue);
     } else {
       Map<String, Issue> stageIssues = stages.computeIfAbsent(instance, k -> new LinkedHashMap<>());
-      String errorCode = issue.getErrorCode();
+      String key = deDupKey(issue);
 
       // De-duplicate the same error codes by increasing their count
-      if(stageIssues.containsKey(errorCode)) {
-        stageIssues.get(errorCode).incCount();
+      if(stageIssues.containsKey(key)) {
+        stageIssues.get(key).incCount();
       } else {
-        stageIssues.put(errorCode, issue);
+        stageIssues.put(key, issue);
       }
     }
+  }
+
+  private String deDupKey(Issue issue) {
+    return issue.getErrorCode() + issue.getConfigGroup() + issue.getConfigName();
   }
 
   public List<Issue> getIssues() {
