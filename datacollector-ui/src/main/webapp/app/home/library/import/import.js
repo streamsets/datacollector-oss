@@ -188,7 +188,11 @@ angular
 
 
 
-
+    $scope.$watch('uploadFile', function (newValue) {
+      if (newValue && newValue.name && !$scope.newConfig.title) {
+        $scope.newConfig.title = newValue.name.replace('.json', '');
+      }
+    });
 
 
   });
