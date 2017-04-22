@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.destination.coap;
 
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -118,7 +119,13 @@ public class TestCoapClientTarget {
   @Test
   public void testInvalidURL() throws Exception {
     CoapClientTargetConfig config = getConf("coap://localhost:3434/fdfd");
-    testErrorHandling(config);
+    CoapClientTarget target = new CoapClientTarget(config);
+    TargetRunner runner = new TargetRunner.Builder(CoapClientDTarget.class, target)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    Assert.assertFalse(issues.isEmpty());
+    Assert.assertEquals(1, issues.size());
   }
 
   @Test
