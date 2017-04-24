@@ -116,6 +116,8 @@
     <topicref href="../Pipeline_Design/XMLDF-NodePredicates.dita"/>
     <topicref href="../Pipeline_Design/XMLDF-PredicateExamples.dita"/>
    </topicref>
+   <topicref href="../Pipeline_Design/XMLDF-FieldXPathExp.dita"/>
+   <topicref href="../Pipeline_Design/XMLDF-OutputFAttributes.dita"/>
    <topicref href="../Pipeline_Design/XMLDF-Record.dita"/>
   </topicref>
   <topicref href="../Pipeline_Design/ControlCharacters.dita">

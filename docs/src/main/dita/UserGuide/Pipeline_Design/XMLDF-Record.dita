@@ -41,7 +41,7 @@
             you can use a wildcard to represent the second level <codeph>info</codeph> element, as
             follows:<codeblock>/root/*/sale</codeblock></p>
         <p>Then, you define both namespaces in the origin. </p>
-        <p>When processing the XML document, <ph
+        <p>When processing the XML document using default XML properties, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             produces two records, as shown in the following data preview of the origin:</p>
         <p><image href="../Graphics/XML-records.png" id="image_hqj_s13_2y" scale="60"/></p>

@@ -20,7 +20,9 @@
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Azure
                     Data Lake Store</indexterm></indexterm>The Azure Data Lake Store destination
             writes data to the Microsoft Azure Data Lake Store. You can use the Azure Data Lake
-            Store destination in standalone and cluster batch pipelines at this time.</p>
+            Store destination in standalone and cluster batch pipelines. The destination supports
+            connecting to Azure Data Lake Store using Azure AD Service Identity authentication.
+            Azure AD User Identity authentication is not supported at this time.</p>
         <p>Before you use the destination, you must perform some prerequisite tasks.</p>
         <p>When you configure the Azure Data Lake Store destination, you specify connection
             information such as the Client ID and fully qualified domain name (FQDN) for the

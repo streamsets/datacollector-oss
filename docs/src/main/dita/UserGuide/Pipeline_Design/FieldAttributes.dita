@@ -27,13 +27,10 @@
         <p>For example, you can use an Expression Evaluator to create a field attribute based on
             record data, then pass the record to a Stream Selector that routes data based on the
             value of the attribute. </p>
-        <p>Field attributes are included in records written to destination systems only when you use
-            the SDC RPC data format in the destination. </p>
-        <p>To include field attributes in the record data or to use field attributes in
-            calculations, use the <codeph>record:fieldAttribute</codeph> and
-                <codeph>record:fieldAttributeOrDefault</codeph> functions. For more information
-            about field attribute functions,  see <xref
-                href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"/>.</p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldAtts-SDCRecord"
+            /></p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-FieldAtts-Include"/>
         <p>When using data preview, you can enable viewing field attributes and record header
             attributes to aid with pipeline development.</p>
  </conbody>

@@ -345,10 +345,14 @@
                 <dt>Functions</dt>
                 <dd>
                     <ul id="ul_ayq_pzm_pz">
-                        <li>New escape XML functions - Three new string functions enable you to
-                            escape and unescape XML.</li>
-                        <li>New pipeline user function - A new pipeline user function enables you to
-                            determine the user who started the pipeline. </li>
+                        <li><xref
+                                href="../Expression_Language/StringFunctions.dita#concept_ahp_f4v_1r"
+                                >New escape XML functions</xref> - Three new string functions enable
+                            you to escape and unescape XML.</li>
+                        <li><xref
+                                href="../Expression_Language/PipelineFunctions.dita#concept_dvg_nqn_wx"
+                                >New pipeline user function</xref> - A new pipeline user function
+                            enables you to determine the user who started the pipeline. </li>
                         <li>New function to generate UUIDs - A new string function that enables you
                             generate UUIDs.</li>
                         <li><xref
@@ -391,10 +395,14 @@
                                 href="../Upgrade/PostUpgrade-Preconditions.dita#concept_gk3_s5l_nz"
                                 >Evaluate Precondition Error Handling</xref> for information about
                             upgrading.</li>
-                        <li>XML parsing enhancement - A new Output Field Attributes property allows
-                            you to include XPath, namespace, and attribute information for each
-                            field as field attributes rather than including them in the record as
-                            fields.</li>
+                        <li>XML parsing enhancements - You can include field XPath expressions and
+                            namespaces in the record with the <xref
+                                href="../Pipeline_Design/XMLDF-FieldXPathExp.dita#concept_w3k_1ch_qz"
+                                >Include Field XPaths property</xref>. And use the new <xref
+                                href="../Pipeline_Design/XMLDF-OutputFAttributes.dita#concept_jll_4wh_qz"
+                                >Output Field Attributes property</xref> to write XML attributes and
+                            namespace declarations to field attributes rather than including them in
+                            the record as fields. </li>
                         <li><xref
                                 href="../Getting_Started/ConfiguringConsoleSettings.dita#task_r3q_fnx_pr"
                                 >Wrap long lines in properties</xref> - You can now configure <ph

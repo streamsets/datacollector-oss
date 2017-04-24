@@ -43,6 +43,19 @@
                                 <image href="../Graphics/icon_moreInfo.png" scale="10"
                                     id="image_jvj_5t7_vz"/></xref></entry>
                     </row>
+                    <row>
+                        <entry>Any origin that processes XML data</entry>
+                        <entry>Can include field XPath information, XML attribute, and namespace
+                            declarations in field attributes. <xref
+                                href="../Pipeline_Design/XMLDF-FieldXPathExp.dita">
+                                <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                    id="image_uph_jf3_qz"/></xref></entry>
+                    </row>
+                    <row>
+                        <entry>XML Parser</entry>
+                        <entry>Can include field XPath information, XML attribute, and namespace
+                            declarations in field attributes.</entry>
+                    </row>
                 </tbody>
             </tgroup>
         </table>
