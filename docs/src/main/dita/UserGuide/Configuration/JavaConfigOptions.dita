@@ -21,10 +21,12 @@
           options</indexterm></indexterm><indexterm>SDC_ROOT_CLASSPATH<indexterm>Java environment
           variable</indexterm></indexterm><indexterm>SDC_JAVA_OPTS<indexterm>Java environment
           variable</indexterm></indexterm><indexterm>SDC_JAVA8_OPTS<indexterm>Java environment
-          variable</indexterm></indexterm>You can edit the <ph
+          variable</indexterm></indexterm>You can define the Java configuration options used by <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</p>
+    <p>For a tarball or RPM installation, define Java configuration options in the following
+      environment variables in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      environment configuration file to add or update Java configuration options. </p>
-    <p>You can update Java configuration options in the following environment variables:</p>
+      environment configuration file:</p>
     <ul id="ul_xfx_q33_vx">
       <li>SDC_JAVA_OPTS - Includes configuration options for Java.</li>
       <li>SDC_JAVA8_OPTS - Includes configuration options specific to Java 8.</li>
@@ -32,9 +34,11 @@
     <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> loads
       the value of the version-specific environment variable and adds it to the SDC_JAVA_OPTS
       environment variable.</p>
-    <p>To modify Java configuration options for the <ph
+    <p>For a Cloudera Manager installation, define Java configuration options in the Java Options
+      property for the StreamSets service in Cloudera Manager.</p>
+    <note>To modify Java configuration options for the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> command
       line interface, use the SDC_CLI_JAVA_OPTS environment variable. For more information, see
-        <xref href="../Administration/CLI-JavaConfigOptions.dita#concept_zrc_qch_xw"/>.</p>
+        <xref href="../Administration/CLI-JavaConfigOptions.dita#concept_zrc_qch_xw"/>.</note>
  </conbody>
 </concept>

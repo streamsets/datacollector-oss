@@ -28,22 +28,62 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             performance before making the same change in a production environment. Garbage collector
             performance depends on each particular use case.</p>
-        <p>Define the garbage collector in the SDC_JAVA8_OPTS environment variable in the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            environment configuration file. </p>
-        <p>For example, the default garbage collector is defined as follows:</p>
-        <codeblock>SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<uicontrol>-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</uicontrol>"}</codeblock>
-        <p>To use the G1 garbage collector, set the option as follows: </p>
-        <codeblock>SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<uicontrol>-XX:+UseG1GC</uicontrol>"}</codeblock>
+        <p>Define the garbage collector based on your installation:</p>
+        <dl>
+            <dlentry>
+                <dt>Tarball or RPM installation</dt>
+                <dd>Define the garbage collector in the SDC_JAVA8_OPTS environment variable. </dd>
+                <dd>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"
+                    />
+                </dd>
+                <dd>
+                    <p>For example, the default garbage collector is defined as follows:</p>
+                    <codeblock>export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<uicontrol>-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</uicontrol>"}</codeblock>
+                    <p>To use the G1 garbage collector, set the option as follows: </p>
+                    <codeblock>export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<uicontrol>-XX:+UseG1GC</uicontrol>"}</codeblock>
+                </dd>
+            </dlentry>
+            <dlentry>
+                <dt>Cloudera Manager installation</dt>
+                <dd>Define the garbage collector in the Java Options property for the StreamSets
+                    service in Cloudera Manager.</dd>
+                <dd>For example, to use the G1 garbage collector, add the option to the property as
+                    follows:<codeblock> -XX:+UseG1GC</codeblock></dd>
+            </dlentry>
+        </dl>
         <section id="section_gqv_q21_vy">
             <title>Logging</title>
             <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-                enables garbage collector logging by default to facilitate troubleshooting. To
-                disable logging, set the following environment variable to false in the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> environment configuration
-                file:<codeblock>export SDC_GC_LOGGING=true</codeblock></p>
-            <p> Log files are written to <codeph>$SDC_LOG/gc.log</codeph>. </p>
+                enables garbage collector logging by default to facilitate troubleshooting. Log
+                files are written to <codeph>$SDC_LOG/gc.log</codeph>. You can disable logging.</p>
+            <p>Disable garbage collector logging based on your installation:</p>
+            <dl>
+                <dlentry>
+                    <dt>Tarball or RPM installation</dt>
+                    <dd>Set the SDC_GC_LOGGING environment variable to false in the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> environment configuration file.</dd>
+                    <dd>
+                        <p
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"
+                        />
+                    </dd>
+                    <dd>For example:</dd>
+                    <dd>
+                        <codeblock>export SDC_GC_LOGGING=false</codeblock>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Cloudera Manager installation</dt>
+                    <dd>Set the SDC_GC_LOGGING environment variable to false in the
+                            <codeph>sdc-env.sh</codeph> safety valve for the StreamSets service in
+                        Cloudera Manager.</dd>
+                    <dd>For example, add the following to the <codeph>sdc-env.sh</codeph> safety
+                        valve:<codeblock>export SDC_GC_LOGGING=false</codeblock></dd>
+                </dlentry>
+            </dl>
         </section>
     </conbody>
 </concept>
