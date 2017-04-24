@@ -667,38 +667,57 @@
                               <dt>XML</dt>
                               <dd>Generates records based on a user-defined delimiter element. Use
                                     an XML element directly under the root element or define a
-                                    simplified XPath expression. </dd>
-                              <dd>If you do not define a delimiter element, the origin treats the
-                                    XML file as a single record.</dd>
-                              <dd>For more information about XML processing, see <xref
-                                          href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"
-                                    />.</dd>
+                                    simplified XPath expression. If you do not define a delimiter
+                                    element, the origin treats the XML file as a single record.</dd>
+                              <dd>Generated records include XML attributes and namespace
+                                    declarations as fields in the record by default. You can
+                                    configure the stage to include them in the record as field
+                                    attributes. </dd>
+                              <dd>You can include XPath information for each parsed XML element and
+                                    XML attribute in field attributes. This also places each
+                                    namespace in an xmlns record header attribute. <note><ph
+                                                conref="#concept_vhs_5tz_xp/warn_FieldRecHeaderAtts"
+                                          /></note></dd>
                               <dd>When a record exceeds the user-defined maximum record length, the
                                     origin skips the record and continues processing with the next
                                     record. It sends the skipped record to the pipeline for error
                                     handling. </dd>
-                              <dd>Use the XML data format to process valid XML documents. If you
-                                    want to process invalid XML documents, you can try using the
-                                    text data format with custom delimiters. For more information,
-                                    see <xref
-                                          href="../Pipeline_Design/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
+                              <dd>Use the XML data format to process valid XML documents. For more
+                                    information about XML processing, see <xref
+                                          href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"
                                     />.</dd>
+                              <dd>
+                                    <note type="tip"><ph>If you want to process invalid XML
+                                                documents, you can try using the text data format
+                                                with custom delimiters. For more information, see
+                                                  <xref
+                                                  href="../Pipeline_Design/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
+                                                />.</ph>
+                                    </note>
+                              </dd>
                         </dlentry>
                         <dlentry id="OriginDF-XMLFILE">
                               <dt>XML</dt>
                               <dd>Generates records based on a user-defined delimiter element. Use
                                     an XML element directly under the root element or define a
-                                    simplified XPath expression. </dd>
-                              <dd>If you do not define a delimiter element, the origin treats the
-                                    XML file as a single record.</dd>
-                              <dd>For more information about XML processing, see <xref
-                                          href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"
-                                    />.</dd>
+                                    simplified XPath expression. If you do not define a delimiter
+                                    element, the origin treats the XML file as a single record. </dd>
+                              <dd>Generated records include XML attributes and namespace
+                                    declarations as fields in the record by default. You can
+                                    configure the stage to include them in the record as field
+                                    attributes. </dd>
+                              <dd>You can include XPath information for each parsed XML element and
+                                    XML attribute in field attributes. This also places each
+                                    namespace in an xmlns record header attribute. </dd>
+                              <dd>
+                                    <note><ph conref="#concept_vhs_5tz_xp/warn_FieldRecHeaderAtts"
+                                          /></note>
+                              </dd>
                               <dd>When a record exceeds the user-defined maximum record length, the
                                     origin cannot continue processing data in the file. Records
                                     already processed from the file are passed to the pipeline. The
                                     behavior of the origin is then based on the error handling
-                                    configured for the stage:<ul id="ul_rnb_qdp_ht">
+                                    configured for the stage:<ul id="ul_t2x_xvn_qz">
                                           <li>Discard - The origin continues processing with the
                                                 next file, leaving the partially-processed file in
                                                 the directory. </li>
@@ -709,13 +728,16 @@
                                                 Otherwise, it leaves the file in the directory.</li>
                                           <li>Stop Pipeline - The origin stops the pipeline. </li>
                                     </ul></dd>
-                              <dd>Use the XML data format to process valid XML documents. <ph
-                                          id="ph-p-InvalidXML-CustomDelimXref">If you want to
-                                          process invalid XML documents, you can try using the text
-                                          data format with custom delimiters. For more information,
-                                          see <xref
-                                                href="../Pipeline_Design/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
-                                          />.</ph></dd>
+                              <dd>Use the XML data format to process valid XML documents. For more
+                                    information about XML processing, see <xref
+                                          href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"
+                                    />. <note type="tip"><ph id="ph-p-InvalidXML-CustomDelimXref">If
+                                                you want to process invalid XML documents, you can
+                                                try using the text data format with custom
+                                                delimiters. For more information, see <xref
+                                                  href="../Pipeline_Design/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
+                                                />.</ph>
+                                    </note></dd>
                         </dlentry>
                   </dl>
             </p>
@@ -750,6 +772,7 @@
                   predicate:<codeblock>/&lt;element>[@&lt;attribute name>='&lt;attribute value>']</codeblock></p>
             <p><ph id="XML-ph-AttAsterisk">You can use the asterisk wildcard as the attribute value.
                         Surround the value in single quotation marks.</ph></p>
+            <p/>
             <p>
                   <draft-comment author="Loretta">Amazon <uicontrol>S3origin-CopyMove1</uicontrol>
                         and 2 used in Amazon S3 origin Configuring.</draft-comment>
@@ -2630,7 +2653,25 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               href="../Pipeline_Design/CDC-Overview.dita#concept_apw_l2c_ty"
                   />.</ph></p>
             <p/>
-            <p/>
+            <draft-comment author="Loretta">used in references to field attributes - XML parser, XML
+                  data format descriptions...</draft-comment>
+            <p><ph id="ph-FieldAtts-SDCRecord">Field attributes are automatically included in
+                        records written to destination systems only when you use the SDC RPC data
+                        format in the destination.</ph>
+            </p>
+            <p id="p-FieldAtts-Include">To include field attributes in the record data or to use
+                  field attributes in calculations, use the <codeph>record:fieldAttribute</codeph>
+                  and <codeph>record:fieldAttributeOrDefault</codeph> functions. For more
+                  information about field attribute functions, see <xref
+                        href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"/>.</p>
+            <p><ph id="warn_FieldRecHeaderAtts">Field attributes and record header attributes are
+                        written to destination systems automatially only when you use the SDC RPC
+                        data format in destinations. For more information about working with field
+                        attributes and record header attributes, and how to include them in records,
+                        see <xref href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
+                        /> and <xref
+                              href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"
+                        />.</ph></p>
             <draft-comment author="alisontaylor">Used in the OAuth 2 Authorization topic for HTTP
                   Client origin, processor, and destination</draft-comment>
             <p id="OAuth2_Credentials">The credentials that you enter to request an access token

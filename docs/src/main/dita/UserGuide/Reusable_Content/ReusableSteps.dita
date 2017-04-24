@@ -1397,7 +1397,8 @@
                     <draft-comment author="Loretta"><uicontrol>XML data </uicontrol>- step used by
                         message and file based origins: Kafka Consumer, Hadoop FS, Kinesis Consumer,
                         Directory, S3, HTTP Client, maybe more. Origins without compression uses
-                        rows - JMS Consumer</draft-comment>
+                        almost all the rows - JMS Consumer, Kafka Consumer, Rabbit MQ Consumer,
+                        Redis Consumer</draft-comment>
                 </cmd>
             </step>
             <step id="XMLprops">
@@ -1444,6 +1445,22 @@
                                             </ul></p>
                                     </entry>
                                 </row>
+                                <row id="O-row-XMLFieldXpath">
+                                    <entry>Include Field XPaths <xref
+                                            href="../Pipeline_Design/XMLDF-FieldXPathExp.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline"
+                                        /></xref></entry>
+                                    <entry>Includes the XPath to each parsed XML element and XML
+                                        attribute in field attributes. Also includes each namespace
+                                        in an xmlns record header attribute. <p>When not selected,
+                                            this information is not included in the record. By
+                                            default, the property is not selected.</p><p>
+                                            <note><ph
+                                                  conref="ReusablePhrases.dita#concept_vhs_5tz_xp/warn_FieldRecHeaderAtts"
+                                                /></note>
+                                        </p></entry>
+                                </row>
                                 <row id="O-row-XMLNamespaces">
                                     <entry>Namespaces </entry>
                                     <entry>Namespace prefix and URI to use when parsing the XML
@@ -1457,6 +1474,19 @@
                                                 href="../Pipeline_Design/XMLDF-XPath-Namespaces.dita#concept_mkk_3zj_dy"
                                             />.</p><p>Use the <uicontrol>Add</uicontrol> icon to add
                                             additional namespaces.</p></entry>
+                                </row>
+                                <row id="O-row-XMLOutputAtts">
+                                    <entry>Output Field Attributes</entry>
+                                    <entry>Includes XML attributes and namespace declarations in the
+                                        record as field attributes. When not selected, XML
+                                        attributes and namespace declarations are included in the
+                                        record as fields.<note><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldAtts-SDCRecord"
+                                            /> For more information about working with field
+                                            attributes, see <xref
+                                                href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
+                                            />.</note><p>By default, the property is not
+                                            selected.</p></entry>
                                 </row>
                                 <row id="O-row-XML-MaxRecLength">
                                     <entry>Max Record Length (chars)</entry>
