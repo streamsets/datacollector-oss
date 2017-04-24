@@ -49,7 +49,7 @@ public class TCPServerSourceConfig {
   public DataFormat dataFormat;
 
   @ConfigDefBean(groups = "DATA_FORMAT")
-  public DataParserFormatConfig dataFormatConfig;
+  public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
 
   @ConfigDefBean(groups = "TLS")
   public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.SERVER);

@@ -30,7 +30,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.destination.sdcipc.Constants;
-import com.streamsets.pipeline.stage.destination.sdcipc.SSLTestUtils;
+import com.streamsets.pipeline.stage.util.tls.TLSTestUtils;
 import com.streamsets.testing.NetworkUtils;
 import org.iq80.snappy.SnappyFramedOutputStream;
 import org.junit.Assert;
@@ -60,16 +60,16 @@ public class TestSdcIpcSource {
   }
 
   private void testReceiveRecords(final boolean ssl, final boolean compressed) throws Exception {
-    String hostname = SSLTestUtils.getHostname();
+    String hostname = TLSTestUtils.getHostname();
     File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     File keyStore = new File(testDir, "keystore.jks");
     final File trustStore = new File(testDir, "truststore.jks");
     if (ssl) {
       Assert.assertTrue(testDir.mkdirs());
-      KeyPair keyPair = SSLTestUtils.generateKeyPair();
-      Certificate cert = SSLTestUtils.generateCertificate("CN=" + hostname, keyPair, 30);
-      SSLTestUtils.createKeyStore(keyStore.toString(), "keystore", "web", keyPair.getPrivate(), cert);
-      SSLTestUtils.createTrustStore(trustStore.toString(), "truststore", "web", cert);
+      KeyPair keyPair = TLSTestUtils.generateKeyPair();
+      Certificate cert = TLSTestUtils.generateCertificate("CN=" + hostname, keyPair, 30);
+      TLSTestUtils.createKeyStore(keyStore.toString(), "keystore", "web", keyPair.getPrivate(), cert);
+      TLSTestUtils.createTrustStore(trustStore.toString(), "truststore", "web", cert);
     }
 
     final Configs configs = new Configs();
@@ -91,7 +91,7 @@ public class TestSdcIpcSource {
         @Override
         public Boolean call() throws Exception {
           HttpURLConnection conn = getConnection(Constants.IPC_PATH, configs.appId, runner.getContext(),
-                                                 SSLTestUtils.getHostname() + ":" + configs.port, ssl,
+                                                 TLSTestUtils.getHostname() + ":" + configs.port, ssl,
                                                  trustStore.toString(), "truststore");
           conn.setRequestMethod("GET");
           conn.setDefaultUseCaches(false);
@@ -112,7 +112,7 @@ public class TestSdcIpcSource {
           Record r2 = RecordCreator.create();
           r2.set(Field.create(false));
           List<Record> records = ImmutableList.of(r1, r2);
-          return sendRecords(configs.appId, runner.getContext(), SSLTestUtils.getHostname() + ":" + configs.port, ssl,
+          return sendRecords(configs.appId, runner.getContext(), TLSTestUtils.getHostname() + ":" + configs.port, ssl,
                              trustStore.toString(), "truststore", compressed, records);
         }
       });
@@ -135,7 +135,7 @@ public class TestSdcIpcSource {
           Record r2 = RecordCreator.create();
           r2.set(Field.create(false));
           List<Record> records = ImmutableList.of(r1, r2);
-          return sendRecords("invalid", runner.getContext(), SSLTestUtils.getHostname() + ":" + configs.port, ssl,
+          return sendRecords("invalid", runner.getContext(), TLSTestUtils.getHostname() + ":" + configs.port, ssl,
                              trustStore.toString(), "truststore", compressed, records);
         }
       });
@@ -144,7 +144,7 @@ public class TestSdcIpcSource {
 
       //test PING
       HttpURLConnection conn = getConnection("/ping", "nop", runner.getContext(),
-                                             SSLTestUtils.getHostname() + ":" + configs.port, ssl,
+                                             TLSTestUtils.getHostname() + ":" + configs.port, ssl,
                                              trustStore.toString(), "truststore");
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
 

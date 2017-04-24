@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.pipeline.stage.util.tls.TLSTestUtils;
 import com.streamsets.testing.NetworkUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -54,7 +55,6 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -168,16 +168,16 @@ public class TestReceiverServer {
   @Test
   public void testLifecycleHttps() throws Exception {
     // setup TLS
-    String hostname = SSLTestUtils.getHostname();
+    String hostname = TLSTestUtils.getHostname();
     File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     final File keyStore = new File(testDir, "keystore.jks");
     Assert.assertTrue(testDir.mkdirs());
     final String keyStorePassword = "keystore";
     final File trustStore = new File(testDir, "truststore.jks");
-    KeyPair keyPair = SSLTestUtils.generateKeyPair();
-    Certificate cert = SSLTestUtils.generateCertificate("CN=" + hostname, keyPair, 30);
-    SSLTestUtils.createKeyStore(keyStore.toString(), keyStorePassword, "web", keyPair.getPrivate(), cert);
-    SSLTestUtils.createTrustStore(trustStore.toString(), "truststore", "web", cert);
+    KeyPair keyPair = TLSTestUtils.generateKeyPair();
+    Certificate cert = TLSTestUtils.generateCertificate("CN=" + hostname, keyPair, 30);
+    TLSTestUtils.createKeyStore(keyStore.toString(), keyStorePassword, "web", keyPair.getPrivate(), cert);
+    TLSTestUtils.createTrustStore(trustStore.toString(), "truststore", "web", cert);
 
     final int port = NetworkUtils.getRandomPort();
     final HttpConfigs configs = new HttpConfigs("g", "p") {
@@ -244,7 +244,7 @@ public class TestReceiverServer {
           HttpURLConnection conn = getConnection("/path",
               configs.getAppId(),
               context,
-              SSLTestUtils.getHostname() + ":" + configs.getPort(),
+              TLSTestUtils.getHostname() + ":" + configs.getPort(),
               trustStore.toString(),
               "truststore"
           );

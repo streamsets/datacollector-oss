@@ -83,7 +83,7 @@ public class TCPServerSource extends BasePushSource {
     List<ConfigIssue> issues = new ArrayList<>();
 
     if (config.enableEpoll && !Epoll.isAvailable()) {
-      issues.add(getContext().createConfigIssue(Groups.TCP.name(), "enableEpoll", Errors.TCP_08));
+      issues.add(getContext().createConfigIssue(Groups.TCP.name(), "enableEpoll", Errors.TCP_05));
     }
     final String portsField = "ports";
     if (config.ports.isEmpty()) {
@@ -108,7 +108,7 @@ public class TCPServerSource extends BasePushSource {
 
     if (issues.isEmpty()) {
       if (addresses.isEmpty()) {
-        issues.add(getContext().createConfigIssue(Groups.TCP.name(), portsField, Errors.TCP_12));
+        issues.add(getContext().createConfigIssue(Groups.TCP.name(), portsField, Errors.TCP_09));
       } else {
         if (config.tlsEnabled) {
           boolean tlsValid = config.tlsConfigBean.init(getContext(), Groups.TLS.name(), "conf.tlsConfigBean.", issues);
@@ -157,13 +157,14 @@ public class TCPServerSource extends BasePushSource {
               issues.add(getContext().createConfigIssue(
                   Groups.TCP.name(),
                   portsField,
-                  Errors.TCP_07,
+                  Errors.TCP_04,
                   config.ports,
                   ex
               ));
             } else {
               LOG.debug("Caught exception while starting up TCP server: {}", ex);
-              issues.add(getContext().createConfigIssue(null,
+              issues.add(getContext().createConfigIssue(
+                  null,
                   null,
                   Errors.TCP_00,
                   addresses.toString(),
@@ -269,7 +270,7 @@ public class TCPServerSource extends BasePushSource {
         );
       } else {
         OnRecordErrorException error = pipelineIdToError.getValue();
-        throw new StageException(Errors.TCP_09, error.getMessage(), error);
+        throw new StageException(Errors.TCP_06, error.getMessage(), error);
       }
     }
   }

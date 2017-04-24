@@ -23,6 +23,7 @@ import com.google.common.io.Files;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.pipeline.stage.util.tls.TLSTestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -116,10 +117,10 @@ public class TestConfigs {
     // create trust store
     File testDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDir.mkdirs());
-    KeyPair kp = SSLTestUtils.generateKeyPair();
-    Certificate cert1 = SSLTestUtils.generateCertificate("CN=Cert1", kp, 30);
+    KeyPair kp = TLSTestUtils.generateKeyPair();
+    Certificate cert1 = TLSTestUtils.generateCertificate("CN=Cert1", kp, 30);
     String truststoreFile = new File(testDir, "truststore.jks").toString();
-    SSLTestUtils.createTrustStore(truststoreFile, "password", "cert1", cert1);
+    TLSTestUtils.createTrustStore(truststoreFile, "password", "cert1", cert1);
 
     ForTestConfigs target = new ForTestConfigs(null);
     injectConfigsHttps(target, truststoreFile, "password", true);
@@ -242,10 +243,10 @@ public class TestConfigs {
     issues.clear();
 
     // valid trust store file
-    KeyPair kp = SSLTestUtils.generateKeyPair();
-    Certificate cert1 = SSLTestUtils.generateCertificate("CN=Cert1", kp, 30);
+    KeyPair kp = TLSTestUtils.generateKeyPair();
+    Certificate cert1 = TLSTestUtils.generateCertificate("CN=Cert1", kp, 30);
     String trustStoreLocation = new File(testDir, "truststore.jks").toString();
-    SSLTestUtils.createTrustStore(trustStoreLocation, "password", "cert1", cert1);
+    TLSTestUtils.createTrustStore(trustStoreLocation, "password", "cert1", cert1);
 
     config.tlsConfigBean.trustStoreFilePath = trustStoreLocation;
     config.tlsConfigBean.trustStorePassword = "password";

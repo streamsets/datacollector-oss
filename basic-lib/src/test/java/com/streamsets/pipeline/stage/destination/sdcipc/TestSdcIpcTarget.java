@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.util.tls.TLSTestUtils;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -395,16 +396,16 @@ public class TestSdcIpcTarget {
   }
 
   private void testHttps(boolean hostVerification) throws Exception {
-    String hostname = (hostVerification) ? SSLTestUtils.getHostname() : "localhost";
+    String hostname = (hostVerification) ? TLSTestUtils.getHostname() : "localhost";
 
     File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(testDir.mkdirs());
-    KeyPair keyPair = SSLTestUtils.generateKeyPair();
-    Certificate cert = SSLTestUtils.generateCertificate("CN=" + hostname, keyPair, 30);
+    KeyPair keyPair = TLSTestUtils.generateKeyPair();
+    Certificate cert = TLSTestUtils.generateCertificate("CN=" + hostname, keyPair, 30);
     File keyStore = new File(testDir, "keystore.jks");
-    SSLTestUtils.createKeyStore(keyStore.toString(), "keystore", "web", keyPair.getPrivate(), cert);
+    TLSTestUtils.createKeyStore(keyStore.toString(), "keystore", "web", keyPair.getPrivate(), cert);
     File trustStore = new File(testDir, "truststore.jks");
-    SSLTestUtils.createTrustStore(trustStore.toString(), "truststore", "web", cert);
+    TLSTestUtils.createTrustStore(trustStore.toString(), "truststore", "web", cert);
 
     Server server = new Server(0);
     ServletContextHandler context = new ServletContextHandler();

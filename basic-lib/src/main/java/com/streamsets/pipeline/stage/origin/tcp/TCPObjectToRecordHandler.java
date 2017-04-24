@@ -124,7 +124,9 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     }
     super.channelInactive(ctx);
     cancelMaxWaitTimeTask();
-    context.processBatch(batchContext);
+    if (batchContext != null) {
+      context.processBatch(batchContext);
+    }
   }
 
   @Override
@@ -167,7 +169,8 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     if (exception instanceof DecoderException) {
       // unwrap the Netty decoder exception
       exception = exception.getCause();
-    } else if (exception instanceof IOException && StringUtils.contains(exception.getMessage(), RST_PACKET_MESSAGE)) {
+    }
+    if (exception instanceof IOException && StringUtils.contains(exception.getMessage(), RST_PACKET_MESSAGE)) {
       // client disconnected forcibly
       if (LOG.isDebugEnabled()) {
         LOG.debug(
@@ -179,7 +182,7 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
       ctx.close();
       return;
     } else if (exception instanceof DataParserException) {
-      exception = new OnRecordErrorException(Errors.TCP_11, exception.getMessage(), exception);
+      exception = new OnRecordErrorException(Errors.TCP_08, exception.getMessage(), exception);
     }
 
     LOG.error("exceptionCaught in TCPObjectToRecordHandler", exception);
@@ -210,7 +213,7 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
           break;
       }
     } else {
-      context.reportError(Errors.TCP_10, exception.getClass().getName(), exception.getMessage(), exception);
+      context.reportError(Errors.TCP_07, exception.getClass().getName(), exception.getMessage(), exception);
     }
     // Close the connection when an exception is raised.
     ctx.close();

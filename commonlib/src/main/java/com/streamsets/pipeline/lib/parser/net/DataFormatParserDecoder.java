@@ -22,8 +22,12 @@ package com.streamsets.pipeline.lib.parser.net;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.parser.Errors;
+import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
+import com.streamsets.pipeline.lib.util.ExceptionUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -38,7 +42,8 @@ import java.util.List;
  * other words, it does not check the writerIndex nor does it follow the
  * {@link io.netty.handler.codec.ReplayingDecoder} paradigm.</p>
  *
- * <p>This class lives in commonlib (as opposed to net-commonlib) because of its dependency on DataP</p>
+ * <p>This class lives in commonlib (as opposed to net-commonlib) because of its dependency on
+ * {@link DataParserFactory}</p>
  */
 public class DataFormatParserDecoder extends ByteToMessageDecoder {
   private final DataParserFactory parserFactory;
@@ -68,10 +73,17 @@ public class DataFormatParserDecoder extends ByteToMessageDecoder {
     DataParser parser = parserFactory.getParser(generateRecordId(), bytes);
 
     Record record;
-    while ((record = parser.parse()) != null) {
-      out.add(record);
+    try {
+      while ((record = parser.parse()) != null) {
+        out.add(record);
+      }
+    } catch (RecoverableDataParserException e) {
+      // allow to return
+    } catch (Exception e) {
+      ExceptionUtils.throwUndeclared(new OnRecordErrorException(Errors.DATA_PARSER_04, e.getMessage(), e));
+    } finally {
+      parser.close();
     }
-    parser.close();
   }
 
   private String generateRecordId() {

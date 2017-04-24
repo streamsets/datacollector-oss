@@ -29,15 +29,12 @@ public enum Errors implements ErrorCode {
   TCP_01("Unknown data format: {}"),
   TCP_02("No ports specified"),
   TCP_03("Port '{}' is invalid"),
-  TCP_04("Charset '{}' is not supported"),
-  TCP_05("collectd Types DB '{}' not found"),
-  TCP_06("collectd Auth File '{}' not found"),
-  TCP_07("Insufficient permissions to listen on privileged port {}"),
-  TCP_08("Multithreaded TCP server is not available on your platform."),
-  TCP_09("Failing pipeline on error as per stage configuration: {}"),
-  TCP_10("{} thrown in Netty channel pipeline: {}"),
-  TCP_11("DataParserException thrown in Netty channel pipeline from DataFormatParserDecoder: {}"),
-  TCP_12("No addresses available for TCP server to listen on"),
+  TCP_04("Insufficient permissions to listen on privileged port {}"),
+  TCP_05("Native transports for TCP server are not available on your platform."),
+  TCP_06("Failing pipeline on error as per stage configuration: {}"),
+  TCP_07("{} thrown in Netty channel pipeline: {}"),
+  TCP_08("DataParserException thrown in Netty channel pipeline from DataFormatParserDecoder: {}"),
+  TCP_09("No addresses available for TCP server to listen on"),
   ;
 
   private final String msg;

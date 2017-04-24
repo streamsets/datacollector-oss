@@ -17,8 +17,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.http;
+package com.streamsets.pipeline.stage.util.tls;
 
+import org.apache.commons.io.IOUtils;
 import org.bouncycastle.x509.X509V1CertificateGenerator;
 
 import javax.security.auth.x500.X500Principal;
@@ -36,7 +37,7 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 
-public class SSLTestUtils {
+public class TLSTestUtils {
 
   public static X509Certificate generateCertificate(String dn, KeyPair keyPair, int days) throws Exception {
 
@@ -92,5 +93,4 @@ public class SSLTestUtils {
   public static String getHostname() throws Exception {
     return InetAddress.getLocalHost().getHostName();
   }
-
 }

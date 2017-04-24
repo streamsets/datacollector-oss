@@ -28,6 +28,7 @@ public enum Errors implements ErrorCode {
   DATA_PARSER_01("Error creating parser : '{}'"),
   DATA_PARSER_02("Parser error: '{}'"),
   DATA_PARSER_03("Failed to parse/load schema from registry: {}"),
+  DATA_PARSER_04("Error attempting to parse delimited record: {}"),
   ;
 
   private final String msg;
