@@ -52,6 +52,13 @@ log "SDC_JAVA_OPTS: $SDC_JAVA_OPTS"
 log "SDC_CURL_OPTS: $SDC_CURL_OPTS"
 log "DPM_TOKEN_REGENERATE: $DPM_TOKEN_REGENERATE"
 log "DEBUG: $DEBUG"
+log "Running from: $0"
+
+# Source versioning strings
+source $(dirname $0)/buildinfo.sh
+log "CSD_VERSION=$CSD_VERSION"
+log "CSD_BUILT_BY=$CSD_BUILT_BY"
+log "CSD_BUILT_DATE=$CSD_BUILT_DATE"
 
 # If we're in debug mode, enable printing each executed command
 if [[ $DEBUG = "true" ]]; then

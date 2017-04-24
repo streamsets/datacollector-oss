@@ -25,7 +25,13 @@
       <outputDirectory>/descriptor</outputDirectory>
       <filtered>true</filtered>
     </file>
+    <file>
+      <source>${project.basedir}/src/main/scripts/buildinfo.sh</source>
+      <outputDirectory>/scripts</outputDirectory>
+      <filtered>true</filtered>
+    </file>
   </files>
+
   <fileSets>
     <fileSet>
       <directory>${project.basedir}/src/main</directory>
@@ -36,7 +42,9 @@
         <include>scripts/**</include>
         <include>META-INF/**</include>
       </includes>
+      <excludes>
+        <exclude>buildinfo.sh</exclude>
+      </excludes>
     </fileSet>
-
   </fileSets>
 </assembly>

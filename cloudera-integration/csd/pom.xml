@@ -29,6 +29,11 @@
   <name>The StreamSets CSD for Cloudera Manager</name>
   <packaging>pom</packaging>
 
+  <properties>
+    <timestamp>${maven.build.timestamp}</timestamp>
+    <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
