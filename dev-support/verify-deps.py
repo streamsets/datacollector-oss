@@ -41,6 +41,7 @@ COMPLEX_CASES = (
   (re.compile("^streamsets-(.*)-(([0-9.]+)(-SNAPSHOT))?\.jar$"), lambda m: ('streamsets', m.group(2))),
   # Squashing multiple different jars to single dependency
   (re.compile("^avro-(.*)-([0-9.]+)(-tests|-hadoop2)?\.jar$"), lambda m: ('avro', m.group(2))),
+  (re.compile("^jackson-annotations-2.5.0.jar$"), lambda m: ('jackson', '2.5.4')),
   (re.compile("^jackson-(.*)-([0-9.]+)\.jar$"), lambda m: ('jackson', m.group(2)) ),
   (re.compile("^netty-(.*-)?([0-9.]+)\.Final(-linux-x86_64)?\.jar$"), lambda m: ('netty', m.group(2))),
   # Cloudera's specialities
@@ -50,6 +51,7 @@ COMPLEX_CASES = (
   (re.compile("^([A-Za-z_.0-9-]+)-(([0-9.]+)\.hwx)\.jar$"), lambda m: (m.group(1), m.group(2))),
   # Various special weirdness
   (re.compile("^jython\.jar$"), lambda m: ('jython', 'unspecified')),
+
 )
 
 # Allowed exceptions - stage libraries for which we do ship multiple versions either because we know that it's
