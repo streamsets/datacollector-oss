@@ -190,11 +190,19 @@ public class LogDataParserFactory extends DataParserFactory {
     }
     GrokDictionary grokDictionary = new GrokDictionary();
     //Add grok patterns and Java patterns by default
-    grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
-    grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(
-      Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME));
-    for(String dictionary : dictionaries) {
-      grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(dictionary));
+    try(
+      InputStream grogPatterns = getClass().getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME);
+      InputStream javaPatterns = getClass().getClassLoader().getResourceAsStream(Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME);
+    ) {
+      grokDictionary.addDictionary(grogPatterns);
+      grokDictionary.addDictionary(javaPatterns);
+      for(String dictionary : dictionaries) {
+        try(InputStream dictionaryStream = getClass().getClassLoader().getResourceAsStream(dictionary)) {
+          grokDictionary.addDictionary(dictionaryStream);
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeException("Can't close resource stream", e);
     }
     if(grokPatternDefinition != null && !grokPatternDefinition.isEmpty()) {
       grokDictionary.addDictionary(new StringReader(grokPatternDefinition));

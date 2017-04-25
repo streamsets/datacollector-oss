@@ -128,10 +128,13 @@ public class LogUtils {
       if (logPattern != null) {
         String grokPattern = Log4jHelper.translateLog4jLayoutToGrok(logPattern);
         GrokDictionary grokDictionary = new GrokDictionary();
-        grokDictionary.addDictionary(LogUtils.class.getClassLoader().
-            getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
-        grokDictionary.addDictionary(LogUtils.class.getClassLoader().getResourceAsStream(
-            Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME));
+        try(
+          InputStream grogPatterns = LogUtils.class.getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME);
+          InputStream javaPatterns = LogUtils.class.getClassLoader().getResourceAsStream(Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME);
+        ) {
+          grokDictionary.addDictionary(grogPatterns);
+          grokDictionary.addDictionary(javaPatterns);
+        }
         grokDictionary.bind();
         logFileGrok = grokDictionary.compileExpression(grokPattern);
         runtimeInfo.setAttribute(LOG4J_GROK_ATTR, logFileGrok);

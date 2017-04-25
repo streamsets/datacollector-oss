@@ -27,6 +27,8 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.exception.GrokCompilationException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
@@ -235,17 +237,20 @@ public class LogDataFormatValidator {
       String configPrefix,
       List<Stage.ConfigIssue> issues
   ) {
-    try {
+    try(
+      InputStream grogPatterns = getClass().getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME);
+      InputStream javaPatterns = getClass().getClassLoader().getResourceAsStream(Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME);
+    ) {
       GrokDictionary grokDictionary = new GrokDictionary();
-      grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
-      grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(
-        Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME));
+
+      grokDictionary.addDictionary(grogPatterns);
+      grokDictionary.addDictionary(javaPatterns);
       if(grokPatternDefinition != null && !grokPatternDefinition.isEmpty()) {
         grokDictionary.addDictionary(new StringReader(grokPatternDefinition));
       }
       grokDictionary.bind();
       grokDictionary.compileExpression(grokPattern);
-    } catch (GrokCompilationException e){
+    } catch (GrokCompilationException|IOException e){
       issues.add(
         context.createConfigIssue(
           groupName,
