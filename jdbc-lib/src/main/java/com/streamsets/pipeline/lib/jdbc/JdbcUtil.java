@@ -49,6 +49,7 @@ import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -524,6 +525,12 @@ public class JdbcUtil {
     boolean readOnly
   ) {
     HikariConfig config = new HikariConfig();
+
+    // Log all registered drivers
+    LOG.info("Registered JDBC drivers:");
+    Collections.list(DriverManager.getDrivers()).forEach(driver -> {
+      LOG.info("Driver class {} (version {}.{})", driver.getClass().getName(), driver.getMajorVersion(), driver.getMinorVersion());
+    });
 
     config.setJdbcUrl(hikariConfigBean.connectionString);
     config.setUsername(hikariConfigBean.username);
