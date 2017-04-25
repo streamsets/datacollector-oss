@@ -83,12 +83,13 @@ public class MysqlSchemaRepository {
       try (PreparedStatement stmt = conn.prepareStatement(TABLE_SCHEMA_SQL)) {
         stmt.setString(1, databaseAndTable.getDatabase());
         stmt.setString(2, databaseAndTable.getTable());
-        ResultSet rs = stmt.executeQuery();
         List<Column> columns = new ArrayList<>();
-        while (rs.next()) {
-          String name = rs.getString(1);
-          String type = rs.getString(2);
-          columns.add(new Column(name, MysqlType.of(type)));
+        try(ResultSet rs = stmt.executeQuery()) {
+          while (rs.next()) {
+            String name = rs.getString(1);
+            String type = rs.getString(2);
+            columns.add(new Column(name, MysqlType.of(type)));
+          }
         }
         if (columns.isEmpty()) {
           return Optional.absent();
