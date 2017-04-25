@@ -26,6 +26,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -210,12 +211,16 @@ public class RestClient {
     }
 
     public <T> T getData(TypeReference<T> typeReference) throws IOException {
-      return jsonMapper.readValue(getInputStream(), typeReference);
+      try(InputStream inputStream = getInputStream()) {
+        return jsonMapper.readValue(inputStream, typeReference);
+      }
     }
 
     public <T> T getData(Class<T> klass) throws IOException {
       if (isJson()) {
-        return jsonMapper.readValue(getInputStream(), klass);
+        try(InputStream inputStream = getInputStream()) {
+          return jsonMapper.readValue(inputStream, klass);
+        }
       } else {
         throw new IllegalStateException("Response is not application/json, is " + conn.getContentType());
       }
@@ -225,7 +230,9 @@ public class RestClient {
     public Map getError() throws IOException {
       Map map;
       if (isJson()) {
-        map = jsonMapper.readValue(conn.getErrorStream(), Map.class);
+        try(InputStream inputStream = conn.getErrorStream()) {
+          map = jsonMapper.readValue(inputStream, Map.class);
+        }
       } else {
         map = new HashMap();
         map.put("message", conn.getResponseMessage());
@@ -335,7 +342,9 @@ public class RestClient {
     conn.setRequestMethod(method);
     if (upload != null) {
       if (json) {
-        jsonMapper.writeValue(conn.getOutputStream(), upload);
+        try(OutputStream outputStream = conn.getOutputStream()) {
+          jsonMapper.writeValue(outputStream, upload);
+        }
       } else {
         throw new IllegalStateException("Content type is not JSON, cannot upload data bean");
       }
