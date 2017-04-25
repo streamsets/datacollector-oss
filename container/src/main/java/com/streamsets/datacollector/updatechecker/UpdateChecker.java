@@ -36,6 +36,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -148,11 +150,15 @@ public class UpdateChecker implements Runnable {
               conn.setDoOutput(true);
               conn.setDoInput(true);
               conn.setRequestProperty("content-type", APPLICATION_JSON_MIME);
-              ObjectMapperFactory.getOneLine().writeValue(conn.getOutputStream(), uploadInfo);
+              try(OutputStream outputStream = conn.getOutputStream()) {
+                ObjectMapperFactory.getOneLine().writeValue(outputStream, uploadInfo);
+              }
               if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 String responseContentType = conn.getHeaderField("content-type");
                 if (APPLICATION_JSON_MIME.equals(responseContentType)) {
-                  updateInfo = ObjectMapperFactory.get().readValue(conn.getInputStream(), Map.class);
+                  try(InputStream inputStream = conn.getInputStream()) {
+                    updateInfo = ObjectMapperFactory.get().readValue(inputStream, Map.class);
+                  }
                 } else {
                   LOG.trace("Got invalid content-type '{}' from from update-check server", responseContentType);
                 }
