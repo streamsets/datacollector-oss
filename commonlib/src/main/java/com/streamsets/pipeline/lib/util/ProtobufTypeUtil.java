@@ -97,8 +97,9 @@ public class ProtobufTypeUtil {
       Map<String, Object> defaultValueMap
   ) throws StageException {
     File descriptorFileHandle = new File(context.getResourcesDirectory(), protoDescriptorFile);
-    try {
+    try(
       FileInputStream fin = new FileInputStream(descriptorFileHandle);
+      ) {
       DescriptorProtos.FileDescriptorSet set = DescriptorProtos.FileDescriptorSet.parseFrom(fin);
 
       // Iterate over all the file descriptor set computed above and cache dependencies and all encountered
