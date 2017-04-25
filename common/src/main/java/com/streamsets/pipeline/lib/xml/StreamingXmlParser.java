@@ -111,6 +111,8 @@ public class StreamingXmlParser {
     }
     XMLInputFactory factory = XMLInputFactory.newFactory();
     factory.setProperty("javax.xml.stream.isCoalescing", true);
+    factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+    factory.setProperty("javax.xml.stream.supportDTD", false);
     this.xmlEventReader = new XPathMatchingEventReader(factory.createXMLEventReader(reader), this.recordElement, namespaces);
     while (hasNext(xmlEventReader) && !peek(xmlEventReader).isEndDocument() && !peek(xmlEventReader).isStartElement()) {
       read(xmlEventReader);
