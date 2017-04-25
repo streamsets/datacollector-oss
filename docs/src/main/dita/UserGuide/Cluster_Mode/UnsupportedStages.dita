@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pdf_r5y_fz">
+ <title>Unsupported Stages</title>
+ <conbody>
+  <p><indexterm>cluster mode<indexterm>unsupported stages</indexterm></indexterm>At this time, you
+            should not use the following stages in cluster pipelines:<ul id="ul_rrk_s5y_fz">
+                <li>Any non-cluster origin - For a description of the origins to use, see <xref
+                        href="ClusterPipelines-ExecutionMode.dita#concept_rjc_4m5_lx"/>.</li>
+                <li>Record Deduplicator processor - This processor is not supported in cluster
+                    pipelines at this time. </li>
+                <li>RabbitMQ Producer destination - This destination is not supported in cluster
+                    pipelines at this time. </li>
+                <li>Scripting processors - The state object is available only for the instance of
+                    the processor stage it is defined in. If the pipeline executes in cluster mode,
+                    the state object is not shared across nodes. </li>
+            </ul><ul id="ul_ow3_fnr_rz">
+                <li>Spark Evaluator processor - Use the Spark Evaluator processor in cluster
+                    pipelines only in development or test environments. This processor is not
+                    supported in cluster pipelines in production environments at this
+                        time.<draft-comment author="Loretta">Remove the Spark bullet in 2.6. Logging
+                        a doc bug.</draft-comment></li>
+            </ul></p>
+ </conbody>
+</concept>

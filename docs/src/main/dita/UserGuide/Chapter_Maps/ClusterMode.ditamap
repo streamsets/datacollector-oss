@@ -44,5 +44,6 @@
   </topicref>
   <topicref href="../Cluster_Mode/HDFSRequirements.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+  <topicref href="../Cluster_Mode/UnsupportedStages.dita"/>
  </topicref>
 </map>

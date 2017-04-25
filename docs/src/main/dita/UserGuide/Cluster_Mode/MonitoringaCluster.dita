@@ -31,7 +31,7 @@
       click the worker link. You can then view metrics and alerts for the worker. </p>
     <p>Metric and data alerts are defined for the pipeline, but triggered by individual workers.
       When you define a metric or data alert, each worker inherits the alert and triggers the alert
-      based on the statistics for the worker.<note>You cannot take snapshots when monitoring in
-        cluster pipelines.</note></p>
+      based on the statistics for the worker.<note>You cannot take snapshots when monitoring cluster
+        pipelines.</note></p>
   </conbody>
 </concept>

@@ -4578,6 +4578,99 @@ chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta">Cluster doc shared steps – </draft-comment>
+                    <draft-comment author="Loretta">First checkpoint for Kafka and Mesos YARN
+                        Streaming, Info steps conrefed by other versions.</draft-comment>
+                </cmd>
+            </step>
+            <step id="Cluster-CheckpointStorage">
+                <cmd>To enable checkpoint metadata storage, grant the user defined in the SDC_USER
+                    environment variable write permission on
+                    <filepath>/user/$SDC_USER</filepath>.</cmd>
+                <info id="Cluster-info-SDCUSER">The SDC_USER environment variable defines the system
+                    user used to run Data Collector as a service. The variable is defined in the
+                    $SDC_DIST/libexec/sdcd-env.sh file. </info>
+                <info id="Cluster-info-SDCUser-Example">For example, say SDC_USER is defined as
+                        <filepath>sdc</filepath> and the cluster does not use Kerberos. Then you
+                    might use the following commands to create the directory and configure the
+                    necessary write
+                    permissions:<codeblock id="Cluster-Code-SDCUserCode">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</codeblock></info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Mesos version of above, removed Kerberos from
+                        example.</draft-comment>
+                </cmd>
+            </step>
+            <step id="Cluster-CheckpointStorage-Mesos">
+                <cmd>To enable checkpoint metadata storage, grant $SDC_USER write permission on
+                        <filepath>/user/$SDC_USER</filepath>.</cmd>
+                <info conref="#task_kzs_5vz_sq/Cluster-info-SDCUSER"/>
+                <info>For example, say $SDC_USER is defined as <filepath>sdc</filepath>. Then you
+                    might use the following commands to create the directory and configure the
+                    necessary write
+                    permissions:<codeblock conref="#task_kzs_5vz_sq/Cluster-Code-SDCUserCode"/></info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">MapR Cluster Batch and HDFS (cluster
+                        batch)</draft-comment>
+                </cmd>
+            </step>
+            <step id="ClusterBatch-SDCUser">
+                <cmd>Grant the user defined in the SDC_USER environment variable write permission on
+                        <filepath>/user/$SDC_USER</filepath>.</cmd>
+                <info conref="#task_kzs_5vz_sq/Cluster-info-SDCUSER"/>
+                <info conref="#task_kzs_5vz_sq/Cluster-info-SDCUser-Example"/>
+            </step>
+            <step>
+                <cmd/>
+            </step>
+            <step id="Cluster-ConfigKerberos">
+                <cmd>If YARN is configured to use Kerberos authentication, configure <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to use Kerberos authentication. </cmd>
+                <info>When you configure Kerberos authentication for <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />, you enable <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to use Kerberos and define the principal and keytab. <note type="important"
+                        id="Cluster-KerbNote">For cluster pipelines, enter an absolute path to the
+                        keytab when configuring <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />. Standalone pipelines do not require an absolute path.</note></info>
+                <info>Once enabled, <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> automatically uses the Kerberos principal and keytab to connect to any YARN
+                    cluster that uses Kerberos. For more information, see <xref
+                        href="../Configuration/Kerberos.dita#concept_hnm_n4l_xs"/>.</info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Just the bullets in this step used I
+                        think:</draft-comment>
+                </cmd>
+            </step>
+            <step>
+                <cmd>To enable <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to submit YARN jobs, perform one of the following tasks:</cmd>
+                <info>
+                    <ul id="Cluster-SubmitYarnTasks">
+                        <li>On YARN, set the min.user.id to a value equal to or lower than the user
+                            ID associated with the <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> user ID, typically named "sdc".</li>
+                        <li>On YARN, add the <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> user name, typically "sdc", to the allowed.system.users
+                            property.</li>
+                    </ul>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="alisontaylor">The following two steps are reused in the
                         Tarball and RPM upgrade section - Update the Configuration
                         Files</draft-comment>
