@@ -93,6 +93,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -833,9 +834,8 @@ public class PipelineStoreResource {
         stageDefinitions.add(stageDefinition);
         String iconFile = stageDefinition.getIcon();
         if (iconFile != null && iconFile.trim().length() > 0) {
-          try {
-            stageIcons.put(key, BaseEncoding.base64().encode(
-                IOUtils.toByteArray(stageDefinition.getStageClassLoader().getResourceAsStream(iconFile))));
+          try(InputStream icon = stageDefinition.getStageClassLoader().getResourceAsStream(iconFile)) {
+            stageIcons.put(key, BaseEncoding.base64().encode(IOUtils.toByteArray(icon)));
           } catch (Exception e) {
             LOG.debug("Failed to convert stage icons to Base64 - " + e.getLocalizedMessage());
             stageIcons.put(key, null);
