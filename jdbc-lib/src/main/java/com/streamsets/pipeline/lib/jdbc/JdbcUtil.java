@@ -335,15 +335,16 @@ public class JdbcUtil {
     // Read up to max clob length
     long maxRemaining = maxClobSize;
     int count;
-    Reader r = data.getCharacterStream();
-    while ((count = r.read(cbuf)) > -1 && maxRemaining > 0) {
-      // If c is more then the remaining chars we want to read, read only as many are available
-      if (count > maxRemaining) {
-        count = (int) maxRemaining;
+    try(Reader r = data.getCharacterStream()) {
+      while ((count = r.read(cbuf)) > -1 && maxRemaining > 0) {
+        // If c is more then the remaining chars we want to read, read only as many are available
+        if (count > maxRemaining) {
+          count = (int) maxRemaining;
+        }
+        sb.append(cbuf, 0, count);
+        // decrement available according to the number of chars we've read
+        maxRemaining -= count;
       }
-      sb.append(cbuf, 0, count);
-      // decrement available according to the number of chars we've read
-      maxRemaining -= count;
     }
     return sb.toString();
   }
@@ -360,15 +361,16 @@ public class JdbcUtil {
     // Read up to max blob length
     long maxRemaining = maxBlobSize;
     int count;
-    InputStream is = data.getBinaryStream();
-    while ((count = is.read(buf)) > -1 && maxRemaining > 0) {
-      // If count is more then the remaining bytes we want to read, read only as many are available
-      if (count > maxRemaining) {
-        count = (int) maxRemaining;
+    try(InputStream is = data.getBinaryStream()) {
+      while ((count = is.read(buf)) > -1 && maxRemaining > 0) {
+        // If count is more then the remaining bytes we want to read, read only as many are available
+        if (count > maxRemaining) {
+          count = (int) maxRemaining;
+        }
+        os.write(buf, 0, count);
+        // decrement available according to the number of bytes we've read
+        maxRemaining -= count;
       }
-      os.write(buf, 0, count);
-      // decrement available according to the number of bytes we've read
-      maxRemaining -= count;
     }
     return os.toByteArray();
   }
