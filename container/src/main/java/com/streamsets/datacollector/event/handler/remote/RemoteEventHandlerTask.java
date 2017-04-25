@@ -573,11 +573,15 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         }
       } catch (IOException ex) {
         ackEventStatus = AckEventStatus.ERROR;
-        ackEventMessage = Utils.format(
+        if(serverEvent == null) {
+          ackEventMessage = Utils.format("Can't parse event JSON", serverEventJson);
+        } else {
+          ackEventMessage = Utils.format(
             "Remote event type: '{}' encountered exception while being deserialized '{}'",
-            serverEvent.getEventType(),
+            serverEvent,
             ex.getMessage()
-        );
+          );
+        }
         LOG.warn(ackEventMessage, ex);
       }
       if (serverEventJson.isRequiresAck()) {
