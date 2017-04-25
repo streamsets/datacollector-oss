@@ -156,6 +156,7 @@ public class SdcIpcTarget extends BaseTarget {
           writer.write(record);
         }
         writer.close();
+        os.close();
         ok = conn.getResponseCode() == HttpURLConnection.HTTP_OK;
         if (!ok) {
           errorReason = conn.getResponseMessage();
