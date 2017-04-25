@@ -33,6 +33,10 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> on a Spark and Mesos gateway node.</cmd>
             </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Cluster-CheckpointStorage-Mesos">
+                <cmd/>
+            </step>
             <step>
                 <cmd>If necessary, specify the location of the spark-submit script.</cmd>
                 <info>The <ph

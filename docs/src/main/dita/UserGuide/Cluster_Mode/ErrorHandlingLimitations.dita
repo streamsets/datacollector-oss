@@ -19,8 +19,8 @@
   <p><indexterm>cluster mode <indexterm>error handling limitations</indexterm></indexterm>Please
       note the following limitations to pipeline configuration options at this time:<ul
         id="ul_vf1_zft_ls">
-        <li><uicontrol>Memory Limit Exceeded</uicontrol> - Use the log or log and alert options.
-          Stopping the pipeline is not supported at this time. </li>
+        <li><uicontrol>Memory Limit Exceeded</uicontrol> - Use either the Log option or the Log and
+          Alert option. The Log, Alert, and Stop Pipeline option is not supported at this time. </li>
         <li><uicontrol>Error Records</uicontrol> - Write error records to Kafka or discard the
           records. Stopping the pipeline or writing records to file is not supported at this time.
         </li>

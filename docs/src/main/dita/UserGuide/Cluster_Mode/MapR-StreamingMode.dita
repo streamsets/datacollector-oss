@@ -27,6 +27,10 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> on a Spark and YARN gateway node.</cmd>
             </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Cluster-CheckpointStorage">
+                <cmd/>
+            </step>
             <step>
                 <cmd>If necessary, specify the location of the spark-submit script. </cmd>
                 <info><ph
@@ -45,15 +49,10 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> to submit YARN jobs, perform one of the following tasks:</cmd>
                 <info>
-                    <ul id="ul_tzs_zbj_cy">
-                        <li>On YARN, set the min.user.id to a value equal to or lower than the user
-                            ID associated with the <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> user ID, typically named "sdc".</li>
-                        <li>On YARN, add the <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> user name, typically "sdc", to the allowed.system.users
-                            property.</li>
+                    <ul
+                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Cluster-SubmitYarnTasks"
+                        id="ul_jdl_kpp_qz">
+                        <li/>
                     </ul>
                 </info>
             </step>
@@ -70,22 +69,9 @@
                     might set the property as follows:
                     <codeblock>log4j.rootCategory=INFO</codeblock></info>
             </step>
-            <step>
-                <cmd>If YARN is configured to use Kerberos authentication, configure <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> to use Kerberos authentication. </cmd>
-                <info>When you configure Kerberos authentication for <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />, you enable <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> to use Kerberos and define the principal and keytab. <p>When Kerberos is
-                        enabled for <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />, <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> automatically uses the Kerberos principal and keytab to connect to any
-                        YARN cluster that uses Kerberos. </p><p>For more information, see <xref
-                            href="../Configuration/Kerberos.dita#concept_hnm_n4l_xs"/>.</p></info>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Cluster-ConfigKerberos">
+                <cmd/>
             </step>
             <step>
                 <cmd>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
