@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -67,6 +66,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -124,6 +124,8 @@ public class OracleCDCSource extends BaseSource {
   private static final String VERSION_STR = "v2";
   private static final String ZERO = "0";
   private boolean sentInitialSchemaEvent = false;
+  private Optional<ResultSet> currentResultSet = Optional.empty(); //NOSONAR
+  private Optional<Statement> currentStatement = Optional.empty();
 
   private enum DDL_EVENT {
     CREATE,
@@ -242,6 +244,7 @@ public class OracleCDCSource extends BaseSource {
       boolean unversioned = true;
       int base = 0;
       long rowsRead;
+      boolean closeResultSet = false;
       if (!StringUtils.isEmpty(lastSourceOffset)) {
         // versioned offsets are of the form : v2::commit_scn:numrowsread.
         // unversioned offsets: scn::nurowsread
@@ -275,6 +278,7 @@ public class OracleCDCSource extends BaseSource {
           dateChanges = connection.prepareStatement(dateChangesString);
           LOG.debug("LogMiner Select Query: " + dateChangesString);
           selectChanges = dateChanges;
+          closeResultSet = true;
         } else {
           BigDecimal startCommitSCN = new BigDecimal(configBean.startSCN);
           produceSelectChanges.setBigDecimal(1, startCommitSCN);
@@ -293,12 +297,13 @@ public class OracleCDCSource extends BaseSource {
         throw new StageException(JDBC_52, ex);
       }
       final PreparedStatement select = selectChanges;
+      final boolean closeRS = closeResultSet;
       resultSetClosingFuture = resultSetExecutor.submit(new Runnable() {
         @Override
         public void run() {
           generationStarted.set(true);
           try {
-            generateRecords(batchSize, select, batchMaker);
+            generateRecords(batchSize, select, batchMaker, closeRS);
           } catch (Exception ex) {
             LOG.error("Error while generating records", ex);
             Throwables.propagate(ex);
@@ -348,17 +353,30 @@ public class OracleCDCSource extends BaseSource {
   private void generateRecords(
       int batchSize,
       PreparedStatement selectChanges,
-      BatchMaker batchMaker
+      BatchMaker batchMaker,
+      boolean forceNewResultSet
   ) throws SQLException, StageException, ParseException {
     String operation;
-    selectChanges.setMaxRows(batchSize);
     StringBuilder query = new StringBuilder();
-    try (ResultSet resultSet = selectChanges.executeQuery()) {
+    ResultSet resultSet;
+    if (!currentResultSet.isPresent()) {
+      resultSet = selectChanges.executeQuery();
+      currentStatement = Optional.of(selectChanges);
+      currentResultSet = Optional.of(resultSet);
+    } else {
+      resultSet = currentResultSet.get();
+    }
+
+    int count = 0;
+    boolean incompleteRedoStatement;
+    try {
       while (resultSet.next()) {
+        count++;
         query.append(resultSet.getString(5));
         // CSF is 1 if the query is incomplete, so read the next row before parsing
         // CSF being 0 means query is complete, generate the record
         if (resultSet.getInt(9) == 0) {
+          incompleteRedoStatement = false;
           BigDecimal scnDecimal = resultSet.getBigDecimal(1);
           String scn = scnDecimal.toPlainString();
           String username = resultSet.getString(2);
@@ -447,11 +465,26 @@ public class OracleCDCSource extends BaseSource {
           }
           this.nextOffsetReference.set(scnSeq);
           query.setLength(0);
+        } else {
+          incompleteRedoStatement = true;
+        }
+        if (!incompleteRedoStatement && count >= batchSize) {
+          break;
         }
       }
     } catch (SQLException ex) {
       if (ex.getErrorCode() != RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED) {
         LOG.warn("SQL Exception while retrieving records", ex);
+      }
+      if (!resultSet.isClosed()) {
+        resultSet.close();
+        currentResultSet = Optional.empty();
+      }
+
+    } finally {
+      if (forceNewResultSet || count < batchSize) {
+        resultSet.close();
+        currentResultSet = Optional.empty();
       }
     }
   }
@@ -878,16 +911,12 @@ public class OracleCDCSource extends BaseSource {
           colName = colName.toUpperCase();
         }
         if (colType == Types.DATE || colType == Types.TIME || colType == Types.TIMESTAMP) {
-          if (dateTimeColumns.get(tableName) == null) {
-            dateTimeColumns.put(tableName, new HashMap<String, String>());
-          }
+          dateTimeColumns.computeIfAbsent(tableName, k -> new HashMap<>());
           dateTimeColumns.get(tableName).put(colName, md.getColumnTypeName(i));
         }
 
         if (colType == Types.DECIMAL || colType == Types.NUMERIC) {
-          if (decimalColumns.get(tableName) == null) {
-            decimalColumns.put(tableName, new HashMap<String, PrecisionAndScale>());
-          }
+          decimalColumns.computeIfAbsent(tableName, k -> new HashMap<>());
           decimalColumns.get(tableName).put(colName, new PrecisionAndScale(md.getPrecision(i), md.getScale(i)));
         }
         columns.put(md.getColumnName(i), md.getColumnType(i));
@@ -1080,7 +1109,7 @@ public class OracleCDCSource extends BaseSource {
 
   private static Optional<String> matchDateTimeString(Matcher m) {
     if (!m.find()) {
-      return Optional.absent();
+      return Optional.empty();
     }
     return Optional.of(m.group(1));
   }
