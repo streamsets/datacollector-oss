@@ -21,7 +21,7 @@ package com.streamsets.pipeline.stage.destination.kinesis;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class FirehoseDestinationChooserValues extends BaseEnumChooserValues {
+public class FirehoseDestinationChooserValues extends BaseEnumChooserValues<FirehoseDestinationType> {
   public FirehoseDestinationChooserValues() {
     super(FirehoseDestinationType.class);
   }

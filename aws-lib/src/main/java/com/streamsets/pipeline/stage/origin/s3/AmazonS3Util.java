@@ -20,7 +20,7 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
@@ -35,7 +35,6 @@ import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +61,7 @@ public class AmazonS3Util {
    * @throws AmazonClientException
    */
   static List<S3ObjectSummary> listObjectsLexicographically(
-      AmazonS3Client s3Client,
+      AmazonS3 s3Client,
       S3ConfigBean s3ConfigBean,
       AntPathMatcher pathMatcher,
       AmazonS3Source.S3Offset s3Offset,
@@ -118,7 +117,7 @@ public class AmazonS3Util {
    * @throws AmazonClientException
    */
   static List<S3ObjectSummary> listObjectsChronologically(
-      AmazonS3Client s3Client,
+      AmazonS3 s3Client,
       S3ConfigBean s3ConfigBean,
       AntPathMatcher pathMatcher,
       AmazonS3Source.S3Offset s3Offset,
@@ -128,18 +127,14 @@ public class AmazonS3Util {
     //Algorithm:
     // - Full scan all objects that match the file name pattern and which are later than the file in the offset
     // - Select the oldest "fetchSize" number of files and return them.
-    TreeSet<S3ObjectSummary> treeSet = new TreeSet<>(
-      new Comparator<S3ObjectSummary>() {
-        @Override
-        public int compare(S3ObjectSummary o1, S3ObjectSummary o2) {
-          int result = o1.getLastModified().compareTo(o2.getLastModified());
-          if(result != 0) {
-            //same modified time. Use name to sort
-            return result;
-          }
-          return o1.getKey().compareTo(o2.getKey());
-        }
-      });
+    TreeSet<S3ObjectSummary> treeSet = new TreeSet<>((o1, o2) -> {
+      int result = o1.getLastModified().compareTo(o2.getLastModified());
+      if(result != 0) {
+        //same modified time. Use name to sort
+        return result;
+      }
+      return o1.getKey().compareTo(o2.getKey());
+    });
 
     S3Objects s3ObjectSummaries = S3Objects
       .withPrefix(s3Client, s3ConfigBean.s3Config.bucket, s3ConfigBean.s3Config.commonPrefix)
@@ -193,7 +188,7 @@ public class AmazonS3Util {
   }
 
   static void copy(
-      AmazonS3Client s3Client,
+      AmazonS3 s3Client,
       String srcBucket,
       String sourceKey,
       String destBucket,
@@ -208,7 +203,7 @@ public class AmazonS3Util {
   }
 
   static S3Object getObject(
-      AmazonS3Client s3Client,
+      AmazonS3 s3Client,
       String bucket,
       String objectKey,
       boolean useSSE,
@@ -252,7 +247,7 @@ public class AmazonS3Util {
   }
 
   static S3Object getObjectRange(
-      AmazonS3Client s3Client,
+      AmazonS3 s3Client,
       String bucket,
       String objectKey,
       long range,
@@ -269,7 +264,7 @@ public class AmazonS3Util {
     return s3Client.getObject(getObjectRequest);
   }
 
-  static S3ObjectSummary getObjectSummary(AmazonS3Client s3Client, String bucket, String objectKey) {
+  static S3ObjectSummary getObjectSummary(AmazonS3 s3Client, String bucket, String objectKey) {
     S3ObjectSummary s3ObjectSummary = null;
     S3Objects s3ObjectSummaries = S3Objects.withPrefix(s3Client, bucket, objectKey);
     for (S3ObjectSummary s : s3ObjectSummaries) {

@@ -19,9 +19,11 @@
  */
 package com.streamsets.pipeline.stage.origin.s3;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -35,7 +37,7 @@ import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.common.FakeS3;
+import com.streamsets.pipeline.stage.common.AmazonS3TestSuite;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
@@ -44,7 +46,6 @@ import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -56,52 +57,36 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class TestAmazonS3Source2 {
-  private static String fakeS3Root;
-  private static ExecutorService executorService;
-  private static FakeS3 fakeS3;
-  private static AmazonS3Client s3client;
+public class TestAmazonS3Source2 extends AmazonS3TestSuite {
+
+  private static AmazonS3 s3client;
   private static final String BUCKET_NAME = "mybucket2";
   private static final String POSTPROCESS_BUCKET = "post-process-bucket2";
   private static final String POSTPROCESS_PREFIX = "post-process-prefix";
   private static final String ERROR_BUCKET = "error-bucket2";
   private static final String ERROR_PREFIX = "error-prefix";
-  private static int port;
 
   @BeforeClass
-  public static void setUpClass() throws IOException, InterruptedException, URISyntaxException {
-    File dir = new File(new File("target", UUID.randomUUID().toString()), "fakes3_root").getAbsoluteFile();
-    Assert.assertTrue(dir.mkdirs());
-    fakeS3Root = dir.getAbsolutePath();
-    port = TestUtil.getFreePort();
-    fakeS3 = new FakeS3(fakeS3Root, port);
-    Assume.assumeTrue("Please install fakes3 in your system", fakeS3.fakes3Installed());
-    //Start the fakes3 server
-    executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(fakeS3);
-
+  public static void setUpClass() throws Exception {
+    setupS3();
     populateFakes3();
   }
 
   @AfterClass
   public static void tearDownClass() {
-    if(executorService != null) {
-      executorService.shutdownNow();
-    }
-    if(fakeS3 != null) {
-      fakeS3.shutdown();
-    }
+    teardownS3();
   }
 
   private static void populateFakes3() throws IOException, InterruptedException, URISyntaxException {
     BasicAWSCredentials credentials = new BasicAWSCredentials("foo", "bar");
-    s3client = new AmazonS3Client(credentials);
-    s3client.setEndpoint("http://localhost:" + port);
-    s3client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
+    s3client = AmazonS3ClientBuilder
+        .standard()
+        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:" + port, null))
+        .withPathStyleAccessEnabled(true)
+        .withChunkedEncodingDisabled(true)
+        .build();
 
     TestUtil.createBucket(s3client, BUCKET_NAME);
     TestUtil.createBucket(s3client, POSTPROCESS_BUCKET);
@@ -331,6 +316,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
@@ -373,6 +359,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
@@ -415,6 +402,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
@@ -458,15 +446,16 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
-  private int getObjectCount(AmazonS3Client s3Client, String bucket) {
+  private int getObjectCount(AmazonS3 s3Client, String bucket) {
     int count = 0;
-    for(S3ObjectSummary s : S3Objects.inBucket(s3Client, bucket)) {
+    for(S3ObjectSummary ignored : S3Objects.inBucket(s3Client, bucket)) {
       count++;
     }
     return count;

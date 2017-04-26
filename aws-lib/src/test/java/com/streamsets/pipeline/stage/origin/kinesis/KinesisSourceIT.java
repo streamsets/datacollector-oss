@@ -19,8 +19,11 @@
  */
 package com.streamsets.pipeline.stage.origin.kinesis;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.kinesis.AmazonKinesisClient;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.kinesis.AmazonKinesis;
+import com.amazonaws.services.kinesis.AmazonKinesisClientBuilder;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.amazonaws.services.kinesis.metrics.impl.NullMetricsFactory;
 import com.amazonaws.services.kinesis.model.DescribeStreamRequest;
@@ -62,6 +65,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.amazonaws.SDKGlobalConfiguration.AWS_CBOR_DISABLE_SYSTEM_PROPERTY;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
@@ -107,15 +111,19 @@ public class KinesisSourceIT {
             .build();
       })
   ).withExposedPorts(DYNAMO_DB_PORT);
-  
+
   @ClassRule
   public static GenericContainer kinesalite = new GenericContainer("instructure/kinesalite:latest")
       .withExposedPorts(KINESIS_PORT);
 
   @BeforeClass
   public static void setUpClass() throws Exception {
-    AmazonKinesisClient client = new AmazonKinesisClient();
-    client.setEndpoint(getKinesisEndpoint());
+    AmazonKinesis client = AmazonKinesisClientBuilder
+        .standard()
+        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(getKinesisEndpoint(), null))
+        .build();
+
+    System.setProperty(AWS_CBOR_DISABLE_SYSTEM_PROPERTY, "true");
 
     client.createStream(SINGLE_SHARD_STREAM, 1);
     client.createStream(MULTI_SHARD_STREAM, 2);
@@ -160,7 +168,7 @@ public class KinesisSourceIT {
     return badRecord;
   }
 
-  private static boolean streamActive(AmazonKinesisClient client, String streamName) {
+  private static boolean streamActive(AmazonKinesis client, String streamName) {
     try {
       DescribeStreamRequest describeStreamRequest = new DescribeStreamRequest();
       describeStreamRequest.setStreamName(streamName);
@@ -317,8 +325,10 @@ public class KinesisSourceIT {
     return "http://" + dynamo.getContainerIpAddress() + ":" + dynamo.getMappedPort(DYNAMO_DB_PORT);
   }
 
-  private AmazonDynamoDBClient getDynamoDBClient() {
-    return new AmazonDynamoDBClient()
-        .withEndpoint(getDynamoEndpoint());
+  private AmazonDynamoDB getDynamoDBClient() {
+    return AmazonDynamoDBClientBuilder
+        .standard()
+        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(getDynamoEndpoint(), null))
+        .build();
   }
 }

@@ -52,4 +52,11 @@ public class AWSConfig {
   )
   public String awsSecretAccessKey;
 
+  /**
+   * FakeS3 used for testing does not support chunked encoding
+   * so it is exposed as a flag here, as the user should not
+   * normally need to change this. This is a general AWS Client
+   * configuration property and is not specific to S3.
+   */
+  public boolean disableChunkedEncoding = false;
 }

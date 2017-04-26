@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.s3;
 
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class S3FileRef extends AbstractFileRef {
-  private final AmazonS3Client s3Client;
+  private final AmazonS3 s3Client;
   private final S3ObjectSummary s3ObjectSummary;
   private final boolean useSSE;
   private final String customerKey;
@@ -37,7 +37,7 @@ public final class S3FileRef extends AbstractFileRef {
 
   @SuppressWarnings("unchecked")
   public S3FileRef(
-      AmazonS3Client s3Client,
+      AmazonS3 s3Client,
       S3ObjectSummary s3ObjectSummary,
       boolean useSSE,
       String customerKey,
@@ -90,12 +90,12 @@ public final class S3FileRef extends AbstractFileRef {
    */
   public static final class Builder extends AbstractFileRef.Builder<S3FileRef, Builder> {
     private S3ObjectSummary s3ObjectSummary;
-    private AmazonS3Client s3Client;
+    private AmazonS3 s3Client;
     private boolean useSSE;
     private String customerKey;
     private String customerKeyMd5;
 
-    public Builder s3Client(AmazonS3Client s3Client) {
+    public Builder s3Client(AmazonS3 s3Client) {
       this.s3Client = s3Client;
       return this;
     }

@@ -20,7 +20,7 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.codahale.metrics.Meter;
 import com.google.common.base.Preconditions;
@@ -41,7 +41,7 @@ public class S3Spooler {
 
   private final Source.Context context;
   private final S3ConfigBean s3ConfigBean;
-  private final AmazonS3Client s3Client;
+  private final AmazonS3 s3Client;
   private AntPathMatcher pathMatcher;
 
   public S3Spooler(Source.Context context, S3ConfigBean s3ConfigBean) {

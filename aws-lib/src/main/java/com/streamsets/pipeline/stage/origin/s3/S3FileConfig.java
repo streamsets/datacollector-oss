@@ -69,7 +69,7 @@ public class S3FileConfig {
     min = 1,
     max = Integer.MAX_VALUE
   )
-  public int poolSize;
+  public int poolSize = 100;
 
   @ConfigDef(
     required = true,

@@ -21,7 +21,7 @@ package com.streamsets.pipeline.stage.destination.s3;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.transfer.TransferManager;
-import com.amazonaws.services.s3.transfer.TransferManagerConfiguration;
+import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Batch;
@@ -82,14 +82,13 @@ public class AmazonS3Target extends BaseTarget {
     timeDriverVars = getContext().createELVars();
     calendar = Calendar.getInstance(TimeZone.getTimeZone(s3TargetConfigBean.timeZoneID));
 
-    transferManager = new TransferManager(
-        s3TargetConfigBean.s3Config.getS3Client(),
-        Executors.newFixedThreadPool(s3TargetConfigBean.tmConfig.threadPoolSize)
-    );
-    TransferManagerConfiguration transferManagerConfiguration = new TransferManagerConfiguration();
-    transferManagerConfiguration.setMinimumUploadPartSize(s3TargetConfigBean.tmConfig.minimumUploadPartSize);
-    transferManagerConfiguration.setMultipartUploadThreshold(s3TargetConfigBean.tmConfig.multipartUploadThreshold);
-    transferManager.setConfiguration(transferManagerConfiguration);
+    transferManager = TransferManagerBuilder
+        .standard()
+        .withS3Client(s3TargetConfigBean.s3Config.getS3Client())
+        .withExecutorFactory(() -> Executors.newFixedThreadPool(s3TargetConfigBean.tmConfig.threadPoolSize))
+        .withMinimumUploadPartSize(s3TargetConfigBean.tmConfig.minimumUploadPartSize)
+        .withMultipartUploadThreshold(s3TargetConfigBean.tmConfig.multipartUploadThreshold)
+        .build();
 
     if (partitionTemplate.contains(EL_PREFIX)) {
       TimeEL.setCalendarInContext(partitionVars, calendar);

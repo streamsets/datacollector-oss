@@ -19,10 +19,12 @@
  */
 package com.streamsets.pipeline.stage.destination.s3;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.Headers;
-import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -40,9 +42,8 @@ import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import com.streamsets.pipeline.stage.common.FakeS3;
+import com.streamsets.pipeline.stage.common.AmazonS3TestSuite;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
@@ -53,7 +54,6 @@ import com.streamsets.pipeline.stage.origin.s3.S3Config;
 import com.streamsets.pipeline.stage.origin.s3.S3FileRef;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,11 +74,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @RunWith(Parameterized.class)
-public class TestAmazonS3TargetForWholeFile {
+public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
   private static final String SOURCE_BUCKET_NAME = "source";
   private static final String TARGET_BUCKET_NAME = "target";
   private static final String FILE_NAME_1 = "file1.txt";
@@ -91,11 +89,7 @@ public class TestAmazonS3TargetForWholeFile {
   private static final Map<String, String> SAMPLE_TEXT_FOR_FILE =
       ImmutableMap.of(FILE_NAME_1, SAMPLE_TEXT_TO_FILE_PATH_1, FILE_NAME_2, SAMPLE_TEXT_TO_FILE_PATH_2);
 
-  private static String fakeS3Root;
-  private static FakeS3 fakeS3;
-  private static AmazonS3Client s3client;
-  private static ExecutorService executorService;
-  private static int port;
+  private static AmazonS3 s3client;
   private static File testDir;
 
   private enum SourceType {
@@ -135,11 +129,11 @@ public class TestAmazonS3TargetForWholeFile {
             ChecksumAlgorithm.values()
         );
     for (ChecksumAlgorithm checksumAlgorithm : supportedChecksumAlgorithms) {
-      for (int j = 0; j < array.size(); j++) {
+      for (Object[] anArray : array) {
         Object[] data = new Object[4];
-        data[0] = array.get(j)[0];
-        data[1] = array.get(j)[1];
-        data[2] = array.get(j)[2];
+        data[0] = anArray[0];
+        data[1] = anArray[1];
+        data[2] = anArray[2];
         data[3] = checksumAlgorithm;
         finalData.add(data);
       }
@@ -149,20 +143,16 @@ public class TestAmazonS3TargetForWholeFile {
 
   @BeforeClass
   public static void setUpClass() throws Exception {
-    File dir = new File(new File("target", UUID.randomUUID().toString()), "fakes3_root").getAbsoluteFile();
-    Assert.assertTrue(dir.mkdirs());
-    fakeS3Root = dir.getAbsolutePath();
-    port = TestUtil.getFreePort();
-    fakeS3 = new FakeS3(fakeS3Root, port);
-    Assume.assumeTrue("Please install fakes3 in your system", fakeS3.fakes3Installed());
-    //Start the fakes3 server
-    executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(fakeS3);
+    setupS3();
 
     BasicAWSCredentials credentials = new BasicAWSCredentials("foo", "bar");
-    s3client = new AmazonS3Client(credentials);
-    s3client.setEndpoint("http://localhost:" + port);
-    s3client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
+    s3client = AmazonS3ClientBuilder
+        .standard()
+        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:" + port, null))
+        .withPathStyleAccessEnabled(true)
+        .withChunkedEncodingDisabled(true)
+        .build();
 
     TestUtil.createBucket(s3client, SOURCE_BUCKET_NAME);
     TestUtil.createBucket(s3client, TARGET_BUCKET_NAME);
@@ -191,12 +181,7 @@ public class TestAmazonS3TargetForWholeFile {
 
   @AfterClass
   public static void tearDownClass() {
-    if(executorService != null) {
-      executorService.shutdownNow();
-    }
-    if(fakeS3 != null) {
-      fakeS3.shutdown();
-    }
+    teardownS3();
   }
 
   public void deleteObjectsAfterVerificationInTarget(String objectKey) throws Exception {
@@ -292,6 +277,7 @@ public class TestAmazonS3TargetForWholeFile {
     s3Config.awsConfig = new AWSConfig();
     s3Config.awsConfig.awsAccessKeyId = "foo";
     s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3Config.awsConfig.disableChunkedEncoding = true;
     s3Config.commonPrefix = "";
     s3Config.delimiter = DELIMITER;
 
@@ -332,9 +318,7 @@ public class TestAmazonS3TargetForWholeFile {
 
   private int verifyAndReturnNoOfObjects() throws Exception {
     int numberOfObjects = 0;
-    Iterator<S3ObjectSummary> s3ObjectSummaryIterator = S3Objects.inBucket(s3client, TARGET_BUCKET_NAME).iterator();
-    while (s3ObjectSummaryIterator.hasNext()) {
-      S3ObjectSummary s3ObjectSummary = s3ObjectSummaryIterator.next();
+    for (S3ObjectSummary s3ObjectSummary : S3Objects.inBucket(s3client, TARGET_BUCKET_NAME)) {
       String fileNameOrKey = s3ObjectSummary.getKey();
       if (withFileNamePrefix) {
         //strip out the filePrefix sdc-
@@ -371,35 +355,32 @@ public class TestAmazonS3TargetForWholeFile {
       int numberOfRecords = verifyAndReturnNoOfObjects();
 
       Assert.assertEquals(numberOfRecords, targetRunner.getEventRecords().size());
-      Iterator<Record> eventRecordIterator = targetRunner.getEventRecords().iterator();
 
-      while (eventRecordIterator.hasNext()) {
-        Record eventRecord = eventRecordIterator.next();
-
+      for (Record eventRecord : targetRunner.getEventRecords()) {
         Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
         Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));
-        Map<String, Field> targetFileInfo = eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH).getValueAsMap();
+        Map<String, Field> targetFileInfo = eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH)
+            .getValueAsMap();
         Assert.assertEquals(targetFileInfo.get("bucket").getValueAsString(), TARGET_BUCKET_NAME);
 
         Assert.assertTrue(eventRecord.has("/" + FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO));
         Assert.assertTrue(eventRecord.has("/" + FileRefUtil.WHOLE_FILE_CHECKSUM));
 
-        Assert.assertEquals(
-            checksumAlgorithm.name(),
+        Assert.assertEquals(checksumAlgorithm.name(),
             eventRecord.get("/" + FileRefUtil.WHOLE_FILE_CHECKSUM_ALGO).getValueAsString()
         );
 
         //strip out the filePrefix sdc-
-        String objectKey =
-            eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/objectKey").getValueAsString();
+        String objectKey = eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/objectKey")
+            .getValueAsString();
         if (withFileNamePrefix) {
           Assert.assertTrue(objectKey.startsWith("sdc-"));
           //strip out the filePrefix sdc-
           objectKey = objectKey.substring(4);
         }
 
-        String checksum = HashingUtil.getHasher(checksumAlgorithm.getHashType())
-            .hashString(SAMPLE_TEXT_FOR_FILE.get(objectKey), Charset.defaultCharset()).toString();
+        String checksum = HashingUtil.getHasher(checksumAlgorithm.getHashType()).hashString(SAMPLE_TEXT_FOR_FILE.get(
+            objectKey), Charset.defaultCharset()).toString();
         Assert.assertEquals(checksum, eventRecord.get("/" + FileRefUtil.WHOLE_FILE_CHECKSUM).getValueAsString());
       }
     } finally {
@@ -416,7 +397,7 @@ public class TestAmazonS3TargetForWholeFile {
     targetRunner.runInit();
     try {
       Record invalidRecord = getRecords().get(0);
-      invalidRecord.set(Field.create(new HashMap<String, Field>()));
+      invalidRecord.set(Field.create(new HashMap<>()));
       targetRunner.runWrite(ImmutableList.of(invalidRecord));
       Assert.assertEquals(1, targetRunner.getErrorRecords().size());
     } finally {

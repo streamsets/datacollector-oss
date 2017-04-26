@@ -136,7 +136,7 @@ public class KinesisTarget extends BaseTarget {
           .setCredentialsProvider(AWSUtil.getCredentialsProvider(conf.awsConfig));
 
       if (conf.region == AWSRegions.OTHER) {
-        producerConfig.setCustomEndpoint(conf.endpoint);
+        producerConfig.setKinesisEndpoint(conf.endpoint);
       } else {
         producerConfig.setRegion(conf.region.getLabel());
       }

@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.common;
 
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -45,7 +45,7 @@ public class TestUtil {
     return port;
   }
 
-  public static void createBucket(AmazonS3Client s3client, String bucketName) {
+  public static void createBucket(AmazonS3 s3client, String bucketName) {
     if(s3client.doesBucketExist(bucketName)) {
       for(S3ObjectSummary s : S3Objects.inBucket(s3client, bucketName)) {
         s3client.deleteObject(bucketName, s.getKey());

@@ -19,8 +19,9 @@
  */
 package com.streamsets.pipeline.stage.destination.kinesis;
 
-import com.amazonaws.regions.RegionUtils;
-import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClient;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose;
+import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClientBuilder;
 import com.amazonaws.services.kinesisfirehose.model.PutRecordBatchRequest;
 import com.amazonaws.services.kinesisfirehose.model.PutRecordBatchResponseEntry;
 import com.amazonaws.services.kinesisfirehose.model.PutRecordBatchResult;
@@ -56,7 +57,7 @@ public class FirehoseTarget extends BaseTarget {
 
   private ErrorRecordHandler errorRecordHandler;
   private DataGeneratorFactory generatorFactory;
-  private AmazonKinesisFirehoseClient firehoseClient;
+  private AmazonKinesisFirehose firehoseClient;
 
   private long recordCounter = 0L;
 
@@ -78,12 +79,16 @@ public class FirehoseTarget extends BaseTarget {
     }
 
     generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
-    firehoseClient = new AmazonKinesisFirehoseClient(AWSUtil.getCredentialsProvider(conf.awsConfig));
+    AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder
+        .standard()
+        .withCredentials(AWSUtil.getCredentialsProvider(conf.awsConfig));
     if (conf.region == AWSRegions.OTHER) {
-      firehoseClient.setEndpoint(conf.endpoint);
+      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
     } else {
-      firehoseClient.setRegion(RegionUtils.getRegion(conf.region.getLabel()));
+      builder.withRegion(conf.region.getLabel());
     }
+
+    firehoseClient = builder.build();
 
     return issues;
   }

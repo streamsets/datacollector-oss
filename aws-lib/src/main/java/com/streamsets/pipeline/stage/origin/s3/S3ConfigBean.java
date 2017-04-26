@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.s3;
 
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
@@ -202,7 +202,7 @@ public class S3ConfigBean {
     s3Config.destroy();
   }
 
-  private void validateBucket(Stage.Context context, List<Stage.ConfigIssue> issues, AmazonS3Client s3Client,
+  private void validateBucket(Stage.Context context, List<Stage.ConfigIssue> issues, AmazonS3 s3Client,
                               String bucket, String groupName, String configName) {
     if(bucket == null || bucket.isEmpty()) {
       issues.add(context.createConfigIssue(groupName, configName, Errors.S3_SPOOLDIR_11));

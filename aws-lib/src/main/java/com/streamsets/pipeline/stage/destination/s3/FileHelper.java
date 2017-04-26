@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.destination.s3;
 
-import com.amazonaws.event.ProgressEvent;
 import com.amazonaws.event.ProgressListener;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -128,23 +127,19 @@ abstract class FileHelper {
     );
     final String object = s3TargetConfigBean.s3Config.bucket + s3TargetConfigBean.s3Config.delimiter + fileName;
     Upload upload = transferManager.upload(putObjectRequest);
-    upload.addProgressListener(
-        new ProgressListener() {
-          public void progressChanged(ProgressEvent progressEvent) {
-            switch (progressEvent.getEventType()) {
-              case TRANSFER_STARTED_EVENT:
-                LOG.debug("Started uploading object {} into Amazon S3", object);
-                break;
-              case TRANSFER_COMPLETED_EVENT:
-                LOG.debug("Completed uploading object {} into Amazon S3", object);
-                break;
-              case TRANSFER_FAILED_EVENT:
-                LOG.debug("Failed uploading object {} into Amazon S3", object);
-                break;
-            }
-          }
-        }
-    );
+    upload.addProgressListener((ProgressListener) progressEvent -> {
+      switch (progressEvent.getEventType()) {
+        case TRANSFER_STARTED_EVENT:
+          LOG.debug("Started uploading object {} into Amazon S3", object);
+          break;
+        case TRANSFER_COMPLETED_EVENT:
+          LOG.debug("Completed uploading object {} into Amazon S3", object);
+          break;
+        case TRANSFER_FAILED_EVENT:
+          LOG.debug("Failed uploading object {} into Amazon S3", object);
+          break;
+      }
+    });
     return upload;
   }
 }

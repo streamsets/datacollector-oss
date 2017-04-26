@@ -21,9 +21,9 @@ package com.streamsets.pipeline.stage.lib.aws;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.internal.StaticCredentialsProvider;
 import com.streamsets.pipeline.api.Config;
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,7 +37,7 @@ public class AWSUtil {
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) {
     AWSCredentialsProvider credentialsProvider;
     if (!StringUtils.isEmpty(config.awsAccessKeyId) && !StringUtils.isEmpty(config.awsSecretAccessKey)) {
-      credentialsProvider = new StaticCredentialsProvider(
+      credentialsProvider = new AWSStaticCredentialsProvider(
           new BasicAWSCredentials(config.awsAccessKeyId, config.awsSecretAccessKey)
       );
     } else {

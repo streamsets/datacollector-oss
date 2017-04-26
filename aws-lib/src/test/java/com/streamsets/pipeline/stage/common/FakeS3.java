@@ -57,7 +57,6 @@ public class FakeS3 implements Runnable {
       p.waitFor();
     } catch (IOException | InterruptedException e) {
       e.printStackTrace();
-      return;
     }
   }
 
@@ -91,7 +90,6 @@ public class FakeS3 implements Runnable {
         }
       } catch (IOException e) {
         e.printStackTrace();
-        return;
       }
     }
   }

@@ -138,7 +138,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
       int i = 0;
       while(i < maxBatchSize) {
         try {
-          Record record = null;
+          Record record;
 
           try {
             record = parser.parse();

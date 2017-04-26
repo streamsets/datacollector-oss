@@ -21,9 +21,9 @@ package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.RegionUtils;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -32,8 +32,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
-import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
@@ -126,11 +126,11 @@ public class S3Config {
     }
   }
 
-  public AmazonS3Client getS3Client() {
+  public AmazonS3 getS3Client() {
     return s3Client;
   }
 
-  private AmazonS3Client s3Client;
+  private AmazonS3 s3Client;
 
   private void validateConnection(
       Stage.Context context,
@@ -146,17 +146,24 @@ public class S3Config {
       clientConfig.setMaxErrorRetry(maxErrorRetries);
     }
 
-    s3Client = new AmazonS3Client(credentials, clientConfig);
-    s3Client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
+    AmazonS3ClientBuilder builder = AmazonS3ClientBuilder
+        .standard()
+        .withCredentials(credentials)
+        .withClientConfiguration(clientConfig)
+        .withChunkedEncodingDisabled(awsConfig.disableChunkedEncoding)
+        .withPathStyleAccessEnabled(true);
+
     if (region == AWSRegions.OTHER) {
       if (endpoint == null || endpoint.isEmpty()) {
         issues.add(context.createConfigIssue(Groups.S3.name(), configPrefix + "endpoint", Errors.S3_SPOOLDIR_10));
         return;
       }
-      s3Client.setEndpoint(endpoint);
+      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, null));
     } else {
-      s3Client.setRegion(RegionUtils.getRegion(region.getLabel()));
+      builder.withRegion(region.getLabel());
     }
+    s3Client = builder.build();
+
     try {
       //check if the credentials are right by trying to list an object in the common prefix
       s3Client.listObjects(new ListObjectsRequest(bucket, commonPrefix, null, delimiter, 1).withEncodingType("url"));

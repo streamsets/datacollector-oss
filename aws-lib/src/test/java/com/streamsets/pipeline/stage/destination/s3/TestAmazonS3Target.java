@@ -19,9 +19,11 @@
  */
 package com.streamsets.pipeline.stage.destination.s3;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -65,7 +67,7 @@ public class TestAmazonS3Target {
 
   private static String fakeS3Root;
   private static FakeS3 fakeS3;
-  private static AmazonS3Client s3client;
+  private static AmazonS3 s3client;
   private static ExecutorService executorService;
 
   private static int port;
@@ -83,9 +85,13 @@ public class TestAmazonS3Target {
     executorService.submit(fakeS3);
 
     BasicAWSCredentials credentials = new BasicAWSCredentials("foo", "bar");
-    s3client = new AmazonS3Client(credentials);
-    s3client.setEndpoint("http://localhost:" + port);
-    s3client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
+    s3client = AmazonS3ClientBuilder
+        .standard()
+        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:" + port, null))
+        .withPathStyleAccessEnabled(true)
+        .withChunkedEncodingDisabled(true) // FakeS3 does not correctly calculate checksums with chunked encoding enabled.
+        .build();
 
     TestUtil.createBucket(s3client, BUCKET_NAME);
   }
@@ -259,6 +265,7 @@ public class TestAmazonS3Target {
     s3Config.awsConfig = new AWSConfig();
     s3Config.awsConfig.awsAccessKeyId = "foo";
     s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3Config.awsConfig.disableChunkedEncoding = true;
     s3Config.commonPrefix = commonPrefix;
     s3Config.delimiter = DELIMITER;
 

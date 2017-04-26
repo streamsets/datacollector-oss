@@ -19,14 +19,17 @@
  */
 package com.streamsets.pipeline.stage.origin.s3;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.Headers;
-import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
@@ -42,7 +45,7 @@ import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.common.FakeS3;
+import com.streamsets.pipeline.stage.common.AmazonS3TestSuite;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
@@ -52,12 +55,11 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.internal.util.reflection.Whitebox;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -65,78 +67,76 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class TestAmazonS3SourceDataFormats {
+public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
 
-  private static String fakeS3Root;
-  private static ExecutorService executorService;
-  private static FakeS3 fakeS3;
-  private static AmazonS3Client s3client;
+  private static AmazonS3 s3client;
   private static final String BUCKET_NAME = "testamazonssourcedataformats";
-  private static int port;
 
   @BeforeClass
-  public static void setUpClass() throws IOException, InterruptedException {
-    File dir = new File(new File("target", UUID.randomUUID().toString()), "fakes3_root").getAbsoluteFile();
-    Assert.assertTrue(dir.mkdirs());
-    fakeS3Root = dir.getAbsolutePath();
-    port = TestUtil.getFreePort();
-    fakeS3 = new FakeS3(fakeS3Root, port);
-    Assume.assumeTrue("Please install fakes3 in your system", fakeS3.fakes3Installed());
-    //Start the fakes3 server
-    executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(fakeS3);
-
+  public static void setUpClass() throws Exception {
+    setupS3();
     populateFakes3();
   }
 
   @AfterClass
   public static void tearDownClass() {
-    if(executorService != null) {
-      executorService.shutdownNow();
-    }
-    if(fakeS3 != null) {
-      fakeS3.shutdown();
-    }
+    teardownS3();
   }
 
   private static void populateFakes3() throws IOException, InterruptedException {
     BasicAWSCredentials credentials = new BasicAWSCredentials("foo", "bar");
-    s3client = new AmazonS3Client(credentials);
-    s3client.setEndpoint("http://localhost:" + port);
-    s3client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
+    s3client = AmazonS3ClientBuilder
+        .standard()
+        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:" + port, null))
+        .withPathStyleAccessEnabled(true)
+        .withChunkedEncodingDisabled(true)
+        .build();
 
     TestUtil.createBucket(s3client, BUCKET_NAME);
 
     //write files each under myBucket
-    //delimited
-    InputStream in = Resources.getResource("sample_csv.csv").openStream();
-    PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_csv.csv", in, new ObjectMetadata());
-    s3client.putObject(putObjectRequest);
-    //sdc
-    in = Resources.getResource("sample_sdc.sdc").openStream();
-    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_sdc.sdc", in, new ObjectMetadata());
-    s3client.putObject(putObjectRequest);
-    //xml
-    in = Resources.getResource("sample_xml.xml").openStream();
-    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_xml.xml", in, new ObjectMetadata());
-    s3client.putObject(putObjectRequest);
-    //json
-    in = Resources.getResource("sample_json.json").openStream();
-    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_json.json", in, new ObjectMetadata());
-    s3client.putObject(putObjectRequest);
-    //log
-    in = Resources.getResource("sample_log.log").openStream();
-    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_log.log", in, new ObjectMetadata());
-    s3client.putObject(putObjectRequest);
-    //avro
-    in = Resources.getResource("sample_avro.avro").openStream();
-    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_avro.avro", in, new ObjectMetadata());
-    s3client.putObject(putObjectRequest);
 
+    //delimited
+    try (InputStream in = Resources.getResource("sample_csv.csv").openStream()) {
+      PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_csv.csv", in, new ObjectMetadata());
+      s3client.putObject(putObjectRequest);
+    }
+
+    //sdc
+    try (InputStream in = Resources.getResource("sample_sdc.sdc").openStream()) {
+      // This file is > 8kb which is the mark limit for BufferedInputStream created by openStream()
+      byte[] data = ByteStreams.toByteArray(in);
+      ByteArrayInputStream bIn = new ByteArrayInputStream(data);
+      ObjectMetadata metadata = new ObjectMetadata();
+      metadata.setContentLength(data.length);
+      PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_sdc.sdc", bIn, metadata);
+      s3client.putObject(putObjectRequest);
+    }
+
+    //xml
+    try (InputStream in = Resources.getResource("sample_xml.xml").openStream()) {
+      PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_xml.xml", in, new ObjectMetadata());
+      s3client.putObject(putObjectRequest);
+    }
+
+    //json
+    try (InputStream in = Resources.getResource("sample_json.json").openStream()) {
+      PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_json.json", in, new ObjectMetadata());
+      s3client.putObject(putObjectRequest);
+    }
+    //log
+    try (InputStream in = Resources.getResource("sample_log.log").openStream()) {
+      PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_log.log", in, new ObjectMetadata());
+      s3client.putObject(putObjectRequest);
+    }
+
+    //avro
+    try (InputStream in = Resources.getResource("sample_avro.avro").openStream()) {
+      PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_avro.avro", in, new ObjectMetadata());
+      s3client.putObject(putObjectRequest);
+    }
 
     int count = 0;
     if(s3client.doesBucketExist(BUCKET_NAME)) {
@@ -429,6 +429,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
@@ -470,6 +471,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
@@ -507,6 +509,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
@@ -546,6 +549,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
@@ -585,6 +589,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
@@ -624,6 +629,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
@@ -662,13 +668,14 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
     s3ConfigBean.proxyConfig = new ProxyConfig();
     return new AmazonS3Source(s3ConfigBean);
   }
 
-  private int getObjectCount(AmazonS3Client s3Client, String bucket) {
+  private int getObjectCount(AmazonS3 s3Client, String bucket) {
     int count = 0;
     for(S3ObjectSummary s : S3Objects.inBucket(s3Client, bucket)) {
       count++;

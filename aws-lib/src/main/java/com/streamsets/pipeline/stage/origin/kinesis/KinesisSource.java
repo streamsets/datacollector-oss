@@ -19,7 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.kinesis;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
@@ -67,7 +67,7 @@ public class KinesisSource extends BasePushSource {
 
   private DataParserFactory parserFactory;
   private ExecutorService executor;
-  private AmazonDynamoDBClient dynamoDBClient = null;
+  private AmazonDynamoDB dynamoDBClient = null;
   private IMetricsFactory metricsFactory = null;
   private Worker worker;
 
@@ -109,8 +109,8 @@ public class KinesisSource extends BasePushSource {
   }
 
   @VisibleForTesting
-  void setDynamoDBClient(AmazonDynamoDBClient dynamoDBClient) {
-    this.dynamoDBClient = dynamoDBClient;
+  void setDynamoDBClient(AmazonDynamoDB client) {
+    this.dynamoDBClient = client;
   }
 
   @VisibleForTesting
@@ -241,7 +241,9 @@ public class KinesisSource extends BasePushSource {
           }
         }
         return Optional.<Throwable>empty();
-      }).get().ifPresent(Throwables::propagate);
+      }).get().ifPresent(t -> {
+        throw Throwables.propagate(t);
+      });
     } catch (InterruptedException | ExecutionException e) {
       throw Throwables.propagate(e);
     }
