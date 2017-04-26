@@ -20,6 +20,7 @@
 
 package com.streamsets.pipeline.stage.origin.tcp;
 
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 
 /**
@@ -32,7 +33,7 @@ public interface StopPipelineHandler {
    * Stop the pipeline (by whatever mechanism is defined)
    *
    * @param pipelineId the SDC pipeline ID to stop
-   * @param error the OnRecordErrorException that triggered this stop, should not be null
+   * @param error the Exception that triggered this stop, should not be null
    */
-  void stopPipeline(String pipelineId, OnRecordErrorException error);
+  void stopPipeline(String pipelineId, StageException error);
 }

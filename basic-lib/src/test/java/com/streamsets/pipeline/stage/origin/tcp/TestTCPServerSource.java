@@ -34,6 +34,7 @@ import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.util.tls.TLSTestUtils;
 import com.streamsets.testing.NetworkUtils;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -60,7 +61,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -186,7 +190,7 @@ public class TestTCPServerSource {
   }
 
   @Test
-  public void runTextRecords() throws StageException, IOException, ExecutionException, InterruptedException {
+  public void runTextRecordsWithAck() throws StageException, IOException, ExecutionException, InterruptedException {
 
     final Charset charset = Charsets.ISO_8859_1;
     final TCPServerSourceConfig configBean = createConfigBean(charset);
@@ -194,6 +198,8 @@ public class TestTCPServerSource {
     configBean.tcpMode = TCPMode.DELIMITED_RECORDS;
     configBean.recordSeparatorStr = "\n";
     configBean.ports = NetworkUtils.getRandomPorts(1);
+    configBean.recordProcessedAckMessage = "record_ack_${record:id()}";
+    configBean.batchCompletedAckMessage = "batch_ack_${batchSize}";
 
     final TCPServerSource source = new TCPServerSource(configBean);
     final String outputLane = "lane";
@@ -223,13 +229,28 @@ public class TestTCPServerSource {
     runner.waitOnProduce();
 
     // Wait until the connection is closed.
-    channelFuture.channel().closeFuture().sync();
+    final Channel channel = channelFuture.channel();
+    TCPServerSourceClientHandler clientHandler = channel.pipeline().get(TCPServerSourceClientHandler.class);
+
+    final List<String> responses = new LinkedList<>();
+    for (int i = 0; i < batchSize + 1; i++) {
+      // one for each record, plus one for the batch
+      responses.add(clientHandler.getResponse());
+    }
+
+    channel.close();
+
     workerGroup.shutdownGracefully();
 
     assertThat(records, hasSize(batchSize));
     for (int i = 0; i < records.size(); i++) {
+      // validate the output record value
       assertThat(records.get(i).get("/text").getValueAsString(), equalTo(expectedRecords[i]));
+      // validate the record-level ack
+      assertThat(responses.get(i), equalTo(String.format("record_ack_%s", records.get(i).getHeader().getSourceId())));
     }
+    // validate the batch-level ack
+    assertThat(responses.get(10), equalTo(String.format("batch_ack_%d", batchSize)));
   }
 
   @Test
@@ -378,37 +399,55 @@ public class TestTCPServerSource {
   ) throws
       InterruptedException {
     ChannelFuture channelFuture;
-    try {
-      Bootstrap bootstrap = new Bootstrap();
-      bootstrap.group(workerGroup);
-      bootstrap.channel(NioSocketChannel.class);
-      bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-      bootstrap.handler(new ChannelInitializer() {
-        @Override
-        protected void initChannel(Channel ch) throws Exception {
-          ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
-            @Override
-            public void channelActive(ChannelHandlerContext ctx) throws Exception {
-              super.channelActive(ctx);
-              if (randomlySlice) {
-                for (List<Byte> slice : NetTestUtils.getRandomByteSlices(data)) {
-                  ctx.writeAndFlush(Unpooled.copiedBuffer(Bytes.toArray(slice)));
-                }
-              } else {
-                ctx.writeAndFlush(Unpooled.copiedBuffer(data));
-              }
-            }
-          });
-        }
-      });
+    Bootstrap bootstrap = new Bootstrap();
+    bootstrap.group(workerGroup);
+    bootstrap.channel(NioSocketChannel.class);
+    bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+    bootstrap.handler(new ChannelInitializer() {
+      @Override
+      protected void initChannel(Channel ch) throws Exception {
+        ch.pipeline().addLast(new TCPServerSourceClientHandler(randomlySlice, data));
+      }
+    });
 
-      // Start the client.
-      channelFuture = bootstrap.connect("localhost", Integer.parseInt(configBean.ports.get(0))).sync();
+    // Start the client.
+    channelFuture = bootstrap.connect("localhost", Integer.parseInt(configBean.ports.get(0))).sync();
 
-    } finally {
-      workerGroup.shutdownGracefully();
-    }
     return channelFuture;
+  }
+
+  private static class TCPServerSourceClientHandler extends ChannelInboundHandlerAdapter {
+    private final boolean randomlySlice;
+    private final byte[] data;
+
+    private final BlockingQueue<String> responses = new LinkedBlockingDeque<>();
+
+    private TCPServerSourceClientHandler(boolean randomlySlice, byte[] data) {
+      this.randomlySlice = randomlySlice;
+      this.data = data;
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+      ByteBuf buf = (ByteBuf) msg;
+      responses.add(buf.toString(com.google.common.base.Charsets.UTF_8));
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+      super.channelActive(ctx);
+      if (randomlySlice) {
+        for (List<Byte> slice : NetTestUtils.getRandomByteSlices(data)) {
+          ctx.writeAndFlush(Unpooled.copiedBuffer(Bytes.toArray(slice)));
+        }
+      } else {
+        ctx.writeAndFlush(Unpooled.copiedBuffer(data));
+      }
+    }
+
+    private String getResponse() throws InterruptedException {
+      return responses.take();
+    }
   }
 
   private static List<Stage.ConfigIssue> initSourceAndGetIssues(TCPServerSourceConfig configBean) throws

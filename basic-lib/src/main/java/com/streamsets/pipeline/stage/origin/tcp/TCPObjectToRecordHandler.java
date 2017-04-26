@@ -21,13 +21,21 @@
 package com.streamsets.pipeline.stage.origin.tcp;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.net.MessageToRecord;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.DecoderException;
@@ -37,9 +45,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.time.Clock;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
@@ -55,18 +67,36 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
   private final long maxWaitTime;
   private final StopPipelineHandler stopPipelineHandler;
 
+  private final ELEval recordProcessedAckEval;
+  private final ELVars recordProcessedAckVars;
+  private final String recordProcessedAckExpr;
+  private final ELEval batchCompletedAckEval;
+  private final ELVars batchCompletedAckVars;
+  private final String batchCompletedAckExpr;
+  private final String timeZoneId;
+  private final Charset ackResponseCharset;
+
   private int batchRecordCount = 0;
   private long totalRecordCount = 0;
   private long lastChannelStart = 0;
   private long lastBatchStart = 0;
   private BatchContext batchContext = null;
   private ScheduledFuture<?> maxWaitTimeFlush;
+  private Record lastRecord;
 
   public TCPObjectToRecordHandler(
       PushSource.Context context,
       int maxBatchSize,
       long maxWaitTime,
-      StopPipelineHandler stopPipelineHandler
+      StopPipelineHandler stopPipelineHandler,
+      ELEval recordProcessedAckEval,
+      ELVars recordProcessedAckVars,
+      String recordProcessedAckExpr,
+      ELEval batchCompletedAckEval,
+      ELVars batchCompletedAckVars,
+      String batchCompletedAckExpr,
+      String timeZoneId,
+      Charset ackResponseCharset
   ) {
     Utils.checkNotNull(context, "context");
     Utils.checkNotNull(stopPipelineHandler, "stopPipelineHandler");
@@ -74,6 +104,14 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     this.maxBatchSize = maxBatchSize;
     this.maxWaitTime = maxWaitTime;
     this.stopPipelineHandler = stopPipelineHandler;
+    this.recordProcessedAckEval = recordProcessedAckEval;
+    this.recordProcessedAckVars = recordProcessedAckVars;
+    this.recordProcessedAckExpr = recordProcessedAckExpr;
+    this.batchCompletedAckEval = batchCompletedAckEval;
+    this.batchCompletedAckVars = batchCompletedAckVars;
+    this.batchCompletedAckExpr = batchCompletedAckExpr;
+    this.timeZoneId = timeZoneId;
+    this.ackResponseCharset = ackResponseCharset;
   }
 
   @Override
@@ -99,7 +137,7 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
   private void restartMaxWaitTimeTask(ChannelHandlerContext ctx, long delay) {
     cancelMaxWaitTimeTask();
     if (delay > 0) {
-      maxWaitTimeFlush = ctx.channel().eventLoop().schedule(this::newBatch, delay, TimeUnit.MILLISECONDS);
+      maxWaitTimeFlush = ctx.channel().eventLoop().schedule((() -> this.newBatch(ctx)), delay, TimeUnit.MILLISECONDS);
     } else {
       LOG.warn("Negative maxWaitTimeFlush task scheduled, so ignoring");
     }
@@ -134,10 +172,10 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     if (msg instanceof MessageToRecord) {
       Record record = context.createRecord(generateRecordId());
       ((MessageToRecord) msg).populateRecord(record);
-      addRecord(record);
+      addRecord(ctx, record);
     } else if (msg instanceof Record) {
       // we already have a Record (ex: from a DataFormatParserDecoder), so just add it
-      addRecord((Record)msg);
+      addRecord(ctx, (Record)msg);
     } else {
       throw new IllegalStateException(String.format(
           "Unexpected object type (%s) found in Netty channel pipeline",
@@ -149,18 +187,99 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     restartMaxWaitTimeTask(ctx, waitTimeRemaining);
   }
 
-  private void addRecord(Record record) {
+  private void addRecord(ChannelHandlerContext ctx, Record record) {
     batchContext.getBatchMaker().addRecord(record);
+    lastRecord = record;
+    evaluateElAndSendResponse(
+        recordProcessedAckEval,
+        recordProcessedAckVars,
+        recordProcessedAckExpr,
+        ctx,
+        ackResponseCharset,
+        true,
+        "record processed"
+    );
+
     if (++batchRecordCount >= maxBatchSize) {
-      newBatch();
+      newBatch(ctx);
     }
   }
 
-  private void newBatch() {
+  private void newBatch(ChannelHandlerContext ctx) {
     context.processBatch(batchContext);
+
+    batchCompletedAckVars.addVariable("batchSize", batchRecordCount);
+    evaluateElAndSendResponse(
+        batchCompletedAckEval,
+        batchCompletedAckVars,
+        batchCompletedAckExpr,
+        ctx,
+        ackResponseCharset,
+        false,
+        "batch completed"
+    );
+
     batchContext = context.startBatch();
     lastBatchStart = getCurrentTime();
     batchRecordCount = 0;
+  }
+
+  private void evaluateElAndSendResponse(
+      ELEval eval,
+      ELVars vars,
+      String expression,
+      ChannelHandlerContext ctx,
+      Charset charset,
+      boolean recordLevel,
+      String expressionDescription
+  ) {
+    if (Strings.isNullOrEmpty(expression)) {
+      return;
+    }
+    if (lastRecord != null) {
+      RecordEL.setRecordInContext(vars, lastRecord);
+    }
+    final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
+    TimeEL.setCalendarInContext(vars, calendar);
+    TimeNowEL.setTimeNowInContext(vars, Date.from(ZonedDateTime.now().toInstant()));
+    final String elResult;
+    try {
+      elResult = eval.eval(vars, expression, String.class);
+      ctx.writeAndFlush(Unpooled.copiedBuffer(elResult, charset));
+    } catch (ELEvalException exception) {
+      if (LOG.isErrorEnabled()) {
+        LOG.error(String.format(
+            "ELEvalException caught attempting to evaluate %s expression",
+            expressionDescription
+        ), exception);
+      }
+
+      if (recordLevel) {
+        switch (context.getOnErrorRecord()) {
+          case DISCARD:
+            // do nothing
+            break;
+          case STOP_PIPELINE:
+            if (LOG.isErrorEnabled()) {
+              LOG.error(String.format(
+                  "ELEvalException caught when evaluating %s expression to send client response; failing pipeline %s" +
+                      " as per stage configuration: %s",
+                  expressionDescription,
+                  context.getPipelineId(),
+                  exception.getMessage()
+              ), exception);
+            }
+            stopPipelineHandler.stopPipeline(context.getPipelineId(), exception);
+            break;
+          case TO_ERROR:
+            Record errorRecord = lastRecord != null ? lastRecord : context.createRecord(generateRecordId());
+            batchContext.toError(errorRecord, exception);
+            break;
+        }
+      } else {
+        context.reportError(Errors.TCP_35, expressionDescription, exception.getMessage(), exception);
+      }
+    }
   }
 
   @Override
@@ -187,6 +306,7 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
 
     LOG.error("exceptionCaught in TCPObjectToRecordHandler", exception);
     if (exception instanceof OnRecordErrorException) {
+      OnRecordErrorException errorEx = (OnRecordErrorException) exception;
       switch (context.getOnErrorRecord()) {
         case DISCARD:
           break;
@@ -198,18 +318,10 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
                 exception.getMessage()
             ), exception);
           }
-          stopPipelineHandler.stopPipeline(context.getPipelineId(), (OnRecordErrorException) exception);
+          stopPipelineHandler.stopPipeline(context.getPipelineId(), errorEx);
           break;
         case TO_ERROR:
-          if (exception instanceof Exception) {
-            batchContext.toError(context.createRecord(generateRecordId()), (Exception) exception);
-          } else {
-            // cause is an Error, just need to wrap it
-            batchContext.toError(context.createRecord(generateRecordId()), new Exception(
-                "Error caught when processing data in TCP source",
-                exception
-            ));
-          }
+          batchContext.toError(context.createRecord(generateRecordId()), errorEx);
           break;
       }
     } else {
@@ -224,7 +336,7 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
   }
 
   @VisibleForTesting
-  protected long getCurrentTime() {
+  long getCurrentTime() {
     return Clock.systemUTC().millis();
   }
 }

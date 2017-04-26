@@ -25,6 +25,11 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.DataFormatChooserValues;
+import com.streamsets.pipeline.config.TimeZoneChooserValues;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingModeChooserValues;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
@@ -145,6 +150,7 @@ public class TCPServerSourceConfig {
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTF-8",
       label = "Charset",
+      description = "The character encoding that Syslog messages will have",
       displayPosition = 30,
       group = "SYSLOG",
       dependsOn = "tcpMode",
@@ -204,4 +210,53 @@ public class TCPServerSourceConfig {
       max = Integer.MAX_VALUE
   )
   public int maxMessageSize = 4096;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTF-8",
+      label = "Charset",
+      description = "The character set to be used when sending ack messages back to client",
+      displayPosition = 200,
+      group = "TCP"
+  )
+  @ValueChooserModel(CharsetChooserValues.class)
+  public String ackMessageCharset = "UTF-8";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTC",
+      label = "Ack Time Zone",
+      description = "Time zone to use for ack message evaluation (if time or time now ELs are used)",
+      displayPosition = 210,
+      group = "TCP"
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String timeZoneID = "UTC";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      label = "Record Processed Ack Message",
+      description = "Acknowledgement message to be sent back to the client upon each successfully processed record.",
+      displayPosition = 250,
+      group = "TCP",
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String recordProcessedAckMessage;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      label = "Batch Completed Ack Message",
+      description = "Acknowledgement message to be sent back to the client upon each successfully completed batch." +
+          " The record in the EL context is the last record processed in the batch.",
+      displayPosition = 260,
+      group = "TCP",
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String batchCompletedAckMessage;
 }

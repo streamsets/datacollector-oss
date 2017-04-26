@@ -35,6 +35,9 @@ public enum Errors implements ErrorCode {
   TCP_07("{} thrown in Netty channel pipeline: {}"),
   TCP_08("DataParserException thrown in Netty channel pipeline from DataFormatParserDecoder: {}"),
   TCP_09("No addresses available for TCP server to listen on"),
+  TCP_30("Invalid expression \"{}\" for record processed ack message: {}"),
+  TCP_31("Invalid expression \"{}\" for batch completed ack message: {}"),
+  TCP_35("Error evaluating {} expression: {}"),
   ;
 
   private final String msg;
