@@ -195,7 +195,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer {
 
       try {
         if(topicPartitionToOffsetMetadataMap.isEmpty()) {
-          LOG.info("Skipping committing offsets since we haven't consume anything.");
+          LOG.debug("Skipping committing offsets since we haven't consume anything.");
           return;
         }
 
