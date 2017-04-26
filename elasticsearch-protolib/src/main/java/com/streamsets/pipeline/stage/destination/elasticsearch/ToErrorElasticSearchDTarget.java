@@ -26,7 +26,9 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 
 @StageDef(
-    version = 6,
+    // We're reusing upgrader for both ToErrorElasticSearchDTarget and ElasticsearchDTargetUpgrader, make sure that you
+    // upgrade both versions at the same time when changing.
+    version = 7,
     label = "Write to Elasticsearch",
     description = "",
     icon = "",
