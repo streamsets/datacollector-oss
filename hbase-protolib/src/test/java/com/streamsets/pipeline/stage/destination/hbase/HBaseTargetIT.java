@@ -24,7 +24,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
-import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
@@ -35,8 +34,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.ext.DataCollectorServices;
-import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.hbase.common.Errors;
 import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
@@ -102,7 +99,6 @@ public class HBaseTargetIT {
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     try {
-      DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
       UserGroupInformation.createUserForTesting("foo", new String[]{"all"});
       utility = new HBaseTestingUtility(conf);
       utility.startMiniCluster();

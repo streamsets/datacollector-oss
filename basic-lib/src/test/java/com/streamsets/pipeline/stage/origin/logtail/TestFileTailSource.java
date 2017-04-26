@@ -20,13 +20,10 @@
 package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.codahale.metrics.Counter;
-import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ext.DataCollectorServices;
-import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
@@ -39,7 +36,6 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -77,11 +73,6 @@ import java.util.UUID;
 public class TestFileTailSource {
   private final static int SCAN_INTERVAL = 0; //using zero forces synchronous file discovery
   private final Logger LOGGER = LoggerFactory.getLogger(TestFileTailSource.class);
-
-  @BeforeClass
-  public static void setUpClass() {
-    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
-  }
 
   @Test(expected = StageException.class)
   //Non existing directory with conf.allowLateDirectory=false (default) will throw exception.
