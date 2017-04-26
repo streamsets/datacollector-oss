@@ -36,14 +36,14 @@ import java.util.Set;
 public class SlaveWebServerTask extends DataCollectorWebServerTask {
 
   private Configuration conf;
-  static final String HTTPS_WORKER_KEYSTORE_PATH = "https.worker.keystore.path";
+  static final String HTTPS_WORKER_KEYSTORE_PATH = "https.cluster.keystore.path";
   private static final String HTTPS_WORKER_KEYSTORE_PATH_DEFAULT = "/opt/security/jks/sdc-keystore.jks";
-  static final String HTTPS_WORKER_KEYSTORE_PASSWORD = "https.worker.keystore.password";
+  static final String HTTPS_WORKER_KEYSTORE_PASSWORD = "https.cluster.keystore.password";
   private static final String HTTPS_WORKER_KEYSTORE_PASSWORD_DEFAULT = "${file(\"/opt/security/jks/keystore-password"
       + ".txt\")}";
-  static final String HTTPS_WORKER_TRUSTSTORE_PATH = "https.worker.truststore.path";
+  static final String HTTPS_WORKER_TRUSTSTORE_PATH = "https.cluster.truststore.path";
   private static final String HTTPS_WORKER_TRUSTSTORE_PATH_DEFAULT = null;
-  static final String HTTPS_WORKER_TRUSTSTORE_PASSWORD = "https.worker.truststore.password";
+  static final String HTTPS_WORKER_TRUSTSTORE_PASSWORD = "https.cluster.truststore.password";
   private static final String HTTPS_WORKER_TRUSTSTORE_PASSWORD_DEFAULT = null;
 
   private static final Logger LOG = LoggerFactory.getLogger(SlaveWebServerTask.class);
