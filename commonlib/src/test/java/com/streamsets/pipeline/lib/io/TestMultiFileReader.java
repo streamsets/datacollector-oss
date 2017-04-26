@@ -19,10 +19,14 @@
  */
 package com.streamsets.pipeline.lib.io;
 
+import com.streamsets.datacollector.json.JsonMapperImpl;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -48,6 +52,11 @@ public class TestMultiFileReader {
   private static final Charset UTF8 = StandardCharsets.UTF_8;
   private File testDir1;
   private File testDir2;
+
+  @BeforeClass
+  public static void setUpClass() {
+    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
+  }
 
   @Before
   public void setUp() {
