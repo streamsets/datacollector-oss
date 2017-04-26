@@ -65,6 +65,7 @@ public class ShellConfig {
     label = "Script",
     group = "SCRIPT",
     mode = ConfigDef.Mode.SHELL,
+    evaluation = ConfigDef.Evaluation.EXPLICIT,
     displayPosition = 10
   )
   public String script;

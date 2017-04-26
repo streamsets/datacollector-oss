@@ -122,7 +122,7 @@ public class TestShellExecutor {
 
   @Test
   public void testEnvironmentalVariables() throws Exception {
-    config.script = "echo $company > " + handoverFile.getPath();
+    config.script = "echo ${company} > " + handoverFile.getPath();
     config.environmentVariables = Collections.singletonMap("company", "${record:value('/company')}");
 
     ShellExecutor executor = new ShellExecutor(config);
