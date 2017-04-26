@@ -3902,7 +3902,7 @@
                                                   path>)}</codeph>. Uses the datetime result as the
                                                   time basis. </li>
                                             </ul></p>
-                                        <p>When the Index definition does not include datetime
+                                        <p>When the Index property does not include datetime
                                             variables, you can ignore this property. </p>
                                         <p>Default is <codeph>${time:now()}</codeph>.</p>
                                     </entry>
@@ -3914,20 +3914,26 @@
                                 </row>
                                 <row id="row_ElasticIndex">
                                     <entry>Index</entry>
-                                    <entry>Index information for the generated documents. You can
-                                        use constants, datetime variables, a field that includes the
-                                        index information, or any valid combination. <p>When using
-                                            datetime variables, make sure to configure the time
-                                            basis appropriately. For details about datetime
-                                            variables, see <xref
+                                    <entry>Index for the generated documents. Enter an index name,
+                                        an expression that evaluates to the index name, or a field
+                                        that includes the index name. <p>For example, if you enter
+                                                <codeph>customer</codeph> as the index, the
+                                            destination writes the document within the
+                                                <codeph>customer</codeph> index. </p><p>If you use
+                                            datetime variables in the expression, make sure to
+                                            configure the time basis appropriately. For details
+                                            about datetime variables, see <xref
                                                 href="../Expression_Language/DateTimeVariables.dita#concept_gh4_qd2_sv"
                                             />.</p></entry>
                                 </row>
                                 <row id="row_ElasticMapping">
                                     <entry>Mapping</entry>
-                                    <entry>Mapping information for the generated documents. You can
-                                        use a constant or a field that includes the mapping
-                                        information. </entry>
+                                    <entry>Mapping type for the generated documents. Enter the
+                                        mapping type, an expression that evaluates to the mapping
+                                        type, or a field that includes the mapping type. <p>For
+                                            example, if you enter <codeph>user</codeph> as the
+                                            mapping type, the destination writes the document with a
+                                                <codeph>user</codeph> mapping type.</p></entry>
                                 </row>
                                 <row id="row_ElasticDocID">
                                     <entry>Document ID <xref
