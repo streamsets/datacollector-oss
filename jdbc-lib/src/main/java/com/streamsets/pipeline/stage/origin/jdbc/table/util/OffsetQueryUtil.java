@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
@@ -28,6 +27,8 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableContext;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableContextUtil;
@@ -50,7 +51,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class OffsetQueryUtil {
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+  private static final JsonMapper JSON_MAPPER = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
   private static final Logger LOG = LoggerFactory.getLogger(OffsetQueryUtil.class);
 
   private static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
@@ -292,7 +293,7 @@ public final class OffsetQueryUtil {
    */
   public static String serializeOffsetMap(Map<String, String> offsetMap) throws StageException {
     try {
-      return OBJECT_MAPPER.writeValueAsString(offsetMap);
+      return JSON_MAPPER.writeValueAsString(offsetMap);
     } catch (IOException ex) {
       LOG.error("Error when serializing", ex);
       throw new StageException(JdbcErrors.JDBC_60, ex);
@@ -312,7 +313,7 @@ public final class OffsetQueryUtil {
       offsetMap = new HashMap<>();
     } else {
       try {
-        offsetMap = OBJECT_MAPPER.readValue(lastSourceOffset, Map.class);
+        offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
       } catch (IOException ex) {
         LOG.error("Error when deserializing", ex);
         throw new StageException(JdbcErrors.JDBC_61, ex);

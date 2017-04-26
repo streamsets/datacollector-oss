@@ -23,12 +23,15 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
@@ -107,6 +110,8 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @BeforeClass
   public static void setupTables() throws SQLException {
+    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
+
     EXPECTED_CRICKET_STARS_RECORDS = ImmutableList.of(
         createSportsStarsRecords(1, "Sachin", "Tendulkar"),
         createSportsStarsRecords(2, "Mahendra Singh", "Dhoni"),
