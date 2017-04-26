@@ -30,6 +30,8 @@ import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
 
 @GenerateResourceBundle
 @StageDef(
+    // We're reusing upgrader for both ToErrorElasticSearchDTarget and ElasticsearchDTargetUpgrader, make sure that you
+    // upgrade both versions at the same time when changing.
     version = 7,
     label = "Elasticsearch",
     description = "Upload data to an Elasticsearch cluster",
