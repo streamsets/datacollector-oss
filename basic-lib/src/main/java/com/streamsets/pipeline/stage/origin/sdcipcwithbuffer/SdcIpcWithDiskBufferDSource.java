@@ -30,13 +30,15 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.stage.origin.sdcipc.Configs;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Dev SDC RPC with Buffering",
     description = "Receives records via SDC RPC from a Data Collector pipeline that uses an SDC RPC destination. " +
         "It buffers records in memory/disk. In case of failure/stop records may be lost.",
     execution = ExecutionMode.STANDALONE,
     icon = "dev.png",
-    onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html")
+    onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html",
+    upgrader = SdcIpcWithDiskBufferSourceUpgrader.class
+)
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class SdcIpcWithDiskBufferDSource extends DSourceOffsetCommitter {
