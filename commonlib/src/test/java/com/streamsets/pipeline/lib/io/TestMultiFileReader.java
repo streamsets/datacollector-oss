@@ -19,11 +19,9 @@
  */
 package com.streamsets.pipeline.lib.io;
 
-import com.streamsets.datacollector.json.JsonMapperImpl;
-import com.streamsets.pipeline.api.ext.DataCollectorServices;
-import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -55,7 +53,7 @@ public class TestMultiFileReader {
 
   @BeforeClass
   public static void setUpClass() {
-    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
+    DataCollectorServicesUtils.loadDefaultServices();
   }
 
   @Before

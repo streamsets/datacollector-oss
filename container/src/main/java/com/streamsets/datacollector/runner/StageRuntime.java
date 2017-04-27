@@ -279,7 +279,7 @@ public class StageRuntime implements PushSourceContextDelegate {
    */
 
   @Override
-  public BatchContext startBatch() {
+  public final BatchContext startBatch() {
     return (BatchContext) AccessController.doPrivileged(new PrivilegedAction() {
       public Object run() {
         try {
@@ -293,7 +293,7 @@ public class StageRuntime implements PushSourceContextDelegate {
   }
 
   @Override
-  public boolean processBatch(final BatchContext batchContext, final String entity, final String offset) {
+  public final boolean processBatch(final BatchContext batchContext, final String entity, final String offset) {
     return (boolean) AccessController.doPrivileged(new PrivilegedAction() {
       public Object run() {
         try {
@@ -307,7 +307,7 @@ public class StageRuntime implements PushSourceContextDelegate {
   }
 
   @Override
-  public void commitOffset(final String entity, final String offset) {
+  public final void commitOffset(final String entity, final String offset) {
     AccessController.doPrivileged(new PrivilegedAction() {
       public Object run() {
         try {
