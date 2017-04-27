@@ -208,6 +208,7 @@
          <li>runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)</li>
          <li>sdc:hostname()</li>
          <li>sdc:id()</li>
+         <li>uuid:uuid()</li>
          <li>vault:read(&lt;path>, &lt;key>)</li>
          <li>vault:readWithDelay(&lt;path>, &lt;key>, &lt;delay>)</li>
         </ul>
