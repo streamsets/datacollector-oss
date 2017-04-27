@@ -301,6 +301,10 @@
       <directory>${basedir}/../${hdp_2_5-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${hdp_2_6-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
 
     <!-- MapR Libs -->
     <fileSet>

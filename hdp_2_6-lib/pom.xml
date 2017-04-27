@@ -25,19 +25,22 @@
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-hdp_2_5-lib</artifactId>
+  <artifactId>streamsets-datacollector-hdp_2_6-lib</artifactId>
   <version>2.6.0.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector HDP 2.5.0 Lib</description>
-  <name>StreamSets Data Collector HDP 2.5.0 Lib</name>
+  <description>StreamSets Data Collector HDP 2.6.0 Lib</description>
+  <name>StreamSets Data Collector HDP 2.6.0 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <flume.version>1.5.2.2.5.0.0-1245</flume.version>
-    <hadoop.version>2.7.3.2.5.0.0-1245</hadoop.version>
-    <hbase.version>1.1.2.2.5.0.0-1245</hbase.version>
-    <hive.version>1.2.1000.2.5.0.0-1245</hive.version>
-    <kafka.version>0.10.0.2.5.0.0-1245</kafka.version>
-    <spark.version>1.6.2.2.5.0.0-1245</spark.version>
+    <!--
+         https://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.6.0.3/build_metadata.txt
+     -->
+    <flume.version>1.5.2.2.6.0.3-8</flume.version>
+    <hadoop.version>2.7.3.2.6.0.3-8</hadoop.version>
+    <hbase.version>1.1.2.2.6.0.3-8</hbase.version>
+    <hive.version>1.2.1000.2.6.0.3-8</hive.version>
+    <kafka.version>0.10.1.2.6.0.3-8</kafka.version>
+    <spark.version>1.6.3.2.6.0.3-8</spark.version>
     <thrift.version>0.9.0</thrift.version>
     <zk-client.version>0.5-1</zk-client.version>
     <avro.version>1.7.7</avro.version>

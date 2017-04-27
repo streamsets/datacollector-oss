@@ -412,6 +412,7 @@
         <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
         <hdp_2_4-lib>hdp_2_4-lib</hdp_2_4-lib>
         <hdp_2_5-lib>hdp_2_5-lib</hdp_2_5-lib>
+        <hdp_2_6-lib>hdp_2_6-lib</hdp_2_6-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
         <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
@@ -461,6 +462,7 @@
         <module>hdp_2_3-lib</module>
         <module>hdp_2_4-lib</module>
         <module>hdp_2_5-lib</module>
+        <module>hdp_2_6-lib</module>
         <module>jython_2_7-lib</module>
         <module>mapr_5_0-lib</module>
         <module>mapr_5_1-lib</module>
@@ -494,7 +496,7 @@
         <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
-        <hdp_2_5-lib>hdp_2_5-lib</hdp_2_5-lib>
+        <hdp_2_6-lib>hdp_2_6-lib</hdp_2_6-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <mapr_5_2-lib>mapr_5_2-lib</mapr_5_2-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
@@ -517,7 +519,7 @@
         <module>cdh_kafka_2_0-lib</module>
         <module>elasticsearch_5-lib</module>
         <module>groovy_2_4-lib</module>
-        <module>hdp_2_5-lib</module>
+        <module>hdp_2_6-lib</module>
         <module>jython_2_7-lib</module>
         <module>mapr_5_2-lib</module>
         <module>mongodb_3-lib</module>
