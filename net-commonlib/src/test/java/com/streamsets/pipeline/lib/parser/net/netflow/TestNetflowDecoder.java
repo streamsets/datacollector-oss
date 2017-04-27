@@ -27,6 +27,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
@@ -106,4 +107,36 @@ public class TestNetflowDecoder {
     return records;
   }
 
+  @Test
+  public void testTimestamps() {
+
+    EmbeddedChannel ch = new EmbeddedChannel(new NetflowDecoder());
+
+    final long uptime = RandomUtils.nextLong(0L, 1000000L);
+    final long seconds = RandomUtils.nextLong(0L, 1500000000L);
+    final long nanos = RandomUtils.nextLong(0L, 1000000000L-1L);
+    NetflowTestUtil.writeV5NetflowHeader(ch, 1, uptime, seconds, nanos, 0L, 0, 0, 0);
+
+    final long first = RandomUtils.nextLong(uptime + 1L, 2000000L);
+    final long last = RandomUtils.nextLong(first + 1L, 3000000L);
+    NetflowTestUtil.writeV5NetflowFlowRecord(ch, 0, 0, 0, 0, 0, 1, 1, first, last, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    Object obj = ch.readInbound();
+    assertThat(obj, instanceOf(NetflowMessage.class));
+    NetflowMessage msg = (NetflowMessage) obj;
+
+    assertThat(msg.getCount(), equalTo(1));
+    assertThat(msg.getSeconds(), equalTo(seconds));
+    assertThat(msg.getNanos(), equalTo(nanos));
+    assertThat(msg.getUptime(), equalTo(uptime));
+
+    final long expectedTimestamp = seconds * 1000 + (nanos/1000000);
+    assertThat(msg.getTimestamp(), equalTo(expectedTimestamp));
+
+    final long expectedFirst = expectedTimestamp - uptime + first;
+    assertThat(msg.getFirst(), equalTo(expectedFirst));
+
+    final long expectedLast = expectedTimestamp - uptime + last;
+    assertThat(msg.getLast(), equalTo(expectedLast));
+  }
 }

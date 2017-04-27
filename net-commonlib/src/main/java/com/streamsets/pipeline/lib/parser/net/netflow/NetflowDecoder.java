@@ -51,6 +51,7 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
   private int count = 0;
   private long uptime = 0;
   private long seconds = 0;
+  private long nanos = 0;
   private long millis = 0;
   private long timestamp = 0;
   private long flowSequence = 0;
@@ -179,13 +180,15 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
       uptime = buf.readUnsignedInt();
       // 8-11
       seconds = buf.readUnsignedInt();
-      millis = seconds / 1000;
+      // 12-15
+      nanos = buf.readUnsignedInt();
+
+      millis = nanos / 1000000;
+
       // java timestamp, which is milliseconds
       timestamp = (seconds * 1000L) + millis;
       packetId = UUIDs.startOfJavaTimestamp(timestamp);
 
-      // 12-15
-      long nanos = buf.readUnsignedInt();
       // 16-19
       flowSequence = buf.readUnsignedInt();
       // 20
@@ -205,6 +208,9 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
       //ByteBuf flowBuf = buf.slice(V5_HEADER_SIZE + (readIndex * V5_FLOW_SIZE), V5_FLOW_SIZE);
 
       NetflowMessage msg = new NetflowMessage();
+      msg.setSeconds(seconds);
+      msg.setNanos(nanos);
+      msg.setCount(count);
 
       // 0
       int srcaddr = (int)buf.readUnsignedInt();
@@ -226,6 +232,7 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
       msg.setFlowSequence(flowSequence);
       msg.setEngineId(engineId);
       msg.setEngineType(engineType);
+      msg.setRawSampling(sampling);
       msg.setSamplingInterval(samplingInterval);
       msg.setSamplingMode(samplingMode);
       msg.setReaderId(readerId);
@@ -236,16 +243,18 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
       long octets = buf.readUnsignedInt();
       // 24
       long first = buf.readUnsignedInt();
+      msg.setRawFirst(first);
       if (first > 0) {
-        msg.setFirst(timestamp - uptime - first);
+        msg.setFirst(timestamp - uptime + first);
       } else {
         msg.setFirst(0L);
       }
 
       // 28
       long last = buf.readUnsignedInt();
+      msg.setRawLast(last);
       if (last > 0) {
-        msg.setLast(timestamp - uptime - last);
+        msg.setLast(timestamp - uptime + last);
       } else {
         msg.setLast(0L);
       }
@@ -309,6 +318,7 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
     count = 0;
     uptime = 0;
     seconds = 0;
+    nanos = 0;
     millis = 0;
     timestamp = 0;
     flowSequence = 0;

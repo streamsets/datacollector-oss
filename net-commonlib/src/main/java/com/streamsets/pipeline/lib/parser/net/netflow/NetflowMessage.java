@@ -29,46 +29,54 @@ import java.util.Map;
 
 public class NetflowMessage implements MessageToRecord {
 
-  public static final String VERSION = "version";
-  public static final String PACKETID = "packetid";
+  public static final String FIELD_VERSION = "version";
+  public static final String FIELD_PACKETID = "packetid";
+  public static final String FIELD_COUNT = "count";
 
-  public static final String ID = "id";
-  public static final String SENDER = "sender";
-  public static final String LENGTH = "length";
-  public static final String UPTIME = "uptime";
-  public static final String TIMESTAMP = "timestamp";
-  public static final String SRCPORT = "srcport";
-  public static final String DSTPORT = "dstport";
-  public static final String SRCAS = "srcas";
-  public static final String DSTAS = "dstas";
-  public static final String PACKETS = "dPkts";
-  public static final String DOCTECTS = "dOctets";
-  public static final String PROTO = "proto";
-  public static final String TOS = "tos";
-  public static final String TCPFLAGS = "tcp_flags";
-  public static final String FIRST = "first";
-  public static final String LAST = "last";
-  public static final String SRCADDR = "srcaddr";
-  public static final String DSTADDR = "dstaddr";
-  public static final String NEXTHOP = "nexthop";
-  public static final String SRCADDR_S = "srcaddr_s";
-  public static final String DSTADDR_S = "dstaddr_s";
-  public static final String NEXTHOP_S = "nexthop_s";
-  public static final String SNMPINPUT = "snmpinput";
-  public static final String SNMPOUTPUT = "snmponput";
-  public static final String SRCMASK = "src_mask";
-  public static final String DSTMASK = "dst_mask";
-  public static final String READERID = "readerId";
+  public static final String FIELD_SECONDS = "seconds";
+  public static final String FIELD_NANOS = "nanos";
 
-  public static final String FLOWSEQ = "flowseq";
-  public static final String ENGINETYPE = "enginetype";
-  public static final String ENGINEID = "engineid";
-  public static final String SAMPLINGINT = "samplingint";
-  public static final String SAMPLINGMODE = "samplingmode";
+  public static final String FIELD_ID = "id";
+  public static final String FIELD_SENDER = "sender";
+  public static final String FIELD_LENGTH = "length";
+  public static final String FIELD_UPTIME = "uptime";
+  public static final String FIELD_TIMESTAMP = "timestamp";
+  public static final String FIELD_SRCPORT = "srcport";
+  public static final String FIELD_DSTPORT = "dstport";
+  public static final String FIELD_SRCAS = "srcas";
+  public static final String FIELD_DSTAS = "dstas";
+  public static final String FIELD_PACKETS = "dPkts";
+  public static final String FIELD_DOCTECTS = "dOctets";
+  public static final String FIELD_PROTO = "proto";
+  public static final String FIELD_TOS = "tos";
+  public static final String FIELD_TCPFLAGS = "tcp_flags";
+  public static final String FIELD_FIRST = "first";
+  public static final String FIELD_RAW_FIRST = "raw_first";
+  public static final String FIELD_LAST = "last";
+  public static final String FIELD_RAW_LAST = "raw_last";
+  public static final String FIELD_SRCADDR = "srcaddr";
+  public static final String FIELD_DSTADDR = "dstaddr";
+  public static final String FIELD_NEXTHOP = "nexthop";
+  public static final String FIELD_SRCADDR_S = "srcaddr_s";
+  public static final String FIELD_DSTADDR_S = "dstaddr_s";
+  public static final String FIELD_NEXTHOP_S = "nexthop_s";
+  public static final String FIELD_SNMPINPUT = "snmpinput";
+  public static final String FIELD_SNMPOUTPUT = "snmponput";
+  public static final String FIELD_SRCMASK = "src_mask";
+  public static final String FIELD_DSTMASK = "dst_mask";
+  public static final String FIELD_READERID = "readerId";
+
+  public static final String FIELD_FLOWSEQ = "flowseq";
+  public static final String FIELD_ENGINETYPE = "enginetype";
+  public static final String FIELD_ENGINEID = "engineid";
+  public static final String FIELD_RAW_SAMPLING = "raw_sampling";
+  public static final String FIELD_SAMPLINGINT = "samplingint";
+  public static final String FIELD_SAMPLINGMODE = "samplingmode";
 
   private int version;
   private String packetId;
 
+  private int count;
   private String id;
   private String sender;
   private int length;
@@ -100,12 +108,15 @@ public class NetflowMessage implements MessageToRecord {
   private long flowSequence;
   private short engineType;
   private short engineId;
+
+  private int rawSampling;
   private int samplingInterval;
   private int samplingMode;
 
-  public NetflowMessage() {
-    int k =14;
-  }
+  private long seconds;
+  private long nanos;
+  private long rawFirst;
+  private long rawLast;
 
   public int getVersion() {
     return version;
@@ -121,6 +132,14 @@ public class NetflowMessage implements MessageToRecord {
 
   public void setPacketId(String packetId) {
     this.packetId = packetId;
+  }
+
+  public int getCount() {
+    return count;
+  }
+
+  public void setCount(int count) {
+    this.count = count;
   }
 
   public String getId() {
@@ -363,6 +382,14 @@ public class NetflowMessage implements MessageToRecord {
     this.engineId = engineId;
   }
 
+  public int getRawSampling() {
+    return rawSampling;
+  }
+
+  public void setRawSampling(int rawSampling) {
+    this.rawSampling = rawSampling;
+  }
+
   public int getSamplingInterval() {
     return samplingInterval;
   }
@@ -379,44 +406,82 @@ public class NetflowMessage implements MessageToRecord {
     this.samplingMode = samplingMode;
   }
 
+  public long getSeconds() {
+    return seconds;
+  }
+
+  public void setSeconds(long seconds) {
+    this.seconds = seconds;
+  }
+
+  public long getNanos() {
+    return nanos;
+  }
+
+  public void setNanos(long nanos) {
+    this.nanos = nanos;
+  }
+
+  public long getRawFirst() {
+    return rawFirst;
+  }
+
+  public void setRawFirst(long rawFirst) {
+    this.rawFirst = rawFirst;
+  }
+
+  public long getRawLast() {
+    return rawLast;
+  }
+
+  public void setRawLast(long rawLast) {
+    this.rawLast = rawLast;
+  }
+
   @Override
   public void populateRecord(Record record) {
     Map<String, Field> fields = new HashMap<>();
-    fields.put(VERSION, Field.create(getVersion()));
-    fields.put(PACKETID, Field.create(getPacketId()));
-    fields.put(SENDER, Field.create(getSender()));
-    fields.put(LENGTH, Field.create(getLength()));
-    fields.put(UPTIME, Field.create(getUptime()));
-    fields.put(TIMESTAMP, Field.create(getTimestamp()));
-    fields.put(FLOWSEQ, Field.create(getFlowSequence()));
-    fields.put(ENGINEID, Field.create(getEngineId()));
-    fields.put(ENGINETYPE, Field.create(getEngineType()));
-    fields.put(SAMPLINGINT, Field.create(getSamplingInterval()));
-    fields.put(SAMPLINGMODE, Field.create(getSamplingMode()));
-    fields.put(READERID, Field.create(getReaderId()));
+    fields.put(FIELD_VERSION, Field.create(getVersion()));
+    fields.put(FIELD_PACKETID, Field.create(getPacketId()));
+    fields.put(FIELD_SENDER, Field.create(getSender()));
+    fields.put(FIELD_LENGTH, Field.create(getLength()));
+    fields.put(FIELD_UPTIME, Field.create(getUptime()));
+    fields.put(FIELD_SECONDS, Field.create(getSeconds()));
+    fields.put(FIELD_NANOS, Field.create(getNanos()));
+    fields.put(FIELD_TIMESTAMP, Field.create(getTimestamp()));
+    fields.put(FIELD_FLOWSEQ, Field.create(getFlowSequence()));
+    fields.put(FIELD_ENGINEID, Field.create(getEngineId()));
+    fields.put(FIELD_ENGINETYPE, Field.create(getEngineType()));
+    fields.put(FIELD_RAW_SAMPLING, Field.create(getRawSampling()));
+    fields.put(FIELD_SAMPLINGINT, Field.create(getSamplingInterval()));
+    fields.put(FIELD_SAMPLINGMODE, Field.create(getSamplingMode()));
+    fields.put(FIELD_READERID, Field.create(getReaderId()));
 
-    fields.put(ID, Field.create(getId()));
-    fields.put(SRCADDR, Field.create(getSrcAddr()));
-    fields.put(DSTADDR, Field.create(getDstAddr()));
-    fields.put(NEXTHOP, Field.create(getNextHop()));
-    fields.put(SRCADDR_S, Field.create(getSrcAddrString()));
-    fields.put(DSTADDR_S, Field.create(getDstAddrString()));
-    fields.put(NEXTHOP_S, Field.create(getNexthopString()));
-    fields.put(SRCPORT, Field.create(getSrcPort()));
-    fields.put(DSTPORT, Field.create(getDstPort()));
-    fields.put(SRCAS, Field.create(getSrcAs()));
-    fields.put(DSTAS, Field.create(getDstAs()));
-    fields.put(PACKETS, Field.create(getdPkts()));
-    fields.put(DOCTECTS, Field.create(getdOctets()));
-    fields.put(PROTO, Field.create(getProto()));
-    fields.put(TOS, Field.create(getTos()));
-    fields.put(TCPFLAGS, Field.create(getTcpFlags()));
-    fields.put(FIRST, Field.create(getFirst()));
-    fields.put(LAST, Field.create(getLast()));
-    fields.put(SNMPINPUT, Field.create(getSnmpInput()));
-    fields.put(SNMPOUTPUT, Field.create(getSnmpOnput()));
-    fields.put(SRCMASK, Field.create(getSrcMask()));
-    fields.put(DSTMASK, Field.create(getDstMask()));
+    fields.put(FIELD_COUNT, Field.create(getCount()));
+    fields.put(FIELD_ID, Field.create(getId()));
+    fields.put(FIELD_SRCADDR, Field.create(getSrcAddr()));
+    fields.put(FIELD_DSTADDR, Field.create(getDstAddr()));
+    fields.put(FIELD_NEXTHOP, Field.create(getNextHop()));
+    fields.put(FIELD_SRCADDR_S, Field.create(getSrcAddrString()));
+    fields.put(FIELD_DSTADDR_S, Field.create(getDstAddrString()));
+    fields.put(FIELD_NEXTHOP_S, Field.create(getNexthopString()));
+    fields.put(FIELD_SRCPORT, Field.create(getSrcPort()));
+    fields.put(FIELD_DSTPORT, Field.create(getDstPort()));
+    fields.put(FIELD_SRCAS, Field.create(getSrcAs()));
+    fields.put(FIELD_DSTAS, Field.create(getDstAs()));
+    fields.put(FIELD_PACKETS, Field.create(getdPkts()));
+    fields.put(FIELD_DOCTECTS, Field.create(getdOctets()));
+    fields.put(FIELD_PROTO, Field.create(getProto()));
+    fields.put(FIELD_TOS, Field.create(getTos()));
+    fields.put(FIELD_TCPFLAGS, Field.create(getTcpFlags()));
+    fields.put(FIELD_FIRST, Field.create(getFirst()));
+    fields.put(FIELD_RAW_FIRST, Field.create(getRawFirst()));
+    fields.put(FIELD_LAST, Field.create(getLast()));
+    fields.put(FIELD_RAW_LAST, Field.create(getRawLast()));
+    fields.put(FIELD_SNMPINPUT, Field.create(getSnmpInput()));
+    fields.put(FIELD_SNMPOUTPUT, Field.create(getSnmpOnput()));
+    fields.put(FIELD_SRCMASK, Field.create(getSrcMask()));
+    fields.put(FIELD_DSTMASK, Field.create(getDstMask()));
 
     record.set(Field.create(fields));
   }
