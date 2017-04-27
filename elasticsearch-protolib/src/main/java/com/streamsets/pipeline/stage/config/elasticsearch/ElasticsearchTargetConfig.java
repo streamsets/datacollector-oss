@@ -118,7 +118,7 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       group = "ELASTIC_SEARCH"
   )
   @ValueChooserModel(ElasticsearchOperationChooserValues.class)
-  public ElasticsearchOperationType defaultOperation;
+  public ElasticsearchOperationType defaultOperation = ElasticsearchOperationType.INDEX;
 
   @ConfigDef(
       required = true,
@@ -130,5 +130,5 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       group = "ELASTIC_SEARCH"
   )
   @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
-  public UnsupportedOperationAction unsupportedAction;
+  public UnsupportedOperationAction unsupportedAction = UnsupportedOperationAction.DISCARD;
 }
