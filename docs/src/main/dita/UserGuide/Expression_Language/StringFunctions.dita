@@ -104,10 +104,15 @@
           <dd>Uses the following arguments:<ul id="ul_fy1_qbx_1r">
               <li>string - The string that contains a pattern of characters.</li>
               <li>regEx - Regular expression that describes the pattern of the string, separating it
-                into groups.</li>
+                into groups. Use the backslash as an escape character for special characters in the
+                expression. For example, to represent a digit in the expression with the characters
+                  <codeph>\d</codeph>, use <codeph>\\d</codeph>.</li>
               <li>group - The number of the group to return, where 1 represents the first group, 2
                 represents the second group, etc. 0 returns the entire string.</li>
-            </ul></dd>
+            </ul><p>For example, to extract the month and day from the Date field that uses the
+              format 'mm-dd-yyyy', use the following function:
+              ${str:regExCapture(record:value('/Date'), '(\\w{2}\\-\\w{2})-\\w*', 1)}</p><p>
+              (\\w{2}\\-\\w{2})-\\w*', 1)</p></dd>
         </dlentry>
         <dlentry>
           <dt>str:replace(&lt;string>, &lt;oldChar>, &lt;newChar>)</dt>
