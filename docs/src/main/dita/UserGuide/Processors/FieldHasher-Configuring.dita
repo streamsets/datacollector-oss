@@ -121,9 +121,11 @@
                             <tbody>
                                 <row>
                                     <entry>On Field Issue</entry>
-                                    <entry>Determines the action if a record does not include values
-                                        for the fields to hash:<ul id="ul_e4v_fz5_lv">
-                                            <li>Continue - Passes nulls for the missing values.</li>
+                                    <entry>Determines the action to take if a specified field to
+                                        hash is missing from the record, contains a null value, or
+                                        is a List, Map, or List-Map data type:<ul id="ul_e4v_fz5_lv">
+                                            <li>Continue - Drops the target field from the record
+                                                and continues processing.</li>
                                             <li>Send to Error - Passes the record to the pipeline
                                                 for error handling.</li>
                                         </ul></entry>
