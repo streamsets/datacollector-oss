@@ -19,6 +19,7 @@
   <id>java-src</id>
   <formats>
     <format>tar.gz</format>
+    <format>zip</format>
   </formats>
   <includeBaseDirectory>true</includeBaseDirectory>
   <fileSets>
