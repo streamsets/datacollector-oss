@@ -353,8 +353,10 @@
                                 href="../Expression_Language/PipelineFunctions.dita#concept_dvg_nqn_wx"
                                 >New pipeline user function</xref> - A new pipeline user function
                             enables you to determine the user who started the pipeline. </li>
-                        <li>New function to generate UUIDs - A new string function that enables you
-                            generate UUIDs.</li>
+                        <li><xref
+                                href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"
+                                >New function to generate UUIDs</xref> - A new function that enables
+                            you generate UUIDs.</li>
                         <li><xref
                                 href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"
                                 >New function returns the number of available processors</xref> -

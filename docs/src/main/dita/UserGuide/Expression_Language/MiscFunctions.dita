@@ -168,6 +168,13 @@
           MapReduce.</p></dd>
       </dlentry>
       <dlentry>
+        <dt>uuid:uuid()</dt>
+        <dd>Returns a randomly generated UUID. For example, you might use the function in an
+          Expression Evaluator processor to generate a UUID for an ID field added to each
+          record.</dd>
+        <dd>Return type: String.</dd>
+      </dlentry>
+      <dlentry>
         <dt>vault:read(&lt;path>, &lt;key>)</dt>
         <dd>Returns the value for the key on the specified path. You can use the function in <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-VaultOneFunction-Usage"
