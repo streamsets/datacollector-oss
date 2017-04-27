@@ -182,7 +182,9 @@ public class ElasticsearchTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    delegate.destroy();
+    if(delegate != null) {
+      delegate.destroy();
+    }
     super.destroy();
   }
 
