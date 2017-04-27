@@ -75,4 +75,7 @@ public class ElasticsearchConfig {
       group = "ELASTIC_SEARCH"
   )
   public boolean useSecurity = false;
+
+  // Display position in SecurityConfig starts where this stops. This is because this config is also available
+  // on error stage where there is only one tab an hence all configs are sequential.
 }

@@ -26,6 +26,8 @@ public class SecurityConfig {
 
   public static final String CONF_PREFIX = "conf.securityConfig.";
 
+  // Display positition here starts where ElasticsearchConfig stops. This is because this config is also available
+  // on error stage where there is only one tab an hence all configs are sequential.
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
@@ -34,7 +36,7 @@ public class SecurityConfig {
       description = "",
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
-      displayPosition = 10,
+      displayPosition = 41,
       elDefs = VaultEL.class,
       group = "SECURITY"
   )
@@ -48,7 +50,7 @@ public class SecurityConfig {
       description = "",
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
-      displayPosition = 20,
+      displayPosition = 42,
       group = "SECURITY"
   )
   public String sslTrustStorePath;
@@ -61,7 +63,7 @@ public class SecurityConfig {
       description = "",
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
-      displayPosition = 30,
+      displayPosition = 43,
       elDefs = VaultEL.class,
       group = "SECURITY"
   )
