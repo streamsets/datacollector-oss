@@ -29,7 +29,6 @@ import java.sql.SQLException;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -73,12 +72,8 @@ public final class MultithreadedTableProvider {
   }
 
   private void offerToOwnedTablesQueue(String acquiredTableName) {
-    Optional.ofNullable(acquiredTableName).ifPresent(
-        tableName -> {
-          getOwnedTablesQueue().offerLast(tableName);
-          LOG.trace("Thread '{}' has acquired table '{}'", getCurrentThreadName(), tableName);
-        }
-    );
+    getOwnedTablesQueue().offerLast(acquiredTableName);
+    LOG.trace("Thread '{}' has acquired table '{}'", getCurrentThreadName(), acquiredTableName);
   }
 
   /**
@@ -94,12 +89,12 @@ public final class MultithreadedTableProvider {
       offerToOwnedTablesQueue(sharedAvailableTablesQueue.take());
     }
     String acquiredTableName;
-    do {
-      acquiredTableName = sharedAvailableTablesQueue.poll();
-      offerToOwnedTablesQueue(acquiredTableName);
-    } while (acquiredTableName != null && getOwnedTablesQueue().size()< upperBoundOnTablesToAcquire);
     //If we keep acquiring we will starve other threads, maxQueueSize is an upper bound
     //for number of tables we can acquire
+    while (getOwnedTablesQueue().size() < upperBoundOnTablesToAcquire &&
+        (acquiredTableName = sharedAvailableTablesQueue.poll()) != null) {
+      offerToOwnedTablesQueue(acquiredTableName);
+    }
   }
 
   /**
