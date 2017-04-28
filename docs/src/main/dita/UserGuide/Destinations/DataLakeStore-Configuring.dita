@@ -66,8 +66,9 @@
                                 </row>
                                 <row>
                                     <entry>Account FQDN</entry>
-                                    <entry>The URL of the Data Lake Store.<p>For help locating this
-                                            information in Azure, see <xref
+                                    <entry>The host name of the Data Lake Store. For example:
+                                            <codeblock>&lt;service name>.azuredatalakestore.net</codeblock><p>For
+                                            help locating this information in Azure, see <xref
                                                 href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/AccountFDQN"
                                                 >Step 2. Retrieve Details from
                                         Azure</xref>.</p></entry>
