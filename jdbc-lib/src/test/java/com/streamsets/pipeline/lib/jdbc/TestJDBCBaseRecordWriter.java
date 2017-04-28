@@ -98,6 +98,7 @@ public class TestJDBCBaseRecordWriter {
 
   @Test
   public void testSinglePrimaryKeys() throws StageException {
+    boolean caseSensitive = false;
     JdbcBaseRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
@@ -107,7 +108,8 @@ public class TestJDBCBaseRecordWriter {
         PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
 
     try {
@@ -122,6 +124,7 @@ public class TestJDBCBaseRecordWriter {
 
   @Test
   public void testCompoundPrimaryKeys() throws StageException {
+    boolean caseSensitive = false;
     JdbcBaseRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
@@ -131,7 +134,8 @@ public class TestJDBCBaseRecordWriter {
         PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
 
     try {
@@ -158,6 +162,7 @@ public class TestJDBCBaseRecordWriter {
         new JdbcFieldColumnMapping("/field2", "MSG", "", DataType.STRING)
     );
 
+    boolean caseSensitive = false;
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
@@ -168,7 +173,8 @@ public class TestJDBCBaseRecordWriter {
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
         generatedColumnMapping,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();

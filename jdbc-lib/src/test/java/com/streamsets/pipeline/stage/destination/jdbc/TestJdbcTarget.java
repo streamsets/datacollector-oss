@@ -37,6 +37,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -45,6 +47,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -52,6 +55,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(Parameterized.class)
 @SuppressWarnings("Duplicates")
 public class TestJdbcTarget {
 
@@ -66,6 +70,14 @@ public class TestJdbcTarget {
   private final String h2ConnectionString = "jdbc:h2:mem:" + database;
 
   private Connection connection = null;
+
+  @Parameterized.Parameters
+  public static Collection<Boolean> caseSensitives() {
+    return ImmutableList.of(false, true);
+  }
+
+  @Parameterized.Parameter
+  public boolean caseSensitive;
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
@@ -150,7 +162,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -181,7 +193,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -226,7 +238,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -272,7 +284,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -338,7 +350,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         true,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -403,7 +415,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -471,7 +483,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         true,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -533,7 +545,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -594,7 +606,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -623,7 +635,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -652,7 +664,7 @@ public class TestJdbcTarget {
         schema,
         tableName,
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -681,7 +693,7 @@ public class TestJdbcTarget {
         schema,
         "${record:attribute('tableName')}",
         fieldMappings,
-        true, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -789,7 +801,7 @@ public class TestJdbcTarget {
         schema,
         "DATETIMES",
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -837,7 +849,7 @@ public class TestJdbcTarget {
         schema,
         "DATETIMES",
         fieldMappings,
-        false, // enclose table name
+        caseSensitive,
         false,
         false,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,

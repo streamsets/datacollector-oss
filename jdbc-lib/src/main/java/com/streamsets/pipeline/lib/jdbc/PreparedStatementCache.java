@@ -34,6 +34,9 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.SortedMap;
 import java.util.Map;
 import java.util.HashMap;
@@ -51,13 +54,9 @@ public class PreparedStatementCache {
   private final List<JdbcFieldColumnMapping> generatedColumnMappings;
   private final List<String> primaryKeyColumns;
   private final int opCode;
+  private final boolean caseSensitive;
   public static final int UNLIMITED_CACHE = -1;
 
-  private static final Joiner joiner = Joiner.on(',');
-  private static final Joiner joinerEqual = Joiner.on("\" = ?, \"");
-  private static final Joiner joinerEqualAnd = Joiner.on("\" = ? AND \"");
-  private final String deleteQuery;
-  private final String primaryKeyCols;
 
   private final LoadingCache<SortedMap<String, String>, PreparedStatement> cacheMap;
 
@@ -91,17 +90,16 @@ public class PreparedStatementCache {
                          List<JdbcFieldColumnMapping> generatedColumnMappings,
                          List<String> primaryKeyColumns,
                          int opCode,
-                         int maxCacheSize)
+                         int maxCacheSize,
+                         boolean caseSensitive)
   {
     this.connection = connection;
     this.tableName = tableName;
     this.generatedColumnMappings = generatedColumnMappings;
     this.primaryKeyColumns = primaryKeyColumns;
     this.opCode = opCode;
+    this.caseSensitive = caseSensitive;
 
-    primaryKeyCols = joinerEqualAnd.join(primaryKeyColumns);
-    //Delete query is always same for same table, single-row operation.
-    deleteQuery = String.format("DELETE FROM %s WHERE \"%s\" = ?", tableName, primaryKeyCols);
     CacheBuilder cacheBuilder = CacheBuilder.newBuilder();
     if (maxCacheSize > -1){
       cacheBuilder.maximumSize(maxCacheSize);
@@ -120,31 +118,14 @@ public class PreparedStatementCache {
   }
 
   private String generateQuery(final SortedMap<String, String> columns) throws OnRecordErrorException {
-    String query;
-    if (opCode != OperationType.INSERT_CODE && primaryKeyColumns.isEmpty()) {
-      LOG.error("Primary key columns are missing in records: {}", primaryKeyColumns);
-      throw new OnRecordErrorException(JdbcErrors.JDBC_62, tableName);
+    List<String> primaryKeyParams = new LinkedList<>();
+    for (String key: primaryKeyColumns) {
+      primaryKeyParams.add(columns.get(key));
     }
-    switch (opCode) {
-      case OperationType.INSERT_CODE:
-        query = String.format("INSERT INTO %s (\"%s\") VALUES (%s)", tableName,
-            Joiner.on("\", \"").join(columns.keySet()),
-            joiner.join(columns.values())
-        );
-        break;
-      case OperationType.DELETE_CODE:
-        query = deleteQuery;
-        break;
-      case OperationType.UPDATE_CODE:
-        query = String.format("UPDATE %s SET \"%s\" = ? WHERE \"%s\" = ?", tableName,
-            joinerEqual.join(columns.keySet()),
-            primaryKeyCols
-        );
-        break;
-      default:
-        //shouldn't reach here
-        throw new OnRecordErrorException(JdbcErrors.JDBC_70, String.format("SDC opcode=%d", opCode));
-    }
+
+    final int recordSize = 1;
+    String query = JdbcUtil.generateQuery(opCode, tableName, primaryKeyColumns, primaryKeyParams, columns, recordSize, caseSensitive);
+
     return query;
   }
 

@@ -50,7 +50,8 @@ final class PreparedStatementMap {
       String tableName,
       List<JdbcFieldColumnMapping> generatedColumnMappings,
       List<String> primaryKeyColumns,
-      int maxPrepStmtCache)
+      int maxPrepStmtCache,
+      boolean caseSensitive)
   {
     for (JDBCOperationType type: JDBCOperationType.values()) {
       cache.put(type.code, new PreparedStatementCache(
@@ -59,7 +60,8 @@ final class PreparedStatementMap {
           generatedColumnMappings,
           primaryKeyColumns,
           type.code,
-          maxPrepStmtCache)
+          maxPrepStmtCache,
+          caseSensitive)
       );
     }
   }

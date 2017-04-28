@@ -41,7 +41,8 @@ public final class JdbcRecordReaderWriterFactory {
       int maxPrepStmtCache,
       JDBCOperationType defaultOperation,
       UnsupportedOperationAction unsupportedAction,
-      JdbcRecordReader recordReader
+      JdbcRecordReader recordReader,
+      boolean caseSensitive
   ) throws StageException {
 
     return createJdbcRecordWriter(
@@ -56,7 +57,8 @@ public final class JdbcRecordReaderWriterFactory {
         maxPrepStmtCache,
         defaultOperation,
         unsupportedAction,
-        recordReader
+        recordReader,
+        caseSensitive
     );
   }
 
@@ -73,7 +75,8 @@ public final class JdbcRecordReaderWriterFactory {
        int maxPrepStmtCache,
        JDBCOperationType defaultOperation,
        UnsupportedOperationAction unsupportedAction,
-       JdbcRecordReader recordReader
+       JdbcRecordReader recordReader,
+       boolean caseSensitive
   ) throws StageException {
 
     JdbcRecordWriter recordWriter;
@@ -89,7 +92,8 @@ public final class JdbcRecordReaderWriterFactory {
           defaultOperation,
           unsupportedAction,
           generatedColumnMappings,
-          recordReader
+          recordReader,
+          caseSensitive
       );
     } else {
       recordWriter = new JdbcGenericRecordWriter(
@@ -102,7 +106,8 @@ public final class JdbcRecordReaderWriterFactory {
           defaultOperation,
           unsupportedAction,
           generatedColumnMappings,
-          recordReader
+          recordReader,
+          caseSensitive
       );
     }
     return recordWriter;

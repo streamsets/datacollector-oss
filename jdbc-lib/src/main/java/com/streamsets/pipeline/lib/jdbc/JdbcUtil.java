@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.zaxxer.hikari.HikariConfig;
@@ -63,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.SortedMap;
 
 import static com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean.MILLISECONDS;
 
@@ -89,6 +91,18 @@ public class JdbcUtil {
   private static final String PK_TABLE_NAME = "PKTABLE_NAME";
 
   public static final String TABLE_NAME = "tableNameTemplate";
+
+  /**
+   * Parameterized SQL statements to the database.
+   *
+   * @see java.sql.Connection#prepareStatement
+   */
+  private static final Joiner joiner = Joiner.on(", ");
+  private static final Joiner joinerColumn = Joiner.on(" = ?, ");
+  private static final Joiner joinerWhereClause =  Joiner.on(" = ? AND ");
+  private static final Joiner joinerWithQuote = Joiner.on("\", \"");
+  private static final Joiner joinerColumnWithQuote = Joiner.on("\" = ?, \"");
+  private static final Joiner joinerWhereClauseWitheQuote =  Joiner.on("\" = ? AND \"");
 
   private JdbcUtil() {
   }
@@ -690,6 +704,98 @@ public class JdbcUtil {
       }
     }
     return false;
+  }
+
+  public static String generateQuery(
+      int opCode,
+      String tableName,
+      List<String> primaryKeys,
+      List<String> primaryKeyParams,
+      SortedMap<String, String> columns,
+      int numRecords,
+      boolean caseSensitive
+  ) throws OnRecordErrorException {
+    String query;
+    String valuePlaceholder;
+    String valuePlaceholders;
+
+    if(opCode != OperationType.INSERT_CODE && primaryKeys.isEmpty()){
+      LOG.error("Primary key columns are missing in records: {}", primaryKeys);
+      throw new OnRecordErrorException(JdbcErrors.JDBC_62, tableName);
+    }
+
+    if (!caseSensitive) {
+      switch (opCode) {
+        case OperationType.INSERT_CODE:
+          valuePlaceholder = String.format("(%s)", joiner.join(columns.values()));
+          valuePlaceholders = org.apache.commons.lang3.StringUtils.repeat(valuePlaceholder, ", ", numRecords);
+          query = String.format(
+              "INSERT INTO %s (%s) VALUES %s",
+              tableName,
+              joiner.join(columns.keySet()),
+              valuePlaceholders
+          );
+          break;
+        case OperationType.DELETE_CODE:
+          valuePlaceholder = String.format("(%s)", joiner.join(primaryKeyParams));
+          valuePlaceholders = org.apache.commons.lang3.StringUtils.repeat(valuePlaceholder, ", ", numRecords);
+          query = String.format(
+              "DELETE FROM %s WHERE (%s) IN (%s)",
+              tableName,
+              joiner.join(primaryKeys),
+              valuePlaceholders
+          );
+          break;
+        case OperationType.UPDATE_CODE:
+          query = String.format(
+              "UPDATE %s SET %s = ? WHERE %s = ?",
+              tableName,
+              joinerColumn.join(columns.keySet()),
+              joinerWhereClause.join(primaryKeys)
+          );
+          break;
+        default:
+          // Should be checked earlier. Shouldn't reach here
+          LOG.error("Unsupported Operation code: {}}", opCode);
+          throw new OnRecordErrorException(JdbcErrors.JDBC_70, opCode);
+      }
+    } else {
+      switch (opCode) {
+        case OperationType.INSERT_CODE:
+          valuePlaceholder = String.format("(%s)", joiner.join(columns.values()));
+          valuePlaceholders = org.apache.commons.lang3.StringUtils.repeat(valuePlaceholder, ", ", numRecords);
+          query = String.format(
+              "INSERT INTO %s (\"%s\") VALUES %s",
+              tableName,
+              joinerWithQuote.join(columns.keySet()),
+              valuePlaceholders
+          );
+          break;
+        case OperationType.DELETE_CODE:
+          valuePlaceholder = String.format("(%s)", joiner.join(primaryKeyParams));
+          valuePlaceholders = org.apache.commons.lang3.StringUtils.repeat(valuePlaceholder, ", ", numRecords);
+          query = String.format(
+              "DELETE FROM %s WHERE (\"%s\") IN (%s)",
+              tableName,
+              joinerWithQuote.join(primaryKeys),
+              valuePlaceholders
+          );
+          break;
+        case OperationType.UPDATE_CODE:
+          query = String.format(
+              "UPDATE %s SET \"%s\" = ? WHERE \"%s\" = ?",
+              tableName,
+              joinerColumnWithQuote.join(columns.keySet()),
+              joinerWhereClauseWitheQuote.join(primaryKeys)
+          );
+          break;
+        default:
+          // Should be checked earlier. Shouldn't reach here
+          LOG.error("Unsupported Operation code: {}}", opCode);
+          throw new OnRecordErrorException(JdbcErrors.JDBC_70, opCode);
+      }
+    }
+    return query;
   }
 
   protected static PreparedStatement getPreparedStatement(

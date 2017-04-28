@@ -93,7 +93,8 @@ public class JdbcTarget extends BaseTarget {
           maxPrepStmtCache,
           defaultOperation,
           unsupportedAction,
-          JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat)
+          JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat),
+          caseSensitive
       );
     }
   }
