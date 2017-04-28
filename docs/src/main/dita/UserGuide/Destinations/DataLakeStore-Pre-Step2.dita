@@ -93,9 +93,10 @@
                         <li id="AccountFDQN">In the <wintitle>Essentials</wintitle> page, note the
                                     URL:<p><image href="../Graphics/DLStore-URL.png"
                                     id="image_vxz_gfw_zx" scale="60"/></p><note type="important"
-                                >When you configure the Azure Data Lake Store destination, use this
-                                URL for the <uicontrol>Account FQDN</uicontrol> property.
-                            </note></li>
+                                >When you configure the Azure Data Lake Store destination, use the
+                                host name from this URL for the <uicontrol>Account FQDN</uicontrol>
+                                property. In this case, the host name is
+                                servicename.azuredatalakestore.net. </note></li>
                     </ol>
                 </dd>
             </dlentry>

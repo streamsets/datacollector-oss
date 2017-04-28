@@ -17,26 +17,46 @@
  <title>Full and Incremental Mode</title>
  <conbody>
   <p><indexterm>JDBC Query Consumer origin<indexterm>full or incremental modes for
-          queries</indexterm></indexterm>JDBC Query Consumer can perform queries in two modes: </p>
+                                        queries</indexterm></indexterm>JDBC Query Consumer can
+                        perform queries in two modes:</p>
   <p>
    <dl>
     <dlentry>
      <dt>Incremental mode</dt>
      <dd>When the JDBC Query Consumer performs an incremental query, it uses the initial offset as
-            the offset value in the first SQL query. As JDBC Query Consumer completes processing the
-            results of the first query, it saves the last offset value that it processes. When it
-            requests a subsequent query, it returns data after the last-saved offset. You can reset
-            the origin to use the initial offset value. </dd>
+                                                the offset value in the first SQL query. As the
+                                                origin completes processing the results of the first
+                                                query, it saves the last offset value that it
+                                                processes. Then it waits the specified query
+                                                interval before performing a subsequent query. </dd>
+                                        <dd>When the origin performs a subsequent query, it returns
+                                                data based on the last-saved offset. You can reset
+                                                the origin to use the initial offset value. </dd>
      <dd>Use incremental mode for append-only tables or when you do not need to capture changes to
             older rows. By default, JDBC Query Consumer uses incremental mode. </dd>
     </dlentry>
     <dlentry>
      <dt>Full mode</dt>
-     <dd>When the JDBC Query Consumer origin performs a full query, it runs the defined SQL query.
-            If you optionally configure the offset column and initial offset value, the origin uses
-            the initial offset as the offset value in the SQL query each time it requests data.</dd>
+     <dd>When the JDBC Query Consumer origin performs a full query, it runs the specified SQL query.
+                                                If you optionally configure the offset column and
+                                                initial offset value, the origin uses the initial
+                                                offset as the offset value in the SQL query each
+                                                time it requests data.</dd>
+                                        <dd>When the origin completes processing the results of the
+                                                full query, it waits the specified query interval,
+                                                and then performs the same query again. </dd>
      <dd>Use full mode to capture all row updates. You might use a Record Deduplicator in the
             pipeline to minimize repeated rows. Not ideal for large tables.</dd>
+                                        <dd>
+                                                <note type="tip">If you want to process the results
+                                                  from a single full query and then stop the
+                                                  pipeline, you can enable the origin to generate
+                                                  events and use the Pipeline Finisher to stop the
+                                                  pipeline automatically. For more information, see
+                                                  <xref
+                                                  href="JDBCConsumer-EventGen.dita#concept_o1c_kwr_kz"
+                                                  />.</note>
+                                        </dd>
     </dlentry>
    </dl>
   </p>
