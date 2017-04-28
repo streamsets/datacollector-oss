@@ -225,11 +225,14 @@
                     <dt>Processors</dt>
                     <dd>
                         <ul id="ul_z35_cwt_5y">
-                            <li dir="ltr">Field Type Converter processor enhancement - You can now
-                                configure the processor to convert timestamp data in a Long field to
-                                a String. Previously, you had to use one Field Type Converter
-                                processor to convert the Long field to a Datetime, and then use
-                                another processor to convert the Datetime field to a String.</li>
+                            <li dir="ltr"><xref
+                                    href="../Processors/FieldTypeConverter-Configuring.dita#task_g23_2tq_wq"
+                                    >Field Type Converter processor enhancement</xref> - You can now
+                                configure the processor to convert timestamp data in a long field to
+                                a String data type. Previously, you had to use one Field Type
+                                Converter processor to convert the long field to a datetime, and
+                                then use another processor to convert the datetime field to a
+                                string.</li>
                             <li dir="ltr">
                                 <p><xref href="../Processors/HTTPClient.dita#concept_ghx_ypr_fw"
                                         >HTTP Client processor enhancements</xref>  - You can now
