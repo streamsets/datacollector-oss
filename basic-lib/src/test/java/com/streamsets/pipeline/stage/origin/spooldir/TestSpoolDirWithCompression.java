@@ -20,16 +20,14 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.google.common.io.Resources;
-import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.ext.DataCollectorServices;
-import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.compress.compressors.CompressorException;
@@ -58,7 +56,7 @@ public class TestSpoolDirWithCompression {
 
   @BeforeClass
   public static void setUpClass() throws IOException, InterruptedException, URISyntaxException, CompressorException {
-    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
+    DataCollectorServicesUtils.loadDefaultServices();
 
     testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(testDir.mkdirs());
