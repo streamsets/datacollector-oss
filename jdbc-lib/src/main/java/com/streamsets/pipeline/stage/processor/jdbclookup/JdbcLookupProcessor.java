@@ -234,13 +234,15 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
   @SuppressWarnings("unchecked")
   private LoadingCache<String, Map<String, Field>> buildCache() {
-    JdbcLookupLoader loader = new JdbcLookupLoader(dataSource,
-        columnsToFields,
-        columnsToDefaults,
-        columnsToTypes,
-        maxClobSize,
-        maxBlobSize,
-        errorRecordHandler
+    JdbcLookupLoader loader = new JdbcLookupLoader(
+      getContext(),
+      dataSource,
+      columnsToFields,
+      columnsToDefaults,
+      columnsToTypes,
+      maxClobSize,
+      maxBlobSize,
+      errorRecordHandler
     );
     return LookupUtils.buildCache(loader, cacheConfig);
   }

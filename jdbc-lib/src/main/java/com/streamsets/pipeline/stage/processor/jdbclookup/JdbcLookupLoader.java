@@ -19,8 +19,11 @@
  */
 package com.streamsets.pipeline.stage.processor.jdbclookup;
 
+import com.codahale.metrics.Meter;
+import com.codahale.metrics.Timer;
 import com.google.common.cache.CacheLoader;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.jdbc.DataType;
@@ -56,15 +59,18 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
   private final Map<String, String> columnsToDefaults;
   private final Map<String, DataType> columnsToTypes;
   private final DataSource dataSource;
+  private final Meter selectMeter;
+  private final Timer selectTimer;
 
   public JdbcLookupLoader(
-      DataSource dataSource,
-      Map<String, String> columnsToFields,
-      Map<String, String> columnsToDefaults,
-      Map<String, DataType> columnsToTypes,
-      int maxClobSize,
-      int maxBlobSize,
-      ErrorRecordHandler errorRecordHandler
+    Stage.Context context,
+    DataSource dataSource,
+    Map<String, String> columnsToFields,
+    Map<String, String> columnsToDefaults,
+    Map<String, DataType> columnsToTypes,
+    int maxClobSize,
+    int maxBlobSize,
+    ErrorRecordHandler errorRecordHandler
   ) {
     this.dataSource = dataSource;
     this.columnsToFields = columnsToFields;
@@ -73,6 +79,8 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
     this.maxClobSize = maxClobSize;
     this.maxBlobSize = maxBlobSize;
     this.errorRecordHandler = errorRecordHandler;
+    this.selectMeter = context.createMeter("Select Queries");
+    this.selectTimer = context.createTimer("Select Queries");
   }
 
   @Override
@@ -81,60 +89,69 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
   }
 
   private Map<String, Field> lookupValuesForRecord(String preparedQuery) throws StageException {
+    LOG.debug("Executing SQL:  {}", preparedQuery);
     Map<String, Field> defaultValues = new HashMap<>();
 
-    try (Connection connection = dataSource.getConnection()) {
-      try (Statement stmt = connection.createStatement()) {
-        try (ResultSet resultSet = stmt.executeQuery(preparedQuery)) {
-          if (resultSet.next()) {
-            ResultSetMetaData md = resultSet.getMetaData();
+    Timer.Context t = selectTimer.time();
+    try (
+      Connection connection = dataSource.getConnection();
+       Statement stmt = connection.createStatement();
+       ResultSet resultSet = stmt.executeQuery(preparedQuery)
+    ) {
+      // Stop timer immediately so that we're calculating only query execution time and not the processing time
+      t.stop();
+      t = null;
 
-            LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(resultSet,
-                maxClobSize,
-                maxBlobSize,
-                columnsToTypes,
-                errorRecordHandler
-            );
+      if (resultSet.next()) {
+        ResultSetMetaData md = resultSet.getMetaData();
 
-            int numColumns = md.getColumnCount();
-            if (fields.size() != numColumns) {
-              throw new OnRecordErrorException(JdbcErrors.JDBC_35, fields.size(), numColumns);
-            }
+        LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(resultSet,
+            maxClobSize,
+            maxBlobSize,
+            columnsToTypes,
+            errorRecordHandler
+        );
 
-            return fields;
-          } else {
-            // Database returns no row. Use default values.
-            for (String column : columnsToFields.keySet()) {
-              String defaultValue = columnsToDefaults.get(column);
-              DataType dataType = columnsToTypes.get(column);
-              if (dataType != DataType.USE_COLUMN_TYPE) {
-                Field field;
-                try {
-                  if (dataType == DataType.DATE) {
-                    field = Field.createDate(DATE_FORMATTER.parseDateTime(defaultValue).toDate());
-                  } else if (dataType == DataType.DATETIME) {
-                    field = Field.createDatetime(DATETIME_FORMATTER.parseDateTime(defaultValue).toDate());
-                  } else {
-                    field = Field.create(Field.Type.valueOf(columnsToTypes.get(column).getLabel()), defaultValue);
-                  }
-                  defaultValues.put(column, field);
-                } catch (IllegalArgumentException e) {
-                  throw new OnRecordErrorException(JdbcErrors.JDBC_03, column, defaultValue, e);
-                }
+        int numColumns = md.getColumnCount();
+        if (fields.size() != numColumns) {
+          throw new OnRecordErrorException(JdbcErrors.JDBC_35, fields.size(), numColumns);
+        }
+
+        return fields;
+      } else {
+        // Database returns no row. Use default values.
+        for (String column : columnsToFields.keySet()) {
+          String defaultValue = columnsToDefaults.get(column);
+          DataType dataType = columnsToTypes.get(column);
+          if (dataType != DataType.USE_COLUMN_TYPE) {
+            Field field;
+            try {
+              if (dataType == DataType.DATE) {
+                field = Field.createDate(DATE_FORMATTER.parseDateTime(defaultValue).toDate());
+              } else if (dataType == DataType.DATETIME) {
+                field = Field.createDatetime(DATETIME_FORMATTER.parseDateTime(defaultValue).toDate());
+              } else {
+                field = Field.create(Field.Type.valueOf(columnsToTypes.get(column).getLabel()), defaultValue);
               }
+              defaultValues.put(column, field);
+            } catch (IllegalArgumentException e) {
+              throw new OnRecordErrorException(JdbcErrors.JDBC_03, column, defaultValue, e);
             }
           }
         }
-      } catch (SQLException e) {
-        // Exception executing query
-        LOG.error(JdbcErrors.JDBC_02.getMessage(), preparedQuery, e);
-        throw new OnRecordErrorException(JdbcErrors.JDBC_02, preparedQuery, e.getMessage());
       }
     } catch (SQLException e) {
       // Exception executing query
       LOG.error(JdbcErrors.JDBC_02.getMessage(), preparedQuery, e);
       throw new OnRecordErrorException(JdbcErrors.JDBC_02, preparedQuery, e.getMessage());
+    } finally {
+      // If the timer wasn't stopped due to exception yet, stop it now
+      if(t != null) {
+        t.stop();
+      }
+      selectMeter.mark();
     }
+
     return defaultValues;
   }
 }
