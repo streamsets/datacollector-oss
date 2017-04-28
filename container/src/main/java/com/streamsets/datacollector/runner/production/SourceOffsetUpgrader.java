@@ -36,13 +36,14 @@ public class SourceOffsetUpgrader {
 
     switch(sourceOffset.getVersion()) {
       case 0:
+        // fall through
       case 1:
         upgradeV0toV2(sourceOffset);
+        // fall through
       case 2:
         // Current version
         sourceOffset.setVersion(2);
         break;
-
       default:
         throw new IllegalArgumentException("Unknown SourceOffset version: " + sourceOffset.getVersion());
     }

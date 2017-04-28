@@ -187,8 +187,8 @@ public final class HashingUtil {
                       field.getType()
                   )
               );
-            case MAP:
-            case LIST:
+            default:
+              break;
           }
         } else {
           sink.putBoolean(true);

@@ -323,11 +323,16 @@ public class TestProductionPipeline {
       ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, PipelineType.DEFAULT);
       pipeline.registerStatusListener(listener);
 
+      boolean exceptionThrown = true;
       try {
         pipeline.run();
+        exceptionThrown = false;
+      } catch (Throwable t) {
+        // suppress exception so that we can continue and retry.
+      }
+
+      if (!exceptionThrown) {
         Assert.fail("Expected exception thrown by the pipeline");
-      } catch (Throwable e) {
-        // No-op
       }
 
       Assert.assertEquals(finalStatus, listener.statuses.get(listener.statuses.size() - 1));

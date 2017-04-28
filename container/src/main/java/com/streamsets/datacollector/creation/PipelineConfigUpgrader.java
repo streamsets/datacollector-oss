@@ -39,12 +39,16 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // nothing to do from 0 to 1
       case 1:
         upgradeV1ToV2(configs);
+        // fall through
       case 2:
         upgradeV2ToV3(configs);
+        // fall through
       case 3:
         upgradeV3ToV4(configs);
+        // fall through
       case 4:
         upgradeV4ToV5(configs);
+        // fall through
       case 5:
         upgradeV5ToV6(configs);
         break;

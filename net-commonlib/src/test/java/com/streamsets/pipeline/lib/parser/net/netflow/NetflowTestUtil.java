@@ -81,7 +81,7 @@ public abstract class NetflowTestUtil {
     int seq,
     int octets
   ) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss.SSSS");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSS");
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     Map<String, Field> map = record.get().getValueAsMap();
     Assert.assertEquals(version, map.get(NetflowMessage.VERSION).getValueAsInteger());

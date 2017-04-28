@@ -191,6 +191,8 @@ public class RecordImpl implements Record, Cloneable {
             // When we convert listMap to list we loose the key,
             // UI & deserializer need to use path attribute to recover the key for listMap
             return new ArrayList<>(((Map) value).values());
+          default:
+            break;
         }
       }
       return v;
@@ -562,6 +564,8 @@ public class RecordImpl implements Record, Cloneable {
             //replace existing value
             fieldToReplace = parentField.getValueAsList().set(elementIndex, newField);
           }
+          break;
+        case ROOT:
           break;
       }
     }

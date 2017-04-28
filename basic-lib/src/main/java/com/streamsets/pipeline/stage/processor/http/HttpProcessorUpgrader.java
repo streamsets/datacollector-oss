@@ -62,25 +62,31 @@ public class HttpProcessorUpgrader implements StageUpgrader {
         if (toVersion == 4) {
           break;
         }
+        // fall through
       case 4:
         upgradeV4ToV5(configs);
         if (toVersion == 5) {
           break;
         }
+        // fall through
       case 5:
         upgradeV5ToV6(configs);
         if (toVersion == 6) {
           break;
         }
+        // fall through
       case 6:
         upgradeV6ToV7(configs);
         if (toVersion == 7) {
           break;
         }
-        break;
+        // fall through
       case 7:
         upgradeV7ToV8(configs);
-        break;
+        if (toVersion == 8) {
+          break;
+        }
+        // fall through
       case 8:
         upgradeV8ToV9(configs);
         break;

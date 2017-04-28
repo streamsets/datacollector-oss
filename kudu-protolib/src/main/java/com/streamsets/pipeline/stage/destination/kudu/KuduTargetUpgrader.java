@@ -34,9 +34,16 @@ public class KuduTargetUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
       case 3:
         upgradeV3ToV4(configs);
         break;

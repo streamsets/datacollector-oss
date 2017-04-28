@@ -45,6 +45,7 @@ public class RedisSourceUpgrader implements StageUpgrader {
         if(toVersion == 2) {
           break;
         }
+        // fall through
       case 2:
         upgradeV2toV3(configs);
         break;

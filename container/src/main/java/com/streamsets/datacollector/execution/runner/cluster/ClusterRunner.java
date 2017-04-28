@@ -240,35 +240,38 @@ public class ClusterRunner extends AbstractRunner {
   public void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getState().getStatus();
     LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
-    String msg = null;
+    String msg;
     switch (status) {
       case STARTING:
         msg = "Pipeline was in STARTING state, forcing it to DISCONNECTED";
+        break;
       case RETRY:
-        msg = (msg == null) ? "Pipeline was in RETRY state, forcing it to DISCONNECTING": msg;
+        msg = "Pipeline was in RETRY state, forcing it to DISCONNECTING";
+        break;
       case CONNECTING:
-        msg = msg == null ? "Pipeline was in CONNECTING state, forcing it to DISCONNECTED" : msg;
+        msg = "Pipeline was in CONNECTING state, forcing it to DISCONNECTED";
+        break;
       case RUNNING:
-        msg = msg == null ? "Pipeline was in RUNNING state, forcing it to DISCONNECTED" : msg;
+        msg = "Pipeline was in RUNNING state, forcing it to DISCONNECTED";
+        break;
       case CONNECT_ERROR:
-        msg = msg == null ? "Pipeline was in CONNECT_ERROR state, forcing it to DISCONNECTED" : msg;
+        msg = "Pipeline was in CONNECT_ERROR state, forcing it to DISCONNECTED";
+        break;
       case STOPPING:
-        msg = msg == null ? "Pipeline was in STOPPING state, forcing it to DISCONNECTED": msg;
-        LOG.debug(msg);
-        validateAndSetStateTransition(user, PipelineStatus.DISCONNECTED, msg);
+        msg = "Pipeline was in STOPPING state, forcing it to DISCONNECTED";
         break;
       case DISCONNECTED:
-        break;
-      case RUN_ERROR: // do nothing
       case EDITED:
       case FINISHED:
       case KILLED:
       case START_ERROR:
       case STOPPED:
-        break;
+        return;
       default:
         throw new IllegalStateException(Utils.format("Pipeline in undefined state: '{}'", status));
     }
+    LOG.debug(msg);
+    validateAndSetStateTransition(user, PipelineStatus.DISCONNECTED, msg);
   }
 
   @Override

@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.operation.OperationType;
 
 public class OracleCDCOperationCode {
@@ -51,7 +52,7 @@ public class OracleCDCOperationCode {
         case SELECT_FOR_UPDATE_CODE:
           return OperationType.UPDATE_CODE;
         default:  //DDL_CODE
-          throw new UnsupportedOperationException(String.format("Operation code {} is not supported", code));
+          throw new UnsupportedOperationException(Utils.format("Operation code {} is not supported", code));
       }
     } catch (NumberFormatException ex) {
       throw new NumberFormatException("Operation code must be a numeric value. " + ex.getMessage());

@@ -192,20 +192,16 @@ public class StageRuntime implements PushSourceContextDelegate {
   }
 
   public void execute(final Map<String, String> offsets, final int batchSize) throws StageException {
-      Callable<String> callable = new Callable<String>() {
-        @Override
-        public String call() throws Exception {
-          switch (getDefinition().getType()) {
-            case SOURCE: {
-              if(getStage() instanceof PushSource) {
-                ((PushSource)getStage()).produce(offsets, batchSize);
-                return null;
-              }
+      Callable<String> callable = () -> {
+        switch (getDefinition().getType()) {
+          case SOURCE:
+            if(getStage() instanceof PushSource) {
+              ((PushSource)getStage()).produce(offsets, batchSize);
+              return null;
             }
-            default: {
-              throw new IllegalStateException(Utils.format("Unknown stage type: '{}'", getDefinition().getType()));
-            }
-          }
+            // fall through
+          default:
+            throw new IllegalStateException(Utils.format("Unknown stage type: '{}'", getDefinition().getType()));
         }
       };
 

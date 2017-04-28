@@ -132,6 +132,9 @@ public class HttpClientCommon {
         case GZIP:
           clientBuilder.register(GZipEncoder.class);
           break;
+        case NONE:
+        default:
+          break;
       }
       clientBuilder.register(EncodingFilter.class);
     }

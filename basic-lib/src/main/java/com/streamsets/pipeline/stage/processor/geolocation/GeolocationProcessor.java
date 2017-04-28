@@ -366,14 +366,16 @@ public class  GeolocationProcessor extends SingleLaneRecordProcessor {
               case TO_ERROR:
                 errorRecordHandler.onError(new OnRecordErrorException(record, Errors.GEOIP_02, field.getValue(), cause.getMessage()));
                 LOG.debug(Utils.format(Errors.GEOIP_02.getMessage(), field.getValue(), cause.getMessage()), cause);
-                continue;
+                break;
               case REPLACE_WITH_NULLS:
                 record.set(config.outputFieldName, Field.create(config.targetType.fieldType, null));
+                break;
               case IGNORE:
-                continue;
+                break;
               default:
                 throw new IllegalStateException(Utils.format("Unknown configuration value: ", missingAddressAction));
             }
+            continue;
           }
           Throwables.propagateIfPossible(cause, OnRecordErrorException.class);
           Throwables.propagateIfInstanceOf(cause, GeoIp2Exception.class);

@@ -86,6 +86,7 @@ public class PipelineConfigurationUpgrader {
     switch (pipelineConf.getSchemaVersion()) {
       case 1:
         upgradeSchema1to2(pipelineConf, issues);
+        // fall through
       case 2:
         upgradeSchema2to3(pipelineConf, issues);
         break;

@@ -49,6 +49,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,6 +88,7 @@ public class TestFilePipelineStoreTask {
 
     @Provides
     @Singleton
+    @Nullable
     public PipelineStateStore providePipelineStateStore() {
       return null;
     }

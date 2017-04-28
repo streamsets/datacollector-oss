@@ -192,38 +192,45 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       MDC.put(LogConstants.ENTITY, name);
       LOG.info("Pipeline " + name + " with rev " + rev + " is in state: " + status);
       String msg = null;
+      List<PipelineStatus> transitions = new ArrayList<>();
       switch (status) {
         case STARTING:
           msg = "Pipeline was in STARTING state, forcing it to DISCONNECTING";
+          transitions.add(PipelineStatus.DISCONNECTING);
+          transitions.add(PipelineStatus.DISCONNECTED);
+          break;
         case RETRY:
-          msg = (msg == null) ? "Pipeline was in RETRY state, forcing it to DISCONNECTING": msg;
+          msg = "Pipeline was in RETRY state, forcing it to DISCONNECTING";
+          transitions.add(PipelineStatus.DISCONNECTING);
+          transitions.add(PipelineStatus.DISCONNECTED);
+          break;
         case CONNECTING:
-          msg = (msg == null) ? "Pipeline was in CONNECTING state, forcing it to DISCONNECTING" : msg;
+          msg = "Pipeline was in CONNECTING state, forcing it to DISCONNECTING";
+          transitions.add(PipelineStatus.DISCONNECTING);
+          transitions.add(PipelineStatus.DISCONNECTED);
+          break;
         case RUNNING:
-          msg = (msg == null) ? "Pipeline was in RUNNING state, forcing it to DISCONNECTING" : msg;
-          LOG.debug(msg);
-          validateAndSetStateTransition(user, PipelineStatus.DISCONNECTING, msg, null);
+          msg = "Pipeline was in RUNNING state, forcing it to DISCONNECTING";
+          transitions.add(PipelineStatus.DISCONNECTING);
+          transitions.add(PipelineStatus.DISCONNECTED);
+          break;
         case DISCONNECTING:
           msg = "Pipeline was in DISCONNECTING state, forcing it to DISCONNECTED";
-          LOG.debug(msg);
-          validateAndSetStateTransition(user, PipelineStatus.DISCONNECTED, msg, null);
-        case DISCONNECTED:
+          transitions.add(PipelineStatus.DISCONNECTED);
           break;
         case RUNNING_ERROR:
           msg = "Pipeline was in RUNNING_ERROR state, forcing it to terminal state of RUN_ERROR";
-          LOG.debug(msg);
-          validateAndSetStateTransition(user, PipelineStatus.RUN_ERROR, msg, null);
+          transitions.add(PipelineStatus.RUN_ERROR);
           break;
         case STOPPING:
           msg = "Pipeline was in STOPPING state, forcing it to terminal state of STOPPED";
-          LOG.debug(msg);
-          validateAndSetStateTransition(user, PipelineStatus.STOPPED, msg, null);
+          transitions.add(PipelineStatus.STOPPED);
           break;
         case FINISHING:
           msg = "Pipeline was in FINISHING state, forcing it to terminal state of FINISHED";
-          LOG.debug(msg);
-          validateAndSetStateTransition(user, PipelineStatus.FINISHED, null, null);
+          transitions.add(PipelineStatus.FINISHED);
           break;
+        case DISCONNECTED:
         case RUN_ERROR:
         case EDITED:
         case FINISHED:
@@ -234,6 +241,15 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         default:
           throw new IllegalStateException(Utils.format("Pipeline in undefined state: '{}'", status));
       }
+      if (msg != null) {
+        LOG.debug(msg);
+      }
+
+      // Perform the transitions
+      for (PipelineStatus t : transitions) {
+        validateAndSetStateTransition(user, t, msg, null);
+      }
+
     } finally {
       MDC.clear();
     }

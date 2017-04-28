@@ -104,6 +104,7 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         if (toVersion == 10) {
           break;
         }
+        // fall through
       case 10:
         upgradeV10ToV11(configs);
         if (toVersion == 11) {

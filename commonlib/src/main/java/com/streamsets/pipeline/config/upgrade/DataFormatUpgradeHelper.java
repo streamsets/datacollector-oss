@@ -59,7 +59,7 @@ public class DataFormatUpgradeHelper {
     // to chose where is the Avro schema as this decision is no longer "simple". However for people who are upgrading
     // we're making the same decision that they selected in the past.
     if (schemaInMessage.isPresent()) {
-      if ((boolean) schemaInMessage.get().<Boolean>getValue()) {
+      if ((boolean) schemaInMessage.get().getValue()) {
         toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), OriginAvroSchemaSource.SOURCE));
       } else {
         toAdd.add(new Config(PERIOD.join(prefix, "avroSchemaSource"), OriginAvroSchemaSource.INLINE));

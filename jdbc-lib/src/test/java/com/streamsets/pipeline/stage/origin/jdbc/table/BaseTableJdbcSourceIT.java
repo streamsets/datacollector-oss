@@ -199,8 +199,9 @@ public abstract class BaseTableJdbcSourceIT {
         return UUID.randomUUID().toString();
       case DECIMAL:
         return new BigDecimal(BigInteger.valueOf(RANDOM.nextLong() % (long)Math.pow(10, 20)), 10);
+      default:
+        return null;
     }
-    return null;
   }
 
 

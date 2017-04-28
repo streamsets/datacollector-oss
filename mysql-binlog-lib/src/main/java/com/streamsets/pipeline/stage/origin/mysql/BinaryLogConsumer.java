@@ -19,10 +19,6 @@
  */
 package com.streamsets.pipeline.stage.origin.mysql;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.github.shyiko.mysql.binlog.BinaryLogClient.EventListener;
 import com.github.shyiko.mysql.binlog.event.DeleteRowsEventData;
@@ -40,6 +36,10 @@ import com.streamsets.pipeline.stage.origin.mysql.schema.Table;
 import com.streamsets.pipeline.stage.origin.mysql.schema.TableWithoutColumnsNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Event listener for {@link BinaryLogClient} enriching events with metadata, such as table and column names,
@@ -115,8 +115,10 @@ public class BinaryLogConsumer implements EventListener {
         currentTxGtid = eventData.getGtid();
         currentTxEventSeqNo = 0;
         LOG.trace("Started new tx, gtid: {}", currentTxGtid);
+        break;
       default:
         // ignore
+        break;
     }
   }
 

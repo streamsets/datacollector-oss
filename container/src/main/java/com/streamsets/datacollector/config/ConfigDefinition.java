@@ -303,6 +303,8 @@ public class ConfigDefinition {
           }
           model = ModelDefinition.localizedComplexField(model, listBeanLocalize);
           break;
+        default:
+          break;
       }
     }
 

@@ -100,7 +100,7 @@ public class ShellExecutor extends BaseExecutor {
 
     // We're using static UTC calendar as the timeout is just few seconds/minutes max
     ELVars vars = getContext().createELVars();
-    TimeEL.setCalendarInContext(vars, Calendar.getInstance(TimeZone.getTimeZone("UTF")));
+    TimeEL.setCalendarInContext(vars, Calendar.getInstance(TimeZone.getTimeZone("UTC")));
     try {
       timeout = getContext().createELEval("timeout").eval(vars, config.timeout, Long.class);
 

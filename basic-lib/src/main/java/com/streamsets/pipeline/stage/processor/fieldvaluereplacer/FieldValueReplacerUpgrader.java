@@ -41,6 +41,7 @@ public class FieldValueReplacerUpgrader implements StageUpgrader {
         if (toVersion == 2) {
           break;
         }
+        // fall through
       case 2:
         upgradeV2ToV3(configs);
     }

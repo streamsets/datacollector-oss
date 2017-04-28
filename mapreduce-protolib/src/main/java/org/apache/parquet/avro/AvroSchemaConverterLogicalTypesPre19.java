@@ -66,8 +66,8 @@ public class AvroSchemaConverterLogicalTypesPre19 {
   private static final String LOGICAL_TYPE_TIMESTAMP_MILLIS = "timestamp-millis";
   private static final String LOGICAL_TYPE_DATE = "date";
   // The following types are not currently supported in older Parquet versions
-  private static final String LOGICAL_TYPE_TIME_MICORS = "time-micros";
-  private static final String LOGICAL_TYPE_TIMESTAMP_MICORS = "timestamp-micros";
+  private static final String LOGICAL_TYPE_TIME_MICROS = "time-micros";
+  private static final String LOGICAL_TYPE_TIMESTAMP_MICROS = "timestamp-micros";
 
   public static final String ADD_LIST_ELEMENT_RECORDS =
     "parquet.avro.add-list-element-records";
@@ -400,11 +400,11 @@ public class AvroSchemaConverterLogicalTypesPre19 {
       return OriginalType.DATE;
     } else if (LOGICAL_TYPE_TIME_MILLIS.equals(logicalType)) {
       return OriginalType.TIME_MILLIS;
-//    } else if (LOGICAL_TYPE_TIME_MICORS.equals(logicalType)) {
+//    } else if (LOGICAL_TYPE_TIME_MICROS.equals(logicalType)) {
 //      return OriginalType.TIME_MICROS;
     } else if (LOGICAL_TYPE_TIMESTAMP_MILLIS.equals(logicalType)) {
       return OriginalType.TIMESTAMP_MILLIS;
-//    } else if (LOGICAL_TYPE_TIMESTAMP_MICORS.equals(logicalType)) {
+//    } else if (LOGICAL_TYPE_TIMESTAMP_MICROS.equals(logicalType)) {
 //      return OriginalType.TIMESTAMP_MICROS;
     }
     return null;
@@ -418,21 +418,22 @@ public class AvroSchemaConverterLogicalTypesPre19 {
       case DECIMAL:
         return ImmutableMap.of(
           LOGICAL_TYPE, LOGICAL_TYPE_DECIMAL,
-          LOGICAL_PROP_PRECISION, "" + meta.getPrecision(),
-          LOGICAL_PROP_SCALE, "" + meta.getScale()
+          LOGICAL_PROP_PRECISION, Integer.toString(meta.getPrecision()),
+          LOGICAL_PROP_SCALE, Integer.toString(meta.getScale())
           );
       case DATE:
         return ImmutableMap.of(LOGICAL_TYPE, LOGICAL_TYPE_DATE);
       case TIME_MILLIS:
         return ImmutableMap.of(LOGICAL_TYPE, LOGICAL_TYPE_TIME_MILLIS);
 //      case TIME_MICROS:
-//        return ImmutableMap.of(LOGICAL_TYPE, LOGICAL_TYPE_TIME_MICORS);
+//        return ImmutableMap.of(LOGICAL_TYPE, LOGICAL_TYPE_TIME_MICROS);
       case TIMESTAMP_MILLIS:
         return ImmutableMap.of(LOGICAL_TYPE, LOGICAL_TYPE_TIMESTAMP_MILLIS);
 //      case TIMESTAMP_MICROS:
-//        return ImmutableMap.of(LOGICAL_TYPE, LOGICAL_TYPE_TIMESTAMP_MICORS);
+//        return ImmutableMap.of(LOGICAL_TYPE, LOGICAL_TYPE_TIMESTAMP_MICROS);
+      default:
+        return null;
     }
-    return null;
   }
 
   /**

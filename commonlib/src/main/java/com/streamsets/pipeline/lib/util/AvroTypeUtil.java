@@ -594,6 +594,8 @@ public class AvroTypeUtil {
                   defValMap.putAll(getDefaultValuesFromSchema(s, processedSchemaSet));
                 }
                 break;
+              default:
+                break;
             }
           }
         }
@@ -608,6 +610,8 @@ public class AvroTypeUtil {
         for(Schema s : schema.getTypes()) {
           defValMap.putAll(getDefaultValuesFromSchema(s, processedSchemaSet));
         }
+        break;
+      default:
         break;
     }
 

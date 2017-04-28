@@ -209,7 +209,7 @@ public class HiveMetadataProcessorIT extends BaseHiveIT {
   @Test
   public void testSubTimeZonepartitions() throws Exception {
     final TimeZone timeZone = TimeZone.getTimeZone("US/Pacific");
-    final TimeZone targetTimeZone = TimeZone.getTimeZone("US/Eatern");
+    final TimeZone targetTimeZone = TimeZone.getTimeZone("US/Eastern");
 
     HiveMetadataProcessor processor = new HiveMetadataProcessorBuilder()
         .partitions(new PartitionConfigBuilder()

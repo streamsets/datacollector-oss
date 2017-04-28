@@ -39,9 +39,10 @@ public class XMLFlatteningProcessorUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         v1ToV2(configs);
-        if(toVersion <= 2) {
+        if(toVersion == 2) {
           break;
         }
+        // fall through
       case 2:
         v2ToV3(configs);
         break;

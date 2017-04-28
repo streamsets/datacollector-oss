@@ -25,7 +25,6 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.util.SystemProcess;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -36,7 +35,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
@@ -102,17 +100,12 @@ public class SystemProcessImpl implements SystemProcess {
     NumberFormat numberFormat = NumberFormat.getInstance();
     numberFormat.setMinimumIntegerDigits(10);
     numberFormat.setGroupingUsed(false);
-    SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd_HH.mm.ss");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
     return Utils.format("{}-{}", dateFormat.format(new Date()), numberFormat.format(fileCounter.incrementAndGet()));
   }
 
   static void clean(File tempDir, int limit) {
-    String[] files = tempDir.list(new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        return name.endsWith(OUT_EXT) || name.endsWith(ERR_EXT);
-      }
-    });
+    String[] files = tempDir.list((dir, name) -> name.endsWith(OUT_EXT) || name.endsWith(ERR_EXT));
     if (files != null && files.length > limit) {
       List<String> fileList = new ArrayList<>(files.length);
       fileList.addAll(Arrays.asList(files));

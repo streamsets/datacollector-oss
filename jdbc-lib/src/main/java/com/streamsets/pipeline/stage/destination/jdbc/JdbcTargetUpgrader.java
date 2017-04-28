@@ -35,15 +35,28 @@ public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
     switch(fromVersion) {
       case 1:
         upgradeV1toV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
         // fall through
       case 2:
         upgradeV2toV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
         // fall through
       case 3:
         upgradeV3toV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
         // fall through
       case 4:
         upgradeV4toV5(configs);
+        if (toVersion == 5) {
+          break;
+        }
+        // fall through
       case 5:
         upgradeV5toV6(configs);
         break;

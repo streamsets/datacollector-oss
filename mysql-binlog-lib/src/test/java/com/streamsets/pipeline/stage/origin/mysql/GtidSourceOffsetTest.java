@@ -19,12 +19,12 @@
  */
 package com.streamsets.pipeline.stage.origin.mysql;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 import java.util.UUID;
 
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class GtidSourceOffsetTest {
   private String gtidSet1 = UUID.randomUUID() + ":1-10";
@@ -37,7 +37,7 @@ public class GtidSourceOffsetTest {
     assertThat(offset.incompleteTransactionsContain(gtid1, 100), is(false));
     GtidSourceOffset offset1 = offset.withIncompleteTransaction(gtid1, 300);
     assertThat(offset1.getGtid(), is(gtid1));
-    assertThat(offset1.getSeqNo(), is(300l));
+    assertThat(offset1.getSeqNo(), is(300L));
     assertThat(offset1.incompleteTransactionsContain(gtid1, 100), is(true));
     assertThat(offset1.incompleteTransactionsContain(gtid1, 300), is(true));
     assertThat(offset1.incompleteTransactionsContain(gtid1, 301), is(false));

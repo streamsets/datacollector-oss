@@ -320,8 +320,7 @@ public class JMXJsonServlet extends HttpServlet {
         jg.writeEndArray();
       } else if(value instanceof Number) {
         Number n = (Number)value;
-        if (value instanceof Double && ((Double)value == Double.POSITIVE_INFINITY ||
-            (Double)value == Double.NEGATIVE_INFINITY || (Double)value == Double.NaN)) {
+        if (value instanceof Double && (((Double) value).isInfinite() || ((Double) value).isNaN())) {
           jg.writeString(n.toString());
         } else {
           jg.writeNumber(n.toString());

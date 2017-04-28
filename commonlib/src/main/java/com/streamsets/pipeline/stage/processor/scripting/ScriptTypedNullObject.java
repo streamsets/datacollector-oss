@@ -163,7 +163,8 @@ public class ScriptTypedNullObject {
         return NULL_LIST;
       case MAP:
         return NULL_MAP;
+      default:
+        return null;
     }
-    return null;
   }
 }

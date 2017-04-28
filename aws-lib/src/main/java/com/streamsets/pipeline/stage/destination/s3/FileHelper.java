@@ -138,6 +138,8 @@ abstract class FileHelper {
         case TRANSFER_FAILED_EVENT:
           LOG.debug("Failed uploading object {} into Amazon S3", object);
           break;
+        default:
+          break;
       }
     });
     return upload;

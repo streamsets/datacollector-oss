@@ -33,7 +33,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <maven-compiler-plugin>3.1</maven-compiler-plugin>
+    <maven-compiler-plugin>3.6.1</maven-compiler-plugin>
 
     <maven.dependency.version>3.3.9</maven.dependency.version>
     <maven.plugin-tools.version>3.4</maven.plugin-tools.version>

@@ -238,7 +238,7 @@ public class FullPipeBatch implements PipeBatch {
     List<Record> records = Preconditions.checkNotNull(fullPayload.remove(inputLane), Utils.formatL(
         "Stream '{}' does not exist", inputLane));
     for (String lane : outputLanes) {
-      Preconditions.checkNotNull(fullPayload.containsKey(lane), Utils.formatL("Lane '{}' does not exist", lane));
+      Preconditions.checkState(!fullPayload.containsKey(lane), Utils.formatL("Lane '{}' already exists", lane));
       fullPayload.put(lane, createCopy(records));
     }
   }

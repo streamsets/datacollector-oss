@@ -154,6 +154,7 @@ public class MetricAggregationProcessor extends SingleLaneProcessor {
             break;
           case AggregatorUtil.METRIC_RULE_CHANGE:
             metricRuleHandler.handleRuleChangeRecord(record);
+            break;
           case AggregatorUtil.DATA_RULE_CHANGE:
             dataRuleHandler.handleRuleChangeRecord(record);
             break;

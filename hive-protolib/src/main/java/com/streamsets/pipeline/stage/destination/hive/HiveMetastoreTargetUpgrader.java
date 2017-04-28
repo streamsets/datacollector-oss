@@ -37,9 +37,7 @@ public class HiveMetastoreTargetUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
-        if (toVersion == 2) {
-          break;
-        }
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }

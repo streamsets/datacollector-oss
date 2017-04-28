@@ -319,6 +319,7 @@ public class TestAvroDataGenerator {
     return r;
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void testGenerateWithDefaults() throws Exception {
 
@@ -367,7 +368,7 @@ public class TestAvroDataGenerator {
 
     Assert.assertEquals(null, result.get("boss"));
 
-    Map<String, Object> phones = (Map<String, Object>) result.get("phones");
+    Map<Utf8, Object> phones = (Map<Utf8, Object>) result.get("phones");
     Assert.assertEquals(8675309, (long)phones.get(new Utf8("home")));
     Assert.assertEquals(8675308, (long)phones.get(new Utf8("mobile")));
   }

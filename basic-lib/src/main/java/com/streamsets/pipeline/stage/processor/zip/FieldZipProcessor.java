@@ -123,8 +123,9 @@ public class FieldZipProcessor extends SingleLaneRecordProcessor {
           } else if (!nonListFields.isEmpty()) {
             throw new OnRecordErrorException(Errors.ZIP_00, record.getHeader().getSourceId(), nonListFields);
           }
+          // fall through
         case CONTINUE:
-          return;
+          continue;
         default:
           throw new IllegalStateException("Invalid value for on stage pre-condition failure");
       }

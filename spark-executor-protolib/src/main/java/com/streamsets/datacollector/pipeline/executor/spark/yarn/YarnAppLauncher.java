@@ -307,6 +307,7 @@ public class YarnAppLauncher implements AppLauncher {
     }
   }
 
+  @SuppressWarnings("ReturnValueIgnored")
   private static void applyConfIfPresent(
       String configName,
       String configValue,

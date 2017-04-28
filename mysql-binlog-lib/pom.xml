@@ -30,12 +30,14 @@
   <name>StreamSets Data Collector MySql BinLog Lib</name>
 
   <properties>
+    <jackson.version>2.8.8</jackson.version>
     <mysql-connector-java.version>5.1.39</mysql-connector-java.version>
     <mysql-binlog-connector-java.version>0.4.0</mysql-binlog-connector-java.version>
     <guava.version>19.0</guava.version>
   </properties>
 
   <dependencies>
+    <!-- Provided Dependencies -->
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
@@ -62,6 +64,8 @@
         <version>${mysql-connector-java.version}</version>
         <scope>provided</scope>
     </dependency>
+
+    <!-- Compile Dependencies -->
     <dependency>
         <groupId>com.github.shyiko</groupId>
         <artifactId>mysql-binlog-connector-java</artifactId>
@@ -83,6 +87,13 @@
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
+    <!-- Test Dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

@@ -511,6 +511,7 @@ public class MongoDBConfig {
         break;
       case LDAP:
         credential = MongoCredential.createCredential(username, "$external", password.toCharArray());
+        break;
       case NONE:
       default:
         break;

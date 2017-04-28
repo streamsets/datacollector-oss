@@ -142,6 +142,7 @@ public class ScriptObjectFactory {
             break;
           case FILE_REF:
             scriptObject = new ScriptFileRefImpl(field.getValueAsFileRef(), context);
+            break;
           default:
             // no action
             break;

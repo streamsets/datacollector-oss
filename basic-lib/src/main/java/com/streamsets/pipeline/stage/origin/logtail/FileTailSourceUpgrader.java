@@ -103,8 +103,9 @@ public class FileTailSourceUpgrader implements StageUpgrader {
           configsToAdd.add(new Config(joiner.join(CONF, DATA_FORMAT_CONFIG, "jsonMaxObjectLen"), config.getValue()));
           configsToAdd.add(new Config(joiner.join(CONF, DATA_FORMAT_CONFIG, "logMaxObjectLen"), config.getValue()));
           configsToRemove.add(config);
+          break;
         default:
-          // no op
+          break;
       }
     }
     configs.addAll(configsToAdd);

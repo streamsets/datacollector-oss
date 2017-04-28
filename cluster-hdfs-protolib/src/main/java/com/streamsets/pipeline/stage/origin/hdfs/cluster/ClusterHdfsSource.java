@@ -274,16 +274,13 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   @VisibleForTesting
   void readInPreview(final FileStatus[] files, final List<ConfigIssue> issues) throws IOException,InterruptedException {
-    getUGI().doAs(new PrivilegedExceptionAction<Void>() {
-      @Override
-      public Void run() throws Exception {
-        for (FileStatus fileStatus : files) {
-          if (previewBuffer.size() < PREVIEW_SIZE && fileStatus.isFile()) {
-            readInPreview(fileStatus, issues);
-          }
+    getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
+      for (FileStatus fileStatus : files) {
+        if (previewBuffer.size() < PREVIEW_SIZE && fileStatus.isFile()) {
+          readInPreview(fileStatus, issues);
         }
-        return null;
       }
+      return null;
     });
   }
 
@@ -299,8 +296,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       }
       for (int i = 0; i < buffer.size() && previewBuffer.size() < PREVIEW_SIZE; i++) {
         Map.Entry entry = buffer.get(i);
-        previewBuffer.put(String.valueOf(entry.getKey()),
-            entry.getValue() == null ? null : entry.getValue());
+        previewBuffer.put(String.valueOf(entry.getKey()), entry.getValue());
       }
     } catch (IOException | InterruptedException ex) {
       LOG.warn(Utils.format(Errors.HADOOPFS_16.getMessage(), path, ex), ex);
@@ -755,7 +751,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       count++;
       messageId = String.valueOf(message.getKey());
       List<Record> listRecords = null;
-      if (conf.dataFormat == DataFormat.TEXT) {
+      if (conf.dataFormat == DataFormat.TEXT || conf.dataFormat == DataFormat.AVRO) {
         listRecords = processMessage(messageId, message.getValue());
       } else if (conf.dataFormat == DataFormat.DELIMITED) {
         switch (conf.dataFormatConfig.csvHeader) {
@@ -766,6 +762,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             if (offsetContextSplit.length > 1 && offsetContextSplit[1].equals("0")) {
               break;
             }
+            // fall through
           case NO_HEADER:
             listRecords = processMessage(messageId, message.getValue());
             break;
@@ -783,8 +780,6 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             LOG.warn(msg);
             throw new IllegalStateException(msg);
         }
-      } else if (conf.dataFormat == DataFormat.AVRO) {
-        listRecords = processMessage(messageId, message.getValue());
       } else {
         throw new IllegalStateException(Utils.format("Unrecognized data format: '{}'", conf.dataFormat));
       }
@@ -887,7 +882,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         LOG.info("Destroy() on stages is complete");
       }
     } catch (InterruptedException e) {
-      LOG.warn("Thread interrupted while waiting on receving the done flag" + e, e);
+      LOG.warn("Thread interrupted while waiting on receiving the done flag" + e, e);
     }
   }
 

@@ -52,7 +52,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,7 +66,8 @@ public abstract class StageRunner<S extends Stage> {
 
   static {
     RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
-                                              Arrays.asList(StageRunner.class.getClassLoader()));
+        Collections.singletonList(StageRunner.class.getClassLoader())
+    );
     try {
       RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
     } catch (IOException ex) {
@@ -315,7 +315,7 @@ public abstract class StageRunner<S extends Stage> {
     return info;
   }
 
-  public S.Context getContext() {
+  public Stage.Context getContext() {
     return context;
   }
 
