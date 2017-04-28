@@ -122,7 +122,7 @@ public class TlsConfigBeanUpgradeUtil {
     }
 
     configs.add(new Config(String.format(
-        "tlsConfigBean.has%sStore",
+        "%stlsConfigBean.has%sStore",
         configPrefix,
         StringUtils.capitalize(storeType)
     ), hasStore));
