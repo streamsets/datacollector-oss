@@ -74,6 +74,18 @@
                                             types affected by locale. </p></entry>
                                 </row>
                                 <row>
+                                    <entry>Treat Input Field as Date</entry>
+                                    <entry>Treats the input field as a datetime when converting a
+                                        long field to the String data type. <p>Select when you want
+                                            to convert a timestamp in a long field, such as an epoch
+                                            or UNIX time, to a string such as "2017-02-01 12:00:00".
+                                            The processor first converts the long value to a
+                                            datetime, and then to a string using the specified date
+                                            format.</p><p>When cleared, the processor converts a
+                                            long value such as 1485979200 to the string value
+                                            "1485979200".</p></entry>
+                                </row>
+                                <row>
                                     <entry>Scale <xref
                                         href="FieldTypeConverter-ChangeScale.dita">
                                         <image href="../Graphics/icon_moreInfo.png"
