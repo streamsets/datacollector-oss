@@ -26,7 +26,7 @@ public class TestSdcIpcTargetUpgrader {
 
   @Test
   public void testV1ToV2() throws Exception {
-    TlsConfigBeanUpgraderTestUtil.testRawKeyStoreConfigsToTlsConfigBeanUpgrade(
+    TlsConfigBeanUpgraderTestUtil.testRawTrustStoreConfigsToTlsConfigBeanUpgrade(
         "config.",
         new SdcIpcTargetUpgrader(),
         2

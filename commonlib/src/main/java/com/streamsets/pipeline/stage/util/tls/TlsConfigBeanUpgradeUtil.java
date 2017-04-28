@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.util.tls;
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -62,24 +63,68 @@ public class TlsConfigBeanUpgradeUtil {
       String oldSslEnabledProperty,
       String newTlsEnabledProperty
   ) {
-    final String newKeyStorePath = configPrefix + "tlsConfigBean.keyStoreFilePath";
+    upgradeRawStoreConfigsToTlsConfigBean(
+        configs,
+        configPrefix,
+        keyStorePathProperty,
+        keyStorePasswordProperty,
+        oldSslEnabledProperty,
+        newTlsEnabledProperty,
+        "key"
+    );
+  }
+
+  public static void upgradeRawTrustStoreConfigsToTlsConfigBean(
+      List<Config> configs,
+      String configPrefix,
+      String trustStorePathProperty,
+      String trustStorePasswordProperty,
+      String oldSslEnabledProperty,
+      String newTlsEnabledProperty
+  ) {
+    upgradeRawStoreConfigsToTlsConfigBean(
+        configs,
+        configPrefix,
+        trustStorePathProperty,
+        trustStorePasswordProperty,
+        oldSslEnabledProperty,
+        newTlsEnabledProperty,
+        "trust"
+    );
+  }
+
+  private static void upgradeRawStoreConfigsToTlsConfigBean(
+      List<Config> configs,
+      String configPrefix,
+      String storePathProperty,
+      String storePasswordProperty,
+      String oldSslEnabledProperty,
+      String newTlsEnabledProperty,
+      String storeType
+  ) {
+    final String newStorePath = String.format("%stlsConfigBean.%sStoreFilePath", configPrefix, storeType);
     final String newTlsEnabled = configPrefix + newTlsEnabledProperty;
     UpgraderUtils.moveAllTo(
         configs,
         configPrefix + oldSslEnabledProperty, newTlsEnabled,
-        configPrefix + keyStorePathProperty, newKeyStorePath,
-        configPrefix + keyStorePasswordProperty, configPrefix + "tlsConfigBean.keyStorePassword"
+        configPrefix + storePathProperty, newStorePath,
+        configPrefix + storePasswordProperty, String.format("%stlsConfigBean.%sStorePassword",
+            configPrefix, storeType)
     );
 
-    boolean hasKeyStore = false;
+    boolean hasStore = false;
 
     for (Config config : configs) {
-      if (newKeyStorePath.equals(config.getName())) {
-        hasKeyStore = !Strings.isNullOrEmpty((String) config.getValue());
+      if (newStorePath.equals(config.getName())) {
+        hasStore = !Strings.isNullOrEmpty((String) config.getValue());
         break;
       }
     }
 
-    configs.add(new Config(configPrefix + "tlsConfigBean.hasKeyStore", hasKeyStore));
+    configs.add(new Config(String.format(
+        "tlsConfigBean.has%sStore",
+        configPrefix,
+        StringUtils.capitalize(storeType)
+    ), hasStore));
   }
 }

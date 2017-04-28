@@ -35,11 +35,11 @@ public class SdcIpcTargetUpgrader implements StageUpgrader {
       List<Config> configs) throws StageException {
     switch(fromVersion) {
       case 1:
-        TlsConfigBeanUpgradeUtil.upgradeRawKeyStoreConfigsToTlsConfigBean(
+        TlsConfigBeanUpgradeUtil.upgradeRawTrustStoreConfigsToTlsConfigBean(
             configs,
             "config.",
-            "keyStoreFile",
-            "keyStorePassword",
+            "trustStoreFile",
+            "trustStorePassword",
             "sslEnabled",
             "tlsEnabled"
         );

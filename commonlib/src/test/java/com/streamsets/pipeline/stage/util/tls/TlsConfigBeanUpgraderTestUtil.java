@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 
 import java.util.ArrayList;
@@ -86,13 +87,33 @@ public abstract class TlsConfigBeanUpgraderTestUtil {
       int toVersion
   )
       throws StageException {
+    testRawStoreConfigsToTlsConfigBeanUpgrade(configPrefix, upgrader, toVersion, "key");
+  }
+
+  public static void testRawTrustStoreConfigsToTlsConfigBeanUpgrade(
+      String configPrefix,
+      StageUpgrader upgrader,
+      int toVersion
+  )
+      throws StageException {
+
+    testRawStoreConfigsToTlsConfigBeanUpgrade(configPrefix, upgrader, toVersion, "trust");
+  }
+
+  private static void testRawStoreConfigsToTlsConfigBeanUpgrade(
+      String configPrefix,
+      StageUpgrader upgrader,
+      int toVersion,
+      String storeType
+  )
+      throws StageException {
 
     List<Config> configs = new ArrayList<>();
-    final String oldKeyStoreFile = configPrefix + "keyStoreFile";
-    final String oldKeyStorePW = configPrefix + "keyStorePassword";
+    final String oldKeyStoreFile = String.format("%s%sStoreFile", configPrefix, storeType);
+    final String oldKeyStorePW = String.format("%s%sStorePassword", configPrefix, storeType);
 
-    configs.add(new Config(oldKeyStoreFile, "/path/to/keystore"));
-    configs.add(new Config(oldKeyStorePW, "keyStorePassword"));
+    configs.add(new Config(oldKeyStoreFile, "/path/to/store"));
+    configs.add(new Config(oldKeyStorePW, "storePassword"));
 
     UpgraderTestUtils.UpgradeMoveWatcher watcher = UpgraderTestUtils.snapshot(configs);
 
@@ -100,12 +121,16 @@ public abstract class TlsConfigBeanUpgraderTestUtil {
 
     watcher.assertAllMoved(
         configs,
-        oldKeyStoreFile, configPrefix + "tlsConfigBean.keyStoreFilePath",
-        oldKeyStorePW, configPrefix + "tlsConfigBean.keyStorePassword"
+        oldKeyStoreFile, String.format("%stlsConfigBean.%sStoreFilePath", configPrefix, storeType),
+        oldKeyStorePW, String.format("%stlsConfigBean.%sStorePassword", configPrefix, storeType)
     );
 
     for (Config config : configs) {
-      if ((configPrefix + "tlsConfig.hasKeyStore").equals(config.getName())) {
+      if (String.format(
+          "%stlsConfigBean.has%sStore",
+          configPrefix,
+          StringUtils.capitalize(storeType)
+      ).equals(config.getName())) {
         Assert.assertEquals(true, config.getValue());
         break;
       }
