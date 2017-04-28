@@ -20,11 +20,9 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ext.DataCollectorServices;
-import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -68,7 +66,7 @@ public class TestInvalidStartOffset {
 
   @BeforeClass
   public static void setUpClass() {
-    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
+    DataCollectorServicesUtils.loadDefaultServices();
   }
 
   @Test

@@ -23,11 +23,9 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.datacollector.json.JsonMapperImpl;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.ext.DataCollectorServices;
-import com.streamsets.pipeline.api.ext.json.JsonMapper;
+import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.codec.binary.Hex;
@@ -133,7 +131,7 @@ public abstract class BaseTableJdbcSourceIT {
 
   @BeforeClass
   public static void setup() throws SQLException {
-    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
+    DataCollectorServicesUtils.loadDefaultServices();
 
     connection = DriverManager.getConnection(JDBC_URL, USER_NAME, PASSWORD);
     try (Statement statement = connection.createStatement()) {
