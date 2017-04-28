@@ -345,6 +345,10 @@ public class StageLibraryResource {
   ) throws IOException {
     String runtimeDir = runtimeInfo.getRuntimeDir();
     for (String libraryId : libraryList) {
+      if (!libraryId.matches("[a-zA-Z0-9_-]")) {
+        throw new RuntimeException(Utils.format(ContainerError.CONTAINER_01301.getMessage(), libraryId));
+      }
+
       File libraryDirectory = new File(runtimeDir + STREAMSETS_LIBS_PATH + libraryId);
       if (libraryDirectory.exists()) {
         FileUtils.deleteDirectory(libraryDirectory);
