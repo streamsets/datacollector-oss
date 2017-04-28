@@ -435,12 +435,14 @@
           <forceJavacCompilerUse>true</forceJavacCompilerUse>
           <source>${javaVersion}</source>
           <target>${javaVersion}</target>
-          <!-- We need to clean up SDC project a bit more before enabling this
           <compilerArgs>
+            <!-- Disables Javadoc failures for new strict Java 8 rules -->
+            <arg>-Xdoclint:none</arg>
+            <!-- We need to clean up SDC project a bit more before enabling this
             <arg>-Xlint:unchecked</arg>
             <arg>-Xlint:deprecation</arg>
+            -->
           </compilerArgs>
-          -->
         </configuration>
         <dependencies>
           <dependency>

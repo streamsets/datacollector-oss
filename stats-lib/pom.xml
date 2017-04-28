@@ -219,6 +219,7 @@
         <configuration>
           <compilerArgs>
             <arg>-XDignore.symbol.file</arg>
+            <arg>-Xdoclint:none</arg>
           </compilerArgs>
           <fork>true</fork>
         </configuration>
