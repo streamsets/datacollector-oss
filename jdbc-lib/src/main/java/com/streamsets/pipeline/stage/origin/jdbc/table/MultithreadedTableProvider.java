@@ -63,7 +63,7 @@ public final class MultithreadedTableProvider {
     this.threadNumToMaxTableSlots = threadNumToMaxTableSlots;
   }
 
-  private Deque<String> getOwnedTablesQueue() {
+  Deque<String> getOwnedTablesQueue() {
     return ownedTablesQueue.get();
   }
 

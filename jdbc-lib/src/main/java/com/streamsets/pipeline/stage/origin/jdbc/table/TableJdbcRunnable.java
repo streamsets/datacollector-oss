@@ -29,7 +29,6 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -60,6 +59,7 @@ public final class TableJdbcRunnable implements Runnable {
   static final String THREAD_NAME = "Thread Name";
   static final String CURRENT_TABLE = "Current Table";
   static final String TABLES_OWNED_COUNT = "Tables Owned";
+  static final String STATUS = "Status";
   static final String TABLE_METRICS = "Table Metrics for Thread - ";
   static final String TABLE_JDBC_THREAD_PREFIX = "Table Jdbc Runner - ";
 
@@ -81,6 +81,13 @@ public final class TableJdbcRunnable implements Runnable {
 
   private int numSQLErrors = 0;
   private SQLException firstSqlException = null;
+
+  private enum Status {
+    QUERYING_TABLE,
+    GENERATING_BATCH,
+    BATCH_GENERATED,
+    ;
+  }
 
   TableJdbcRunnable(
       PushSource.Context context,
@@ -108,8 +115,7 @@ public final class TableJdbcRunnable implements Runnable {
     this.firstSqlException = null;
 
     // Metrics
-    String gaugeName = TABLE_METRICS + threadNumber;
-    this.gaugeMap = context.createGauge(gaugeName).getValue();
+    this.gaugeMap = context.createGauge(TABLE_METRICS + threadNumber).getValue();
   }
 
   LoadingCache<TableContext, TableReadContext> getTableReadContextCache() {
@@ -157,13 +163,21 @@ public final class TableJdbcRunnable implements Runnable {
    */
   private void initGaugeIfNeeded() {
     gaugeMap.put(THREAD_NAME, Thread.currentThread().getName());
+    gaugeMap.put(STATUS, "");
     gaugeMap.put(TABLES_OWNED_COUNT, tableReadContextCache.size());
     gaugeMap.put(CURRENT_TABLE, "");
   }
 
-  private void updateGauge() {
-    gaugeMap.put(CURRENT_TABLE, tableContext.getQualifiedName());
-    gaugeMap.put(TABLES_OWNED_COUNT, tableReadContextCache.size());
+  private void updateGauge(Status status) {
+    gaugeMap.put(STATUS, status.name());
+    gaugeMap.put(
+        CURRENT_TABLE,
+        Optional.ofNullable(tableContext).map(TableContext::getQualifiedName).orElse("")
+    );
+    gaugeMap.put(
+        TABLES_OWNED_COUNT,
+        tableProvider.getOwnedTablesQueue().size()
+    );
   }
 
   /**
@@ -176,11 +190,12 @@ public final class TableJdbcRunnable implements Runnable {
       if (tableContext == null) {
         tableContext = tableProvider.nextTable(threadNumber);
       }
+      updateGauge(Status.QUERYING_TABLE);
       TableReadContext tableReadContext = getOrLoadTableReadContext();
       ResultSet rs = tableReadContext.getResultSet();
       boolean evictTableReadContext = false;
       try {
-        updateGauge();
+        updateGauge(Status.GENERATING_BATCH);
         while (recordCount < batchSize) {
           if (rs.isClosed() || !rs.next()) {
             evictTableReadContext = true;
@@ -265,6 +280,7 @@ public final class TableJdbcRunnable implements Runnable {
             );
             calculateEvictTableFlag(shouldEvict, tableReadContext);
           });
+      updateGauge(Status.BATCH_GENERATED);
       //Process And Commit offsets
       context.processBatch(batchContext, tableContext.getQualifiedName(), offsets.get(tableContext.getQualifiedName()));
     }
