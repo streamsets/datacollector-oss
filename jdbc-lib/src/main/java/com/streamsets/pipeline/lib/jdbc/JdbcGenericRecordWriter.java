@@ -44,6 +44,7 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_14;
 public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcGenericRecordWriter.class);
   private final int maxPrepStmtCache;
+  private final boolean caseSensitive;
 
   /**
    * Class constructor
@@ -66,11 +67,13 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       int maxStmtCache,
       JDBCOperationType defaultOp,
       UnsupportedOperationAction unsupportedAction,
-      JdbcRecordReader recordReader
+      JdbcRecordReader recordReader,
+      boolean caseSensitive
   ) throws StageException {
     super(connectionString, dataSource, tableName, rollbackOnError,
         customMappings, defaultOp, unsupportedAction, recordReader, null);
     this.maxPrepStmtCache = maxStmtCache;
+    this.caseSensitive = caseSensitive;
   }
 
   /**
@@ -96,11 +99,13 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       JDBCOperationType defaultOp,
       UnsupportedOperationAction unsupportedAction,
       List<JdbcFieldColumnMapping> generatedColumnMappings,
-      JdbcRecordReader recordReader
+      JdbcRecordReader recordReader,
+      boolean caseSensitive
   ) throws StageException {
     super(connectionString, dataSource, tableName, rollbackOnError,
         customMappings, defaultOp, unsupportedAction, recordReader, generatedColumnMappings);
     this.maxPrepStmtCache = maxStmtCache;
+    this.caseSensitive = caseSensitive;
   }
 
   /** {@inheritDoc} */
@@ -119,7 +124,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
           getTableName(),
           getGeneratedColumnMappings(),
           getPrimaryKeyColumns(),
-          maxPrepStmtCache
+          maxPrepStmtCache,
+          caseSensitive
       );
 
       for (Record record : batch) {

@@ -137,7 +137,8 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
           maxPrepStmtCache,
           defaultOperation,
           unsupportedAction,
-          JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat)
+          JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat),
+          caseSensitive
       );
     }
   }

@@ -61,10 +61,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
   };
 
   public static final int UNLIMITED_PARAMETERS = -1;
+  private final boolean caseSensitive;
   private int maxPrepStmtParameters;
-  private static final Joiner joiner = Joiner.on(", ");
-  private static final Joiner joinerColumn = Joiner.on("\" = ?, \"");
-  private static final Joiner joinerWhereClause =  Joiner.on("\" = ? AND \"");
 
   /**
    * Class constructor
@@ -85,11 +83,13 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       int maxPrepStmtParameters,
       JDBCOperationType defaultOp,
       UnsupportedOperationAction unsupportedAction,
-      JdbcRecordReader recordReader
+      JdbcRecordReader recordReader,
+      boolean caseSensitive
   ) throws StageException {
     super(connectionString, dataSource, tableName, rollbackOnError, customMappings, defaultOp, unsupportedAction, recordReader);
     this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
         maxPrepStmtParameters;
+    this.caseSensitive = caseSensitive;
   }
 
   /**
@@ -115,12 +115,14 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       JDBCOperationType defaultOp,
       UnsupportedOperationAction unsupportedAction,
       List<JdbcFieldColumnMapping> generatedColumnMappings,
-      JdbcRecordReader recordReader
+      JdbcRecordReader recordReader,
+      boolean caseSensitive
   ) throws StageException {
     super(connectionString, dataSource, tableName, rollbackOnError, customMappings,
         defaultOp, unsupportedAction, recordReader, generatedColumnMappings);
     this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
         maxPrepStmtParameters;
+    this.caseSensitive = caseSensitive;
   }
 
 
@@ -292,38 +294,9 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       List<String> primaryKeys,
       int numRecords
   ) throws OnRecordErrorException, SQLException {
-    if(opCode != OperationType.INSERT_CODE && primaryKeys.isEmpty()){
-      LOG.error("Primary key columns are missing in records: {}", primaryKeys);
-      throw new OnRecordErrorException(JdbcErrors.JDBC_62, getTableName());
-    }
 
-    String query;
-    String valuePlaceholder;
-    String valuePlaceholders;
-    switch (opCode) {
-      case OperationType.INSERT_CODE:
-        valuePlaceholder = String.format("(%s)", joiner.join(columns.values()));
-        valuePlaceholders = StringUtils.repeat(valuePlaceholder, ", ", numRecords);
-        query = String.format("INSERT INTO %s (\"%s\") VALUES %s",
-            getTableName(), Joiner.on("\", \"").join(columns.keySet()), valuePlaceholders);
-        break;
-      case OperationType.DELETE_CODE:
-        valuePlaceholder = String.format("(%s)", joiner.join(getPrimaryKeyParams()));
-        valuePlaceholders = StringUtils.repeat(valuePlaceholder, ", ", numRecords);
-        query = String.format("DELETE FROM %s WHERE (\"%s\") IN (%s)",
-            getTableName(), Joiner.on("\", \"").join(primaryKeys), valuePlaceholders);
-        break;
-      case OperationType.UPDATE_CODE:
-        query = String.format("UPDATE %s SET \"%s\" = ? WHERE \"%s\" = ?",
-            getTableName(),
-            joinerColumn.join(columns.keySet()),
-            joinerWhereClause.join(primaryKeys));
-        break;
-      default:
-        // Should be checked earlier. Shouldn't reach here
-        LOG.error("Unsupported Operation code: {}}", opCode);
-        throw new OnRecordErrorException(JdbcErrors.JDBC_70, opCode);
-    }
+    String query = JdbcUtil.generateQuery(opCode, getTableName(), primaryKeys, getPrimaryKeyParams(), columns, numRecords, caseSensitive);
+
     LOG.debug("Generated multi-row operation query: {}", query);
     return query;
   }

@@ -38,6 +38,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -45,11 +47,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(Parameterized.class)
 @SuppressWarnings("Duplicates")
 public class TestJdbcTee {
 
@@ -59,10 +63,17 @@ public class TestJdbcTee {
   private final String unprivPassword = "unpriv_pass";
   private final String database = "TEST";
   private final String tableName = "TEST_TABLE";
-  private final boolean enclosedTableName = false;
   private final String h2ConnectionString = "jdbc:h2:mem:" + database;
 
   private Connection connection = null;
+
+  @Parameterized.Parameters
+  public static Collection<Boolean> encloseTableNames() {
+    return ImmutableList.of(false, true);
+  }
+
+  @Parameterized.Parameter
+  public boolean encloseTableName;
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
@@ -133,7 +144,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", enclosedTableName)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -173,7 +184,7 @@ public class TestJdbcTee {
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("encloseTableName", false)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
         .addConfiguration("maxPrepStmtCache", PreparedStatementCache.UNLIMITED_CACHE)
@@ -237,7 +248,7 @@ public class TestJdbcTee {
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("encloseTableName", false)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
         .addConfiguration("maxPrepStmtCache", PreparedStatementCache.UNLIMITED_CACHE)
@@ -299,7 +310,7 @@ public class TestJdbcTee {
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("encloseTableName", false)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
         .addConfiguration("maxPrepStmtCache", PreparedStatementCache.UNLIMITED_CACHE)
@@ -356,7 +367,7 @@ public class TestJdbcTee {
           .addConfiguration("schema", database)
           .addConfiguration("tableNameTemplate", tableName)
           .addConfiguration("customMappings", fieldMappings)
-          .addConfiguration("encloseTableName", false)
+          .addConfiguration("encloseTableName", encloseTableName)
           .addConfiguration("rollbackOnError", false)
           .addConfiguration("useMultiRowOp", true)
           .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -442,7 +453,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", enclosedTableName)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -524,7 +535,7 @@ public class TestJdbcTee {
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("encloseTableName", false)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
         .addConfiguration("maxPrepStmtCache", PreparedStatementCache.UNLIMITED_CACHE)
@@ -609,7 +620,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", enclosedTableName)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", true)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -672,7 +683,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", false)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -736,7 +747,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", enclosedTableName)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -771,7 +782,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", enclosedTableName)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -804,7 +815,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", enclosedTableName)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)
         .addConfiguration("maxPrepStmtParameters", JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS)
@@ -840,7 +851,7 @@ public class TestJdbcTee {
         .addConfiguration("schema", database)
         .addConfiguration("tableNameTemplate", "${record:attribute('tableName')}")
         .addConfiguration("customMappings", fieldMappings)
-        .addConfiguration("encloseTableName", enclosedTableName)
+        .addConfiguration("encloseTableName", encloseTableName)
         .addConfiguration("customMappings", fieldMappings)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowOp", false)

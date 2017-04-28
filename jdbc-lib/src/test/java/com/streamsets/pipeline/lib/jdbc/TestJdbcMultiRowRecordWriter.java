@@ -111,6 +111,7 @@ public class TestJdbcMultiRowRecordWriter {
   @Test
   public void testThreePartitions() throws Exception {
     List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
+    boolean caseSensitive = false;
 
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
@@ -121,7 +122,9 @@ public class TestJdbcMultiRowRecordWriter {
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        new JdbcRecordReader());
+        new JdbcRecordReader(),
+        caseSensitive
+    );
     List<Record> batch = generateRecords(10);
     writer.writeBatch(batch);
 
@@ -137,6 +140,7 @@ public class TestJdbcMultiRowRecordWriter {
   public void testParameterLimit() throws Exception {
     List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
 
+    boolean caseSensitive = false;
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
         dataSource,
@@ -146,7 +150,8 @@ public class TestJdbcMultiRowRecordWriter {
         8,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
 
     Collection<Record> records = generateRecords(10);
@@ -167,6 +172,7 @@ public class TestJdbcMultiRowRecordWriter {
   public void testDatetimeColumn() throws Exception {
     List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
 
+    boolean caseSensitive = false;
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
         dataSource,
@@ -176,7 +182,8 @@ public class TestJdbcMultiRowRecordWriter {
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
 
     Collection<Record> records = generateRecords(1);
@@ -195,6 +202,7 @@ public class TestJdbcMultiRowRecordWriter {
   public void testEmptyColumnMappingError() throws Exception {
     List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
 
+    boolean caseSensitive = false;
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
         dataSource,
@@ -204,7 +212,8 @@ public class TestJdbcMultiRowRecordWriter {
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
 
     Collection<Record> records = new ArrayList<>();
@@ -228,6 +237,7 @@ public class TestJdbcMultiRowRecordWriter {
     );
     List<String> primaryKeys = ImmutableList.of("P_ID");
     List<Record> records = generateRecords(3);
+    boolean caseSensitive = false;
     JdbcMultiRowRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
         dataSource,
@@ -237,13 +247,14 @@ public class TestJdbcMultiRowRecordWriter {
         15,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
     // Test Insert query
     try {
       Assert.assertEquals(
           "Generated a wrong query",
-          "INSERT INTO TEST.TEST_TABLE (\"F1\", \"F2\", \"F3\", \"F4\", \"P_ID\") " +
+          "INSERT INTO TEST.TEST_TABLE (F1, F2, F3, F4, P_ID) " +
               "VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)",
           writer.generateQueryForMultiRow(OperationType.INSERT_CODE, columns, primaryKeys, records.size())
       );
@@ -255,7 +266,7 @@ public class TestJdbcMultiRowRecordWriter {
     try {
       Assert.assertEquals(
           "Generated a wrong query",
-          "UPDATE TEST.TEST_TABLE SET \"F1\" = ?, \"F2\" = ?, \"F3\" = ?, \"F4\" = ?, \"P_ID\" = ? WHERE \"P_ID\" = ?",
+          "UPDATE TEST.TEST_TABLE SET F1 = ?, F2 = ?, F3 = ?, F4 = ?, P_ID = ? WHERE P_ID = ?",
           writer.generateQueryForMultiRow(OperationType.UPDATE_CODE, columns, primaryKeys, records.size())
       );
     } catch (SQLException ex) {
@@ -266,7 +277,66 @@ public class TestJdbcMultiRowRecordWriter {
     try {
       Assert.assertEquals(
           "Generated a wrong query",
-          "DELETE FROM TEST.TEST_TABLE WHERE (\"P_ID\") IN ((?), (?), (?))",
+          "DELETE FROM TEST.TEST_TABLE WHERE (P_ID) IN ((?), (?), (?))",
+          writer.generateQueryForMultiRow(OperationType.DELETE_CODE, columns, primaryKeys, records.size())
+      );
+    } catch (SQLException ex) {
+      Assert.fail("Error while generating a query:" + ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testGenerateQueryForMultiRowWithQuote() throws StageException {
+    SortedMap<String, String> columns = ImmutableSortedMap.of(
+        "P_ID", "?",
+        "F1", "?",
+        "F2", "?",
+        "F3", "?",
+        "F4", "?"
+    );
+    List<String> primaryKeys = ImmutableList.of("P_ID");
+    List<Record> records = generateRecords(3);
+    boolean caseSensitive = true;
+    JdbcMultiRowRecordWriter writer = new JdbcMultiRowRecordWriter(
+        connectionString,
+        dataSource,
+        "\"TEST\".\"TEST_TABLE\"",
+        false, //rollback
+        new LinkedList<JdbcFieldColumnParamMapping>(),
+        15,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        new JdbcRecordReader(),
+        caseSensitive
+    );
+    // Test Insert query
+    try {
+      Assert.assertEquals(
+          "Generated a wrong query",
+          "INSERT INTO \"TEST\".\"TEST_TABLE\" (\"F1\", \"F2\", \"F3\", \"F4\", \"P_ID\") " +
+              "VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)",
+          writer.generateQueryForMultiRow(OperationType.INSERT_CODE, columns, primaryKeys, records.size())
+      );
+    } catch (SQLException ex) {
+      Assert.fail("Error while generating a query:" + ex.getMessage());
+    }
+
+    // Test Update query
+    try {
+      Assert.assertEquals(
+          "Generated a wrong query",
+          "UPDATE \"TEST\".\"TEST_TABLE\" SET \"F1\" = ?, \"F2\" = ?, \"F3\" = ?, \"F4\" = ?, \"P_ID\" = ? WHERE \"P_ID\" = ?",
+          writer.generateQueryForMultiRow(OperationType.UPDATE_CODE, columns, primaryKeys, records.size())
+      );
+    } catch (SQLException ex) {
+      Assert.fail("Error while generating a query:" + ex.getMessage());
+    }
+
+    // Test Delete query
+    try {
+      Assert.assertEquals(
+          "Generated a wrong query",
+          "DELETE FROM \"TEST\".\"TEST_TABLE\" WHERE (\"P_ID\") IN ((?), (?), (?))",
           writer.generateQueryForMultiRow(OperationType.DELETE_CODE, columns, primaryKeys, records.size())
       );
     } catch (SQLException ex) {

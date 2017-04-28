@@ -110,6 +110,7 @@ public class TestGenericRecordWriter {
     fields.put("MSG", Field.create("unit test"));
     record.set(Field.create(fields));
     // record doesn't have operation code in header, but default is set to INSERT.
+    boolean caseSensitive = false;
 
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
@@ -120,7 +121,8 @@ public class TestGenericRecordWriter {
         PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.USE_DEFAULT,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
     List<Record> batch = ImmutableList.of(record);
     writer.writeBatch(batch);
@@ -155,6 +157,8 @@ public class TestGenericRecordWriter {
     );
     updateRecord.set(Field.create(update));
 
+    boolean caseSensitive = false;
+
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
@@ -164,7 +168,8 @@ public class TestGenericRecordWriter {
         PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.USE_DEFAULT,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
     List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
     writer.writeBatch(batch);
@@ -200,6 +205,8 @@ public class TestGenericRecordWriter {
     );
     deleteRecord.set(Field.create(delete));
 
+    boolean caseSensitive = false;
+
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
@@ -209,7 +216,8 @@ public class TestGenericRecordWriter {
         PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.USE_DEFAULT,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
     List<Record> batch = ImmutableList.of(insertRecord, deleteRecord);
     writer.writeBatch(batch);
@@ -246,6 +254,8 @@ public class TestGenericRecordWriter {
     );
     updateRecord.set(Field.create(update));
 
+    boolean caseSensitive = false;
+
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
@@ -255,7 +265,8 @@ public class TestGenericRecordWriter {
         PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.USE_DEFAULT,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
     List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
     writer.writeBatch(batch);
@@ -294,6 +305,8 @@ public class TestGenericRecordWriter {
     );
     deleteRecord.set(Field.create(delete));
 
+    boolean caseSensitive = false;
+
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
@@ -303,7 +316,8 @@ public class TestGenericRecordWriter {
         PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.USE_DEFAULT,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
     List<Record> batch = ImmutableList.of(insertRecord, deleteRecord);
     writer.writeBatch(batch);
@@ -328,6 +342,7 @@ public class TestGenericRecordWriter {
         new JdbcFieldColumnParamMapping("/field2", "MSG", "?")
     );
 
+    boolean caseSensitive = false;
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
@@ -337,7 +352,8 @@ public class TestGenericRecordWriter {
         PreparedStatementCache.UNLIMITED_CACHE,
         JDBCOperationType.INSERT,
         UnsupportedOperationAction.DISCARD,
-        new JdbcRecordReader()
+        new JdbcRecordReader(),
+        caseSensitive
     );
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();

@@ -100,22 +100,59 @@ public class TestPreparedStatementMap {
         "MSG", "?"
     );
 
+    boolean caseSensitive = false;
     PreparedStatementMap cacheMap = new PreparedStatementMap(
         connection,
         "TEST.TEST_TABLE",
         generatedColumnMappings,
         primaryKeyColumns,
-        10
+        10,
+        caseSensitive
     );
     try {
       PreparedStatement insert = cacheMap.getPreparedStatement(OperationType.INSERT_CODE, columnToParam);
-      Assert.assertTrue(insert.toString().contains("INSERT INTO TEST.TEST_TABLE (\"MSG\", \"P_ID\") VALUES (?,?)"));
+      Assert.assertTrue(insert.toString().contains("INSERT INTO TEST.TEST_TABLE (MSG, P_ID) VALUES (?, ?)"));
 
       PreparedStatement delete = cacheMap.getPreparedStatement(OperationType.DELETE_CODE, columnToParam);
-      Assert.assertTrue(delete.toString().contains("DELETE FROM TEST.TEST_TABLE WHERE \"P_ID\" = ?"));
+      Assert.assertTrue(delete.toString().contains("DELETE FROM TEST.TEST_TABLE WHERE (P_ID) IN ((?))"));
 
       PreparedStatement update = cacheMap.getPreparedStatement(OperationType.UPDATE_CODE, columnToParam);
-      Assert.assertTrue(update.toString().contains("UPDATE TEST.TEST_TABLE SET \"MSG\" = ?, \"P_ID\" = ? WHERE \"P_ID\" = ?"));
+      Assert.assertTrue(update.toString().contains("UPDATE TEST.TEST_TABLE SET MSG = ?, P_ID = ? WHERE P_ID = ?"));
+    } catch (StageException ex) {
+      Assert.fail("StageException while generating a PreparedStatement:" + ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testPreparedStatementMapSinglePrimaryKeyWithCaseSensitive() {
+    List<JdbcFieldColumnMapping> generatedColumnMappings = ImmutableList.of(
+        new JdbcFieldColumnMapping("/field1", "P_ID"),
+        new JdbcFieldColumnMapping("/field2", "MSG")
+    );
+    List<String> primaryKeyColumns = ImmutableList.of("P_ID");
+    SortedMap<String, String> columnToParam = ImmutableSortedMap.of(
+        "P_ID", "?",
+        "MSG", "?"
+    );
+
+    boolean caseSensitive = true;
+    PreparedStatementMap cacheMap = new PreparedStatementMap(
+        connection,
+        "\"TEST\".\"TEST_TABLE\"",
+        generatedColumnMappings,
+        primaryKeyColumns,
+        10,
+        caseSensitive
+    );
+    try {
+      PreparedStatement insert = cacheMap.getPreparedStatement(OperationType.INSERT_CODE, columnToParam);
+      Assert.assertTrue(insert.toString().contains("INSERT INTO \"TEST\".\"TEST_TABLE\" (\"MSG\", \"P_ID\") VALUES (?, ?)"));
+
+      PreparedStatement delete = cacheMap.getPreparedStatement(OperationType.DELETE_CODE, columnToParam);
+      Assert.assertTrue(delete.toString().contains("DELETE FROM \"TEST\".\"TEST_TABLE\" WHERE (\"P_ID\") IN ((?))"));
+
+      PreparedStatement update = cacheMap.getPreparedStatement(OperationType.UPDATE_CODE, columnToParam);
+      Assert.assertTrue(update.toString().contains("UPDATE \"TEST\".\"TEST_TABLE\" SET \"MSG\" = ?, \"P_ID\" = ? WHERE \"P_ID\" = ?"));
     } catch (StageException ex) {
       Assert.fail("StageException while generating a PreparedStatement:" + ex.getMessage());
     }
@@ -135,24 +172,66 @@ public class TestPreparedStatementMap {
         "MSG", "?"
     );
 
+    boolean caseSensitive = false;
     PreparedStatementMap cacheMap = new PreparedStatementMap(
         connection,
         "TEST.COMPOSITE_KEY",
         generatedColumnMappings,
         primaryKeyColumns,
-        -1
+        -1,
+        caseSensitive
     );
 
     try {
       PreparedStatement insert = cacheMap.getPreparedStatement(OperationType.INSERT_CODE, columnToParam);
-      Assert.assertTrue(insert.toString().contains("INSERT INTO TEST.COMPOSITE_KEY (\"MSG\", \"P_ID\", \"P_IDB\") VALUES (?,?,?)"));
+      Assert.assertTrue(insert.toString().contains("INSERT INTO TEST.COMPOSITE_KEY (MSG, P_ID, P_IDB) VALUES (?, ?, ?)"));
 
       PreparedStatement delete = cacheMap.getPreparedStatement(OperationType.DELETE_CODE, columnToParam);
-      Assert.assertTrue(delete.toString().contains("DELETE FROM TEST.COMPOSITE_KEY WHERE \"P_ID\" = ? AND \"P_IDB\" = ?"));
+      Assert.assertTrue(delete.toString().contains("DELETE FROM TEST.COMPOSITE_KEY WHERE (P_ID, P_IDB) IN ((?, ?))"));
 
       PreparedStatement update = cacheMap.getPreparedStatement(OperationType.UPDATE_CODE, columnToParam);
       Assert.assertTrue(update.toString().contains(
-          "UPDATE TEST.COMPOSITE_KEY SET \"MSG\" = ?, \"P_ID\" = ?, \"P_IDB\" = ? WHERE \"P_ID\" = ? AND \"P_IDB\" = ?"
+          "UPDATE TEST.COMPOSITE_KEY SET MSG = ?, P_ID = ?, P_IDB = ? WHERE P_ID = ? AND P_IDB = ?"
+      ));
+    } catch (StageException ex) {
+      Assert.fail("StageException while generating a PreparedStatement:" + ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testPreparedStatementMapCompoundPrimaryKeyWithCaseSensitive() {
+    List<JdbcFieldColumnMapping> generatedColumnMappings = ImmutableList.of(
+        new JdbcFieldColumnMapping("/field1", "P_ID"),
+        new JdbcFieldColumnMapping("/field2", "P_IDB"),
+        new JdbcFieldColumnMapping("/field3", "MSG")
+    );
+    List<String> primaryKeyColumns = ImmutableList.of("P_ID", "P_IDB");
+    SortedMap<String, String> columnToParam = ImmutableSortedMap.of(
+        "P_ID", "?",
+        "P_IDB", "?",
+        "MSG", "?"
+    );
+
+    boolean caseSensitive = true;
+    PreparedStatementMap cacheMap = new PreparedStatementMap(
+        connection,
+        "\"TEST\".\"COMPOSITE_KEY\"",
+        generatedColumnMappings,
+        primaryKeyColumns,
+        -1,
+        caseSensitive
+    );
+
+    try {
+      PreparedStatement insert = cacheMap.getPreparedStatement(OperationType.INSERT_CODE, columnToParam);
+      Assert.assertTrue(insert.toString().contains("INSERT INTO \"TEST\".\"COMPOSITE_KEY\" (\"MSG\", \"P_ID\", \"P_IDB\") VALUES (?, ?, ?)"));
+
+      PreparedStatement delete = cacheMap.getPreparedStatement(OperationType.DELETE_CODE, columnToParam);
+      Assert.assertTrue(delete.toString().contains("DELETE FROM \"TEST\".\"COMPOSITE_KEY\" WHERE (\"P_ID\", \"P_IDB\") IN ((?, ?))"));
+
+      PreparedStatement update = cacheMap.getPreparedStatement(OperationType.UPDATE_CODE, columnToParam);
+      Assert.assertTrue(update.toString().contains(
+          "UPDATE \"TEST\".\"COMPOSITE_KEY\" SET \"MSG\" = ?, \"P_ID\" = ?, \"P_IDB\" = ? WHERE \"P_ID\" = ? AND \"P_IDB\" = ?"
       ));
     } catch (StageException ex) {
       Assert.fail("StageException while generating a PreparedStatement:" + ex.getMessage());
