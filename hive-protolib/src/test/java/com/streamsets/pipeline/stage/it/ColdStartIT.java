@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.HiveMetadataProcessorBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -50,6 +51,7 @@ import com.streamsets.testing.ParametrizedUtils;
  * doesn't exists before starting the pipeline.
  */
 @RunWith(Parameterized.class)
+@Ignore
 public class ColdStartIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(ColdStartIT.class);

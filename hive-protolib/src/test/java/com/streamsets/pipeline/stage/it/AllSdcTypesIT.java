@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.processor.hive.DecimalDefaultsConfig;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -56,6 +57,7 @@ import java.util.Map;
  * Run all various data types that are available in SDC to validate that they behave in expected way.
  */
 @RunWith(Parameterized.class)
+@Ignore
 public class AllSdcTypesIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(ColdStartIT.class);

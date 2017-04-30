@@ -31,6 +31,7 @@ import com.streamsets.pipeline.stage.BaseHiveIT;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Types;
@@ -47,6 +48,7 @@ import static org.junit.Assert.assertTrue;
  * To verify that the Hive queries is indeed executed properly, we're creating tables and validating their proper structure.
  */
 @SuppressWarnings("unchecked")
+@Ignore
 public class HiveQueryExecutorIT extends BaseHiveIT {
 
   @Before

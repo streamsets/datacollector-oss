@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -43,6 +44,7 @@ import java.util.Map;
 /**
  * Since decimal is fairly advanced type that required a lot of change, we're testing it explicitly here
  */
+@Ignore
 public class DecimalTypeIT extends BaseHiveMetadataPropagationIT {
 
   @Test

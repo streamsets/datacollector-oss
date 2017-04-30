@@ -34,6 +34,7 @@ import com.streamsets.pipeline.stage.processor.hive.Errors;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -55,6 +56,7 @@ import static org.junit.Assert.fail;
  * that we either die gracefully or throw proper error.
  */
 @RunWith(Parameterized.class)
+@Ignore
 public class MaliciousPartitionStringsIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(MaliciousPartitionStringsIT.class);

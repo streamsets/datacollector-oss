@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.destination.hive.HiveMetastoreTarget;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.ResultSet;
@@ -46,6 +47,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Ensure that we're creating tables in expected locations.
  */
+@Ignore
 public class LocationIT extends BaseHiveMetadataPropagationIT {
 
   private HiveMetastoreTarget hiveTarget;

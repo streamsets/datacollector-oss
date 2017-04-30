@@ -31,6 +31,7 @@ import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.ResultSet;
@@ -43,6 +44,7 @@ import java.util.List;
  * Test scenario where input origin is not able to give us full schema of the source data and is rather sending
  * only a subset of the structure with each record (for example typically CDC).
  */
+@Ignore
 public class PartialInputIT extends  BaseHiveMetadataPropagationIT {
 
   @Test

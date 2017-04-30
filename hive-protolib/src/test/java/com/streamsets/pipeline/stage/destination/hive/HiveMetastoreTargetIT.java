@@ -35,6 +35,7 @@ import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ import java.sql.Types;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+@Ignore
 public class HiveMetastoreTargetIT extends BaseHiveIT {
 
   private static Logger LOG = LoggerFactory.getLogger(BaseHiveIT.class);

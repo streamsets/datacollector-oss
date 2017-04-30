@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.ResultSet;
@@ -42,6 +43,7 @@ import java.util.Map;
 /**
  *  Validate stream of multiple tables with different structures.
  */
+@Ignore
 public class MultiplexingIT extends BaseHiveMetadataPropagationIT {
   @Test
   @SuppressWarnings("unchecked")

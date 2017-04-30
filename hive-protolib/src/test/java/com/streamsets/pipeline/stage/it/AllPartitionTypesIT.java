@@ -34,6 +34,7 @@ import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -54,6 +55,7 @@ import java.util.Map;
  * Run all various data types that are available for partitioning column.
  */
 @RunWith(Parameterized.class)
+@Ignore
 public class AllPartitionTypesIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(AllPartitionTypesIT.class);

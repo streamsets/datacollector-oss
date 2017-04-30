@@ -35,6 +35,7 @@ import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -50,6 +51,7 @@ import java.util.Map;
  * Validates what happens on each drift type (columns added, removed, changed).
  */
 @SuppressWarnings("unchecked")
+@Ignore
 public class DriftIT extends  BaseHiveMetadataPropagationIT {
 
   @Before

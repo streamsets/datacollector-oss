@@ -36,6 +36,7 @@ import com.streamsets.pipeline.stage.PartitionConfigBuilder;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -45,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+@Ignore
 public class HiveMetadataProcessorIT extends BaseHiveIT {
 
   private ProcessorRunner getProcessorRunner(HiveMetadataProcessor processor) {

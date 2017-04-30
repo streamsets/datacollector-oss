@@ -31,6 +31,7 @@ import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -48,6 +49,7 @@ import java.util.Map;
  * Try all SDC types containing NULL value to make sure that we're propagating it properly to Hive.
  */
 @RunWith(Parameterized.class)
+@Ignore
 public class AllNullTypesIT extends BaseHiveMetadataPropagationIT {
 
   private static Logger LOG = LoggerFactory.getLogger(ColdStartIT.class);
