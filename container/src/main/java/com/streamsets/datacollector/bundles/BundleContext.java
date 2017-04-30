@@ -19,8 +19,10 @@
  */
 package com.streamsets.datacollector.bundles;
 
+import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.store.PipelineStoreTask;
 
 /**
  * Shared context describing the bundle that is actively being created.
@@ -37,4 +39,14 @@ public interface BundleContext {
    * Returns RuntimeInfo structure for the data collector.
    */
   public RuntimeInfo getRuntimeInfo();
+
+  /**
+   * Returns pipeline store for current data collector.
+   */
+  public PipelineStoreTask getPipelineStore();
+
+  /**
+   * Returns pipeline state store for current data collector.
+   */
+  public PipelineStateStore getPipelineStateStore();
 }

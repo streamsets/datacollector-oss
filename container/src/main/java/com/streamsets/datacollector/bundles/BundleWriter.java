@@ -70,4 +70,13 @@ public interface BundleWriter {
    * @throws IOException
    */
   public abstract void write(String bundleDirectory, Path path) throws IOException;
+
+  /**
+   * Write given object as JSON.
+   *
+   * @param fileName Path and name for target file in bundle
+   * @param object Object that will be serialized with ObjectMapper.
+   * @throws IOException
+   */
+  public abstract void writeJson(String fileName, Object object) throws IOException;
 }

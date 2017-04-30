@@ -19,10 +19,14 @@
  */
 package com.streamsets.datacollector.bundles;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.execution.PipelineStateStore;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.cloudera.log4j.redactor.StringRedactor;
 import org.slf4j.Logger;
@@ -64,6 +68,8 @@ public class SupportBundleManager implements BundleContext {
    */
   private final ExecutorService executor;
 
+  private final PipelineStoreTask pipelineStore;
+  private final PipelineStateStore stateStore;
   private final RuntimeInfo runtimeInfo;
   private final BuildInfo buildInfo;
 
@@ -80,10 +86,14 @@ public class SupportBundleManager implements BundleContext {
   @Inject
   public SupportBundleManager(
     @Named("supportBundleExecutor") SafeScheduledExecutorService executor,
+    PipelineStoreTask pipelineStore,
+    PipelineStateStore stateStore,
     RuntimeInfo runtimeInfo,
     BuildInfo buildInfo
   ) {
     this.executor = executor;
+    this.pipelineStore = pipelineStore;
+    this.stateStore = stateStore;
     this.runtimeInfo = runtimeInfo;
     this.buildInfo = buildInfo;
 
@@ -221,6 +231,16 @@ public class SupportBundleManager implements BundleContext {
     return runtimeInfo;
   }
 
+  @Override
+  public PipelineStoreTask getPipelineStore() {
+    return pipelineStore;
+  }
+
+  @Override
+  public PipelineStateStore getPipelineStateStore() {
+    return stateStore;
+  }
+
   private static class BundleWriterImpl implements BundleWriter {
 
     private final String prefix;
@@ -293,6 +313,14 @@ public class SupportBundleManager implements BundleContext {
       try (Stream<String> stream = Files.lines(path)) {
         stream.forEach(this::writeLn);
       }
+      markEndOfFile();
+    }
+
+    @Override
+    public void writeJson(String fileName, Object object) throws IOException {
+      ObjectMapper objectMapper = ObjectMapperFactory.get();
+      markStartOfFile(fileName);
+      write(objectMapper.writeValueAsString(object));
       markEndOfFile();
     }
   }

@@ -21,11 +21,13 @@ package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
+import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
 import com.streamsets.datacollector.restapi.configuration.SupportBundleInjector;
+import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.glassfish.hk2.api.Factory;
@@ -171,9 +173,11 @@ public class TestAdminResource extends JerseyTest {
     @Override
     public SupportBundleManager provide() {
       SafeScheduledExecutorService service = mock(SafeScheduledExecutorService.class);
+      PipelineStoreTask pipelineStoreTask = mock(PipelineStoreTask.class);
+      PipelineStateStore stateStore = mock(PipelineStateStore.class);
       RuntimeInfo runtimeInfo = mock(RuntimeInfo.class);
       BuildInfo buildInfo = mock(BuildInfo.class);
-      return new SupportBundleManager(service, runtimeInfo, buildInfo);
+      return new SupportBundleManager(service, pipelineStoreTask, stateStore, runtimeInfo, buildInfo);
     }
 
     @Override
