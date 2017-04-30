@@ -231,7 +231,7 @@
           as some kerberos settings are read only on startup and cached -->
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
-          <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+          <argLine>-Xmx1g</argLine>
         </configuration>
       </plugin>
     </plugins>
