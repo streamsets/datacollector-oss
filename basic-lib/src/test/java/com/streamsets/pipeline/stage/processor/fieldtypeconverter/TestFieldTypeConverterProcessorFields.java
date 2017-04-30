@@ -1007,8 +1007,8 @@ public class TestFieldTypeConverterProcessorFields {
 
     try {
       Map<String, Field> map = new LinkedHashMap<>();
-      map.put("LongString", Field.create(1431763314761l));
-      map.put("dateString", Field.create(1431763314761l));
+      map.put("LongString", Field.create(1431763314761L));
+      map.put("dateString", Field.create(1431763314761L));
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));

@@ -52,7 +52,7 @@ public class ValidatePipelineCommand extends BaseCommand {
       PreviewApi previewApi = new PreviewApi(getApiClient());
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-      System.out.println(mapper.writeValueAsString(previewApi.validateConfigs(pipelineId, pipelineRev, 1000000l)));
+      System.out.println(mapper.writeValueAsString(previewApi.validateConfigs(pipelineId, pipelineRev, 1000000L)));
     } catch (Exception ex) {
       if(printStackTrace) {
         ex.printStackTrace();

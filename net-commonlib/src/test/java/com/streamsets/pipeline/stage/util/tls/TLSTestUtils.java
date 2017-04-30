@@ -42,7 +42,7 @@ public class TLSTestUtils {
   public static X509Certificate generateCertificate(String dn, KeyPair keyPair, int days) throws Exception {
 
     Date from = new Date();
-    Date to = new Date(from.getTime() + days * 86400000l);
+    Date to = new Date(from.getTime() + days * 86400000L);
     BigInteger sn = new BigInteger(64, new SecureRandom());
     X509V1CertificateGenerator certGen = new X509V1CertificateGenerator();
     X500Principal dnName = new X500Principal(dn);

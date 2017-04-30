@@ -85,7 +85,7 @@ public class TestManagerApi {
     pipelineState = managerApi.startPipeline(pipelineName, "0", null);
     Assert.assertEquals(PipelineStateJson.StatusEnum.STARTING, pipelineState.getStatus());
 
-    Thread.sleep(500l);
+    Thread.sleep(500L);
 
     //Get Pipeline Status
     pipelineState = managerApi.getPipelineStatus(pipelineName, "0");

@@ -82,7 +82,7 @@ public class TestPreviewApi {
     );
     Assert.assertNotNull(pipelineConfig);
 
-    PreviewInfoJson previewInfoJson = previewApi.validateConfigs(pipelineName, "0", 5000l);
+    PreviewInfoJson previewInfoJson = previewApi.validateConfigs(pipelineName, "0", 5000L);
     Assert.assertNotNull(pipelineConfig);
     Assert.assertNotNull(previewInfoJson.getPreviewerId());
     //Assert.assertEquals(PreviewInfoJson.StatusEnum.VALIDATING, previewInfoJson.getStatus());
@@ -95,7 +95,7 @@ public class TestPreviewApi {
         break;
       }
 
-      Thread.sleep(500l);
+      Thread.sleep(500L);
     }
 
     Assert.assertNotNull(lastPreviewStatus);
@@ -134,7 +134,7 @@ public class TestPreviewApi {
         break;
       }
 
-      Thread.sleep(500l);
+      Thread.sleep(500L);
     }
 
     Assert.assertNotNull(lastPreviewStatus);

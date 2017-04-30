@@ -87,7 +87,7 @@ public class TestRecordEL {
     Mockito.when(header.getErrorMessage()).thenReturn("message");
     Mockito.when(header.getErrorDataCollectorId()).thenReturn("collector");
     Mockito.when(header.getErrorPipelineName()).thenReturn("pipeline");
-    Mockito.when(header.getErrorTimestamp()).thenReturn(10l);
+    Mockito.when(header.getErrorTimestamp()).thenReturn(10L);
     Record record = Mockito.mock(Record.class);
     Mockito.when(record.getHeader()).thenReturn(header);
 
@@ -98,7 +98,7 @@ public class TestRecordEL {
     Assert.assertEquals("message", eval.eval(variables, "${record:errorMessage()}", String.class));
     Assert.assertEquals("collector", eval.eval(variables, "${record:errorCollectorId()}", String.class));
     Assert.assertEquals("pipeline", eval.eval(variables, "${record:errorPipeline()}", String.class));
-    Assert.assertEquals(10l, (long)eval.eval(variables, "${record:errorTime()}", Long.class));
+    Assert.assertEquals(10L, (long)eval.eval(variables, "${record:errorTime()}", Long.class));
   }
 
   @Test

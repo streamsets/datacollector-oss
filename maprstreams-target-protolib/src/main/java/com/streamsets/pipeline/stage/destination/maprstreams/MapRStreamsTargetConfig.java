@@ -371,7 +371,7 @@ public class MapRStreamsTargetConfig {
       String[] topics = topicWhiteList.split(",");
       for (String t : topics) {
         t = t.trim();
-        //validate sup0lied topic names in the white list
+        //validate supplied topic names in the white list
         validateTopicExistence(context, issues, t);
       }
     }

@@ -375,7 +375,7 @@ public abstract class AbstractTestCompressorDecompressor {
 
     private static final byte[] CACHE = new byte[] { 0x0, 0x1, 0x2, 0x3, 0x4,
         0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
-    private static final Random rnd = new Random(12345l);
+    private static final Random rnd = new Random(12345L);
 
     public static byte[] get(int size) {
       byte[] array = (byte[]) Array.newInstance(byte.class, size);

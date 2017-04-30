@@ -60,12 +60,12 @@ public class TestConfiguration {
     Assert.assertEquals("S", conf.get("s", "D"));
     Assert.assertEquals(true, conf.get("b", false));
     Assert.assertEquals(Integer.MAX_VALUE, conf.get("i", 1));
-    Assert.assertEquals(Long.MAX_VALUE, conf.get("l", 2l));
+    Assert.assertEquals(Long.MAX_VALUE, conf.get("l", 2L));
 
     Assert.assertEquals("D", conf.get("x", "D"));
     Assert.assertEquals(false, conf.get("x", false));
     Assert.assertEquals(1, conf.get("x", 1));
-    Assert.assertEquals(2l, conf.get("x", 2l));
+    Assert.assertEquals(2L, conf.get("x", 2L));
 
     conf.unset("s");
     Assert.assertFalse(conf.hasName("s"));

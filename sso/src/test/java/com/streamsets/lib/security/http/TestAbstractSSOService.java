@@ -67,7 +67,7 @@ public class TestAbstractSSOService {
 
     conf.set(AbstractSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 30);
     service.setConfiguration(conf);
-    Mockito.verify(service).initializePrincipalCaches(eq(30 * 1000l));
+    Mockito.verify(service).initializePrincipalCaches(eq(30 * 1000L));
 
     Assert.assertNotNull(service.getUserPrincipalCache());
     Assert.assertNotNull(service.getAppPrincipalCache());
