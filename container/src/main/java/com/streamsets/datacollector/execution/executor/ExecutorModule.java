@@ -73,8 +73,10 @@ public class ExecutorModule {
 
   @Provides @Singleton @Named("supportBundleExecutor")
   public SafeScheduledExecutorService provideSupportBundleExecutor(Configuration configuration) {
-    // Harcoding a single executor for generating support bundle at this time
-    return new SafeScheduledExecutorService(1, "supportBundleExecutor");
+    return new SafeScheduledExecutorService(
+      configuration.get(ExecutorConstants.BUNDLE_EXECUTOR_THREAD_POOL_SIZE_KEY, ExecutorConstants.BUNDLE_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
+      "supportBundleExecutor"
+    );
   }
 
   @Provides @Singleton
