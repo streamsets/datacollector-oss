@@ -19,19 +19,16 @@
  */
 package com.streamsets.datacollector.bundles;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.file.Path;
+import java.util.Properties;
 
 /**
  * Writer for content generator classes.
  *
  * Subclasses OutputStream by adding adding methods that are relevant to bundles creation (stores whole file, ...)
  */
-public abstract class BundleWriter extends OutputStream {
+public interface BundleWriter {
 
   /**
    * Create new file in the bundle.
@@ -46,28 +43,31 @@ public abstract class BundleWriter extends OutputStream {
   public abstract void markEndOfFile() throws IOException;
 
   /**
-   * Convenience method to write out string with platform default encoding.
+   * Write out string with platform default encoding.
    * @param str String to be written out
    */
-  public void write(String str) throws IOException {
-    if(str == null) {
-      return;
-    }
-
-    write(str.getBytes());
-  }
+  public abstract void write(String str);
 
   /**
-   * Write the content of give file to the bundle.
-   *
-   * The caller must call mark*File() methods before and after this call.
-   *
-   * @param input Input file to be written into the stream
+   * Write out string with platform default encoding and end with new line character.
+   * @param str String to be written out
    */
-  public void writeFile(File input) throws IOException {
-    try(FileInputStream inputStream = new FileInputStream(input)) {
-      IOUtils.copy(inputStream, this);
-    }
-  }
+  public abstract void writeLn(String str);
 
+  /**
+   * Write given properties file.
+   *
+   * @param fileName Path and file name for the file in the bundle
+   * @param properties Properties to be serialized
+   */
+  public abstract void write(String fileName, Properties properties) throws IOException;
+
+  /**
+   * Copy file at given path to given directory, the file will be redacted line by line.
+   *
+   * @param bundleDirectory Directory inside bundle where the file should be stored (file name will be kept)
+   * @param path Path on local filesystem for the source file.
+   * @throws IOException
+   */
+  public abstract void write(String bundleDirectory, Path path) throws IOException;
 }

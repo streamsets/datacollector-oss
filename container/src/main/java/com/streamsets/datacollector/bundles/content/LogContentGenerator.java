@@ -26,6 +26,7 @@ import com.streamsets.datacollector.bundles.BundleWriter;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 @BundleContentGeneratorDef(
   name = "Logs",
@@ -46,16 +47,8 @@ public class LogContentGenerator implements BundleContentGenerator {
 
     for(File file : logDir.listFiles()) {
       if(file.isFile()) {
-        writeFile(file, writer);
+        writer.write("", Paths.get(file.toURI()));
       }
     }
   }
-
-
-  private void writeFile(File file, BundleWriter writer) throws IOException {
-    writer.markStartOfFile(file.getName());
-    writer.writeFile(file);
-    writer.markEndOfFile();
-  }
-
 }

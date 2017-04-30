@@ -51,8 +51,8 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
   @Override
   public void generateContent(BundleContext context, BundleWriter writer) throws IOException {
     // Various properties
-    writeProperties(context.getBuildInfo().getInfo(), "build.properties", writer);
-    writeProperties(System.getProperties(), "system.properties", writer);
+    writer.write("properties/build.properties", context.getBuildInfo().getInfo());
+    writer.write("properties/system.properties", System.getProperties());
 
     // Interesting directory listings
     listDirectory(context.getRuntimeInfo().getConfigDir(), "conf.txt", writer);
@@ -63,27 +63,18 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
     listDirectory(context.getRuntimeInfo().getRuntimeDir() + "/streamsets-libs/", "stagelibs.txt", writer);
 
     // Interesting files
-    writeFile(context.getRuntimeInfo().getConfigDir() + "/sdc.properties", "conf", writer);
-    writeFile(context.getRuntimeInfo().getConfigDir() + "/sdc-log4j.properties", "conf", writer);
-    writeFile(context.getRuntimeInfo().getConfigDir() + "/dpm.properties", "conf", writer);
-    writeFile(context.getRuntimeInfo().getConfigDir() + "/ldap-login.conf", "conf", writer);
-    writeFile(context.getRuntimeInfo().getConfigDir() + "/sdc-security.policy", "conf", writer);
-    writeFile(context.getRuntimeInfo().getLibexecDir() + "/sdc-env.sh", "libexec", writer);
-    writeFile(context.getRuntimeInfo().getLibexecDir() + "/sdcd-env.sh", "libexec", writer);
+    String confDir = context.getRuntimeInfo().getConfigDir();
+    writer.write("conf", Paths.get(confDir, "sdc.properties"));
+    writer.write("conf", Paths.get(confDir, "sdc-log4j.properties"));
+    writer.write("conf", Paths.get(confDir, "dpm.properties"));
+    writer.write("conf", Paths.get(confDir, "ldap-login.conf"));
+    writer.write("conf", Paths.get(confDir, "sdc-security.policy"));
+    String libExecDir = context.getRuntimeInfo().getLibexecDir();
+    writer.write("libexec", Paths.get(libExecDir, "sdc-env.sh"));
+    writer.write("libexec", Paths.get(libExecDir, "sdcd-env.sh"));
 
     // Thread dump
     threadDump(writer);
-  }
-
-  private void writeFile(String path, String dir, BundleWriter writer) throws IOException {
-    File file = new File(path);
-    if(!file.exists()) {
-      return;
-    }
-
-    writer.markStartOfFile(dir + "/" + file.getName());
-    writer.writeFile(file);
-    writer.markEndOfFile();
   }
 
   public void threadDump(BundleWriter writer) throws IOException {
@@ -96,12 +87,6 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
       writer.write(info.toString());
     }
 
-    writer.markEndOfFile();
-  }
-
-  private void writeProperties(Properties properties, String name, BundleWriter writer) throws IOException {
-    writer.markStartOfFile("properties/" + name);
-    properties.store(writer, "");
     writer.markEndOfFile();
   }
 

@@ -67,9 +67,7 @@ public class PipelineContentGenerator implements BundleContentGenerator {
   }
 
   private void writeFile(Path path, Path prefix, BundleWriter writer) throws IOException {
-    writer.markStartOfFile(prefix.relativize(path).toString());
-    writer.writeFile(path.toFile());
-    writer.markEndOfFile();
+    writer.write(prefix.relativize(path).getParent().toString(), path);
   }
 
 }

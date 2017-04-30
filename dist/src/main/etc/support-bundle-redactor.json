@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "description": "Generic password in configuration files.",
+      "trigger": "password",
+      "search": "password=.*",
+      "replace": "password=REDACTED"
+    }, {
+      "description": "DPM Authorization token",
+      "trigger": "dpm.appAuthToken",
+      "search": "dpm.appAuthToken=.*",
+      "replace": "dpm.appAuthToken=REDACTED"
+    }, {
+      "description": "LDAP Password",
+      "trigger": "bindPassword",
+      "search": "bindPassword=.*",
+      "replace": "bindPassword=REDACTED"
+    }
+  ]
+}
