@@ -30,7 +30,7 @@ public class SupportBundleContentDefinitionJson {
   }
 
   public String getKlass() {
-    return definition.getClass().getName();
+    return definition.getKlass().getName();
   }
 
   public String getName() {
