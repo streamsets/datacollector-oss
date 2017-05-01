@@ -58,11 +58,15 @@ public abstract class BaseNettyServer {
   public void listen() throws Exception {
     for (SocketAddress address : addresses) {
       AbstractBootstrap b = bootstrap(enableEpoll);
-      if (!enableEpoll && numThreads > 1) {
-        throw new IllegalArgumentException("numThreads cannot be > 1 unless epoll is enabled");
-      }
       LOG.info("Starting server on address {}", address);
-      for (int i = 0; i < numThreads; i++) {
+      if (enableEpoll) {
+        // for epoll, bind for each thread
+        for (int i = 0; i < numThreads; i++) {
+          ChannelFuture channelFuture = b.bind(address).sync();
+          channelFutures.add(channelFuture);
+        }
+      } else {
+        // for non-epoll (NIO threadpool), bind once
         ChannelFuture channelFuture = b.bind(address).sync();
         channelFutures.add(channelFuture);
       }
