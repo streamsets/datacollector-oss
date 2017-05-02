@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,23 +20,26 @@
 
 package com.streamsets.pipeline.stage.destination.datalake.writer;
 
-import com.microsoft.azure.datalake.store.ADLFileOutputStream;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
+import com.streamsets.pipeline.lib.event.EventCreator;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Date;
+public final class DataLakeEvents {
+  /**
+   * Fired once a new table is being created.
+   */
+  public static EventCreator CLOSED_FILE = new EventCreator.Builder("file-closed", 1)
+      .withRequiredField("filepath") // Absolute path to the closed file
+      .withRequiredField("filename") // File name of the closed file
+      .withRequiredField("length") // Size of the closed file in bytes
+      .build();
 
-interface OutputStreamHelper {
-  final static String TMP_FILE_PREFIX = "_tmp_";
-  OutputStream getOutputStream(String filePath)
-      throws StageException, IOException;
-  String getTempFilePath(String dirPath, Record record, Date recordTime) throws StageException;
-  void commitFile(String dirPath) throws IOException;
-  void clearStatus() throws IOException;
-  boolean shouldRoll(String dirPath);
-  StreamCloseEventHandler<?> getStreamCloseEventHandler();
+
+  /**
+   * Fired when the file transfer is complete.
+   */
+  public static EventCreator FILE_TRANSFER_COMPLETE_EVENT = FileRefUtil.FILE_TRANSFER_COMPLETE_EVENT;
+
+  private DataLakeEvents() {
+    // Instantiation is prohibited
+  }
 }

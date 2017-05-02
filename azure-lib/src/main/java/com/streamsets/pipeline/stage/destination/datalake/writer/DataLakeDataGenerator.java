@@ -53,8 +53,6 @@ public class DataLakeDataGenerator {
   private boolean idleClosed = false;
   private Future<Void> currentIdleCloseFuture = null;
 
-  private CountingOutputStream textOutputStream;
-
   private ScheduledThreadPoolExecutor idleCloseExecutor = new ScheduledThreadPoolExecutor(
       1,
       new ThreadFactoryBuilder().setNameFormat("Data Lake Idle Close Thread").build()
@@ -115,7 +113,7 @@ public class DataLakeDataGenerator {
     try {
       if (generator == null) {
         OutputStream outputStream = outputStreamHelper.getOutputStream(filePath);
-        generator = dataFormatConfig.getDataGeneratorFactory().getGenerator(outputStream);
+        generator = dataFormatConfig.getDataGeneratorFactory().getGenerator(outputStream, outputStreamHelper.getStreamCloseEventHandler());
         idleClosed = false;
       }
       generator.write(record);
@@ -130,7 +128,9 @@ public class DataLakeDataGenerator {
 
     closeLock.writeLock().lock();
     try {
-      generator.flush();
+      if (generator != null) {
+        generator.flush();
+      }
     } finally {
       closeLock.writeLock().unlock();
     }

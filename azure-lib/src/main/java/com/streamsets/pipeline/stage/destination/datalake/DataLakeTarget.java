@@ -294,9 +294,16 @@ public class DataLakeTarget extends BaseTarget {
       LOG.error(errorRecord.getErrorCode().getMessage(), errorRecord.toString());
       errorRecordHandler.onError(errorRecord);
     }
+
+    try {
+      writer.issueCachedEvents();
+    } catch (IOException ex) {
+      throw new StageException(Errors.ADLS_12, String.valueOf(ex), ex);
+    }
+
   }
 
-  private Map<String, List<Record>> getRecordsPerFile(Batch batch) throws StageException{
+  private Map<String, List<Record>> getRecordsPerFile(Batch batch) throws StageException {
     Iterator<Record> recordIterator = batch.getRecords();
 
     Map<String, List<Record>> recordsPerFile = new HashMap<>();

@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import org.apache.commons.io.output.CountingOutputStream;
 
 import java.io.IOException;
@@ -34,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 final class DefaultOutputStreamHandler implements OutputStreamHelper {
   private final static String DOT = ".";
@@ -47,6 +49,7 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
   private final String tempFileName;
   private final String uniqueId;
   private CountingOutputStream countingOutputStream;
+  private final ConcurrentLinkedQueue<String> closedPaths;
 
   public DefaultOutputStreamHandler(
       ADLStoreClient client,
@@ -54,7 +57,8 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
       String fileNameSuffix,
       String uniqueId,
       long maxRecordsPerFile,
-      long maxFileSize
+      long maxFileSize,
+      ConcurrentLinkedQueue<String> closedPaths
   ) {
     filePathCount = new HashMap<>();
     this.client = client;
@@ -64,6 +68,7 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
     this.maxRecordsPerFile = maxRecordsPerFile;
     this.maxFileSize = maxFileSize;
     this.tempFileName = TMP_FILE_PREFIX + uniquePrefix + "-" + uniqueId + getExtention();
+    this.closedPaths = closedPaths;
   }
 
   @Override
@@ -86,6 +91,7 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
     String filePath = dirPath + "/" +
         tempFileName.replaceFirst(TMP_FILE_PREFIX + uniquePrefix + "-" + uniqueId, uniquePrefix + "-" + UUID.randomUUID());
     client.rename(dirPath + "/" + tempFileName, filePath);
+    closedPaths.add(filePath);
   }
 
   @Override
@@ -112,8 +118,7 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
     long size = countingOutputStream.getByteCount();
 
     if (count == null) {
-      filePathCount.put(dirPath, 1L);
-      return false;
+      count = 1L;
     }
 
     if (maxRecordsPerFile > 0 && count >= maxRecordsPerFile) {
@@ -130,6 +135,11 @@ final class DefaultOutputStreamHandler implements OutputStreamHelper {
 
     filePathCount.put(dirPath, count);
     return false;
+  }
+
+  @Override
+  public StreamCloseEventHandler<?> getStreamCloseEventHandler() {
+    return null;
   }
 
   private String getExtention() {

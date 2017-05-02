@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.datalake.writer;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.microsoft.azure.datalake.store.ADLStoreClient;
+import com.microsoft.azure.datalake.store.ContentSummary;
 import com.microsoft.azure.datalake.store.oauth2.AzureADAuthenticator;
 import com.microsoft.azure.datalake.store.oauth2.AzureADToken;
 import com.streamsets.pipeline.api.Record;
@@ -47,6 +48,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class RecordWriter {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
@@ -77,6 +79,8 @@ public class RecordWriter {
   private final String clientKey;
   private final long idleTimeSecs;
 
+  private final ConcurrentLinkedQueue<String> closedPaths;
+
   public RecordWriter(
       ADLStoreClient client,
       DataFormat dataFormat,
@@ -101,6 +105,7 @@ public class RecordWriter {
     dirPathTemplateVars = context.createELVars();
     fileNameEval = context.createELEval("fileNameEL");
     fileNameVars = context.createELVars();
+    closedPaths = new ConcurrentLinkedQueue<>();
 
     this.client = client;
     this.dataFormat = dataFormat;
@@ -131,10 +136,6 @@ public class RecordWriter {
   public void write(String filePath, Record record) throws StageException, IOException {
     DataLakeDataGenerator generator = getGenerator(filePath);
     generator.write(record);
-
-    if (dataFormat == DataFormat.WHOLE_FILE) {
-      commitOldFile(filePath);
-    }
   }
 
   /*
@@ -144,7 +145,7 @@ public class RecordWriter {
       String dirPathTemplate,
       Record record,
       Date recordTime
-  ) throws ELEvalException {
+  ) throws StageException {
     String dirPath;
     // get directory path
     if (dirPathTemplateInHeader) {
@@ -229,10 +230,12 @@ public class RecordWriter {
           fileNameSuffix,
           uniqueId,
           maxRecordsPerFile,
-          maxFileSize
+          maxFileSize,
+          closedPaths
       );
     } else {
       return new WholeFileFormatOutputStreamHandler(
+          context,
           client,
           uniquePrefix,
           fileNameEL,
@@ -266,5 +269,24 @@ public class RecordWriter {
     }
 
     return outputStreamHelper.shouldRoll(dirPath);
+  }
+
+  /**
+   * Produce events that were cached during the batch processing.
+   */
+  public void issueCachedEvents() throws IOException {
+    String closedPath;
+    while((closedPath = closedPaths.poll()) != null) {
+      produceCloseFileEvent(closedPath);
+    }
+  }
+
+  private void produceCloseFileEvent(String finalPath) throws IOException {
+    ContentSummary summary = client.getContentSummary(finalPath);
+    DataLakeEvents.CLOSED_FILE.create(context)
+        .with("filepath", finalPath.toString())
+        .with("filename", finalPath.substring(finalPath.lastIndexOf("/")+1))
+        .with("length", summary.length)
+        .createAndSend();
   }
 }
