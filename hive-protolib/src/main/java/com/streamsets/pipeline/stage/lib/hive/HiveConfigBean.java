@@ -220,7 +220,7 @@ public class HiveConfigBean {
               context.createConfigIssue(
                   "ADVANCED",
                   JOINER.join(prefix, HIVE_JDBC_URL),
-                  Errors.HIVE_01,
+                  Errors.HIVE_38,
                   loginUgi.getAuthenticationMethod(),
                   UserGroupInformation.AuthenticationMethod.KERBEROS
               )
