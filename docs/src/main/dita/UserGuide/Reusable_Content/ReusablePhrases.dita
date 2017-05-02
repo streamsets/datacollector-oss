@@ -29,6 +29,10 @@
                   Collector</ph></p>
             <p>DPM long only: <ph id="DPM-LongOnly">Dataflow Performance Manager</ph></p>
             <p>DPM short: <ph id="DPM-short">DPM</ph></p>
+            <draft-comment author="alisontaylor">The following ph's for the current version are used
+                  in the install and upgrade steps:</draft-comment>
+            <p><ph id="version">2.6.0.0</ph></p>
+            <p><ph id="version_DirName">2600</ph></p>
             <p>
                   <draft-comment author="Loretta">The following ph is used by the registration DPM
                         topics. </draft-comment>

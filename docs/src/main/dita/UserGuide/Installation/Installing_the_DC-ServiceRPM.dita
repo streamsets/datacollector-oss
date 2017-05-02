@@ -46,8 +46,10 @@
                 <cmd>Use the following command to extract the file to the desired location:</cmd>
                 <info>
                     <codeblock>tar -xzf streamsets-datacollector-&lt;version>-all-rpms.tgz</codeblock>
-                    <p>For example, to extract version 2.5.0.0, use the following
-                        command:<codeblock>tar -xzf streamsets-datacollector-2.5.0.0-all-rpms.tgz</codeblock></p>
+                    <p>For example, to extract version <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
+                        />, use the following
+                        command:<codeblock>tar -xzf streamsets-datacollector-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>-all-rpms.tgz</codeblock></p>
                 </info>
             </step>
             <step>
@@ -60,8 +62,8 @@
             </step>
             <step>
                 <cmd>To start <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> as a service, use the following command:</cmd>
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> as a service, use the following command:</cmd>
                 <info>
                     <codeblock>service sdc start</codeblock>
                 </info>

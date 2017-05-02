@@ -32,10 +32,14 @@
                 <li>Environment configuration file,
                     <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph>.</li>
             </ul></p>
-        <p>For example, if you are upgrading version 2.3.0.0, copy the Data Collector data directory
-            and rename it as follows: <codeph>/var/lib/sdc2300</codeph>. Create a backup of the
-            environment configuration file by renaming the file as follows:
-                <codeph>sdcd-env-2300.sh</codeph>.</p>
+        <p>For example, if you are upgrading version <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>, copy
+            the Data Collector data directory and rename it as follows: <codeph>/var/lib/sdc<ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version_DirName"
+                /></codeph>. Create a backup of the environment configuration file by renaming the
+            file as follows: <codeph>sdcd-env-<ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version_DirName"
+                />.sh</codeph>.</p>
     </conbody>
     <related-links>
         <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>

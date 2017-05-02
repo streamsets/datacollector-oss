@@ -33,9 +33,12 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> directory for runtime resource files.</li>
             </ul></p>
-        <p>For example, if you are upgrading version 2.3.0.0, copy the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration directory and rename it as follows: <codeph>/etc/sdc2300</codeph>.</p>
+        <p>For example, if you are upgrading version <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>, copy
+            the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> configuration directory and rename it as follows: <codeph>/etc/sdc<ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version_DirName"
+                /></codeph>.</p>
     </conbody>
     <related-links>
         <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>

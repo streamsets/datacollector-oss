@@ -18,7 +18,9 @@
  <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         version 2.5.0.0 requires Java 8. If your previous <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        version ran on Java 7, you must migrate to Java 8 with version 2.5.0.0.</shortdesc>
+        version ran on Java 7, you must migrate to Java 8 before upgrading to the latest <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        version.</shortdesc>
  <conbody>
         <p>All services that use Data Collector JAR files also must run on Java 8. This means that
             your Hadoop cluster must run on Java 8 if you are using cluster pipelines, the Spark

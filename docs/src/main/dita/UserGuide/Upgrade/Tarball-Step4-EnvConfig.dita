@@ -70,8 +70,10 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
-                                        configuration directory to <codeph>/etc/sdc2200</codeph>,
-                                        use the value <codeph>/etc/sdc</codeph>.</entry>
+                                        configuration directory to <codeph>/etc/sdc<ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version_DirName"
+                                            /></codeph>, use the value
+                                        <codeph>/etc/sdc</codeph>.</entry>
                                 </row>
                                 <row>
                                     <entry>SDC_DATA</entry>

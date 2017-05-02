@@ -28,8 +28,9 @@
             <step>
                 <cmd>Open the environment configuration file that you backed up in the previous
                     version.</cmd>
-                <info>For example, open the <codeph>$SDC_DIST/libexec/sdcd-env-2300.sh</codeph>
-                    file.</info>
+                <info>For example, open the <codeph>$SDC_DIST/libexec/sdcd-env-<ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version_DirName"
+                        />.sh</codeph> file.</info>
             </step>
             <step>
                 <cmd>In the new version of <ph

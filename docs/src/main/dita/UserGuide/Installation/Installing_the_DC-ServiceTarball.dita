@@ -40,8 +40,10 @@
                     typically <codeph>/opt/local/</codeph>:</cmd>
                 <info>
                     <codeblock>tar -xzf streamsets-datacollector-all-&lt;version>.tgz</codeblock>
-                    <p>For example, to extract version 2.5.0.0, use the following
-                        command:<codeblock>tar -xzf streamsets-datacollector-all-2.5.0.0.tgz</codeblock></p>
+                    <p>For example, to extract version <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
+                        />, use the following
+                        command:<codeblock>tar -xzf streamsets-datacollector-all-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>.tgz</codeblock></p>
                 </info>
             </step>
             <step>

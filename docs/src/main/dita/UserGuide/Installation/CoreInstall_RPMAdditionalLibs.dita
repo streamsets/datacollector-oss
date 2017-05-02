@@ -32,8 +32,10 @@
                 <dd>For example, to install the Amazon S3 origin and destination, as well as the
                     Kudu destination for <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> version 2.5.0.0, use the following command:
-                    <codeblock>yum localinstall streamsets-datacollector-aws-lib-2.5.0.0-1.noarch.rpm,streamsets-datacollector-apache-kudu_1_0-lib-2.5.0.0-1.noarch.rpm </codeblock></dd>
+                    /> version <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"
+                    />, use the following command:
+                    <codeblock>yum localinstall streamsets-datacollector-aws-lib-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>-1.noarch.rpm,streamsets-datacollector-apache-kudu_1_0-lib-<ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/version"/>-1.noarch.rpm </codeblock></dd>
             </dlentry>
             <dlentry>
                 <dt>To list the stage libraries installed on the current <ph
