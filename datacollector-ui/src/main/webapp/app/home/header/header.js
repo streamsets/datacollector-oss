@@ -420,9 +420,9 @@ angular
             });
       },
 
-      showCommitHistory: function (pipelineInfo, $event) {
+      showCommitHistory: function (pipelineInfo, metadata) {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Show Commit History', 1);
-        pipelineService.showCommitHistoryCommand(pipelineInfo, $event)
+        pipelineService.showCommitHistoryCommand(pipelineInfo, metadata)
           .then(
             function(updatedPipelineConfig) {
               if (updatedPipelineConfig) {
