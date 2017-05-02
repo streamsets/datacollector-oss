@@ -55,12 +55,17 @@
                                                 href="../Pipeline_Configuration/WildcardsArraysMaps.dita#concept_vqr_sqc_wr"
                                                   ><image href="../Graphics/icon_moreInfo.png"
                                                   scale="10"/>
-                                            </xref></p><note>You cannot use regex to select a subset
-                                            of array indices and map elements. For example, if the
+                                            </xref></p><p>You cannot use regex to select a subset of
+                                            array indices and map elements. For example, if the
                                             Division array contains 20 indices, you cannot use the
                                             following regex to rename the field path for the first
                                             10
-                                        indices:<codeblock>/Division[0-9]</codeblock></note></entry>
+                                            indices:<codeblock>/Division[0-9]</codeblock></p><note>If
+                                            you rename fields within a list or list-map field, the
+                                            processor lists the renamed fields at the end of the
+                                            list or list-map field. You can use a Field Order
+                                            processor to reorder fields in a list-map
+                                        field.</note></entry>
                                 </row>
                                 <row>
                                     <entry>Source Field Does Not Exist</entry>
