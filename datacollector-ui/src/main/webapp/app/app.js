@@ -307,6 +307,18 @@ angular.module('dataCollectorApp')
         },
 
         /**
+         * Open the Support Bundle Modal Dialog
+         */
+        showSupportBundle: function() {
+          $modal.open({
+            templateUrl: 'app/help/supportBundle/supportBundleModal.tpl.html',
+            controller: 'SupportBundleModalInstanceController',
+            size: '',
+            backdrop: true
+          });
+        },
+
+        /**
          * Open the About Modal Dialog
          */
         showAbout: function() {

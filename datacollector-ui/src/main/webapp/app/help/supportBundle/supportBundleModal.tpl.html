@@ -1,0 +1,59 @@
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<form class="sdc-support-bundle-modal-form" role="form">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="done()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="sdcSupportBundle.title">Support Bundle</h3>
+  </div>
+
+  <div class="modal-body text-center" ng-show="showLoading">
+    <i class="fa fa-spinner fa-spin fa-2x"></i>
+  </div>
+
+  <div class="modal-body" ng-show="!showLoading">
+    <p translate="sdcSupportBundle.infoMessage"></p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th translate="sdcSupportBundle.generator" colspan="2">Generator</th>
+          <th translate="sdcSupportBundle.description">Description</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng-repeat="generator in generators">
+          <td><input type="checkbox" ng-model="generator.checked"></td>
+          <td>{{generator.name}}</td>
+          <td>{{generator.description}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal-footer">
+    <a
+        class="btn btn-primary"
+        ng-href="{{getGenerateUrl()}}"
+        ng-disabled="showLoading || !hasAnyGeneratorSelected()"
+        target="_self"
+        translate="global.form.generate">Generate
+    </a>
+  </div>
+</form>

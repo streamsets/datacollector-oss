@@ -34,7 +34,8 @@
         "localHelp": "Local Help",
         "hostedHelp": "Hosted Help",
         "restFulAPI": "RESTful API",
-        "settings": "Settings"
+        "settings": "Settings",
+        "supportBundle": "Support Bundle"
       },
       "home": "Home",
       "dpmEnabled": "Dataflow Performance Manager Enabled - ",
@@ -834,6 +835,12 @@
     "lineWrapping": "Wrap long lines in properties",
     "restResponse": "Hide REST Response Menu",
     "runPreviewForFieldPaths": "Run preview in background to display available fields"
+  },
+  "sdcSupportBundle": {
+    "title": "Support Bundle",
+    "infoMessage": "The support bundle allows you to generate an archive file with the information required to troubleshoot various issues with the data collector. Please select one or more generators to be included in the archive.",
+    "generator": "Generator",
+    "description": "Description"
   },
   "sdcDirectories" : {
     "title": "SDC Directories",
