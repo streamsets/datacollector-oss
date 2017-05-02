@@ -25,15 +25,14 @@ import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
-
 import dagger.ObjectGraph;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.crypto.Cipher;
 import javax.security.auth.Subject;
-
 import java.net.Authenticator;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivilegedExceptionAction;
 
 public class Main {
@@ -89,6 +88,12 @@ public class Main {
       if (securityContext.getSecurityConfiguration().isKerberosEnabled()) {
         log.info("  Kerberos principal: {}", securityContext.getSecurityConfiguration().getKerberosPrincipal());
         log.info("  Kerberos keytab: {}", securityContext.getSecurityConfiguration().getKerberosKeytab());
+      }
+      try {
+        boolean unlimited = Cipher.getMaxAllowedKeyLength("RC5") >= 256;
+        log.info("  Unlimited cryptography enabled: {}", unlimited);
+      } catch(NoSuchAlgorithmException ex) {
+        log.info("  Unlimited cryptography check: algorithm RC5 not found." );
       }
       log.info("-----------------------------------------------------------------");
       log.info("Starting ...");
