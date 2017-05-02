@@ -32,7 +32,7 @@ angular
         errors: []
       },
       pipelineInfo: pipelineInfo,
-      pipelineId: metadata['dpm.pipeline.pipelineId'],
+      pipelineId: metadata['dpm.pipeline.id'],
       pipelineVersion: metadata['dpm.pipeline.version'],
       pipelinesCommit: [],
       updatedPipelineConfig: undefined,
