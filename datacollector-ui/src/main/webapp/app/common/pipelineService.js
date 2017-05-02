@@ -427,6 +427,8 @@ angular.module('dataCollectorApp.common')
 
     /**
      * Show Remote Pipeline Commit History
+     * @param pipelineInfo
+     * @param metadata
      * @param $event
      * @returns {*}
      */
