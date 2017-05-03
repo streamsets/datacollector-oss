@@ -37,6 +37,10 @@ public class SupportBundleContentDefinitionJson {
     return definition.getName();
   }
 
+  public String getId() {
+    return definition.getId();
+  }
+
   public String getDescription() {
     return definition.getDescription();
   }

@@ -25,6 +25,7 @@ package com.streamsets.datacollector.bundles;
 public class BundleContentGeneratorDefinition {
   private Class<? extends BundleContentGenerator> klass;
   private String name;
+  private String id;
   private String description;
   private int version;
   private boolean enabledByDefault;
@@ -32,12 +33,14 @@ public class BundleContentGeneratorDefinition {
   public BundleContentGeneratorDefinition(
     Class<? extends BundleContentGenerator> klass,
     String name,
+    String id,
     String description,
     int version,
     boolean enabledByDefault
   ) {
     this.klass = klass;
     this.name = name;
+    this.id = id;
     this.description = description;
     this.version = version;
     this.enabledByDefault = enabledByDefault;
@@ -49,6 +52,10 @@ public class BundleContentGeneratorDefinition {
 
   public String getName() {
     return name;
+  }
+
+  public String getId() {
+    return id;
   }
 
   public String getDescription() {

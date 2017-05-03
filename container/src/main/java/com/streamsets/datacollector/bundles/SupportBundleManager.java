@@ -43,9 +43,11 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -97,6 +99,8 @@ public class SupportBundleManager implements BundleContext {
     this.runtimeInfo = runtimeInfo;
     this.buildInfo = buildInfo;
 
+    Set<String> ids = new HashSet<>();
+
     ImmutableList.Builder builder = new ImmutableList.Builder();
     try {
       InputStream generatorResource = Thread.currentThread().getContextClassLoader().getResourceAsStream(SupportBundleContentGeneratorProcessor.RESOURCE_NAME);
@@ -111,9 +115,21 @@ public class SupportBundleManager implements BundleContext {
           continue;
         }
 
+        String id = bundleClass.getSimpleName();
+        if(!def.id().isEmpty()) {
+          id = def.id();
+        }
+
+        if(ids.contains(id)) {
+          LOG.error("Ignoring duplicate id {} for generator {}.", id, bundleClass.getName());
+        } else {
+          ids.add(id);
+        }
+
         builder.add(new BundleContentGeneratorDefinition(
           bundleClass,
           def.name(),
+          id,
           def.description(),
           def.version(),
           def.enabledByDefault()
@@ -162,18 +178,14 @@ public class SupportBundleManager implements BundleContext {
    * Either get all definittions that should be used by default or only those specified in the generators argument.
    */
   private List<BundleContentGeneratorDefinition> getRequestedDefinitions(List<String> generators) {
-    List<BundleContentGeneratorDefinition> useDefs;
+    Stream<BundleContentGeneratorDefinition> stream = definitions.stream();
     if(generators == null || generators.isEmpty()) {
       // Filter out default generators
-      useDefs = definitions.stream()
-        .filter(BundleContentGeneratorDefinition::isEnabledByDefault)
-        .collect(Collectors.toList());
+      stream = stream.filter(BundleContentGeneratorDefinition::isEnabledByDefault);
     } else {
-      useDefs = definitions.stream()
-        .filter(def -> generators.contains(def.getKlass().getName()))
-        .collect(Collectors.toList());
+      stream = stream.filter(def -> generators.contains(def.getId()));
     }
-    return useDefs;
+    return stream.collect(Collectors.toList());
   }
 
   private void generateNewBundleInternal(List<BundleContentGeneratorDefinition> defs, ZipOutputStream zipStream) {

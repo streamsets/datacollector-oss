@@ -90,7 +90,7 @@ public class TestSupportBundleManager {
 
   @Test
   public void testSimpleBundleCreation() throws Exception {
-    ZipFile bundle = zipFile(ImmutableList.of(SimpleGenerator.class.getName()));
+    ZipFile bundle = zipFile(ImmutableList.of(SimpleGenerator.class.getSimpleName()));
     ZipEntry entry;
 
     // Check we have expected files

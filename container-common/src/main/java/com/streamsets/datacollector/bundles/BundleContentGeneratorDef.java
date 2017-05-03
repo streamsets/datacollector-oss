@@ -37,6 +37,13 @@ public @interface BundleContentGeneratorDef {
   String name();
 
   /**
+   * Internal id to be used when requesting what generators should be used for given bundle. Default is empty value
+   * that will get resolved to the class name (without package name). The id of generators must be unique across the
+   * data collector instance.
+   */
+  String id() default "";
+
+  /**
    * User visible description (few sentences) about what this generator does - what kind of data it collects.
    */
   String description();
