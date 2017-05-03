@@ -22,7 +22,7 @@
 
         <a ng-disabled="hasSelectedLibrary(true)"
            ng-if="isAuthorized([userRoles.admin])"
-           ng-click="selectedStageLibraryList.length === 0 || onInstallSelectedLibrariesClick()"
+           ng-click="hasSelectedLibrary(true) || onInstallSelectedLibrariesClick()"
            tooltip-placement="bottom"
            tooltip="{{('packageManager.header.install' | translate)  + ' (' + selectedStageLibraryList.length + ')'}}"
            tooltip-popup-delay="500"
@@ -32,7 +32,7 @@
 
         <a ng-disabled="common.isSlaveNode || hasSelectedLibrary(false)"
            ng-if="isAuthorized([userRoles.admin])"
-           ng-click="selectedStageLibraryList.length === 0 || onUninstallSelectedLibrariesClick()"
+           ng-click="hasSelectedLibrary(false) || onUninstallSelectedLibrariesClick()"
            tooltip-placement="bottom"
            tooltip="{{('packageManager.header.uninstall' | translate)  + ' (' + selectedStageLibraryList.length + ')'}}"
            tooltip-popup-delay="500"
@@ -71,7 +71,6 @@
                 <span> {{'packageManager.header.customRepoUrl' | translate}}</span>
               </a>
             </li>
-
 
           </ul>
         </div>
