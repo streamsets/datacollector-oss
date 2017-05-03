@@ -49,7 +49,19 @@
    <topicref href="../Pipeline_Configuration/RuntimeResources.dita">
     <topicref href="../Pipeline_Configuration/RuntimeResources-Defining.dita"/>
     <topicref href="../Pipeline_Configuration/RuntimeResources-Calling.dita"/>
+   </topicref>  </topicref>
+   <topicref href="../Pipeline_Configuration/Webhooks.dita">
+    <topicmeta>
+     <shortdesc/>
+    </topicmeta>
+    <topicref href="../Pipeline_Configuration/Webhooks-RequestMethod.dita"/>
+    <topicref href="../Pipeline_Configuration/Webhooks-RequestPayload.dita"/>
+   <topicref href="../Pipeline_Configuration/Webhooks-Examples.dita"/>
    </topicref>
+  <topicref href="../Pipeline_Configuration/Notifications.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
   </topicref>
   <topicref href="../Pipeline_Configuration/Validation.dita">
    <topicmeta>

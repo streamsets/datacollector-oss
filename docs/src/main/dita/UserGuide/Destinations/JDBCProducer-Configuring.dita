@@ -54,8 +54,11 @@
                                 </row>
                                 <row>
                                     <entry>Table Name</entry>
-                                    <entry>Database table to use. Use the table name format required
-                                        by the database. </entry>
+                                    <entry>Database table name to use. Use the table name format
+                                        required by the database. <p>
+                                            <note type="tip">By default, Oracle requires table names
+                                                in all caps, e.g. TABLE_NAME.</note>
+                                        </p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/FieldToColumnJDBC_row">

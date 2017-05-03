@@ -17,11 +17,12 @@
  <title>Rules and Alerts Overview</title>
  <shortdesc>Define rules to enable the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        capture information about a running pipeline. Enable the alert associated with a rule to be
+        capture information about a running pipeline. You can enable an alert for any rule to be
         notified when the specified condition occurs.</shortdesc>
  <conbody>
-        <p>You can enable alerts to display in monitor mode or to send an alert email. </p>
-        <p>You can create the following types of rules:<ul id="ul_hcb_pqh_q5">
+        <p><indexterm>rules and alerts<indexterm>overview</indexterm></indexterm><indexterm>alerts
+                and rules<indexterm>overview</indexterm></indexterm>You can create the following
+            types of rules:<ul id="ul_hcb_pqh_q5">
                 <li>Metric rule - Gathers statistics about the pipeline such as pipeline idle time
                     or error record counts. Provides an alert when enabled.</li>
                 <li>Data rule - Gathers details about data as it passes between two stages. Can
@@ -29,5 +30,12 @@
                 <li>Data drift rule - Gathers details about data drift as data passes between two
                     stages. Can provide a meter and alert.</li>
             </ul></p>
- </conbody>
+        <p>When you enable alerts, you can be informed of the alert in the following ways:<ul
+                id="ul_hlr_dnk_rz">
+                <li>Pipeline monitoring - All alerts display when you view the pipeline in Monitor
+                    mode. </li>
+                <li>Webhooks - All alerts trigger all configured webhooks.</li>
+                <li>Email - You can configure rules to send email alerts.</li>
+            </ul></p>
+    </conbody>
 </concept>

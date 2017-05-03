@@ -35,7 +35,8 @@
                     canvas.</cmd>
             </step>
             <step>
-                <cmd>In the Properties panel, click <uicontrol>Email IDs</uicontrol>. </cmd>
+                <cmd>In the Properties panel, click <uicontrol>Rules</uicontrol>, and then click
+                        <uicontrol>Email IDs</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>Enter an email address where you want to send email alerts.</cmd>

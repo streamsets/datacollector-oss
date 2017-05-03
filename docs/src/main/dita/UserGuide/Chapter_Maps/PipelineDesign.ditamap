@@ -44,8 +44,9 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Pipeline_Design/InternalAttributes.dita"/>
-   <topicref href="../Pipeline_Design/RecordHeaderAttributes-WorkingWith.dita"/>
+   <topicref href="../Pipeline_Design/RecordHeaderAttributes-WorkingWith.dita">
+    <topicref href="../Pipeline_Design/InternalAttributes.dita"/>
+   </topicref>
    <topicref href="../Pipeline_Design/Attributes-ViewinginDPreview.dita"/>
    <topicref href="../Pipeline_Design/AttributeGeneratingStages.dita"/>
    <topicref href="../Pipeline_Design/RecordBasedWrites-overview.dita">

@@ -41,9 +41,14 @@
                 href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
         <note>When using the destination in multiple pipelines, take care to avoid concurrent or
             conflicting writes to the same tables. </note>
+        <p>For more information about the Drift Synchronization Solution for Hive and a simple case
+            study, see <xref
+                href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>. For a
+            tutorial, check out our <xref
+                href="https://github.com/streamsets/tutorials/blob/master/tutorial-hivedrift/readme.md"
+                format="html" scope="external">tutorial on Github</xref>.</p>
     </conbody>
     <related-links>
-        <link href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>
         <link href="../Hive_Drift_Solution/HiveDataTypes.dita#concept_ry2_qkm_hw"/>
     </related-links>
 </concept>

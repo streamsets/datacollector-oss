@@ -50,6 +50,9 @@
    <topicref href="../Alerts/DataDriftTriggers.dita"/>
    <topicref href="../Alerts/DataDriftAlerts-Configuring.dita"/>
   </topicref>
+  <topicref href="../Alerts/AlertWebhooks.dita">
+   <topicref href="../Alerts/AlertWebhooks-Configuring.dita"/>
+  </topicref>
   <topicref href="../Alerts/EmailforAlerts-Configuring.dita">
    <topicmeta>
    <shortdesc/>

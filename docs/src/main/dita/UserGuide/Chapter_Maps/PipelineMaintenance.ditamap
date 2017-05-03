@@ -21,7 +21,7 @@
    <shortdesc/>
   </topicmeta>
  </topicref>
-  <topicref href="../Pipeline_Maintenance/PipelineStates-Understanding.dita" chunk="to-content">
+  <topicref href="../Pipeline_Maintenance/PipelineStates-Understanding.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Maintenance/PipelineStates-Examples.dita"/>
   </topicref>
@@ -46,7 +46,11 @@
    <topicref href="../Pipeline_Maintenance/SharingAPipeline.dita"/>
    <topicref href="../Pipeline_Maintenance/ChangingOwners.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Maintenance/AddingLabelsPipelines.dita"/>
+  <topicref href="../Pipeline_Maintenance/AddingLabelsPipelines.dita">
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+  </topicref>
  <topicref href="../Pipeline_Maintenance/ExportingPipelines.dita">
   <topicmeta>
   <shortdesc/>

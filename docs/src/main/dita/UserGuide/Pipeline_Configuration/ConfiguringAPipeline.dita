@@ -163,16 +163,6 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Notify on Pipeline State Changes</entry>
-                                    <entry>Sends an email when the pipeline encounters the listed
-                                        pipeline states. </entry>
-                                </row>
-                                <row>
-                                    <entry>Email IDs</entry>
-                                    <entry>Email addresses to receive notification about pipeline
-                                        state changes. </entry>
-                                </row>
-                                <row>
                                     <entry>Rate Limit (records / sec)
                                         <xref
                                             href="PipelineRateLimit.dita"
@@ -207,6 +197,88 @@
                     for each parameter.</cmd>
                 <info>For more information, see <xref
                         href="RuntimeParameters.dita#concept_rjh_ntz_qr"/>.</info>
+            </step>
+            <step>
+                <cmd>To configure notifications based on changes in pipeline state, on the
+                        <wintitle>Notifications</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_zwz_34j_rz">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Notifications Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Notify on Pipeline State Changes <xref
+                                            href="Notifications.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_rgb_stj_rz"/></xref></entry>
+                                    <entry>Sends notifications when the pipeline encounters the
+                                        listed pipeline states. </entry>
+                                </row>
+                                <row>
+                                    <entry>Email IDs</entry>
+                                    <entry>Email addresses to receive notification when the pipeline
+                                        state changes to one of the specified states. Click the
+                                            <uicontrol>Add</uicontrol> icon to add additional
+                                        addresses. </entry>
+                                </row>
+                                <row>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-Webhook-entry"/>
+                                    <entry>Webhook to send when the pipeline state changes to one of
+                                        the specified states. Click the <uicontrol>Add</uicontrol>
+                                        icon to add additional webhooks.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-URL-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-Header-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-HTTPMethod-row">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-Payload-entry"/>
+                                    <entry>Optional payload to use. Available for PUT, POST, and
+                                        DELETE methods. <p>Use any valid content type.</p><p>You can
+                                            use webhook parameters in the payload to include
+                                            information about the triggering event, such as the
+                                            pipeline name or state. Enclose webhook parameters in
+                                            double curly brackets as follows:
+                                                <codeph>{{PIPELINE_STATE}}</codeph>.</p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-ContentType-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-AuthenticationType-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-UserName-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-Password-row">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>Click the <wintitle>Error Records</wintitle> tab and configure the following
