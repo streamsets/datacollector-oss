@@ -29,7 +29,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 @StageDef(
     version = 2,
     label = "WebSocket Client",
-    description = "Uses an WebSocket client to write data.",
+    description = "Uses a WebSocket client to write data",
     icon = "websockets.png",
     recordsByRef = true,
     onlineHelpRefUrl = "index.html#Destinations/WebSocketClient.html#task_erb_pjn_lz",

@@ -30,10 +30,10 @@ import com.streamsets.pipeline.lib.coap.Groups;
 @StageDef(
     version = 1,
     label = "CoAP Client",
-    description = "Uses an CoAP client to write data.",
+    description = "Uses a CoAP client to write data",
     icon = "coap.png",
     recordsByRef = true,
-    onlineHelpRefUrl = "TODO"
+    onlineHelpRefUrl = "index.html#Destinations/CoAPClient.html#task_d2p_w3n_sz"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
