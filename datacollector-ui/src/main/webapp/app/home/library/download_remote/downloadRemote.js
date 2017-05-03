@@ -82,8 +82,13 @@ angular
       api.remote.fetchPipelines(authService.getRemoteBaseUrl(), authService.getSSOToken())
         .then(
           function(res) {
-            $scope.remotePipelines = res.data;
-            angular.forEach(res.data, function(remotePipeline) {
+            if ( _.isArray(res.data)) {
+              $scope.remotePipelines = res.data;
+            } else if (res.data.data) {
+              $scope.remotePipelines = res.data.data;
+            }
+
+            angular.forEach($scope.remotePipelines, function(remotePipeline) {
               if (_.contains(existingDPMPipelineIds, remotePipeline.pipelineId)) {
                 $scope.downloaded[remotePipeline.commitId] = true;
               }
