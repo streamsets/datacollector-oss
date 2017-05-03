@@ -21,12 +21,12 @@
             attributes for event information such as the event type and when the event occurred. </p>
         <p>As with any record header attribute, you can use the Expression Evaluator and the
             record:attribute function to include record header attribute information as a field in
-            the record. Note that all record header attributes are String values.</p>
-        <p>When storing event records, you most likely want to include the time of the event in the
-            event record, using the following expression in an Expression
+            the record. For example, when storing event records, you most likely want to include the
+            time of the event in the event record, using the following expression in an Expression
             Evaluator:<codeblock>${record:attribute('sdc.event.creation_timestamp')}</codeblock></p>
-        <p>For more information, see <xref href="CaseStudy-EventStorage.dita#concept_ocb_nnl_px"
-            />.</p>
+        <p>Note that all record header attributes are String values. For more information about
+            working with record header attributes, see <xref
+                href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"/>.</p>
         <p>Most events include the following event record header attributes. The exception, File
             Tail, writes all of the event information to record fields. <table frame="all"
                 rowsep="1" colsep="1" id="table_bxn_dhs_5x">
@@ -58,8 +58,8 @@
                     </tbody>
                 </tgroup>
             </table></p>
-        <p><ph
+        <note type="note"><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-ERecord-Fields"
-            /></p>
+            /></note>
     </conbody>
 </concept>

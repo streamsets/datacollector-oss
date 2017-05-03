@@ -148,6 +148,31 @@
                   <li>The input data column for processors.</li>
             </ul>
             <p>
+                  <draft-comment author="Loretta">WEBHOOKS: The following ph are used in the Webhook
+                        overview and Alert Webhook overview:</draft-comment>
+            </p>
+            <p><ph id="WH-Definition-ph">A webhook is a user-defined HTTP callback - an HTTP request
+                        that the pipeline sends automatically when certain actions occur. You can
+                        use webhooks to automatically trigger external tasks based on an HTTP
+                        request. Tasks can be as simple as sending a message through an application
+                        API or as powerful as passing commands to the <ph
+                              conref="#concept_vhs_5tz_xp/pName-long"/> command line interface.</ph>
+            </p>
+            <p id="WH-APIdocNote">
+                  <note type="important">You must configure webhooks as expected by the receiving
+                        system. For details on how to configure incoming webhooks check the
+                        receiving system's documentation. You might also need to enable webhook
+                        usage within that system.</note>
+            </p>
+            <p><ph id="WH-Config-URLmethods-ph">you specify the URL to send the request and the HTTP
+                        method to use. Some HTTP methods allow you to include a request body or
+                        payload.</ph>
+                  <ph id="WH-Config-params-ph">In the payload, you can use parameters to include
+                        information about the cause of the trigger, such as</ph> the text of the
+                  alert or the latest pipeline state. <ph id="WH-Config-Optional-ph">You can also
+                        include request headers, content type, authentication type, username and
+                        password as needed.</ph></p>
+            <p>
                   <draft-comment author="Loretta">The following bullets are the types of origins
                         that can be reset / that remember where you left off. These are used
                         currently in "Starting a Pipeline" and "Resetting an

@@ -14,25 +14,24 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rd2_ghz_dz">
- <title>Creating and Updating Header Attributes</title>
+ <title>Working with Header Attributes</title>
  <conbody>
-  <p><indexterm>record header attributes<indexterm>working with</indexterm></indexterm>Some stages
-            automatically create record header attributes. Others can be quickly configured to
-            create record header attributes. For example, the JDBC Query Consumer has an option on
-            the Advanced tab to create JDBC header attributes. </p>
-        <p>You can also use the Expression Evaluator or any scripting processor to create or update
-            record header attributes. You can use these processors to create or update header
-            attributes for downstream stages. For example, the MongoDB destination requires a CRUD
-            operation to be specified in a record header attribute. If the origin providing the data
-            does not generate that information automatically, you can use the Expression Evaluator
-            or scripting processor to set the attribute value.</p>
-        <p>The expression language includes <xref
+  <p><indexterm>record header attributes<indexterm>working with</indexterm></indexterm>You can use
+            the Expression Evaluator or any scripting processor to create or update record header
+            attributes. For example, the MongoDB destination requires a CRUD operation to be
+            specified in a record header attribute. If the origin providing the data does not
+            generate that information automatically, you can use the Expression Evaluator or
+            scripting processor to set the attribute value.</p>
+        <p>You can also use <xref
                 href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"
-                >record:attribute functions</xref> that you can use to work with attributes. <note
-                type="important">Record header attributes do not have field paths. When using an
+                >record:attribute functions</xref> in any expression to include attribute values in
+            calculations. </p>
+        <p>
+            <note type="important">Record header attributes do not have field paths. When using an
                 attribute in an expression, use just the attribute name, surrounded by quotation
                 marks since attributes are strings, as
-                follows:<codeblock> ${record:attribute('&lt;attribute name>')}</codeblock></note></p>
+                follows:<codeblock> ${record:attribute('&lt;attribute name>')}</codeblock></note>
+        </p>
         <p>For example, the following Expression Evaluator adds the file and offset record header
             attributes created by the Directory origin to the record: </p>
         <p><image href="../Graphics/Origins-EEval-headerattributes.png" id="image_prx_fn3_yv"
