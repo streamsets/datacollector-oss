@@ -126,6 +126,7 @@
       "numberOfCopies": "Number of Copies",
       "outputRecord": "Output Record",
       "owner": "Owner",
+      "parameters": "Parameters",
       "pipeline": "Pipeline",
       "pipelineId": "Pipeline ID",
       "previousStage": "Previous Stage",

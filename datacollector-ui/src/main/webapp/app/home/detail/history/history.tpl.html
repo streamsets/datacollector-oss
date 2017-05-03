@@ -10,8 +10,9 @@
     <thead>
     <tr>
       <th class="col-md-3" translate="global.form.lastStatusChange">Last Status Change</th>
-      <th class="col-md-2" translate="global.form.status">Status</th>
-      <th class="col-md-5" translate="global.form.message">Message</th>
+      <th class="col-md-1" translate="global.form.status">Status</th>
+      <th class="col-md-4" translate="global.form.message">Message</th>
+      <th class="col-md-2" translate="global.form.parameters">Parameters</th>
       <th class="col-md-2" translate="home.detailPane.summary">Summary</th>
     </tr>
     </thead>
@@ -20,6 +21,9 @@
       <td>{{history.timeStamp | date:'medium'}}</td>
       <td ng-bind="history.status"></td>
       <td ng-bind="history.message"></td>
+      <td>
+        <span ng-if="history.attributes && history.attributes['RUNTIME_PARAMETERS']">{{history.attributes['RUNTIME_PARAMETERS'] | json}}</span>
+      </td>
       <td>
         <a href="javascript:;"
            ng-if="history.metrics"
