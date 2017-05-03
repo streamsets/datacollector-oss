@@ -156,7 +156,7 @@ public enum ContainerError implements ErrorCode {
 
   // misc
   CONTAINER_01300("Environment variable 'STREAMSETS_LIBRARIES_EXTRA_DIR' is not set"),
-  CONTAINER_01301("Invalid stage name '{}'"),
+  CONTAINER_01301("Invalid library name '{}'"),
 
   ;
 

@@ -345,7 +345,7 @@ public class StageLibraryResource {
   ) throws IOException {
     String runtimeDir = runtimeInfo.getRuntimeDir();
     for (String libraryId : libraryList) {
-      if (!libraryId.matches("[a-zA-Z0-9_-]")) {
+      if (!libraryId.matches("[a-zA-Z0-9_-]+")) {
         throw new RuntimeException(Utils.format(ContainerError.CONTAINER_01301.getMessage(), libraryId));
       }
 
