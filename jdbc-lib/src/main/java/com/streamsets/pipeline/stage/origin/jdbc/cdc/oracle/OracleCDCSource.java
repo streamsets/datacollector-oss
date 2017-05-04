@@ -126,6 +126,8 @@ public class OracleCDCSource extends BaseSource {
   private boolean sentInitialSchemaEvent = false;
   private Optional<ResultSet> currentResultSet = Optional.empty(); //NOSONAR
   private Optional<Statement> currentStatement = Optional.empty();
+  private boolean isCachedSCNValid = true;
+  private static final int MISSING_LOG_FILE = 1291;
 
   private enum DDL_EVENT {
     CREATE,
@@ -473,14 +475,15 @@ public class OracleCDCSource extends BaseSource {
         }
       }
     } catch (SQLException ex) {
-      if (ex.getErrorCode() != RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED) {
+      if (ex.getErrorCode() == MISSING_LOG_FILE) {
+        isCachedSCNValid = false;
+      } else if (ex.getErrorCode() != RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED) {
         LOG.warn("SQL Exception while retrieving records", ex);
       }
       if (!resultSet.isClosed()) {
         resultSet.close();
-        currentResultSet = Optional.empty();
       }
-
+      currentResultSet = Optional.empty();
     } finally {
       if (forceNewResultSet || count < batchSize) {
         resultSet.close();
@@ -563,7 +566,7 @@ public class OracleCDCSource extends BaseSource {
     BigDecimal endSCN = getEndingSCN();
 
     // Try starting using cached SCN to avoid additional query if the cache one is still the oldest.
-    if (cachedSCN != BigDecimal.ZERO) { // Yes, it is an == comparison since we are checking if this is the actual ZERO object
+    if (cachedSCN != BigDecimal.ZERO && isCachedSCNValid) { // Yes, it is an == comparison since we are checking if this is the actual ZERO object
       try {
         startLogMinerUsingGivenSCNs(cachedSCN, endSCN);
         if (LOG.isDebugEnabled()) {
@@ -585,6 +588,7 @@ public class OracleCDCSource extends BaseSource {
         try {
           startLogMinerUsingGivenSCNs(oldestSCN, endSCN);
           startedLogMiner = true;
+          isCachedSCNValid = true;
           break;
         } catch (SQLException ex) {
           lastException = ex;
@@ -662,7 +666,7 @@ public class OracleCDCSource extends BaseSource {
       issues.add(getContext().createConfigIssue(
           Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
     }
-
+    String commitScnField;
     BigDecimal scn = null;
     try {
       scn = getEndingSCN();
@@ -755,6 +759,7 @@ public class OracleCDCSource extends BaseSource {
           LOG.info("Switching containers failed, ignoring since there was no PDB switch", ex);
         }
       }
+      commitScnField = majorVersion >= 11 ? "COMMIT_SCN" : "CSCN";
     } catch (SQLException ex) {
       LOG.error("Error while creating statement", ex);
       issues.add(getContext().createConfigIssue(
@@ -781,7 +786,7 @@ public class OracleCDCSource extends BaseSource {
     // ORDER BY is not required, since log miner returns all records from a transaction once it is committed, in the
     // order of statement execution. Not having ORDER BY also increases performance a whole lot.
     baseLogEntriesSql = Utils.format(
-        "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, COMMIT_SCN, SEQUENCE#, CSF" +
+        "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, " + commitScnField + ", SEQUENCE#, CSF" +
             " FROM V$LOGMNR_CONTENTS" +
             " WHERE" +
             " SEG_OWNER='{}' AND TABLE_NAME IN ({})" +
@@ -790,7 +795,7 @@ public class OracleCDCSource extends BaseSource {
     );
 
     redoLogEntriesSql = Utils.format(baseLogEntriesSql,
-        "((((COMMIT_SCN = ? AND SEQUENCE# > ?) OR COMMIT_SCN > ?) AND OPERATION_CODE IN (" + getSupportedOperations() + ")) " +
+        "((((" + commitScnField + " = ? AND SEQUENCE# > ?) OR " + commitScnField + " > ?) AND OPERATION_CODE IN (" + getSupportedOperations() + ")) " +
             getDDLOperationsClauseSCN() + ")");
 
     try {
