@@ -27,14 +27,14 @@
           <input type="text" class="form-control input-sm"
                  name="mapObject{{$index}}"
                  ng-required="true"
-                 ng-model="runtimeParameters[constant.key]"/>
+                 ng-model="parameters.runtimeParameters[constant.key]"/>
         </div>
       </div>
 
       <div ui-codemirror
            ng-if="bulkEdit"
            class="codemirror-editor"
-           ng-model="runtimeParameters"
+           ng-model="parameters.runtimeParameters"
            ui-refresh="refreshCodemirror"
            ui-codemirror-opts="getCodeMirrorOptions({
               lineNumbers: true
