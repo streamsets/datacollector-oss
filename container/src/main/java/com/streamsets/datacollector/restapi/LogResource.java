@@ -196,19 +196,6 @@ public class LogResource {
       .build();
   }
 
-  private File[] getLogFiles() throws IOException {
-    String logFile = LogUtils.getLogFile(runtimeInfo);
-    File log = new File(logFile);
-    File logDir = log.getParentFile();
-    final String logName = log.getName();
-    return logDir.listFiles(new FilenameFilter() {
-      @Override
-      public boolean accept(File dir, String name) {
-        return name.startsWith(logName);
-      }
-    });
-  }
-
   @GET
   @Path("/logs/files")
   @ApiOperation(value = "Returns all available SDC Log files", response = Map.class, responseContainer = "List",
@@ -220,7 +207,7 @@ public class LogResource {
   })
   @SuppressWarnings("unchecked")
   public Response listLogFiles() throws IOException {
-    File[] logFiles = getLogFiles();
+    File[] logFiles = LogUtils.getLogFiles(runtimeInfo);
     List<Map> list = new ArrayList<>();
     for (File file : logFiles) {
       Map map = new HashMap();
@@ -246,7 +233,7 @@ public class LogResource {
   ) throws IOException {
     Response response;
     File newLogFile = null;
-    for (File file : getLogFiles()) {
+    for (File file : LogUtils.getLogFiles(runtimeInfo)) {
       if (file.getName().equals(logName)) {
         newLogFile = file;
         break;

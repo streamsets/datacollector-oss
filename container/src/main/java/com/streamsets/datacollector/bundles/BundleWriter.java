@@ -46,13 +46,13 @@ public interface BundleWriter {
    * Write out string with platform default encoding.
    * @param str String to be written out
    */
-  public abstract void write(String str);
+  public abstract void write(String str) throws IOException;
 
   /**
    * Write out string with platform default encoding and end with new line character.
    * @param str String to be written out
    */
-  public abstract void writeLn(String str);
+  public abstract void writeLn(String str) throws IOException;
 
   /**
    * Write given properties file.
@@ -70,6 +70,18 @@ public interface BundleWriter {
    * @throws IOException
    */
   public abstract void write(String bundleDirectory, Path path) throws IOException;
+
+  /**
+   * Copy file at given path to given directory, the file will be redacted line by line.
+   *
+   * Start reading the given file from given offset (skipping beginning of the file). If the startOffset is negative or
+   * zero, then it's ignored and whole file is copied.
+   *
+   * @param bundleDirectory Directory inside bundle where the file should be stored (file name will be kept)
+   * @param path Path on local filesystem for the source file.
+   * @throws IOException
+   */
+  public abstract void write(String bundleDirectory, Path path, long startOffset) throws IOException;
 
   /**
    * Write given object as JSON.

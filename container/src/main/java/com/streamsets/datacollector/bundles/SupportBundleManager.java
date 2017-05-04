@@ -279,24 +279,20 @@ public class SupportBundleManager implements BundleContext {
       zipOutputStream.closeEntry();
     }
 
-    public void writeInternal(String string, boolean ln) {
-      try {
-        zipOutputStream.write(redactor.redact(string).getBytes());
-        if(ln) {
-          zipOutputStream.write('\n');
-        }
-      } catch (IOException e) {
-        throw new RuntimeException("Can't write string out: " + string, e);
+    public void writeInternal(String string, boolean ln) throws IOException {
+      zipOutputStream.write(redactor.redact(string).getBytes());
+      if(ln) {
+        zipOutputStream.write('\n');
       }
     }
 
     @Override
-    public void write(String str) {
+    public void write(String str) throws IOException {
       writeInternal(str, false);
     }
 
     @Override
-    public void writeLn(String str) {
+    public void writeLn(String str) throws IOException {
       writeInternal(str, true);
     }
 
@@ -316,15 +312,28 @@ public class SupportBundleManager implements BundleContext {
 
     @Override
     public void write(String dir, Path path) throws IOException {
+      write(dir, path, 0);
+    }
+
+    @Override
+    public void write(String dir, Path path, long startOffset) throws IOException {
       // We're not interested in serializing non-existing files
       if(!Files.exists(path)) {
         return;
       }
 
-      markStartOfFile(dir + "/" + path.getFileName());
-      try (Stream<String> stream = Files.lines(path)) {
-        stream.forEach(this::writeLn);
+      try (BufferedReader reader = Files.newBufferedReader(path)) {
+        markStartOfFile(dir + "/" + path.getFileName());
+        if(startOffset > 0) {
+          reader.skip(startOffset);
+        }
+
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+          writeLn(line);
+        }
       }
+
       markEndOfFile();
     }
 

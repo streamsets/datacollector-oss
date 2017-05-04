@@ -23,10 +23,16 @@ import com.streamsets.datacollector.bundles.BundleContentGenerator;
 import com.streamsets.datacollector.bundles.BundleContentGeneratorDef;
 import com.streamsets.datacollector.bundles.BundleContext;
 import com.streamsets.datacollector.bundles.BundleWriter;
+import com.streamsets.datacollector.log.LogUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @BundleContentGeneratorDef(
   name = "Logs",
@@ -35,20 +41,41 @@ import java.nio.file.Paths;
   enabledByDefault = true
 )
 public class LogContentGenerator implements BundleContentGenerator {
+
+  /**
+   * 1GB of raw logs is equal to roughly ~80MB after zip compression (depending on the type of logs)
+   */
+  private static long LOG_MAX_SIZE = (1024 * 1024 * 1024);
+
+  /**
+   * For GC, we want last ~50 MBs (random constant at this point).
+   */
+  private static long GC_MAX_SIZE = (50 * 1024 * 1024);
+
   @Override
   public void generateContent(BundleContext context, BundleWriter writer) throws IOException {
-    // This is very naive implementation that simply copies all files from log directory.
-    // Production ready implementation will need to add some sort of max limit for the logs
-    // and read only the "last" logs.
-    File logDir = new File(context.getRuntimeInfo().getLogDir());
-    if(!logDir.exists() || !logDir.isDirectory()) {
-      return;
+
+    // Sort the log files in descending manner (e.g. get the most up to date logs first)
+    List<File> logFiles = Arrays.stream(LogUtils.getLogFiles(context.getRuntimeInfo()))
+      .sorted((f1, f2) -> f1.lastModified() < f2.lastModified() ? 1 : -1)
+      .collect(Collectors.toList());
+
+    // Write as many log files as for which we have actual space
+    long availableSpace = LOG_MAX_SIZE;
+    for(File logFile : logFiles) {
+      // As long as we have not exhausted quota for logs
+      if(availableSpace <= 0) {
+        break;
+      }
+
+      writer.write("", logFile.toPath(), logFile.length() - availableSpace);
+      availableSpace -= logFile.length();
     }
 
-    for(File file : logDir.listFiles()) {
-      if(file.isFile()) {
-        writer.write("", Paths.get(file.toURI()));
-      }
+    // GC log
+    Path gcLog = Paths.get(context.getRuntimeInfo().getLogDir(), "gc.log");
+    if(Files.exists(gcLog)) {
+      writer.write("", gcLog, Files.size(gcLog) - GC_MAX_SIZE);
     }
   }
 }

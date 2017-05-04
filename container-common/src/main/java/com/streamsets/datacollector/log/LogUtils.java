@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokD
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util.Grok;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -144,6 +145,14 @@ public class LogUtils {
 
     }
     return logFileGrok;
+  }
+
+  public static File[] getLogFiles(RuntimeInfo runtimeInfo) throws IOException {
+    String logFile = LogUtils.getLogFile(runtimeInfo);
+    File log = new File(logFile);
+    File logDir = log.getParentFile();
+    final String logName = log.getName();
+    return logDir.listFiles((dir, name) -> name.startsWith(logName));
   }
 
   @VisibleForTesting
