@@ -1813,5 +1813,122 @@
     </tbody>
    </tgroup>
   </table>
+  <draft-comment author="alisontaylor">Rows in this table are used in MongoDB origin, MongoDB Oplog
+   origin, and MongoDB destination</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_mh4_bxs_ns">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3*"/>
+    <thead>
+     <row>
+      <entry>MongoDB Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row id="row-MongoSingleMode">
+      <entry>Enable Single Mode</entry>
+      <entry>Select to connect to a single MongoDB server or node. If
+       multiple nodes are defined in the connection string, the
+       origin connects only to the first node. <p>Use this option
+        with care. If the origin cannot connect or the
+        connection fails, the pipeline stops. </p></entry>
+     </row>
+     <row id="row-MongoDatabase">
+      <entry>Database</entry>
+      <entry>Name of the MongoDB database.</entry>
+     </row>
+     <row id="row-MongoCollection">
+      <entry>Collection</entry>
+      <entry>Name of the MongoDB collection to use.</entry>
+     </row>
+     <row id="row-MongoCappedCollection">
+      <entry>Capped Collection</entry>
+      <entry>The collection is capped. Clear this option to read an
+       uncapped collection.</entry>
+     </row>
+     <row id="row-MongoInitialOffset">
+      <entry>Initial Offset</entry>
+      <entry>Initial offset to use to begin reading. When using an
+       Object ID field as the offset field, enter a timestamp with
+       the following format: <codeph>YYYY-MM-DD hh:mm:ss</codeph>.
+       When using a string field, enter the string to
+       use.<p>Default is: 2015-01-01 00:00:00</p></entry>
+     </row>
+     <row id="row-MongoOffsetField">
+      <entry>Offset Field Type</entry>
+      <entry>Data type of the offset field. Use Object ID for Object
+       ID fields. Use String for string offset fields. <p>Default
+        is Object ID.</p></entry>
+     </row>
+     <row id="row-MongoOffset">
+      <entry>Offset Field <xref
+       href="../Origins/MongoDB-OffsetField.dita">
+       <image href="../Graphics/icon_moreInfo.png" scale="10"
+        id="image_k2w_rsd_3t"/></xref>
+      </entry>
+      <entry>Field to use to track reads. Default is the _id field.
+       <p>You can use a nested offset field, such as o._id, or
+        any Object ID field or any string field. Results are not
+        guaranteed for anything but the _id field.</p></entry>
+     </row>
+     <row id="row-Mongo-BatchSize">
+      <entry>Batch Size (records)</entry>
+      <entry>Maximum number of records allowed in a batch.</entry>
+     </row>
+     <row id="row-MongoBatchWait">
+      <entry>Max Batch Wait Time <xref
+       href="../Origins/BatchSizeWaitTime.dita">
+       <image href="../Graphics/icon_moreInfo.png" scale="10"
+       /></xref>
+      </entry>
+      <entry id="entry-Mongo-BatchWaitTime">Amount of time the origin
+       will wait to fill a batch before sending an empty batch.
+      </entry>
+     </row>
+     <row id="row-MongoReadPreference">
+      <entry>Read Preference <xref
+       href="../Origins/MongoDB-ReadPreference.dita">
+       <image href="../Graphics/icon_moreInfo.png" scale="10"
+        id="image_o23_1rd_ww"/></xref>
+      </entry>
+      <entry id="entry-Mongo-ReadPref">Determines how the origin reads
+       data from different members of the MongoDB replica
+       set.</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+  <draft-comment author="alisontaylor">Rows in this table are used in MongoDB origin, MongoDB Oplog
+   origin, and MongoDB destination</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_bdl_csd_3t">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry>Credentials</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row id="row-MongoAuthType">
+      <entry>Authentication Type</entry>
+      <entry>Authentication used by the MongoDB server:
+       Username/Password or LDAP.</entry>
+     </row>
+     <row id="row-MongoUsername">
+      <entry>Username</entry>
+      <entry>MongoDB or LDAP user name.</entry>
+     </row>
+     <row id="row-MongoPassword">
+      <entry>Password</entry>
+      <entry>MongoDB or LDAP password.<note
+       conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+      /></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>

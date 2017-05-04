@@ -30,9 +30,10 @@
         <p>The MongoDB Oplog origin <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-CDCoverview"
             /></p>
-        <p>When you configure the MongoDB Oplog origin, you configure connection information, an
-            optional timestamp and ordinal to specify where to start the read, the operations that
-            you want to process, and the read preference.</p>
+        <p>When you configure the MongoDB Oplog origin, you configure connection information, such
+            as the connection string and MongoDB credentials. You also define an optional timestamp
+            and ordinal to specify where to start the read, the operations that you want to process,
+            and the read preference.</p>
         <p>You can optionally configure advanced options that determine how the origin connects to
             MongoDB, including enabling SSL/TLS. </p>
  </conbody>

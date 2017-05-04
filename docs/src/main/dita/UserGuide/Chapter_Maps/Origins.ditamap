@@ -225,6 +225,7 @@
   </topicref>
   <topicref href="../Origins/MongoDB.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MongoDB-Credentials.dita"/>
    <topicref href="../Origins/MongoDB-OffsetField.dita"/>
    <topicref href="../Origins/MongoDB-ReadPreference.dita"/>
    <topicref href="../Origins/MongoDB-BSONTimestamp.dita"/>
@@ -233,6 +234,7 @@
   </topicref>
   <topicref href="../Origins/MongoDBOplog.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MongoDBOplog-Credentials.dita"/>
    <topicref href="../Origins/MongoDBOplog-TimestampOrdinal.dita"/>
    <topicref href="../Origins/MongoDBOplog-ReadPreference.dita"/>
    <topicref href="../Origins/MongoDBOplog-GeneratedRecords.dita">

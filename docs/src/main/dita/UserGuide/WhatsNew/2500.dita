@@ -217,10 +217,13 @@
                         <li><xref href="../Origins/KConsumer.dita#concept_msz_wnr_5q">Kinesis
                                 Consumer origin enhancement</xref> - The origin now performs
                             parallel processing and can generate mulitithreaded pipelines. </li>
-                        <li>MongoDB origin enhancements - The origin can now use LDAP authentication
-                            in addition to username/password authentication to connect to MongoDB.
-                            You can also now include credentials in the MongoDB connection
-                            string.</li>
+                        <li><xref href="../Origins/MongoDB-Credentials.dita#concept_gzz_kdr_tz"
+                                >MongoDB origin</xref> and <xref
+                                href="../Origins/MongoDBOplog-Credentials.dita#concept_ovt_vpt_tz"
+                                >MongoDB Oplog origin</xref> enhancements - The origins can now use
+                            LDAP authentication in addition to username/password authentication to
+                            connect to MongoDB. You can also now include credentials in the MongoDB
+                            connection string.</li>
                     </ul>
                 </dd>
             </dlentry>
@@ -300,10 +303,11 @@
                                 >MapR DB JSON destination enhancement</xref> - You can now enter an
                             expression that evaluates to the name of the MapR DB JSON table to write
                             to.</li>
-                        <li>MongoDB destination enhancements - The destination can now use LDAP
-                            authentication in addition to username/password authentication to
-                            connect to MongoDB. You can also now include credentials in the MongoDB
-                            connection string.</li>
+                        <li><xref href="../Destinations/MongoDB-Credentials.dita#concept_ppl_3qt_tz"
+                                >MongoDB destination enhancements</xref> - The destination can now
+                            use LDAP authentication in addition to username/password authentication
+                            to connect to MongoDB. You can also now include credentials in the
+                            MongoDB connection string.</li>
                         <li><xref href="../Destinations/RPCdest-Configuring.dita#task_nbl_r2x_dt"
                                 >SDC RPC destination enhancements</xref> - The Back Off Period value
                             that you enter now increases exponentially after each retry, until it

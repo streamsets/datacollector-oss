@@ -281,6 +281,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/MongoDB-Credentials.dita"/>
    <topicref href="../Destinations/MongoDB-CRUDOperation.dita"/>
    <topicref href="../Destinations/MongoDB-EnableSSL.dita"/>
    <topicref href="../Destinations/MongoDB-Configuring.dita"/>

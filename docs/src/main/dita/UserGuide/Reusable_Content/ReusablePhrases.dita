@@ -2795,5 +2795,31 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                   /> uses the alphanumeric characters entered for the pipeline title as a prefix for
                   the generated pipeline ID.</p>
+            <draft-comment author="alisontaylor">Used in the Credentials topic for MongoDB origin,
+                  MongoDB Oplog origin, and MongoDB destination</draft-comment>
+            <p id="MongoDBCredentials">To use username/password or LDAP authentication, enter the required credentials in
+                  one of the following ways:<dl>
+                        <dlentry>
+                              <dt>Connection string in the MongoDB tab</dt>
+                              <dd>Enter credentials in the connection string in the MongoDB
+                                    tab.</dd>
+                              <dd>To enter credentials for username/password authentication, enter
+                                    the username and password before the host name. Use the
+                                    following
+                                    format:<codeblock>mongodb://<b>username:password@</b>host[:port][/[database][?options]]</codeblock></dd>
+                              <dd>To enter credentials for LDAP authentication, enter the username
+                                    and password before the host name, and set the authMechanism
+                                    option to PLAIN. Use the following
+                                    format:<codeblock>mongodb://<b>username:password@</b>host[:port][/[database]<b>?authMechanism=PLAIN</b></codeblock></dd>
+                        </dlentry>
+                        <dlentry>
+                              <dt>Credentials tab</dt>
+                              <dd>Select either the Username/Password or LDAP authentication type in
+                                    the Credentials tab. Then enter the username and password for
+                                    the authentication type. </dd>
+                        </dlentry>
+                  </dl></p>
+            <p id="MongoDBCredentialsConclusion">If you enter credentials in both the connection string and in the Credentials tab,
+                  the Credentials tab takes precedence.</p>
       </conbody>
 </concept>

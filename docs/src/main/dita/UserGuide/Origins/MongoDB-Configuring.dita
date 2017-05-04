@@ -25,12 +25,82 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-MongoDBconfigs">
-                <cmd/>
+            <step>
+                <cmd>On the <uicontrol>MongoDB</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_prm_rlt_tz">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>MongoDB Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-MongoConnectString">
+                                    <entry>Connection String</entry>
+                                    <entry>Connection string for the MongoDB instance. Use the
+                                        following
+                                        format:<codeblock>mongodb://host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]</codeblock>When
+                                        connecting to a cluster, enter additional node information
+                                        to ensure a connection.<p>If the MongoDB server uses
+                                            username/password or LDAP authentication, you can
+                                            include the credentials in the connection string, as
+                                            described in <xref
+                                                href="../Origins/MongoDB-Credentials.dita#concept_gzz_kdr_tz"
+                                            />.</p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MongoSingleMode"
+                                    conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MongoOffset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-Mongo-BatchSize"
+                                    conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MongoBatchWait">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MongoReadPreference">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/MongoDB_Credentials_step">
-                <cmd/>
+            <step>
+                <cmd>To enter credentials separately from the MongoDB connection string, click the
+                        <uicontrol>Credentials</uicontrol> tab and configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_fhj_pmt_tz">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials
+                                        <xref
+                                            href="MongoDB-Credentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_o23_1rd_ww"/></xref></entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MongoAuthType"
+                                    conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MongoPassword">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>Optionally, click the <uicontrol>Advanced</uicontrol> tab to configure how the
