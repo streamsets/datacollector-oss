@@ -80,6 +80,7 @@ import java.util.Map;
 public class LogResource {
   private static final String X_SDC_LOG_PREVIOUS_OFFSET_HEADER = "X-SDC-LOG-PREVIOUS-OFFSET";
   private static final String EXCEPTION = "exception";
+  private static long MAX_EXCEPTION = 10 * 1024; // 10 KB
   private final RuntimeInfo runtimeInfo;
   private final PipelineStoreTask store;
 
@@ -294,7 +295,16 @@ public class LogResource {
           Map<String, String> lastLogData = logData.get(logData.size() - 1);
 
           if(lastLogData.containsKey(EXCEPTION)) {
-            lastLogData.put(EXCEPTION, lastLogData.get(EXCEPTION) + "\n" + thisLine);
+            String exception = lastLogData.get(EXCEPTION);
+            if(exception.length() <= MAX_EXCEPTION) {
+              String newException;
+              if(exception.length() + thisLine.length() > MAX_EXCEPTION) {
+                newException = exception + "\n ... Truncated ...";
+              } else {
+                newException = exception + "\n" + thisLine;
+              }
+              lastLogData.put(EXCEPTION, newException);
+            }
           } else {
             lastLogData.put(EXCEPTION, thisLine);
           }
