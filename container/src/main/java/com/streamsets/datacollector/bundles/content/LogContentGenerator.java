@@ -30,7 +30,7 @@ import java.nio.file.Paths;
 
 @BundleContentGeneratorDef(
   name = "Logs",
-  description = "Puts sdc logs to the bundle.",
+  description = "Most recent logs.",
   version = 1,
   enabledByDefault = true
 )

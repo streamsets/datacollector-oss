@@ -44,7 +44,7 @@ import java.util.Map;
 
 @BundleContentGeneratorDef(
   name = "Pipelines",
-  description = "Pipeline definition, history files, ...",
+  description = "Pipeline metadata (definition, history files, ...).",
   version = 1,
   enabledByDefault = true
 )

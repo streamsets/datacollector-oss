@@ -40,7 +40,7 @@ import java.util.Properties;
 
 @BundleContentGeneratorDef(
   name = "SDC Info",
-  description = "Various information about SDC itself. Precise build information, configuration, thread dump...",
+  description = "Information about SDC itself (precise build information, configuration and thread dump, ...).",
   version = 1,
   enabledByDefault = true
 )
