@@ -22,10 +22,11 @@
             CRUD operation record header attribute. The CRUD operation header attribute indicates
             the operation to perform for each record - INSERT, UPSERT, or DELETE. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/></p>
-        <p>When you configure the MongoDB destination, you configure the connection string,
-            database, and collection, and write concern to use. To perform upserts, you must specify
-            a unique key field. When you do not specify a unique key field, upsert records are sent
-            to the stage for error handling.</p>
+        <p>When you configure the MongoDB destination, you define connection information, such as
+            the connection string and MongoDB credentials. You also configure the database, and
+            collection, and write concern to use. To perform upserts, you must specify a unique key
+            field. When you do not specify a unique key field, upsert records are sent to the stage
+            for error handling.</p>
         <p>Note that when performing a DELETE operation, the destination deletes a maximum of one
             matching document in MongoDB. It does not delete all matching documents, as is sometimes
             possible with MongoDB.</p>
