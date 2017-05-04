@@ -121,7 +121,6 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private Field convertField(String matchingField, Field field, BaseConverterConfig converterConfig) throws StageException {
     if (field.getType() == Field.Type.STRING) {
       if (field.getValue() == null) {
-        LOG.warn("Field {} has null value. Converting the type of field to '{}' with null value.", matchingField, converterConfig.targetType);
         return Field.create(converterConfig.targetType, null);
       } else {
         try {
@@ -145,9 +144,6 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     if (converterConfig.targetType.isOneOf(Field.Type.STRING)
         && converterConfig.treatInputFieldAsDate && field.getType() == Field.Type.LONG) {
       if (field.getValue() == null) {
-        LOG.warn(
-            "Field {} in record has null value. Converting the type of field to '{}' with null value.",
-            matchingField, converterConfig.targetType);
         return Field.create(converterConfig.targetType, null);
       } else {
         String dateMask = converterConfig.getDateMask();
@@ -159,7 +155,6 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
     if (field.getType().isOneOf(Field.Type.DATETIME, Field.Type.DATE, Field.Type.TIME) && converterConfig.targetType.isOneOf(Field.Type.LONG, Field.Type.STRING)) {
       if (field.getValue() == null) {
-        LOG.warn("Field {} in record has null value. Converting the type of field to '{}' with null value.", matchingField, converterConfig.targetType);
         return Field.create(converterConfig.targetType, null);
       } else if(converterConfig.targetType == Field.Type.LONG) {
         return Field.create(converterConfig.targetType, field.getValueAsDatetime().getTime());
