@@ -75,9 +75,11 @@ import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -629,9 +631,16 @@ public class AdminResource {
       generatorList = Arrays.asList(generators.split(","));
     }
 
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+    StringBuilder builder = new StringBuilder("bundle_");
+    builder.append(runtimeInfo.getId());
+    builder.append("_");
+    builder.append(dateFormat.format(new Date()));
+    builder.append(".zip");
+
     return Response
       .ok()
-      .header("content-disposition", "attachment; filename=\"support_bundle.zip\"")
+      .header("content-disposition", "attachment; filename=\"" + builder.toString() + "\"")
       .entity(supportBundleManager.generateNewBundle(generatorList))
       .build();
   }
