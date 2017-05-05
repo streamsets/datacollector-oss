@@ -1,0 +1,87 @@
+/*
+ * Copyright 2017 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.streamsets.pipeline.stage.bigquery.origin;
+
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.stage.bigquery.lib.GoogleCloudCredentialsConfig;
+
+public class BigQuerySourceConfig {
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.TEXT,
+      mode = ConfigDef.Mode.SQL,
+      label = "Query",
+      displayPosition = 10,
+      group = "BIGQUERY"
+  )
+  public String query = "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use Legacy SQL",
+      description = "By default Standard SQL is used. When checked Legacy SQL is used.",
+      defaultValue = "false",
+      displayPosition = 20,
+      group = "BIGQUERY"
+  )
+  public boolean useLegacySql = false;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use Query Cache",
+      defaultValue = "true",
+      displayPosition = 30,
+      group = "BIGQUERY"
+  )
+  public boolean useQueryCache = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "${5 * MINUTES}",
+      label = "Query Timeout (sec)",
+      elDefs = TimeEL.class,
+      displayPosition = 40,
+      group = "BIGQUERY",
+      min = 1
+  )
+  public long timeout = 300;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Max Batch Size (records)",
+      description = "Max number of records per batch",
+      displayPosition = 1000,
+      group = "#0",
+      min = 1,
+      max = Integer.MAX_VALUE
+  )
+  public int maxBatchSize = 1000;
+
+  @ConfigDefBean(groups = "CREDENTIALS")
+  public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();
+}

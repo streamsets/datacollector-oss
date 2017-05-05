@@ -390,12 +390,6 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
-    <!-- Bigtable -->
-    <fileSet>
-      <directory>${basedir}/../bigtable-lib/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-
     <!-- InfluxDB -->
     <fileSet>
       <directory>${basedir}/../influxdb_0_9-lib/target/streamsets-libs/</directory>
@@ -439,6 +433,17 @@
     <!-- Jython libs -->
     <fileSet>
       <directory>${basedir}/../${jython_2_7-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
+    <!-- Google Cloud Libraries -->
+    <fileSet>
+      <directory>${basedir}/../${google-cloud-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/../${bigtable-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 

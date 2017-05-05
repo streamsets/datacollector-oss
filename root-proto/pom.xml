@@ -49,6 +49,7 @@
          All dependency versions should be defined here to avoid version
          mismatches with multiple artifacts of the same logical dependency.
     -->
+    <awaitility.version>2.0.0</awaitility.version>
     <bouncycastle.version>1.57</bouncycastle.version>
     <metrics.version>3.1.2</metrics.version>
     <log4j.version>1.2.17</log4j.version>
@@ -78,6 +79,11 @@
   <!-- API dependencies ONLY -->
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>${awaitility.version}</version>
+      </dependency>
       <dependency>
         <groupId>io.dropwizard.metrics</groupId>
         <artifactId>metrics-core</artifactId>
@@ -112,6 +118,16 @@
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
         <version>${mockito.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>${powermock.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-api-mockito</artifactId>
+        <version>${powermock.version}</version>
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>

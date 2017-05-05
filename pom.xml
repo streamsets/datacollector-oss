@@ -67,7 +67,9 @@
 
     <aws-lib>aws-lib</aws-lib>
     <basic-lib>basic-lib</basic-lib>
+    <bigtable-lib>bigtable-lib</bigtable-lib>
     <dev-lib>dev-lib</dev-lib>
+    <google-cloud-lib>google-cloud-lib</google-cloud-lib>
     <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
     <jks-credentialstore-lib>jks-credentialstore-lib</jks-credentialstore-lib>
     <jdbc-lib>jdbc-lib</jdbc-lib>
@@ -202,6 +204,7 @@
     <module>basic-lib</module>
     <module>bigtable-lib</module>
     <module>dev-lib</module>
+    <module>google-cloud-lib</module>
     <module>influxdb_0_9-lib</module>
     <module>jks-credentialstore-lib</module>
     <module>jdbc-lib</module>
