@@ -25,6 +25,7 @@ import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
@@ -52,7 +53,7 @@ public class TestSupportBundleManager {
 
   @BeforeClass
   public static void createManager() {
-
+    Configuration configuration = mock(Configuration.class);
     RuntimeInfo runtimeInfo = mock(RuntimeInfo.class);
     when(runtimeInfo.getId()).thenReturn("super-secret-id");
     when(runtimeInfo.isAclEnabled()).thenReturn(false);
@@ -63,6 +64,7 @@ public class TestSupportBundleManager {
 
     manager = new SupportBundleManager(
       new SafeScheduledExecutorService(1, "supportBundleExecutor"),
+      configuration,
       pipelineStoreTask,
       stateStore,
       runtimeInfo,

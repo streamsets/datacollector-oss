@@ -19,40 +19,35 @@
  */
 package com.streamsets.datacollector.bundles;
 
-import com.streamsets.datacollector.execution.PipelineStateStore;
-import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.store.PipelineStoreTask;
-import com.streamsets.datacollector.util.Configuration;
+public final class Constants {
 
-/**
- * Shared context describing the bundle that is actively being created.
- *
- */
-public interface BundleContext {
+  // General
 
   /**
-   * Fully provisioned SDC Configuration
+   * Configuration file that will be search in SDC_CONF for redactor configuration.
    */
-  public Configuration getConfiguration();
+  public static final String REDACTOR_CONFIG = "support-bundle-redactor.json";
+
+
+  // Log Generator
 
   /**
-   * Returns BuildInfo structure for the data collector.
+   * 1GB of raw logs is equal to roughly ~80MB after zip compression (depending on the type of logs)
    */
-  public BuildInfo getBuildInfo();
+  public static final String LOG_MAX_SIZE = "bundle.log.max_size";
+  public static final long DEFAULT_LOG_MAX_SIZE = (1024 * 1024 * 1024);
 
   /**
-   * Returns RuntimeInfo structure for the data collector.
+   * For GC, we want last ~50 MBs (random constant at this point).
    */
-  public RuntimeInfo getRuntimeInfo();
+  public static final String LOG_GC_MAX_SIZE = "bundle.log.gc_max_size";
+  public static final long DEFAULT_LOG_GC_MAX_SIZE = (50 * 1024 * 1024);
+
+  // Pipeline Generator
 
   /**
-   * Returns pipeline store for current data collector.
+   * Redaction regular expression for pipeline configuration keys
    */
-  public PipelineStoreTask getPipelineStore();
-
-  /**
-   * Returns pipeline state store for current data collector.
-   */
-  public PipelineStateStore getPipelineStateStore();
+  public static final String PIPELINE_REDACT_REGEXP = "bundle.pipeline.redact_regexp";
+  public static final String DEFAULT_PIPELINE_REDACT_REGEXP = ".*[Pp]assword.*";
 }

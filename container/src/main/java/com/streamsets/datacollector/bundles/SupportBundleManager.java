@@ -25,6 +25,7 @@ import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
@@ -61,8 +62,6 @@ public class SupportBundleManager implements BundleContext {
 
   private static final Logger LOG = LoggerFactory.getLogger(SupportBundleManager.class);
 
-  private static final String REDACTOR_CONFIG = "support-bundle-redactor.json";
-
   /**
    * Executor service for generating new bundles.
    *
@@ -70,6 +69,7 @@ public class SupportBundleManager implements BundleContext {
    */
   private final ExecutorService executor;
 
+  private final Configuration configuration;
   private final PipelineStoreTask pipelineStore;
   private final PipelineStateStore stateStore;
   private final RuntimeInfo runtimeInfo;
@@ -88,12 +88,14 @@ public class SupportBundleManager implements BundleContext {
   @Inject
   public SupportBundleManager(
     @Named("supportBundleExecutor") SafeScheduledExecutorService executor,
+    Configuration configuration,
     PipelineStoreTask pipelineStore,
     PipelineStateStore stateStore,
     RuntimeInfo runtimeInfo,
     BuildInfo buildInfo
   ) {
     this.executor = executor;
+    this.configuration = configuration;
     this.pipelineStore = pipelineStore;
     this.stateStore = stateStore;
     this.runtimeInfo = runtimeInfo;
@@ -143,7 +145,7 @@ public class SupportBundleManager implements BundleContext {
 
     // Create shared instance of redactor
     try {
-      redactor = StringRedactor.createFromJsonFile(runtimeInfo.getConfigDir() + "/" + REDACTOR_CONFIG);
+      redactor = StringRedactor.createFromJsonFile(runtimeInfo.getConfigDir() + "/" + Constants.REDACTOR_CONFIG);
     } catch (IOException e) {
       LOG.error("Can't load redactor configuration, bundles will not be redacted", e);
       redactor = StringRedactor.createEmpty();
@@ -231,6 +233,11 @@ public class SupportBundleManager implements BundleContext {
         LOG.error("Failed to finish generating the bundle", e);
       }
     }
+  }
+
+  @Override
+  public Configuration getConfiguration() {
+    return configuration;
   }
 
   @Override

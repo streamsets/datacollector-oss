@@ -23,6 +23,7 @@ import com.streamsets.datacollector.bundles.BundleContentGenerator;
 import com.streamsets.datacollector.bundles.BundleContentGeneratorDef;
 import com.streamsets.datacollector.bundles.BundleContext;
 import com.streamsets.datacollector.bundles.BundleWriter;
+import com.streamsets.datacollector.bundles.Constants;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
@@ -50,10 +51,13 @@ import java.util.Map;
 )
 public class PipelineContentGenerator implements BundleContentGenerator {
 
-  Pattern REDACT_CONFIG_KEY = Pattern.compile(".*[Pp]assword.*");
 
   @Override
   public void generateContent(BundleContext context, BundleWriter writer) throws IOException {
+    Pattern redactionPattern = Pattern.compile(
+      context.getConfiguration().get(Constants.PIPELINE_REDACT_REGEXP, Constants.DEFAULT_PIPELINE_REDACT_REGEXP)
+    );
+
     PipelineStoreTask store = context.getPipelineStore();
     PipelineStateStore stateStore = context.getPipelineStateStore();
 
@@ -68,7 +72,7 @@ public class PipelineContentGenerator implements BundleContentGenerator {
         // Pipeline (format is for "exported" pipeline, so that it can be easily imported)
         PipelineConfiguration pipelineConfig = store.load(name, rev);
         RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
-        redactPipeline(pipelineConfig);
+        redactPipeline(pipelineConfig, redactionPattern);
         PipelineEnvelopeJson pipelineEnvelope = new PipelineEnvelopeJson();
         pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
         pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
@@ -87,22 +91,22 @@ public class PipelineContentGenerator implements BundleContentGenerator {
     }
   }
 
-  private void redactPipeline(PipelineConfiguration pipelineConfig) {
-    redactConfigs(pipelineConfig.getConfiguration());
+  private void redactPipeline(PipelineConfiguration pipelineConfig, Pattern redactionPattern) {
+    redactConfigs(pipelineConfig.getConfiguration(), redactionPattern);
 
     for(StageConfiguration stage : pipelineConfig.getStages()) {
       List<Config> configs = stage.getConfiguration();
-      redactConfigs(configs);
+      redactConfigs(configs, redactionPattern);
       stage.setConfig(configs);
     }
   }
 
-  private void redactConfigs(List<Config> configuration) {
+  private void redactConfigs(List<Config> configuration, Pattern redactionPattern) {
     List<Config> toAdd = new ArrayList<>();
     List<Config> toRemove = new ArrayList<>();
 
     for(Config config: configuration) {
-      if(REDACT_CONFIG_KEY.matcher(config.getName()).matches()) {
+      if(redactionPattern.matcher(config.getName()).matches()) {
         Object newValue = config.getValue();
         if(newValue instanceof String) {
           String value = (String) newValue;
