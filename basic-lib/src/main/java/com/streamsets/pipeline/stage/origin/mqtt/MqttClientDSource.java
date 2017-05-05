@@ -34,7 +34,7 @@ import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
     version = 2,
     label = "MQTT Subscriber",
     description = "Uses an MQTT client to subscribe to a topic on the MQTT Broker",
-    icon = "mqtt.png",
+    icon = "mqtt_multithreaded.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     onlineHelpRefUrl = "index.html#Origins/MQTTSubscriber.html#task_wnz_mxt_lz",

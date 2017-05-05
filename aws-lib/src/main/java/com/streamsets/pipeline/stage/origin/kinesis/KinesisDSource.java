@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     version = 6,
     label = "Kinesis Consumer",
     description = "Reads data from Kinesis",
-    icon = "kinesis.png",
+    icon = "kinesis_multithreaded.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = KinesisSourceUpgrader.class,

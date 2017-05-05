@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
     version = 1,
     label = "Elasticsearch",
     description = "Read data from an Elasticsearch cluster",
-    icon = "elasticsearch.png",
+    icon = "elasticsearch_multithreaded.png",
     resetOffset = true,
     onlineHelpRefUrl = "index.html#Origins/Elasticsearch.html#task_pmh_xpm_2z"
 )

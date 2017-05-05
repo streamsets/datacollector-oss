@@ -33,7 +33,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     version = 1,
     label = "TCP Server Source",
     description = "Listens for TCP messages on one or more ports",
-    icon = "ethernet.png",
+    icon = "ethernet_multithreaded.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = TCPServerSourceUpgrader.class,
