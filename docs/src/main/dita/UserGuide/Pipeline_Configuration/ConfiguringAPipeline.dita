@@ -70,7 +70,9 @@
                                     <entry>Optional labels to assign to the pipeline. <p>Use labels
                                             to group similar pipelines. For example, you might want
                                             to group pipelines by database schema or by the test or
-                                            production environment.</p></entry>
+                                            production environment. </p><p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/NestedLabels"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Execution Mode <xref href="../Cluster_Mode/ClusterPipelines.dita"
@@ -450,9 +452,10 @@
                                             />s write to the same directory. </p><p>The <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> ID is stored in the following file:
-                                                <filepath>$SDC_DATA/sdc.id</filepath> file. For more information about environment variables, see <xref
-                                                    href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.
-                                        </p></entry>
+                                                <filepath>$SDC_DATA/sdc.id</filepath> file. For more
+                                            information about environment variables, see <xref
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                            />. </p></entry>
                                 </row>
                                 <row>
                                     <entry>File Wait Time (secs)</entry>
@@ -632,8 +635,7 @@
                     />), you can configure the pipeline to aggregate statistics on the
                         <uicontrol>Statistics</uicontrol> tab. </cmd>
                 <info>
-                            <p>For information on configuring a pipeline to aggregate statistics for
-                            <ph
+                    <p>For information on configuring a pipeline to aggregate statistics for <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                         />, see <xref href="../DPM/AggregatedStatistics.dita#concept_h2q_mb5_xw"
                         />.</p>

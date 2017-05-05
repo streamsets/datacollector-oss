@@ -27,7 +27,7 @@
                     console</indexterm></indexterm>The following image shows the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             console when you display all pipelines on the Home page:</p>
-        <image href="../Graphics/DCConsoleAllPipelines.png" scale="65" id="image_a41_tlq_1w"/>
+        <image href="../Graphics/DCConsoleAllPipelines.png" scale="60" id="image_a41_tlq_1w"/>
         <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 1.55* 3.85*">
             <sthead>
                 <stentry>Area/Icon</stentry>
@@ -48,14 +48,14 @@
             </strow>
             <strow>
                 <stentry>2</stentry>
-                <stentry>Filter field</stentry>
-                <stentry>Allows you to filter for pipelines by name.</stentry>
-            </strow>
-            <strow>
-                <stentry>3</stentry>
                 <stentry>Pipeline list</stentry>
                 <stentry>Allows you to select one or more pipelines and then perform an action on
                     the pipelines, such as starting, stopping, or exporting the pipelines.</stentry>
+            </strow>
+            <strow>
+                <stentry>3</stentry>
+                <stentry>Filter field</stentry>
+                <stentry>Allows you to filter for pipelines by name.</stentry>
             </strow>
             <strow>
                 <stentry>4</stentry>
