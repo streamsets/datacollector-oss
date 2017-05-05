@@ -22,6 +22,7 @@ package com.streamsets.datacollector.bundles;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.bundles.content.SimpleGenerator;
 import com.streamsets.datacollector.execution.PipelineStateStore;
+import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -61,12 +62,14 @@ public class TestSupportBundleManager {
     when(buildInfo.getVersion()).thenReturn("666");
     PipelineStoreTask pipelineStoreTask = mock(PipelineStoreTask.class);
     PipelineStateStore stateStore = mock(PipelineStateStore.class);
+    SnapshotStore snapshotStore = mock(SnapshotStore.class);
 
     manager = new SupportBundleManager(
       new SafeScheduledExecutorService(1, "supportBundleExecutor"),
       configuration,
       pipelineStoreTask,
       stateStore,
+      snapshotStore,
       runtimeInfo,
       buildInfo
     );

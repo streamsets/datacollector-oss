@@ -22,6 +22,7 @@ package com.streamsets.datacollector.bundles;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.execution.PipelineStateStore;
+import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -72,6 +74,7 @@ public class SupportBundleManager implements BundleContext {
   private final Configuration configuration;
   private final PipelineStoreTask pipelineStore;
   private final PipelineStateStore stateStore;
+  private final SnapshotStore snapshotStore;
   private final RuntimeInfo runtimeInfo;
   private final BuildInfo buildInfo;
 
@@ -91,6 +94,7 @@ public class SupportBundleManager implements BundleContext {
     Configuration configuration,
     PipelineStoreTask pipelineStore,
     PipelineStateStore stateStore,
+    SnapshotStore snapshotStore,
     RuntimeInfo runtimeInfo,
     BuildInfo buildInfo
   ) {
@@ -98,6 +102,7 @@ public class SupportBundleManager implements BundleContext {
     this.configuration = configuration;
     this.pipelineStore = pipelineStore;
     this.stateStore = stateStore;
+    this.snapshotStore = snapshotStore;
     this.runtimeInfo = runtimeInfo;
     this.buildInfo = buildInfo;
 
@@ -260,6 +265,11 @@ public class SupportBundleManager implements BundleContext {
     return stateStore;
   }
 
+  @Override
+  public SnapshotStore getSnapshotStore() {
+    return snapshotStore;
+  }
+
   private static class BundleWriterImpl implements BundleWriter {
 
     private final String prefix;
@@ -318,6 +328,13 @@ public class SupportBundleManager implements BundleContext {
     }
 
     @Override
+    public void write(String fileName, InputStream inputStream) throws IOException {
+      try(BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        copyReader(reader, fileName, 0);
+      }
+    }
+
+    @Override
     public void write(String dir, Path path) throws IOException {
       write(dir, path, 0);
     }
@@ -330,18 +347,8 @@ public class SupportBundleManager implements BundleContext {
       }
 
       try (BufferedReader reader = Files.newBufferedReader(path)) {
-        markStartOfFile(dir + "/" + path.getFileName());
-        if(startOffset > 0) {
-          reader.skip(startOffset);
-        }
-
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-          writeLn(line);
-        }
+        copyReader(reader, dir + "/" + path.getFileName(), startOffset);
       }
-
-      markEndOfFile();
     }
 
     @Override
@@ -349,6 +356,21 @@ public class SupportBundleManager implements BundleContext {
       ObjectMapper objectMapper = ObjectMapperFactory.get();
       markStartOfFile(fileName);
       write(objectMapper.writeValueAsString(object));
+      markEndOfFile();
+    }
+
+    private void copyReader(BufferedReader reader, String path, long startOffset) throws IOException {
+      markStartOfFile(path);
+
+      if(startOffset > 0) {
+        reader.skip(startOffset);
+      }
+
+      String line = null;
+      while ((line = reader.readLine()) != null) {
+        writeLn(line);
+      }
+
       markEndOfFile();
     }
   }

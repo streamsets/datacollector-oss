@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.bundles;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Properties;
 
@@ -61,6 +62,16 @@ public interface BundleWriter {
    * @param properties Properties to be serialized
    */
   public abstract void write(String fileName, Properties properties) throws IOException;
+
+  /**
+   * Copy data from given input stream to the bundle.
+   *
+   * The stream is redacted line by line.
+   *
+   * @param fileName Path and file name for the file in the bundle
+   * @param inputStream Input stream to be copied over
+   */
+  public abstract void write(String fileName, InputStream inputStream) throws IOException;
 
   /**
    * Copy file at given path to given directory, the file will be redacted line by line.

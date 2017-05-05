@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.bundles;
 
 import com.streamsets.datacollector.execution.PipelineStateStore;
+import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -55,4 +56,9 @@ public interface BundleContext {
    * Returns pipeline state store for current data collector.
    */
   public PipelineStateStore getPipelineStateStore();
+
+  /**
+   * Returns snapshot store for current data collector.
+   */
+  public SnapshotStore getSnapshotStore();
 }
