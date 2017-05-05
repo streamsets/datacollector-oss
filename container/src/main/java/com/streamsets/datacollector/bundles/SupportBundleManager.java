@@ -306,9 +306,9 @@ public class SupportBundleManager implements BundleContext {
 
       for(Map.Entry<Object, Object> entry: properties.entrySet()) {
         String key = (String) entry.getKey();
-        String value = (String) entry.getKey();
+        String value = (String) entry.getValue();
 
-        write(Utils.format("{}={}", key, value));
+        writeLn(Utils.format("{}={}", key, value));
       }
 
       markEndOfFile();
