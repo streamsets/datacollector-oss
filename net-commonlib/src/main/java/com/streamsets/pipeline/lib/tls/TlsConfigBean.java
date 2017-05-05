@@ -54,7 +54,7 @@ public class TlsConfigBean {
 
   public static final String DEFAULT_KEY_MANAGER_ALGORITHM = "SunX509";
 
-  private static final String[] MODERN_PROTOCOLS = {"TLSv1.2", "TLSv1.1"};
+  private static final String[] MODERN_PROTOCOLS = {"TLSv1.2"};
   private static final String[] MODERN_CIPHER_SUITES = {
       "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
       "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
