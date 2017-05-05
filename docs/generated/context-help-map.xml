@@ -16,6 +16,10 @@
                path="Getting_Started/GettingStarted_Title.html#task_r3q_fnx_pr"/>
    <appContext helpID="concept_hz3_5fk_fy"
                path="WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy"/>
+   <appContext helpID="concept_afr_hly_tz"
+               path="WhatsNew/WhatsNew_Title.html#concept_afr_hly_tz"/>
+   <appContext helpID="concept_ddx_bpm_pz"
+               path="WhatsNew/WhatsNew_Title.html#concept_ddx_bpm_pz"/>
    <appContext helpID="concept_cf2_sdz_fz"
                path="WhatsNew/WhatsNew_Title.html#concept_cf2_sdz_fz"/>
    <appContext helpID="concept_kzc_4sd_yy"
@@ -33,6 +37,8 @@
                path="Installation/InstallationAndConfig.html#concept_gbn_4lv_1r"/>
    <appContext helpID="concept_vzg_n2p_kq"
                path="Installation/InstallationAndConfig.html#concept_vzg_n2p_kq"/>
+   <appContext helpID="concept_jfj_qhq_tz"
+               path="Installation/InstallationAndConfig.html#concept_jfj_qhq_tz"/>
    <appContext helpID="concept_al3_qz5_jz"
                path="Installation/InstallationAndConfig.html#concept_al3_qz5_jz"/>
    <appContext helpID="task_bt1_zcp_kq"
@@ -68,7 +74,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_1461038881"/>
+               path="Installation/CMInstall-Overview.html#unique_1690119751"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -298,10 +304,10 @@
                path="Pipeline_Design/ErrorHandling.html#concept_y4z_n4y_5r"/>
    <appContext helpID="concept_wn2_jcz_dz"
                path="Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz"/>
-   <appContext helpID="concept_itf_55z_dz"
-               path="Pipeline_Design/RecordHeaderAttributes.html#concept_itf_55z_dz"/>
    <appContext helpID="concept_rd2_ghz_dz"
                path="Pipeline_Design/RecordHeaderAttributes.html#concept_rd2_ghz_dz"/>
+   <appContext helpID="concept_itf_55z_dz"
+               path="Pipeline_Design/RecordHeaderAttributes.html#concept_itf_55z_dz"/>
    <appContext helpID="concept_t1l_xwf_2z"
                path="Pipeline_Design/RecordHeaderAttributes.html#concept_t1l_xwf_2z"/>
    <appContext helpID="concept_ih1_3f1_2z"
@@ -371,6 +377,10 @@
                path="Pipeline_Design/XMLDFormat.html#concept_bnl_4fh_2y"/>
    <appContext helpID="concept_cgw_sc4_2y"
                path="Pipeline_Design/XMLDFormat.html#concept_cgw_sc4_2y"/>
+   <appContext helpID="concept_w3k_1ch_qz"
+               path="Pipeline_Design/XMLDFormat.html#concept_w3k_1ch_qz"/>
+   <appContext helpID="concept_jll_4wh_qz"
+               path="Pipeline_Design/XMLDFormat.html#concept_jll_4wh_qz"/>
    <appContext helpID="concept_tzk_1gk_dy"
                path="Pipeline_Design/XMLDFormat.html#concept_tzk_1gk_dy"/>
    <appContext helpID="concept_hfs_dkm_js"
@@ -411,6 +421,16 @@
                path="Pipeline_Configuration/PipelineConfiguration_title.html#concept_jh2_ysm_2s"/>
    <appContext helpID="concept_aky_bwm_2s"
                path="Pipeline_Configuration/PipelineConfiguration_title.html#concept_aky_bwm_2s"/>
+   <appContext helpID="concept_mp1_t3l_rz"
+               path="Pipeline_Configuration/PipelineConfiguration_title.html#concept_mp1_t3l_rz"/>
+   <appContext helpID="concept_fdm_3tl_rz"
+               path="Pipeline_Configuration/PipelineConfiguration_title.html#concept_fdm_3tl_rz"/>
+   <appContext helpID="concept_rby_1rl_rz"
+               path="Pipeline_Configuration/PipelineConfiguration_title.html#concept_rby_1rl_rz"/>
+   <appContext helpID="concept_sbt_qql_rz"
+               path="Pipeline_Configuration/PipelineConfiguration_title.html#concept_sbt_qql_rz"/>
+   <appContext helpID="concept_mtn_k4j_rz"
+               path="Pipeline_Configuration/PipelineConfiguration_title.html#concept_mtn_k4j_rz"/>
    <appContext helpID="concept_azs_swf_jr"
                path="Pipeline_Configuration/PipelineConfiguration_title.html#concept_azs_swf_jr"/>
    <appContext helpID="concept_ofb_1cm_xq"
@@ -724,6 +744,8 @@
                path="Origins/MapRStreamsCons.html#task_bfz_gch_2v"/>
    <appContext helpID="concept_bk4_2rs_ns"
                path="Origins/MongoDB.html#concept_bk4_2rs_ns"/>
+   <appContext helpID="concept_gzz_kdr_tz"
+               path="Origins/MongoDB.html#concept_gzz_kdr_tz"/>
    <appContext helpID="concept_kx3_zrs_ns"
                path="Origins/MongoDB.html#concept_kx3_zrs_ns"/>
    <appContext helpID="concept_oy2_1dt_ns"
@@ -734,6 +756,8 @@
    <appContext helpID="task_mdf_2rs_ns" path="Origins/MongoDB.html#task_mdf_2rs_ns"/>
    <appContext helpID="concept_mjn_yqw_4y"
                path="Origins/MongoDBOplog.html#concept_mjn_yqw_4y"/>
+   <appContext helpID="concept_ovt_vpt_tz"
+               path="Origins/MongoDBOplog.html#concept_ovt_vpt_tz"/>
    <appContext helpID="concept_iry_ykm_sy"
                path="Origins/MongoDBOplog.html#concept_iry_ykm_sy"/>
    <appContext helpID="concept_cwt_gd3_sy"
@@ -1557,6 +1581,8 @@
                path="Destinations/MapRStreamsProd.html#task_tbh_nbn_2v"/>
    <appContext helpID="concept_eth_k5n_4v"
                path="Destinations/MongoDB.html#concept_eth_k5n_4v"/>
+   <appContext helpID="concept_ppl_3qt_tz"
+               path="Destinations/MongoDB.html#concept_ppl_3qt_tz"/>
    <appContext helpID="concept_bkc_m24_4v"
                path="Destinations/MongoDB.html#concept_bkc_m24_4v"/>
    <appContext helpID="task_d5l_qh2_ww"
@@ -1918,6 +1944,8 @@
                path="Cluster_Mode/ClusterPipelines_title.html#task_i3h_q3w_hx"/>
    <appContext helpID="task_akz_w5b_ws"
                path="Cluster_Mode/ClusterPipelines_title.html#task_akz_w5b_ws"/>
+   <appContext helpID="concept_pdf_r5y_fz"
+               path="Cluster_Mode/ClusterPipelines_title.html#concept_pdf_r5y_fz"/>
    <appContext helpID="concept_jjk_23z_sq"
                path="Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq"/>
    <appContext helpID="concept_jtn_s3m_lq"
@@ -1978,6 +2006,10 @@
                path="Alerts/RulesAlerts_title.html#concept_rj4_y4g_q5"/>
    <appContext helpID="task_dyk_ptm_q5"
                path="Alerts/RulesAlerts_title.html#task_dyk_ptm_q5"/>
+   <appContext helpID="concept_rtm_sfk_rz"
+               path="Alerts/RulesAlerts_title.html#concept_rtm_sfk_rz"/>
+   <appContext helpID="task_l2p_53t_rz"
+               path="Alerts/RulesAlerts_title.html#task_l2p_53t_rz"/>
    <appContext helpID="task_f3v_1hw_1r"
                path="Alerts/RulesAlerts_title.html#task_f3v_1hw_1r"/>
    <appContext helpID="concept_asx_fdz_sq"
@@ -2005,9 +2037,9 @@
    <appContext helpID="concept_wc5_ysp_1w"
                path="Pipeline_Maintenance/PipelineMaintenance_title.html#concept_wc5_ysp_1w"/>
    <appContext helpID="concept_s4p_ns5_nz"
-               path="Pipeline_Maintenance/PipelineStates-Understanding.html#concept_s4p_ns5_nz"/>
+               path="Pipeline_Maintenance/PipelineMaintenance_title.html#concept_s4p_ns5_nz"/>
    <appContext helpID="concept_ijz_5s5_nz"
-               path="Pipeline_Maintenance/PipelineStates-Understanding.html#concept_ijz_5s5_nz"/>
+               path="Pipeline_Maintenance/PipelineMaintenance_title.html#concept_ijz_5s5_nz"/>
    <appContext helpID="task_wpy_1xr_5q"
                path="Pipeline_Maintenance/PipelineMaintenance_title.html#task_wpy_1xr_5q"/>
    <appContext helpID="task_ixk_mjt_kz"
@@ -2139,7 +2171,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_772472970"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_2055995594"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
