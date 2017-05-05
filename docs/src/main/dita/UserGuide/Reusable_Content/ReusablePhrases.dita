@@ -2821,5 +2821,12 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   </dl></p>
             <p id="MongoDBCredentialsConclusion">If you enter credentials in both the connection string and in the Credentials tab,
                   the Credentials tab takes precedence.</p>
+            <draft-comment author="alisontaylor">This text is used in Configuring a Pipeline and in
+                  Adding Labels to a Pipeline</draft-comment>
+            <p id="NestedLabels">You can use nested labels to create a hierarchy of pipeline
+                  groupings. Enter nested labels using the following
+                  format:<codeblock>&lt;label1>/&lt;label2>/&lt;label3></codeblock>For example, you
+                  might want to group pipelines in the test environment by the origin system. You
+                  add the labels Test/HDFS and Test/Elasticsearch to the appropriate pipelines.</p>
       </conbody>
 </concept>
