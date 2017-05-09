@@ -27,12 +27,6 @@
                 <li>Scripting processors - The state object is available only for the instance of
                     the processor stage it is defined in. If the pipeline executes in cluster mode,
                     the state object is not shared across nodes. </li>
-            </ul><ul id="ul_ow3_fnr_rz">
-                <li>Spark Evaluator processor - Use the Spark Evaluator processor in cluster
-                    pipelines only in development or test environments. This processor is not
-                    supported in cluster pipelines in production environments at this
-                        time.<draft-comment author="Loretta">Remove the Spark bullet in 2.6. Logging
-                        a doc bug.</draft-comment></li>
             </ul></p>
  </conbody>
 </concept>

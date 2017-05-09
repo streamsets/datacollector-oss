@@ -16,9 +16,7 @@
 <concept id="concept_cpx_1lm_zx">
  <title>Spark Evaluator</title>
  <shortdesc>The Spark Evaluator performs custom processing within a pipeline based on a Spark
-        application that you develop. Use the Spark Evaluator in pipelines configured for standalone
-        mode. In a development or test environment, you can also use the processor in pipelines
-        configured for cluster execution mode. </shortdesc>
+        application that you develop.</shortdesc>
  <conbody>
         <p><indexterm>Spark Evaluator
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Spark

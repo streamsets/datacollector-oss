@@ -14,17 +14,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_b1l_5lv_jz">
- <title>Cluster Pipelines (Beta)</title>
-    <shortdesc>The Spark Evaluator processor provides beta support of cluster mode pipelines. In a
-        development or test environment, you can use the processor in pipelines that process data
-        from a Kafka or MapR cluster in cluster streaming mode. You cannot use the processor in
-        cluster pipelines that process data from a MapR cluster in cluster batch mode or from HDFS. </shortdesc>
+ <title>Cluster Pipelines</title>
+    <shortdesc>You can use the Spark Evaluator processor in cluster pipelines that process data from
+        a Kafka or MapR cluster in cluster streaming mode. You cannot use the processor in cluster
+        pipelines that process data from a MapR cluster in cluster batch mode or from HDFS. </shortdesc>
  <conbody>
-        <p>
-            <note type="warning">At this time, do not use the Spark Evaluator processor in cluster
-                mode pipelines in a production environment. In a future release, it will be
-                supported in a production environment.</note>
-        </p>
         <p><indexterm>Spark Evaluator processor<indexterm>cluster
             pipelines</indexterm></indexterm>In a cluster pipeline, the cluster manager spawns a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
