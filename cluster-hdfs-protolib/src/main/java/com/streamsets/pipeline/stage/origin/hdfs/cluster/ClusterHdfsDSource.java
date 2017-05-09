@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedSource;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -45,14 +46,14 @@ import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
 @HideConfigs(value = {"clusterHDFSConfigBean.dataFormatConfig.compression", "clusterHDFSConfigBean.dataFormatConfig.includeCustomDelimiterInTheText"})
 @GenerateResourceBundle
 public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements ErrorListener {
-  private ClusterHdfsSource clusterHDFSSource;
+  private Source clusterHDFSSource;
 
   @ConfigDefBean
   public ClusterHdfsConfigBean clusterHDFSConfigBean;
 
   @Override
   protected Source createSource() {
-    clusterHDFSSource = new ClusterHdfsSource(clusterHDFSConfigBean);
+    clusterHDFSSource = new HadoopConfigurationSynchronizedSource(new ClusterHdfsSource(clusterHDFSConfigBean));
     return clusterHDFSSource;
   }
 

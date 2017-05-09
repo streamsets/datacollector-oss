@@ -1171,8 +1171,7 @@ public class HBaseTargetIT {
     dTarget.ignoreMissingFieldPath = ignoreMissingFieldPath;
     dTarget.ignoreInvalidColumn = ignoreInvalidColumn;
     dTarget.timeDriver = timeDriver;
-    HBaseTarget target = (HBaseTarget)dTarget.createTarget();
-    //new TargetRunner.Builder(HBaseDTarget.class, target);
+    Target target = dTarget.createTarget();
 
     TargetRunner targetRunner =
         new TargetRunner.Builder(HBaseDTarget.class, target)

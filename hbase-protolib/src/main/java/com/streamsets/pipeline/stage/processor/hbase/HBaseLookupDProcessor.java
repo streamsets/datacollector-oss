@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.hbase;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedProcessor;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -44,6 +45,6 @@ public class HBaseLookupDProcessor extends DProcessor {
 
   @Override
   protected Processor createProcessor() {
-    return new HBaseLookupProcessor(conf);
+    return new HadoopConfigurationSynchronizedProcessor(new HBaseLookupProcessor(conf));
   }
 }

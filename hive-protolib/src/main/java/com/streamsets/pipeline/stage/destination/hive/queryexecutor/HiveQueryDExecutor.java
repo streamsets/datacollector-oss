@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hive.queryexecutor;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedExecutor;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Executor;
@@ -51,6 +52,6 @@ public class HiveQueryDExecutor extends DExecutor {
 
   @Override
   protected Executor createExecutor() {
-    return new HiveQueryExecutor(config);
+    return new HadoopConfigurationSynchronizedExecutor(new HiveQueryExecutor(config));
   }
 }

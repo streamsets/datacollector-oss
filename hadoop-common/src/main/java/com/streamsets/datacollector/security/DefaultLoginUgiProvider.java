@@ -39,13 +39,11 @@ public class DefaultLoginUgiProvider extends LoginUgiProvider {
     AccessControlContext accessContext = AccessController.getContext();
     Subject subject = Subject.getSubject(accessContext);
     // As per SDC-2917 doing this avoids deadlock
+    UserGroupInformation loginUgi;
     synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {
       // call some method to force load static block in KerberosName
       KerberosName.hasRulesBeenSet();
-    }
-    UserGroupInformation.setConfiguration(hdfsConfiguration);
-    UserGroupInformation loginUgi;
-    synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {
+      UserGroupInformation.setConfiguration(hdfsConfiguration);
       if (UserGroupInformation.isSecurityEnabled()) {
         loginUgi = UserGroupInformation.getUGIFromSubject(subject);
       } else {
@@ -53,7 +51,8 @@ public class DefaultLoginUgiProvider extends LoginUgiProvider {
         loginUgi = UserGroupInformation.getLoginUser();
       }
       if (LOG.isDebugEnabled()) {
-        LOG.debug("Subject = {}, Principals = {}, Login UGI = {}",
+        LOG.debug(
+            "Subject = {}, Principals = {}, Login UGI = {}",
             subject,
             subject == null ? "null" : subject.getPrincipals(),
             loginUgi
