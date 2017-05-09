@@ -19,6 +19,8 @@
  */
 package com.streamsets.datacollector.bundles;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -102,4 +104,13 @@ public interface BundleWriter {
    * @throws IOException
    */
   public abstract void writeJson(String fileName, Object object) throws IOException;
+
+  /**
+   * Generate JSON Generator to stream JSON structure without the need to have it in memory.
+   *
+   * This method will *not* redact data!
+   *
+   * @param fileName Name that should be used in the bundle
+   */
+  public abstract JsonGenerator createGenerator(String fileName) throws IOException;
 }

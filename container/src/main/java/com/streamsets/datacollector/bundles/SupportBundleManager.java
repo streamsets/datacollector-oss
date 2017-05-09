@@ -19,6 +19,8 @@
  */
 package com.streamsets.datacollector.bundles;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -42,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.nio.file.Files;
@@ -359,6 +362,12 @@ public class SupportBundleManager implements BundleContext {
       markEndOfFile();
     }
 
+    @Override
+    public JsonGenerator createGenerator(String fileName) throws IOException {
+      markStartOfFile(fileName);
+      return new JsonFactory().createGenerator(new DelegateOutputStreamIgnoreClose(zipOutputStream));
+    }
+
     private void copyReader(BufferedReader reader, String path, long startOffset) throws IOException {
       markStartOfFile(path);
 
@@ -372,6 +381,25 @@ public class SupportBundleManager implements BundleContext {
       }
 
       markEndOfFile();
+    }
+  }
+
+  private static class DelegateOutputStreamIgnoreClose extends OutputStream {
+
+    ZipOutputStream zipOutputStream;
+
+    public DelegateOutputStreamIgnoreClose(ZipOutputStream stream) {
+      this.zipOutputStream = stream;
+    }
+
+    @Override
+    public void write(int b) throws IOException {
+      zipOutputStream.write(b);
+    }
+
+    @Override
+    public void close() throws IOException {
+      // Nothing, we don't want the underlying stream to be closed
     }
   }
 }
