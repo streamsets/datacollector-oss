@@ -43,6 +43,7 @@ angular
                                           configuration, pipelineConstant, Analytics, $route, $translate) {
     $location.search('auth_token', null);
     $location.search('auth_user', null);
+    $rootScope.common.successList = [];
 
     if ($routeParams.errors) {
       $rootScope.common.errors = [$routeParams.errors];
