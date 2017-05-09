@@ -13,20 +13,21 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_vhl_mfj_rx">
+<concept id="concept_eck_fm3_vz">
  <title>Event Generation</title>
- <conbody>
-  <p><indexterm>HDFS File Metadata executor<indexterm>event
-                generation</indexterm></indexterm><indexterm>event generation<indexterm>HDFS File
-                    Metadata executor</indexterm></indexterm>The HDFS File Metadata executor can
-            generate events that you can use in an event stream. When you enable event generation,
-            the executor generates events each time it changes file metadata or creates an empty
-            file.</p>
-        <p>HDFS File Metadata events can be used in any logical way. For example: <ul>
+    <conbody>
+        <p><indexterm>Azure Data Lake Store destination<indexterm>event
+                generation</indexterm></indexterm><indexterm>event framework<indexterm>Azure Data
+                    Lake Store destination event generation</indexterm></indexterm>The Azure Data
+            Lake Store destination can generate events that you can use in an event stream. When you
+            enable event generation, Azure Data Lake Store generates event records each time the
+            destination completes writing to an output file or completes streaming a whole file. </p>
+        <p>Azure Data Lake Store events can be used in any logical way. For example: <ul
+                id="ul_dzf_tpg_zx">
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
                 />
             </ul></p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
- </conbody>
+    </conbody>
 </concept>

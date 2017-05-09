@@ -23,7 +23,8 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EventGen-PipeFin-Ph1"
                 > I</ph> The origin also generates an event when a query completes successfully and
             when it fails to complete.</p>
-        <p>You can use JDBC Query Consumer events in the following ways:<ul id="ul_i2s_3h1_4z">
+        <p>JDBC Query Consumer events can be used in any logical way. For example: <ul
+                id="ul_i2s_3h1_4z">
                 <li>With the Pipeline Finisher executor to stop the pipeline and transition the
                     pipeline to a Finished state when the origin completes processing available
                         data.<p>When you restart a pipeline stopped by the Pipeline Finisher

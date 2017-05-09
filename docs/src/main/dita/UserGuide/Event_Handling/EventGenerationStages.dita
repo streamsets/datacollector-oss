@@ -87,24 +87,6 @@
                             </entry>
                         </row>
                         <row>
-                            <entry>Amazon S3 destination</entry>
-                            <entry>
-                                <ul id="ul_lb3_zck_px">
-                                    <li>Completes writing to an object.</li>
-                                    <li>Completes streaming a whole file.</li>
-                                </ul>
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>Hadoop FS destination</entry>
-                            <entry>
-                                <ul id="ul_x5c_cdk_px">
-                                    <li>Closes a file.</li>
-                                    <li>Completes streaming a whole file.</li>
-                                </ul>
-                            </entry>
-                        </row>
-                        <row>
                             <entry>Groovy Evaluator processor</entry>
                             <entry>
                                 <ul id="ul_cj5_tnp_1y">
@@ -125,6 +107,33 @@
                             <entry>
                                 <ul id="ul_ujt_wnp_1y">
                                     <li>Runs a script that generates events.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Amazon S3 destination</entry>
+                            <entry>
+                                <ul id="ul_lb3_zck_px">
+                                    <li>Completes writing to an object.</li>
+                                    <li>Completes streaming a whole file.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Azure Data Lake Store destination</entry>
+                            <entry>
+                                <ul id="ul_wny_nw4_vz">
+                                    <li>Closes a file.</li>
+                                    <li>Completes streaming a whole file.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Hadoop FS destination</entry>
+                            <entry>
+                                <ul id="ul_x5c_cdk_px">
+                                    <li>Closes a file.</li>
+                                    <li>Completes streaming a whole file.</li>
                                 </ul>
                             </entry>
                         </row>

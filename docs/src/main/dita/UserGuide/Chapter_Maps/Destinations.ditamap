@@ -51,6 +51,9 @@
    <topicref href="../Destinations/DataLakeStore-DirTemplates.dita"/>
    <topicref href="../Destinations/DataLakeStore-TimeBasis.dita"/>
    <topicref href="../Destinations/DataLakeStore-IdleTimeout.dita"/>
+   <topicref href="../Destinations/DataLakeStore-EventGeneration.dita">
+    <topicref href="../Destinations/DataLakeStore-EventRecords.dita"/>
+   </topicref>
    <topicref href="../Destinations/DataLakeStore-DataFormats.dita"/>
    <topicref href="../Destinations/DataLakeStore-Configuring.dita"/>
   </topicref>

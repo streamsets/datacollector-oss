@@ -35,5 +35,8 @@
             schema, and roll files based on record header attributes. For more information, see
                 <xref href="../Pipeline_Design/RecordBasedWrites-overview.dita#concept_lmn_gdc_1w"
             />.</p>
+        <p>The destination can also generate events for an event stream. For more information about
+            the event framework, see <xref
+                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
  </conbody>
 </concept>

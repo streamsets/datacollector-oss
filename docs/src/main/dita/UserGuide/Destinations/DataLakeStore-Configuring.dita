@@ -25,7 +25,8 @@
                 before you configure the destination.</p>
         </context>
         <steps id="steps_qlj_xrw_zx">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-D-E-EventHandling">
                 <cmd/>
             </step>
             <step>
@@ -139,6 +140,10 @@
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-MaxRecords">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-MaxFileSize">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Idle Timeout <xref
                                             href="DataLakeStore-IdleTimeout.dita">
@@ -248,6 +253,14 @@
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-FileExists">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-IncludeChecksum">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ChecksumAlgo">
                                     <entry/>
                                 </row>
                             </tbody>

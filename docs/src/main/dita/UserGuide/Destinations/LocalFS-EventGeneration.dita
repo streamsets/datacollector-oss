@@ -21,14 +21,13 @@
                     destination</indexterm></indexterm>The Local FS destination <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-ph-EventGen1"
             /></p>
-        <p>Local FS events can be used in several ways:<ul id="ul_swm_vyj_px">
+        <p>Local FS events can be used in any logical way. For example: <ul id="ul_swm_vyj_px">
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FilePerms"/>
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
                 />
             </ul></p>
-        <p>For an overview on the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
  </conbody>
 </concept>

@@ -22,7 +22,7 @@
             generation</indexterm></indexterm>The Salesforce origin <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EventGen-PipeFin-Ph1"
             /></p>
-        <p>You can use Salesforce events in the following ways:<ul id="ul_znq_hf1_4z">
+        <p>Salesforce events can be used in any logical way. For example: <ul id="ul_znq_hf1_4z">
                 <li>With the Pipeline Finisher executor to stop the pipeline and transition the
                     pipeline to a Finished state when the origin completes processing available
                         data.<p>When you restart a pipeline stopped by the Pipeline Finisher

@@ -115,6 +115,14 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>Azure Data Lake Store</entry>
+                            <entry>
+                                <ul>
+                                    <li>Any destination for event storage.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>Hadoop FS</entry>
                             <entry>
                                 <ul id="ul_hbx_blh_tx">

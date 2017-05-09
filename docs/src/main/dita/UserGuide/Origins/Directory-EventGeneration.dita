@@ -21,9 +21,11 @@
             Directory origin <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-EventGen1"
             /></p>
-        <p>Directory <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-EventGen-FileStorage"
-            /></p>
+        <p>Directory can be used in any logical way. For example: <ul id="ul_xcz_dx4_vz">
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
+                />
+            </ul></p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
  </conbody>
 </concept>

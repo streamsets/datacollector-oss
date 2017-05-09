@@ -21,12 +21,11 @@
                     destination</indexterm></indexterm>The MapR FS destination <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-ph-EventGen1"
             /></p>
-        <p>MapR FS events can be used in several ways:<ul
+        <p>MapR FS events can be used in any logical way. For example: <ul
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-ul-Event-UseCases"
                 id="ul_sww_spb_rx">
                 <li/>
             </ul></p>
-        <p>For an overview on the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
  </conbody>
 </concept>

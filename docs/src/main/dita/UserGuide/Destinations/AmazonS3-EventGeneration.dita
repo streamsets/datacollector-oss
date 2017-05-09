@@ -14,23 +14,23 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_aqq_tt2_px">
- <title>Event Generation</title>
- <conbody>
+    <title>Event Generation</title>
+    <conbody>
         <p><indexterm>Amazon S3 destination<indexterm>event
                 generation</indexterm></indexterm><indexterm>event framework<indexterm>Amazon S3
                     destination event generation</indexterm></indexterm>The Amazon S3 destination
             can generate events that you can use in an event stream. When you enable event
             generation, Amazon S3 generates event records each time the destination completes
             writing to an object or completes streaming a whole file. </p>
-        <p>Amazon S3 events can be used as follows:<ul id="ul_dzf_tpg_zx">
+        <p> Amazon S3 events can be used in any logical way. For example: <ul id="ul_dzf_tpg_zx">
                 <li>With the HDFS File Metadata executor to move or change permissions on
                     fully-written objects or whole files. <p>For an example, see <xref
                             href="../Event_Handling/CaseStudy-FileManagement.dita#concept_d1q_xl4_lx"
                         />.</p></li>
                 <li
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"/>
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
+                />
             </ul></p>
-        <p>For more information about the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
- </conbody>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
+    </conbody>
 </concept>

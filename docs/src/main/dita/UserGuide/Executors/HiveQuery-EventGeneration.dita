@@ -23,5 +23,11 @@
         <p>The executor submits queries to Hive each time it receives an event record. When you
             enable event generation, the executor generates events each time it determines if the
             submitted query has completed. </p>
+        <p>Hive Query events can be used in any logical way. For example: <ul id="ul_dzf_tpg_zx">
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
+                />
+            </ul></p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
  </conbody>
 </concept>

@@ -22,7 +22,8 @@
             Multitable Consumer origin <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EventGen-PipeFin-mini"
             /> queries for all tables.</p>
-        <p>You can use JDBC Multitable Consumer events in the following ways:<ul id="ul_xjk_kf1_4z">
+        <p>JDBC Multitable Consumer events can be used in any logical way. For example: <ul
+                id="ul_xjk_kf1_4z">
                 <li>With the Pipeline Finisher executor to stop the pipeline and transition the
                     pipeline to a Finished state when the origin completes processing available
                         data.<p>When you restart a pipeline stopped by the Pipeline Finisher

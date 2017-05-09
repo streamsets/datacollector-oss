@@ -23,8 +23,8 @@
             the destination creates event records each time it updates the Hive metastore, including
             when it creates a table, adds columns, or creates a partition. <note>Updates to existing
                 tables, columns and partitions are treated as creates since the destination does not
-                change or delete existing structures. </note>Hive Metastore events can be used as
-            follows: <ul id="ul_ohl_4pg_zx">
+                change or delete existing structures. </note>Hive Metastore events can be used in
+            any logical way. For example: <ul id="ul_ohl_4pg_zx">
                 <li>With the Hive Query executor to run Hive or Impala queries after updating the
                     Hive metastore.<p>For an example, see <xref
                             href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"
@@ -33,7 +33,6 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
                 />
             </ul></p>
-        <p>For an overview of the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
  </conbody>
 </concept>

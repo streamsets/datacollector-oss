@@ -21,12 +21,13 @@
                     executor</indexterm></indexterm>The Spark executor can generate events that you
             can use in an event stream. When you enable event generation, the executor generates
             events each time it starts a Spark application. </p>
-        <p>Spark executor <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-EventGen-FileStorage"
-            /></p>
+        <p>Spark executor events can be used in any logical way. For example: <ul id="ul_dzf_tpg_zx">
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
+                />
+            </ul></p>
         <p>Since Spark executor events include the application ID for each application that it
             starts, you might generate events to keep a log of the application IDs.</p>
-        <p>For more information about the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
     </conbody>
 </concept>
