@@ -37,13 +37,14 @@ import java.util.List;
 import java.util.TimeZone;
 
 @StageDef(
-    version=1,
+    version = 2,
     label="Hive Metadata",
     description = "Generates Hive metadata and write information for HDFS",
     icon="metadata.png",
     outputStreams = HiveMetadataOutputStreams.class,
     privateClassLoader = true,
-    onlineHelpRefUrl = "index.html#Processors/HiveMetadata.html#task_hpg_pft_zv"
+    onlineHelpRefUrl = "index.html#Processors/HiveMetadata.html#task_hpg_pft_zv",
+    upgrader = HiveMetadataProcessorUpgrader.class
 )
 
 @ConfigGroups(Groups.class)
