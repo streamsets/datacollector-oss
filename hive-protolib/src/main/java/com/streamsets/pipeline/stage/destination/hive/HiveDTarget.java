@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hive;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedTarget;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -143,7 +144,7 @@ public class HiveDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new HiveTarget(
+    return new HadoopConfigurationSynchronizedTarget(new HiveTarget(
         hiveUrl,
         schema,
         table,
@@ -153,6 +154,6 @@ public class HiveDTarget extends DTarget {
         txnBatchSize,
         bufferLimitKb,
         additionalHiveProperties
-    );
+    ));
   }
 }

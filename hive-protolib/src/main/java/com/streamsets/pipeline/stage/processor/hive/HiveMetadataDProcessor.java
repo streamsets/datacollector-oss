@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.processor.hive;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedProcessor;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Processor;
@@ -166,7 +167,7 @@ public class HiveMetadataDProcessor extends DProcessor {
 
   @Override
   protected Processor createProcessor() {
-    return new HiveMetadataProcessor(
+    return new HadoopConfigurationSynchronizedProcessor(new HiveMetadataProcessor(
         dbNameEL,
         tableNameEL,
         partitionList,
@@ -177,7 +178,6 @@ public class HiveMetadataDProcessor extends DProcessor {
         timeDriver,
         decimalDefaultsConfig,
         TimeZone.getTimeZone(timeZoneID)
-    );
+    ));
   }
-
 }

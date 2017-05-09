@@ -20,6 +20,7 @@
 
 package com.streamsets.pipeline.stage.destination.hbase;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedTarget;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -130,7 +131,7 @@ public class HBaseDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new HBaseTarget(
+    return new HadoopConfigurationSynchronizedTarget(new HBaseTarget(
         hBaseConnectionConfig,
         hbaseRowKey,
         rowKeyStorageType,
@@ -139,7 +140,7 @@ public class HBaseDTarget extends DTarget {
         ignoreMissingFieldPath,
         ignoreInvalidColumn,
         timeDriver
-    );
+    ));
   }
 
 }

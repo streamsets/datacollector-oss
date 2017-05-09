@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedTarget;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -47,7 +48,7 @@ public class HdfsDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new HdfsTarget(hdfsTargetConfigBean);
+    return new HadoopConfigurationSynchronizedTarget(new HdfsTarget(hdfsTargetConfigBean));
   }
 
 }
