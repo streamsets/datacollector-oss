@@ -74,7 +74,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_1690119751"/>
+               path="Installation/CMInstall-Overview.html#unique_1733417284"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -268,6 +268,8 @@
                path="Upgrade/PostUpgrade.html#concept_yyv_v45_zw"/>
    <appContext helpID="task_ijh_wtw_xy"
                path="Upgrade/Upgrade-ExternalSystems.html#task_ijh_wtw_xy"/>
+   <appContext helpID="concept_spf_2gq_vz"
+               path="Upgrade/Upgrade-ExternalSystems.html#concept_spf_2gq_vz"/>
    <appContext helpID="concept_spt_33c_yy"
                path="Upgrade/Upgrade-ExternalSystems.html#concept_spt_33c_yy"/>
    <appContext helpID="concept_dgz_p45_gy"
@@ -2171,7 +2173,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_2055995594"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_332401274"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
