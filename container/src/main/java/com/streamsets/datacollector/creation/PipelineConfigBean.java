@@ -276,7 +276,7 @@ public class PipelineConfigBean implements Stage {
       group = "NOTIFICATIONS"
   )
   @ListBeanModel
-  public List<PipelineWebhookConfig> webhookConfigs;
+  public List<PipelineWebhookConfig> webhookConfigs = Collections.emptyList();
 
   @Override
   public List<ConfigIssue> init(Info info, Context context) {

@@ -45,6 +45,7 @@ public class MiniSDC {
   private Map<String, List<URL>> streamsetsLibsUrls;
   private Map<String, List<URL>> userLibsUrls;
   private DataCollector dataCollector;
+  private ClassLoader containerCL;
 
   public MiniSDC(String libraryRoot) {
     this.libraryRoot = libraryRoot;
@@ -60,7 +61,7 @@ public class MiniSDC {
     userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", null, null, null);
 
     ClassLoader apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, ClassLoader.getSystemClassLoader());
-    ClassLoader containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);
+    containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);
     List<ClassLoader> stageLibrariesCLs = new ArrayList<>();
     Map<String, List<URL>> libsUrls = new LinkedHashMap<>();
     libsUrls.putAll(streamsetsLibsUrls);
@@ -158,6 +159,12 @@ public class MiniSDC {
   }
 
   public List<? extends ValidationIssue> validatePipeline(String name, String pipelineJson) throws IOException {
-    return dataCollector.validatePipeline(name, pipelineJson);
+    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(containerCL);
+      return dataCollector.validatePipeline(name, pipelineJson);
+    } finally {
+      Thread.currentThread().setContextClassLoader(originalClassLoader);
+    }
   }
 }

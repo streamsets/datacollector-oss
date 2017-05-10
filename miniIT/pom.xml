@@ -125,10 +125,12 @@
       <artifactId>streamsets-datacollector-dist</artifactId>
       <scope>test</scope>
       <exclusions>
+        <!--
         <exclusion>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-api</artifactId>
         </exclusion>
+        -->
         <exclusion>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-cli</artifactId>
