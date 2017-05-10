@@ -61,7 +61,7 @@ public enum CreationError implements ErrorCode {
   CREATION_040("ComplexField configuration is not a LIST, it is a '{}'"),
   CREATION_041("Failed to instantiate ComplexField bean '{}' [ERROR]: {}"),
   CREATION_042("ComplexField configuration value is invalid: {}"),
-  CREATION_043("ComplexField could not load class: {}"),
+  CREATION_043("ComplexField could not load class '{}' in class loader {}"),
 
   CREATION_050("Configuration value cannot be NULL"),
   CREATION_051("Configuration type '{}' is invalid [ERROR]"),

@@ -779,11 +779,11 @@ public abstract class PipelineBeanCreator {
     } else {
       boolean error = false;
       List<Object> list = new ArrayList<>();
+      String className = configDef.getModel().getListBeanClass().getName();
       try {
         // we need to use the classloader fo the stage to instatiate the ComplexField so if the stage has a private
         // classloader we use the same one.
-        Class klass = Thread.currentThread().getContextClassLoader()
-                            .loadClass(configDef.getModel().getListBeanClass().getName());
+        Class klass = Thread.currentThread().getContextClassLoader().loadClass(className);
         List listValue = (List) value;
         for (int i = 0; i < listValue.size(); i++) {
           Map<String, Object> configElement;
@@ -810,8 +810,14 @@ public abstract class PipelineBeanCreator {
         value = (error) ? null : list;
       } catch (ClassNotFoundException ex) {
         value = null;
-        errors.add(issueCreator.create(configDef.getGroup(), configConf.getName(), CreationError.CREATION_043,
-                                       ex.toString()));
+        LOG.debug("Can't load class {}", className, ex);
+        errors.add(issueCreator.create(
+          configDef.getGroup(),
+          configConf.getName(),
+          CreationError.CREATION_043,
+          ex.toString(),
+          Thread.currentThread().getContextClassLoader().toString()
+        ));
       }
     }
     return value;
