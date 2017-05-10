@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.maprdb;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedTarget;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
@@ -44,7 +45,7 @@ public class MapRDBDTarget extends HBaseDTarget {
 
   @Override
   protected Target createTarget() {
-    return new MapRDBTarget(
+    return new HadoopConfigurationSynchronizedTarget(new MapRDBTarget(
         hBaseConnectionConfig,
         hbaseRowKey,
         rowKeyStorageType,
@@ -53,6 +54,6 @@ public class MapRDBDTarget extends HBaseDTarget {
         ignoreMissingFieldPath,
         ignoreInvalidColumn,
         timeDriver
-    );
+    ));
   }
 }

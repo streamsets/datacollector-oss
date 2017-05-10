@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.maprfs;
 
+import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedSource;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
@@ -45,14 +46,14 @@ import com.streamsets.pipeline.stage.origin.hdfs.cluster.ClusterHdfsDSource;
 @GenerateResourceBundle
 public class ClusterMapRFSDSource extends ClusterHdfsDSource {
 
-  private ClusterMapRFSSource clusterMapRFSSource;
+  private Source clusterMapRFSSource;
 
   @Override
   protected Source createSource() {
     if(clusterHDFSConfigBean.hdfsUri == null || clusterHDFSConfigBean.hdfsUri.isEmpty()) {
       clusterHDFSConfigBean.hdfsUri = "maprfs:///";
     }
-    clusterMapRFSSource = new ClusterMapRFSSource(clusterHDFSConfigBean);
+    clusterMapRFSSource = new HadoopConfigurationSynchronizedSource(new ClusterMapRFSSource(clusterHDFSConfigBean));
     return clusterMapRFSSource;
   }
 
