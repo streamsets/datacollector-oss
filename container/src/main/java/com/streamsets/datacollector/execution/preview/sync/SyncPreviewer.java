@@ -175,9 +175,11 @@ public class SyncPreviewer implements Previewer {
     RawPreview rawPreview;
     ClassLoader classLoader = sourceStageDef.getStageClassLoader();
     ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-    Thread.currentThread().setContextClassLoader(classLoader);
-    try(BoundedInputStream bIn = new BoundedInputStream(rawSourcePreviewer.preview(bytesToRead), bytesToRead)) {
-      rawPreview = new RawPreviewImpl(IOUtils.toString(bIn), rawSourcePreviewer.getMimeType());
+    try {
+      Thread.currentThread().setContextClassLoader(classLoader);
+      try(BoundedInputStream bIn = new BoundedInputStream(rawSourcePreviewer.preview(bytesToRead), bytesToRead)) {
+        rawPreview = new RawPreviewImpl(IOUtils.toString(bIn), rawSourcePreviewer.getMimeType());
+      }
     } catch (IOException ex) {
       throw new PipelineRuntimeException(PreviewError.PREVIEW_0003, ex.toString(), ex);
     } finally {
