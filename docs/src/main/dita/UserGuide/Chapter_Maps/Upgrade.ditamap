@@ -69,6 +69,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Upgrade/UpgradeCDH511.dita"/>
    <topicref href="../Upgrade/UpgradeMapR.dita"/>
   </topicref>
   <topicref href="../Upgrade/UpgradeTroubleshooting.dita" chunk="to-content"/>
