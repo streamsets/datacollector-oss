@@ -192,6 +192,7 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JDBCLookup-DriverInstall.dita"/>
    <topicref href="../Processors/JDBCLookup-Cache.dita"/>
+   <topicref href="../Processors/JDBCLookup-Monitoring.dita"/>
    <topicref href="../Processors/JDBCLookup-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/JDBCTee.dita" chunk="to-content">
