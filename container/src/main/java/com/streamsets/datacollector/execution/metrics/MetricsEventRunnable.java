@@ -116,10 +116,11 @@ public class MetricsEventRunnable implements Runnable {
 
   @Override
   public void run() {
-    //Added log trace to debug SDC-725
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    Date now = new Date();
-    LOG.trace("MetricsEventRunnable Run - " + sdf.format(now));
+    // Added log trace to debug SDC-725
+    if (LOG.isTraceEnabled()) {
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+      LOG.trace("MetricsEventRunnable Run - {}", sdf.format(new Date()));
+    }
     try {
       if(threadHealthReporter != null) {
         threadHealthReporter.reportHealth(RUNNABLE_NAME, scheduledDelay, System.currentTimeMillis());
@@ -164,8 +165,8 @@ public class MetricsEventRunnable implements Runnable {
 
   public MetricRegistryJson getAggregatedMetrics() {
     MetricRegistryJson aggregatedMetrics = new MetricRegistryJson();
-    Map<String, CounterJson> aggregatedCounters = null;
-    Map<String, MeterJson> aggregatedMeters = null;
+    Map<String, CounterJson> aggregatedCounters = new HashMap<>();
+    Map<String, MeterJson> aggregatedMeters = new HashMap<>();
     List<String> slaves = new ArrayList<>();
 
     for(CallbackInfo callbackInfo : slaveCallbackManager.getSlaveCallbackList(CallbackObjectType.METRICS)) {
@@ -182,66 +183,27 @@ public class MetricsEventRunnable implements Runnable {
       Map<String, CounterJson> slaveCounters = metrics.getCounters();
       Map<String, MeterJson> slaveMeters = metrics.getMeters();
 
-      if(aggregatedCounters == null) {
-        //First Slave Metrics
+      for (Map.Entry<String, CounterJson> counterJsonEntry : slaveCounters.entrySet()) {
+        CounterJson slaveCounter = counterJsonEntry.getValue();
+        CounterJson aggregatedCounter = aggregatedCounters.getOrDefault(counterJsonEntry.getKey(), new CounterJson());
+        aggregatedCounter.setCount(aggregatedCounter.getCount() + slaveCounter.getCount());
+        aggregatedCounters.put(counterJsonEntry.getKey(), aggregatedCounter);
+      }
 
-        aggregatedCounters = new HashMap<>();
-        aggregatedMeters = new HashMap<>();
-
-        for(Map.Entry<String, CounterJson> counterJsonEntry: slaveCounters.entrySet()) {
-          CounterJson slaveCounter = counterJsonEntry.getValue();
-          CounterJson aggregatedCounter = new CounterJson();
-          aggregatedCounter.setCount(slaveCounter.getCount());
-          aggregatedCounters.put(counterJsonEntry.getKey(), aggregatedCounter);
-        }
-
-        for(Map.Entry<String, MeterJson> meterJsonEntry: slaveMeters.entrySet()) {
-          MeterJson slaveMeter = meterJsonEntry.getValue();
-          MeterJson aggregatedMeter = new MeterJson();
-          aggregatedMeter.setCount( slaveMeter.getCount());
-          aggregatedMeter.setM1_rate(slaveMeter.getM1_rate());
-          aggregatedMeter.setM5_rate(slaveMeter.getM5_rate());
-          aggregatedMeter.setM15_rate(slaveMeter.getM15_rate());
-          aggregatedMeter.setM30_rate(slaveMeter.getM30_rate());
-          aggregatedMeter.setH1_rate(slaveMeter.getH1_rate());
-          aggregatedMeter.setH6_rate(slaveMeter.getH6_rate());
-          aggregatedMeter.setH12_rate(slaveMeter.getH12_rate());
-          aggregatedMeter.setH24_rate(slaveMeter.getH24_rate());
-          aggregatedMeter.setMean_rate(slaveMeter.getMean_rate());
-          aggregatedMeters.put(meterJsonEntry.getKey(), aggregatedMeter);
-        }
-
-      } else {
-        //Otherwise add to the aggregated Metrics
-        for(Map.Entry<String, CounterJson> counterJsonEntry : aggregatedCounters.entrySet()) {
-          CounterJson aggregatedCounter = counterJsonEntry.getValue();
-          CounterJson slaveCounter = slaveCounters.get(counterJsonEntry.getKey());
-
-          if(aggregatedCounter != null && slaveCounter != null) {
-            aggregatedCounter.setCount(aggregatedCounter.getCount() + slaveCounter.getCount());
-          }
-        }
-
-        for(Map.Entry<String, MeterJson> meterJsonEntry : aggregatedMeters.entrySet()) {
-          MeterJson aggregatedMeter = meterJsonEntry.getValue();
-          MeterJson slaveMeter = slaveMeters.get(meterJsonEntry.getKey());
-
-          if(aggregatedMeter != null && slaveMeter != null) {
-            aggregatedMeter.setCount(aggregatedMeter.getCount() + slaveMeter.getCount());
-
-            aggregatedMeter.setM1_rate(aggregatedMeter.getM1_rate() + slaveMeter.getM1_rate());
-            aggregatedMeter.setM5_rate(aggregatedMeter.getM5_rate() + slaveMeter.getM5_rate());
-            aggregatedMeter.setM15_rate(aggregatedMeter.getM15_rate() + slaveMeter.getM15_rate());
-            aggregatedMeter.setM30_rate(aggregatedMeter.getM30_rate() + slaveMeter.getM30_rate());
-
-            aggregatedMeter.setH1_rate(aggregatedMeter.getH1_rate() + slaveMeter.getH1_rate());
-            aggregatedMeter.setH6_rate(aggregatedMeter.getH6_rate() + slaveMeter.getH6_rate());
-            aggregatedMeter.setH12_rate(aggregatedMeter.getH12_rate() + slaveMeter.getH12_rate());
-            aggregatedMeter.setH24_rate(aggregatedMeter.getH24_rate() + slaveMeter.getH24_rate());
-
-            aggregatedMeter.setMean_rate(aggregatedMeter.getMean_rate() + slaveMeter.getMean_rate());
-          }
-        }
+      for (Map.Entry<String, MeterJson> meterJsonEntry : slaveMeters.entrySet()) {
+        MeterJson slaveMeter = meterJsonEntry.getValue();
+        MeterJson aggregatedMeter = aggregatedMeters.getOrDefault(meterJsonEntry.getKey(), new MeterJson());
+        aggregatedMeter.setCount(aggregatedMeter.getCount() + slaveMeter.getCount());
+        aggregatedMeter.setM1_rate(aggregatedMeter.getM1_rate() + slaveMeter.getM1_rate());
+        aggregatedMeter.setM5_rate(aggregatedMeter.getM5_rate() + slaveMeter.getM5_rate());
+        aggregatedMeter.setM15_rate(aggregatedMeter.getM15_rate() + slaveMeter.getM15_rate());
+        aggregatedMeter.setM30_rate(aggregatedMeter.getM30_rate() + slaveMeter.getM30_rate());
+        aggregatedMeter.setH1_rate(aggregatedMeter.getH1_rate() + slaveMeter.getH1_rate());
+        aggregatedMeter.setH6_rate(aggregatedMeter.getH6_rate() + slaveMeter.getH6_rate());
+        aggregatedMeter.setH12_rate(aggregatedMeter.getH12_rate() + slaveMeter.getH12_rate());
+        aggregatedMeter.setH24_rate(aggregatedMeter.getH24_rate() + slaveMeter.getH24_rate());
+        aggregatedMeter.setMean_rate(aggregatedMeter.getMean_rate() + slaveMeter.getMean_rate());
+        aggregatedMeters.put(meterJsonEntry.getKey(), aggregatedMeter);
       }
     }
 
