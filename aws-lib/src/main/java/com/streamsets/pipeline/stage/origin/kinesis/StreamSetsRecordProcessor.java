@@ -23,6 +23,7 @@ import com.amazonaws.services.kinesis.clientlibrary.exceptions.InvalidStateExcep
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.ShutdownException;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorCheckpointer;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessor;
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.ShutdownReason;
 import com.amazonaws.services.kinesis.clientlibrary.types.InitializationInput;
 import com.amazonaws.services.kinesis.clientlibrary.types.ProcessRecordsInput;
 import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownInput;
@@ -60,7 +61,7 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
   private BatchMaker batchMaker;
   private ErrorRecordHandler errorRecordHandler;
 
-  public StreamSetsRecordProcessor(
+  StreamSetsRecordProcessor(
       PushSource.Context context,
       DataParserFactory parserFactory,
       int maxBatchSize,
@@ -78,8 +79,10 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
   @Override
   public void initialize(InitializationInput initializationInput) {
     shardId = initializationInput.getShardId();
-    LOG.debug("Initializing record processor at: {}", initializationInput.getExtendedSequenceNumber().toString());
-    LOG.debug("Initializing record processor for shard: {}", shardId);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Initializing record processor at: {}", initializationInput.getExtendedSequenceNumber().toString());
+      LOG.debug("Initializing record processor for shard: {}", shardId);
+    }
   }
 
   private void startBatch() {
@@ -146,17 +149,32 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
       }
       // Checkpoint iff batch processing succeeded
       checkpointer.checkpoint(checkpointRecord);
-      LOG.debug("Checkpointed batch at record {}", checkpointRecord.toString());
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Checkpointed batch at record {}", checkpointRecord.toString());
+      }
     } catch (InvalidStateException | ShutdownException e) {
       LOG.error("Error checkpointing batch: {}", e.toString(), e);
     }
   }
 
   /**
-   * {@inheritDoc}
+   * We don't checkpoint on SHUTDOWN_REQUESTED because we currently always
+   * checkpoint each batch in {@link #processRecords}.
+   *
+   * @param shutdownInput {@inheritDoc}
    */
   @Override
   public void shutdown(ShutdownInput shutdownInput) {
     LOG.info("Shutting down record processor for shard: {}", shardId);
+
+    if (ShutdownReason.TERMINATE.equals(shutdownInput.getShutdownReason())) {
+      // Shard is closed / finished processing. Checkpoint all processing up to here.
+      try {
+        shutdownInput.getCheckpointer().checkpoint();
+        LOG.debug("Checkpointed due to record processor shutdown request.");
+      } catch (InvalidStateException | ShutdownException e) {
+        LOG.error("Error checkpointing batch: {}", e.toString(), e);
+      }
+    }
   }
 }
