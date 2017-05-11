@@ -542,6 +542,31 @@
                                     </ul></p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-hdp_2_6-lib </entry>
+                            <entry>For the Hortonworks version 2.6 distribution of Apache Hadoop.
+                                        <p>Includes:<ul id="ul_pz4_nhd_wz">
+                                        <li>
+                                            <p>Hadoop FS origin for cluster mode pipelines</p>
+                                        </li>
+                                        <li>HTTP to Kafka origin</li>
+                                        <li>Kafka Consumer origin for standalone and cluster mode
+                                            pipelines</li>
+                                        <li>SDC RPC to Kafka origin</li>
+                                        <li>UDP to Kafka origin</li>
+                                        <li>HBase Lookup processor</li>
+                                        <li>Hive Metadata processor</li>
+                                        <li>Flume destination </li>
+                                        <li>Hadoop FS destination </li>
+                                        <li>HBase destination </li>
+                                        <li>Hive Metastore destination</li>
+                                        <li>Hive Streaming destination</li>
+                                        <li>Kafka Producer destination</li>
+                                        <li>HDFS Metadata executor</li>
+                                        <li>Hive Query executor</li>
+                                        <li>MapReduce executor</li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-influxdb-0_9-lib</entry>
                             <entry>For InfluxDB version 0.9 or greater.<p>Includes the InfluxDB
                                     destination.</p></entry>
