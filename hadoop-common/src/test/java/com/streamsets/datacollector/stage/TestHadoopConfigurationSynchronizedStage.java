@@ -21,20 +21,29 @@ package com.streamsets.datacollector.stage;
 
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.Executor;
+import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.List;
+
+import static org.mockito.Mockito.withSettings;
+
 public class TestHadoopConfigurationSynchronizedStage {
 
+
   @Test
-  public void testHadoopConfSynchronizedSource() throws Exception {
-    Source source = Mockito.mock(Source.class);
-    Source syncSource = new HadoopConfigurationSynchronizedSource(source);
+  public void testHadoopConfSynchronizedClusterSource() throws Exception {
+    Source source = Mockito.mock(ClusterSource.class, withSettings().extraInterfaces(OffsetCommitter.class,
+        ErrorListener.class));
+    HadoopConfigurationSynchronizedClusterSource syncSource = new HadoopConfigurationSynchronizedClusterSource(source);
     syncSource.init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
     Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
     syncSource.produce(Mockito.anyString(), Mockito.anyInt(), Mockito.any(BatchMaker.class));
@@ -42,6 +51,40 @@ public class TestHadoopConfigurationSynchronizedStage {
         Mockito.anyInt(),
         Mockito.any(BatchMaker.class)
     );
+    syncSource.commit(Mockito.anyString());
+    Mockito.verify((OffsetCommitter)source, Mockito.times(1)).commit(Mockito.anyString());
+    syncSource.errorNotification(Mockito.any(Throwable.class));
+    Mockito.verify((ErrorListener)source, Mockito.times(1)).errorNotification(Mockito.any(Throwable.class));
+
+    syncSource.put(Mockito.any(List.class));
+    Mockito.verify((ClusterSource)source, Mockito.times(1)).put(Mockito.any(List.class));
+
+    syncSource.postDestroy();
+    Mockito.verify((ClusterSource)source, Mockito.times(1)).postDestroy();
+
+    syncSource.shutdown();
+    Mockito.verify((ClusterSource)source, Mockito.times(1)).shutdown();
+
+    syncSource.completeBatch();
+    Mockito.verify((ClusterSource)source, Mockito.times(1)).completeBatch();
+
+    syncSource.getConfigsToShip();
+    Mockito.verify((ClusterSource)source, Mockito.times(1)).getConfigsToShip();
+
+    syncSource.getName();
+    Mockito.verify((ClusterSource)source, Mockito.times(1)).getName();
+
+    syncSource.getParallelism();
+    Mockito.verify((ClusterSource)source, Mockito.times(1)).getParallelism();
+
+    syncSource.getRecordsProduced();
+    Mockito.verify((ClusterSource)source, Mockito.times(1)).getRecordsProduced();
+
+    syncSource.inErrorState();
+    Mockito.verify((ClusterSource)source, Mockito.times(1)).inErrorState();
+
+    syncSource.isInBatchMode();
+    Mockito.verify((ClusterSource)source, Mockito.times(1)).isInBatchMode();
   }
 
   @Test
