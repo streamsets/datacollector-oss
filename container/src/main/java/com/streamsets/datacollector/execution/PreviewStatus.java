@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.execution;
 
+// When changing this class, make sure that you change PreviewInfoJson in CLI as well.
 public enum PreviewStatus {
   CREATED(false),       // The preview was just created and nothing else has happened yet
 
