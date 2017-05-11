@@ -607,7 +607,7 @@ public final class HiveMetastoreUtil {
       throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", fieldName, 1);
     }
     if (scale < 0) {
-      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, precision, "precision", fieldName, 0);
+      throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_07, scale, "scale", fieldName, 0);
     }
     if (scale > precision) {
       throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_08, scale, fieldName, precision);
