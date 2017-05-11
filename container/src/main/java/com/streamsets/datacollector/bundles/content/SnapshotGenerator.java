@@ -52,7 +52,7 @@ public class SnapshotGenerator implements BundleContentGenerator {
         String rev = pipelineInfo.getLastRev();
 
         for(SnapshotInfo snapshotInfo : snapshotStore.getSummaryForPipeline(name, rev)) {
-          writer.writeJson(name + "/info.json", BeanHelper.wrapSnapshotInfoNewAPI(snapshotInfo));
+          writer.writeJson(name + "/" + snapshotInfo.getId() + "/info.json", BeanHelper.wrapSnapshotInfoNewAPI(snapshotInfo));
 
           // Do not write unfinished snapshots
           if(snapshotInfo.isInProgress()) {
@@ -61,7 +61,7 @@ public class SnapshotGenerator implements BundleContentGenerator {
 
           try(InputStream snapshotStream = snapshotStore.get(name, rev, snapshotInfo.getId()).getOutput()) {
             if(snapshotStream != null) {
-              writer.write(name + "/output.json", snapshotStream);
+              writer.write(name + "/" + snapshotInfo.getId() + "/output.json", snapshotStream);
             }
           }
         }
