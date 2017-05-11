@@ -258,9 +258,9 @@ public class StageRuntime implements PushSourceContextDelegate {
       if (!context.isPreview() || runnerThread == (Thread.currentThread().getId())) {
         setErrorAndEventSink(null, null);
       }
+      Thread.currentThread().setContextClassLoader(mainClassLoader);
       //we release the stage classloader back to the library  ro reuse (as some stages my have private classloaders)
       stageBean.releaseClassLoader();
-      Thread.currentThread().setContextClassLoader(mainClassLoader);
     }
   }
 
