@@ -21,6 +21,7 @@ package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
+import com.streamsets.datacollector.bundles.SupportBundle;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -75,11 +76,9 @@ import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -626,23 +625,44 @@ public class AdminResource {
   public Response createSupportBundlesContentGenerators(
     @QueryParam("generators") @DefaultValue("") String generators
   ) throws IOException {
-    List<String> generatorList = Collections.emptyList();
-    if(!generators.isEmpty()) {
-      generatorList = Arrays.asList(generators.split(","));
-    }
-
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-    StringBuilder builder = new StringBuilder("bundle_");
-    builder.append(runtimeInfo.getId());
-    builder.append("_");
-    builder.append(dateFormat.format(new Date()));
-    builder.append(".zip");
+    SupportBundle bundle = supportBundleManager.generateNewBundle(getGeneratorList(generators));
 
     return Response
       .ok()
-      .header("content-disposition", "attachment; filename=\"" + builder.toString() + "\"")
-      .entity(supportBundleManager.generateNewBundle(generatorList))
+      .header("content-disposition", "attachment; filename=\"" + bundle.getBundleName() + "\"")
+      .entity(bundle.getInputStream())
       .build();
   }
 
+  @GET
+  @Path("/bundle/upload")
+  @ApiOperation(
+      value = "Generates new support bundle and uploads it to StreamSets.",
+      response = Object.class,
+      authorizations = @Authorization(value = "basic")
+  )
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response uploadSupportBundlesContentGenerators(
+    @QueryParam("generators") @DefaultValue("") String generators
+  ) throws IOException {
+    // The call with throw IOException on any error that will be propagated to the client
+    supportBundleManager.uploadNewBundle(getGeneratorList(generators));
+
+    return Response
+      .ok()
+      .build();
+  }
+
+  private List<String> getGeneratorList(String queryValue) {
+    if(StringUtils.isEmpty(queryValue)) {
+      return Collections.emptyList();
+    }
+
+    return Arrays.asList(queryValue.split(","));
+  }
 }

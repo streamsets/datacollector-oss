@@ -19,6 +19,21 @@
  */
 package com.streamsets.datacollector.bundles;
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.internal.StaticCredentialsProvider;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.S3ClientOptions;
+import com.amazonaws.services.s3.model.AbortMultipartUploadRequest;
+import com.amazonaws.services.s3.model.CompleteMultipartUploadRequest;
+import com.amazonaws.services.s3.model.InitiateMultipartUploadRequest;
+import com.amazonaws.services.s3.model.InitiateMultipartUploadResult;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PartETag;
+import com.amazonaws.services.s3.model.UploadPartRequest;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,8 +53,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +64,9 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -170,7 +188,7 @@ public class SupportBundleManager implements BundleContext {
   /**
    * Return InputStream from which a new generated resource bundle can be retrieved.
    */
-  public InputStream generateNewBundle(List<String> generators) throws IOException {
+  public SupportBundle generateNewBundle(List<String> generators) throws IOException {
     PipedInputStream inputStream = new PipedInputStream();
     PipedOutputStream outputStream = new PipedOutputStream();
     inputStream.connect(outputStream);
@@ -179,7 +197,122 @@ public class SupportBundleManager implements BundleContext {
     List<BundleContentGeneratorDefinition> useDefs = getRequestedDefinitions(generators);
     executor.submit(() -> generateNewBundleInternal(useDefs, zipOutputStream));
 
-    return inputStream;
+    String bundleName = generateBundleName();
+    String bundleKey = generateBundleDate() + "/" + bundleName;
+
+    return new SupportBundle(
+      bundleKey,
+      bundleName,
+      inputStream
+    );
+  }
+
+  /**
+   * Instead of providing support bundle directly to user, upload it to StreamSets backend services.
+   */
+  public void uploadNewBundle(List<String> generators) throws IOException {
+    // AWS credentials
+    String accessKey = configuration.get(Constants.UPLOAD_ACCESS, Constants.DEFAULT_UPLOAD_ACCESS);
+    String secretKey = configuration.get(Constants.UPLOAD_SECRET, Constants.DEFAULT_UPLOAD_SECRET);
+    String bucket = configuration.get(Constants.UPLOAD_BUCKET, Constants.DEFAULT_UPLOAD_BUCKET);
+    int bufferSize = configuration.get(Constants.UPLOAD_BUFFER_SIZE, Constants.DEFAULT_UPLOAD_BUFFER_SIZE);
+
+    AWSCredentialsProvider credentialsProvider = new StaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
+    AmazonS3Client s3Client = new AmazonS3Client(credentialsProvider, new ClientConfiguration());
+    s3Client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
+    s3Client.setRegion(Region.getRegion(Regions.US_WEST_2));
+
+    // Object Metadata
+    ObjectMetadata metadata = new ObjectMetadata();
+    for(Map.Entry<Object, Object> entry: getMetadata().entrySet()) {
+      metadata.addUserMetadata((String)entry.getKey(), (String)entry.getValue());
+    }
+
+    // Generate bundle
+    SupportBundle bundle = generateNewBundle(generators);
+
+    // Uploading part by part
+    LOG.info("Initiating multi-part support bundle upload");
+    List<PartETag> partETags = new ArrayList<>();
+    InitiateMultipartUploadRequest initRequest = new InitiateMultipartUploadRequest(bucket, bundle.getBundleKey());
+    initRequest.setObjectMetadata(metadata);
+    InitiateMultipartUploadResult initResponse = s3Client.initiateMultipartUpload(initRequest);
+
+    try {
+      byte[] buffer = new byte[bufferSize];
+      int partId = 1;
+      int size = -1;
+      while ((size = readFully(bundle.getInputStream(), buffer)) != -1) {
+        LOG.debug("Uploading part {} of size {}", partId, size);
+        UploadPartRequest uploadRequest = new UploadPartRequest()
+          .withBucketName(bucket)
+          .withKey(bundle.getBundleKey())
+          .withUploadId(initResponse.getUploadId())
+          .withPartNumber(partId++)
+          .withInputStream(new ByteArrayInputStream(buffer))
+          .withPartSize(size);
+
+        partETags.add(s3Client.uploadPart(uploadRequest).getPartETag());
+      }
+
+      CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(
+        bucket,
+        bundle.getBundleKey(),
+        initResponse.getUploadId(),
+        partETags
+      );
+
+      s3Client.completeMultipartUpload(compRequest);
+      LOG.info("Support bundle upload finished");
+    } catch (Exception e) {
+      LOG.error("Support bundle upload failed", e);
+      s3Client.abortMultipartUpload(new AbortMultipartUploadRequest(
+        bucket,
+        bundle.getBundleKey(),
+        initResponse.getUploadId())
+      );
+
+      throw new IOException("Can't upload support bundle", e);
+    } finally {
+      // Close the client
+      s3Client.shutdown();
+    }
+  }
+
+  /**
+   * This method will read from the input stream until the whole buffer is loaded up with actual bytes or end of stream
+   * has been reached. Hence it will return buffer.length of all executions except the last two - one to the last call
+   * will return less then buffer.length (reminder of the data) and returns -1 on any subsequent calls.
+   */
+  private int readFully(InputStream inputStream, byte []buffer) throws IOException {
+    int readBytes = 0;
+
+    while(readBytes < buffer.length) {
+      int loaded = inputStream.read(buffer, readBytes, buffer.length - readBytes);
+      if(loaded == -1) {
+        return readBytes == 0 ? -1 : readBytes;
+      }
+
+      readBytes += loaded;
+    }
+
+    return readBytes;
+  }
+
+  private String generateBundleDate() {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    return dateFormat.format(new Date());
+  }
+
+  private String generateBundleName() {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+    StringBuilder builder = new StringBuilder("bundle_");
+    builder.append(runtimeInfo.getId());
+    builder.append("_");
+    builder.append(dateFormat.format(new Date()));
+    builder.append(".zip");
+
+    return builder.toString();
   }
 
   /**
@@ -221,14 +354,8 @@ public class SupportBundleManager implements BundleContext {
       zipStream.closeEntry();
 
       // metadata.properties
-      Properties metadata = new Properties();
-      metadata.put("version", "1");
-      metadata.put("sdc.version", buildInfo.getVersion());
-      metadata.put("sdc.id", runtimeInfo.getId());
-      metadata.put("sdc.acl.enabled", String.valueOf(runtimeInfo.isAclEnabled()));
-
       zipStream.putNextEntry(new ZipEntry("metadata.properties"));
-      metadata.store(zipStream, "");
+      getMetadata().store(zipStream, "");
       zipStream.closeEntry();
 
     } catch (Exception e) {
@@ -241,6 +368,16 @@ public class SupportBundleManager implements BundleContext {
         LOG.error("Failed to finish generating the bundle", e);
       }
     }
+  }
+
+  private Properties getMetadata() {
+    Properties metadata = new Properties();
+    metadata.put("version", "1");
+    metadata.put("sdc.version", buildInfo.getVersion());
+    metadata.put("sdc.id", runtimeInfo.getId());
+    metadata.put("sdc.acl.enabled", String.valueOf(runtimeInfo.isAclEnabled()));
+
+    return metadata;
   }
 
   @Override

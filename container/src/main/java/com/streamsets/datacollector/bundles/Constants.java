@@ -28,6 +28,20 @@ public final class Constants {
    */
   public static final String REDACTOR_CONFIG = "support-bundle-redactor.json";
 
+  /**
+   * Uploading support bundles directly
+   */
+  public static final String UPLOAD_BUCKET = "bundle.upload.bucket";
+  public static final String DEFAULT_UPLOAD_BUCKET = "customer-support-bundles";
+
+  public static final String UPLOAD_ACCESS = "bundle.upload.access";
+  public static final String DEFAULT_UPLOAD_ACCESS = "AKIAJHYWC4WBOORYJRSA";
+
+  public static final String UPLOAD_SECRET = "bundle.upload.secret";
+  public static final String DEFAULT_UPLOAD_SECRET = "sVDtlHLqOhyimJPwOR/gKmOApB4TTBLDQVgdegKU";
+
+  public static final String UPLOAD_BUFFER_SIZE = "bundle.upload.buffer_size";
+  public static final int DEFAULT_UPLOAD_BUFFER_SIZE = 5 * 1024 * 1024; // 5MB, amazon lower limit
 
   // Log Generator
 

@@ -110,7 +110,7 @@ public class TestSupportBundleManager {
   }
 
   private ZipFile zipFile(List<String> bundles) throws Exception {
-    InputStream bundleStream = manager.generateNewBundle(bundles);
+    InputStream bundleStream = manager.generateNewBundle(bundles).getInputStream();
     File outputFile = File.createTempFile("test-support-bundle", ".zip");
     outputFile.deleteOnExit();
 
