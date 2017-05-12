@@ -32,6 +32,23 @@
       <strong>Note!</strong> Custom HTTP header attribute (X-Requested-By) is required for all POST/PUT/DELETE REST API requests.
       <pre>curl -u username:password -X DELETE https://localhost:18630/rest/v1/pipeline/samplepipeline -H "X-Requested-By:sdc"</pre>
     </div>
+
+    <div class="alert alert-info" ng-if="!fetching">
+      Sample script for calling SDC REST API when DPM is enabled:
+      <pre>
+# login to DPM security app
+curl -X POST -d '{"userName":"DPMUserID", "password": "DPMUserPassword"}' https://cloud.streamsets.com/security/public-rest/v1/authentication/login --header "Content-Type:application/json" --header "X-Requested-By:SDC" -c cookie.txt
+
+# generate auth token from security app
+sessionToken=$(cat cookie.txt | grep SSO | rev | grep -o '^\S*' | rev)
+echo "Generated session token : $sessionToken"
+
+touch /tmp/authToken.txt
+
+# Call SDC REST APIs using auth token
+curl -X GET http://localhost:18630/rest/v1/pipelines --header "Content-Type:application/json" --header "X-Requested-By:SDC" --header "X-SS-REST-CALL:true" --header "X-SS-User-Auth-Token:$sessionToken" -i
+      </pre>
+    </div>
   </div>
 
 </div>
