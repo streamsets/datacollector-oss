@@ -35,7 +35,7 @@ public interface ClusterFunction extends Serializable {
    *
    * @return The batch produced by the first Spark processor (or empty batch if none exist in the pipeline)
    */
-  Iterable startBatch(List<Map.Entry> batch) throws Exception;
+  Iterator startBatch(List<Map.Entry> batch) throws Exception;
 
   /**
    * Set the number of spark processors in this pipeline.
@@ -45,12 +45,12 @@ public interface ClusterFunction extends Serializable {
   /**
    * Send the transformed batch to the i-th Spark processor in the pipeline.
    */
-  Iterable forwardTransformedBatch(Iterator<Object> batch, int id) throws Exception;
+  Iterator forwardTransformedBatch(Iterator batch, int id) throws Exception;
 
   /**
    * Write errors to the i-th Spark processor in the pipeline.
    */
-  void writeErrorRecords(List errors, int id) throws Exception;
+  void writeErrorRecords(Iterator errors, int id) throws Exception;
 
   /**
    * Shutdown all Embedded SDCs and thus all stages.

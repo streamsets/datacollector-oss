@@ -89,7 +89,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   }
 
   @Override
-  public Iterable startBatch(List<Map.Entry> batch) throws Exception {
+  public Iterator startBatch(List<Map.Entry> batch) throws Exception {
     if (IS_TRACE_ENABLED) {
       LOG.trace("In executor function " + " " + Thread.currentThread().getName() + ": " + batch.size());
     }
@@ -124,34 +124,34 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   }
 
   @SuppressWarnings("unchecked")
-  public static Iterable<Object> getNextBatch(int id, EmbeddedSDC sdc) {
+  public static Iterator<Object> getNextBatch(int id, EmbeddedSDC sdc) {
     return Optional.ofNullable(sdc.getSparkProcessorAt(id)).flatMap(t -> {
       try {
         Object processor = t.getClass().getMethod("get").invoke(t);
         final Method getBatch = processor.getClass().getDeclaredMethod(GET_BATCH);
         List<Object> cloned = new ArrayList<>();
-        for (Object record : (Iterable<Object>) getBatch.invoke(processor)) {
-          cloned.add(RecordCloner.clone(record));
-        }
-        return Optional.of(cloned);
+        Iterator<Object> batch = (Iterator<Object>) getBatch.invoke(processor);
+        batch.forEachRemaining(record -> cloned.add(RecordCloner.clone(record)));
+        return Optional.of(cloned.iterator());
       } catch (Exception ex) {
         throw new RuntimeException(ex);
       }
-    }).orElse(Collections.emptyList());
+    }).orElse(Collections.emptyIterator());
   }
 
   @Override
-  public void writeErrorRecords(List errors, int id) throws Exception {
+  public void writeErrorRecords(Iterator errors, int id) throws Exception {
     EmbeddedSDC sdc = sdcPool.getSDCBatchRead(id);
     try {
-      if (IS_TRACE_ENABLED) {
-        if (sdc == null) {
-          LOG.trace("No SDC at ID " + id);
-        } else {
-          LOG.trace("Writing " + errors.size() + " errors to SDC " + sdc.toString());
+      Optional.ofNullable(sdc.getSparkProcessorAt(id)).ifPresent(t -> {
+        try {
+          Object processor = t.getClass().getMethod("get").invoke(t);
+          final Method setErrors = processor.getClass().getDeclaredMethod(SET_ERRORS, Iterator.class);
+          setErrors.invoke(processor, errors);
+        } catch (Exception ex) {
+          throw new RuntimeException(ex);
         }
-      }
-      writeErrorsToProcessor(errors, id, sdc);
+      });
     } finally {
       if (sdc != null) {
         if (IS_TRACE_ENABLED) {
@@ -163,30 +163,21 @@ public class ClusterFunctionImpl implements ClusterFunction  {
     }
   }
 
-  public static void writeErrorsToProcessor(List errors, int id, EmbeddedSDC sdc) {
-    Optional.ofNullable(sdc.getSparkProcessorAt(id)).ifPresent(t -> {
-      try {
-        Object processor = t.getClass().getMethod("get").invoke(t);
-        final Method setErrors = processor.getClass().getDeclaredMethod(SET_ERRORS, List.class);
-        setErrors.invoke(processor, errors);
-      } catch (Exception ex) {
-        throw new RuntimeException(ex);
-      }
-    });
-  }
-
   @Override
-  public Iterable forwardTransformedBatch(Iterator<Object> batch, int id) throws Exception {
+  @SuppressWarnings("unchecked")
+  public Iterator<Object> forwardTransformedBatch(Iterator batch, int id) throws Exception {
     EmbeddedSDC sdc = sdcPool.getSDCBatchRead(id);
     try {
-      if (IS_TRACE_ENABLED) {
-        if (sdc == null) {
-          LOG.trace("No SDC at ID " + id);
-        } else {
-          LOG.trace("Writing batch to SDC " + sdc.toString());
+      return Optional.ofNullable(sdc.getSparkProcessorAt(id)).map(t -> {
+        try {
+          Object processor = t.getClass().getMethod("get").invoke(t);
+          final Method continueProcessing = processor.getClass().getDeclaredMethod(CONTINUE_PROCESSING, Iterator.class);
+          continueProcessing.invoke(processor, batch);
+          return getNextBatch(id + 1, sdc);
+        } catch (Exception ex) {
+          throw new RuntimeException(ex);
         }
-      }
-      return writeTransformedToProcessor(batch, id, sdc);
+      }).orElse(Collections.emptyIterator());
     } finally {
       if (sdc != null) {
         if (IS_TRACE_ENABLED) {
@@ -200,22 +191,6 @@ public class ClusterFunctionImpl implements ClusterFunction  {
         }
       }
     }
-
-  }
-
-  @SuppressWarnings("unchecked")
-  public static Iterable<Object> writeTransformedToProcessor(Iterator<Object> batch, int id, EmbeddedSDC sdc) {
-    return Optional.ofNullable(sdc.getSparkProcessorAt(id)).map(t -> {
-      try {
-        Class sparkDProcessorClass = t.getClass();
-        Object processor = sparkDProcessorClass.getMethod("get").invoke(t);
-        final Method continueProcessing = processor.getClass().getDeclaredMethod(CONTINUE_PROCESSING, Iterator.class);
-        continueProcessing.invoke(processor, batch);
-        return getNextBatch(id + 1, sdc);
-      } catch (Exception ex) {
-        throw new RuntimeException(ex);
-      }
-    }).orElse(Collections.emptyList());
   }
 
   private String getErrorStackTrace(Throwable e) {

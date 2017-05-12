@@ -313,13 +313,13 @@ public class BootstrapCluster {
 
   @SuppressWarnings("unchecked")
   public static void createTransformers(JavaSparkContext context) throws Exception {
-
+    transformers = new ArrayList<>();
     if (transformerCLs == null) {
       return;
     }
 
     List<Object> configs = callOnPiplineConfigurationUtil("getSparkTransformers");
-    transformers = new ArrayList<>();
+
     for (Object transformerConfig : configs) {
       try {
         String transformerClass =

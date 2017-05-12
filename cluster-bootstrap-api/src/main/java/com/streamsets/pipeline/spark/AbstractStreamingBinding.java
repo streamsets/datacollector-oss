@@ -29,7 +29,6 @@ import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkConf;
 import org.apache.spark.deploy.SparkHadoopUtil;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.apache.spark.streaming.api.java.JavaStreamingContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,21 +130,13 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
         isRunningInMesos
     );
 
-    //Upgrade path from spark check pointing to sdc check pointing
-    if (!offsetHelper.isSDCCheckPointing() && hdfs.listStatus(checkPointPath).length > 0) {
-      LOG.info("Initializing with existing spark checkpoint at: {}", checkPointPath);
-      ssc = JavaStreamingContext.getOrCreate(checkPointPath.toString(), hadoopConf, javaStreamingContextFactory, true);
-    } else {
-      LOG.info("Using SDC checkpoint mechanism at: {}", checkPointPath);
-      ssc = javaStreamingContextFactory.create();
-      Path rddCheckpointDir = new Path(checkPointPath, RDD_CHECKPOINT_DIR);
-      if (hdfs.exists(rddCheckpointDir)) {
-        hdfs.delete(rddCheckpointDir, true);
-      }
-      hdfs.mkdirs(rddCheckpointDir);
-      ssc.checkpoint(rddCheckpointDir.toString());
-
+    ssc = javaStreamingContextFactory.create();
+    Path rddCheckpointDir = new Path(checkPointPath, RDD_CHECKPOINT_DIR);
+    if (hdfs.exists(rddCheckpointDir)) {
+      hdfs.delete(rddCheckpointDir, true);
     }
+    hdfs.mkdirs(rddCheckpointDir);
+    ssc.checkpoint(rddCheckpointDir.toString());
 
     // mesos tries to stop the context internally, so don't do it here - deadlock bug in spark
     if (!isRunningInMesos) {

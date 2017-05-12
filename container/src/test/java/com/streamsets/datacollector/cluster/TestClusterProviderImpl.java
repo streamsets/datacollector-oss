@@ -482,7 +482,7 @@ public class TestClusterProviderImpl {
             Collections.<Config>emptyList()
         ), null).getId());
       Assert.assertArrayEquals(
-        new String[]{"<masked>/_cluster-manager", "start", "--master", "yarn-cluster", "--executor-memory", "512m",
+        new String[]{"<masked>/_cluster-manager", "start", "--master", "yarn", "--deploy-mode", "cluster", "--executor-memory", "512m",
             "--executor-cores", "1", "--num-executors", "64", "--archives", "<masked>/provider-temp/staging/libs.tar" +
             ".gz,<masked>/provider-temp/staging/etc.tar.gz,<masked>/provider-temp/staging/resources.tar.gz",
             "--files", "<masked>/provider-temp/staging/log4j.properties", "--jars",

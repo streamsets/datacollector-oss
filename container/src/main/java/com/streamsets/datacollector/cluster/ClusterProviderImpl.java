@@ -1096,7 +1096,9 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("start");
     // we only support yarn-cluster mode
     args.add("--master");
-    args.add("yarn-cluster");
+    args.add("yarn");
+    args.add("--deploy-mode");
+    args.add("cluster");
     args.add("--executor-memory");
     args.add(slaveMemory + "m");
     // one single sdc per executor

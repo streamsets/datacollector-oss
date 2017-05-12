@@ -33,9 +33,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 import static com.streamsets.pipeline.stage.processor.spark.Errors.SPARK_04;
@@ -54,7 +52,6 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
 
   private Iterator<Record> batch;
   private SingleLaneBatchMaker currentBatchMaker;
-  private Map<Record, String> errors = new LinkedHashMap<>();
 
   @Override
   public List<ConfigIssue> init() {
@@ -64,14 +61,14 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
     return issues;
   }
 
-  public Iterable<Record> getBatch() {
+  public Iterator<Record> getBatch() {
     try {
       if (IS_DEBUG_ENABLED) {
         LOG.debug("Trying to read batch at " + System.currentTimeMillis());
       }
       synchronized (this) {
         if (batch != null) {
-          return toIterable(batch); // no waiting, if batch was already set.
+          return batch; // no waiting, if batch was already set.
         }
       }
       batchReceived.acquire();
@@ -84,18 +81,10 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
     }
     synchronized (this) {
       if (batch == null) {
-        return Collections.emptyList();
+        return Collections.emptyIterator();
       }
-      return toIterable(batch);
+      return batch;
     }
-  }
-
-  private Iterable<Record> toIterable(Iterator<Record> recordIterator) {
-    final ArrayList<Record> records = new ArrayList<>();
-    while (recordIterator.hasNext()) {
-      records.add(recordIterator.next());
-    }
-    return Collections.unmodifiableList(records);
   }
 
   @Override
@@ -122,8 +111,8 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
   }
 
   @SuppressWarnings("unchecked")
-  public void setErrors(List errors) throws StageException {
-    errors.forEach(error -> {
+  public void setErrors(Iterator<Object> errors) throws StageException {
+    errors.forEachRemaining(error -> {
       try {
         Record cloned = RecordCloner.clone(error, getContext());
         String reason = cloned.getHeader().getAttribute(CLUSTER_ERROR_REASON_HDR);
@@ -136,10 +125,7 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
   }
 
   public void continueProcessing(Iterator<Object> transformed) {
-    Iterator<Record> newBatch = clone(transformed);
-    while(newBatch.hasNext()) {
-      currentBatchMaker.addRecord(newBatch.next());
-    }
+    clone(transformed).forEachRemaining(currentBatchMaker::addRecord);
     currentBatchMaker = null;
     synchronized (this) {
       batch = null;

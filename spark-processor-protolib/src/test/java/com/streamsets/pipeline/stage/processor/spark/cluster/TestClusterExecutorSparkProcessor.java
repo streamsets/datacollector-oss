@@ -71,7 +71,7 @@ public class TestClusterExecutorSparkProcessor {
         throw Throwables.propagate(ex);
       }
     });
-    Record[] dataFromProcessor = Iterators.toArray(processor.getBatch().iterator(), Record.class);
+    Record[] dataFromProcessor = Iterators.toArray(processor.getBatch(), Record.class);
     Iterator<Record> inputBatchReceived = Iterators.forArray(dataFromProcessor);
     for (Record record : records) {
       Assert.assertTrue(inputBatchReceived.hasNext());
@@ -89,7 +89,7 @@ public class TestClusterExecutorSparkProcessor {
 
     Record[] errors = Arrays.copyOfRange(dataFromProcessor, dataFromProcessor.length - 5, dataFromProcessor.length);
 
-    processor.setErrors(Arrays.asList(errors));
+    processor.setErrors(Iterators.forArray(errors));
     processor.continueProcessing(transformed);
 
     Thread.sleep(1000);

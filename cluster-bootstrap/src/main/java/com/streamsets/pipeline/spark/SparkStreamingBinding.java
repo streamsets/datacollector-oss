@@ -28,7 +28,6 @@ import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import org.apache.spark.streaming.api.java.JavaStreamingContextFactory;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 import scala.Tuple2;
 import scala.reflect.ClassTag;
@@ -50,7 +49,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
   private static final String KAFKA_AUTO_RESET_LARGEST = "largest";
 
   private static final Map<String, String> KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES = new HashMap<>();
-  private static final String GROUP_ID_KEY = "group.id";
+  public static final String GROUP_ID_KEY = "group.id";
 
   static {
     KAFKA_POST_0_9_TO_PRE_0_9_CONFIG_CHANGES.put(KAFKA_AUTO_RESET_EARLIEST, KAFKA_AUTO_RESET_SMALLEST);
@@ -64,7 +63,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
     }
   }
 
-  private static Function<MessageAndMetadata<byte[], byte[]>, Tuple2<byte[], byte[]>> MESSAGE_HANDLER_FUNCTION  = new MessageHandlerFunction();
+  public static Function<MessageAndMetadata<byte[], byte[]>, Tuple2<byte[], byte[]>> MESSAGE_HANDLER_FUNCTION  = new MessageHandlerFunction();
 
   public SparkStreamingBinding(Properties properties) {
     super(properties);
@@ -106,7 +105,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
     );
   }
 
-  private static class JavaStreamingContextFactoryImpl implements JavaStreamingContextFactory {
+  public static class JavaStreamingContextFactoryImpl implements JavaStreamingContextFactory {
     private final SparkConf sparkConf;
     private final long duration;
     private final String metaDataBrokerList;
@@ -179,8 +178,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
             KafkaUtils.createDirectStream(result, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class,
                 props, new HashSet<>(Arrays.asList(topic.split(","))));
       }
-      SparkDriverFunction driverFunction = new SparkDriverFunction();
-      dStream.foreachRDD(driverFunction);
+      Driver$.MODULE$.foreach(dStream.dstream());
       return result;
     }
   }
