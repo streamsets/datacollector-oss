@@ -23,7 +23,10 @@
                         stage library</xref> - <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> now supports the Cloudera CDH version 5.11 distribution of Hadoop and the
-                    Cloudera version 5.11 distribution of Apache Kafka 2.1.</li>
+                    Cloudera version 5.11 distribution of Apache Kafka 2.1. <p>Upgrading to this
+                        version can require updating existing pipelines. For details, see <xref
+                            href="../Upgrade/UpgradeCDH511.dita#concept_spf_2gq_vz"/>.</p>
+                </li>
             </ul></p>
  </conbody>
 </concept>
