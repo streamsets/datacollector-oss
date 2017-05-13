@@ -80,8 +80,8 @@ public class PreconditionsPredicate implements FilterRecordBatch.Predicate  {
                              "Called for record that passed all preconditions");
     ErrorMessage msg = null;
     if (failedPrecondition != null) {
-      msg = (exception == null) ? new ErrorMessage(ContainerError.CONTAINER_0051, preconditions)
-                                : new ErrorMessage(ContainerError.CONTAINER_0052, preconditions,
+      msg = (exception == null) ? new ErrorMessage(ContainerError.CONTAINER_0051, failedPrecondition)
+                                : new ErrorMessage(ContainerError.CONTAINER_0052, failedPrecondition,
                                                    exception.toString(), exception);
     }
     return msg;

@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.el.RuntimeEL;
@@ -108,17 +109,31 @@ public class TestPreconditionsPredicate {
 
   @Test
   public void testMultiplePreconditions() {
-    FilterRecordBatch.Predicate predicate =
-        new PreconditionsPredicate(createContext(),
-                                   Arrays.asList("${record:value('/') % 2 == 0}", "${record:value('/') % 3 == 0}"));
+    final String MODULO_TWO = "${record:value('/') % 2 == 0}";
+    final String MODULO_THREE = "${record:value('/') % 3 == 0}";
+
+    FilterRecordBatch.Predicate predicate = new PreconditionsPredicate(
+      createContext(),
+      ImmutableList.of(MODULO_TWO, MODULO_THREE)
+    );
 
     Record record = new RecordImpl("", "", null, null);
+    String message;
+
     record.set(Field.create(2));
     Assert.assertFalse(predicate.evaluate(record));
-    Assert.assertNotNull(predicate.getRejectedMessage());
+    message = predicate.getRejectedMessage().toString();
+    Assert.assertNotNull(message);
+    Assert.assertFalse(message.contains(MODULO_TWO));
+    Assert.assertTrue(message.contains(MODULO_THREE));
+
     record.set(Field.create(3));
     Assert.assertFalse(predicate.evaluate(record));
-    Assert.assertNotNull(predicate.getRejectedMessage());
+    message = predicate.getRejectedMessage().toString();
+    Assert.assertNotNull(message);
+    Assert.assertTrue(message.contains(MODULO_TWO));
+    Assert.assertFalse(message.contains(MODULO_THREE));
+
     record.set(Field.create(6));
     Assert.assertTrue(predicate.evaluate(record));
   }
