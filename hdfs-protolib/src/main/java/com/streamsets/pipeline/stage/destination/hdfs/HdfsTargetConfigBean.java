@@ -504,7 +504,7 @@ public class HdfsTargetConfigBean {
       fileNameSuffix = "";
     } else {
       //File Suffix should not contain '/' or start with '.'
-      if(fileNameSuffix.startsWith(".") || fileNameSuffix.contains("/")) {
+      if(fileType != HdfsFileType.WHOLE_FILE && (fileNameSuffix.startsWith(".") || fileNameSuffix.contains("/"))) {
         issues.add(
             context.createConfigIssue(
                 Groups.HADOOP_FS.name(),
