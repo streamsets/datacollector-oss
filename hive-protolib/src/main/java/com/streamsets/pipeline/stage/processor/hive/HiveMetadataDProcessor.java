@@ -61,8 +61,8 @@ public class HiveMetadataDProcessor extends DProcessor {
       type = ConfigDef.Type.STRING,
       defaultValue = "${record:attribute('database')}",
       description = "Use an expression language to obtain database name from record. If not set, \"default\" will be applied",
-      displayPosition = 20,
-      group = "HIVE",
+      displayPosition = 10,
+      group = "TABLE",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class}
   )
@@ -77,7 +77,7 @@ public class HiveMetadataDProcessor extends DProcessor {
       displayPosition = 20,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class},
-      group = "HIVE"
+      group = "TABLE"
   )
   public String tableNameEL;
 
@@ -87,10 +87,10 @@ public class HiveMetadataDProcessor extends DProcessor {
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
       description = "Partition information, often used in PARTITION BY clause in CREATE query.",
-      displayPosition = 20,
+      displayPosition = 30,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class},
-      group = "HIVE"
+      group = "TABLE"
   )
   @ListBeanModel
   public List<PartitionConfig> partitionList;
@@ -102,8 +102,8 @@ public class HiveMetadataDProcessor extends DProcessor {
       defaultValue = "false",
       description = "Will data be stored in external table? If checked, Hive will not use the default location. " +
           "Otherwise, Hive will use the default location at hive.metastore.warehouse.dir in hive-site.xml",
-      displayPosition = 20,
-      group = "HIVE"
+      displayPosition = 40,
+      group = "TABLE"
   )
   public boolean externalTable;
 
@@ -114,8 +114,8 @@ public class HiveMetadataDProcessor extends DProcessor {
       type = ConfigDef.Type.STRING,
       defaultValue = "/user/hive/warehouse/${record:attribute('database')}.db/${record:attribute('table_name')}",
       description = "Expression for table path",
-      displayPosition = 20,
-      group = "HIVE",
+      displayPosition = 50,
+      group = "TABLE",
       dependsOn = "externalTable",
       triggeredByValue = "true",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -129,8 +129,8 @@ public class HiveMetadataDProcessor extends DProcessor {
       type = ConfigDef.Type.STRING,
       defaultValue = "dt=${record:attribute('dt')}",
       description = "Expression for partition path",
-      displayPosition = 20,
-      group = "HIVE",
+      displayPosition = 60,
+      group = "TABLE",
       dependsOn = "externalTable",
       triggeredByValue = "true",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -144,12 +144,15 @@ public class HiveMetadataDProcessor extends DProcessor {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       description = "Expression that will evaluate to column comment.",
-      displayPosition = 20,
-      group = "HIVE",
+      displayPosition = 70,
+      group = "TABLE",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class, FieldPathEL.class}
   )
   public String commentExpression;
+
+  @ConfigDefBean
+  public DecimalDefaultsConfig decimalDefaultsConfig;
 
   @ConfigDef(
       required = true,
@@ -158,7 +161,7 @@ public class HiveMetadataDProcessor extends DProcessor {
       label = "Time Basis",
       description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
           "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
-      displayPosition = 130,
+      displayPosition = 100,
       group = "ADVANCED",
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -171,20 +174,17 @@ public class HiveMetadataDProcessor extends DProcessor {
       defaultValue = "UTC",
       label = "Data Time Zone",
       description = "Time zone to use for a record.",
-      displayPosition = 140,
+      displayPosition = 110,
       group = "ADVANCED"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
   public String timeZoneID;
 
-  @ConfigDefBean
-  public DecimalDefaultsConfig decimalDefaultsConfig;
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
-      displayPosition = 150,
+      displayPosition = 10,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(HMPDataFormatChooserValues.class)

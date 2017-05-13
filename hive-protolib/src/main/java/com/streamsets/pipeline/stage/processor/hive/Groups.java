@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   HIVE("Hive"),
+  TABLE("Table"),
   ADVANCED("Advanced"),
   DATA_FORMAT("Data Format")
   ;
