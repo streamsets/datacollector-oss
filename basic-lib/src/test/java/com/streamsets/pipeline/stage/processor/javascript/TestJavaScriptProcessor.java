@@ -552,12 +552,14 @@ public class TestJavaScriptProcessor {
         "  records[i].value['initValue'] = state['initValue'];\n" +
         "  output.write(records[i])\n" +
         "}";
+    String destroyScript = "event = sdcFunctions.createEvent(\"event\", 1)\n" +
+      "sdcFunctions.toEvent(event)";
 
     Processor processor = new JavaScriptProcessor(
         ProcessingMode.BATCH,
         script,
         initScript,
-        ""
+        destroyScript
     );
     ScriptingProcessorTestUtil.verifyInitDestroy(JavaScriptProcessor.class, processor);
   }

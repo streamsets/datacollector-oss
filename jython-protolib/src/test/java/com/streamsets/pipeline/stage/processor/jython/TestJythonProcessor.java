@@ -457,12 +457,14 @@ public class TestJythonProcessor {
     String script = "for record in records:\n" +
         "  record.value['initValue'] = state['initValue']\n" +
         "  output.write(record)\n";
+    String destroyScript = "event = sdcFunctions.createEvent(\"event\", 1)\n" +
+      "sdcFunctions.toEvent(event)";
 
     Processor processor = new JythonProcessor(
         ProcessingMode.BATCH,
         script,
         initScript,
-        ""
+        destroyScript
     );
     ScriptingProcessorTestUtil.verifyInitDestroy(JythonProcessor.class, processor);
   }

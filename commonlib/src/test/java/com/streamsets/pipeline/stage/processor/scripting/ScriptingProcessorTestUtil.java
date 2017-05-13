@@ -776,10 +776,16 @@ public class ScriptingProcessorTestUtil {
     } finally {
       runner.runDestroy();
     }
+
+    // Validate init method by getting normal record from process with value that was set in init()
     List<Record> records = output.getRecords().get("lane");
     assertEquals(1, records.size());
     assertTrue(records.get(0).has("/initValue"));
     assertEquals("init", records.get(0).get("/initValue").getValueAsString());
+
+    // Validate destroy method by getting event that is generated only there
+    List<Record> events = runner.getEventRecords();
+    assertEquals(1, events.size());
   }
 
   static void assertFieldUtil(String fieldName, Field field, Object obj){

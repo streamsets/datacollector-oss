@@ -52,7 +52,6 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   private final String script;
   private final String initScript;
   private final String destroyScript;
-  private final SimpleBindings bindings = new SimpleBindings();
   // State obj for use by end-user scripts.
   private Object state;
 
@@ -177,12 +176,8 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     err = new Err();
     sdcFunc = new SdcFunctions();
 
-    SimpleBindings initBindings = new SimpleBindings();
-    initBindings.put(STATE_BINDING_NAME, state);
-    initBindings.put(LOG_BINDING_NAME, log);
-
     try {
-      engine.eval(initScript, initBindings);
+      engine.eval(initScript, createBindings());
     } catch (ScriptException e) {
       issues.add(getContext().createConfigIssue(scriptConfigGroup, "initScript", Errors.SCRIPTING_08, e.toString(), e));
     }
@@ -193,10 +188,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   @Override
   public void destroy() {
     try {
-      SimpleBindings destroyBindings = new SimpleBindings();
-      destroyBindings.put(STATE_BINDING_NAME, state);
-      destroyBindings.put(LOG_BINDING_NAME, log);
-      engine.eval(destroyScript, destroyBindings);
+      engine.eval(destroyScript, createBindings());
     } catch (ScriptException e) {
       log.error(Errors.SCRIPTING_09.getMessage(), e.toString(), e);
     }
@@ -226,7 +218,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
     while (it.hasNext()) {
       Record record = it.next();
       records.set(0, getScriptObjectFactory().createScriptRecord(record));
-      runScript(records, out, err, state, log);
+      runScript(records, out);
     }
   }
 
@@ -237,20 +229,12 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       Record record = it.next();
       records.add(getScriptObjectFactory().createScriptRecord(record));
     }
-    runScript(records, out, err, state, log);
+    runScript(records, out);
   }
 
-  private void runScript(List<ScriptRecord> records, Out out, Err err, Object state, Logger log) throws StageException {
-    bindings.put("records", records.toArray(new Object[records.size()]));
-    bindings.put("output", out);
-    bindings.put("error", err);
-    bindings.put(STATE_BINDING_NAME, state);
-    bindings.put(LOG_BINDING_NAME, log);
-    ScriptTypedNullObject.fillNullTypes(bindings);
-    bindings.put("sdcFunctions", sdcFunc);
-
+  private void runScript(List<ScriptRecord> records, Out out) throws StageException {
     try {
-      runScript(bindings);
+      runScript(createBindings(records, out));
     } catch (ScriptException ex) {
       switch (processingMode) {
         case RECORD:
@@ -271,7 +255,25 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
           );
       }
     }
+  }
 
+  private SimpleBindings createBindings(List<ScriptRecord> records, Out out) {
+    SimpleBindings bindings = createBindings();
+    bindings.put("records", records.toArray(new Object[records.size()]));
+    bindings.put("output", out);
+    return bindings;
+  }
+
+  private SimpleBindings createBindings() {
+    SimpleBindings bindings = new SimpleBindings();
+
+    bindings.put("error", err);
+    bindings.put(STATE_BINDING_NAME, state);
+    bindings.put(LOG_BINDING_NAME, log);
+    ScriptTypedNullObject.fillNullTypes(bindings);
+    bindings.put("sdcFunctions", sdcFunc);
+
+    return bindings;
   }
 
   private void runScript(SimpleBindings bindings) throws ScriptException {

@@ -337,12 +337,14 @@ public class TestGroovyProcessor {
         "  record.value['initValue'] = state['initValue']\n" +
         "  output.write(record)\n" +
         "}";
+    String destroyScript = "event = sdcFunctions.createEvent(\"event\", 1)\n" +
+      "sdcFunctions.toEvent(event)";
 
     Processor processor = new GroovyProcessor(
         ProcessingMode.BATCH,
         script,
         initScript,
-        ""
+        destroyScript
     );
     ScriptingProcessorTestUtil.verifyInitDestroy(GroovyProcessor.class, processor);
   }
