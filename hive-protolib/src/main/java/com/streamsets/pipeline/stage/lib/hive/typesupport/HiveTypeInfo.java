@@ -19,11 +19,16 @@
  */
 package com.streamsets.pipeline.stage.lib.hive.typesupport;
 
+/**
+ * Describes Hive type including additional metadata (such as column comment).
+ */
 public class HiveTypeInfo {
   HiveType hiveType;
+  String comment;
 
-  HiveTypeInfo(HiveType hiveType) {
+  HiveTypeInfo(HiveType hiveType, String comment) {
     this.hiveType = hiveType;
+    this.comment = comment;
   }
 
   public HiveType getHiveType() {
@@ -39,6 +44,10 @@ public class HiveTypeInfo {
 
     return hiveType == that.hiveType;
 
+  }
+
+  public String getComment() {
+    return this.comment;
   }
 
   @Override

@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage;
 
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.processor.hive.DecimalDefaultsConfig;
 import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
@@ -40,6 +39,7 @@ public class HiveMetadataProcessorBuilder {
   private DecimalDefaultsConfig decimalDefaultsConfig;
   private TimeZone timeZone;
   private HMPDataFormat dataFormat;
+  private String commentEL;
 
   public HiveMetadataProcessorBuilder() {
     database = "default";
@@ -54,6 +54,7 @@ public class HiveMetadataProcessorBuilder {
     decimalDefaultsConfig.precisionExpression = String.valueOf(38);
     timeZone = TimeZone.getTimeZone("UTC");
     dataFormat = HMPDataFormat.AVRO;
+    commentEL = "${field:field()}";
   }
 
   public HiveMetadataProcessorBuilder database(String database) {
@@ -119,19 +120,25 @@ public class HiveMetadataProcessorBuilder {
     return this;
   }
 
+  public HiveMetadataProcessorBuilder commentEL(String commentEL) {
+    this.commentEL = commentEL;
+    return this;
+  }
+
   public HiveMetadataProcessor build() {
     return new HiveMetadataProcessor(
-        database,
-        table,
-        partitions,
-        external,
-        tablePathTemplate,
-        partitionPathTemplate,
-        BaseHiveIT.getHiveConfigBean(),
-        timeDriver,
-        decimalDefaultsConfig,
-        timeZone,
-        dataFormat
+      database,
+      table,
+      partitions,
+      external,
+      tablePathTemplate,
+      partitionPathTemplate,
+      BaseHiveIT.getHiveConfigBean(),
+      timeDriver,
+      decimalDefaultsConfig,
+      timeZone,
+      dataFormat,
+      commentEL
     );
   }
 }

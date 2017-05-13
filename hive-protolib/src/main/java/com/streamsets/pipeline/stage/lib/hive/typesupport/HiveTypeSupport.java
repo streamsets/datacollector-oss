@@ -42,6 +42,7 @@ public abstract class HiveTypeSupport {
     Map<String, Field> fields = new HashMap<>();
     fields.put(HiveMetastoreUtil.TYPE, Field.create(hiveTypeInfo.getHiveType().name()));
     fields.put(HiveMetastoreUtil.EXTRA_INFO, generateExtraInfoFieldForMetadataRecord(hiveTypeInfo));
+    fields.put(HiveMetastoreUtil.COMMENT, Field.create(Field.Type.STRING, hiveTypeInfo.getComment()));
     return Field.create(fields);
   }
 
@@ -63,7 +64,11 @@ public abstract class HiveTypeSupport {
         throw new StageException(Errors.HIVE_17, HiveMetastoreUtil.TYPE_INFO);
       }
       HiveType hiveType = HiveType.getHiveTypeFromString(fields.get(HiveMetastoreUtil.TYPE).getValueAsString());
-      return generateHiveTypeInfoFromMetadataField(hiveType, fields.get(HiveMetastoreUtil.EXTRA_INFO));
+      String comment = "";
+      if(fields.containsKey(HiveMetastoreUtil.COMMENT)) {
+        comment = fields.get(HiveMetastoreUtil.COMMENT).getValueAsString();
+      }
+      return generateHiveTypeInfoFromMetadataField(hiveType, comment, fields.get(HiveMetastoreUtil.EXTRA_INFO));
     } else {
       throw new StageException(Errors.HIVE_17, HiveMetastoreUtil.TYPE_INFO);
     }
@@ -77,9 +82,10 @@ public abstract class HiveTypeSupport {
    */
   public String generateColumnTypeDefinition(HiveTypeInfo hiveTypeInfo, String columnName) {
     return String.format(
-        HiveMetastoreUtil.COLUMN_TYPE,
-        columnName,
-        hiveTypeInfo.toString()
+      HiveMetastoreUtil.COLUMN_TYPE,
+      columnName,
+      hiveTypeInfo.toString(),
+      hiveTypeInfo.getComment()
     );
   }
 
@@ -92,6 +98,7 @@ public abstract class HiveTypeSupport {
    */
   protected abstract <T extends HiveTypeInfo> T generateHiveTypeInfoFromMetadataField(
       HiveType type,
+      String comment,
       Field hiveTypeField
   ) throws StageException;
 
@@ -120,7 +127,7 @@ public abstract class HiveTypeSupport {
    * @return {@link HiveTypeInfo}
    * @throws StageException
    */
-  public abstract <T extends HiveTypeInfo> T generateHiveTypeInfoFromRecordField(Field field, Object... auxillaryArgs)
+  public abstract <T extends HiveTypeInfo> T generateHiveTypeInfoFromRecordField(Field field, String comment, Object... auxillaryArgs)
       throws HiveStageCheckedException;
 
   /**
@@ -128,5 +135,5 @@ public abstract class HiveTypeSupport {
    * @param <T> {@link HiveTypeInfo}
    * @return {@link HiveTypeInfo}
    */
-  public abstract <T extends HiveTypeInfo> T createTypeInfo(HiveType hiveType, Object... auxillaryArgs);
+  public abstract <T extends HiveTypeInfo> T createTypeInfo(HiveType hiveType, String comment, Object... auxillaryArgs);
 }

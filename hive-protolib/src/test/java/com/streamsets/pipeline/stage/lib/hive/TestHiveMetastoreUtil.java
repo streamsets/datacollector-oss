@@ -22,12 +22,16 @@ package com.streamsets.pipeline.stage.lib.hive;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.sdk.ElUtil;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.lib.hive.exceptions.HiveStageCheckedException;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveType;
 import com.streamsets.pipeline.stage.lib.hive.typesupport.HiveTypeInfo;
 import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -39,14 +43,23 @@ import java.util.Map;
 
 public class TestHiveMetastoreUtil {
 
-  // Utility function to generate HiveTypeInfo from HiveType.
-  public static HiveTypeInfo generatePrimitiveTypeInfo(HiveType type){
-    return type.getSupport().createTypeInfo(type);
+  private ELVars variables;
+  private ELEval eval;
+
+  @Before
+  public void setUpEls() {
+    this.variables = ElUtil.createELVars();
+    this.eval = ElUtil.createElEval("not-important", FieldPathEL.class);
   }
 
   // Utility function to generate HiveTypeInfo from HiveType.
-  public static HiveTypeInfo generateDecimalTypeInfo(int precision, int scale){
-    return HiveType.DECIMAL.getSupport().createTypeInfo(HiveType.DECIMAL, precision, scale);
+  public static HiveTypeInfo generatePrimitiveTypeInfo(HiveType type, String comment){
+    return type.getSupport().createTypeInfo(type, comment);
+  }
+
+  // Utility function to generate HiveTypeInfo from HiveType.
+  public static HiveTypeInfo generateDecimalTypeInfo(String comment, int precision, int scale){
+    return HiveType.DECIMAL.getSupport().createTypeInfo(HiveType.DECIMAL, comment, precision, scale);
   }
 
   @Test
@@ -64,17 +77,26 @@ public class TestHiveMetastoreUtil {
     record.set(Field.create(map));
 
     Map<String, HiveTypeInfo> expected = new LinkedHashMap<>();
-    expected.put("string", generatePrimitiveTypeInfo(HiveType.STRING));
-    expected.put("boolean", generatePrimitiveTypeInfo(HiveType.BOOLEAN));
-    expected.put("integer", generatePrimitiveTypeInfo(HiveType.INT));
-    expected.put("negative", generatePrimitiveTypeInfo(HiveType.INT));
-    expected.put("long", generatePrimitiveTypeInfo(HiveType.BIGINT));
-    expected.put("float", generatePrimitiveTypeInfo(HiveType.FLOAT));
-    expected.put("double", generatePrimitiveTypeInfo(HiveType.DOUBLE));
+    expected.put("string", generatePrimitiveTypeInfo(HiveType.STRING, "string"));
+    expected.put("boolean", generatePrimitiveTypeInfo(HiveType.BOOLEAN, "boolean"));
+    expected.put("integer", generatePrimitiveTypeInfo(HiveType.INT, "integer"));
+    expected.put("negative", generatePrimitiveTypeInfo(HiveType.INT, "negative"));
+    expected.put("long", generatePrimitiveTypeInfo(HiveType.BIGINT,"long"));
+    expected.put("float", generatePrimitiveTypeInfo(HiveType.FLOAT, "float"));
+    expected.put("double", generatePrimitiveTypeInfo(HiveType.DOUBLE, "double"));
 
     Map<String, HiveTypeInfo> actual = null;
     try {
-      actual = HiveMetastoreUtil.convertRecordToHMSType(record, null, null, null, null, null);
+      actual = HiveMetastoreUtil.convertRecordToHMSType(
+        record,
+        eval,
+        eval,
+        eval,
+        "",
+        "",
+        "${field:field()}",
+        variables
+      );
     } catch (StageException e){
       Assert.fail("convertRecordToHMSType threw StageException:" + e.getMessage());
     }
@@ -82,6 +104,7 @@ public class TestHiveMetastoreUtil {
     for(Map.Entry<String, HiveTypeInfo> pair:  expected.entrySet()) {
       HiveTypeInfo actualType = actual.get(pair.getKey());
       Assert.assertEquals(pair.getValue().getHiveType(), actualType.getHiveType());
+      Assert.assertEquals(pair.getValue().getComment(), actualType.getComment());
     }
   }
 
@@ -90,7 +113,7 @@ public class TestHiveMetastoreUtil {
     Record record = RecordCreator.create();
     record.set(Field.create(Field.Type.LIST, Collections.emptyList()));
 
-    HiveMetastoreUtil.convertRecordToHMSType(record, null, null, null, null, null);
+    HiveMetastoreUtil.convertRecordToHMSType(record, eval, eval, eval, "", "", "",  variables);
   }
 
   @Test
@@ -115,20 +138,22 @@ public class TestHiveMetastoreUtil {
     record.set(Field.create(map));
 
     Map<String, HiveTypeInfo> expected = new LinkedHashMap<>();
-    expected.put("char", generatePrimitiveTypeInfo(HiveType.STRING));
-    expected.put("short", generatePrimitiveTypeInfo(HiveType.INT));
-    expected.put("date", generatePrimitiveTypeInfo(HiveType.DATE));
-    expected.put("decimal", generateDecimalTypeInfo(decimalVal.scale(), decimalVal.precision()));
+    expected.put("char", generatePrimitiveTypeInfo(HiveType.STRING, "char"));
+    expected.put("short", generatePrimitiveTypeInfo(HiveType.INT, "short"));
+    expected.put("date", generatePrimitiveTypeInfo(HiveType.DATE, "date"));
+    expected.put("decimal", generateDecimalTypeInfo("decimal", decimalVal.scale(), decimalVal.precision()));
 
     Map<String, HiveTypeInfo> actual = null;
     try {
       actual = HiveMetastoreUtil.convertRecordToHMSType(
           record,
-          null,
-          null,
+          eval,
+          eval,
+          eval,
           String.valueOf(decimalVal.scale()),
           String.valueOf(decimalVal.precision()),
-          null
+          "${field:field()}",
+          variables
       );
     } catch (StageException e){
       Assert.fail("convertRecordToHMSType threw StageException:" + e.getMessage());
@@ -138,6 +163,7 @@ public class TestHiveMetastoreUtil {
     for(Map.Entry<String, HiveTypeInfo> pair:  expected.entrySet()) {
       HiveTypeInfo actualType = actual.get(pair.getKey());
       Assert.assertEquals(pair.getValue().getHiveType(), actualType.getHiveType());
+      Assert.assertEquals(pair.getValue().getComment(), actualType.getComment());
     }
 
     // Test if the Field type and values in original Record are converted correctly

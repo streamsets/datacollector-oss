@@ -31,6 +31,7 @@ import java.util.List;
 public class HiveMetadataProcessorUpgrader implements StageUpgrader {
   private static final String DATA_FORMAT = "dataFormat";
   private static final String DATA_FORMAT_AVRO = HMPDataFormat.AVRO.name();
+  private static final String COMMENT_EXPRESSION = "commentExpression";
 
   @Override
   public List<Config> upgrade(
@@ -50,6 +51,7 @@ public class HiveMetadataProcessorUpgrader implements StageUpgrader {
     List<Config> configsToAdd = new ArrayList<>();
 
     configsToAdd.add(new Config(DATA_FORMAT, DATA_FORMAT_AVRO));
+    configsToAdd.add(new Config(COMMENT_EXPRESSION, ""));
 
     configs.addAll(configsToAdd);
   }

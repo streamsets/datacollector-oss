@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.stage.lib.hive.FieldPathEL;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 
 import java.util.List;
@@ -138,6 +139,19 @@ public class HiveMetadataDProcessor extends DProcessor {
   public String partitionPathTemplate;
 
   @ConfigDef(
+      required = false,
+      label = "Column comment",
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      description = "Expression that will evaluate to column comment.",
+      displayPosition = 20,
+      group = "HIVE",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class, FieldPathEL.class}
+  )
+  public String commentExpression;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "${time:now()}",
@@ -179,17 +193,18 @@ public class HiveMetadataDProcessor extends DProcessor {
   @Override
   protected Processor createProcessor() {
     return new HadoopConfigurationSynchronizedProcessor(new HiveMetadataProcessor(
-        dbNameEL,
-        tableNameEL,
-        partitionList,
-        externalTable,
-        tablePathTemplate,
-        partitionPathTemplate,
-        hiveConfigBean,
-        timeDriver,
-        decimalDefaultsConfig,
-        TimeZone.getTimeZone(timeZoneID),
-        dataFormat
+      dbNameEL,
+      tableNameEL,
+      partitionList,
+      externalTable,
+      tablePathTemplate,
+      partitionPathTemplate,
+      hiveConfigBean,
+      timeDriver,
+      decimalDefaultsConfig,
+      TimeZone.getTimeZone(timeZoneID),
+      dataFormat,
+      commentExpression
     ));
   }
 

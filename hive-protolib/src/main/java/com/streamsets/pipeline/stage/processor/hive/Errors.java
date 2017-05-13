@@ -34,6 +34,7 @@ public enum Errors implements ErrorCode {
   HIVE_METADATA_08("Invalid value {} for scale in field {}, should be less than or equal to precision's value: {}"),
   HIVE_METADATA_09("Invalid type for partition: {}"),
   HIVE_METADATA_10("Unsupported character to use for partition value: {}"),
+  HIVE_METADATA_11("Invalid comment for column '{}': {}"),
   ;
 
 

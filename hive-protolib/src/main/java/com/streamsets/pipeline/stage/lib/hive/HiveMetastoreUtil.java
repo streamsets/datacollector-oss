@@ -103,7 +103,7 @@ public final class HiveMetastoreUtil {
   public static final String PARTITION_ADDITION_METADATA_RECORD_VERSION = "2";
 
   public static final String HIVE_OBJECT_ESCAPE =  "`";
-  public static final String COLUMN_TYPE = HIVE_OBJECT_ESCAPE + "%s" + HIVE_OBJECT_ESCAPE + " %s";
+  public static final String COLUMN_TYPE = HIVE_OBJECT_ESCAPE + "%s" + HIVE_OBJECT_ESCAPE + " %s COMMENT \"%s\"";
   public static final String DATABASE_FIELD = "database";
   public static final String SEP = "/";
   public static final String EQUALS = "=";
@@ -117,6 +117,7 @@ public final class HiveMetastoreUtil {
   public static final String TYPE_INFO = "typeInfo";
   public static final String TYPE = "type";
   public static final String EXTRA_INFO = "extraInfo";
+  public static final String COMMENT = "comment";
   public static final String AVRO_SCHEMA_FILE_FORMAT =  AVRO_SCHEMA +"_%s_%s_%s"+AVRO_SCHEMA_EXT;
   public static final String AVRO_SERDE = "org.apache.hadoop.hive.serde2.avro.AvroSerDe";
   public static final String PARQUET_SERDE = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe";
@@ -129,6 +130,7 @@ public final class HiveMetastoreUtil {
   private static final Pattern UNSUPPORTED_PARTITION_VALUE_PATTERN = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
   //Letters followed by letters/numbers/underscore
   private static final Pattern COLUMN_NAME_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
+  private static final Pattern COMMENT_PATTERN = Pattern.compile("[^\"]*");
 
   public enum MetadataRecordType {
     /**
@@ -579,7 +581,6 @@ public final class HiveMetastoreUtil {
     String value = defaultScaleEL;
     // And if so evaluate it
     if (elEval != null) {
-      FieldPathEL.setFieldInContext(variables, fieldPath);
       value = elEval.eval(
           variables,
           defaultScaleEL,
@@ -639,8 +640,10 @@ public final class HiveMetastoreUtil {
       Record record,
       ELEval scaleEL,
       ELEval precisionEL,
+      ELEval commentEL,
       String scaleExpression,
       String precisionExpression,
+      String commentExpression,
       ELVars variables
   ) throws HiveStageCheckedException, ELEvalException {
     if(!record.get().getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
@@ -671,6 +674,14 @@ public final class HiveMetastoreUtil {
           break;
       }
 
+      // Set current field in the context - used by subsequent ELs (decimal resolution, comments, ...)
+      FieldPathEL.setFieldInContext(variables, pair.getKey());
+
+      String comment = commentEL.eval(variables, commentExpression, String.class);
+      if(!COMMENT_PATTERN.matcher(comment).matches()) {
+        throw new HiveStageCheckedException(com.streamsets.pipeline.stage.processor.hive.Errors.HIVE_METADATA_11, pair.getKey(), comment);
+      }
+
       // Update the Field type and value in Record
       pair.setValue(currField);
       HiveType hiveType = HiveType.getHiveTypeforFieldType(currField.getType());
@@ -680,13 +691,13 @@ public final class HiveMetastoreUtil {
         int precision = resolveScaleOrPrecisionExpression("precision", precisionEL, variables, precisionExpression, pair.getKey());
         int scale = resolveScaleOrPrecisionExpression("scale", scaleEL, variables, scaleExpression, pair.getKey());
         validateScaleAndPrecision(pair.getKey(), currField, precision, scale);
-        hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, precision, scale);
+        hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, comment, precision, scale);
         // We need to make sure that all java objects have the same scale
         if(currField.getValue() != null) {
           pair.setValue(Field.create(currField.getValueAsDecimal().setScale(scale)));
         }
       } else {
-        hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField);
+        hiveTypeInfo = hiveType.getSupport().generateHiveTypeInfoFromRecordField(currField, comment);
       }
       columns.put(pair.getKey().toLowerCase(), hiveTypeInfo);
     }

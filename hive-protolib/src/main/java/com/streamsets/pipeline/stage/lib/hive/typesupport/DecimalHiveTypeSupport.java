@@ -43,7 +43,7 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
   }
 
   @Override
-  protected DecimalTypeInfo generateHiveTypeInfoFromMetadataField(HiveType type, Field hiveTypeField)
+  protected DecimalTypeInfo generateHiveTypeInfoFromMetadataField(HiveType type, String comment, Field hiveTypeField)
       throws HiveStageCheckedException {
     Map<String, Field> extraInfo = hiveTypeField.getValueAsMap();
     if(!extraInfo.containsKey(SCALE)) {
@@ -54,7 +54,7 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
     }
     int scale = extraInfo.get(SCALE).getValueAsInteger();
     int precision = extraInfo.get(PRECISION).getValueAsInteger();
-    return new DecimalTypeInfo(precision, scale);
+    return new DecimalTypeInfo(comment, precision, scale);
   }
 
   @Override
@@ -71,7 +71,7 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
     }
     int precision = Integer.parseInt(split[0]);
     int scale = Integer.parseInt(split[1]);
-    return new DecimalTypeInfo(precision, scale);
+    return new DecimalTypeInfo("", precision, scale);
   }
 
   private static int getScale(Object... auxillaryArgs) {
@@ -90,25 +90,25 @@ public final class DecimalHiveTypeSupport extends PrimitiveHiveTypeSupport {
 
   @Override
   @SuppressWarnings("unchecked")
-  public DecimalTypeInfo generateHiveTypeInfoFromRecordField(Field field, Object... auxillaryArgs)
+  public DecimalTypeInfo generateHiveTypeInfoFromRecordField(Field field, String comment, Object... auxillaryArgs)
       throws HiveStageCheckedException {
     int precision = getPrecision(auxillaryArgs);
     int scale = getScale(auxillaryArgs);
-    return new DecimalTypeInfo(precision, scale);
+    return new DecimalTypeInfo(comment, precision, scale);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public DecimalTypeInfo createTypeInfo(HiveType hiveType, Object... auxillaryArgs) {
-    return new DecimalTypeInfo(getPrecision(auxillaryArgs), getScale(auxillaryArgs));
+  public DecimalTypeInfo createTypeInfo(HiveType hiveType, String comment, Object... auxillaryArgs) {
+    return new DecimalTypeInfo(comment, getPrecision(auxillaryArgs), getScale(auxillaryArgs));
   }
 
   public static class DecimalTypeInfo extends PrimitiveHiveTypeInfo {
     private int precision;
     private int scale;
 
-    public DecimalTypeInfo(int precision, int scale) {
-      super(HiveType.DECIMAL);
+    public DecimalTypeInfo(String comment, int precision, int scale) {
+      super(HiveType.DECIMAL, comment);
       this.precision = precision;
       this.scale = scale;
     }

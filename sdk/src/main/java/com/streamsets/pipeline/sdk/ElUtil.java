@@ -19,9 +19,13 @@
  */
 package com.streamsets.pipeline.sdk;
 
+import com.streamsets.datacollector.el.ELEvaluator;
+import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.FileEL;
 import com.streamsets.pipeline.lib.el.MathEL;
 import com.streamsets.pipeline.lib.el.StringEL;
@@ -32,7 +36,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-class ElUtil {
+public class ElUtil {
 
   private ElUtil() {}
 
@@ -80,5 +84,13 @@ class ElUtil {
     elDefClasses[i++] = MathEL.class;
     elDefClasses[i++] = FileEL.class;
     return elDefClasses;
+  }
+
+  public static ELEval createElEval(String configName, Class ...elDefs) {
+    return new ELEvaluator(configName, getElDefClasses(elDefs));
+  }
+
+  public static ELVars createELVars() {
+    return new ELVariables();
   }
 }

@@ -78,6 +78,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private static final String TIME_DRIVER = "timeDriver";
   private static final String SCALE_EXPRESSION = "scaleExpression";
   private static final String PRECISION_EXPRESSION = "precisionExpression";
+  private static final String COMMENT_EXPRESSION = "commentExpression";
   private static final String TEMP_AVRO_DIR_NAME = "/.avro";
 
   protected static final String HDFS_HEADER_ROLL = "roll";
@@ -93,6 +94,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private final DecimalDefaultsConfig decimalDefaultsConfig;
   private final TimeZone timeZone;
   private final HMPDataFormat dataFormat;
+  private final String commentExpression;
 
   private HiveConfigBean hiveConfigBean;
 
@@ -129,6 +131,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     private ELEval partitionPathTemplateELEval;
     private ELEval scaleEL;
     private ELEval precisionEL;
+    private ELEval commentEL;
 
     public void init(Stage.Context context) {
       dbNameELEval = context.createELEval(HIVE_DB_NAME);
@@ -139,6 +142,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       timeDriverElEval = context.createELEval(TIME_DRIVER);
       scaleEL = context.createELEval(SCALE_EXPRESSION);
       precisionEL = context.createELEval(PRECISION_EXPRESSION);
+      commentEL = context.createELEval(COMMENT_EXPRESSION);
     }
   }
 
@@ -153,7 +157,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String timeDriver,
       DecimalDefaultsConfig decimalDefaultsConfig,
       TimeZone timezone,
-      HMPDataFormat dataFormat
+      HMPDataFormat dataFormat,
+      String commentExpression
   ) {
     this.databaseEL = databaseEL;
     this.tableEL = tableEL;
@@ -169,6 +174,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     partitionTypeInfo = new LinkedHashMap<>();
     this.timeZone = timezone;
     this.dataFormat = dataFormat;
+    this.commentExpression = commentExpression;
   }
 
   @Override
@@ -210,7 +216,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
         }
         partitionTypeInfo.put(
             partition.name.toLowerCase(),
-            partition.valueType.getSupport().createTypeInfo(partition.valueType)
+            partition.valueType.getSupport().createTypeInfo(partition.valueType, "")
         );
       }
     }
@@ -367,8 +373,10 @@ public class HiveMetadataProcessor extends RecordProcessor {
           record,
           elEvals.scaleEL,
           elEvals.precisionEL,
+          elEvals.commentEL,
           decimalDefaultsConfig.scaleExpression,
           decimalDefaultsConfig.precisionExpression,
+          commentExpression,
           variables
       );
 

@@ -28,13 +28,13 @@ import java.util.LinkedHashMap;
 public class PrimitiveHiveTypeSupport extends HiveTypeSupport{
   @Override
   protected Field generateExtraInfoFieldForMetadataRecord(HiveTypeInfo hiveTypeInfo) {
-    return Field.create(new LinkedHashMap<String, Field>());
+    return Field.create(new LinkedHashMap<>());
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  protected PrimitiveHiveTypeInfo generateHiveTypeInfoFromMetadataField(HiveType type, Field hiveTypeField) throws StageException {
-    return new PrimitiveHiveTypeInfo(type);
+  protected PrimitiveHiveTypeInfo generateHiveTypeInfoFromMetadataField(HiveType type, String comment, Field hiveTypeField) throws StageException {
+    return new PrimitiveHiveTypeInfo(type, comment);
   }
 
   @Override
@@ -42,25 +42,25 @@ public class PrimitiveHiveTypeSupport extends HiveTypeSupport{
   public PrimitiveHiveTypeInfo generateHiveTypeInfoFromResultSet(String hiveTypeString)
       throws HiveStageCheckedException {
     HiveType type = HiveType.prefixMatch(hiveTypeString);
-    return new PrimitiveHiveTypeInfo(type);
+    return new PrimitiveHiveTypeInfo(type, "");
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveHiveTypeInfo generateHiveTypeInfoFromRecordField(Field field, Object... auxillaryArgs)
+  public PrimitiveHiveTypeInfo generateHiveTypeInfoFromRecordField(Field field, String comment, Object... auxillaryArgs)
       throws HiveStageCheckedException{
-    return new PrimitiveHiveTypeInfo(HiveType.getHiveTypeforFieldType(field.getType()));
+    return new PrimitiveHiveTypeInfo(HiveType.getHiveTypeforFieldType(field.getType()), comment);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public PrimitiveHiveTypeInfo createTypeInfo(HiveType hiveType, Object... auxillaryArgs){
-    return new PrimitiveHiveTypeInfo(hiveType);
+  public PrimitiveHiveTypeInfo createTypeInfo(HiveType hiveType, String comment, Object... auxillaryArgs){
+    return new PrimitiveHiveTypeInfo(hiveType, comment);
   }
 
   public static class PrimitiveHiveTypeInfo extends HiveTypeInfo{
-    public PrimitiveHiveTypeInfo(HiveType hiveType) {
-      super(hiveType);
+    public PrimitiveHiveTypeInfo(HiveType hiveType, String comment) {
+      super(hiveType, comment);
     }
   }
 }

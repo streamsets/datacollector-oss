@@ -127,16 +127,16 @@ public class TestHiveMetastoreTarget {
 
   private LinkedHashMap<String, HiveTypeInfo> generatePartitionTypeInfo() {
     LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo = new LinkedHashMap<>();
-    partitionTypeInfo.put("dt", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
+    partitionTypeInfo.put("dt", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "dt"));
     return partitionTypeInfo;
   }
 
   private LinkedHashMap<String, HiveTypeInfo> generateColumnTypeInfo() {
     LinkedHashMap<String, HiveTypeInfo> columnTypeInfo = new LinkedHashMap<>();
-    columnTypeInfo.put("id", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
-    columnTypeInfo.put("int", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT));
-    columnTypeInfo.put("decimal", TestHiveMetastoreUtil.generateDecimalTypeInfo(10, 5));
-    columnTypeInfo.put("string", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
+    columnTypeInfo.put("id", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "id"));
+    columnTypeInfo.put("int", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "int"));
+    columnTypeInfo.put("decimal", TestHiveMetastoreUtil.generateDecimalTypeInfo("decimal", 10, 5));
+    columnTypeInfo.put("string", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "string"));
     return columnTypeInfo;
   }
 

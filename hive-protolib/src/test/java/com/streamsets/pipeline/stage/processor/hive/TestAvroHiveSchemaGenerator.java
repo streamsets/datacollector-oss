@@ -45,9 +45,9 @@ public class TestAvroHiveSchemaGenerator {
         "}";
 
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
-    record.put("intColumn", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT)) ;
-    record.put("strColumn", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
-    record.put("boolColumn", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BOOLEAN));
+    record.put("intColumn", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "intColumn")) ;
+    record.put("strColumn", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "strColumn"));
+    record.put("boolColumn", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BOOLEAN, "boolColumn"));
 
     AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");
     String result = gen.inferSchema(record);
@@ -69,9 +69,9 @@ public class TestAvroHiveSchemaGenerator {
         "{\"name\":\"third\",\"type\":[\"null\",\"int\"],\"default\":null}]" +
         "}";
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
-    record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING)) ;
-    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
-    record.put("third", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT));
+    record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "first")) ;
+    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "second"));
+    record.put("third", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "third"));
 
     AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");
     String result = gen.inferSchema(record);
@@ -92,9 +92,9 @@ public class TestAvroHiveSchemaGenerator {
         "{\"name\":\"third\",\"type\":[\"null\",\"double\"],\"default\":null}]" +
         "}";
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
-    record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT)) ;
-    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.FLOAT));
-    record.put("third", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.DOUBLE));
+    record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT, "first")) ;
+    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.FLOAT, "second"));
+    record.put("third", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.DOUBLE, "double"));
 
     AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");
     String result = gen.inferSchema(record);
@@ -114,8 +114,8 @@ public class TestAvroHiveSchemaGenerator {
         "{\"name\":\"second\",\"type\":[\"null\",\"bytes\"],\"default\":null}]" +
         "}";
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
-    record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING)) ;
-    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BINARY));
+    record.put("first", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "first"));
+    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BINARY, "second"));
 
     AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");
     String result = gen.inferSchema(record);
@@ -136,8 +136,8 @@ public class TestAvroHiveSchemaGenerator {
         "{\"name\":\"second\",\"type\":[\"null\",\"string\"],\"default\":null}]" +
         "}";
     Map<String, HiveTypeInfo> record = new LinkedHashMap<>();
-    record.put("first", TestHiveMetastoreUtil.generateDecimalTypeInfo(2, 1)) ;
-    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
+    record.put("first", TestHiveMetastoreUtil.generateDecimalTypeInfo("first",2, 1)) ;
+    record.put("second", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "second"));
 
     AvroHiveSchemaGenerator gen = new AvroHiveSchemaGenerator("test");
     String result = gen.inferSchema(record);

@@ -29,7 +29,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
@@ -95,54 +94,54 @@ public class TestHiveMetadataProcessor {
   static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_RECORD1
       = new LinkedHashMap<>(ImmutableMap.of(
       "column1",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING),
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "column1"),
       "column2",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT)
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "column2")
   )
   );
 
   static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_RECORD2
       = new LinkedHashMap<>(ImmutableMap.of(
       "column1",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BOOLEAN),
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BOOLEAN, "column1"),
       "column2",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.DOUBLE)
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.DOUBLE, "column2")
   )
   );
 
   static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_RECORD3
       = new LinkedHashMap<>(ImmutableMap.of(
       "first",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING),
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "first"),
       "second",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT)
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "second")
   )
   );
 
   static final LinkedHashMap<String, HiveTypeInfo> DECIMAL_RECORD1
       = new LinkedHashMap<>(ImmutableMap.of(
       "decimal_val",
-      TestHiveMetastoreUtil.generateDecimalTypeInfo(5, 10),
+      TestHiveMetastoreUtil.generateDecimalTypeInfo("decimal_val", 5, 10),
       "long_val",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT)
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT, "long_val")
   )
   );
 
   static final LinkedHashMap<String, HiveTypeInfo> DECIMAL_RECORD2
       = new LinkedHashMap<>(ImmutableMap.of(
       "decimal_val",
-      TestHiveMetastoreUtil.generateDecimalTypeInfo(10, 12),
+      TestHiveMetastoreUtil.generateDecimalTypeInfo("decimal_val", 10, 12),
       "long_value",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT)
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.BIGINT, "long_value")
   )
   );
 
   static final LinkedHashMap<String, HiveTypeInfo> SAMPLE_PARTITION
       = new LinkedHashMap<>(ImmutableMap.of(
       "dt",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING),
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "dt"),
       "state",
-      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING)
+      TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "state")
   )
   );
 
@@ -237,6 +236,10 @@ public class TestHiveMetadataProcessor {
       Map<String, Field> extraInfo
           = elem.get(HiveMetastoreUtil.TYPE_INFO).getValueAsMap().get(HiveMetastoreUtil.EXTRA_INFO).getValueAsMap();
 
+      // Assert column comment (should be the same as column name in this test case)
+      String comment = elem.get(HiveMetastoreUtil.TYPE_INFO).getValueAsMap().get(HiveMetastoreUtil.COMMENT).getValueAsString();
+      Assert.assertEquals(comment, colName);
+
       if (original.get(colName).getHiveType() == HiveType.DECIMAL){
         DecimalHiveTypeSupport.DecimalTypeInfo expectedDecimal
             = (DecimalHiveTypeSupport.DecimalTypeInfo)original.get(colName);
@@ -250,6 +253,7 @@ public class TestHiveMetadataProcessor {
             extraInfo.get(DecimalHiveTypeSupport.SCALE).getValueAsInteger(),
             expectedDecimal.getScale()
         );
+
       } else {
         // Type is not decimal, so extraInfo should be empty
         Assert.assertTrue(extraInfo.isEmpty());

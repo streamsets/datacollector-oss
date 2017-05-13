@@ -177,7 +177,7 @@ public class TestHMSCache {
     hmsCache.invalidate(cacheType, qualifiedTableName);
 
     LinkedHashMap<String, HiveTypeInfo> columnTypeInfo = new LinkedHashMap<>();
-    columnTypeInfo.put("id", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
+    columnTypeInfo.put("id", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "id"));
     setMockForHMSCacheLoader(columnTypeInfo, EMPTY_TYPE_INFO, EMPTY_PARTITION_INFO, true, true);
 
     tblPropertiesInfo = hmsCache.getOrLoad(cacheType, qualifiedTableName);
@@ -238,17 +238,17 @@ public class TestHMSCache {
 
   private LinkedHashMap<String, HiveTypeInfo> getDefaultColumnTypeInfo() {
     LinkedHashMap<String, HiveTypeInfo> defaultColumnTypeInfo = new LinkedHashMap<>();
-    defaultColumnTypeInfo.put("string", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
-    defaultColumnTypeInfo.put("int", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT));
+    defaultColumnTypeInfo.put("string", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "string"));
+    defaultColumnTypeInfo.put("int", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "int"));
     return defaultColumnTypeInfo;
   }
 
   private LinkedHashMap<String, HiveTypeInfo> getDefaultPartitionTypeInfo() {
     LinkedHashMap<String, HiveTypeInfo> defaultPartitionTypeInfo = new LinkedHashMap<>();
-    defaultPartitionTypeInfo.put("dt", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING));
-    defaultPartitionTypeInfo.put("year", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT));
-    defaultPartitionTypeInfo.put("month", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT));
-    defaultPartitionTypeInfo.put("day", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT));
+    defaultPartitionTypeInfo.put("dt", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "dt"));
+    defaultPartitionTypeInfo.put("year", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "year"));
+    defaultPartitionTypeInfo.put("month", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "month"));
+    defaultPartitionTypeInfo.put("day", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT, "day"));
     return defaultPartitionTypeInfo;
   }
 
@@ -301,7 +301,7 @@ public class TestHMSCache {
     Assert.assertEquals("Diff size mismatch", 0, diff.size());
 
     extraColumn = new LinkedHashMap<>(defaultColumnTypeInfo);
-    extraColumn.put("decimal", TestHiveMetastoreUtil.generateDecimalTypeInfo(10, 5));
+    extraColumn.put("decimal", TestHiveMetastoreUtil.generateDecimalTypeInfo("decimal",10, 5));
 
     diff = typeInfo.getDiff(extraColumn);
     Assert.assertEquals("Diff size mismatch", 1, diff.size());
@@ -318,7 +318,7 @@ public class TestHMSCache {
 
     //Change a type of a column for c_string and see what happens
     extraColumn = new LinkedHashMap<>(defaultColumnTypeInfo);
-    extraColumn.put("string", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.INT));
+    extraColumn.put("string", TestHiveMetastoreUtil.generatePrimitiveTypeInfo( HiveType.INT, "string"));
     try {
       diff = typeInfo.getDiff(extraColumn);
       Assert.fail("Diff with mismatched column should fail.");
@@ -328,7 +328,7 @@ public class TestHMSCache {
 
     //Change the scale of the decimal column
     extraColumn = new LinkedHashMap<>(defaultColumnTypeInfo);
-    extraColumn.put("decimal", TestHiveMetastoreUtil.generateDecimalTypeInfo(10, 3));
+    extraColumn.put("decimal", TestHiveMetastoreUtil.generateDecimalTypeInfo("decimal", 10, 3));
     try {
       diff = typeInfo.getDiff(extraColumn);
       Assert.fail("Diff with changed decimal column info should fail.");
