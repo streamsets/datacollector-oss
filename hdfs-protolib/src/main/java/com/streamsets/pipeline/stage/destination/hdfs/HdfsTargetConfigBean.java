@@ -153,8 +153,8 @@ public class HdfsTargetConfigBean {
       description = "File name suffix e.g.'txt'",
       displayPosition = 106,
       group = "OUTPUT_FILES",
-      dependsOn = "dataFormat",
-      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
+      dependsOn = "fileType",
+      triggeredByValue = {"TEXT", "SEQUENCE_FILE"}
   )
   public String fileNameSuffix;
 
@@ -221,8 +221,8 @@ public class HdfsTargetConfigBean {
     displayPosition = 140,
     group = "OUTPUT_FILES",
     min = 0,
-    dependsOn = "dataFormat",
-    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
+    dependsOn = "fileType",
+    triggeredByValue = {"TEXT", "SEQUENCE_FILE"}
   )
   public long maxRecordsPerFile;
 
@@ -235,25 +235,25 @@ public class HdfsTargetConfigBean {
     displayPosition = 150,
     group = "OUTPUT_FILES",
     min = 0,
-    dependsOn = "dataFormat",
-    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
+    dependsOn = "fileType",
+    triggeredByValue = {"TEXT", "SEQUENCE_FILE"}
   )
   public long maxFileSize;
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "${1 * HOURS}",
-      label = "Idle Timeout",
-      description = "Maximum time for a file to remain idle. After no records are written to a file for the" +
-        " specified time, the destination closes the file. Enter a number to specify a value in seconds. You" +
-        " can also use the MINUTES or HOURS constants in an expression. Use -1 to opt out of a timeout.",
-      group = "OUTPUT_FILES",
-      displayPosition = 155,
-      elDefs = {TimeEL.class},
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
-      dependsOn = "dataFormat",
-      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "${1 * HOURS}",
+    label = "Idle Timeout",
+    description = "Maximum time for a file to remain idle. After no records are written to a file for the" +
+      " specified time, the destination closes the file. Enter a number to specify a value in seconds. You" +
+      " can also use the MINUTES or HOURS constants in an expression. Use -1 to opt out of a timeout.",
+    group = "OUTPUT_FILES",
+    displayPosition = 155,
+    elDefs = {TimeEL.class},
+    evaluation = ConfigDef.Evaluation.EXPLICIT,
+    dependsOn = "fileType",
+    triggeredByValue = {"TEXT", "SEQUENCE_FILE"}
   )
   public String idleTimeout;
 
@@ -265,8 +265,8 @@ public class HdfsTargetConfigBean {
     description = "",
     displayPosition = 160,
     group = "OUTPUT_FILES",
-    dependsOn = "dataFormat",
-    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
+    dependsOn = "fileType",
+    triggeredByValue = {"TEXT", "SEQUENCE_FILE"}
   )
   @ValueChooserModel(CompressionChooserValues.class)
   public CompressionMode compression;
