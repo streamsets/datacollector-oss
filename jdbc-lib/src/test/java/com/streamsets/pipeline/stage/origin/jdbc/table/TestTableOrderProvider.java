@@ -162,6 +162,10 @@ public class TestTableOrderProvider {
         tableName,
         new LinkedHashMap<>(ImmutableMap.of("prim_key", Types.INTEGER)),
         Collections.emptyMap(),
+        Collections.emptyMap(),
+        Collections.emptyMap(),
+        false,
+        -1,
         null
     );
   }
@@ -179,7 +183,8 @@ public class TestTableOrderProvider {
     ).with((proxy, method, args) -> new HashSet<>(referredTablesTestRelation.getReferredTableMap().get((String)args[2])));
     tableOrderProvider = new TableOrderProviderFactory(PowerMockito.mock(Connection.class), tableOrderStrategy).create();
     for (String table : referredTablesTestRelation.getTableListingOrder()) {
-      tableContextsMap.put(TableContextUtil.getQualifiedTableName(null, table), getTableContext(table));
+      final TableContext tableContext = getTableContext(table);
+      tableContextsMap.put(table, tableContext);
     }
   }
 

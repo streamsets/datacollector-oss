@@ -56,7 +56,7 @@ public class TableJdbcSourceTestBuilder {
     this.driverProperties = Collections.emptyMap();
     this.driverClassName = "";
     this.connectionTestQuery = "";
-    this.queryInterval = 1;
+    this.queryInterval = 0;
     this.maxBatchSize = 1000;
     this.maxClobSize = 1000;
     this.maxBlobSize = 1000;
@@ -162,6 +162,11 @@ public class TableJdbcSourceTestBuilder {
     return this;
   }
 
+  public TableJdbcSourceTestBuilder fetchSize(int fetchSize) {
+    this.fetchSize = fetchSize;
+    return this;
+  }
+
   public TableJdbcSourceTestBuilder quoteChar(QuoteChar quoteChar) {
     this.quoteChar = quoteChar;
     return this;
@@ -230,6 +235,9 @@ public class TableJdbcSourceTestBuilder {
     private List<String> offsetColumns;
     private Map<String, String> offsetColumnToInitialOffsetValue;
     private String extraOffsetColumnConditions;
+    private boolean scaleUpEnabled;
+    private String partitionSize;
+    private int maxNumActivePartitions;
 
     public TableConfigBeanTestBuilder() {
       this.schema = "";
@@ -239,6 +247,9 @@ public class TableJdbcSourceTestBuilder {
       this.offsetColumns = new ArrayList<>();
       this.offsetColumnToInitialOffsetValue = Collections.emptyMap();
       this.extraOffsetColumnConditions = "";
+      this.scaleUpEnabled = false;
+      this.partitionSize = TableConfigBean.DEFAULT_PARTITION_SIZE;
+      this.maxNumActivePartitions = TableConfigBean.DEFAULT_MAX_NUM_ACTIVE_PARTITIONS;
     }
 
     public TableConfigBeanTestBuilder schema(String schema) {
@@ -276,6 +287,21 @@ public class TableJdbcSourceTestBuilder {
       return this;
     }
 
+    public TableConfigBeanTestBuilder scaleUpEnabled(boolean scaleUpEnabled) {
+      this.scaleUpEnabled = scaleUpEnabled;
+      return this;
+    }
+
+    public TableConfigBeanTestBuilder partitionSize(String partitionSize) {
+      this.partitionSize = partitionSize;
+      return this;
+    }
+
+    public TableConfigBeanTestBuilder maxNumActivePartitions(int maxNumActivePartitions) {
+      this.maxNumActivePartitions = maxNumActivePartitions;
+      return this;
+    }
+
     public TableConfigBean build() {
       TableConfigBean tableConfigBean = new TableConfigBean();
       tableConfigBean.schema = schema;
@@ -285,6 +311,9 @@ public class TableJdbcSourceTestBuilder {
       tableConfigBean.overrideDefaultOffsetColumns = overrideDefaultOffsetColumns;
       tableConfigBean.offsetColumns = offsetColumns;
       tableConfigBean.extraOffsetColumnConditions = extraOffsetColumnConditions;
+      tableConfigBean.scaleUpEnabled = scaleUpEnabled;
+      tableConfigBean.partitionSize = partitionSize;
+      tableConfigBean.maxNumActivePartitions = maxNumActivePartitions;
       return tableConfigBean;
     }
   }

@@ -33,9 +33,9 @@ public class OffsetColumnEL {
     return (TableContext) ELEval.getVariablesInScope().getContextVariable(TABLE_CONTEXT_VAR);
   }
 
-  public static void setTableInContext(ELVars elVars, TableContext tableInContext) {
+  public static void setTableInContext(ELVars elVars, TableRuntimeContext tableRuntimeInContext) {
     Utils.checkNotNull(elVars, "elVars");
-    elVars.addContextVariable(TABLE_CONTEXT_VAR, tableInContext);
+    elVars.addContextVariable(TABLE_CONTEXT_VAR, tableRuntimeInContext.getSourceTableContext());
   }
 
   @ElFunction(

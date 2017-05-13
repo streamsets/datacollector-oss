@@ -15,30 +15,62 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public final class TableContext {
+import java.sql.JDBCType;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
+public class TableContext {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TableContext.class);
 
   private final String schema;
   private final String tableName;
-  private final LinkedHashMap<String, Integer> offsetColumnToType;
-  private final Map<String, String> offsetColumnToStartOffset;
+  private final LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
+  private final Map<String, String> offsetColumnToStartOffset = new HashMap<>();
+  private final Map<String, String> offsetColumnToPartitionOffsetAdjustments = new HashMap<>();
+  private final Map<String, String> offsetColumnToMinValues = new HashMap<>();
+  private final boolean enablePartitioning;
+  private final int maxNumActivePartitions;
   private final String extraOffsetColumnConditions;
+  private final boolean partitionable;
 
   TableContext(
       String schema,
       String tableName,
       LinkedHashMap<String, Integer> offsetColumnToType,
       Map<String, String> offsetColumnToStartOffset,
+      Map<String, String> offsetColumnToPartitionOffsetAdjustments,
+      Map<String, String> offsetColumnToMinValues,
+      boolean enablePartitioning,
+      int maxNumActivePartitions,
       String extraOffsetColumnConditions
   ) {
     this.schema = schema;
     this.tableName = tableName;
-    this.offsetColumnToType = offsetColumnToType;
-    this.offsetColumnToStartOffset = offsetColumnToStartOffset;
+    if (offsetColumnToType != null) {
+      this.offsetColumnToType.putAll(offsetColumnToType);
+    }
+    if (offsetColumnToStartOffset != null) {
+      this.offsetColumnToStartOffset.putAll(offsetColumnToStartOffset);
+    }
+    if (offsetColumnToMinValues != null) {
+      this.offsetColumnToMinValues.putAll(offsetColumnToMinValues);
+    }
     this.extraOffsetColumnConditions = extraOffsetColumnConditions;
+    this.enablePartitioning = enablePartitioning;
+    this.maxNumActivePartitions = maxNumActivePartitions;
+    if (offsetColumnToPartitionOffsetAdjustments != null) {
+      this.offsetColumnToPartitionOffsetAdjustments.putAll(offsetColumnToPartitionOffsetAdjustments);
+    }
+    this.partitionable = isPartitionable(this);
   }
 
   public String getSchema() {
@@ -53,7 +85,11 @@ public final class TableContext {
     return TableContextUtil.getQualifiedTableName(schema, tableName);
   }
 
-  public Collection<String> getOffsetColumns() {
+  public Map<String, Integer> getOffsetColumnToType() {
+    return Collections.unmodifiableMap(offsetColumnToType);
+  }
+
+  public Set<String> getOffsetColumns() {
     return offsetColumnToType.keySet();
   }
 
@@ -69,6 +105,26 @@ public final class TableContext {
     return offsetColumnToStartOffset;
   }
 
+  public Map<String, String> getOffsetColumnToPartitionOffsetAdjustments() {
+    return offsetColumnToPartitionOffsetAdjustments;
+  }
+
+  public Map<String, String> getOffsetColumnToMinValues() {
+    return Collections.unmodifiableMap(offsetColumnToMinValues);
+  }
+
+  public boolean isEnablePartitioning() {
+    return enablePartitioning;
+  }
+
+  public boolean isPartitionable() {
+    return partitionable;
+  }
+
+  public int getMaxNumActivePartitions() {
+    return maxNumActivePartitions;
+  }
+
   //Used to reset after the first batch we should not be using the initial offsets.
   public void clearStartOffset() {
     offsetColumnToStartOffset.clear();
@@ -76,5 +132,69 @@ public final class TableContext {
 
   public String getExtraOffsetColumnConditions() {
     return extraOffsetColumnConditions;
+  }
+
+  private static boolean isPartitionable(TableContext sourceTableContext) {
+    return isPartitionable(sourceTableContext, null);
+  }
+
+  public static boolean isPartitionable(TableContext sourceTableContext, List<String> outputReasons) {
+    final String tableName = sourceTableContext.getQualifiedName();
+    if (sourceTableContext.getOffsetColumns().size() > 1) {
+      String reason = String.format(
+          "Table %s is not partitionable because it has more than one offset column",
+          tableName
+      );
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(reason);
+      }
+      if (outputReasons != null) {
+        outputReasons.add(reason);
+      }
+      return false;
+    }
+
+    for (Map.Entry<String, Integer> offsetColToType : sourceTableContext.getOffsetColumnToType().entrySet()) {
+      final int type = offsetColToType.getValue();
+      if (!TableContextUtil.PARTITIONABLE_TYPES.contains(type)) {
+        String reason = String.format(
+            "Table %s is not partitionable because %s column (type %s) is not partitionable",
+            tableName,
+            offsetColToType.getKey(),
+            JDBCType.valueOf(type).getName()
+        );
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(reason);
+        }
+        if (outputReasons != null) {
+          outputReasons.add(reason);
+        }
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    TableContext that = (TableContext) o;
+    return Objects.equals(schema, that.schema) && Objects.equals(tableName, that.tableName);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(schema, tableName);
+  }
+
+  @Override
+  public String toString() {
+    return String.format("TableContext{schema='%s', tableName='%s'}", schema, tableName);
   }
 }

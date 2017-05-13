@@ -31,15 +31,21 @@ public abstract class RandomTestUtils {
 
   private static final Logger LOG = LoggerFactory.getLogger(RandomTestUtils.class);
 
+  public static final String RANDOM_SEED_PROPERTY_NAME = "sdc.testing.random-seed";
+
   static {
     long seed;
-    final String seedProp = System.getProperty("sdc.testing.random-seed");
-    if (!Strings.isNullOrEmpty(seedProp)) {
-      LOG.info(String.format("Loading random seed from sdc.testing.random-seed property: %s", seedProp));
-      seed = Long.parseLong(seedProp);
+    final String seedValue = System.getProperty(RANDOM_SEED_PROPERTY_NAME);
+    if (!Strings.isNullOrEmpty(seedValue)) {
+      LOG.info(String.format("Loading random seed from %s property: %s", RANDOM_SEED_PROPERTY_NAME, seedValue));
+      seed = Long.parseLong(seedValue);
     } else {
       seed = System.currentTimeMillis();
-      LOG.info(String.format("No random seed property; using current system millis timestamp: %d", seed));
+      LOG.info(String.format(
+          "No random seed property (%s) found; using current system millis timestamp: %d",
+          RANDOM_SEED_PROPERTY_NAME,
+          seed
+      ));
     }
     random.setSeed(seed);
   }
@@ -58,4 +64,7 @@ public abstract class RandomTestUtils {
     return startInclusive + random.nextInt(endExclusive - startInclusive);
   }
 
+  public static Random getRandom() {
+    return random;
+  }
 }

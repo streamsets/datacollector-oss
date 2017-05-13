@@ -42,7 +42,7 @@ public final class TableJdbcELEvalContext {
     TimeNowEL.setTimeNowInContext(elVars, date);
   }
 
-  public void setTableContext(TableContext tableContext) {
+  public void setTableContext(TableRuntimeContext tableContext) {
     OffsetColumnEL.setTableInContext(elVars, tableContext);
   }
 

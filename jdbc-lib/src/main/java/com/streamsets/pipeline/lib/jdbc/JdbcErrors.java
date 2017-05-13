@@ -109,6 +109,9 @@ public enum JdbcErrors implements ErrorCode {
       "The transaction was longer than transaction window"),
   JDBC_85("Following fields have unsupported field types: '{}' in table '{}'"),
 
+  JDBC_100("Could not enable partitioning for table {}: {}"),
+  JDBC_101("Invalid partition size for table {}: {}"),
+
   ;
 
   private final String msg;

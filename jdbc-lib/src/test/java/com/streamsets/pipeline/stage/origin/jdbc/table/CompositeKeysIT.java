@@ -21,6 +21,8 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.testing.RandomTestUtils;
+import org.apache.commons.collections.ComparatorUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,6 +33,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -41,12 +44,13 @@ import java.util.UUID;
 public class CompositeKeysIT extends BaseTableJdbcSourceIT {
   private static final Logger LOG = LoggerFactory.getLogger(CompositeKeysIT.class);
   private static final List<Record> MULTIPLE_INT_COMPOSITE_RECORDS = new ArrayList<>();
-  private static final Random RANDOM = new Random();
+  private static final Random RANDOM = RandomTestUtils.getRandom();
   private static final String LOG_TEMPLATE =
       "Batches Read Till Now : {}," +
           " Record Read Till Now: {}," +
           " Remaining Records : {}, Current Batch Size: {}, Output Record Size : {}";
   private static final String MULTIPLE_INT_COMPOSITE_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, %s, %s, '%s')";
+  private static final String TABLE_NAME = "MULTIPLE_INT_PRIMARY";
 
   private static Record createMultipleIntCompositePrimaryKeyRecord(int id_1, int id_2, int id_3, String stringCol) {
     Record record = RecordCreator.create();
@@ -65,8 +69,9 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
   public static void setupTables() throws SQLException {
     try (Statement statement = connection.createStatement()) {
       statement.addBatch(
-          "CREATE TABLE TEST.MULTIPLE_INT_PRIMARY" +
-              "(" +
+          "CREATE TABLE TEST." +
+              TABLE_NAME +
+              " (" +
               " id_1 INT NOT NULL," +
               " id_2 INT NOT NULL," +
               " id_3 INT NOT NULL," +
@@ -90,7 +95,7 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
         statement.addBatch(
             String.format(
                 MULTIPLE_INT_COMPOSITE_INSERT_TEMPLATE,
-                "MULTIPLE_INT_PRIMARY",
+                TABLE_NAME,
                 recordToInsert.get("/id_1").getValue(),
                 recordToInsert.get("/id_2").getValue(),
                 recordToInsert.get("/id_3").getValue(),
@@ -105,7 +110,7 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
   @AfterClass
   public static void dropTables() throws SQLException {
     try (Statement statement = connection.createStatement()) {
-      statement.execute(String.format(DROP_STATEMENT_TEMPLATE, database, "MULTIPLE_INT_PRIMARY"));
+      statement.execute(String.format(DROP_STATEMENT_TEMPLATE, database, TABLE_NAME));
     }
   }
 
@@ -142,7 +147,13 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
         List<Record> actualRecords = batchRecords.get(0);
 
         List<Record> expectedRecords = MULTIPLE_INT_COMPOSITE_RECORDS.subList(recordsRead, recordsRead + batchSize);
-        checkRecords(expectedRecords, actualRecords);
+
+        Comparator<Record> recordComp = Comparator.comparingInt(
+            (Record r)->r.get("/ID_1").getValueAsInteger())
+            .thenComparingInt(r->r.get("/ID_2").getValueAsInteger())
+            .thenComparingInt(r->r.get("/ID_3").getValueAsInteger());
+
+        checkRecords(TABLE_NAME, expectedRecords, actualRecords, null, null);
 
         recordsRead = recordsRead + batchSize;
         noOfBatches++;

@@ -17,12 +17,24 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 public class TestTableJdbcSourceUpgrader {
 
@@ -51,4 +63,76 @@ public class TestTableJdbcSourceUpgrader {
       }
     }
   }
+
+  @Test
+  public void testUpgradeV2ToV3() throws Exception {
+
+    List<Config> configs = new ArrayList<>();
+
+    List<LinkedHashMap<String, Object>> tableConfigMaps = new LinkedList<>();
+
+    LinkedHashMap<String, Object> tableConfigMap1 = new LinkedHashMap<>();
+    tableConfigMap1.put("tablePattern", "pattern1");
+    tableConfigMap1.put("overrideDefaultOffsetColumns", false);
+    tableConfigMap1.put("offsetColumns", Collections.emptyList());
+    tableConfigMap1.put("offsetColumnToInitialOffsetValue", Collections.emptyList());
+    tableConfigMap1.put("schema", "schema");
+    tableConfigMaps.add(tableConfigMap1);
+    LinkedHashMap<String, Object> tableConfigMap2 = new LinkedHashMap<>(tableConfigMap1);
+    tableConfigMap2.put("tablePattern", "pattern2");
+    tableConfigMap2.put("schema", "schema2");
+    tableConfigMaps.add(tableConfigMap2);
+
+    configs.add(new Config(TableJdbcConfigBean.TABLE_CONFIG, tableConfigMaps));
+
+    TableJdbcSourceUpgrader upgrader = new TableJdbcSourceUpgrader();
+    List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 2, 3, configs);
+
+    Config upgradedTableConfigs = UpgraderUtils.getConfigWithName(upgradedConfigs, TableJdbcConfigBean.TABLE_CONFIG);
+    assertThat(upgradedTableConfigs, notNullValue());
+    assertThat(upgradedTableConfigs.getValue(), is(instanceOf(List.class)));
+    List<LinkedHashMap<String, Object>> upgradedTableConfigsList =
+        (List<LinkedHashMap<String, Object>>) upgradedTableConfigs.getValue();
+
+    assertThat(upgradedTableConfigsList, hasSize(2));
+    LinkedHashMap<String, Object> upgradedTableConfig1 = upgradedTableConfigsList.get(0);
+    LinkedHashMap<String, Object> upgradedTableConfig2 = upgradedTableConfigsList.get(1);
+    assertAllContain(
+        TableConfigBean.PARTITION_SIZE_FIELD,
+        TableConfigBean.DEFAULT_PARTITION_SIZE,
+        upgradedTableConfig1,
+        upgradedTableConfig2
+    );
+    assertAllContain(
+        TableConfigBean.SCALE_UP_ENABLED_FIELD,
+        false,
+        upgradedTableConfig1,
+        upgradedTableConfig2
+    );
+    assertAllContain(
+        TableConfigBean.MAX_NUM_ACTIVE_PARTITIONS_FIELD,
+        TableConfigBean.DEFAULT_MAX_NUM_ACTIVE_PARTITIONS,
+        upgradedTableConfig1,
+        upgradedTableConfig2
+    );
+
+    assertHasAllEntries(upgradedTableConfig1, tableConfigMap1);
+    assertHasAllEntries(upgradedTableConfig2, tableConfigMap2);
+  }
+
+  private static void assertAllContain(String configKey, Object configValue, LinkedHashMap... tableConfigMaps) {
+    for (LinkedHashMap<String, Object> tableConfigMap : tableConfigMaps) {
+      assertThat(tableConfigMap, hasEntry(
+          configKey,
+          configValue
+      ));
+    }
+  }
+
+  private static void assertHasAllEntries(Map<String, Object> expectedMap, Map<String, Object> actualMap) {
+    for (Map.Entry<String, Object> entry : expectedMap.entrySet()) {
+      assertThat(actualMap, hasEntry(entry.getKey(), entry.getValue()));
+    }
+  }
+
 }

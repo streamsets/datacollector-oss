@@ -19,6 +19,7 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableContext;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableReadContext;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableRuntimeContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,12 +28,12 @@ import java.util.Optional;
 /**
  * Listens for cache invalidation and appropriately closes the result set and statement.
  */
-public class JdbcTableReadContextInvalidationListener implements RemovalListener<TableContext, TableReadContext> {
+public class JdbcTableReadContextInvalidationListener implements RemovalListener<TableRuntimeContext, TableReadContext> {
 
   private static final Logger LOG = LoggerFactory.getLogger(JdbcTableReadContextInvalidationListener.class);
 
   @Override
-  public void onRemoval(RemovalNotification<TableContext, TableReadContext> tableReadContextRemovalNotification) {
+  public void onRemoval(RemovalNotification<TableRuntimeContext, TableReadContext> tableReadContextRemovalNotification) {
     Optional.ofNullable(tableReadContextRemovalNotification.getKey()).ifPresent(tableContext -> {
       LOG.debug("Closing statement and result set for : {}", tableContext.getQualifiedName());
       Optional.ofNullable(tableReadContextRemovalNotification.getValue()).ifPresent(readContext -> {

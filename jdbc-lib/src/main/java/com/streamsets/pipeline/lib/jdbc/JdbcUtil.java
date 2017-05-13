@@ -33,6 +33,8 @@ import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
+import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableContextUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang.StringUtils;
@@ -52,13 +54,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -104,6 +109,16 @@ public class JdbcUtil {
   private static final Joiner joinerWithQuote = Joiner.on("\", \"");
   private static final Joiner joinerColumnWithQuote = Joiner.on("\" = ?, \"");
   private static final Joiner joinerWhereClauseWitheQuote =  Joiner.on("\" = ? AND \"");
+
+  /**
+   * The query to select the min value for a particular offset column
+   */
+  public static final String MIN_OFFSET_VALUE_QUERY = "SELECT MIN(%s) FROM %s";
+
+  /**
+   * The index within the result set for the MIN_OFFSET_VALUE_QUERY that contains the min offset value
+   */
+  private static final int MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX = 1;
 
   private JdbcUtil() {
   }
@@ -248,6 +263,37 @@ public class JdbcUtil {
       keys.add(result.getString(COLUMN_NAME));
     }
     return keys;
+  }
+
+  public static Map<String, String> getMinimumOffsetValues(
+      Connection connection,
+      String schema,
+      String tableName,
+      QuoteChar quoteChar,
+      Collection<String> offsetColumnNames
+  ) throws SQLException {
+    Map<String, String> minOffsetValues = new HashMap<>();
+    final String qualifiedName = TableContextUtil.getQuotedQualifiedTableName(
+        schema,
+        tableName,
+        quoteChar.getQuoteCharacter()
+    );
+    for (String offsetColumn : offsetColumnNames) {
+      final String minOffsetQuery = String.format(MIN_OFFSET_VALUE_QUERY, offsetColumn, qualifiedName);
+      try (
+        Statement st = connection.createStatement();
+        ResultSet rs = st.executeQuery(minOffsetQuery)
+      ) {
+        if (rs.next()) {
+          String minValue = rs.getString(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+          minOffsetValues.put(offsetColumn, minValue);
+        } else {
+          LOG.warn("Unable to get minimum offset value using query {}; result set had no rows", minOffsetQuery);
+        }
+      }
+    }
+
+    return minOffsetValues;
   }
 
   /**

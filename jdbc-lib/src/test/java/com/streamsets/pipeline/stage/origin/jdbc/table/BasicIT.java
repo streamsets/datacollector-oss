@@ -19,6 +19,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -49,6 +50,11 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 public class BasicIT extends BaseTableJdbcSourceIT {
   private static final String STARS_INSERT_TEMPLATE = "INSERT into TEST.%s values (%s, '%s', '%s')";
@@ -689,6 +695,63 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     );
   }
 
+  @Test
+  public void testPartitionConfigs() throws Exception {
+    TableConfigBean tableConfigBean =
+        new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+            .tablePattern("CRICKET_STARS")
+            .schema(database)
+            .scaleUpEnabled(true)
+            .partitionSize("-1")
+            .build();
+
+    TableJdbcSource tableJdbcSource =
+        new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+            .tableConfigBeans(ImmutableList.of(tableConfigBean))
+            .build();
+
+    validateAndAssertConfigIssue(
+        tableJdbcSource,
+        JdbcErrors.JDBC_101,
+        TableContextUtil.GENERIC_PARTITION_SIZE_GT_ZERO_MSG
+    );
+
+    tableConfigBean.partitionSize = "abcd";
+
+    validateAndAssertConfigIssue(
+        tableJdbcSource,
+        JdbcErrors.JDBC_101,
+        "invalid for offset column"
+    );
+
+  }
+
+  private static void validateAndAssertConfigIssue(
+      TableJdbcSource tableJdbcSource,
+      ErrorCode expectedErrorCode,
+      String expectedInErrorMessage
+  ) throws StageException {
+
+    PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+        .addOutputLane("a")
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+    assertThat(configIssues, hasSize(1));
+    Stage.ConfigIssue issue = configIssues.get(0);
+
+    final ErrorMessage errorMsg = (ErrorMessage) Whitebox.getInternalState(issue, "message");
+    assertThat(errorMsg, notNullValue());
+    Assert.assertEquals(
+        expectedErrorCode.getCode(),
+        errorMsg.getErrorCode()
+    );
+
+    if (expectedInErrorMessage != null) {
+      assertThat(errorMsg.getLocalized(), containsString(expectedInErrorMessage));
+    }
+  }
+
   private void runSourceForInitialOffset(List<Record> expectedRecords, int batchSize, Map<String, String> lastOffsets) throws Exception {
     TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("TENNIS_STARS")
@@ -726,7 +789,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void testUpgradeOffsetsToV1() throws Exception {
+  public void testUpgradeOffsetsToV2FromLegacyFormat() throws Exception {
     Map<String, String> lastOffsets = Maps.newLinkedHashMap(
         Collections.singletonMap(
             Source.POLL_SOURCE_OFFSET_KEY, OffsetQueryUtil.serializeOffsetMap(
@@ -774,13 +837,20 @@ public class BasicIT extends BaseTableJdbcSourceIT {
       //Check the local offsets variable from the TableJdbcSource
       Map<String, String> upgradedOffset = (Map<String, String>) Whitebox.getInternalState(source, "offsets");
 
+      MultithreadedTableProvider tableProvider = (MultithreadedTableProvider) Whitebox.getInternalState(
+          source,
+          "tableOrderProvider"
+      );
       //Should not contain poll source offset key
       Assert.assertFalse(upgradedOffset.containsKey(Source.POLL_SOURCE_OFFSET_KEY));
 
       //Contain all other table values
       for (Map.Entry<String, String> oldOffsetEntry : oldOffsetMap.entrySet()) {
-        Assert.assertTrue(upgradedOffset.containsKey(oldOffsetEntry.getKey()));
-        Assert.assertEquals(oldOffsetEntry.getValue(), upgradedOffset.get(oldOffsetEntry.getKey()));
+        final String tableName = oldOffsetEntry.getKey();
+
+        TableRuntimeContext partition = getSinglePartitionForTable(tableProvider, tableName);
+        Assert.assertTrue(upgradedOffset.containsKey(partition.getOffsetKey()));
+        Assert.assertEquals(oldOffsetEntry.getValue(), upgradedOffset.get(partition.getOffsetKey()));
       }
       //Call the real method, thus upgrading
       return returnVal;
@@ -805,17 +875,35 @@ public class BasicIT extends BaseTableJdbcSourceIT {
       Assert.assertFalse(runnerOffsets.containsKey(Source.POLL_SOURCE_OFFSET_KEY));
       Assert.assertTrue(runnerOffsets.containsKey(TableJdbcSource.OFFSET_VERSION));
 
-      Assert.assertEquals(TableJdbcSource.OFFSET_VERSION_1, runnerOffsets.get(TableJdbcSource.OFFSET_VERSION));
+      Assert.assertEquals(TableJdbcSource.OFFSET_VERSION_2, runnerOffsets.get(TableJdbcSource.OFFSET_VERSION));
 
+      MultithreadedTableProvider tableProvider = (MultithreadedTableProvider) Whitebox.getInternalState(
+          tableJdbcSource,
+          "tableOrderProvider"
+      );
 
-      Assert.assertTrue(runnerOffsets.containsKey("TEST.CRICKET_STARS"));
-      Assert.assertTrue(runnerOffsets.containsKey("TEST.TENNIS_STARS"));
+      TableRuntimeContext cricketStarsPartition = getSinglePartitionForTable(tableProvider, "TEST.CRICKET_STARS");
+      TableRuntimeContext tennisStarsPartition = getSinglePartitionForTable(tableProvider, "TEST.TENNIS_STARS");
 
-      Assert.assertEquals("P_ID=10", runnerOffsets.get("TEST.CRICKET_STARS"));
-      Assert.assertEquals("P_ID=15", runnerOffsets.get("TEST.TENNIS_STARS"));
+      Assert.assertTrue(runnerOffsets.containsKey(cricketStarsPartition.getOffsetKey()));
+      Assert.assertTrue(runnerOffsets.containsKey(tennisStarsPartition.getOffsetKey()));
+
+      Assert.assertEquals("P_ID=10", runnerOffsets.get(cricketStarsPartition.getOffsetKey()));
+      Assert.assertEquals("P_ID=15", runnerOffsets.get(tennisStarsPartition.getOffsetKey()));
     } finally {
       runner.runDestroy();
     }
+  }
+
+  private static TableRuntimeContext getSinglePartitionForTable(
+      MultithreadedTableProvider tableProvider,
+      String tableName
+  ) {
+    Assert.assertTrue(tableProvider.getTableContextMap().containsKey(tableName));
+    final TableContext tableContext = tableProvider.getTableContextMap().get(tableName);
+    Assert.assertTrue(tableProvider.getActiveRuntimeContexts().containsKey(tableContext));
+    Assert.assertTrue(tableProvider.getActiveRuntimeContexts().get(tableContext).size() == 1);
+    return tableProvider.getActiveRuntimeContexts().get(tableContext).first();
   }
 
   @Test

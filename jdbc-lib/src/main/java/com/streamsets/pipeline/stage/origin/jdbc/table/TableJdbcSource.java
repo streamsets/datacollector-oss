@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.streamsets.pipeline.api.BatchContext;
@@ -33,21 +34,22 @@ import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.TimeZone;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -60,6 +62,7 @@ public class TableJdbcSource extends BasePushSource {
   public static final String OFFSET_VERSION =
       "$com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcSource.offset.version$";
   public static final String OFFSET_VERSION_1 = "1";
+  public static final String OFFSET_VERSION_2 = "2";
 
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcSource.class);
   private static final Joiner NEW_LINE_JOINER = Joiner.on("\n");
@@ -73,7 +76,7 @@ public class TableJdbcSource extends BasePushSource {
   private final Map<String, TableContext> allTableContexts;
   //If we have more state to clean up, we can introduce a state manager to do that which
   //can keep track of different closeables from different threads
-  private final Collection<Cache<TableContext, TableReadContext>> toBeInvalidatedThreadCaches;
+  private final Collection<Cache<TableRuntimeContext, TableReadContext>> toBeInvalidatedThreadCaches;
 
   private HikariDataSource hikariDataSource;
   private ConnectionManager connectionManager;
@@ -111,14 +114,14 @@ public class TableJdbcSource extends BasePushSource {
     if (issues.isEmpty()) {
       try {
         connectionManager = new ConnectionManager(hikariDataSource);
-
         for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
           //No duplicates even though a table matches multiple configurations, we will add it only once.
           allTableContexts.putAll(
               TableContextUtil.listTablesForConfig(
                   connectionManager.getConnection(),
                   tableConfigBean,
-                  new TableJdbcELEvalContext(context, context.createELVars())
+                  new TableJdbcELEvalContext(context, context.createELVars()),
+                  tableJdbcConfigBean.quoteChar
               )
           );
         }
@@ -134,16 +137,12 @@ public class TableJdbcSource extends BasePushSource {
               )
           );
         } else {
-          numberOfThreads = tableJdbcConfigBean.numberOfThreads;
-          if (tableJdbcConfigBean.numberOfThreads > allTableContexts.size()) {
-            numberOfThreads = Math.min(tableJdbcConfigBean.numberOfThreads, allTableContexts.size());
-            LOG.info(
-                "Number of threads configured '{}'is more than number of tables '{}'. Will be Using '{}' number of threads.",
-                tableJdbcConfigBean.numberOfThreads,
-                allTableContexts.size(),
-                numberOfThreads
-            );
+          issues = validatePartitioningConfigs(context, issues, allTableContexts);
+          if (!issues.isEmpty()) {
+            return;
           }
+
+          numberOfThreads = tableJdbcConfigBean.numberOfThreads;
 
           TableOrderProvider tableOrderProvider = new TableOrderProviderFactory(
               connectionManager.getConnection(),
@@ -155,7 +154,9 @@ public class TableJdbcSource extends BasePushSource {
             this.tableOrderProvider = new MultithreadedTableProvider(
                 allTableContexts,
                 tableOrderProvider.getOrderedTables(),
-                decideMaxTableSlotsForThreads()
+                decideMaxTableSlotsForThreads(),
+                numberOfThreads,
+                tableJdbcConfigBean.batchTableStrategy
             );
           } catch (ExecutionException e) {
             LOG.debug("Error during Table Order Provider Init", e);
@@ -248,6 +249,53 @@ public class TableJdbcSource extends BasePushSource {
     return issues;
   }
 
+  private List<ConfigIssue> validatePartitioningConfigs(
+      Stage.Context context,
+      List<ConfigIssue> issues,
+      Map<String, TableContext> allTableContexts
+  ) {
+    for (Map.Entry<String, TableContext> tableEntry : allTableContexts.entrySet()) {
+      TableContext table = tableEntry.getValue();
+
+      if (table.isEnablePartitioning() && !table.isPartitionable()) {
+        List<String> reasons = new LinkedList<>();
+        TableContext.isPartitionable(table, reasons);
+        issues.add(context.createConfigIssue(
+            Groups.TABLE.name(),
+            TableJdbcConfigBean.TABLE_CONFIG,
+            JdbcErrors.JDBC_100,
+            table.getQualifiedName(),
+            StringUtils.join(reasons, ", ")
+        ));
+      }
+
+
+      if (table.isEnablePartitioning()) {
+        Map.Entry<String, Integer> entry = table.getOffsetColumnToType().entrySet().iterator().next();
+
+        String partitionSize = table.getOffsetColumnToPartitionOffsetAdjustments().get(entry.getKey());
+
+        final String validationError = TableContextUtil.getPartitionSizeValidationError(
+            entry.getValue(),
+            entry.getKey(),
+            partitionSize
+        );
+        if (!Strings.isNullOrEmpty(validationError)) {
+          issues.add(context.createConfigIssue(
+              Groups.TABLE.name(),
+              TableJdbcConfigBean.TABLE_CONFIG,
+              JdbcErrors.JDBC_101,
+              table.getQualifiedName(),
+              validationError
+          ));
+        }
+      }
+    }
+
+
+    return issues;
+  }
+
   @Override
   public int getNumberOfThreads() {
     return numberOfThreads;
@@ -256,7 +304,7 @@ public class TableJdbcSource extends BasePushSource {
   @Override
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
     int batchSize = Math.min(maxBatchSize, commonSourceConfigBean.maxBatchSize);
-    handleLastOffset(lastOffsets);
+    handleLastOffset(new HashMap<>(lastOffsets));
     try {
       executorService = new SafeScheduledExecutorService(numberOfThreads, TableJdbcRunnable.TABLE_JDBC_THREAD_PREFIX);
 
@@ -291,7 +339,8 @@ public class TableJdbcSource extends BasePushSource {
    * so creates a new batch and then
    */
   private void generateNoMoreDataEventIfNeeded() {
-    if (tableOrderProvider.shouldGenerateNoMoreDataEvent()) {
+    final boolean shouldGenerate = tableOrderProvider.shouldGenerateNoMoreDataEvent();
+    if (shouldGenerate) {
       //throw event
       LOG.info("No More data to process, Triggered No More Data Event");
       BatchContext batchContext = getContext().startBatch();
@@ -348,6 +397,8 @@ public class TableJdbcSource extends BasePushSource {
   @VisibleForTesting
   void handleLastOffset(Map<String, String> lastOffsets) throws StageException {
     if (lastOffsets != null) {
+      String offsetVersion = null;
+      //Only if it is not already committed
       if (lastOffsets.containsKey(Source.POLL_SOURCE_OFFSET_KEY)) {
         String innerTableOffsetsAsString = lastOffsets.get(Source.POLL_SOURCE_OFFSET_KEY);
 
@@ -357,33 +408,36 @@ public class TableJdbcSource extends BasePushSource {
 
         offsets.forEach((tableName, tableOffset) -> getContext().commitOffset(tableName, tableOffset));
 
+        upgradeFromV1();
+
         //Remove Poll Source Offset key from the offset.
         //Do this at last so as not to lose the offsets if there is failure in the middle
         //when we call commitOffset above
         getContext().commitOffset(Source.POLL_SOURCE_OFFSET_KEY, null);
       } else {
-        offsets.putAll(lastOffsets);
-      }
-      //Only if it is not already committed
-      if (!lastOffsets.containsKey(OFFSET_VERSION)) {
-        //Version the offset so as to allow for future evolution.
-        getContext().commitOffset(OFFSET_VERSION, OFFSET_VERSION_1);
-      }
-    }
+        offsetVersion = lastOffsets.remove(OFFSET_VERSION);
 
-    //If the offset already does not contain the table (meaning it is the first start or a new table)
-    //We can skip validation
-    for (Map.Entry<String, String> tableAndOffsetEntry : offsets.entrySet()) {
-      TableContext tableContext = allTableContexts.get(tableAndOffsetEntry.getKey());
-      if (tableContext != null) { //When the table is removed from the configuration
-        try {
-          OffsetQueryUtil.validateStoredAndSpecifiedOffset(tableContext, tableAndOffsetEntry.getValue());
-        } catch (StageException e) {
-          LOG.error("Error when validating stored offset with configuration", e);
-          //Throw the stage exception, we should not start the pipeline with this.
-          throw e;
+        offsets.putAll(lastOffsets);
+
+        if (OFFSET_VERSION_2.equals(offsetVersion)) {
+          tableOrderProvider.initializeFromV2Offsets(offsets);
+        } else if (OFFSET_VERSION_1.equals(offsetVersion) || Strings.isNullOrEmpty(offsetVersion)) {
+          upgradeFromV1();
         }
       }
+
+
+      //Version the offset so as to allow for future evolution.
+      getContext().commitOffset(OFFSET_VERSION, OFFSET_VERSION_2);
+
+    }
+  }
+
+  private void upgradeFromV1() throws StageException {
+    final Set<String> offsetKeysToRemove = tableOrderProvider.initializeFromV1Offsets(offsets);
+    if (offsetKeysToRemove != null && offsetKeysToRemove.size() > 0) {
+      LOG.info("Removing now outdated offset keys: {}", offsetKeysToRemove);
+      offsetKeysToRemove.forEach(tableName -> getContext().commitOffset(tableName, null));
     }
   }
 }

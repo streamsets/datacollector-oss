@@ -312,7 +312,7 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
             TableJdbcRunnable.class,
             "initTableEvalContextForProduce",
             TableJdbcELEvalContext.class,
-            TableContext.class,
+            TableRuntimeContext.class,
             Calendar.class
         )
     ).with((proxy, method, args) -> {

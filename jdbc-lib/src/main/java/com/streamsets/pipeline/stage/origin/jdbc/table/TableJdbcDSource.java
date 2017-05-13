@@ -29,7 +29,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "JDBC Multitable Consumer",
     description = "Reads data from a JDBC source using table names.",
     icon = "rdbms_multithreaded.png",

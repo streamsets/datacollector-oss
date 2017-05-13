@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -32,6 +33,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 public class TestTableExclusion {
@@ -85,6 +87,14 @@ public class TestTableExclusion {
     connection.close();
   }
 
+  public static Map<String, TableContext> listTablesForConfig(
+      Connection connection,
+      TableConfigBean tableConfigBean,
+      TableJdbcELEvalContext tableJdbcELEvalContext
+  ) throws SQLException, StageException {
+    return TableContextUtil.listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext, QuoteChar.NONE);
+  }
+
   @Test
   public void testNoExclusionPattern() throws Exception {
     TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
@@ -93,7 +103,7 @@ public class TestTableExclusion {
         .build();
     Assert.assertEquals(
         TABLE_NAMES.size(),
-        TableContextUtil.listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
+        TableContextUtil.listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext, QuoteChar.NONE).size()
     );
   }
 
@@ -106,7 +116,7 @@ public class TestTableExclusion {
         .build();
     Assert.assertEquals(
         0,
-        TableContextUtil.listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
+        listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
     );
   }
 
@@ -120,7 +130,7 @@ public class TestTableExclusion {
         .build();
     Assert.assertEquals(
         5,
-        TableContextUtil.listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
+        listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
     );
   }
 
@@ -134,7 +144,7 @@ public class TestTableExclusion {
 
     Assert.assertEquals(
         9,
-        TableContextUtil.listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
+        listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
     );
   }
 
@@ -147,7 +157,7 @@ public class TestTableExclusion {
         .build();
     Assert.assertEquals(
         8,
-        TableContextUtil.listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
+        listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
     );
   }
 }

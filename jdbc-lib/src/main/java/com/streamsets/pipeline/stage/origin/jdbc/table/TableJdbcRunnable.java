@@ -18,6 +18,8 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
@@ -27,7 +29,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
-import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
@@ -52,6 +54,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class TableJdbcRunnable implements Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcRunnable.class);
   private static final String JDBC_NAMESPACE_HEADER = "jdbc.";
+  private static final long ACQUIRE_TABLE_SLEEP_INTERVAL = 5L;
 
   static final String THREAD_NAME = "Thread Name";
   static final String CURRENT_TABLE = "Current Table";
@@ -60,9 +63,12 @@ public final class TableJdbcRunnable implements Runnable {
   static final String TABLE_METRICS = "Table Metrics for Thread - ";
   static final String TABLE_JDBC_THREAD_PREFIX = "Table Jdbc Runner - ";
 
+  static final String PARTITION_ATTRIBUTE = "partition";
+  static final String THREAD_NUMBER_ATTRIBUTE = "threadNumber";
+
   private final PushSource.Context context;
   private final Map<String, String> offsets;
-  private final LoadingCache<TableContext, TableReadContext> tableReadContextCache;
+  private final LoadingCache<TableRuntimeContext, TableReadContext> tableReadContextCache;
   private final MultithreadedTableProvider tableProvider;
   private final int threadNumber;
   private final int batchSize;
@@ -73,7 +79,7 @@ public final class TableJdbcRunnable implements Runnable {
   private final ErrorRecordHandler errorRecordHandler;
   private final Map<String, Object> gaugeMap;
 
-  private TableContext tableContext;
+  private TableRuntimeContext tableRuntimeContext;
   private long lastQueryIntervalTime;
 
   private int numSQLErrors = 0;
@@ -115,7 +121,7 @@ public final class TableJdbcRunnable implements Runnable {
     this.gaugeMap = context.createGauge(TABLE_METRICS + threadNumber).getValue();
   }
 
-  LoadingCache<TableContext, TableReadContext> getTableReadContextCache() {
+  LoadingCache<TableRuntimeContext, TableReadContext> getTableReadContextCache() {
     return tableReadContextCache;
   }
 
@@ -132,7 +138,7 @@ public final class TableJdbcRunnable implements Runnable {
    * Builds the Read Context Cache {@link #tableReadContextCache}
    */
   @SuppressWarnings("unchecked")
-  private LoadingCache<TableContext, TableReadContext> buildReadContextCache() {
+  private LoadingCache<TableRuntimeContext, TableReadContext> buildReadContextCache() {
     CacheBuilder resultSetCacheBuilder = CacheBuilder.newBuilder()
         .removalListener(new JdbcTableReadContextInvalidationListener());
 
@@ -169,7 +175,7 @@ public final class TableJdbcRunnable implements Runnable {
     gaugeMap.put(STATUS, status.name());
     gaugeMap.put(
         CURRENT_TABLE,
-        Optional.ofNullable(tableContext).map(TableContext::getQualifiedName).orElse("")
+        Optional.ofNullable(tableRuntimeContext).map(TableRuntimeContext::getQualifiedName).orElse("")
     );
     gaugeMap.put(
         TABLES_OWNED_COUNT,
@@ -184,23 +190,29 @@ public final class TableJdbcRunnable implements Runnable {
   private void generateBatchAndCommitOffset(BatchContext batchContext) {
     int recordCount = 0;
     try {
-      if (tableContext == null) {
-        tableContext = tableProvider.nextTable(threadNumber);
+      while (tableRuntimeContext == null) {
+        tableRuntimeContext = tableProvider.nextTable(threadNumber);
+        if (tableRuntimeContext == null) {
+          // small sleep before trying to acquire a table again, to potentially allow a new partition to be
+          // returned to shared queue or created
+          ThreadUtil.sleep(ACQUIRE_TABLE_SLEEP_INTERVAL);
+        }
       }
       updateGauge(Status.QUERYING_TABLE);
       TableReadContext tableReadContext = getOrLoadTableReadContext();
       ResultSet rs = tableReadContext.getResultSet();
-      boolean evictTableReadContext = false;
+      boolean resultSetEndReached = false;
       try {
         updateGauge(Status.GENERATING_BATCH);
         while (recordCount < batchSize) {
           if (rs.isClosed() || !rs.next()) {
-            evictTableReadContext = true;
+            resultSetEndReached = true;
             break;
           }
-          createAndAddRecord(rs, tableContext, batchContext);
+          createAndAddRecord(rs, tableRuntimeContext, batchContext);
           recordCount++;
         }
+        tableRuntimeContext.setResultSetProduced(true);
 
         //Reset numSqlErrors if we are able to read result set and add records to the batch context.
         numSQLErrors = 0;
@@ -209,11 +221,13 @@ public final class TableJdbcRunnable implements Runnable {
         //If exception happened we do not report anything about no more data event
         //We report noMoreData if either evictTableReadContext is true (result set no more rows) / record count is 0.
         tableProvider.reportDataOrNoMoreData(
-            tableContext,
-            recordCount == 0 || evictTableReadContext
+            tableRuntimeContext,
+            recordCount,
+            batchSize,
+            resultSetEndReached
         );
       } finally {
-        handlePostBatchAsNeeded(new AtomicBoolean(evictTableReadContext), recordCount, batchContext);
+        handlePostBatchAsNeeded(new AtomicBoolean(resultSetEndReached), recordCount, batchContext);
       }
     } catch (SQLException | ExecutionException | StageException | InterruptedException e) {
       //invalidate if the connection is closed
@@ -249,7 +263,10 @@ public final class TableJdbcRunnable implements Runnable {
     }
   }
 
-  private void calculateEvictTableFlag(AtomicBoolean evictTableReadContext, TableReadContext tableReadContext) {
+  private void calculateEvictTableFlag(
+      AtomicBoolean evictTableReadContext,
+      TableReadContext tableReadContext
+  ) {
     boolean shouldEvict = evictTableReadContext.get();
     boolean isNumberOfBatchesReached = (
         tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES
@@ -261,38 +278,39 @@ public final class TableJdbcRunnable implements Runnable {
 
   /**
    * After a batch is generate perform needed operations, generate and commit batch
-   * Evict entries from {@link #tableReadContextCache}, reset {@link #tableContext}
+   * Evict entries from {@link #tableReadContextCache}, reset {@link #tableRuntimeContext}
    */
   private void handlePostBatchAsNeeded(AtomicBoolean shouldEvict, int recordCount, BatchContext batchContext) {
     //Only process batch if there are records
     if (recordCount > 0) {
-      TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableContext);
+      TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableRuntimeContext);
       Optional.ofNullable(tableReadContext)
           .ifPresent(readContext -> {
             readContext.setNumberOfBatches(readContext.getNumberOfBatches() + 1);
             LOG.debug(
                 "Table {} read {} number of batches from the fetched result set",
-                tableContext.getQualifiedName(),
+                tableRuntimeContext.getQualifiedName(),
                 readContext.getNumberOfBatches()
             );
             calculateEvictTableFlag(shouldEvict, tableReadContext);
           });
       updateGauge(Status.BATCH_GENERATED);
       //Process And Commit offsets
-      context.processBatch(batchContext, tableContext.getQualifiedName(), offsets.get(tableContext.getQualifiedName()));
+      context.processBatch(batchContext, tableRuntimeContext.getOffsetKey(), offsets.get(tableRuntimeContext.getOffsetKey()));
     }
     //Make sure we close the result set only when there are no more rows in the result set
     if (shouldEvict.get()) {
       //Invalidate so as to fetch a new result set
       //We close the result set/statement in Removal Listener
-      tableReadContextCache.invalidate(tableContext);
+      tableReadContextCache.invalidate(tableRuntimeContext);
 
       //evict from owned tables
-      tableProvider.releaseOwnedTable(tableContext);
+      tableProvider.releaseOwnedTable(tableRuntimeContext, threadNumber);
 
-      tableContext = null;
+      tableRuntimeContext = null;
     } else if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
-      tableContext = null;
+      //tableProvider.switchAwayFromTable(tableRuntimeContext, threadNumber);
+      tableRuntimeContext = null;
     }
   }
 
@@ -301,7 +319,7 @@ public final class TableJdbcRunnable implements Runnable {
    */
   private static void initTableEvalContextForProduce(
       TableJdbcELEvalContext tableJdbcELEvalContext,
-      TableContext tableContext,
+      TableRuntimeContext tableContext,
       Calendar calendar
   ) {
     tableJdbcELEvalContext.setCalendar(calendar);
@@ -320,29 +338,27 @@ public final class TableJdbcRunnable implements Runnable {
 
 
   /**
-   * Get Or Load {@link TableReadContext} for {@link #tableContext}
+   * Get Or Load {@link TableReadContext} for {@link #tableRuntimeContext}
    */
   private TableReadContext getOrLoadTableReadContext() throws ExecutionException, InterruptedException {
     initTableEvalContextForProduce(
-        tableJdbcELEvalContext,
-        tableContext,
+        tableJdbcELEvalContext, tableRuntimeContext,
         Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID))
     );
     //Check and then if we want to wait for query being issued do that
-    TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableContext);
+    TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableRuntimeContext);
 
-    LOG.trace("Selected table : '{}' for generating records", tableContext.getQualifiedName());
+    LOG.trace("Selected table : '{}' for generating records", tableRuntimeContext.getDescription());
 
     if (tableReadContext == null) {
       //Wait before issuing query (Optimization instead of waiting during each batch)
       waitIfNeeded();
       //Set time before query
       initTableEvalContextForProduce(
-          tableJdbcELEvalContext,
-          tableContext,
+          tableJdbcELEvalContext, tableRuntimeContext,
           Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID))
       );
-      tableReadContext = tableReadContextCache.get(tableContext);
+      tableReadContext = tableReadContextCache.get(tableRuntimeContext);
       //Record query time
       lastQueryIntervalTime = System.currentTimeMillis();
     }
@@ -354,7 +370,7 @@ public final class TableJdbcRunnable implements Runnable {
    */
   private void createAndAddRecord(
       ResultSet rs,
-      TableContext tableContext,
+      TableRuntimeContext tableContext,
       BatchContext batchContext
   ) throws SQLException, StageException {
     ResultSetMetaData md = rs.getMetaData();
@@ -367,21 +383,28 @@ public final class TableJdbcRunnable implements Runnable {
         tableJdbcConfigBean.unknownTypeAction
     );
 
-    String offsetFormat = OffsetQueryUtil.getOffsetFormatFromColumns(tableContext, fields);
+    final Map<String, String> columnsToOffsets = OffsetQueryUtil.getOffsetsFromColumns(tableContext, fields);
+    //final Map<String, String> commitOffsets = tableRuntimeContext.recordNextOffsets(columnsToOffsets);
+    columnsToOffsets.forEach((col, off) -> tableContext.recordColumnOffset(col, String.valueOf(off)));
+
+    String offsetFormat = OffsetQueryUtil.getOffsetFormat(columnsToOffsets);
     Record record = context.createRecord(tableContext.getQualifiedName() + ":" + offsetFormat);
     record.set(Field.createListMap(fields));
 
     //Set Column Headers
     JdbcUtil.setColumnSpecificHeaders(
         record,
-        Collections.singleton(tableContext.getTableName()),
+        Collections.singleton(tableContext.getSourceTableContext().getTableName()),
         md,
         JDBC_NAMESPACE_HEADER
     );
 
+    record.getHeader().setAttribute(PARTITION_ATTRIBUTE, tableContext.getDescription());
+    record.getHeader().setAttribute(THREAD_NUMBER_ATTRIBUTE, String.valueOf(threadNumber));
+
     batchContext.getBatchMaker().addRecord(record);
 
-    offsets.put(tableContext.getQualifiedName(), offsetFormat);
+    offsets.put(tableContext.getOffsetKey(), offsetFormat);
   }
 
   /**

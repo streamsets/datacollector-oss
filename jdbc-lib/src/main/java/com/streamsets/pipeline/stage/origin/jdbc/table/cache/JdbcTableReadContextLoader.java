@@ -20,6 +20,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.ConnectionManager;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableContext;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcELEvalContext;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableReadContext;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableRuntimeContext;
 import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -31,7 +32,7 @@ import java.util.Map;
  * Users can then use {@link TableReadContext#getResultSet()} to read rows
  * from the corresponding table
  */
-public class JdbcTableReadContextLoader extends CacheLoader<TableContext, TableReadContext>{
+public class JdbcTableReadContextLoader extends CacheLoader<TableRuntimeContext, TableReadContext>{
   private final ConnectionManager connectionManager;
   private final TableJdbcELEvalContext tableJdbcELEvalContext;
   private final Map<String, String> offsets;
@@ -53,11 +54,11 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableContext, TableR
   }
 
   @Override
-  public TableReadContext load(TableContext tableContext) throws Exception {
+  public TableReadContext load(TableRuntimeContext tableRuntimeContext) throws Exception {
     Pair<String, List<Pair<Integer, String>>> queryAndParamValToSet =
         OffsetQueryUtil.buildAndReturnQueryAndParamValToSet(
-            tableContext,
-            offsets.get(tableContext.getQualifiedName()),
+            tableRuntimeContext,
+            offsets.get(tableRuntimeContext.getOffsetKey()),
             quoteChar,
             tableJdbcELEvalContext
         );
@@ -72,7 +73,7 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableContext, TableR
 
     //Clear the initial offset after the  query is build so we will not use the initial offset from the next
     //time the table is used.
-    tableContext.clearStartOffset();
+    tableRuntimeContext.getSourceTableContext().clearStartOffset();
 
     return tableReadContext;
   }

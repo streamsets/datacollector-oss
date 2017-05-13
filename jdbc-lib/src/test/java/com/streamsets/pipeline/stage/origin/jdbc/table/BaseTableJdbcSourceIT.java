@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.testing.RandomTestUtils;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.AfterClass;
@@ -40,13 +41,20 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -56,13 +64,12 @@ public abstract class BaseTableJdbcSourceIT {
   protected static final String USER_NAME = "sa";
   protected static final String PASSWORD = "sa";
   protected static final String database = "TEST";
-  protected static final String JDBC_URL = "jdbc:h2:mem:" + database;
+  protected static final String JDBC_URL = "jdbc:h2:mem:" + database;// + ";MVCC=TRUE";
   protected static final String CREATE_STATEMENT_TEMPLATE = "CREATE TABLE %s.%s ( %s )";
   protected static final String INSERT_STATEMENT_TEMPLATE = "INSERT INTO %s.%s values ( %s )";
   protected static final String DROP_STATEMENT_TEMPLATE = "DROP TABLE %s.%s";
   protected static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
-  protected static final Random RANDOM = new Random();
-
+  protected static final Random RANDOM = RandomTestUtils.getRandom();
 
   protected static final Map<Field.Type, String> FIELD_TYPE_TO_SQL_TYPE_AND_STRING =
       ImmutableMap.<Field.Type, String>builder()
@@ -245,6 +252,16 @@ public abstract class BaseTableJdbcSourceIT {
       Map<String, String> offsetFields,
       Map<String, String> otherFields
   ) {
+    return getCreateStatement(schemaName, tableName, offsetFields, otherFields, true);
+  }
+
+  protected static String getCreateStatement(
+      String schemaName,
+      String tableName,
+      Map<String, String> offsetFields,
+      Map<String, String> otherFields,
+      boolean usePrimaryKey
+  ) {
     List<String> fieldFormats = new ArrayList<>();
     for (Map.Entry<String, String> offsetFieldEntry : offsetFields.entrySet()) {
       Assert.assertNotNull("Null Value for - " + offsetFieldEntry, offsetFieldEntry.getValue());
@@ -257,7 +274,9 @@ public abstract class BaseTableJdbcSourceIT {
     }
 
     if (!offsetFields.isEmpty()) {
-      fieldFormats.add("PRIMARY KEY(" + COMMA_SPACE_JOINER.join(offsetFields.keySet()) + ")");
+      if (usePrimaryKey) {
+        fieldFormats.add("PRIMARY KEY(" + COMMA_SPACE_JOINER.join(offsetFields.keySet()) + ")");
+      }
     }
 
     String createQuery = String.format(CREATE_STATEMENT_TEMPLATE, schemaName, tableName, COMMA_SPACE_JOINER.join(fieldFormats));
@@ -339,9 +358,39 @@ public abstract class BaseTableJdbcSourceIT {
   }
 
   static void checkRecords(List<Record> expectedRecords, List<Record> actualRecords) {
-    Assert.assertEquals("Record Size Does not match.", expectedRecords.size(), actualRecords.size());
-    for (int i = 0; i < actualRecords.size(); i++) {
-      Record actualRecord = actualRecords.get(i);
+    checkRecords("(null)", expectedRecords, actualRecords, null, null);
+  }
+
+  static void checkRecords(
+      String tableName,
+      List<Record> expectedRecords,
+      List<Record> actualRecords,
+      Comparator<Record> actualRecordComparator
+      ) {
+    checkRecords("(null)", expectedRecords, actualRecords, actualRecordComparator, null);
+  }
+
+  static void checkRecords(
+      String tableName,
+      List<Record> expectedRecords,
+      List<Record> actualRecords,
+      Comparator<Record> actualRecordComparator,
+      Comparator<Record> expectedRecordComparator
+  ) {
+    Assert.assertEquals(
+        String.format("Record Size for table %s does not match.", tableName),
+        expectedRecords.size(),
+        actualRecords.size()
+    );
+
+    List<Record> actualRecordsSorted = new ArrayList<>(actualRecords);
+
+    if (actualRecordComparator != null) {
+      Collections.sort(actualRecordsSorted, actualRecordComparator);
+    }
+
+    for (int i = 0; i < actualRecordsSorted.size(); i++) {
+      Record actualRecord = actualRecordsSorted.get(i);
       Record expectedRecord = expectedRecords.get(i);
       checkField("", expectedRecord.get(), actualRecord.get());
     }

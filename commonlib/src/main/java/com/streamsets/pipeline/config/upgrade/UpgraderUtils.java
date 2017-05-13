@@ -85,4 +85,22 @@ public abstract class UpgraderUtils {
     configs.addAll(configsToAdd);
     return numMoved;
   }
+
+  /**
+   * <p>
+   * Returns a {@link Config} object from the supplied list with the supplied name, if it exists.
+   * </p>
+   *
+   * @param configs list of config objects (will not be modified)
+   * @param name the config to return, based on name
+   * @return the config object by the given name, if it exists, and null otherwise
+   */
+  public static Config getConfigWithName(List<Config> configs, String name) {
+    for (Config config : configs) {
+      if (config.getName().equals(name)) {
+        return config;
+      }
+    }
+    return null;
+  }
 }

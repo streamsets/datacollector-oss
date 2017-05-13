@@ -19,8 +19,10 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TableJdbcSourceUpgrader implements StageUpgrader{
@@ -37,6 +39,12 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
     switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -69,5 +77,21 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
             0
         )
     );
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    Config tableConfigs = UpgraderUtils.getConfigWithName(configs, TableJdbcConfigBean.TABLE_CONFIG);
+
+    List<LinkedHashMap<String, Object>> tableConfigsMap =
+        (List<LinkedHashMap<String, Object>>) tableConfigs.getValue();
+
+    for (LinkedHashMap<String, Object> tableConfigMap : tableConfigsMap) {
+      tableConfigMap.put(TableConfigBean.SCALE_UP_ENABLED_FIELD, false);
+      tableConfigMap.put(TableConfigBean.PARTITION_SIZE_FIELD, TableConfigBean.DEFAULT_PARTITION_SIZE);
+      tableConfigMap.put(
+          TableConfigBean.MAX_NUM_ACTIVE_PARTITIONS_FIELD,
+          TableConfigBean.DEFAULT_MAX_NUM_ACTIVE_PARTITIONS
+      );
+    }
   }
 }

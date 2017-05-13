@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
@@ -28,13 +30,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.JDBCType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,6 +54,23 @@ public final class TableContextUtil {
   private static final String COLUMN_METADATA_COLUMN_NAME = "COLUMN_NAME";
   private static final String COLUMN_METADATA_COLUMN_TYPE = "DATA_TYPE";
   private static final Joiner COMMA_JOINER = Joiner.on(",");
+  public static final String GENERIC_PARTITION_SIZE_GT_ZERO_MSG = "partition size must be greater than zero";
+
+  public static final Set<Integer> PARTITIONABLE_TYPES = ImmutableSet.<Integer>builder()
+    .add(Types.TINYINT)
+    .add(Types.SMALLINT)
+    .add(Types.INTEGER)
+    .add(Types.BIGINT)
+    .add(Types.DATE)
+    .add(Types.TIME)
+    .add(Types.TIMESTAMP)
+    .add(Types.FLOAT)
+    .add(Types.REAL)
+    .add(Types.DOUBLE)
+    .add(Types.DECIMAL)
+    .add(Types.NUMERIC)
+    .build();
+
 
   private TableContextUtil() {}
 
@@ -102,17 +124,17 @@ public final class TableContextUtil {
         quotedTableName: String.format(OffsetQueryUtil.QUOTED_NAME, qC, schema, qC)  + "." + quotedTableName ;
   }
 
-
-
   private static TableContext createTableContext(
       Connection connection,
       String schemaName,
       String tableName,
       TableConfigBean tableConfigBean,
-      TableJdbcELEvalContext tableJdbcELEvalContext
+      TableJdbcELEvalContext tableJdbcELEvalContext,
+      QuoteChar quoteChar
   ) throws SQLException, StageException {
     LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
     //Even though we are using this only find partition column's type, we could cache it if need arises.
+    final String qualifiedTableName = getQualifiedTableName(schemaName, tableName);
     Map<String, Integer> columnNameToType = getColumnNameType(connection, schemaName, tableName);
     Map<String, String> offsetColumnToStartOffset = new HashMap<>();
 
@@ -136,6 +158,14 @@ public final class TableContextUtil {
 
     checkForUnsupportedOffsetColumns(offsetColumnToType);
 
+    Map<String, String> offsetColumnMinValues = JdbcUtil.getMinimumOffsetValues(
+        connection,
+        schemaName,
+        tableName,
+        quoteChar,
+        offsetColumnToType.keySet()
+    );
+
     //Initial offset should exist for all partition columns or none at all.
     if (!tableConfigBean.offsetColumnToInitialOffsetValue.isEmpty()) {
       Set<String> missingColumns =
@@ -157,16 +187,24 @@ public final class TableContextUtil {
           offsetColumnToStartOffset
       );
       checkForInvalidInitialOffsetValues(
-          getQualifiedTableName(schemaName, tableName),
+          qualifiedTableName,
           offsetColumnToType,
           offsetColumnToStartOffset
       );
     }
+
+    final Map<String, String> offsetAdjustments = new HashMap<>();
+    offsetColumnToType.keySet().forEach(c -> offsetAdjustments.put(c, tableConfigBean.partitionSize));
+
     return new TableContext(
         schemaName,
         tableName,
         offsetColumnToType,
         offsetColumnToStartOffset,
+        offsetAdjustments,
+        offsetColumnMinValues,
+        tableConfigBean.scaleUpEnabled,
+        tableConfigBean.maxNumActivePartitions,
         tableConfigBean.extraOffsetColumnConditions
     );
   }
@@ -257,7 +295,8 @@ public final class TableContextUtil {
   public static Map<String, TableContext> listTablesForConfig(
       Connection connection,
       TableConfigBean tableConfigBean,
-      TableJdbcELEvalContext tableJdbcELEvalContext
+      TableJdbcELEvalContext tableJdbcELEvalContext,
+      QuoteChar quoteChar
   ) throws SQLException, StageException {
     Map<String, TableContext> tableContextMap = new LinkedHashMap<>();
     Pattern p =
@@ -269,9 +308,17 @@ public final class TableContextUtil {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
         if (p == null || !p.matcher(tableName).matches()) {
+          TableContext tableContext = createTableContext(
+              connection,
+              schemaName,
+              tableName,
+              tableConfigBean,
+              tableJdbcELEvalContext,
+              quoteChar
+          );
           tableContextMap.put(
               getQualifiedTableName(schemaName, tableName),
-              createTableContext(connection, schemaName, tableName, tableConfigBean, tableJdbcELEvalContext)
+              tableContext
           );
         }
       }
@@ -279,4 +326,150 @@ public final class TableContextUtil {
     return tableContextMap;
   }
 
+  public static String getPartitionSizeValidationError(
+      int colType,
+      String column,
+      String partitionSize
+  ) {
+    switch (colType) {
+      case Types.TINYINT:
+      case Types.SMALLINT:
+      case Types.INTEGER:
+        try {
+          int intVal = Integer.parseInt(partitionSize);
+          if (intVal <= 0) {
+            return createPartitionSizeValidationError(
+                column,
+                partitionSize,
+                colType,
+                GENERIC_PARTITION_SIZE_GT_ZERO_MSG
+            );
+          }
+        } catch (NumberFormatException e) {
+          return createPartitionSizeValidationError(column, partitionSize, colType, e.getMessage());
+        }
+        break;
+      case Types.BIGINT:
+        // TIME, DATE, and TIMESTAMP are represented as long (epoch)
+      case Types.TIME:
+      case Types.DATE:
+      case Types.TIMESTAMP:
+        try {
+          long longVal = Long.parseLong(partitionSize);
+          if (longVal <= 0) {
+            return createPartitionSizeValidationError(
+                column,
+                partitionSize,
+                colType,
+                GENERIC_PARTITION_SIZE_GT_ZERO_MSG
+            );
+          }
+        } catch (NumberFormatException e) {
+          return createPartitionSizeValidationError(column, partitionSize, colType, e.getMessage());
+        }
+        break;
+      case Types.FLOAT:
+      case Types.REAL:
+        try {
+          float floatVal = Float.parseFloat(partitionSize);
+          if (floatVal <= 0) {
+            return createPartitionSizeValidationError(
+                column,
+                partitionSize,
+                colType,
+                GENERIC_PARTITION_SIZE_GT_ZERO_MSG
+            );
+          }
+        } catch (NumberFormatException e) {
+          return createPartitionSizeValidationError(column, partitionSize, colType, e.getMessage());
+        }
+        break;
+      case Types.DOUBLE:
+        try {
+          double doubleVal = Double.parseDouble(partitionSize);
+          if (doubleVal <= 0) {
+            return createPartitionSizeValidationError(
+                column,
+                partitionSize,
+                colType,
+                GENERIC_PARTITION_SIZE_GT_ZERO_MSG
+            );
+          }
+        } catch (NumberFormatException e) {
+          return createPartitionSizeValidationError(column, partitionSize, colType, e.getMessage());
+        }
+        break;
+      case Types.NUMERIC:
+      case Types.DECIMAL:
+        try {
+          BigDecimal decimalValue = new BigDecimal(partitionSize);
+          if (decimalValue.signum() < 1) {
+            return createPartitionSizeValidationError(
+                column,
+                partitionSize,
+                colType,
+                GENERIC_PARTITION_SIZE_GT_ZERO_MSG
+            );
+          }
+        } catch (NumberFormatException e) {
+          return createPartitionSizeValidationError(column, partitionSize, colType, e.getMessage());
+        }
+        break;
+    }
+    return null;
+  }
+
+  private static String createPartitionSizeValidationError(
+      String colName,
+      String partitionSize,
+      int sqlType,
+      String errorMsg
+  ) {
+    return String.format(
+        "Partition size of %s is invalid for offset column %s (type %s): %s",
+        partitionSize,
+        colName,
+        JDBCType.valueOf(sqlType).getName(),
+        errorMsg
+    );
+  }
+
+  public static String generateNextPartitionOffset(
+      TableContext tableContext,
+      String column,
+      String offset
+  ) {
+    final String partitionSize = tableContext.getOffsetColumnToPartitionOffsetAdjustments().get(column);
+    switch (tableContext.getOffsetColumnToType().get(column)) {
+      case Types.TINYINT:
+      case Types.SMALLINT:
+      case Types.INTEGER:
+        final int int1 = Integer.parseInt(offset);
+        final int int2 = Integer.parseInt(partitionSize);
+        return String.valueOf(int1 + int2);
+      case Types.BIGINT:
+      // TIME, DATE, and TIMESTAMP are represented as long (epoch)
+      case Types.TIME:
+      case Types.DATE:
+      case Types.TIMESTAMP:
+        final long long1 = Long.parseLong(offset);
+        final long long2 = Long.parseLong(partitionSize);
+        return String.valueOf(long1 + long2);
+      case Types.FLOAT:
+      case Types.REAL:
+        final float float1 = Float.parseFloat(offset);
+        final float float2 = Float.parseFloat(partitionSize);
+        return String.valueOf(float1 + float2);
+      case Types.DOUBLE:
+        final double double1 = Double.parseDouble(offset);
+        final double double2 = Double.parseDouble(partitionSize);
+        return String.valueOf(double1 + double2);
+      case Types.NUMERIC:
+      case Types.DECIMAL:
+        final BigDecimal decimal1 = new BigDecimal(offset);
+        final BigDecimal decimal2 = new BigDecimal(partitionSize);
+        return decimal1.add(decimal2).toString();
+    }
+    return null;
+  }
 }

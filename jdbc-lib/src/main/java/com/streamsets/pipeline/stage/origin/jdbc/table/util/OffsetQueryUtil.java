@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.table.util;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -27,6 +28,7 @@ import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableContext;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableRuntimeContext;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableContextUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcELEvalContext;
 import org.apache.commons.lang3.StringUtils;
@@ -58,9 +60,12 @@ public final class OffsetQueryUtil {
   private static final String TABLE_QUERY_SELECT = "select * from %s";
 
   private static final String COLUMN_GREATER_THAN_VALUE = "%s > %s";
+  private static final String COLUMN_GREATER_THAN_OR_EQUALS_VALUE = "%s >= %s";
   private static final String COLUMN_EQUALS_VALUE = "%s = %s";
+  private static final String COLUMN_LESS_THAN_VALUE = "%s < %s";
 
   private static final String CONDITION_FORMAT = "( %s )";
+  private static final String AND_CONDITION_FORMAT = "( %s AND %s )";
 
   private static final String WHERE_CLAUSE = " WHERE %s ";
   private static final String ORDER_BY_CLAUSE = " ORDER by %s ";
@@ -69,6 +74,10 @@ public final class OffsetQueryUtil {
 
   private static final Joiner OFFSET_COLUMN_JOINER = Joiner.on("::");
   private static final Splitter OFFSET_COLUMN_SPLITTER = Splitter.on("::");
+
+  private static final String OFFSET_KEY_COLUMN_SEPARATOR = ",";
+  public static final String OFFSET_KEY_COLUMN_NAME_VALUE_SEPARATOR = "=";
+
   private static final String OFFSET_COLUMN_NAME_VALUE = "%s=%s";
   public static final String QUOTED_NAME = "%s%s%s";
 
@@ -114,19 +123,37 @@ public final class OffsetQueryUtil {
 
   private OffsetQueryUtil() {}
 
+  private enum OffsetComparison {
+    GREATER_THAN(COLUMN_GREATER_THAN_VALUE),
+    GREATER_THAN_OR_EQUALS(COLUMN_GREATER_THAN_OR_EQUALS_VALUE),
+    EQUALS(COLUMN_EQUALS_VALUE),
+    LESS_THAN(COLUMN_LESS_THAN_VALUE);
+
+    private final String queryCondition;
+
+    OffsetComparison(String queryCondition) {
+      this.queryCondition = queryCondition;
+    }
+
+    String getQueryCondition() {
+      return queryCondition;
+    }
+  }
+
   /**
    * Build query using the lastOffset which is of the form (<column1>=<value1>::<column2>=<value2>::<column3>=<value3>)
    *
-   * @param tableContext Context for the current table.
+   * @param tableRuntimeContext Context for the current table.
    * @param lastOffset the last offset for this particular table
    * @return A query to execute for the current batch.
    */
   public static Pair<String, List<Pair<Integer, String>>> buildAndReturnQueryAndParamValToSet(
-      TableContext tableContext,
+      TableRuntimeContext tableRuntimeContext,
       String lastOffset,
       String quoteChar,
       TableJdbcELEvalContext tableJdbcELEvalContext
   ) throws ELEvalException {
+    final TableContext tableContext = tableRuntimeContext.getSourceTableContext();
     StringBuilder queryBuilder = new StringBuilder();
     List<Pair<Integer, String>> paramValueToSet = new ArrayList<>();
     queryBuilder.append(
@@ -141,17 +168,32 @@ public final class OffsetQueryUtil {
     );
 
     Map<String, String> storedTableToOffset = getColumnsToOffsetMapFromOffsetFormat(lastOffset);
+    final boolean noStoredOffsets = storedTableToOffset.isEmpty();
 
     //Determines whether an initial offset is specified in the config and there is no stored offset.
-    boolean isOffsetOverriden = tableContext.isOffsetOverriden() && storedTableToOffset.isEmpty();
+    boolean isOffsetOverriden = tableContext.isOffsetOverriden() && noStoredOffsets;
 
-    Map<String, String> offset = isOffsetOverriden?
-        //Use the offset in the configuration
-        tableContext.getOffsetColumnToStartOffset() :
-        // if offset is available
-        // get the stored offset (which is of the form partitionName=value) and strip off 'offsetColumns=' prefix
-        // else null
-        storedTableToOffset;
+    OffsetComparison minComparison = OffsetComparison.GREATER_THAN;
+    Map<String, String> offset = null;
+    if (isOffsetOverriden) {
+      //Use the offset in the configuration
+      offset = tableContext.getOffsetColumnToStartOffset();
+    } else if (tableRuntimeContext.isPartitioned() && noStoredOffsets) {
+      // use partitioned starting offsets
+      offset = tableRuntimeContext.getStartingPartitionOffsets();
+      minComparison = OffsetComparison.GREATER_THAN_OR_EQUALS;
+    } else {
+      // if offset is available
+      // get the stored offset (which is of the form partitionName=value) and strip off 'offsetColumns=' prefix
+      // else null
+      // offset = storedOffsets;
+      offset = storedTableToOffset;
+    }
+
+    Map<String, String> maxOffsets = new HashMap<>();
+    if (tableRuntimeContext.isPartitioned()) {
+      maxOffsets.putAll(tableRuntimeContext.getMaxPartitionOffsets());
+    }
 
     List<String> finalAndConditions = new ArrayList<>();
     //Apply last offset conditions
@@ -164,27 +206,61 @@ public final class OffsetQueryUtil {
       for (String partitionColumn : tableContext.getOffsetColumns()) {
         int partitionSqlType = tableContext.getOffsetColumnType(partitionColumn);
         String partitionOffset = offset.get(partitionColumn);
-        String conditionForThisPartitionColumn =
-            getConditionForPartitionColumn(
-                partitionColumn,
-                true,
-                preconditions,
-                quoteChar
-            );
+
+
+        String thisPartitionColumnMax = null;
+        boolean hasMaxOffset = false;
+        // add max value for partition column (if applicable)
+        if (maxOffsets.containsKey(partitionColumn)) {
+          final String maxOffset = maxOffsets.get(partitionColumn);
+          if (!Strings.isNullOrEmpty(maxOffset)) {
+            Pair<Integer, String> paramValForCurrentOffsetColumnMax = Pair.of(partitionSqlType, maxOffset);
+            // add for current partition column max value
+            paramValueToSet.add(paramValForCurrentOffsetColumnMax);
+            thisPartitionColumnMax =
+                getConditionForPartitionColumn(
+                    partitionColumn,
+                    OffsetComparison.LESS_THAN,
+                    preconditions,
+                    quoteChar
+                );
+            hasMaxOffset = true;
+          }
+        }
+
+        final String thisPartitionColumnMin = getConditionForPartitionColumn(partitionColumn,
+            minComparison,
+            preconditions,
+            quoteChar
+        );
+
+        String conditionForThisPartitionColumn;
+        if (hasMaxOffset) {
+          conditionForThisPartitionColumn = String.format(
+              AND_CONDITION_FORMAT,
+              // add max condition first, since its param to set was already added
+              thisPartitionColumnMax,
+              thisPartitionColumnMin
+          );
+        } else {
+          conditionForThisPartitionColumn = String.format(CONDITION_FORMAT, thisPartitionColumnMin);
+        }
+
         //Add for preconditions (EX: composite keys)
         paramValueToSet.addAll(new ArrayList<>(preconditionParamVals));
         Pair<Integer, String> paramValForCurrentOffsetColumn = Pair.of(partitionSqlType, partitionOffset);
         //Add for current partition column
         paramValueToSet.add(paramValForCurrentOffsetColumn);
-        finalOrConditions.add(String.format(CONDITION_FORMAT, conditionForThisPartitionColumn));
+        finalOrConditions.add(conditionForThisPartitionColumn);
         preconditions.add(
             getConditionForPartitionColumn(
                 partitionColumn,
-                false,
+                OffsetComparison.EQUALS,
                 Collections.emptyList(),
                 quoteChar
             )
         );
+
         preconditionParamVals.add(paramValForCurrentOffsetColumn);
       }
       finalAndConditions.add(String.format(CONDITION_FORMAT, OR_JOINER.join(finalOrConditions)));
@@ -218,7 +294,7 @@ public final class OffsetQueryUtil {
    * Builds parts of the query in the where clause for the the partitition column.
    *
    * @param partitionColumn Partition Column
-   * @param greaterThan Whether the conditiond needs to be greater than or equal.
+   * @param comparison The comparison to use with respect to the partition column
    * @param preconditions Any other precondition in the specific condition that needs to be combined with partition column.
    *                      (For EX: if there are multiple order by we may need to say equals for columns
    *                      before this partition column and apply the current partition column conditions)
@@ -226,11 +302,11 @@ public final class OffsetQueryUtil {
    */
   private static String getConditionForPartitionColumn(
       String partitionColumn,
-      boolean greaterThan,
+      OffsetComparison comparison,
       List<String> preconditions,
       String quoteChar
   ) {
-    String conditionTemplate = greaterThan? COLUMN_GREATER_THAN_VALUE : COLUMN_EQUALS_VALUE;
+    String conditionTemplate = comparison.getQueryCondition();
     List<String> finalConditions = new ArrayList<>(preconditions);
     finalConditions.add(
         String.format(
@@ -249,7 +325,7 @@ public final class OffsetQueryUtil {
    */
   public static Map<String, String> getColumnsToOffsetMapFromOffsetFormat(String lastOffset) {
     Map<String, String> offsetColumnsToOffsetMap = new HashMap<>();
-    if (lastOffset != null) {
+    if (StringUtils.isNotBlank(lastOffset)) {
       Iterator<String> offsetColumnsAndOffsetIterator = OFFSET_COLUMN_SPLITTER.split(lastOffset).iterator();
       while (offsetColumnsAndOffsetIterator.hasNext()) {
         String offsetColumnAndOffset = offsetColumnsAndOffsetIterator.next();
@@ -268,19 +344,73 @@ public final class OffsetQueryUtil {
    * @param fields The current record fields
    * @return Offset in the form of (<column1>=<value1>::<column2>=<value2>::<column3>=<value3>)
    */
-  public static String getOffsetFormatFromColumns(TableContext tableContext, Map<String, Field> fields) {
+  public static String getOffsetFormatFromColumns(TableRuntimeContext tableContext, Map<String, Field> fields) {
+    return getOffsetFormat(getOffsetsFromColumns(tableContext, fields));
+  }
+
+  public static String getOffsetFormat(Map<String, ?> columnsToOffsets) {
     List<String> offsetColumnFormat = new ArrayList<>();
-    for (String offsetColumn : tableContext.getOffsetColumns()) {
-      Field field = fields.get(offsetColumn);
-      Object value = field.getType().isOneOf(Field.Type.DATETIME, Field.Type.DATE, Field.Type.TIME)?
-          //For DATE/TIME fields store the long in string format and convert back to date when using offset
-          //in query
-          String.valueOf(field.getValueAsDatetime().getTime()) : field.getValue();
-      offsetColumnFormat.add(String.format(OFFSET_COLUMN_NAME_VALUE, offsetColumn, value));
+    if (columnsToOffsets != null) {
+      columnsToOffsets.forEach((col, off) -> offsetColumnFormat.add(String.format(OFFSET_COLUMN_NAME_VALUE, col, off)));
     }
     return OFFSET_COLUMN_JOINER.join(offsetColumnFormat);
   }
 
+  public static Map<String, String> getOffsetsFromColumns(TableRuntimeContext tableContext, Map<String, Field> fields) {
+    final Map<String, String> offsets = new HashMap<>();
+    for (String offsetColumn : tableContext.getSourceTableContext().getOffsetColumns()) {
+      Field field = fields.get(offsetColumn);
+      String value = field.getType().isOneOf(Field.Type.DATETIME, Field.Type.DATE, Field.Type.TIME)?
+          //For DATE/TIME fields store the long in string format and convert back to date when using offset
+          //in query
+          String.valueOf(field.getValueAsDatetime().getTime()) : field.getValueAsString();
+      offsets.put(offsetColumn, value);
+    }
+    return offsets;
+  }
+
+  public static String getSourceKeyOffsetsRepresentation(Map<String, String> offsets) {
+    if (offsets == null || offsets.size() == 0) {
+      return "";
+    }
+    final StringBuilder sb = new StringBuilder();
+    for (Map.Entry<String, String> entry : offsets.entrySet()) {
+      if (sb.length() > 0) {
+        sb.append(OFFSET_KEY_COLUMN_SEPARATOR);
+      }
+      sb.append(entry.getKey());
+      sb.append(OFFSET_KEY_COLUMN_NAME_VALUE_SEPARATOR);
+      sb.append(entry.getValue());
+    }
+    return sb.toString();
+  }
+
+  /**
+   * This is the inverse of {@link #getSourceKeyOffsetsRepresentation(Map)}.
+   *
+   * @param offsets the String representation of source key offsets
+   * @return the {@link Map} of the offsets reconstructed from the supplied representation
+   */
+  public static Map<String, String> getOffsetsFromSourceKeyRepresentation(String offsets) {
+    final Map<String, String> offsetMap = new HashMap<>();
+    if (StringUtils.isNotBlank(offsets)) {
+      for (String col : StringUtils.splitByWholeSeparator(offsets, OFFSET_KEY_COLUMN_SEPARATOR)) {
+        final String[] parts = StringUtils.splitByWholeSeparator(col, OFFSET_KEY_COLUMN_NAME_VALUE_SEPARATOR, 2);
+
+        if (parts.length != 2) {
+          throw new IllegalArgumentException(String.format(
+              "Invalid column offset of \"%s\" seen.  Expected colName%svalue.  Full offsets representation: %s",
+              col,
+              OFFSET_KEY_COLUMN_NAME_VALUE_SEPARATOR,
+              offsets
+          ));
+        }
+
+        offsetMap.put(parts[0], parts[1]);
+      }
+    }
+    return offsetMap;
+  }
   /**
    * Serialize the Map of table to offset to a String
    * @param offsetMap Map of table to Offset.
@@ -322,11 +452,19 @@ public final class OffsetQueryUtil {
    * Validates whether offset names match in the stored offset with respect to table configuration
    * @param tableContext {@link TableContext} for table
    * @param offset Stored offset from the previous stage run
+   * @return the actual offset map as deserialized from the offset param, if valid
    * @throws StageException if columns mismatch
    */
-  public static void validateStoredAndSpecifiedOffset(TableContext tableContext, String offset) throws StageException {
+  public static Map<String, String> validateStoredAndSpecifiedOffset(TableContext tableContext, String offset) throws StageException {
     Set<String> expectedColumns = Sets.newHashSet(tableContext.getOffsetColumns());
-    Set<String> actualColumns = getColumnsToOffsetMapFromOffsetFormat(offset).keySet();
+    final Map<String, String> actualOffsets = getColumnsToOffsetMapFromOffsetFormat(offset);
+
+    // only perform the actual validation below if there ARE stored offsets
+    if (actualOffsets.size() == 0) {
+      return actualOffsets;
+    }
+
+    Set<String> actualColumns = actualOffsets.keySet();
 
     Set<String> expectedSetDifference = Sets.difference(expectedColumns, actualColumns);
     Set<String> actualSetDifference = Sets.difference(actualColumns, expectedColumns);
@@ -339,5 +477,6 @@ public final class OffsetQueryUtil {
           COMMA_SPACE_JOINER.join(expectedColumns)
       );
     }
+    return actualOffsets;
   }
 }
