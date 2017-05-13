@@ -255,9 +255,15 @@ public class AvroTypeUtil {
     Object obj;
     if (schema.getType() == Schema.Type.UNION) {
       String fieldPathAttribute = record.getHeader().getAttribute(AVRO_UNION_TYPE_INDEX_PREFIX + avroFieldPath);
+      List<Schema> unionTypes = schema.getTypes();
+
       if (fieldPathAttribute != null && !fieldPathAttribute.isEmpty()) {
         int typeIndex = Integer.parseInt(fieldPathAttribute);
-        schema = schema.getTypes().get(typeIndex);
+        schema = unionTypes.get(typeIndex);
+      } else if(unionTypes.size() == 2 && unionTypes.get(0).getType() == Schema.Type.NULL) {
+        // Special case where we have union of null and actual type (which is very common) - since we know that the
+        // column is not null, expect the union's second type.
+        schema = unionTypes.get(1);
       } else {
         //Record does not have the avro union type index which means this record was not created from avro data.
         //try our best to resolve the union type.
