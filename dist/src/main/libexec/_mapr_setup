@@ -31,8 +31,6 @@
 BLACKLIST_PROP="system.stagelibs.blacklist"
 PROP_FILENAME="sdc.properties"
 POLICY_FILENAME="sdc-security.policy"
-MAPR_VERSION=5.2.0
-MAPR_HOME=""
 MAPR_LIB="streamsets-datacollector-mapr"
 
 if [ -z ${SDC_HOME} ];then
@@ -76,8 +74,11 @@ elif [[ $OSTYPE == "cygwin" ]];then
   exit 0
 fi
 
-# Input from user
-read -p "Please enter the MapR version (default 5.2.0): " MAPR_VERSION
+# Resolve MapR Version
+if [[ -z "${MAPR_VERSION}" ]];
+then
+  read -p "Please enter the MapR version (default 5.2.0): " MAPR_VERSION
+fi
 MAPR_VERSION=${MAPR_VERSION:=5.2.0}
 # Check if input version is valid
 if ! [[ ${MAPR_VERSION} =~ ^[1-9][0-9]*\.[0-9]*(\.[0-9]*)*$ ]];
@@ -95,7 +96,10 @@ if [ ! -d "$SDC_HOME/streamsets-libs/$MAPR_LIB" ]; then
 fi
 
 # Obtain MapR home
-read -p "Please enter the absolute path of MapR Home (default /opt/mapr): " MAPR_HOME
+if [[ -z "${MAPR_HOME}" ]];
+then
+  read -p "Please enter the absolute path of MapR Home (default /opt/mapr): " MAPR_HOME
+fi
 MAPR_HOME=${MAPR_HOME:="/opt/mapr"}
 
 # Check if MAPR_HOME is indeed MapR home directory
@@ -103,6 +107,14 @@ if [ ! -e "${MAPR_HOME}/MapRBuildVersion" ]; then
   echo "Error: ${MAPR_HOME} is not the correct path to MapR Home"
   exit 0
 fi
+
+echo "Configuration:"
+echo "SDC_HOME=$SDC_HOME"
+echo "SDC_CONF=$SDC_CONF"
+echo "MAPR_HOME=$MAPR_HOME"
+echo "MAPR_VERSION=$MAPR_VERSION"
+echo ""
+echo "Working:"
 
 # Remove MapR Version from sdc.properies file
 printf "Updating sdc.properties file ...."
