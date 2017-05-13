@@ -72,3 +72,6 @@ export SDC_HEAPDUMP_ON_OOM=true
 
 # Enable GC logging automatically
 export SDC_GC_LOGGING=true
+
+# SDC will by default only run on Oracle JDK, any other JDK has to be explicitly enabled
+export SDC_ALLOW_UNSUPPORTED_JDK=${SDC_ALLOW_UNSUPPORTED_JDK:-false}

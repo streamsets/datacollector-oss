@@ -152,6 +152,20 @@ else
   echo "WARN: could not determine Java environment version; expected 1.8, which are the supported versions" >&2
 fi
 
+# Verify correct JVM vendor
+JAVA_VENDOR=`$JAVA -XshowSettings:properties -version 2>&1 | grep -e 'java.vm.name' | sed -e 's/\(.*\)= \(.*\)/\2/'`
+if [[ ! "$JAVA_VENDOR" =~ "Java HotSpot(TM)" ]]
+then
+  echo "WARN: Detected non-Oracle JDK: $JAVA_VENDOR"
+
+  # And unless unsupported JDK is explicitly enabled, die
+  if [[ "${SDC_ALLOW_UNSUPPORTED_JDK}" != "true" ]]
+  then
+  echo "ERROR: Please install Oracle JDK or explicitly allow unsupported JDKs via SDC_ALLOW_UNSUPPORTED_JDK=true"
+    exit 1
+  fi
+fi
+
 if [ "${SDC_HEAPDUMP_ON_OOM}" = "true" ]
 then
   SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${SDC_HEAPDUMP_PATH}"
