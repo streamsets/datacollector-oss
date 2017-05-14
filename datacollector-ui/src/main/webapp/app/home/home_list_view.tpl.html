@@ -84,11 +84,18 @@
 
         <div class="pipeline-name"
              ng-class="{'show-name-column': header.showNameColumn}">
+
           <span class="system-pipeline-label"
-                ng-if="isSystemPipeline(pipeline)">system</span>
+                ng-if="isSystemPipeline(pipeline)">DPM system</span>
+
+          <span class="system-pipeline-label"
+                ng-if="isDpmControlledPipeline(pipeline)">DPM</span>
+
           <a ng-click="openPipeline(pipeline)" ><span>{{pipeline.title || '--'}}</span></a>
+
           <span class="version-text"
                 ng-if="pipeline.metadata && pipeline.metadata['dpm.pipeline.version']"> (v{{pipeline.metadata['dpm.pipeline.version']}})</span>
+
           <span class="pipeline-label"
                 ng-if="pipeline.metadata && pipeline.metadata.labels && pipeline.metadata.labels.length > 0"
                 ng-repeat="label in pipeline.metadata.labels">{{label}}</span>

@@ -115,6 +115,8 @@ import java.util.concurrent.TimeUnit;
 public class StandaloneRunner extends AbstractRunner implements StateListener {
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneRunner.class);
   public static final String STATS_NULL_TARGET = "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget";
+  public static final String STATS_DPM_DIRECTLY_TARGET =
+      "com_streamsets_pipeline_stage_destination_devnull_StatsDpmDirectlyDTarget";
 
   private static final ImmutableList<PipelineStatus> RESET_OFFSET_DISALLOWED_STATUSES = ImmutableList.of(
       PipelineStatus.CONNECTING,
@@ -832,6 +834,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     StageConfiguration statsAggregatorStage = pipelineConfiguration.getStatsAggregatorStage();
     if (statsAggregatorStage != null &&
         !statsAggregatorStage.getStageName().equals(STATS_NULL_TARGET) &&
+        !statsAggregatorStage.getStageName().equals(STATS_DPM_DIRECTLY_TARGET) &&
         pipelineConfiguration.getMetadata() != null) {
       isEnabled = true;
     }

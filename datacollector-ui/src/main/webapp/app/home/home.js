@@ -754,6 +754,19 @@ angular
       },
 
       /**
+       * Returns true if pipeline is DPM controlled pipeline
+       * @param pipelineInfo
+       */
+      isDpmControlledPipeline: function(pipelineInfo) {
+        var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
+        return (
+          pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId &&
+          pipelineInfo.pipelineId.indexOf('System Pipeline for Job') !== 0 &&
+          pipelineStatus.attributes && pipelineStatus.attributes.IS_REMOTE_PIPELINE
+        );
+      },
+
+      /**
        * Callback function when Show Name column menu item clicked
        */
       onToggleShowNameColumn: function() {

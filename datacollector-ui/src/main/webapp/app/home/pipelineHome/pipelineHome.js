@@ -814,9 +814,9 @@ angular
         $scope.showLoading = false;
         //Pipeline Configuration, Rules & Metrics
         if (results && results.length > 1) {
-          var config = results[0].data,
-            rules = results[1].data,
-            clickedAlert = $rootScope.common.clickedAlert;
+          var config = results[0].data;
+          var rules = results[1].data;
+          var clickedAlert = $rootScope.common.clickedAlert;
 
           $rootScope.common.pipelineMetrics = results[2].data;
           if (_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
@@ -1070,12 +1070,13 @@ angular
      * @param pipelineRules
      * @param manualUpdate
      * @param ignoreArchive
+     * @param fitToBounds
      */
     var updateGraph = function (pipelineConfig, pipelineRules, manualUpdate, ignoreArchive, fitToBounds) {
-      var selectedStageInstance,
-        stageErrorCounts = {},
-        pipelineMetrics = $rootScope.common.pipelineMetrics,
-        pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
+      var selectedStageInstance;
+      var stageErrorCounts = {};
+      var pipelineMetrics = $rootScope.common.pipelineMetrics;
+      var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
 
       if (!manualUpdate) {
         ignoreUpdate = true;
@@ -1108,6 +1109,14 @@ angular
         $scope.pipelineConfig.metadata = {
           labels : []
         };
+      }
+
+      if ($rootScope.common.isDPMEnabled && !$scope.pipelineConfig.statsAggregatorStage) {
+        var statsAggregatorStageConfig = _.find($scope.pipelineConfig.configuration, function (c) {
+          return c.name === 'statsAggregatorStage';
+        });
+        statsAggregatorStageConfig.value = "streamsets-datacollector-basic-lib::" +
+          "com_streamsets_pipeline_stage_destination_devnull_StatsDpmDirectlyDTarget::1";
       }
 
       //Determine edges from input lanes and output lanes
@@ -1267,12 +1276,12 @@ angular
      * @param options
      */
     var updateDetailPane = function(options) {
-      var selectedObject = options.selectedObject,
-        type = options.type,
-        errorStage = $scope.pipelineConfig.errorStage,
-        statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage,
-        stageLibraryList = [],
-        optionsLength = Object.keys(options).length;
+      var selectedObject = options.selectedObject;
+      var type = options.type;
+      var errorStage = $scope.pipelineConfig.errorStage;
+      var statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
+      var stageLibraryList = [];
+      var optionsLength = Object.keys(options).length;
 
       if (!$scope.previewMode && !$scope.snapshotMode && $scope.selectedType === type && $scope.selectedObject && selectedObject && optionsLength <= 2 &&
         ((type === pipelineConstant.PIPELINE && $scope.selectedObject.info.pipelineId === selectedObject.info.pipelineId) ||
@@ -1701,12 +1710,12 @@ angular
 
 
         //statsAggregatorStage check
-        var statsAggregatorStageConfig = _.find(newValue.configuration, function(c) {
-            return c.name === 'statsAggregatorStage';
-          }),
-          statsAggregatorStageConfigArr = (statsAggregatorStageConfig && statsAggregatorStageConfig.value) ?
-            (statsAggregatorStageConfig.value).split('::') : undefined,
-          statsAggregatorStageInst = newValue.statsAggregatorStage;
+        var statsAggregatorStageConfig = _.find(newValue.configuration, function (c) {
+          return c.name === 'statsAggregatorStage';
+        });
+        var statsAggregatorStageConfigArr = (statsAggregatorStageConfig && statsAggregatorStageConfig.value) ?
+          (statsAggregatorStageConfig.value).split('::') : undefined;
+        var statsAggregatorStageInst = newValue.statsAggregatorStage;
 
         if ((statsAggregatorStageConfigArr && statsAggregatorStageConfigArr.length === 3) &&
           (!statsAggregatorStageInst || statsAggregatorStageInst.library !== statsAggregatorStageConfigArr[0] ||
