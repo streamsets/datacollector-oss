@@ -28,6 +28,7 @@ import com.codahale.metrics.Timer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.StageType;
@@ -172,7 +173,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     errorSink = new ErrorSink();
     eventSink = new EventSink();
     this. configToElDefMap = configToElDefMap;
-    this.constants = constants;
+    this.constants = Collections.unmodifiableMap(constants);
     this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
@@ -363,6 +364,11 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public String getConfig(String configName) {
     return configuration.get(STAGE_CONF_PREFIX + configName, null);
+  }
+
+  @Override
+  public Map<String, Object> getPipelineConstants() {
+    return constants;
   }
 
   @Override
