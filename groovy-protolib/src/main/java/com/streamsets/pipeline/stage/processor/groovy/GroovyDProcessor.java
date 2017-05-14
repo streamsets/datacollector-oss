@@ -92,6 +92,7 @@ public class GroovyDProcessor extends DProcessor {
           " *                          Create new empty event with standard headers.\n" +
           " *   sdcFunctions.toEvent(Record): Send event to event stream\n" +
           " *                          Only events created with sdcFunctions.createEvent are supported.\n" +
+          " *  sdcFunctions.pipelineConstants(): Map with pipeline constants.\n" +
           " *\n" +
           " * Available Record Header Variables:\n" +
           " *   record.attributes: a map of record header attributes.\n" +

@@ -349,6 +349,16 @@ public class TestGroovyProcessor {
     ScriptingProcessorTestUtil.verifyInitDestroy(GroovyProcessor.class, processor);
   }
 
+  @Test
+  public void testConstants() throws Exception {
+    String script = "for(record in records) {\n" +
+        "  record.value['company'] = sdcFunctions.pipelineConstants()['company'];\n" +
+        "  output.write(record);\n" +
+        "}";
+    Processor processor = new GroovyProcessor(ProcessingMode.BATCH, script);
+    ScriptingProcessorTestUtil.verifyConstants(GroovyProcessor.class, processor);
+  }
+
   private static final String WRITE_ERROR_SCRIPT = "for (record in records) { error.write(record, 'oops'); }";
 
   @Test

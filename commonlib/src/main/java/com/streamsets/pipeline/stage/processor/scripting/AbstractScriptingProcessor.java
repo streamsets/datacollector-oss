@@ -40,6 +40,7 @@ import javax.script.SimpleBindings;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   private static final String STATE_BINDING_NAME = "state";
@@ -111,6 +112,9 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       return getScriptObjectFactory().createMap(listMap);
     }
 
+    public Map<String, Object> pipelineConstants() {
+      return getContext().getPipelineConstants();
+    }
   }
 
   public AbstractScriptingProcessor(

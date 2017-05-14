@@ -564,6 +564,16 @@ public class TestJavaScriptProcessor {
     ScriptingProcessorTestUtil.verifyInitDestroy(JavaScriptProcessor.class, processor);
   }
 
+  @Test
+  public void testConstants() throws Exception {
+    String script = "for(var i = 0; i < records.length; i++) {\n" +
+        "  records[i].value['company'] = sdcFunctions.pipelineConstants()['company'];\n" +
+        "  output.write(records[i]);\n" +
+        "}";
+    Processor processor = new JavaScriptProcessor(ProcessingMode.BATCH, script);
+    ScriptingProcessorTestUtil.verifyConstants(JavaScriptProcessor.class, processor);
+  }
+
   private static final String WRITE_ERROR_SCRIPT = "for(var i = 0; i < records.length; i++) { error.write(records[i], 'oops'); }";
 
   @Test

@@ -788,6 +788,31 @@ public class ScriptingProcessorTestUtil {
     assertEquals(1, events.size());
   }
 
+  public static <C extends Processor> void verifyConstants(Class<C> clazz, Processor processor) throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+      .addConstants(ImmutableMap.of("company", "StreamSets"))
+      .addOutputLane("lane")
+      .build();
+
+    Record record = RecordCreator.create();
+    record.set(Field.create(new HashMap<>()));
+
+    runner.runInit();
+    StageRunner.Output output;
+    try {
+      List<Record> input = Collections.singletonList(record);
+      output = runner.runProcess(input);
+    } finally {
+      runner.runDestroy();
+    }
+
+    // Validate init method by getting normal record from process with value that was set in init()
+    List<Record> records = output.getRecords().get("lane");
+    assertEquals(1, records.size());
+    assertTrue(records.get(0).has("/company"));
+    assertEquals("StreamSets", records.get(0).get("/company").getValueAsString());
+  }
+
   static void assertFieldUtil(String fieldName, Field field, Object obj){
     Field.Type expectedType = null;
 
