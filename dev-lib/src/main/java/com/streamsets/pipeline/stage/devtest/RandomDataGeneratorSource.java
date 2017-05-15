@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.devtest;
 
+import com.github.javafaker.Faker;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.EventRecord;
@@ -276,6 +277,8 @@ public class RandomDataGeneratorSource extends BasePushSource {
   }
 
   private Field generateRandomData(DataGeneratorConfig config) {
+    Faker faker = new Faker();
+
     switch(config.type) {
       case BOOLEAN :
         return Field.create(Field.Type.BOOLEAN, random.nextBoolean());
@@ -307,6 +310,192 @@ public class RandomDataGeneratorSource extends BasePushSource {
         return Field.create(Field.Type.LONG, counter++);
       case ZONED_DATETIME:
         return Field.create(Field.Type.ZONED_DATETIME, getRandomZonedDateTime());
+
+      case ADDRESS_FULL_ADDRESS:
+        return Field.create(faker.address().fullAddress());
+
+      case ADDRESS_BUILDING_NUMBER:
+        return Field.create(faker.address().buildingNumber());
+
+      case ADDRESS_STREET_ADDRESS:
+        return Field.create(faker.address().streetAddress());
+
+      case ADDRESS_CITY:
+        return Field.create(faker.address().city());
+
+      case ADDRESS_STATE:
+        return Field.create(faker.address().state());
+
+      case ADDRESS_COUNTRY:
+        return Field.create(faker.address().country());
+
+      case ADDRESS_LATITUDE:
+        return Field.create(faker.address().latitude());
+
+      case ADDRESS_LONGITUDE:
+        return Field.create(faker.address().longitude());
+
+      case APP_NAME:
+        return Field.create(faker.app().name());
+
+      case APP_AUTHOR:
+        return Field.create(faker.app().author());
+
+      case APP_VERSION:
+        return Field.create(faker.app().version());
+
+      case ARTIST_NAME:
+        return Field.create(faker.artist().name());
+
+      case BOOK_TITLE:
+        return Field.create(faker.book().title());
+
+      case BOOK_AUTHOR:
+        return Field.create(faker.book().author());
+
+      case BOOK_GENRE:
+        return Field.create(faker.book().genre());
+
+      case BOOK_PUBLISHER:
+        return Field.create(faker.book().publisher());
+
+      case BUSINESS_CREDIT_CARD_NUMBER:
+        return Field.create(faker.business().creditCardNumber());
+
+      case BUSINESS_CREDIT_CARD_EXPIRY:
+        return Field.create(faker.business().creditCardExpiry());
+
+      case BUSINESS_CREDIT_CARD_TYPE:
+        return Field.create(faker.business().creditCardType());
+
+      case CAT_NAME:
+        return Field.create(faker.cat().name());
+
+      case CAT_BREED:
+        return Field.create(faker.cat().breed());
+
+      case CAT_REGISTRY:
+        return Field.create(faker.cat().registry());
+
+      case CODE_ASIN:
+        return Field.create(faker.code().asin());
+
+      case CODE_IMEI:
+        return Field.create(faker.code().imei());
+
+      case CODE_ISBN10:
+        return Field.create(faker.code().isbn10());
+
+      case CODE_ISBN13:
+        return Field.create(faker.code().isbn13());
+
+      case COLOR:
+        return Field.create(faker.color().name());
+
+      case COMMERCE_DEPARTMENT:
+        return Field.create(faker.commerce().department());
+
+      case COMMERCE_COLOR:
+        return Field.create(faker.commerce().color());
+
+      case COMMERCE_MATERIAL:
+        return Field.create(faker.commerce().material());
+
+      case COMMERCE_PRICE:
+        return Field.create(faker.commerce().price());
+
+      case COMMERCE_PRODUCT_NAME:
+        return Field.create(faker.commerce().productName());
+
+      case COMMERCE_PROMOTION_CODE:
+        return Field.create(faker.commerce().promotionCode());
+
+      case COMPANY_NAME:
+        return Field.create(faker.company().name());
+
+      case COMPANY_INDUSTRY:
+        return Field.create(faker.company().industry());
+
+      case COMPANY_BUZZWORD:
+        return Field.create(faker.company().buzzword());
+
+      case COMPANY_URL:
+        return Field.create(faker.company().url());
+
+      case CRYPTO_MD5:
+        return Field.create(faker.crypto().md5());
+
+      case CRYPTO_SHA1:
+        return Field.create(faker.crypto().sha1());
+
+      case CRYPTO_SHA256:
+        return Field.create(faker.crypto().sha256());
+
+      case CRYPTO_SHA512:
+        return Field.create(faker.crypto().sha512());
+
+      case DEMOGRAPHIC:
+        return Field.create(faker.demographic().race());
+
+      case EDUCATOR:
+        return Field.create(faker.educator().university());
+
+      case FILE:
+        return Field.create(faker.file().fileName());
+
+      case FINANCE:
+        return Field.create(faker.finance().creditCard());
+
+      case FOOD:
+        return Field.create(faker.food().ingredient());
+
+      case GAMEOFTHRONES:
+        return Field.create(faker.gameOfThrones().character());
+
+      case HACKER:
+        return Field.create(faker.hacker().abbreviation());
+
+      case IDNUMBER:
+        return Field.create(faker.idNumber().valid());
+
+      case INTERNET:
+        return Field.create(faker.internet().domainName());
+
+      case LOREM:
+        return Field.create(faker.lorem().character());
+
+      case MUSIC:
+        return Field.create(faker.music().chord());
+
+      case NAME:
+        return Field.create(faker.name().fullName());
+
+      case PHONENUMBER:
+        return Field.create(faker.phoneNumber().cellPhone());
+
+      case POKEMON:
+        return Field.create(faker.pokemon().name());
+
+      case SHAKESPEARE:
+        return Field.create(faker.shakespeare().romeoAndJulietQuote());
+
+      case SLACKEMOJI:
+        return Field.create(faker.slackEmoji().celebration());
+
+      case SPACE:
+        return Field.create(faker.space().company());
+
+      case STOCK:
+        return Field.create(faker.stock().nsdqSymbol());
+
+      case SUPERHERO:
+        return Field.create(faker.superhero().name());
+
+      case TEAM:
+        return Field.create(faker.team().name());
+
+      case UNIVERSITY:
+        return Field.create(faker.university().name());
     }
     return null;
   }
@@ -414,7 +603,82 @@ public class RandomDataGeneratorSource extends BasePushSource {
     BOOLEAN,
     DECIMAL,
     BYTE_ARRAY,
-    LONG_SEQUENCE
+    LONG_SEQUENCE,
+
+    // FAKER Types
+    ADDRESS_FULL_ADDRESS,
+    ADDRESS_BUILDING_NUMBER,
+    ADDRESS_STREET_ADDRESS,
+    ADDRESS_CITY,
+    ADDRESS_STATE,
+    ADDRESS_COUNTRY,
+    ADDRESS_LATITUDE,
+    ADDRESS_LONGITUDE,
+
+    APP_NAME,
+    APP_AUTHOR,
+    APP_VERSION,
+
+    ARTIST_NAME,
+
+    BOOK_TITLE,
+    BOOK_AUTHOR,
+    BOOK_GENRE,
+    BOOK_PUBLISHER,
+
+    BUSINESS_CREDIT_CARD_NUMBER,
+    BUSINESS_CREDIT_CARD_EXPIRY,
+    BUSINESS_CREDIT_CARD_TYPE,
+
+    CAT_NAME,
+    CAT_BREED,
+    CAT_REGISTRY,
+
+    CODE_ASIN,
+    CODE_IMEI,
+    CODE_ISBN10,
+    CODE_ISBN13,
+
+    COLOR,
+
+    COMMERCE_DEPARTMENT,
+    COMMERCE_COLOR,
+    COMMERCE_MATERIAL,
+    COMMERCE_PRICE,
+    COMMERCE_PRODUCT_NAME,
+    COMMERCE_PROMOTION_CODE,
+
+    COMPANY_NAME,
+    COMPANY_INDUSTRY,
+    COMPANY_BUZZWORD,
+    COMPANY_URL,
+
+    CRYPTO_MD5,
+    CRYPTO_SHA1,
+    CRYPTO_SHA256,
+    CRYPTO_SHA512,
+
+    DEMOGRAPHIC,
+    EDUCATOR,
+    FILE,
+    FINANCE,
+    FOOD,
+    GAMEOFTHRONES,
+    HACKER,
+    IDNUMBER,
+    INTERNET,
+    LOREM,
+    MUSIC,
+    NAME,
+    PHONENUMBER,
+    POKEMON,
+    SHAKESPEARE,
+    SLACKEMOJI,
+    SPACE,
+    STOCK,
+    SUPERHERO,
+    TEAM,
+    UNIVERSITY
   }
 
   enum RootType {
