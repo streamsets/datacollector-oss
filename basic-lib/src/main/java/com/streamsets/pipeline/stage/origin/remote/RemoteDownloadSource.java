@@ -43,6 +43,7 @@ import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.vfs2.FileNotFoundException;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSelectInfo;
@@ -52,6 +53,7 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
+import org.apache.commons.vfs2.NameScope;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
@@ -298,12 +300,32 @@ public class RemoteDownloadSource extends BaseSource {
     final int batchSize = Math.min(maxBatchSize, conf.basic.maxBatchSize);
     // Just started up, currentOffset has not yet been set.
     // This method returns NOTHING_READ when only no events have ever been read
-    if (currentOffset == null
-        && lastSourceOffset != null
-        && !lastSourceOffset.isEmpty()
-        && !lastSourceOffset.equals(NOTHING_READ)) {
-      currentOffset = new Offset(lastSourceOffset);
+    if (currentOffset == null) {
+      if(StringUtils.isEmpty(lastSourceOffset) || NOTHING_READ.equals(lastSourceOffset)) {
+        LOG.debug("Detected invalid source offset '{}'", lastSourceOffset);
+
+        // Use initial file
+        if(!StringUtils.isEmpty(conf.initialFileToProcess)) {
+          try {
+            FileObject initialFile = remoteDir.resolveFile(conf.initialFileToProcess, NameScope.DESCENDENT);
+
+            currentOffset = new Offset(
+              initialFile.getName().getPath(),
+              initialFile.getContent().getLastModifiedTime(),
+              ZERO
+            );
+          } catch (FileSystemException e) {
+            throw new StageException(Errors.REMOTE_16, conf.initialFileToProcess, e.toString(), e);
+          }
+        }
+
+        // Otherwise start from beginning
+      } else {
+        // We have valid offset
+        currentOffset = new Offset(lastSourceOffset);
+      }
     }
+
     String offset = NOTHING_READ;
     try {
       Optional<RemoteFile> nextOpt = null;

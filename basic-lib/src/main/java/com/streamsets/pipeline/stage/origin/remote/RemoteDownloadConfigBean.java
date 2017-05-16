@@ -203,4 +203,15 @@ public class RemoteDownloadConfigBean {
   )
   public String filePattern;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "First File to Process",
+      description = "When configured, the Data Collector does not process earlier file names",
+      displayPosition = 50,
+      group = "REMOTE"
+  )
+  public String initialFileToProcess;
+
 }

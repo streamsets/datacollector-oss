@@ -498,6 +498,91 @@ public class TestRemoteDownloadSource {
   }
 
   @Test
+  public void testInitialFile() throws Exception {
+    path = "remote-download-source/parseSameTimestamp";
+    File dir =
+        new File(currentThread().getContextClassLoader().
+            getResource("remote-download-source/parseSameTimestamp").getPath());
+    File[] files = dir.listFiles();
+    Assert.assertEquals(3, files.length);
+    for (File f : files) {
+      if (f.getName().equals("panda.txt")) {
+        Assert.assertTrue(f.setLastModified(18000000L));
+      } else if (f.getName().equals("polarbear.txt")) {
+        f.setLastModified(16000000L);
+      } else if (f.getName().equals("sloth.txt")) {
+        f.setLastModified(17000000L);
+      }
+    }
+    setupSSHD(path, false);
+
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.JSON,
+            null,
+            false,
+            "*",
+              1000,
+            "sloth.txt"
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    List<Record> expected = getExpectedRecords();
+    String offset = RemoteDownloadSource.NOTHING_READ;
+    for (int i = 0; i < 2; i++) {
+      StageRunner.Output op = runner.runProduce(offset, 1000);
+      offset = op.getNewOffset();
+      List<Record> actual = op.getRecords().get("lane");
+      Assert.assertEquals(1, actual.size());
+      Assert.assertEquals(expected.get(i).get(), actual.get(0).get());
+    }
+    destroyAndValidate(runner);
+  }
+
+  @Test(expected = StageException.class)
+  public void testInitialFileDoesntExists() throws Exception {
+    path = "remote-download-source/parseSameTimestamp";
+    setupSSHD(path, false);
+
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.JSON,
+            null,
+            false,
+            "*",
+              1000,
+            "is-arvind-son-of-god.txt"
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      runner.runProduce(null, 1000);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testRestartFromMiddleOfFile() throws Exception {
     path = "remote-download-source/parseNoError";
     setupSSHD(path, false);
@@ -1626,7 +1711,41 @@ public class TestRemoteDownloadSource {
         errorArchive,
         processSubDirectories,
         filePattern,
-        1000
+        1000,
+        ""
+    );
+  }
+
+  private RemoteDownloadConfigBean getBean(
+    String remoteHost,
+    boolean userDirIsRoot,
+    String username,
+    String password,
+    String privateKey,
+    String passphrase,
+    String knownHostsFile,
+    boolean noHostChecking,
+    DataFormat dataFormat,
+    String errorArchive,
+    boolean processSubDirectories,
+    String filePattern,
+    int batchSize
+  ) {
+    return getBean(
+      remoteHost,
+      userDirIsRoot,
+      username,
+      password,
+      privateKey,
+      passphrase,
+      knownHostsFile,
+      noHostChecking,
+      dataFormat,
+      errorArchive,
+      processSubDirectories,
+      filePattern,
+      batchSize,
+      ""
     );
   }
 
@@ -1643,7 +1762,8 @@ public class TestRemoteDownloadSource {
       String errorArchive,
       boolean processSubDirectories,
       String filePattern,
-      int batchSize
+      int batchSize,
+      String initialFile
   ) {
     RemoteDownloadConfigBean configBean = new RemoteDownloadConfigBean();
     configBean.remoteAddress = remoteHost;
@@ -1660,6 +1780,7 @@ public class TestRemoteDownloadSource {
     configBean.processSubDirectories = processSubDirectories;
     configBean.filePattern = filePattern;
     configBean.basic.maxBatchSize = batchSize;
+    configBean.initialFileToProcess = initialFile;
     if (password != null) {
       configBean.auth = Authentication.PASSWORD;
     } else {

@@ -42,7 +42,8 @@ public enum Errors implements ErrorCode {
   REMOTE_12("Strict Host Checking is supported only with SFTP"),
   REMOTE_13("File Pattern cannot be empty"),
   REMOTE_14("Invalid GLOB file pattern '{}': {}"),
-  REMOTE_15("URI: '{}' is invalid. Must begin with 'ftp://' or 'sftp://'")
+  REMOTE_15("URI: '{}' is invalid. Must begin with 'ftp://' or 'sftp://'"),
+  REMOTE_16("Initial file '{}' is invalid: {}"),
   ;
 
   private final String msg;
