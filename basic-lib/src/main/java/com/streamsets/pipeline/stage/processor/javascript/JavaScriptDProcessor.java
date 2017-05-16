@@ -174,7 +174,10 @@ public class JavaScriptDProcessor extends DProcessor {
           " *\n" +
           " *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n" +
           " *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n" +
-          " *\n" +
+          " *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n" +
+          " *                          to check if the field is typed field with value null\n" +
+          " *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n" +
+          " *                          Pass true to this function to create a list map (ordered map)\n" +
           " */\n" +
           "\n" +
           "// state['connection'] = new Connection().open();\n" +
@@ -189,7 +192,14 @@ public class JavaScriptDProcessor extends DProcessor {
           " *\n" +
           " *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n" +
           " *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n" +
-          " *\n" +
+          " *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n" +
+          " *                          to check if the field is typed field with value null\n" +
+          " *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n" +
+          " *                          Pass true to this function to create a list map (ordered map)\n" +
+          " *   sdcFunctions.createEvent(String type, int version): Creates a new event.\n" +
+          " *                          Create new empty event with standard headers.\n" +
+          " *   sdcFunctions.toEvent(Record): Send event to event stream\n" +
+          " *                          Only events created with sdcFunctions.createEvent are supported.\n" +
           " */\n" +
           "\n" +
           "// state['connection'].close();\n" +
