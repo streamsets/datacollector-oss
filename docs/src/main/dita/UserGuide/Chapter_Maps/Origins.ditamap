@@ -33,6 +33,14 @@
    <topicref href="../Origins/AmazonS3-DataFormat.dita"/>
    <topicref href="../Origins/AmazonS3-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/CoAPServer.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/CoAPServer-Prerequisites.dita"/>
+   <topicref href="../Origins/CoAPServer-MultithreadProcessing.dita"/>
+   <topicref href="../Origins/CoAPServer-NetworkConfiguration.dita"/>
+   <topicref href="../Origins/CoAPServer-DataFormat.dita"/>
+   <topicref href="../Origins/CoAPServer-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/Directory.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Directory-FileNamePattern-Mode.dita"/>

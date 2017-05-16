@@ -64,7 +64,7 @@
                             <li>ALERT_TEXT - The text configured for the alert. </li>
                             <li>ALERT_VALUE - The value that triggered the condition. For example,
                                 if the alert is configured to trigger upon reaching 1000 error
-                                records, the alert value wil be 1000.</li>
+                                records, the alert value will be 1000.</li>
                             <li>PIPELINE_TITLE - The pipeline title.</li>
                             <li>PIPELINE_URL - The direct URL to the pipeline.</li>
                             <li>TIME - Time of the triggered request.</li>

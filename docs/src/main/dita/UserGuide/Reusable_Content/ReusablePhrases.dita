@@ -94,6 +94,7 @@
             </p>
             <p>
                   <ul id="BasicOrigins">
+                        <li>CoAP Server</li>
                         <li>Directory</li>
                         <li>File Tail</li>
                         <li>HTTP Client</li>
@@ -115,6 +116,7 @@
             </p>
             <p>
                   <ul id="BasicDestinations">
+                        <li>CoAP Client</li>
                         <li>HTTP Client</li>
                         <li>Local FS</li>
                         <li>MQTT Publisher</li>

@@ -64,6 +64,13 @@
    <topicref href="../Destinations/Cassandra-DataTypes.dita"/>
    <topicref href="../Destinations/Cassandra-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/CoAPClient.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/CoAPClient-DataFormat.dita"/>
+   <topicref href="../Destinations/CoAPClient-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/Elasticsearch.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

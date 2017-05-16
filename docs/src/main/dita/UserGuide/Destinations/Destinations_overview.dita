@@ -26,6 +26,8 @@
           data to the Azure Data Lake Store.</li>
         <li><xref href="Cassandra.dita#concept_hfy_mfd_sr">Cassandra</xref> - Writes data to a
           Cassandra cluster.</li>
+        <li><xref href="CoAPClient.dita#concept_hw5_s3n_sz">CoAP Client</xref> - Writes data to a
+          CoAP endpoint.</li>
         <li><xref href="Elasticsearch.dita#concept_u5t_vpv_4r">Elasticsearch</xref> - Writes data to
           an Elasticsearch cluster.</li>
         <li><xref href="Flume.dita#concept_pzn_hl4_yr">Flume</xref> - Writes data to a Flume

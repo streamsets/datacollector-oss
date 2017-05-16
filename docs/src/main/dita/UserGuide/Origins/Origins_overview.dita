@@ -23,6 +23,9 @@
     <p>In standalone pipelines, you can use the following origins: <ul id="ul_mxz_jxm_jq">
         <li><xref href="AmazonS3.dita#concept_kvs_3hh_ht">Amazon S3</xref> - Reads objects from
           Amazon S3.</li>
+        <li><xref href="CoAPServer.dita#concept_wfy_ghn_sz">CoAP Server</xref> - Listens on a CoAP
+          endpoint and processes the contents of all authorized CoAP requests. Creates multiple
+          threads to enable parallel processing in a multithreaded pipeline.</li>
         <li><xref href="Directory.dita#concept_qcq_54n_jq">Directory</xref> - Reads fully-written
           files from a directory. </li>
         <li><xref href="Elasticsearch.dita#concept_f1q_vpm_2z">Elasticsearch</xref> - Reads data

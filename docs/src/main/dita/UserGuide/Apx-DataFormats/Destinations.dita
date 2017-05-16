@@ -86,6 +86,21 @@
                                                   Applicable * * *</entry>
                                                   <entry/>
                                                 </row>
+            <row>
+              <entry>CoAP Client</entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_op4_1j4_sz"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_pp4_1j4_sz"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qp4_1j4_sz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rp4_1j4_sz"
+                /></entry>
+              <entry/>
+            </row>
                                                 <row>
                                                   <entry>Elasticsearch</entry>
                                                   <entry namest="c2" nameend="c9">* * * Not
