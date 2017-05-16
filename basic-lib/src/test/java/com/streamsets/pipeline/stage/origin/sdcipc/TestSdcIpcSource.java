@@ -74,7 +74,7 @@ public class TestSdcIpcSource {
 
     final Configs configs = new Configs();
     configs.appId = "appId";
-    configs.tlsEnabled = ssl;
+    configs.tlsConfigBean.tlsEnabled = ssl;
     configs.tlsConfigBean.keyStoreFilePath = keyStore.toString();
     configs.tlsConfigBean.keyStorePassword = "keystore";
     configs.port = randomPort;
@@ -162,7 +162,7 @@ public class TestSdcIpcSource {
     config.connectionTimeOutMs = 1000;
     config.readTimeOutMs = 1000;
     config.hostPorts = ImmutableList.of(hostPort);
-    config.tlsEnabled = ssl;
+    config.tlsConfigBean.tlsEnabled = ssl;
     config.hostVerification = false;
     config.tlsConfigBean.trustStoreFilePath = trustStoreFile;
     config.tlsConfigBean.trustStorePassword = trustStorePassword;

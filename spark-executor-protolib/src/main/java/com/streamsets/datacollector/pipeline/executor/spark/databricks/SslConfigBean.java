@@ -21,12 +21,10 @@
  */
 package com.streamsets.datacollector.pipeline.executor.spark.databricks;
 
-import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
-import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 
 import java.util.List;
 
@@ -94,18 +92,12 @@ public class SslConfigBean {
    * @param issues List of issues to augment
    */
   public void init(Stage.Context context, String prefix, List<Stage.ConfigIssue> issues) {
-    underlyingConfig = new TlsConfigBean(TlsConnectionType.NEITHER);
+    underlyingConfig = new TlsConfigBean();
     underlyingConfig.trustStorePassword = trustStorePassword;
     underlyingConfig.trustStoreFilePath = trustStorePath;
-    if (!Strings.isNullOrEmpty(underlyingConfig.trustStoreFilePath)) {
-      underlyingConfig.hasTrustStore = true;
-    }
     underlyingConfig.keyStorePassword = keyStorePassword;
     underlyingConfig.keyStoreFilePath = keyStorePath;
-    if (!Strings.isNullOrEmpty(underlyingConfig.keyStoreFilePath)) {
-      underlyingConfig.hasKeyStore = true;
-    }
-    if (underlyingConfig.isEitherStoreEnabled()) {
+    if (underlyingConfig.isEnabled()) {
       underlyingConfig.init(context, "TLS", prefix, issues);
     }
   }

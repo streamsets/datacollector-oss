@@ -47,7 +47,7 @@ public class TestWebSocketServerPushSource {
     webSocketConfigs.appId = "appId";
     webSocketConfigs.port = NetworkUtils.getRandomPort();
     webSocketConfigs.maxConcurrentRequests = 1;
-    webSocketConfigs.tlsEnabled = false;
+    webSocketConfigs.tlsConfigBean.tlsEnabled = false;
     WebSocketServerPushSource source =
         new WebSocketServerPushSource(webSocketConfigs, DataFormat.JSON, new DataParserFormatConfig());
     final PushSourceRunner runner =
@@ -100,7 +100,7 @@ public class TestWebSocketServerPushSource {
     webSocketConfigs.appId = "appId";
     webSocketConfigs.port = NetworkUtils.getRandomPort();
     webSocketConfigs.maxConcurrentRequests = 1;
-    webSocketConfigs.tlsEnabled = false;
+    webSocketConfigs.tlsConfigBean.tlsEnabled = false;
     webSocketConfigs.appIdViaQueryParamAllowed = true;
     WebSocketServerPushSource source =
         new WebSocketServerPushSource(webSocketConfigs, DataFormat.JSON, new DataParserFormatConfig());

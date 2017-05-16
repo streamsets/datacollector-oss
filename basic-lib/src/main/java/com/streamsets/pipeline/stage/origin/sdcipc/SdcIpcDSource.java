@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
@@ -37,6 +38,12 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
     upgrader = SdcIpcSourceUpgrader.class
 )
 @ConfigGroups(Groups.class)
+@HideConfigs({
+    "configs.tlsConfigBean.trustStoreFilePath",
+    "configs.tlsConfigBean.trustStoreType",
+    "configs.tlsConfigBean.trustStorePassword",
+    "configs.tlsConfigBean.trustStoreAlgorithm"
+})
 @GenerateResourceBundle
 public class SdcIpcDSource extends DSourceOffsetCommitter {
 

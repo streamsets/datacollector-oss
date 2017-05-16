@@ -27,7 +27,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
-import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,11 +49,10 @@ public class Configs {
   private static final Logger LOG = LoggerFactory.getLogger(Configs.class);
   private static final String CONFIG_PREFIX = "config.";
   private static final String HOST_PORTS = CONFIG_PREFIX + "hostPorts";
-  private static final String TRUST_STORE_FILE = CONFIG_PREFIX + "trustStoreFile";
   private static final int MAX_BACKOFF_WAIT = 5 * 60 * 1000; // 5 minutes in milliseconds
 
   @ConfigDefBean(groups = "TLS")
-  public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.CLIENT);
+  public TlsConfigBean tlsConfigBean = new TlsConfigBean();
 
   @ConfigDef(
       required = true,
@@ -81,23 +79,12 @@ public class Configs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "TLS Enabled",
-      description = "Encrypt RPC communication using TLS.",
-      displayPosition = 30,
-      group = "RPC"
-  )
-  public boolean tlsEnabled;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Verify Host In Server Certificate",
       description = "Disables server certificate hostname verification",
       displayPosition = 60,
       group = "RPC",
-      dependsOn = "tlsEnabled",
+      dependsOn = "tlsConfigBean.tlsEnabled",
       triggeredByValue = "true"
   )
   public boolean hostVerification;
@@ -171,14 +158,8 @@ public class Configs {
     boolean ok = validateHostPorts(context, issues);
     ok |= validateSecurity(context, issues);
     if (ok) {
-      if (tlsEnabled) {
-        try {
-          sslSocketFactory = createSSLSocketFactory(context);
-        } catch (Exception ex) {
-          issues.add(context.createConfigIssue(Groups.RPC.name(), TRUST_STORE_FILE,
-                                               Errors.IPC_DEST_10, ex.toString()));
-          ok = false;
-        }
+      if (tlsConfigBean.isEnabled()) {
+        sslSocketFactory = createSSLSocketFactory(context);
       }
       if (ok && !context.isPreview()) {
         List<Stage.ConfigIssue> moreIssues = new ArrayList<>();
@@ -295,13 +276,13 @@ public class Configs {
 
   boolean validateSecurity(Stage.Context context, List<Stage.ConfigIssue> issues) {
     boolean ok = true;
-    if (tlsEnabled) {
+    if (tlsConfigBean.isEnabled()) {
       ok &= tlsConfigBean.init(context, "TLS", "tlsConfigBean.", issues);
     }
     return ok;
   }
 
-  SSLSocketFactory createSSLSocketFactory(Stage.Context context) throws Exception {
+  SSLSocketFactory createSSLSocketFactory(Stage.Context context) {
     return tlsConfigBean.getSslContext().getSocketFactory();
   }
 
@@ -323,12 +304,12 @@ public class Configs {
 
     @VisibleForTesting
   public HttpURLConnection createConnection(String hostPort, String path) throws IOException {
-    String scheme = (tlsEnabled) ? "https://" : "http://";
+    String scheme = (tlsConfigBean.isEnabled()) ? "https://" : "http://";
     URL url = new URL(scheme + hostPort.trim()  + path);
     HttpURLConnection conn = createConnection(url);
     conn.setConnectTimeout(connectionTimeOutMs);
     conn.setReadTimeout(readTimeOutMs);
-    if (tlsEnabled) {
+    if (tlsConfigBean.isEnabled()) {
       HttpsURLConnection sslConn = (HttpsURLConnection) conn;
       sslConn.setSSLSocketFactory(sslSocketFactory);
       if (!hostVerification) {

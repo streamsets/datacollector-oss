@@ -85,8 +85,6 @@ public class TCPServerSource extends BasePushSource {
         ? config.nonTransparentFramingSeparatorCharStr
         : config.recordSeparatorStr;
 
-
-    this.config.tlsConfigBean.hasKeyStore = true;
   }
 
   @Override
@@ -121,7 +119,7 @@ public class TCPServerSource extends BasePushSource {
       if (addresses.isEmpty()) {
         issues.add(getContext().createConfigIssue(Groups.TCP.name(), portsField, Errors.TCP_09));
       } else {
-        if (config.tlsEnabled) {
+        if (config.tlsConfigBean.isEnabled()) {
           boolean tlsValid = config.tlsConfigBean.init(getContext(), Groups.TLS.name(), "conf.tlsConfigBean.", issues);
           if (!tlsValid) {
             return issues;
@@ -140,7 +138,7 @@ public class TCPServerSource extends BasePushSource {
             new ChannelInitializer<SocketChannel>() {
               @Override
               public void initChannel(SocketChannel ch) throws Exception {
-                if (config.tlsEnabled) {
+                if (config.tlsConfigBean.isEnabled()) {
                   // Add TLS handler into pipeline in the first position
                   ch.pipeline().addFirst("TLS", new SslHandler(config.tlsConfigBean.getSslEngine()));
                 }

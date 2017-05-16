@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
-import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 
 public class SdcIpcConfigs extends HttpConfigs {
 
@@ -33,7 +32,7 @@ public class SdcIpcConfigs extends HttpConfigs {
   }
 
   @ConfigDefBean(groups = "TLS")
-  public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.SERVER);
+  public TlsConfigBean tlsConfigBean = new TlsConfigBean();
 
   @ConfigDef(
       required = true,
@@ -88,17 +87,6 @@ public class SdcIpcConfigs extends HttpConfigs {
   )
   public int maxRpcRequestSize;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "TLS Enabled",
-      description = "Encrypt RPC communication using TLS.",
-      displayPosition = 40,
-      group = "RPC"
-  )
-  public boolean tlsEnabled;
-
   @Override
   public int getPort() {
     return port;
@@ -121,7 +109,7 @@ public class SdcIpcConfigs extends HttpConfigs {
 
   @Override
   public boolean isTlsEnabled() {
-    return tlsEnabled;
+    return tlsConfigBean.isEnabled();
   }
 
   @Override

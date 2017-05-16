@@ -38,8 +38,6 @@ public class TestMqttClientTarget {
     MqttClientConfigBean commonConf = new MqttClientConfigBean();
     commonConf.brokerUrl = "tcp://localhost:1833";
     commonConf.clientId = UUID.randomUUID().toString();
-    commonConf.tlsConfig.hasKeyStore = false;
-    commonConf.tlsConfig.hasTrustStore = false;
 
     MqttClientTargetConfigBean publisherConf = new MqttClientTargetConfigBean();
     publisherConf.topic = "sample/topic";

@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -41,6 +42,12 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
 )
 
 @ConfigGroups(Groups.class)
+@HideConfigs({
+    "conf.tlsConfigBean.trustStoreFilePath",
+    "conf.tlsConfigBean.trustStoreType",
+    "conf.tlsConfigBean.trustStorePassword",
+    "conf.tlsConfigBean.trustStoreAlgorithm"
+})
 @GenerateResourceBundle
 public class TCPServerDSource extends DPushSource {
 

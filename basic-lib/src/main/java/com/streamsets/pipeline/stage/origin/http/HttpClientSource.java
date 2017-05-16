@@ -159,7 +159,7 @@ public class HttpClientSource extends BaseSource {
     conf.basic.init(getContext(), Groups.HTTP.name(), BASIC_CONFIG_PREFIX, issues);
     conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.HTTP.name(), DATA_FORMAT_CONFIG_PREFIX, issues);
     conf.init(getContext(), Groups.HTTP.name(), "conf.", issues);
-    if (conf.client.tlsConfig.isEitherStoreEnabled()) {
+    if (conf.client.tlsConfig.isEnabled()) {
       conf.client.tlsConfig.init(getContext(), Groups.TLS.name(), TLS_CONFIG_PREFIX, issues);
     }
 

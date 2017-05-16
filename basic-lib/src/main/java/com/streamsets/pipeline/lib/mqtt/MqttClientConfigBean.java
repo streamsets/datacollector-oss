@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
-import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,17 +137,7 @@ public class MqttClientConfigBean {
   )
   public String password;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Use TLS",
-      displayPosition = 80,
-      group = "MQTT"
-  )
-  public boolean tlsEnabled;
-
   @ConfigDefBean(groups = "TLS")
-  public TlsConfigBean tlsConfig = new TlsConfigBean(TlsConnectionType.NEITHER);
+  public TlsConfigBean tlsConfig = new TlsConfigBean();
 
 }

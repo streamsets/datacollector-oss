@@ -29,7 +29,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
-import org.glassfish.jersey.SslConfigurator;
 
 import javax.net.ssl.SSLContext;
 import java.net.URI;
@@ -37,7 +36,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 public class MqttClientCommon {
-  private static final String SSL_CONFIG_PREFIX = "conf.tlsConfig.";
+  private static final String SSL_CONFIG_PREFIX = "commonConf.tlsConfig.";
   private final MqttClientConfigBean commonConf;
   private MqttClient mqttClient;
 
@@ -46,7 +45,7 @@ public class MqttClientCommon {
   }
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    if (commonConf.tlsConfig.isEitherStoreEnabled()) {
+    if (commonConf.tlsConfig.isEnabled()) {
       // this configuration has no separate "tlsEnabled" field on the bean level, so need to do it this way
       commonConf.tlsConfig.init(
           context,

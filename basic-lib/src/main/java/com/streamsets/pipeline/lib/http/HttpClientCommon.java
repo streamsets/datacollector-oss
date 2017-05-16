@@ -78,7 +78,7 @@ public class HttpClientCommon {
   }
 
   public List<Stage.ConfigIssue> init(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    if (jerseyClientConfig.tlsConfig.isEitherStoreEnabled()) {
+    if (jerseyClientConfig.tlsConfig.isEnabled()) {
       jerseyClientConfig.tlsConfig.init(
           context,
           Groups.TLS.name(),

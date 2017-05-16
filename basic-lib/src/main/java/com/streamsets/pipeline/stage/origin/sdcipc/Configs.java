@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
-import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +34,7 @@ public class Configs extends HttpConfigs {
   private static final String PORT = CONFIG_PREFIX + "port";
 
   @ConfigDefBean(groups = "TLS")
-  public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.SERVER);
+  public TlsConfigBean tlsConfigBean = new TlsConfigBean();
 
   @ConfigDef(
       required = true,
@@ -76,17 +75,6 @@ public class Configs extends HttpConfigs {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "TLS Enabled",
-      description = "Encrypt RPC communication using TLS.",
-      displayPosition = 40,
-      group = "RPC"
-  )
-  public boolean tlsEnabled;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "10",
       label = "Max Record Size (MB)",
@@ -124,7 +112,7 @@ public class Configs extends HttpConfigs {
 
   @Override
   public boolean isTlsEnabled() {
-    return tlsEnabled;
+    return tlsConfigBean.isEnabled();
   }
 
   @Override

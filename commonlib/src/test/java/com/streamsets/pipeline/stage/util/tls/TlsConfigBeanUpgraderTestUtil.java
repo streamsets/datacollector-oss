@@ -74,11 +74,11 @@ public abstract class TlsConfigBeanUpgraderTestUtil {
         Assert.assertEquals(!Strings.isNullOrEmpty(keyStoreFile), config.getValue());
       } else if ((confPrefix+"tlsConfig.hasTrustStore").equals(name)) {
         Assert.assertEquals(!Strings.isNullOrEmpty(trustStoreFile), config.getValue());
-      } else if ((confPrefix+"tlsEnabled").equals(name)) {
+      } else if ((confPrefix+"tlsConfig.tlsEnabled").equals(name)) {
         tlsEnabledSeen = true;
       }
     }
-    Assert.assertTrue("tlsEnabled property not seen on parent bean of tlsConfig", tlsEnabledSeen);
+    Assert.assertTrue("tlsEnabled property not seen in tlsConfig bean", tlsEnabledSeen);
   }
 
   public static void testRawKeyStoreConfigsToTlsConfigBeanUpgrade(
@@ -124,16 +124,5 @@ public abstract class TlsConfigBeanUpgraderTestUtil {
         oldKeyStoreFile, String.format("%stlsConfigBean.%sStoreFilePath", configPrefix, storeType),
         oldKeyStorePW, String.format("%stlsConfigBean.%sStorePassword", configPrefix, storeType)
     );
-
-    for (Config config : configs) {
-      if (String.format(
-          "%stlsConfigBean.has%sStore",
-          configPrefix,
-          StringUtils.capitalize(storeType)
-      ).equals(config.getName())) {
-        Assert.assertEquals(true, config.getValue());
-        break;
-      }
-    }
   }
 }

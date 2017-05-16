@@ -33,7 +33,6 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingModeChooserValues;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
-import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.List;
@@ -56,7 +55,7 @@ public class TCPServerSourceConfig {
   public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
 
   @ConfigDefBean(groups = "TLS")
-  public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.SERVER);
+  public TlsConfigBean tlsConfigBean = new TlsConfigBean();
 
   @ConfigDef(
       required = true,
@@ -79,18 +78,6 @@ public class TCPServerSourceConfig {
       displayPosition = 5
   )
   public boolean enableEpoll;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Use TLS",
-      description = "Enable TLS on the TCP transport.  Must specify the X.509 certificate chain file, the private" +
-          " key file (in PKCS8 format), and a key encryption passphrase (if used for the key).",
-      displayPosition = 10,
-      group = "TCP"
-  )
-  public boolean tlsEnabled;
 
   @ConfigDef(
       required = true,

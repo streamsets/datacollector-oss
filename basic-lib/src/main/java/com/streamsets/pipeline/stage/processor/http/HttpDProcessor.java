@@ -37,7 +37,14 @@ import com.streamsets.pipeline.lib.http.Groups;
     upgrader = HttpProcessorUpgrader.class,
     onlineHelpRefUrl = "index.html#Processors/HTTPClient.html#task_z54_1qr_fw"
 )
-@HideConfigs(value = {"conf.dataFormatConfig.compression", "conf.dataFormatConfig.jsonContent"})
+@HideConfigs(value = {
+    "conf.dataFormatConfig.compression",
+    "conf.dataFormatConfig.jsonContent",
+    "conf.client.tlsConfig.keyStoreFilePath",
+    "conf.client.tlsConfig.keyStoreType",
+    "conf.client.tlsConfig.keyStorePassword",
+    "conf.client.tlsConfig.keyStoreAlgorithm"
+})
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class HttpDProcessor extends DProcessor {

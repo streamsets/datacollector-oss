@@ -48,7 +48,7 @@ public class TestHttpServerPushSource {
     httpConfigs.appId = "id";
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
-    httpConfigs.tlsEnabled = false;
+    httpConfigs.tlsConfigBean.tlsEnabled = false;
     HttpServerPushSource source =
         new HttpServerPushSource(httpConfigs, 1, DataFormat.TEXT, new DataParserFormatConfig());
     final PushSourceRunner runner =
@@ -98,7 +98,7 @@ public class TestHttpServerPushSource {
     httpConfigs.appId = "id";
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
-    httpConfigs.tlsEnabled = false;
+    httpConfigs.tlsConfigBean.tlsEnabled = false;
     httpConfigs.appIdViaQueryParamAllowed = true;
     HttpServerPushSource source =
         new HttpServerPushSource(httpConfigs, 1, DataFormat.TEXT, new DataParserFormatConfig());

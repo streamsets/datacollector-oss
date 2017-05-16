@@ -70,7 +70,7 @@ public class TestSdcIpcTarget {
     config.readTimeOutMs = 200;
     config.hostPorts = ImmutableList.of("localhost:10000");
     config.retriesPerBatch = 2;
-    config.tlsEnabled = false;
+    config.tlsConfigBean.tlsEnabled = false;
     config.tlsConfigBean.trustStoreFilePath = "";
     config.tlsConfigBean.trustStorePassword = "";
     config.hostVerification = true;
@@ -91,7 +91,7 @@ public class TestSdcIpcTarget {
     config.readTimeOutMs = 200;
     config.hostPorts = Arrays.asList("localhost:10000", "localhost:10001");
     config.retriesPerBatch = 2;
-    config.tlsEnabled = false;
+    config.tlsConfigBean.tlsEnabled = false;
     config.tlsConfigBean.trustStoreFilePath = "";
     config.tlsConfigBean.trustStorePassword = "";
     config.hostVerification = true;
@@ -153,7 +153,7 @@ public class TestSdcIpcTarget {
     config.readTimeOutMs = 200;
     config.hostPorts = ImmutableList.of("localhost:10000");
     config.retriesPerBatch = 2;
-    config.tlsEnabled = false;
+    config.tlsConfigBean.tlsEnabled = false;
     config.tlsConfigBean.trustStoreFilePath = "";
     config.tlsConfigBean.trustStorePassword = "";
     config.hostVerification = true;
@@ -195,7 +195,7 @@ public class TestSdcIpcTarget {
     config.readTimeOutMs = 200;
     config.hostPorts = ImmutableList.of("localhost:10000");
     config.retriesPerBatch = 2;
-    config.tlsEnabled = false;
+    config.tlsConfigBean.tlsEnabled = false;
     config.tlsConfigBean.trustStoreFilePath = "";
     config.tlsConfigBean.trustStorePassword = "";
     config.hostVerification = true;
@@ -332,7 +332,7 @@ public class TestSdcIpcTarget {
       config.readTimeOutMs = 2000;
       config.hostPorts = ImmutableList.of("localhost:" + server.getURI().getPort());
       config.retriesPerBatch = 2;
-      config.tlsEnabled = false;
+      config.tlsConfigBean.tlsEnabled = false;
       config.tlsConfigBean.trustStoreFilePath = "";
       config.tlsConfigBean.trustStorePassword = "";
       config.hostVerification = true;
@@ -435,8 +435,7 @@ public class TestSdcIpcTarget {
       config.readTimeOutMs = 2000;
       config.hostPorts = ImmutableList.of(hostname + ":" + server.getURI().getPort());
       config.retriesPerBatch = 2;
-      config.tlsEnabled = true;
-      config.tlsConfigBean.hasTrustStore = true;
+      config.tlsConfigBean.tlsEnabled = true;
       config.tlsConfigBean.trustStoreFilePath = trustStore.getName();
       config.tlsConfigBean.trustStorePassword = "truststore";
       config.hostVerification = hostVerification;
@@ -478,7 +477,7 @@ public class TestSdcIpcTarget {
     config.hostPorts = ImmutableList.of("localhost:10000");
     config.retriesPerBatch = 3;
     config.backOff = 10;
-    config.tlsEnabled = false;
+    config.tlsConfigBean.tlsEnabled = false;
     config.hostVerification = true;
 
     SdcIpcTarget target = new SdcIpcTarget(config);

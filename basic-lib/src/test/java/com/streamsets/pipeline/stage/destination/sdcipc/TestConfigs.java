@@ -52,8 +52,7 @@ public class TestConfigs {
     config.readTimeOutMs = 200;
     config.hostPorts = Arrays.asList("localhost:10000");
     config.retriesPerBatch = 2;
-    config.tlsEnabled = false;
-    config.tlsConfigBean.hasTrustStore = true;
+    config.tlsConfigBean.tlsEnabled = false;
     config.tlsConfigBean.trustStoreFilePath = "";
     config.tlsConfigBean.trustStorePassword = "";
     config.hostVerification = true;
@@ -76,7 +75,7 @@ public class TestConfigs {
     HttpsURLConnection sconn = Mockito.mock(MockHttpsURLConnection.class);
     config = new ForTestConfigs(sconn);
     injectConfigsHttp(config);
-    config.tlsEnabled = true;
+    config.tlsConfigBean.tlsEnabled = true;
     config.createConnection("localhost:10000");
     Mockito.verify(sconn).setConnectTimeout(Mockito.eq(config.connectionTimeOutMs));
     Mockito.verify(sconn).setReadTimeout(Mockito.eq(config.readTimeOutMs));
@@ -89,7 +88,7 @@ public class TestConfigs {
     Mockito.reset(sconn);
     config = new ForTestConfigs(sconn);
     injectConfigsHttp(config);
-    config.tlsEnabled = true;
+    config.tlsConfigBean.tlsEnabled = true;
     config.hostVerification = false;
     config.createConnection("localhost:10000");
     Mockito.verify(sconn).setHostnameVerifier(Mockito.eq(ForTestConfigs.ACCEPT_ALL_HOSTNAME_VERIFIER));
@@ -102,8 +101,7 @@ public class TestConfigs {
     config.readTimeOutMs = 200;
     config.hostPorts = Arrays.asList("localhost:10000");
     config.retriesPerBatch = 2;
-    config.tlsEnabled = true;
-    config.tlsConfigBean.hasTrustStore = true;
+    config.tlsConfigBean.tlsEnabled = true;
     config.tlsConfigBean.trustStoreFilePath = trustStoreFile;
     config.tlsConfigBean.trustStorePassword = trustStorePassword;
     config.hostVerification = hostnameVerification;

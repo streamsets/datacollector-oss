@@ -93,7 +93,7 @@ public class WebSocketTarget extends BaseTarget {
         generatorFactory = conf.dataGeneratorFormatConfig.getDataGeneratorFactory();
       }
     }
-    if (issues.isEmpty() && conf.tlsConfig.isEitherStoreEnabled()) {
+    if (issues.isEmpty() && conf.tlsConfig.isEnabled()) {
       // this configuration has no separate "tlsEnabled" field on the bean level, so need to do it this way
       conf.tlsConfig.init(
           getContext(),

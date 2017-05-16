@@ -40,7 +40,13 @@ import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
     onlineHelpRefUrl = "index.html#Origins/MQTTSubscriber.html#task_wnz_mxt_lz",
     upgrader = MqttClientSourceUpgrader.class
 )
-@HideConfigs(value = {"subscriberConf.dataFormatConfig.jsonContent"})
+@HideConfigs({
+    "subscriberConf.dataFormatConfig.jsonContent",
+    "commonConf.tlsConfig.keyStoreFilePath",
+    "commonConf.tlsConfig.keyStoreType",
+    "commonConf.tlsConfig.keyStorePassword",
+    "commonConf.tlsConfig.keyStoreAlgorithm"
+})
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class MqttClientDSource extends DPushSource {

@@ -145,13 +145,7 @@ public class TestTCPServerSource {
 
     // start TLS config tests
     configBean.ports = Arrays.asList("9876");
-    configBean.tlsEnabled = true;
-    configBean.tlsConfigBean.hasKeyStore = true;
-    List<Stage.ConfigIssue> issues5 = initSourceAndGetIssues(configBean);
-    assertThat(issues5, hasSize(1));
-    assertThat(issues5.get(0).toString(), containsString(TlsConfigErrors.TLS_02.getCode()));
-
-    configBean.tlsConfigBean.hasKeyStore = true;
+    configBean.tlsConfigBean.tlsEnabled = true;
     configBean.tlsConfigBean.keyStoreFilePath = "non-existent-file-path";
     List<Stage.ConfigIssue> issues6 = initSourceAndGetIssues(configBean);
     assertThat(issues6, hasSize(1));
@@ -464,7 +458,7 @@ public class TestTCPServerSource {
   protected static TCPServerSourceConfig createConfigBean(Charset charset) {
     TCPServerSourceConfig config = new TCPServerSourceConfig();
     config.batchSize = 10;
-    config.tlsEnabled = false;
+    config.tlsConfigBean.tlsEnabled = false;
     config.numThreads = 1;
     config.syslogCharset = charset.name();
     config.tcpMode = TCPMode.SYSLOG;

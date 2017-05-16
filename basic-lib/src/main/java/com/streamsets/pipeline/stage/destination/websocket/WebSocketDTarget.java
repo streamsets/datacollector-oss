@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.websocket;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
@@ -36,6 +37,12 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     upgrader = WebSocketTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
+@HideConfigs({
+    "conf.tlsConfig.keyStoreFilePath",
+    "conf.tlsConfig.keyStoreType",
+    "conf.tlsConfig.keyStorePassword",
+    "conf.tlsConfig.keyStoreAlgorithm"
+})
 @GenerateResourceBundle
 public class WebSocketDTarget extends DTarget {
 

@@ -26,7 +26,6 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
-import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 import com.streamsets.pipeline.stage.destination.http.DataFormatChooserValues;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
@@ -77,16 +76,6 @@ public class WebSocketTargetConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Use TLS",
-      displayPosition = 80,
-      group = "WEB_SOCKET"
-  )
-  public boolean tlsEnabled;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Maximum Request Time (sec)",
       defaultValue = "60",
@@ -97,5 +86,5 @@ public class WebSocketTargetConfig {
   public long maxRequestCompletionSecs = 60L;
 
   @ConfigDefBean(groups = "TLS")
-  public TlsConfigBean tlsConfig = new TlsConfigBean(TlsConnectionType.NEITHER);
+  public TlsConfigBean tlsConfig = new TlsConfigBean();
 }

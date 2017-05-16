@@ -89,7 +89,7 @@ public class IpcServer {
     Server server = new Server(threadPool);
 
     ServerConnector connector;
-    if (configs.tlsEnabled) {
+    if (configs.tlsConfigBean.isEnabled()) {
       LOG.debug("Configuring over HTTPS");
       HttpConfiguration httpsConf = new HttpConfiguration();
       httpsConf.addCustomizer(new SecureRequestCustomizer());
@@ -120,7 +120,7 @@ public class IpcServer {
 
     server.start();
 
-    LOG.info("Running, port '{}', TLS '{}'", configs.port, configs.tlsEnabled);
+    LOG.info("Running, port '{}', TLS '{}'", configs.port, configs.tlsConfigBean.isEnabled());
 
     httpServer = server;
   }
@@ -150,7 +150,7 @@ public class IpcServer {
   }
 
   public void stop() {
-    LOG.info("Shutting down, port '{}', TLS '{}'", configs.port, configs.tlsEnabled);
+    LOG.info("Shutting down, port '{}', TLS '{}'", configs.port, configs.tlsConfigBean.isEnabled());
     if (httpServer != null) {
       try {
         servlet.setShuttingDown();

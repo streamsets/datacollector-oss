@@ -45,7 +45,11 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {
     "dataFormatConfig.verifyChecksum",
-    "dataFormatConfig.avroSchemaSource"
+    "dataFormatConfig.avroSchemaSource",
+    "webSocketConfigs.tlsConfigBean.trustStoreFilePath",
+    "webSocketConfigs.tlsConfigBean.trustStoreType",
+    "webSocketConfigs.tlsConfigBean.trustStorePassword",
+    "webSocketConfigs.tlsConfigBean.trustStoreAlgorithm"
 })
 @GenerateResourceBundle
 public class WebSocketServerDPushSource extends DPushSource {

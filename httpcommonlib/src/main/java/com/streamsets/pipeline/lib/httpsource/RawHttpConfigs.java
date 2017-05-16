@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
-import com.streamsets.pipeline.lib.tls.TlsConnectionType;
 
 public class RawHttpConfigs extends HttpConfigs {
 
@@ -33,7 +32,7 @@ public class RawHttpConfigs extends HttpConfigs {
   }
 
   @ConfigDefBean(groups = "TLS")
-  public TlsConfigBean tlsConfigBean = new TlsConfigBean(TlsConnectionType.SERVER);
+  public TlsConfigBean tlsConfigBean = new TlsConfigBean();
 
   @ConfigDef(
       required = true,
@@ -83,16 +82,6 @@ public class RawHttpConfigs extends HttpConfigs {
   )
   public boolean appIdViaQueryParamAllowed;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Use HTTPS",
-      displayPosition = 40,
-      group = "HTTP"
-  )
-  public boolean tlsEnabled;
-
   @Override
   public int getPort() {
     return port;
@@ -122,7 +111,7 @@ public class RawHttpConfigs extends HttpConfigs {
 
   @Override
   public boolean isTlsEnabled() {
-    return tlsEnabled;
+    return tlsConfigBean.isEnabled();
   }
 
   @Override
