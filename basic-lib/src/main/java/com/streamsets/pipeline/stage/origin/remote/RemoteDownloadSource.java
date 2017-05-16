@@ -212,7 +212,7 @@ public class RemoteDownloadSource extends BaseSource {
           break;
       }
 
-      if (remoteURI.getScheme().equals("ftp")) {
+      if("ftp".equals(remoteURI.getScheme())) {
         FtpFileSystemConfigBuilder.getInstance().setPassiveMode(options, true);
         FtpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(options, conf.userDirIsRoot);
         if (conf.strictHostChecking) {
@@ -221,7 +221,7 @@ public class RemoteDownloadSource extends BaseSource {
         }
       }
 
-      if (remoteURI.getScheme().equals("sftp")) {
+      if ("sftp".equals(remoteURI.getScheme())) {
         SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(options, conf.userDirIsRoot);
         if (conf.strictHostChecking) {
           if (knownHostsFile != null) {
