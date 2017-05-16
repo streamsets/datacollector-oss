@@ -676,4 +676,30 @@ public class TestDirectorySpooler {
     assertTrue(regex.matches(fs.getPath("name.txt")));
     assertFalse(regex.matches(fs.getPath("name.abc")));
   }
+
+  @Test
+  public void testPostProcessInLastModifiedTimeStamp() throws Exception {
+    assertTrue(spoolDir.mkdirs());
+
+    // only the pattern matching file is post-process
+    File logFile1 = new File(spoolDir, "x1").getAbsoluteFile();
+    logFile1.setLastModified(System.currentTimeMillis() - 1000000);
+    new FileWriter(logFile1).close();
+
+    File logFile2 = new File(spoolDir, "x2.log").getAbsoluteFile();
+    logFile2.setLastModified(System.currentTimeMillis() - 1000000);
+    new FileWriter(logFile2).close();
+
+    DirectorySpooler.Builder builder = initializeAndGetBuilder()
+        .setUseLastModifiedTimestamp(true)
+        .setPostProcessing(DirectorySpooler.FilePostProcessing.DELETE)
+        .setMaxSpoolFiles(3);
+    DirectorySpooler spooler = builder.build();
+
+    spooler.init("");
+    Assert.assertEquals(logFile2, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(null, spooler.poolForFile(0, TimeUnit.MILLISECONDS));
+    Assert.assertTrue(logFile1.exists());
+    spooler.destroy();
+  }
 }

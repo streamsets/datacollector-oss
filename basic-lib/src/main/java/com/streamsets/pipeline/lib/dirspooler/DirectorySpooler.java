@@ -253,6 +253,10 @@ public class DirectorySpooler {
       public int compare(Path file1, Path file2) {
         try {
           if (useLastModified) {
+            // if comparing with folder last modified timestamp, always return true
+            if (file2.toString().isEmpty()) {
+              return 1;
+            }
             int compares = Files.getLastModifiedTime(file1).compareTo(Files.getLastModifiedTime(file2));
             if (compares != 0) {
               return compares;
@@ -688,9 +692,11 @@ public class DirectorySpooler {
           public FileVisitResult visitFile(
               Path dirPath, BasicFileAttributes attributes
           ) throws IOException {
+
             if (compare(dirPath, startingFile) < 0) {
               toProcess.add(dirPath);
             }
+
             return FileVisitResult.CONTINUE;
           }
         });
@@ -704,7 +710,7 @@ public class DirectorySpooler {
       for (Path p : toProcess) {
         switch (postProcessing) {
           case DELETE:
-            if(Files.exists(p)) {
+            if(fileMatcher.matches(p.getFileName()) && Files.exists(p)) {
               Files.delete(p);
               LOG.debug("Deleting old file '{}'", p);
             } else {
@@ -712,7 +718,7 @@ public class DirectorySpooler {
             }
             break;
           case ARCHIVE:
-            if(Files.exists(p)) {
+            if(fileMatcher.matches(p.getFileName()) && Files.exists(p)) {
               moveIt(p, archiveDirPath);
               LOG.debug("Archiving old file '{}'", p);
             } else {
