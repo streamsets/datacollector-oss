@@ -244,6 +244,7 @@ public class KuduTarget extends BaseTarget {
           )
       );
     }
+    session.setMutationBufferSpace(configBean.mutationBufferSpace);
     session.setFlushMode(SessionConfiguration.FlushMode.MANUAL_FLUSH);
     return session;
   }

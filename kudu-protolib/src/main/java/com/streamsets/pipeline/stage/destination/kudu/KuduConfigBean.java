@@ -97,6 +97,18 @@ public class KuduConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
+      label = "Mutation buffer space",
+      description = "Sets the buffer size that Kudu client uses for a single batch. Should be higher or equal to maximal" +
+        "number of records in a single batch.",
+      defaultValue = "1000",
+      displayPosition = 15,
+      group = "ADVANCED"
+  )
+  public int mutationBufferSpace;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
       defaultValue = "10000",
       label = "Operation Timeout Milliseconds",
       description = "Sets the default timeout used for user operations (using sessions and scanners)",
