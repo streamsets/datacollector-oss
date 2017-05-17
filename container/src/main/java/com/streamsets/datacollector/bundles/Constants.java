@@ -31,6 +31,9 @@ public final class Constants {
   /**
    * Uploading support bundles directly
    */
+  public static final String UPLOAD_ENABLED = "bundle.upload.enabled";
+  public static final boolean DEFAULT_UPLOAD_ENABLED = true;
+
   public static final String UPLOAD_BUCKET = "bundle.upload.bucket";
   public static final String DEFAULT_UPLOAD_BUCKET = "customer-support-bundles";
 

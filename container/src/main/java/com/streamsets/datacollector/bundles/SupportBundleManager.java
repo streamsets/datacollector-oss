@@ -211,11 +211,15 @@ public class SupportBundleManager implements BundleContext {
    * Instead of providing support bundle directly to user, upload it to StreamSets backend services.
    */
   public void uploadNewBundle(List<String> generators) throws IOException {
-    // AWS credentials
+    boolean enabled = configuration.get(Constants.UPLOAD_ENABLED, Constants.DEFAULT_UPLOAD_ENABLED);
     String accessKey = configuration.get(Constants.UPLOAD_ACCESS, Constants.DEFAULT_UPLOAD_ACCESS);
     String secretKey = configuration.get(Constants.UPLOAD_SECRET, Constants.DEFAULT_UPLOAD_SECRET);
     String bucket = configuration.get(Constants.UPLOAD_BUCKET, Constants.DEFAULT_UPLOAD_BUCKET);
     int bufferSize = configuration.get(Constants.UPLOAD_BUFFER_SIZE, Constants.DEFAULT_UPLOAD_BUFFER_SIZE);
+
+    if(!enabled) {
+      throw new IOException("Uploading support bundles was disabled by administrator.");
+    }
 
     AWSCredentialsProvider credentialsProvider = new StaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
     AmazonS3Client s3Client = new AmazonS3Client(credentialsProvider, new ClientConfiguration());
