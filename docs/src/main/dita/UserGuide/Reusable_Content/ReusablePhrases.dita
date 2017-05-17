@@ -1222,10 +1222,8 @@ web-0011.log</codeblock></dd>
             </p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>P-DL-ScriptObjects</uicontrol> -
-                        Groovy, JavaScript, Jython Processor main scripting objects. All three use
-                        these, and they each have their own Record object versions. Make any updates
-                        to state and log dlentries to the same ones below for the init/destroy
-                        scripts</draft-comment>
+                        Groovy, JavaScript, Jython Processor scripting objects. All three use these,
+                        and they each have their own Record object versions. </draft-comment>
             </p>
             <p>
                   <dl id="P-DL-ScriptObjects">
@@ -1315,47 +1313,6 @@ web-0011.log</codeblock></dd>
                         </dlentry>
                   </dl>
             </p>
-            <draft-comment author="alisontaylor"
-                        ><uicontrol>P-DL-InitDestroyScriptObjects</uicontrol> - Groovy, JavaScript,
-                  Jython Processor init and destroy scripting objects. Same text as above, minus the
-                  warning for the state dlentry. Make same updates both places.</draft-comment>
-            <dl id="P-DL-InitDestroyScriptObjects">
-                  <dlentry>
-                        <dt>state</dt>
-                        <dd>An object to store information between invocations of the init, main,
-                              and destroy scripts. A state is a map object that includes a
-                              collection of key/value pairs. You can use the state object to cache
-                              data such as lookups, counters, or a connection to an external
-                              system.</dd>
-                        <dd>The state object functions much like a member variable: <ul
-                                    id="ul_jfv_p5q_kz">
-                                    <li>The information is transient and is lost when the pipeline
-                                          stops or restarts.</li>
-                                    <li>The state object is available only for the instance of the
-                                          processor stage it is defined in. If the pipeline executes
-                                          in cluster mode, the state object is not shared across
-                                          nodes.</li>
-                              </ul></dd>
-                        <dd>The same instance of the state object is available to all three scripts.
-                              For example, you might use the init script to open a connection to a
-                              database and then store a reference to that connection in the state
-                              object. In the main script, you can access the open connection using
-                              the state object. Then in the destroy script, you can close the
-                              connection using the state object.</dd>
-                  </dlentry>
-                  <dlentry>
-                        <dt>log</dt>
-                        <dd>An object to write messages to the log. Includes four methods:
-                              <codeph>info()</codeph>, <codeph>warn()</codeph>,
-                              <codeph>debug()</codeph>, and <codeph>trace()</codeph>. </dd>
-                        <dd>The signature of the four methods is as follows:
-                              <codeblock>(message-template, arguments...) </codeblock>The
-                              message template can have positional variables denoted by curly
-                              brackets: { }. The arguments are replaced in the message
-                              template curly brackets in positional manner, i.e., this is the
-                              first argument in the first { } occurrence, and so on.</dd>
-                  </dlentry>
-            </dl>
             <draft-comment author="alisontaylor">Groovy, JavaScript, Jython Evaluators use this text
                   in Accessing Whole Files topic</draft-comment>
             <p id="Script-WholeFile">The processor can access the fileref field in a whole file

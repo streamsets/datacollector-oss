@@ -17,17 +17,68 @@
  <title>Scripting Processor Content</title>
  <conbody>
         <draft-comment author="alisontaylor">Overview conref</draft-comment>
-     <p id="OverviewScriptTypes">You can develop the following scripts for the processor:
-         <ul id="ul_azr_v3r_kz">
-             <li>Initialization script - Optional initialization script that sets up resources or
+     <p id="OverviewScriptTypes">You can develop the following scripts for the processor: <ul
+                id="ul_azr_v3r_kz">
+                <li>Initialization script - Optional initialization script that sets up resources or
                     connections required by the processor. The initialization script is run once
                     when the pipeline starts. </li>
-             <li>Main processing script - Main script that processes data. The main script is run for each
-                 record or each batch of data, based on the configured processing mode.</li>
-             <li>Destroy script - Optional destroy script that closes any resources or connections opened
-                 by the processor. The destroy script is run once when the pipeline stops.</li>
-         </ul>
-     </p>
+                <li>Main processing script - Main script that processes data. The main script is run
+                    for each record or each batch of data, based on the configured processing
+                    mode.</li>
+                <li>Destroy script - Optional destroy script that closes any resources or
+                    connections opened by the processor. The destroy script is run once when the
+                    pipeline stops.</li>
+            </ul>
+        </p>
+        <draft-comment author="alisontaylor">Scripting objects conref'd table</draft-comment>
+     <table frame="all" rowsep="1" colsep="1"
+         id="table_vyy_2w4_xz">
+         <tgroup cols="2">
+             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+             <thead>
+                 <row>
+                     <entry>Script Type</entry>
+                     <entry>Valid Scripting Objects</entry>
+                 </row>
+             </thead>
+             <tbody>
+                 <row>
+                     <entry>Init</entry>
+                     <entry>You can use the following scripting objects in the initialization
+                         script:<ul id="ul_xg5_khp_xz">
+                             <li>state</li>
+                             <li>log</li>
+                             <li>sdcFunctions - <codeph>getFieldNull</codeph> and
+                                        <codeph>createMap</codeph> methods</li>
+                         </ul></entry>
+                 </row>
+                 <row>
+                     <entry>Main</entry>
+                     <entry>You can use the following scripting objects in the main
+                         script:<ul id="ul_q5q_jw4_xz">
+                             <li>records</li>
+                             <li>state</li>
+                             <li>log</li>
+                             <li>output</li>
+                             <li>error</li>
+                             <li>sdcFunctions - all methods</li>
+                         </ul></entry>
+                 </row>
+                 <row>
+                     <entry>Destroy</entry>
+                     <entry>You can use the following scripting objects in the destroy
+                         script:<ul id="ul_n23_mw4_xz">
+                             <li>state</li>
+                             <li>log</li>
+                             <li>sdcFunctions - <codeph>getFieldNull</codeph>,
+                                        <codeph>createMap</codeph>, <codeph>createEvent</codeph>,
+                                    and <codeph>toEvent</codeph> methods</li>
+                         </ul></entry>
+                 </row>
+             </tbody>
+         </tgroup>
+     </table>
             <draft-comment author="Loretta">Event generation topic conrefs. </draft-comment>
         <p>You can use the &lt;&lt;processor name>> <ph id="Event-ph-1st">to generate event records
                 for an event stream. Enable event generation when you want the processor to generate

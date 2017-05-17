@@ -16,9 +16,43 @@
 <concept id="concept_hzt_zjt_gv">
  <title>Groovy Scripting Objects</title>
  <conbody>
-    <p><indexterm>Groovy Evaluator processor<indexterm>scripting
-        objects</indexterm></indexterm><indexterm>scripting objects<indexterm>Groovy
-          Evaluator</indexterm></indexterm>You can use different scripting objects in the Groovy
-      Evaluator, based on the type of script.</p>
+        <p><indexterm>Groovy Evaluator processor<indexterm>scripting
+                objects</indexterm></indexterm><indexterm>scripting objects<indexterm>Groovy
+                    Evaluator</indexterm></indexterm>You can use different scripting objects in the
+            Groovy Evaluator, based on the type of script:</p>
+        <table
+            conref="../Reusable_Content/Reusable_Topics/ScriptingProcessorContent.dita#concept_oxj_vbh_cy/table_vyy_2w4_xz"
+            id="table_gcq_v4p_xz">
+            <tgroup cols="1">
+                <tbody>
+                    <row>
+                        <entry/>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+        <p>The scripting objects work the same within each script type:</p>
+     <draft-comment
+         author="alisontaylor">Port changes to "records" over to JavaScript Scripting Objects
+         and Jython Scripting Objects, as appropriate.</draft-comment>
+     <dl>
+         <dlentry>
+             <dt>records</dt>
+             <dd>A collection of records to process. The records object includes different elements based
+                 on the processing mode that you use:<ul id="ul_fdm_5yk_sr">
+                     <li>Record by Record - The records array includes one record element. A record includes
+                         a single <codeph>value</codeph> element. The <codeph>value</codeph> element contains
+                         the data for the record.</li>
+                     <li>Batch by Batch - The records array includes all records in the batch.</li>
+                 </ul></dd>
+             <dd>Map and list record fields are mapped to Groovy maps and lists, respectively.</dd>
+         </dlentry>
+     </dl>
+     <dl conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-DL-ScriptObjects">
+            <dlentry>
+                <dt/>
+                <dd/>
+            </dlentry>
+        </dl>
   </conbody>
 </concept>
