@@ -66,7 +66,7 @@ public class Configs extends HttpConfigs {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "5",
       label = "Batch Wait Time (secs)",
-      description = " Maximum amount of time to wait for a batch before sending and empty one",
+      description = "Maximum amount of time to wait for a batch before sending an empty one",
       displayPosition = 30,
       group = "RPC",
       min = 1,
