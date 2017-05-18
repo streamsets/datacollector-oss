@@ -42,6 +42,7 @@ angular.module('dataCollectorApp.common')
     var DPM_ENABLED = 'dpm.enabled';
     var DPM_BASE_URL = 'dpm.base.url';
     var CLOUDERA_MANAGER_MANAGED = 'clouderaManager.managed';
+    var SUPPORT_BUNDLE_ENABLED = 'bundle.upload.enabled';
     var DPM_LABELS ='dpm.remote.control.job.labels';
     var PIPELINE_ACCESS_CONTROL_ENABLED = 'pipeline.access.control.enabled';
 
@@ -288,6 +289,17 @@ angular.module('dataCollectorApp.common')
         return self.config[CLOUDERA_MANAGER_MANAGED] === 'true';
       }
       return false;
+    };
+
+    /*
+     * Returns bundle.upload.enabled flag value
+     * @returns {*}
+     */
+    this.isSupportBundleUplodEnabled = function() {
+      if (self.config && self.config[SUPPORT_BUNDLE_ENABLED] !== undefined) {
+        return self.config[SUPPORT_BUNDLE_ENABLED] === 'true';
+      }
+      return true;
     };
 
     /*

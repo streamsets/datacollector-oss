@@ -1536,6 +1536,19 @@ angular.module('dataCollectorApp.common')
       getGenerateSupportBundleUrl: function (generators) {
         var url = apiBase + '/system/bundle/generate?generators=';
         return url + generators.join(',');
+      },
+
+      /**
+       * Upload support bundle to StreamSets
+       *
+       * @returns {*}
+       */
+      uploadSupportBundle: function (generators) {
+        var url = apiBase + '/system/bundle/upload?=generators=';
+        return $http({
+          method: 'GET',
+          url: url + generators.join(',')
+        });
       }
     };
 

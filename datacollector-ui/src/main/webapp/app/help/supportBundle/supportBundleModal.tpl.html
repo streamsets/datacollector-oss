@@ -27,9 +27,18 @@
     <i class="fa fa-spinner fa-spin fa-2x"></i>
   </div>
 
-  <div class="modal-body" ng-show="!showLoading">
+  <div class="modal-body">
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div
+      ng-if="successfulUpload"
+      class="alert alert-success alert-dismissible"
+      translate="sdcSupportBundle.uploadedMessage"
+      role="alert">
+    </div>
+
     <p translate="sdcSupportBundle.infoMessage"></p>
-    <table class="table">
+    <table class="table" ng-show="!showLoading">
       <thead>
         <tr>
           <th translate="sdcSupportBundle.generator" colspan="2">Generator</th>
@@ -48,12 +57,26 @@
   </div>
 
   <div class="modal-footer">
+    <button
+        type="reset"
+        class="btn btn-default"
+        ng-click="done()"
+        translate="global.form.cancel">Cancel
+    </button>
     <a
         class="btn btn-primary"
-        ng-href="{{getGenerateUrl()}}"
-        ng-disabled="showLoading || !hasAnyGeneratorSelected()"
+        ng-href="{{generateBundle()}}"
+        ng-disabled="showLoading || uploading || !hasAnyGeneratorSelected()"
         target="_self"
-        translate="global.form.generate">Generate
+        translate="global.form.download">Download
     </a>
+    <button
+        class="btn btn-primary"
+        ng-if="isSupportBundleUplodEnabled"
+        ng-disabled="showLoading || uploading || !hasAnyGeneratorSelected()"
+        ng-click="uploadBundle()"
+        translate="global.form.upload">Upload
+    </button>
+
   </div>
 </form>

@@ -24,9 +24,16 @@
 
 angular
     .module('dataCollectorApp')
-    .controller('SupportBundleModalInstanceController', function ($scope, $rootScope, $modalInstance, $window, api) {
+    .controller('SupportBundleModalInstanceController', function ($scope, $rootScope, $modalInstance, $window, api, configuration) {
 
+  // True if we're waiting on list of generators from SDC
   $scope.showLoading = true;
+  // True if user pressed "Upload" button and the bundle is still "uploading"
+  $scope.uploading = false;
+  // True if user pressed "Upload" and we successfully finished uploading the bundle
+  $scope.successfulUpload = false;
+  // Validate that bundle upload is allowed
+  $scope.isSupportBundleUplodEnabled = configuration.isSupportBundleUplodEnabled();
   api.system.getSupportBundleGenerators().then(function(res) {
     $scope.showLoading = false;
     $scope.generators = _.map(res.data, function(generator) {
@@ -39,16 +46,17 @@ angular
   });
 
   angular.extend($scope, {
+    common: {
+      errors: []
+    },
+
     hasAnyGeneratorSelected: function() {
       return _.any($scope.generators, function(generator) {
         return generator.checked;
       });
     },
 
-    getGenerateUrl: function() {
-      if (!this.hasAnyGeneratorSelected()) {
-        return '';
-      }
+    getSelectedGenerators: function() {
       var selectedGenerators = _.filter($scope.generators, function(generator) {
         return generator.checked;
       });
@@ -56,7 +64,30 @@ angular
       var simpleClassNames = _.map(fullyQualifiedClassNames, function(className) {
         return _.last(className.split('.'));
       });
-      return api.system.getGenerateSupportBundleUrl(simpleClassNames);
+      return simpleClassNames;
+    },
+
+    generateBundle: function() {
+      if (!this.hasAnyGeneratorSelected()) {
+        return '';
+      }
+      return api.system.getGenerateSupportBundleUrl(this.getSelectedGenerators());
+    },
+
+    uploadBundle: function() {
+      if (!this.hasAnyGeneratorSelected()) {
+        return;
+      }
+
+      $scope.uploading = true;
+      $scope.successfulUpload = false;
+      api.system.uploadSupportBundle(this.getSelectedGenerators()).then(function(res) {
+        $scope.uploading = false;
+        $scope.successfulUpload = true;
+      }, function(res) {
+        $scope.uploading = false;
+        $scope.common.errors = [res.data];
+      });
     },
 
     done: function() {
