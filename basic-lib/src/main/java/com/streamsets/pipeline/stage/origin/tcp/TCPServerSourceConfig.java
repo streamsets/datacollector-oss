@@ -71,8 +71,9 @@ public class TCPServerSourceConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Enable Multithreading",
-      description = "Use multiple receiver threads for each port. Only available on 64-bit Linux systems",
+      label = "Enable Native Transports (Epoll)",
+      description = "Enable epoll transports.  Multithreaded performance will be significantly higher with this" +
+          " option. Only available on 64-bit Linux systems",
       defaultValue = "false",
       group = "TCP",
       displayPosition = 5
@@ -121,7 +122,7 @@ public class TCPServerSourceConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Non-transparent-framing separator",
+      label = "Non-transparent-framing Separator",
       description = "When using non-transparent-framing, this is the separator character that will appear between" +
           " separate syslog messages.  Specify using Java Unicode syntax (\"\\uxxxx\").  Defaults to line feed (000A).",
       defaultValue = "\\u000A",

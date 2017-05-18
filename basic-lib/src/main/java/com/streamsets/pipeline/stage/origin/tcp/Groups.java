@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   TCP("TCP"),
   SYSLOG("Syslog"),
-  DATA_FORMAT("Delimited records format"),
+  DATA_FORMAT("Data Format"),
   TLS("TLS"),
   ;
 

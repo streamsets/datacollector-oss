@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.Label;
 public enum TCPMode implements Label {
   NETFLOW("NetFlow"),
   SYSLOG("syslog"),
-  DELIMITED_RECORDS("Delimited records"),
+  DELIMITED_RECORDS("Separated records"),
   ;
 
   private final String label;

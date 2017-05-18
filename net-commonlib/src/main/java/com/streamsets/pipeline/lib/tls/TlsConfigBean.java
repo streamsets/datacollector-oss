@@ -74,7 +74,7 @@ public class TlsConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Use TLS",
-      description = "Enable TLS for this stage.",
+      description = "Enable transport layer security for this stage.",
       displayPosition = 0,
       group = "#0"
   )
@@ -83,9 +83,9 @@ public class TlsConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      description = "The path to the key store file.  Absolute path, or relative to the Data Collector resources "
+      description = "The path to the keystore file.  Absolute path, or relative to the Data Collector resources "
           + "directory.",
-      label = "Key Store File",
+      label = "Keystore File",
       displayPosition = 20,
       group = "#0",
       dependsOn = "tlsEnabled",
@@ -97,8 +97,8 @@ public class TlsConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "JKS",
-      label = "Key Store Type",
-      description = "The type of certificate/key scheme to use for the key store.",
+      label = "Keystore Type",
+      description = "The type of certificate/key scheme to use for the key tore.",
       displayPosition = 50,
       group = "#0",
       dependsOn = "tlsEnabled",
@@ -110,9 +110,9 @@ public class TlsConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      description = "The password to the key store file, if applicable.  Using a password is highly recommended for"
+      description = "The password to the keystore file, if applicable.  Using a password is highly recommended for "
           + "security reasons.",
-      label = "Key Store Password",
+      label = "Keystore Password",
       displayPosition = 70,
       elDefs = VaultEL.class,
       group = "#0",
@@ -124,8 +124,8 @@ public class TlsConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Key Store Key Algorithm",
-      description = "The key manager algorithm to use with the key store.",
+      label = "Keystore Key Algorithm",
+      description = "The key manager algorithm to use with the keystore.",
       defaultValue = DEFAULT_KEY_MANAGER_ALGORITHM,
       displayPosition = 80,
       group = "#0",
@@ -137,9 +137,9 @@ public class TlsConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      description = "The path to the trust store file.  Absolute path, or relative to the Data Collector resources "
+      description = "The path to the truststore file.  Absolute path, or relative to the Data Collector resources "
           + "directory.",
-      label = "Trust Store File",
+      label = "Truststore File",
       displayPosition = 120,
       group = "#0",
       dependsOn = "tlsEnabled",
@@ -151,8 +151,8 @@ public class TlsConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "JKS",
-      label = "Trust Store Type",
-      description = "The type of certificate/key scheme to use for the trust store.",
+      label = "Truststore Type",
+      description = "The type of certificate/key scheme to use for the truststore.",
       displayPosition = 150,
       group = "#0",
       dependsOn = "tlsEnabled",
@@ -164,9 +164,9 @@ public class TlsConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      description = "The password to the trust store file, if applicable.  Using a password is highly recommended for"
+      description = "The password to the truststore file, if applicable.  Using a password is highly recommended for "
           + "security reasons.",
-      label = "Trust Store Password",
+      label = "Truststore Password",
       displayPosition = 170,
       elDefs = VaultEL.class,
       group = "#0",
@@ -178,8 +178,8 @@ public class TlsConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Trust Store Trust Algorithm",
-      description = "The key manager algorithm to use with the trust store.",
+      label = "Truststore Trust Algorithm",
+      description = "The key manager algorithm to use with the truststore.",
       defaultValue = DEFAULT_KEY_MANAGER_ALGORITHM,
       displayPosition = 180,
       group = "#0",
@@ -191,9 +191,9 @@ public class TlsConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Use Default (Modern) Protocols",
-      description = "Use only modern TLS protocols.  This is highly recommended for security reasons, but can be"
-          + "overridden if special circumstances require it.",
+      label = "Use Default Protocols",
+      description = "Use only modern TLS protocols (TLSv1.2).  This is highly recommended for security reasons, but " +
+          "can be overridden if special circumstances require it.",
       defaultValue = "true",
       displayPosition = 300,
       group = "#0",
@@ -217,8 +217,8 @@ public class TlsConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Use Default (Modern) Cipher Suites",
-      description = "Use only modern cipher suites.  This is highly recommended for security reasons, but can be" +
+      label = "Use Default Cipher Suites",
+      description = "Use only modern cipher suites.  This is highly recommended for security reasons, but can be " +
           "overridden if special circumstances require it.",
       defaultValue = "true",
       displayPosition = 350,

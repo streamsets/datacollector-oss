@@ -32,7 +32,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
 
 @StageDef(
     version = 1,
-    label = "TCP Server Source",
+    label = "TCP Server",
     description = "Listens for TCP messages on one or more ports",
     icon = "ethernet_multithreaded.png",
     execution = ExecutionMode.STANDALONE,
