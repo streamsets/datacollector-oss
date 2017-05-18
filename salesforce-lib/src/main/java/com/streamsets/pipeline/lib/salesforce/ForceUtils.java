@@ -60,6 +60,8 @@ public class ForceUtils {
   private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
   private static final String WILDCARD_SELECT_QUERY = "^SELECT\\s*\\*\\s*FROM\\s*.*";
   public static final Pattern WILDCARD_SELECT_PATTERN = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
+  public static final int METADATA_DEPTH = 5;
+  private static final int MAX_METADATA_TYPES = 100;
   private static Pattern sObjectFromQueryPattern = Pattern.compile(SOBJECT_TYPE_FROM_QUERY, Pattern.DOTALL);
   private static SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
   private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -300,33 +302,43 @@ public class ForceUtils {
   public static void getAllReferences(
       PartnerConnection partnerConnection,
       Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap,
-      String[] types
+      String[] allTypes,
+      int depth
   ) throws ConnectionException {
+    if (depth == 0) {
+      return;
+    }
+
     List<String> next = new ArrayList<>();
 
-    for (DescribeSObjectResult result : partnerConnection.describeSObjects(types)) {
-      Map<String, com.sforce.soap.partner.Field> fieldMap = new LinkedHashMap<>();
-      com.sforce.soap.partner.Field[] fields = result.getFields();
-      for (int i = 0; i < fields.length; i++) {
-        com.sforce.soap.partner.Field field = fields[i];
-        fieldMap.put(field.getName().toLowerCase(), field);
-      }
+    for (int typeIndex = 0; typeIndex < allTypes.length; typeIndex += MAX_METADATA_TYPES) {
+      int copyTo = Math.min(typeIndex + MAX_METADATA_TYPES, allTypes.length);
+      String[] types = Arrays.copyOfRange(allTypes, typeIndex, copyTo);
 
-      metadataMap.put(result.getName().toLowerCase(), fieldMap);
+      for (DescribeSObjectResult result : partnerConnection.describeSObjects(types)) {
+        Map<String, com.sforce.soap.partner.Field> fieldMap = new LinkedHashMap<>();
+        com.sforce.soap.partner.Field[] fields = result.getFields();
+        for (int i = 0; i < fields.length; i++) {
+          com.sforce.soap.partner.Field field = fields[i];
+          fieldMap.put(field.getName().toLowerCase(), field);
+        }
 
-      Set<String> sobjectNames = metadataMap.keySet();
-      for (com.sforce.soap.partner.Field field : fieldMap.values()) {
-        for (String ref : field.getReferenceTo()) {
-          ref = ref.toLowerCase();
-          if (!sobjectNames.contains(ref) && !next.contains(ref)) {
-            next.add(ref);
+        metadataMap.put(result.getName().toLowerCase(), fieldMap);
+
+        Set<String> sobjectNames = metadataMap.keySet();
+        for (com.sforce.soap.partner.Field field : fieldMap.values()) {
+          for (String ref : field.getReferenceTo()) {
+            ref = ref.toLowerCase();
+            if (!sobjectNames.contains(ref) && !next.contains(ref)) {
+              next.add(ref);
+            }
           }
         }
       }
     }
 
     if (next.size() > 0) {
-      getAllReferences(partnerConnection, metadataMap, next.toArray(new String[0]));
+      getAllReferences(partnerConnection, metadataMap, next.toArray(new String[0]), depth - 1);
     }
   }
 
@@ -335,7 +347,7 @@ public class ForceUtils {
       String sobjectType
   ) throws ConnectionException {
     Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap = new LinkedHashMap<>();
-    getAllReferences(partnerConnection, metadataMap, new String[]{sobjectType});
+    getAllReferences(partnerConnection, metadataMap, new String[]{sobjectType}, METADATA_DEPTH);
     return metadataMap;
   }
 

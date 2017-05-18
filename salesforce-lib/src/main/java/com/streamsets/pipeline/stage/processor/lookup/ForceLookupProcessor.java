@@ -209,7 +209,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
 
     if (metadataMap.get(sobjectType.toLowerCase()) == null) {
       try {
-        ForceUtils.getAllReferences(partnerConnection, metadataMap, new String[]{sobjectType});
+        ForceUtils.getAllReferences(partnerConnection, metadataMap, new String[]{sobjectType}, ForceUtils.METADATA_DEPTH);
       } catch (ConnectionException e) {
         throw new StageException(Errors.FORCE_21, sobjectType, e);
       }

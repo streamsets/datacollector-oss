@@ -246,6 +246,7 @@ public class ForceSource extends BaseSource {
       try {
         metadataMap = ForceUtils.getMetadataMap(partnerConnection, sobjectType);
       } catch (ConnectionException e) {
+        LOG.error("Exception getting metadata map: {}", e);
         issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
             ForceConfigBean.CONF_PREFIX + "soqlQuery",
             Errors.FORCE_21,
@@ -298,6 +299,7 @@ public class ForceSource extends BaseSource {
     try {
       metadataMap = ForceUtils.getMetadataMap(partnerConnection, sobjectType);
     } catch (ConnectionException e) {
+      LOG.error("Exception getting metadata map: {}", e);
       throw new StageException(Errors.FORCE_21, sobjectType, e);
     }
 
