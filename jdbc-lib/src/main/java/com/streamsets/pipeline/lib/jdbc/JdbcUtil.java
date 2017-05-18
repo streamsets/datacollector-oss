@@ -234,12 +234,13 @@ public class JdbcUtil {
    *
    * @throws SQLException
    */
-  public static ResultSet getTableMetadata(Connection connection, String tableName) throws SQLException {
+  public static ResultSet getTableMetadata(Connection connection, String schema, String tableName, boolean caseSensitive) throws SQLException {
     String table = tableName;
-    String schema = null;
     DatabaseMetaData metadata = connection.getMetaData();
-    if (tableName.contains(".")) {
+    if (Strings.isNullOrEmpty(schema) && tableName.contains(".") && !caseSensitive) {
       // Need to split this into the schema and table parts for column metadata to be retrieved.
+      LOG.warn("Schema in the tableName is no longer supported. Schema should defined in Schema configuration: {}", tableName);
+
       String[] parts = tableName.split("\\.");
       if (parts.length != 2) {
         throw new IllegalArgumentException();
@@ -579,7 +580,9 @@ public class JdbcUtil {
   public static HikariDataSource createDataSourceForWrite(
       HikariPoolConfigBean hikariConfigBean,
       Properties driverProperties,
+      String schema,
       String tableNameTemplate,
+      boolean caseSensitive,
       List<Stage.ConfigIssue> issues,
       List<JdbcFieldColumnParamMapping> customMappings,
       Stage.Context context
@@ -595,7 +598,7 @@ public class JdbcUtil {
     if (!tableNameTemplate.contains(EL_PREFIX)) {
       try (
         Connection connection = dataSource.getConnection();
-        ResultSet res = JdbcUtil.getTableMetadata(connection, tableNameTemplate);
+        ResultSet res = JdbcUtil.getTableMetadata(connection, schema, tableNameTemplate, caseSensitive);
       ) {
         if (!res.next()) {
           issues.add(context.createConfigIssue(Groups.JDBC.name(), TABLE_NAME, JdbcErrors.JDBC_16, tableNameTemplate));

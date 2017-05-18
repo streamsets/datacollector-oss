@@ -167,10 +167,14 @@ public class JdbcTarget extends BaseTarget {
 
     if (issues.isEmpty() && null == dataSource) {
       try {
+        String tableName = tableNameTemplate;
+
         dataSource = JdbcUtil.createDataSourceForWrite(
             hikariConfigBean,
             driverProperties,
-            Strings.isNullOrEmpty(schema) ? tableNameTemplate : schema + "." + tableNameTemplate,
+            schema,
+            tableName,
+            caseSensitive,
             issues,
             customMappings,
             getContext()

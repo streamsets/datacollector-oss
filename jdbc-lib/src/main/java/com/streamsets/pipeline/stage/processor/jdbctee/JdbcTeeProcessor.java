@@ -171,9 +171,12 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
 
     if (issues.isEmpty() && null == dataSource) {
       try {
-        dataSource = JdbcUtil.createDataSourceForWrite(hikariConfigBean,
+        dataSource = JdbcUtil.createDataSourceForWrite(
+            hikariConfigBean,
             driverProperties,
+            schema,
             tableNameTemplate,
+            caseSensitive,
             issues,
             customMappings,
             getContext()
