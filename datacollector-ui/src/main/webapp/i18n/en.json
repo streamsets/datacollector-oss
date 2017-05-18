@@ -82,6 +82,7 @@
       "errors": "Errors",
       "eventRecord": "Event Record",
       "execute": "Execute",
+      "executor": "Executor",
       "export": "Export",
       "exportWithLibraryDefinitions": "Export for DPM",
       "fieldName": "Field Name",

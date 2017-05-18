@@ -512,9 +512,9 @@ angular
        * @returns {*|string}
        */
       getStageInstanceLabel: function (stageInstanceName) {
-        var instance,
-          errorStage = $scope.pipelineConfig.errorStage,
-          statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
+        var instance;
+        var errorStage = $scope.pipelineConfig.errorStage;
+        var statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
 
         angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
           if (stageInstance.instanceName === stageInstanceName) {
@@ -1111,7 +1111,7 @@ angular
         };
       }
 
-      if ($rootScope.common.isDPMEnabled && !$scope.pipelineConfig.statsAggregatorStage) {
+      if (!$scope.pipelineConfig.statsAggregatorStage) {
         var statsAggregatorStageConfig = _.find($scope.pipelineConfig.configuration, function (c) {
           return c.name === 'statsAggregatorStage';
         });
