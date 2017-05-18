@@ -130,6 +130,8 @@ public class WebSocketTarget extends BaseTarget {
         }
         if (conf.tlsConfig != null) {
           sslContextFactory.setSslContext(conf.tlsConfig.getSslContext());
+          sslContextFactory.setIncludeCipherSuites(conf.tlsConfig.getFinalCipherSuites());
+          sslContextFactory.setIncludeProtocols(conf.tlsConfig.getFinalProtocols());
         }
         webSocketClient = new WebSocketClient(sslContextFactory);
       } else {

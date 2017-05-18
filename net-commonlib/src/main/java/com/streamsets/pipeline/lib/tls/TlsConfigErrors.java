@@ -25,10 +25,10 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum TlsConfigErrors implements ErrorCode {
-  TLS_01("{} store file does not exist at {}"),
+  TLS_01("{}store file does not exist at {}"),
   TLS_05("Key store and/or trust store file must be specified."),
-  TLS_20("Error attempting to create {} store instance: {}"),
-  TLS_21("Error attempting to load {} store at {}: {}"),
+  TLS_20("Error attempting to create {}store instance: {}"),
+  TLS_21("Error attempting to load {}store at {}: {}"),
   TLS_22("Error attempting to load key manager algorithm {}: {}"),
   TLS_23("Error attempting to initialize key store with key manager: {}"),
   TLS_50("Error attempting to load trust manager algorithm {}: {}"),

@@ -105,6 +105,8 @@ public abstract class AbstractHttpReceiverServer {
         sslContextFactory.setKeyStoreType(tlsConfig.keyStoreType.getJavaValue());
         sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword);
         sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword);
+        sslContextFactory.setIncludeProtocols(tlsConfig.getFinalProtocols());
+        sslContextFactory.setIncludeCipherSuites(tlsConfig.getFinalCipherSuites());
 
         connector = new ServerConnector(server,
             new SslConnectionFactory(sslContextFactory, "http/1.1"),

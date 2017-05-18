@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -346,23 +347,22 @@ public class TlsConfigBean {
     sslEngine.setUseClientMode(false);
     sslEngine.setNeedClientAuth(false);
 
-    Collection<String> filteredProtocols;
-    if (useDefaultProtocols) {
-      filteredProtocols = getSupportedValuesFromSpecified(Arrays.asList(sslEngine.getSupportedProtocols()),
-          Arrays.asList(MODERN_PROTOCOLS),
-          "Protocol"
-      );
-    } else {
-      filteredProtocols = getSupportedValuesFromSpecified(Arrays.asList(sslEngine.getSupportedProtocols()),
-          protocols,
-          "Protocol"
-      );
-    }
-    sslEngine.setEnabledProtocols(filteredProtocols.toArray(new String[0]));
+    sslEngine.setEnabledProtocols(getFinalProtocols());
 
+    sslEngine.setEnabledCipherSuites(getFinalCipherSuites());
+
+    sslEngine.setEnableSessionCreation(true);
+    sslEngine.setUseClientMode(isClientMode());
+
+    return true;
+  }
+
+  @NotNull
+  public String[] getFinalCipherSuites() {
     Collection<String> filteredCipherSuites;
     if (useDefaultCiperSuites) {
-      filteredCipherSuites = getSupportedValuesFromSpecified(Arrays.asList(sslEngine.getSupportedCipherSuites()),
+      filteredCipherSuites = getSupportedValuesFromSpecified(
+          Arrays.asList(sslEngine.getSupportedCipherSuites()),
           Arrays.asList(MODERN_CIPHER_SUITES),
           "Cipher suite"
       );
@@ -372,12 +372,25 @@ public class TlsConfigBean {
           "Cipher suite"
       );
     }
-    sslEngine.setEnabledCipherSuites(filteredCipherSuites.toArray(new String[0]));
+    return filteredCipherSuites.toArray(new String[0]);
+  }
 
-    sslEngine.setEnableSessionCreation(true);
-    sslEngine.setUseClientMode(isClientMode());
-
-    return true;
+  @NotNull
+  public String[] getFinalProtocols() {
+    Collection<String> filteredProtocols;
+    if (useDefaultProtocols) {
+      filteredProtocols = getSupportedValuesFromSpecified(
+          Arrays.asList(sslEngine.getSupportedProtocols()),
+          Arrays.asList(MODERN_PROTOCOLS),
+          "Protocol"
+      );
+    } else {
+      filteredProtocols = getSupportedValuesFromSpecified(Arrays.asList(sslEngine.getSupportedProtocols()),
+          protocols,
+          "Protocol"
+      );
+    }
+    return filteredProtocols.toArray(new String[0]);
   }
 
   private KeyManagerFactory initializeKeyStore(
@@ -526,7 +539,7 @@ public class TlsConfigBean {
           groupName,
           configPrefix + storeCategory.toLowerCase() + "StoreFilePath",
           TlsConfigErrors.TLS_01,
-          storeCategory,
+          storeCategory.toLowerCase(),
           keyStorePath
       ));
       return null;
@@ -540,7 +553,7 @@ public class TlsConfigBean {
           groupName,
           configPrefix + storeCategory.toLowerCase() + "StoreType",
           TlsConfigErrors.TLS_20,
-          storeCategory,
+          storeCategory.toLowerCase(),
           e.getMessage(),
           e
       ));
@@ -554,7 +567,7 @@ public class TlsConfigBean {
           groupName,
           configPrefix + storeCategory.toLowerCase() + "StoreFilePath",
           TlsConfigErrors.TLS_21,
-          storeCategory,
+          storeCategory.toLowerCase(),
           keyStorePath,
           e.getMessage(),
           e

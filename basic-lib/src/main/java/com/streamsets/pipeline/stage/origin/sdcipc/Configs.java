@@ -87,7 +87,7 @@ public class Configs extends HttpConfigs {
   public int maxRecordSize;
 
   public Configs() {
-    super("RPC", "config.");
+    super("RPC", "configs.");
   }
 
   @Override

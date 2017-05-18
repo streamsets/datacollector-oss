@@ -100,6 +100,8 @@ public class IpcServer {
       sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword);
       sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword);
       sslContextFactory.setSslContext(tlsConfig.getSslContext());
+      sslContextFactory.setIncludeProtocols(tlsConfig.getFinalProtocols());
+      sslContextFactory.setIncludeCipherSuites(tlsConfig.getFinalCipherSuites());
 
       connector = new ServerConnector(server, new SslConnectionFactory(sslContextFactory, "http/1.1"),
                                       new HttpConnectionFactory(httpsConf));
