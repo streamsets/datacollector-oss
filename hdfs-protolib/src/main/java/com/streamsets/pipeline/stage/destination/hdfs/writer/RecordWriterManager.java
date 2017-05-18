@@ -339,7 +339,7 @@ public class RecordWriterManager {
    */
   public Path commitWriter(RecordWriter writer) throws IOException, StageException {
     Path path = null;
-    if (!writer.isClosed() || writer.isIdleClosed()) {
+    if ((!writer.isClosed() || writer.isIdleClosed()) && !writer.isRenamed()) {
       // Unset the interrupt flag before close(). InterruptedIOException makes close() fail
       // resulting that the tmp file never gets renamed when stopping the pipeline.
       boolean interrupted = Thread.interrupted();
@@ -354,6 +354,7 @@ public class RecordWriterManager {
 
       LOG.debug("Path[{}] - Committing Writer", writer.getPath());
       path = renameToFinalName(fs, writer.getPath());
+      writer.setRenamed(true);
       LOG.debug("Path[{}] - Committed Writer to '{}'", writer.getPath(), path);
       // Reset the interrupt flag back.
       if (interrupted) {

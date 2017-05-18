@@ -73,6 +73,7 @@ public class RecordWriter {
   private Future<Void> currentIdleCloseFuture = null;
   private ActiveRecordWriters writers = null;
   private boolean batchContainsData = false;
+  private volatile boolean renamed = false;
 
   private final ReadWriteLock closeLock = new ReentrantReadWriteLock();
   private ScheduledThreadPoolExecutor idleCloseExecutor = new ScheduledThreadPoolExecutor(1,
@@ -305,6 +306,14 @@ public class RecordWriter {
   @Override
   public String toString() {
     return Utils.format("RecordWriter[path='{}']", path);
+  }
+
+  public synchronized void setRenamed(boolean renamed) {
+    this.renamed = renamed;
+  }
+
+  public synchronized boolean isRenamed() {
+    return renamed;
   }
 
   private class IdleCloseCallable implements Callable<Void> {
