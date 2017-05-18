@@ -23,6 +23,7 @@ import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ext.io.OverrunException;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -104,8 +105,10 @@ public class XmlCharDataParser extends AbstractDataParser {
       if (field != null) {
         record = createRecord(offset, field);
       }
-    } catch (XMLStreamException ex) {
+    } catch (OverrunException ex) {
       throw new DataParserException(Errors.XML_PARSER_02, readerId, offset, maxObjectLen);
+    } catch (XMLStreamException ex) {
+      throw new DataParserException(Errors.XML_PARSER_03, ex);
     }
     return record;
   }

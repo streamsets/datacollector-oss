@@ -27,6 +27,7 @@ public enum Errors implements ErrorCode {
   XML_PARSER_00("Cannot advance reader '{}' to offset '{}'"),
   XML_PARSER_01("Cannot obtain current reader position: {}"),
   XML_PARSER_02("XML object exceeded maximum length: readerId '{}', offset '{}', maximum length '{}'"),
+  XML_PARSER_03("Can't parse XML: {}"),
   ;
 
   private final String msg;

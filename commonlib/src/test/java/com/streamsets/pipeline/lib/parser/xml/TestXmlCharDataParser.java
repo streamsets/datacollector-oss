@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.xml.StreamingXmlParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.testing.ApiUtils;
@@ -442,6 +443,23 @@ public class TestXmlCharDataParser {
     DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e", 100);
     parser.close();
     parser.parse();
+  }
+
+  @Test
+  public void testInvalidXml() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("<r><open-tag>asdf</r>"), 1000, true, false);
+    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e", 100);
+
+    try {
+      parser.parse();
+      Assert.fail("Parsing should have failed.");
+    } catch (DataParserException e) {
+      String error = e.toString();
+      Assert.assertTrue("Error: " + error, error.contains("XML_PARSER_03"));
+      Assert.assertTrue("Error: " + error, error.contains("The element type \"open-tag\" must be terminated by the matching end-tag"));
+    } finally {
+      parser.close();
+    }
   }
 
 }
