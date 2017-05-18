@@ -31,6 +31,9 @@ public final class Constants {
   /**
    * Uploading support bundles directly
    */
+  public static final String CUSTOMER_ID = "customer.id";
+  public static final String DEFAULT_CUSTOMER_ID = "";
+
   public static final String UPLOAD_ENABLED = "bundle.upload.enabled";
   public static final boolean DEFAULT_UPLOAD_ENABLED = true;
 

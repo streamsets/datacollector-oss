@@ -380,6 +380,7 @@ public class SupportBundleManager implements BundleContext {
     metadata.put("sdc.version", buildInfo.getVersion());
     metadata.put("sdc.id", runtimeInfo.getId());
     metadata.put("sdc.acl.enabled", String.valueOf(runtimeInfo.isAclEnabled()));
+    metadata.put("customer.id", configuration.get(Constants.CUSTOMER_ID, Constants.DEFAULT_CUSTOMER_ID));
 
     return metadata;
   }
