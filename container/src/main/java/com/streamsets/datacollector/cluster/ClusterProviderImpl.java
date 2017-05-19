@@ -835,6 +835,7 @@ public class ClusterProviderImpl implements ClusterProvider {
           log4jProperties.getAbsolutePath(),
           bootstrapJar.getAbsolutePath(),
           jarsToShip,
+          pipelineConfiguration.getTitle(),
           clusterBootstrapJar.getAbsolutePath()
       );
     } else if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
@@ -1089,6 +1090,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       String log4jProperties,
       String bootstrapJar,
       Set<String> jarsToShip,
+      String pipelineTitle,
       String clusterBootstrapJar
   ) {
     List<String> args = new ArrayList<>();
@@ -1127,6 +1129,9 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("spark.executor.extraJavaOptions=" +
         Joiner.on(" ").join("-javaagent:./" + (new File(bootstrapJar)).getName(), javaOpts)
     );
+    // Job name in Resource Manager UI
+    args.add("--name");
+    args.add("StreamSets Data Collector: " + pipelineTitle);
     // main class
     args.add("--class");
     args.add("com.streamsets.pipeline.BootstrapClusterStreaming");

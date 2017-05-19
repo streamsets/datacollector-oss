@@ -490,6 +490,7 @@ public class TestClusterProviderImpl {
                 "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar",
             "--conf", "spark" +
             ".executor.extraJavaOptions=-javaagent:./streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar ",
+            "--name", "StreamSets Data Collector: label",
             "--class", "com" +
             ".streamsets.pipeline.BootstrapClusterStreaming",
             "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-1.7.0.0-SNAPSHOT.jar"},

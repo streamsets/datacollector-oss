@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.hadoop;
 
+import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.ClusterBinding;
 import com.streamsets.pipeline.Utils;
 
@@ -82,7 +83,7 @@ public class HadoopMapReduceBinding implements ClusterBinding {
         conf.set(Job.INPUT_FORMAT_CLASS_ATTR, "org.apache.avro.mapreduce.AvroKeyInputFormat");
         conf.set(Job.MAP_OUTPUT_KEY_CLASS, "org.apache.avro.mapred.AvroKey");
       }
-      job = Job.getInstance(conf, "StreamSets Data Collector - Batch Execution Mode");
+      job = Job.getInstance(conf, "StreamSets Data Collector: " + properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_TITLE));
       job.setJarByClass(this.getClass());
       job.setNumReduceTasks(0);
       if (!"AVRO".equalsIgnoreCase(dataFormat)) {

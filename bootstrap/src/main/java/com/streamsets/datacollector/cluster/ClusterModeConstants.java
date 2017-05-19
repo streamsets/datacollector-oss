@@ -27,6 +27,7 @@ public class ClusterModeConstants {
 
   public static final String NUM_EXECUTORS_KEY = "num-executors";
   public static final String CLUSTER_PIPELINE_NAME = "cluster.pipeline.name";
+  public static final String CLUSTER_PIPELINE_TITLE = "cluster.pipeline.title";
   public static final String CLUSTER_PIPELINE_REV = "cluster.pipeline.rev";
   public static final String CLUSTER_PIPELINE_USER = "cluster.pipeline.user";
   public static final String CLUSTER_PIPELINE_REMOTE = "cluster.pipeline.remote";

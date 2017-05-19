@@ -81,7 +81,7 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
     for (Object key : properties.keySet()) {
       logMessage("Property => " + key + " => " + properties.getProperty(key.toString()), isRunningInMesos);
     }
-    final SparkConf conf = new SparkConf().setAppName("StreamSets Data Collector - Streaming Mode");
+    final SparkConf conf = new SparkConf().setAppName("StreamSets Data Collector: " + properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_TITLE));
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
     final String topic = getTopic();
     final String consumerGroup = getConsumerGroup();

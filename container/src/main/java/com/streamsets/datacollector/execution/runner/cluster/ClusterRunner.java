@@ -844,6 +844,7 @@ public class ClusterRunner extends AbstractRunner {
       // create pipeline and get the parallelism info from the source
       sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, String.valueOf(clusterSourceInfo.getParallelism()));
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_NAME, name);
+      sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_TITLE, pipelineConf.getTitle());
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_REV, rev);
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_USER, user);
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_REMOTE, String.valueOf(isRemotePipeline()));
