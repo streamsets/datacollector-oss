@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline;
 
+import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.spark.api.SparkTransformer;
 import org.apache.spark.api.java.JavaSparkContext;
 
@@ -121,7 +122,7 @@ public class BootstrapCluster {
     File rootDataDir = new File(etcRoot, "data");
     dataDir = rootDataDir.getAbsolutePath();
     File basePipelineDir = new File(rootDataDir, "pipelines");
-    String pipelineName = properties.getProperty("cluster.pipeline.name");
+    String pipelineName = properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_NAME);
     if (pipelineName == null) {
       throw new IllegalStateException("Pipeline to be run cannot be null");
     }

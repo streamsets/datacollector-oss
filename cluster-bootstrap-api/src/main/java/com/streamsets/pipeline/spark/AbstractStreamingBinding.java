@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.spark;
 
+import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.BootstrapCluster;
 import com.streamsets.pipeline.ClusterBinding;
 import com.streamsets.pipeline.SdcClusterOffsetHelper;
@@ -42,7 +43,6 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
   static final String CHECKPOINT_BASE_DIR = ".streamsets-spark-streaming";
   private final String RDD_CHECKPOINT_DIR = "rdd-checkpoints";
   static final String SDC_ID = "sdc.id";
-  static final String CLUSTER_PIPELINE_NAME = "cluster.pipeline.name";
   private static final Logger LOG = LoggerFactory.getLogger(AbstractStreamingBinding.class);
   private final boolean isRunningInMesos;
   private JavaStreamingContext ssc;
@@ -72,7 +72,7 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
         .sdcId(Utils.getPropertyNotNull(properties, SDC_ID))
         .topic(topic)
         .consumerGroup(consumerGroup)
-        .pipelineName(Utils.getPropertyNotNull(properties, CLUSTER_PIPELINE_NAME))
+        .pipelineName(Utils.getPropertyNotNull(properties, ClusterModeConstants.CLUSTER_PIPELINE_NAME))
         .build();
   }
 

@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.spark;
 
+import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.Utils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class TestSparkStreamingBinding {
     Properties properties = new Properties();
     String topic = "topic";
     String consumerGroup = "consumerGroup";
-    properties.put(AbstractStreamingBinding.CLUSTER_PIPELINE_NAME, "p:n");
+    properties.put(ClusterModeConstants.CLUSTER_PIPELINE_NAME, "p:n");
     properties.put(AbstractStreamingBinding.SDC_ID, "uuid1234");
     SparkStreamingBinding sparkStreamingBinding = new SparkStreamingBinding(properties);
     CheckpointPath checkpointPath = sparkStreamingBinding.getCheckPointPath(topic, consumerGroup);
