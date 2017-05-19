@@ -301,6 +301,10 @@ public class TlsConfigBean {
     return hasKeyStore() || hasTrustStore();
   }
 
+  public boolean isInitialized() {
+    return sslEngine != null;
+  }
+
   public boolean init(
       Stage.Context context, String groupName, String configPrefix, List<Stage.ConfigIssue> issues
   ) {

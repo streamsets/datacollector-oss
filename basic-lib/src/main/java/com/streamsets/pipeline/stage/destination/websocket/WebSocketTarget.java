@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.http.Errors;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
@@ -110,28 +111,30 @@ public class WebSocketTarget extends BaseTarget {
       String resourceUrl = conf.resourceUrl.toLowerCase();
       if (resourceUrl.startsWith("wss")) {
         SslContextFactory sslContextFactory = new SslContextFactory();
-        if (conf.tlsConfig.keyStoreFilePath != null) {
-          sslContextFactory.setKeyStorePath(conf.tlsConfig.keyStoreFilePath);
+        final TlsConfigBean tlsConf = conf.tlsConfig;
+
+        if (tlsConf.keyStoreFilePath != null) {
+          sslContextFactory.setKeyStorePath(tlsConf.keyStoreFilePath);
         }
-        if (conf.tlsConfig.keyStoreType != null) {
-          sslContextFactory.setKeyStoreType(conf.tlsConfig.keyStoreType.getJavaValue());
+        if (tlsConf.keyStoreType != null) {
+          sslContextFactory.setKeyStoreType(tlsConf.keyStoreType.getJavaValue());
         }
-        if (conf.tlsConfig.keyStorePassword != null) {
-          sslContextFactory.setKeyStorePassword(conf.tlsConfig.keyStorePassword);
+        if (tlsConf.keyStorePassword != null) {
+          sslContextFactory.setKeyStorePassword(tlsConf.keyStorePassword);
         }
-        if (conf.tlsConfig.trustStoreFilePath != null) {
-          sslContextFactory.setTrustStorePath(conf.tlsConfig.trustStoreFilePath);
+        if (tlsConf.trustStoreFilePath != null) {
+          sslContextFactory.setTrustStorePath(tlsConf.trustStoreFilePath);
         }
-        if (conf.tlsConfig.trustStoreType != null) {
-          sslContextFactory.setTrustStoreType(conf.tlsConfig.trustStoreType.getJavaValue());
+        if (tlsConf.trustStoreType != null) {
+          sslContextFactory.setTrustStoreType(tlsConf.trustStoreType.getJavaValue());
         }
-        if (conf.tlsConfig.trustStorePassword != null) {
-          sslContextFactory.setTrustStorePassword(conf.tlsConfig.trustStorePassword);
+        if (tlsConf.trustStorePassword != null) {
+          sslContextFactory.setTrustStorePassword(tlsConf.trustStorePassword);
         }
-        if (conf.tlsConfig != null) {
-          sslContextFactory.setSslContext(conf.tlsConfig.getSslContext());
-          sslContextFactory.setIncludeCipherSuites(conf.tlsConfig.getFinalCipherSuites());
-          sslContextFactory.setIncludeProtocols(conf.tlsConfig.getFinalProtocols());
+        if (tlsConf != null && tlsConf.isEnabled() && tlsConf.isInitialized()) {
+          sslContextFactory.setSslContext(tlsConf.getSslContext());
+          sslContextFactory.setIncludeCipherSuites(tlsConf.getFinalCipherSuites());
+          sslContextFactory.setIncludeProtocols(tlsConf.getFinalProtocols());
         }
         webSocketClient = new WebSocketClient(sslContextFactory);
       } else {

@@ -180,6 +180,15 @@ public class TestReceiverServer {
 
     final int port = NetworkUtils.getRandomPort();
     final HttpConfigs configs = new HttpConfigs("g", "p") {
+
+      private TlsConfigBean tlsConfigBean = new TlsConfigBean();
+
+      {
+        tlsConfigBean.keyStoreFilePath = keyStore.getAbsolutePath();
+        tlsConfigBean.keyStorePassword = keyStorePassword;
+        tlsConfigBean.tlsEnabled = true;
+      }
+
       @Override
       public int getPort() {
         return port;
@@ -202,7 +211,7 @@ public class TestReceiverServer {
 
       @Override
       public boolean isTlsEnabled() {
-        return true;
+        return tlsConfigBean.isEnabled();
       }
 
       @Override
@@ -212,9 +221,6 @@ public class TestReceiverServer {
 
       @Override
       public TlsConfigBean getTlsConfigBean() {
-        final TlsConfigBean tlsConfigBean = new TlsConfigBean();
-        tlsConfigBean.keyStoreFilePath = keyStore.getAbsolutePath();
-        tlsConfigBean.keyStorePassword = keyStorePassword;
         return tlsConfigBean;
       }
     };
