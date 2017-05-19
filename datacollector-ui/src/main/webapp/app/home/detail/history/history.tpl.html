@@ -9,16 +9,18 @@
   <table class="table">
     <thead>
     <tr>
-      <th class="col-md-3" translate="global.form.lastStatusChange">Last Status Change</th>
+      <th class="col-md-2" translate="global.form.lastStatusChange">Last Status Change</th>
+      <th class="col-md-1" translate="global.form.user">User</th>
       <th class="col-md-1" translate="global.form.status">Status</th>
-      <th class="col-md-4" translate="global.form.message">Message</th>
-      <th class="col-md-2" translate="global.form.parameters">Parameters</th>
+      <th class="col-md-3" translate="global.form.message">Message</th>
+      <th class="col-md-3" translate="global.form.parameters">Parameters</th>
       <th class="col-md-2" translate="home.detailPane.summary">Summary</th>
     </tr>
     </thead>
     <tbody ng-hide="showLoading">
     <tr ng-repeat="history in runHistory track by $index">
       <td>{{history.timeStamp | date:'medium'}}</td>
+      <td>{{history.user}}</td>
       <td ng-bind="history.status"></td>
       <td ng-bind="history.message"></td>
       <td>
