@@ -20,7 +20,7 @@
 package com.streamsets.pipeline.spark;
 
 import kafka.common.TopicAndPartition;
-import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.rdd.RDD;
 import org.apache.spark.streaming.kafka.HasOffsetRanges;
 import org.apache.spark.streaming.kafka.OffsetRange;
 import org.slf4j.Logger;
@@ -30,11 +30,16 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class KafkaOffsetUtil {
-  private static final Logger LOG = LoggerFactory.getLogger(KafkaOffsetUtil.class);
-  private KafkaOffsetUtil() {}
+public final class KafkaOffsetManagerImpl implements KafkaOffsetManager {
+  private static final Logger LOG = LoggerFactory.getLogger(KafkaOffsetManagerImpl.class);
+  private static final KafkaOffsetManagerImpl INSTANCE = new KafkaOffsetManagerImpl();
+  private KafkaOffsetManagerImpl() {}
 
-  private static Map<Integer, Long> getOffsetToSave(OffsetRange[] offsetRanges) {
+  public static KafkaOffsetManagerImpl get() {
+    return INSTANCE;
+  }
+
+  private Map<Integer, Long> getOffsetToSave(OffsetRange[] offsetRanges) {
     Map<Integer, Long> partitionToOffset = new LinkedHashMap<>();
     for (int i = 0; i < offsetRanges.length; i++) {
       //Until offset is the offset till which the current SparkDriverFunction
@@ -50,20 +55,18 @@ public final class KafkaOffsetUtil {
     return partitionToOffset;
   }
 
-  public static Map<Integer, Long> getOffsets(JavaPairRDD<?, ?> byteArrayJavaRDD) {
-    return getOffsetToSave(((HasOffsetRanges) (byteArrayJavaRDD.rdd())).offsetRanges());
-  }
-
+  @Override
   @SuppressWarnings("unchecked")
-  public static void saveOffsets(Map<Integer, Long> partitionOffset) {
-    SparkStreamingBinding.offsetHelper.saveOffsets(partitionOffset);
+  public void saveOffsets(RDD<?> rdd) {
+    SparkStreamingBinding.offsetHelper.saveOffsets(getOffsetToSave(((HasOffsetRanges) rdd).offsetRanges()));
   }
 
-  public static Map<Integer, Long> readOffsets(int numberOfPartitions) {
+  private Map<Integer, Long> readOffsets(int numberOfPartitions) {
     return SparkStreamingBinding.offsetHelper.readOffsets(numberOfPartitions);
   }
 
-  public static Map<TopicAndPartition, Long> getOffsetForDStream(String topic, int numberOfPartitions) {
+  @Override
+  public Map<TopicAndPartition, Long> getOffsetForDStream(String topic, int numberOfPartitions) {
     Map<TopicAndPartition, Long> offsetForDStream = new HashMap<>();
     Map<Integer, Long> partitionsToOffset = readOffsets(numberOfPartitions);
     for (Map.Entry<Integer, Long> partitionAndOffset : partitionsToOffset.entrySet()) {

@@ -168,7 +168,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
                 DefaultDecoder.class,
                 (Class<Tuple2<byte[], byte[]>>) ((Class)(Tuple2.class)),
                 props,
-                KafkaOffsetUtil.getOffsetForDStream(topic, numberOfPartitions),
+                KafkaOffsetManagerImpl.get().getOffsetForDStream(topic, numberOfPartitions),
                 MESSAGE_HANDLER_FUNCTION
             );
         ClassTag<byte[]> byteClassTag = scala.reflect.ClassTag$.MODULE$.apply(byte[].class);
@@ -178,7 +178,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
             KafkaUtils.createDirectStream(result, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class,
                 props, new HashSet<>(Arrays.asList(topic.split(","))));
       }
-      Driver$.MODULE$.foreach(dStream.dstream());
+      Driver$.MODULE$.foreach(dStream.dstream(), KafkaOffsetManagerImpl.get());
       return result;
     }
   }

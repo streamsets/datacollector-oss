@@ -20,7 +20,7 @@
 package com.streamsets.pipeline.spark;
 
 import org.apache.kafka.common.TopicPartition;
-import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.rdd.RDD;
 import org.apache.spark.streaming.kafka.v09.HasOffsetRanges;
 import org.apache.spark.streaming.kafka.v09.OffsetRange;
 import org.slf4j.Logger;
@@ -30,10 +30,15 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class MaprStreamsOffsetUtil {
-  private static final Logger LOG = LoggerFactory.getLogger(MaprStreamsOffsetUtil.class);
+public final class MaprStreamsOffsetManagerImpl implements KafkaOffsetManager {
+  private static final Logger LOG = LoggerFactory.getLogger(MaprStreamsOffsetManagerImpl.class);
+  private static final MaprStreamsOffsetManagerImpl INSTANCE = new MaprStreamsOffsetManagerImpl();
 
-  private MaprStreamsOffsetUtil() {}
+  private MaprStreamsOffsetManagerImpl() {}
+
+  public static MaprStreamsOffsetManagerImpl get() {
+    return INSTANCE;
+  }
 
   private static Map<Integer, Long> getOffsetToSave(OffsetRange[] offsetRanges) {
     Map<Integer, Long> partitionToOffset = new LinkedHashMap<>();
@@ -51,20 +56,18 @@ public final class MaprStreamsOffsetUtil {
     return partitionToOffset;
   }
 
-  public static Map<Integer, Long> getOffsets(JavaPairRDD<?, ?> byteArrayJavaRDD) {
-    return getOffsetToSave(((HasOffsetRanges) (byteArrayJavaRDD.rdd())).offsetRanges());
-  }
-
+  @Override
   @SuppressWarnings("unchecked")
-  public static void saveOffsets(Map<Integer, Long> partitionOffset) {
-    MapRStreamingBinding.offsetHelper.saveOffsets(partitionOffset);
+  public void saveOffsets(RDD<?> rdd) {
+    MapRStreamingBinding.offsetHelper.saveOffsets(getOffsetToSave(((HasOffsetRanges) rdd).offsetRanges()));
   }
 
-  public static Map<Integer, Long> readOffsets(int numberOfPartitions) {
+  private Map<Integer, Long> readOffsets(int numberOfPartitions) {
     return MapRStreamingBinding.offsetHelper.readOffsets(numberOfPartitions);
   }
 
-  public static Map<TopicPartition, Long> getOffsetForDStream(String topic, int numberOfPartitions) {
+  @Override
+  public Map<TopicPartition, Long> getOffsetForDStream(String topic, int numberOfPartitions) {
     Map<TopicPartition, Long> offsetForDStream = new HashMap<>();
     Map<Integer, Long> partitionsToOffset = readOffsets(numberOfPartitions);
     for (Map.Entry<Integer, Long> partitionAndOffset : partitionsToOffset.entrySet()) {

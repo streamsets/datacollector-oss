@@ -42,9 +42,11 @@ object Driver {
   private var isPreprocessingMesosDone = false
   private val EMPTY_LIST = new util.ArrayList[Record]()
   private val ERROR_HEADER = "streamsetsInternalClusterErrorReason"
+  private var offsetManager: KafkaOffsetManager = _
 
-  def foreach(dstream: DStream[(Array[Byte], Array[Byte])]) {
+  def foreach(dstream: DStream[(Array[Byte], Array[Byte])], kafkaOffsetManager: KafkaOffsetManager) {
     dstream.foreachRDD(rdd => process(rdd))
+    offsetManager = kafkaOffsetManager
   }
 
   def process(rdd: RDD[(Array[Byte], Array[Byte])]): Unit = synchronized {
@@ -109,14 +111,13 @@ object Driver {
             .asInstanceOf[java.util.Iterator[Record]]
             .asScala
       }).cache()
-      val c = nextResult.count()
+      nextResult.count()
       previousGeneratedRDDs += nextResult
       id += 1
 
     })
-
     nextResult.count()
-
+    offsetManager.saveOffsets(rdd)
   }
 
   def extractArchives(mesosHomeDir: String): Boolean = {

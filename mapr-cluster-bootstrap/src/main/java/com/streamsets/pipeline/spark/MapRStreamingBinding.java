@@ -151,7 +151,7 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
                 byte[].class,
                 Tuple2.class,
                 props,
-                MaprStreamsOffsetUtil.getOffsetForDStream(topic, numberOfPartitions),
+                MaprStreamsOffsetManagerImpl.get().getOffsetForDStream(topic, numberOfPartitions),
                 MESSAGE_HANDLER_FUNCTION
             );
         ClassTag<byte[]> byteClassTag = scala.reflect.ClassTag$.MODULE$.apply(byte[].class);
@@ -161,7 +161,7 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
             KafkaUtils.createDirectStream(result, byte[].class, byte[].class,
                 props, new HashSet<>(Arrays.asList(topic.split(","))));
       }
-      Driver$.MODULE$.foreach(dStream.dstream());
+      Driver$.MODULE$.foreach(dStream.dstream(), MaprStreamsOffsetManagerImpl.get());
       return result;
     }
   }
