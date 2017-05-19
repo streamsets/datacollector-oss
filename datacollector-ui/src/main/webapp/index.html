@@ -349,7 +349,7 @@
               </a>
             </li>
 
-            <li>
+            <li ng-if="common.userName && isAuthorized([userRoles.admin])">
               <a href="javascript:;" ng-click="common.showSupportBundle()">
                 <span class="fa fa-ticket"></span>
                 <span translate="global.menu.help.supportBundle">Support Bundle</span>
