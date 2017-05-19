@@ -70,10 +70,15 @@
    <topicref href="../Installation/CM-EnableKerberos.dita"/>
    <topicref href="../Installation/CustomStageLibraries-Storing-CM.dita"/>
   </topicref>
-  <topicref href="../Installation/MapR-Prerequisites.dita">
+  <topicref href="../Installation/MapR-Prerequisites.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Installation/MapR-PrerequisitesStep1.dita"/>
+   <topicref href="../Installation/MapR-PrerequisitesStep2.dita">
+    <topicref href="../Installation/MapR-PrerequisitesStep2Interactive.dita"/>
+    <topicref href="../Installation/MapR-PrerequisitesStep2NonInteractive.dita"/>
+   </topicref>
   </topicref>
   <topicref href="../Installation/CreateAnotherDC.dita" chunk="to-content">
    <topicmeta>

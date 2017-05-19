@@ -37,16 +37,12 @@
   streamsets-datacollector-mapr_5_1-lib,\
   streamsets-datacollector-mapr_5_2-lib</codeblock></p></li>
                 <li
-                    conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_SDCHome"
-                    conrefend="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_setup"/>
-                <li>When prompted, enter the new MapR version that you upgraded to: 5.1.0 or
-                    5.2.0.</li>
-                <li
-                    conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_absolutepath"
-                    conrefend="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_loginAuth"/>
-                <li>Start <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />.</li>
+                    conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_loginAuth"/>
+                <li>Run the <codeph>setup-mapr </codeph>command, as described in <xref
+                        href="../Installation/MapR-PrerequisitesStep2.dita#concept_pvx_wxp_xz"
+                        />.<p>The command modifies configuration files and creates the required
+                        symbolic links. You can run the command in interactive or non-interactive
+                        mode.</p></li>
             </ol>
         </p>
  </conbody>

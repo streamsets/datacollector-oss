@@ -21,48 +21,12 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         machine to connect to MapR.</shortdesc>
  <conbody>
-        <p><indexterm>MapR<indexterm>prerequisites</indexterm></indexterm>You must install the
-            required client libraries and then run the <codeph>setup-mapr</codeph> command. The
-            command modifies configuration files and creates the required symbolic links. If the
-            MapR cluster uses username/password login authentication, you must enable <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            use username/password authentication.</p>
-       <p><note>The MapR FS destination supports MapR versions 5.0.0, 5.1.0 and 5.2.0. All other stages that
-                use the MapR library currently only support MapR versions 5.1.0 and 5.2.0.</note></p>
+        <p><indexterm>MapR<indexterm>prerequisites</indexterm></indexterm>MapR prerequisites include
+            installing the required client libraries and then running the command to set up MapR. </p>
         <p>
-            <ol id="ol_o2r_nq4_vw">
-                <li>Install <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> on a node in the MapR cluster or on a client machine.<p>To run <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> on a client machine - outside the cluster or on your local machine - the
-                        MapR client package must be installed and configured on the machine. If the
-                        MapR client package is not installed on the machine, download and install
-                        the following files:<ul id="ul_qcz_x1m_gv">
-                            <li>MapR client library - Typically named
-                                    <codeph>mapr-client_&lt;version>.&lt;ext></codeph>.<p>You can
-                                    download the files for your operating system
-                                    here:<codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>&lt;version>/</codeblock></p></li>
-                            <li>Kafka client library - Typically named
-                                    <codeph>mapr-kafka-&lt;version>.&lt;ext></codeph>. <p>You can
-                                    download the files for your operating system here:
-                                    <codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>ecosystem-&lt;version>/</codeblock></p></li>
-                        </ul></p></li>
-                <li
-                    conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_SDCHome"
-                    conrefend="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_setup"/>
-                <li>When prompted, enter 5.0.0, 5.1.0, or 5.2.0 for the MapR version.</li>
-                <li
-                    conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_absolutepath"
-                    conrefend="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_loginAuth"/>
-                <li>Restart <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> and verify that you can see the MapR origins and destinations in the stage
-                    library.</li>
-            </ol>
+            <note>The MapR FS destination supports MapR versions 5.0.0, 5.1.0 and 5.2.0. All other
+                stages that use the MapR library currently only support MapR versions 5.1.0 and
+                5.2.0.</note>
         </p>
- </conbody>
-    <related-links>
-        <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>
-    </related-links>
+    </conbody>
 </concept>

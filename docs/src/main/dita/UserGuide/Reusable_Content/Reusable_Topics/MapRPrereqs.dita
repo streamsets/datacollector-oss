@@ -16,30 +16,10 @@
 <concept id="concept_xlw_hjc_yy">
  <title>MapR Prerequisites</title>
  <conbody>
-  <p>
+        <p>
             <draft-comment author="alisontaylor">these steps used in MapR Prereqs in Install chapter
                 and Working with Upgraded MapR System in Upgrade chapter</draft-comment>
             <ol id="ol_kpy_jjc_yy">
-                <li id="MapR_SDCHome">Use the following command to set the
-                        <codeph>$SDC_HOME</codeph> environment variable to the location where you
-                    installed <ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />:<codeblock>export SDC_HOME=&lt;installation directory></codeblock><p>For
-                        example:<codeblock>export SDC_HOME=/opt/streamsets-datacollector</codeblock></p><note>The
-                        default installation directory for an RPM installation is
-                            <codeph>/opt/streamsets-datacollector</codeph>. The tarball installation
-                        directory is the location where you extracted the file.</note></li>
-                <li id="MapR_SDCConf">Use the following command to set the
-                        <codeph>$SDC_CONF</codeph> environment variable to the <ph
-                        conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-                    configuration
-                        directory:<codeblock>export SDC_CONF=&lt;configuration directory></codeblock><p>For
-                        example, use the following command if you used the default configuration
-                        directory for an RPM
-                        installation:<codeblock>export SDC_CONF=/etc/sdc</codeblock></p></li>
-                <li id="MapR_setup">Use the following command to set up
-                    MapR:<codeblock>$SDC_DIST/bin/streamsets setup-mapr</codeblock></li>
-                <li id="MapR_absolutepath">When prompted, enter the absolute path to the MapR home directory, usually
-                    /opt/mapr.</li>
                 <li id="MapR_loginAuth">If the MapR cluster uses username/password login
                     authentication, uncomment the following line in the <ph
                         conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
@@ -50,8 +30,45 @@
                         file. If you start <ph
                             conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
                         manually, modify the <codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> file.
-                        </p></li>
+                    </p></li>
             </ol>
         </p>
- </conbody>
+        <draft-comment author="alisontaylor">These rows and steps used in the MapR Prereqs in
+            Install chapter - interactive and non-interactive mode topics</draft-comment>
+        <table frame="all" rowsep="1" colsep="1" id="table_MapREnvVars">
+            <tgroup cols="2">
+                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                <thead>
+                    <row>
+                        <entry>Environment Variable</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row id="row_SDC_HOME">
+                        <entry>SDC_HOME</entry>
+                        <entry><ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                            home directory.<p>
+                                <note>The default home directory for an RPM installation is
+                                        <codeph>/opt/streamsets-datacollector</codeph>. The tarball
+                                    home directory is the location where you extracted the
+                                    file.</note>
+                            </p></entry>
+                    </row>
+                    <row id="row_SDC_CONF">
+                        <entry>SDC_CONF</entry>
+                        <entry><ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                            configuration directory.</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+        <ol id="ol_llv_tfv_xz">
+            <li id="SetUpCommand">Use the following command to set up
+                MapR:<codeblock>$SDC_DIST/bin/streamsets setup-mapr</codeblock></li>
+            <li id="Restart">Restart <ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
+                verify that the MapR origins and destinations appear in the stage library.</li>
+        </ol>
+    </conbody>
 </concept>
