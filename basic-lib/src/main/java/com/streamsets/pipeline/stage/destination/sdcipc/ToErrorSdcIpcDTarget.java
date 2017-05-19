@@ -32,7 +32,16 @@ import com.streamsets.pipeline.api.StageDef;
     onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r"
 )
 @ErrorStage
-@HideConfigs(preconditions = true, onErrorRecord = true)
+@HideConfigs(
+    preconditions = true,
+    onErrorRecord = true,
+    value = {
+        "config.tlsConfigBean.keyStoreFilePath",
+        "config.tlsConfigBean.keyStoreType",
+        "config.tlsConfigBean.keyStorePassword",
+        "config.tlsConfigBean.keyStoreAlgorithm"
+    }
+)
 @GenerateResourceBundle
 public class ToErrorSdcIpcDTarget extends SdcIpcDTarget {
 

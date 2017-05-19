@@ -55,6 +55,10 @@ public class TlsConfigBean {
 
   public static final String DEFAULT_KEY_MANAGER_ALGORITHM = "SunX509";
 
+  // this is to push all display positions to a high number so they appear together at the bottom of the
+  // ToErrorSdcIpcDTarget (where all properties are combined into a single group)
+  private static final int DISPLAY_POSITION_OFFSET = 1000;
+
   private static final String[] MODERN_PROTOCOLS = {"TLSv1.2"};
   private static final String[] MODERN_CIPHER_SUITES = {
       "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
@@ -75,7 +79,7 @@ public class TlsConfigBean {
       defaultValue = "false",
       label = "Use TLS",
       description = "Enable transport layer security for this stage.",
-      displayPosition = 0,
+      displayPosition = DISPLAY_POSITION_OFFSET + 0,
       group = "#0"
   )
   public boolean tlsEnabled;
@@ -86,7 +90,7 @@ public class TlsConfigBean {
       description = "The path to the keystore file.  Absolute path, or relative to the Data Collector resources "
           + "directory.",
       label = "Keystore File",
-      displayPosition = 20,
+      displayPosition = DISPLAY_POSITION_OFFSET + 20,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -99,7 +103,7 @@ public class TlsConfigBean {
       defaultValue = "JKS",
       label = "Keystore Type",
       description = "The type of certificate/key scheme to use for the key tore.",
-      displayPosition = 50,
+      displayPosition = DISPLAY_POSITION_OFFSET + 50,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -113,7 +117,7 @@ public class TlsConfigBean {
       description = "The password to the keystore file, if applicable.  Using a password is highly recommended for "
           + "security reasons.",
       label = "Keystore Password",
-      displayPosition = 70,
+      displayPosition = DISPLAY_POSITION_OFFSET + 70,
       elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "tlsEnabled",
@@ -127,7 +131,7 @@ public class TlsConfigBean {
       label = "Keystore Key Algorithm",
       description = "The key manager algorithm to use with the keystore.",
       defaultValue = DEFAULT_KEY_MANAGER_ALGORITHM,
-      displayPosition = 80,
+      displayPosition = DISPLAY_POSITION_OFFSET + 80,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -140,7 +144,7 @@ public class TlsConfigBean {
       description = "The path to the truststore file.  Absolute path, or relative to the Data Collector resources "
           + "directory.",
       label = "Truststore File",
-      displayPosition = 120,
+      displayPosition = DISPLAY_POSITION_OFFSET + 120,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -153,7 +157,7 @@ public class TlsConfigBean {
       defaultValue = "JKS",
       label = "Truststore Type",
       description = "The type of certificate/key scheme to use for the truststore.",
-      displayPosition = 150,
+      displayPosition = DISPLAY_POSITION_OFFSET + 150,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -167,7 +171,7 @@ public class TlsConfigBean {
       description = "The password to the truststore file, if applicable.  Using a password is highly recommended for "
           + "security reasons.",
       label = "Truststore Password",
-      displayPosition = 170,
+      displayPosition = DISPLAY_POSITION_OFFSET + 170,
       elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "tlsEnabled",
@@ -181,7 +185,7 @@ public class TlsConfigBean {
       label = "Truststore Trust Algorithm",
       description = "The key manager algorithm to use with the truststore.",
       defaultValue = DEFAULT_KEY_MANAGER_ALGORITHM,
-      displayPosition = 180,
+      displayPosition = DISPLAY_POSITION_OFFSET + 180,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -195,7 +199,7 @@ public class TlsConfigBean {
       description = "Use only modern TLS protocols (TLSv1.2).  This is highly recommended for security reasons, but " +
           "can be overridden if special circumstances require it.",
       defaultValue = "true",
-      displayPosition = 300,
+      displayPosition = DISPLAY_POSITION_OFFSET + 300,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -207,7 +211,7 @@ public class TlsConfigBean {
       type = ConfigDef.Type.LIST,
       label = "Transport Protocols",
       description = "The transport protocols to enable for connections (ex: TLSv1.2, TLSv1.1, etc.).",
-      displayPosition = 310,
+      displayPosition = DISPLAY_POSITION_OFFSET + 310,
       group = "#0",
       dependsOn = "useDefaultProtocols",
       triggeredByValue = "false"
@@ -221,7 +225,7 @@ public class TlsConfigBean {
       description = "Use only modern cipher suites.  This is highly recommended for security reasons, but can be " +
           "overridden if special circumstances require it.",
       defaultValue = "true",
-      displayPosition = 350,
+      displayPosition = DISPLAY_POSITION_OFFSET + 350,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -233,7 +237,7 @@ public class TlsConfigBean {
       type = ConfigDef.Type.LIST,
       label = "Cipher Suites",
       description = "The cipher suites for connections (ex: TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, etc.).",
-      displayPosition = 360,
+      displayPosition = DISPLAY_POSITION_OFFSET + 360,
       group = "#0",
       dependsOn = "useDefaultCiperSuites",
       triggeredByValue = "false"
