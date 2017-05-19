@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -84,6 +85,7 @@ public class TestJdbcLookup {
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (2, 'Jon', 'Natkins')");
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (3, 'Jon', 'Daulton')");
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (4, 'Girish', 'Pancha')");
+      statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (5, 'Girish', 'Pancha')");
 
       statement.executeBatch();
     }
@@ -119,6 +121,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -144,6 +147,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -180,6 +184,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", mapQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -216,6 +221,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -260,6 +266,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -285,11 +292,7 @@ public class TestJdbcLookup {
 
     List<Record> records = ImmutableList.of(record1, record2, record3);
     processorRunner.runInit();
-    List<Record> outputRecords = processorRunner.runProcess(records).getRecords().get("lane");
-
-    Assert.assertEquals(1, outputRecords.get(0).get("[2]").getValueAsInteger());
-    Assert.assertEquals(2, outputRecords.get(1).get("[2]").getValueAsInteger());
-    Assert.assertEquals(3, outputRecords.get(2).get("[2]").getValueAsInteger());
+    processorRunner.runProcess(records);
   }
 
   @Test
@@ -302,6 +305,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -321,6 +325,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -340,6 +345,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -382,6 +388,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", mapQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -426,6 +433,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -448,6 +456,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", queryReturnsNoRow)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .setOnRecordError(OnRecordError.TO_ERROR)
@@ -486,6 +495,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", queryReturnsNoRow)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -524,6 +534,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -547,6 +558,7 @@ public class TestJdbcLookup {
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", queryReturnsNoRow)
         .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.FIRST_ONLY)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
         .addOutputLane("lane")
@@ -576,6 +588,45 @@ public class TestJdbcLookup {
       Assert.assertEquals(15, calendar.get(Calendar.HOUR_OF_DAY));
       Assert.assertEquals(44, calendar.get(Calendar.MINUTE));
       Assert.assertEquals(33, calendar.get(Calendar.SECOND));
+    } finally {
+      processorRunner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testMultipleValuesSplitIntoMultipleRecords() throws Exception {
+    List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(new JdbcFieldColumnMapping("P_ID", "[2]"));
+
+    JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
+    processor.hikariConfigBean = createConfigBean(h2ConnectionString, username, password);
+
+    ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
+        .addConfiguration("query", listQuery)
+        .addConfiguration("columnMappings", columnMappings)
+        .addConfiguration("multipleValuesBehavior", MultipleValuesBehavior.SPLIT_INTO_MULTIPLE_RECORDS)
+        .addConfiguration("maxClobSize", 1000)
+        .addConfiguration("maxBlobSize", 1000)
+        .addOutputLane("lane")
+        .build();
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create("Girish"));
+    fields.add(Field.create("Pancha"));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    processorRunner.runInit();
+    try {
+      StageRunner.Output output = processorRunner.runProcess(singleRecord);
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+
+      record = output.getRecords().get("lane").get(0);
+      Assert.assertEquals(4, record.get("[2]").getValueAsInteger());
+
+      record = output.getRecords().get("lane").get(1);
+      Assert.assertEquals(5, record.get("[2]").getValueAsInteger());
+
     } finally {
       processorRunner.runDestroy();
     }

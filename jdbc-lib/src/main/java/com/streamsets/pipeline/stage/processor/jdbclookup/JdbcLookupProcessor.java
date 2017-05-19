@@ -40,6 +40,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
@@ -68,6 +69,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
   private final String query;
   private final List<JdbcFieldColumnMapping> columnMappings;
+  private final MultipleValuesBehavior multipleValuesBehavior;
   private final int maxClobSize;
   private final int maxBlobSize;
   private final HikariPoolConfigBean hikariConfigBean;
@@ -79,12 +81,13 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private Map<String, DataType> columnsToTypes = new HashMap<>();
   private final Properties driverProperties = new Properties();
 
-  private LoadingCache<String, Map<String, Field>> cache;
+  private LoadingCache<String, List<Map<String, Field>>> cache;
   private CacheCleaner cacheCleaner;
 
   public JdbcLookupProcessor(
       String query,
       List<JdbcFieldColumnMapping> columnMappings,
+      MultipleValuesBehavior multipleValuesBehavior,
       int maxClobSize,
       int maxBlobSize,
       HikariPoolConfigBean hikariConfigBean,
@@ -92,6 +95,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   ) {
     this.query = query;
     this.columnMappings = columnMappings;
+    this.multipleValuesBehavior = multipleValuesBehavior;
     this.maxClobSize = maxClobSize;
     this.maxBlobSize = maxBlobSize;
     this.hikariConfigBean = hikariConfigBean;
@@ -187,40 +191,31 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       ELVars elVars = getContext().createELVars();
       RecordEL.setRecordInContext(elVars, record);
       String preparedQuery = queryEval.eval(elVars, query, String.class);
-      Map<String, Field> values = cache.get(preparedQuery);
+      List<Map<String, Field>> values = cache.get(preparedQuery);
+
       if (values.isEmpty()) {
         // No results
         LOG.error(JdbcErrors.JDBC_04.getMessage(), preparedQuery);
         errorRecordHandler.onError(new OnRecordErrorException(record, JdbcErrors.JDBC_04, preparedQuery));
-      }
-      for (Map.Entry<String, Field> entry : values.entrySet()) {
-        String columnName = entry.getKey();
-        String fieldPath = columnsToFields.get(columnName);
-        Field field = entry.getValue();
-        if (fieldPath == null) {
-          Field root = record.get();
-          // No mapping
-          switch (root.getType()) {
-            case LIST:
-              // Add new field to the end of the list
-              fieldPath = "[" + root.getValueAsList().size() + "]";
-              Map<String, Field> cell = new HashMap<>();
-              cell.put("header", Field.create(columnName));
-              cell.put("value", field);
-              field = Field.create(cell);
-              break;
-            case LIST_MAP:
-            case MAP:
-              // Just use the column name
-              fieldPath = "/" + columnName;
-              break;
-            default:
-              break;
-          }
+      } else {
+        switch (multipleValuesBehavior) {
+          case FIRST_ONLY:
+            setFieldsInRecord(record, values.get(0));
+            batchMaker.addRecord(record);
+            break;
+          case SPLIT_INTO_MULTIPLE_RECORDS:
+            for(Map<String, Field> lookupItem : values) {
+              Record newRecord = getContext().cloneRecord(record);
+              setFieldsInRecord(newRecord, lookupItem);
+              batchMaker.addRecord(newRecord);
+            }
+            break;
+          default:
+            throw new IllegalStateException("Unknown multiple value behavior: " + multipleValuesBehavior);
         }
-        record.set(fieldPath, field);
+
       }
-      batchMaker.addRecord(record);
+
     } catch (ELEvalException e) {
       LOG.error(JdbcErrors.JDBC_01.getMessage(), query, e);
       throw new OnRecordErrorException(record, JdbcErrors.JDBC_01, query);
@@ -232,8 +227,38 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
     }
   }
 
+  private void setFieldsInRecord(Record record, Map<String, Field>fields) {
+    for (Map.Entry<String, Field> entry : fields.entrySet()) {
+      String columnName = entry.getKey();
+      String fieldPath = columnsToFields.get(columnName);
+      Field field = entry.getValue();
+      if (fieldPath == null) {
+        Field root = record.get();
+        // No mapping
+        switch (root.getType()) {
+          case LIST:
+            // Add new field to the end of the list
+            fieldPath = "[" + root.getValueAsList().size() + "]";
+            Map<String, Field> cell = new HashMap<>();
+            cell.put("header", Field.create(columnName));
+            cell.put("value", field);
+            field = Field.create(cell);
+            break;
+          case LIST_MAP:
+          case MAP:
+            // Just use the column name
+            fieldPath = "/" + columnName;
+            break;
+          default:
+            break;
+        }
+      }
+      record.set(fieldPath, field);
+    }
+  }
+
   @SuppressWarnings("unchecked")
-  private LoadingCache<String, Map<String, Field>> buildCache() {
+  private LoadingCache<String, List<Map<String, Field>>> buildCache() {
     JdbcLookupLoader loader = new JdbcLookupLoader(
       getContext(),
       dataSource,

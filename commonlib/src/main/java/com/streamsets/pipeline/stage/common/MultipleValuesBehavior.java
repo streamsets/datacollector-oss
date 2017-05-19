@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.processor.common;
+package com.streamsets.pipeline.stage.common;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;

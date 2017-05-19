@@ -31,8 +31,8 @@ import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.xml.Constants;
 import com.streamsets.pipeline.lib.xml.xpath.XPathValidatorUtil;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
-import com.streamsets.pipeline.stage.processor.common.MultipleValuesBehavior;
-import com.streamsets.pipeline.stage.processor.common.MultipleValuesBehaviorChooserValues;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehaviorChooserValues;
 import org.apache.commons.lang.StringUtils;
 
 import java.nio.charset.Charset;

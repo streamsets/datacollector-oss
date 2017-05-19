@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.processor.jdbclookup;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Timer;
 import com.google.common.cache.CacheLoader;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -41,11 +42,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
+public class JdbcLookupLoader extends CacheLoader<String, List<Map<String, Field>>> {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcLookupLoader.class);
   public static final String DATE_FORMAT = "yyyy/MM/dd";
   public static final String DATETIME_FORMAT = "yyyy/MM/dd HH:mm:ss";
@@ -84,13 +87,13 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
   }
 
   @Override
-  public Map<String, Field> load(String key) throws Exception {
+  public List<Map<String, Field>> load(String key) throws Exception {
     return lookupValuesForRecord(key);
   }
 
-  private Map<String, Field> lookupValuesForRecord(String preparedQuery) throws StageException {
+  private List<Map<String, Field>> lookupValuesForRecord(String preparedQuery) throws StageException {
     LOG.debug("Executing SQL:  {}", preparedQuery);
-    Map<String, Field> defaultValues = new HashMap<>();
+    List<Map<String, Field>> lookupItems = new ArrayList<>();
 
     Timer.Context t = selectTimer.time();
     try (
@@ -102,14 +105,15 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
       t.stop();
       t = null;
 
-      if (resultSet.next()) {
+      // Process whole result set and load it to the memory
+      while(resultSet.next()) {
         ResultSetMetaData md = resultSet.getMetaData();
 
         LinkedHashMap<String, Field> fields = JdbcUtil.resultSetToFields(resultSet,
-            maxClobSize,
-            maxBlobSize,
-            columnsToTypes,
-            errorRecordHandler
+          maxClobSize,
+          maxBlobSize,
+          columnsToTypes,
+          errorRecordHandler
         );
 
         int numColumns = md.getColumnCount();
@@ -117,8 +121,13 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
           throw new OnRecordErrorException(JdbcErrors.JDBC_35, fields.size(), numColumns);
         }
 
-        return fields;
-      } else {
+        lookupItems.add(fields);
+      }
+
+      // If no lookup items were found, use defaults
+      if(lookupItems.isEmpty()) {
+        Map<String, Field> defaultValues = new HashMap<>();
+
         // Database returns no row. Use default values.
         for (String column : columnsToFields.keySet()) {
           String defaultValue = columnsToDefaults.get(column);
@@ -138,6 +147,10 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
               throw new OnRecordErrorException(JdbcErrors.JDBC_03, column, defaultValue, e);
             }
           }
+
+          if(!defaultValues.isEmpty()) {
+            lookupItems.add(defaultValues);
+          }
         }
       }
     } catch (SQLException e) {
@@ -152,6 +165,6 @@ public class JdbcLookupLoader extends CacheLoader<String, Map<String, Field>> {
       selectMeter.mark();
     }
 
-    return defaultValues;
+    return lookupItems;
   }
 }

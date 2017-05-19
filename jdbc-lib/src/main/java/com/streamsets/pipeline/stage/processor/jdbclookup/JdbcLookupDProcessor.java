@@ -26,11 +26,13 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 
@@ -75,6 +77,18 @@ public class JdbcLookupDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Multiple Values Behavior",
+      description = "How to handle multiple values ",
+      defaultValue = "FIRST_ONLY",
+      displayPosition = 35,
+      group = "JDBC"
+  )
+  @ValueChooserModel(JdbcLookupMultipleValuesBehaviorChooserValues.class)
+  public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Max Clob Size (Characters)",
@@ -102,12 +116,13 @@ public class JdbcLookupDProcessor extends DProcessor {
   @Override
   protected Processor createProcessor() {
     return new JdbcLookupProcessor(
-        query,
-        columnMappings,
-        maxClobSize,
-        maxBlobSize,
-        hikariConfigBean,
-        cacheConfig
+      query,
+      columnMappings,
+      multipleValuesBehavior,
+      maxClobSize,
+      maxBlobSize,
+      hikariConfigBean,
+      cacheConfig
     );
   }
 }

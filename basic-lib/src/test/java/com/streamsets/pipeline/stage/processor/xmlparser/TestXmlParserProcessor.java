@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.processor.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import org.junit.Assert;
 import org.junit.Test;
 
