@@ -866,7 +866,12 @@ public class ClusterRunner extends AbstractRunner {
       attributes.put(APPLICATION_STATE, applicationState.getMap());
       attributes.put(APPLICATION_STATE_START_TIME, System.currentTimeMillis());
       slaveCallbackManager.setClusterToken(applicationState.getSdcToken());
-      validateAndSetStateTransition(user, PipelineStatus.RUNNING, "Pipeline in cluster is running", attributes);
+      validateAndSetStateTransition(
+        user,
+        PipelineStatus.RUNNING,
+        Utils.format("Pipeline in cluster is running ({})", applicationState.getId()),
+        attributes
+      );
       scheduleRunnable(user, pipelineConf);
     } catch (IOException ex) {
       msg = "IO Error while trying to start the pipeline: " + ex;
