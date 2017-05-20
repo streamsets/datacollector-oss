@@ -22,6 +22,7 @@ package com.streamsets.datacollector.store.impl;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -57,7 +58,7 @@ public class TestFileAclStoreTask {
   protected PipelineStoreTask store;
   protected AclStoreTask aclStore;
 
-  @dagger.Module(injects = {PipelineStoreTask.class, FileAclStoreTask.class, LockCache.class},
+  @dagger.Module(injects = {PipelineStoreTask.class, FileAclStoreTask.class, LockCache.class, UserGroupManager.class},
       includes = LockCacheModule.class)
   public static class Module {
     public Module() {
@@ -85,6 +86,13 @@ public class TestFileAclStoreTask {
 
     @Provides
     @Singleton
+    @Nullable
+    public UserGroupManager provideUserGroupManager() {
+      return Mockito.mock(UserGroupManager.class);
+    }
+
+    @Provides
+    @Singleton
     public PipelineStoreTask providePipelineStoreTask(
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
@@ -99,9 +107,10 @@ public class TestFileAclStoreTask {
     public FileAclStoreTask provideAclStoreTask(
         RuntimeInfo runtimeInfo,
         PipelineStoreTask pipelineStoreTask,
-        LockCache<String> lockCache
+        LockCache<String> lockCache,
+        UserGroupManager userGroupManager
     ) {
-      return new FileAclStoreTask(runtimeInfo, pipelineStoreTask, lockCache);
+      return new FileAclStoreTask(runtimeInfo, pipelineStoreTask, lockCache, userGroupManager);
     }
   }
 
@@ -112,7 +121,8 @@ public class TestFileAclStoreTask {
     store = new CachePipelineStoreTask(filePipelineStoreTask, new LockCache<String>());
 
     FileAclStoreTask fileAclStoreTask = dagger.get(FileAclStoreTask.class);
-    aclStore = new CacheAclStoreTask(fileAclStoreTask, filePipelineStoreTask, new LockCache<String>());
+    UserGroupManager userGroupManager = dagger.get(UserGroupManager.class);
+    aclStore = new CacheAclStoreTask(fileAclStoreTask, filePipelineStoreTask, new LockCache<String>(), userGroupManager);
 
   }
 

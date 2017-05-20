@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.store.impl;
 
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -37,8 +38,13 @@ public class CacheAclStoreTask extends AbstractAclStoreTask {
   private final LockCache<String> lockCache;
 
   @Inject
-  public CacheAclStoreTask(AclStoreTask aclStore, PipelineStoreTask pipelineStore, LockCache<String> lockCache) {
-    super(pipelineStore, lockCache);
+  public CacheAclStoreTask(
+      AclStoreTask aclStore,
+      PipelineStoreTask pipelineStore,
+      LockCache<String> lockCache,
+      UserGroupManager userGroupManager
+  ) {
+    super(pipelineStore, lockCache, userGroupManager);
     this.aclStore = aclStore;
     pipelineAclMap = new ConcurrentHashMap<>();
     this.lockCache = lockCache;

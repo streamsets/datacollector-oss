@@ -33,6 +33,7 @@ import com.streamsets.datacollector.execution.store.SlavePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -113,7 +114,12 @@ public class TestSlaveManager {
     @Provides
     @Singleton
     public AclStoreTask provideAclStoreTask(RuntimeInfo runtimeInfo, PipelineStoreTask pipelineStoreTask) {
-      AclStoreTask aclStoreTask = new FileAclStoreTask(runtimeInfo, pipelineStoreTask, new LockCache<String>());
+      AclStoreTask aclStoreTask = new FileAclStoreTask(
+          runtimeInfo,
+          pipelineStoreTask,
+          new LockCache<String>(),
+          Mockito.mock(UserGroupManager.class)
+      );
       aclStoreTask.init();
       return aclStoreTask;
     }

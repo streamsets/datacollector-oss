@@ -55,6 +55,7 @@ import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.PipelineRunner;
@@ -429,7 +430,8 @@ public class TestUtil {
 
     @Provides @Singleton
     public AclStoreTask provideAclStore(RuntimeInfo info, PipelineStoreTask pipelineStoreTask) {
-      AclStoreTask aclStoreTask = new FileAclStoreTask(info, pipelineStoreTask,  new LockCache<String>());
+      AclStoreTask aclStoreTask = new FileAclStoreTask(info, pipelineStoreTask,  new LockCache<String>(),
+          Mockito.mock(UserGroupManager.class));
       aclStoreTask.init();
       return aclStoreTask;
     }

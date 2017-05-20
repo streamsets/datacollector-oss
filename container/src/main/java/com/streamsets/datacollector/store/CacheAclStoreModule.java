@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.store;
 
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.store.impl.CacheAclStoreTask;
 import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.util.LockCache;
@@ -37,9 +38,10 @@ public class CacheAclStoreModule {
   public AclStoreTask provideAclStore(
       FileAclStoreTask aclStore,
       PipelineStoreTask pipelineStore,
-      LockCache<String> lockCache
+      LockCache<String> lockCache,
+      UserGroupManager userGroupManager
   ) {
-    return new CacheAclStoreTask(aclStore, pipelineStore, lockCache);
+    return new CacheAclStoreTask(aclStore, pipelineStore, lockCache, userGroupManager);
   }
 
 }

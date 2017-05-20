@@ -21,6 +21,7 @@ package com.streamsets.datacollector.store.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
@@ -36,8 +37,12 @@ public class TestAbstractAclStoreTask {
 
   @Test
   public void testAdminBypassAcls() throws Exception {
-    FileAclStoreTask fileAclStoreTask = new FileAclStoreTask(Mockito.mock(RuntimeInfo.class), Mockito.mock
-        (PipelineStoreTask.class), new LockCache());
+    FileAclStoreTask fileAclStoreTask = new FileAclStoreTask(
+        Mockito.mock(RuntimeInfo.class),
+        Mockito.mock(PipelineStoreTask.class),
+        new LockCache(),
+        Mockito.mock(UserGroupManager.class)
+    );
     UserJson userJson = new UserJson();
     userJson.setName("admin");
     userJson.setRoles(ImmutableList.of(AuthzRole.ADMIN));

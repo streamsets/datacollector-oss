@@ -42,6 +42,7 @@ import com.streamsets.datacollector.execution.store.CachePipelineStateStore;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -153,7 +154,8 @@ public class TestClusterRunner {
     clusterHelper = new ClusterHelper(new MockSystemProcessFactory(), clusterProvider, tempDir, sparkManagerShell,
       emptyCL, emptyCL, null);
     setExecModeAndRetries(ExecutionMode.CLUSTER_BATCH);
-    aclStoreTask = new FileAclStoreTask(runtimeInfo, pipelineStoreTask, new LockCache<String>());
+    aclStoreTask = new FileAclStoreTask(runtimeInfo, pipelineStoreTask, new LockCache<String>(),
+        Mockito.mock(UserGroupManager.class));
   }
 
   @After
@@ -216,7 +218,8 @@ public class TestClusterRunner {
           resourceManager,
           eventListenerManager,
           sdcToken,
-          new FileAclStoreTask(runtimeInfo, pipelineStore, new LockCache<String>())
+          new FileAclStoreTask(runtimeInfo, pipelineStore, new LockCache<String>(),
+              Mockito.mock(UserGroupManager.class))
       );
     }
 
@@ -739,7 +742,8 @@ public class TestClusterRunner {
       eventListenerManager) {
       super(name, rev, runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary, executorService,
         clusterHelper, resourceManager, eventListenerManager, "myToken",
-        new FileAclStoreTask(runtimeInfo, pipelineStore, new LockCache<String>()));
+        new FileAclStoreTask(runtimeInfo, pipelineStore, new LockCache<String>(),
+            Mockito.mock(UserGroupManager.class)));
     }
 
     @Override

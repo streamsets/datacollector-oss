@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
@@ -56,8 +57,13 @@ public class FileAclStoreTask extends AbstractAclStoreTask {
   private final ObjectMapper json;
 
   @Inject
-  public FileAclStoreTask(RuntimeInfo runtimeInfo, PipelineStoreTask pipelineStoreTask, LockCache<String> lockCache) {
-    super(pipelineStoreTask, lockCache);
+  public FileAclStoreTask(
+      RuntimeInfo runtimeInfo,
+      PipelineStoreTask pipelineStoreTask,
+      LockCache<String> lockCache,
+      UserGroupManager userGroupManager
+  ) {
+    super(pipelineStoreTask, lockCache, userGroupManager);
     json = ObjectMapperFactory.get();
     this.pipelineStore = pipelineStoreTask;
     this.lockCache = lockCache;

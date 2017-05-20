@@ -728,7 +728,12 @@ public class TestPipelineStoreResource extends JerseyTest {
     @Singleton
     @Override
     public AclStoreTask provide() {
-      aclStore = new FileAclStoreTask (Mockito.mock(RuntimeInfo.class), pipelineStore, new LockCache<String>())  {
+      aclStore = new FileAclStoreTask (
+          Mockito.mock(RuntimeInfo.class),
+          pipelineStore,
+          new LockCache<String>(),
+          Mockito.mock(UserGroupManager.class)
+      )  {
 
         @Override
         public Acl saveAcl(String pipelineName, Acl acl) throws PipelineStoreException {

@@ -39,6 +39,7 @@ import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -148,7 +149,12 @@ public class TestStandalonePipelineManager {
         PipelineStoreTask pipelineStoreTask,
         LockCache<String> lockCache
     ) {
-      AclStoreTask aclStoreTask = new FileAclStoreTask(runtimeInfo, pipelineStoreTask, lockCache);
+      AclStoreTask aclStoreTask = new FileAclStoreTask(
+          runtimeInfo,
+          pipelineStoreTask,
+          lockCache,
+          Mockito.mock(UserGroupManager.class)
+      );
       aclStoreTask.init();
       return aclStoreTask;
     }

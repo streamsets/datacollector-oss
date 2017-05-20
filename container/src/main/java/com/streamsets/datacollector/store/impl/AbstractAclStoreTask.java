@@ -21,6 +21,7 @@ package com.streamsets.datacollector.store.impl;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
@@ -48,11 +49,17 @@ import java.util.Set;
 public abstract class AbstractAclStoreTask extends AbstractTask implements AclStoreTask {
   private final PipelineStoreTask pipelineStore;
   private final LockCache<String> lockCache;
+  private final UserGroupManager userGroupManager;
 
-  AbstractAclStoreTask(PipelineStoreTask pipelineStoreTask, LockCache<String> lockCache) {
+  AbstractAclStoreTask(
+      PipelineStoreTask pipelineStoreTask,
+      LockCache<String> lockCache,
+      UserGroupManager userGroupManager
+  ) {
     super("aclStore");
     this.pipelineStore = pipelineStoreTask;
     this.lockCache = lockCache;
+    this.userGroupManager = userGroupManager;
   }
 
   @Override
@@ -142,7 +149,10 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
     String newResourceOwner = subjectToSubjectMapping.get(resourceOwner);
     //No mapping defined
     if (newResourceOwner != null) {
-      acl.setResourceOwner(newResourceOwner);
+      // Only users can be owner of the pipeline
+      if (!userGroupManager.getGroups().contains(newResourceOwner)) {
+        acl.setResourceOwner(newResourceOwner);
+      }
     }
     for (Permission permission : acl.getPermissions()) {
       if (permission != null) {
@@ -157,6 +167,11 @@ public abstract class AbstractAclStoreTask extends AbstractTask implements AclSt
         //No mapping defined
         if (newSubjectId != null) {
           permission.setSubjectId(newSubjectId);
+          if (userGroupManager.getGroups().contains(newSubjectId)) {
+            permission.setSubjectType(SubjectType.GROUP);
+          } else {
+            permission.setSubjectType(SubjectType.USER);
+          }
         }
       }
     }
