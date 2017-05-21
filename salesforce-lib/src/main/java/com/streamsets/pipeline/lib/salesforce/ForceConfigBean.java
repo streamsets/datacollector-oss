@@ -126,6 +126,22 @@ public class ForceConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
+      label = "Proxy Realm",
+      description = "Authenticaton realm for the proxy server.",
+      displayPosition = 435,
+      elDefs = VaultEL.class,
+      group = "ADVANCED",
+      dependencies = {
+          @Dependency(configName = "useProxy", triggeredByValues = "true"),
+          @Dependency(configName = "useProxyCredentials", triggeredByValues = "true")
+      }
+  )
+  public String proxyRealm;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
       label = "Proxy Username",
       description = "Username for the proxy server.",
       displayPosition = 440,

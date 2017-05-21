@@ -714,7 +714,7 @@ public class ForceSource extends BaseSource {
         throw new StageException(Errors.FORCE_19, e.getMessage(), e);
       }
 
-      forceConsumer = new ForceStreamConsumer(messageQueue, partnerConnection, conf.apiVersion, conf.pushTopic);
+      forceConsumer = new ForceStreamConsumer(messageQueue, partnerConnection, conf);
       forceConsumer.start();
     }
 

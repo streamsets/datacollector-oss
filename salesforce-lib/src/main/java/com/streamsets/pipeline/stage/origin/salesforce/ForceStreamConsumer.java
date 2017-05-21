@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.origin.salesforce;
 import com.sforce.soap.partner.PartnerConnection;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.salesforce.Errors;
+import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;
 import org.cometd.bayeux.client.ClientSession;
@@ -30,13 +31,17 @@ import org.cometd.client.BayeuxClient;
 import org.cometd.client.transport.ClientTransport;
 import org.cometd.client.transport.LongPollingTransport;
 import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.HttpProxy;
+import org.eclipse.jetty.client.api.Authentication;
 import org.eclipse.jetty.client.api.Request;
+import org.eclipse.jetty.client.util.BasicAuthentication;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +65,7 @@ public class ForceStreamConsumer {
   private final PartnerConnection connection;
   private final String bayeuxChannel;
   private final String streamingEndpointPath;
+  private final ForceSourceConfigBean conf;
 
   private HttpClient httpClient;
   private BayeuxClient client;
@@ -71,14 +77,14 @@ public class ForceStreamConsumer {
   public ForceStreamConsumer(
       BlockingQueue<Message> messageQueue,
       PartnerConnection connection,
-      String apiVersion,
-      String pushTopic
+      ForceSourceConfigBean conf
   ) {
+    this.conf = conf;
     this.messageQueue = messageQueue;
     this.connection = connection;
-    this.bayeuxChannel = "/topic/" + pushTopic;
-    String streamingEndpointPrefix = apiVersion.equals("36.0") ? "/cometd/replay/" : "/cometd/";
-    this.streamingEndpointPath = streamingEndpointPrefix + apiVersion;
+    this.bayeuxChannel = "/topic/" + conf.pushTopic;
+    String streamingEndpointPrefix = conf.apiVersion.equals("36.0") ? "/cometd/replay/" : "/cometd/";
+    this.streamingEndpointPath = streamingEndpointPrefix + conf.apiVersion;
   }
 
   private boolean isReplayIdExpired(String message) {
@@ -202,6 +208,17 @@ public class ForceStreamConsumer {
     httpClient = new HttpClient(new SslContextFactory());
     httpClient.setConnectTimeout(CONNECTION_TIMEOUT);
     httpClient.setIdleTimeout(READ_TIMEOUT);
+    if (conf.useProxy) {
+      httpClient.getProxyConfiguration().getProxies().add(
+          new HttpProxy(conf.proxyHostname, conf.proxyPort));
+      if (conf.useProxyCredentials) {
+        URI proxyURI = new URI("http", null, conf.proxyHostname,
+            conf.proxyPort, null, null, null);
+        httpClient.getAuthenticationStore().addAuthentication(
+            new BasicAuthentication(proxyURI, conf.proxyRealm,
+                conf.proxyUsername, conf.proxyPassword));
+      }
+    }
     httpClient.start();
 
     final String sessionid = connection.getConfig().getSessionId();
