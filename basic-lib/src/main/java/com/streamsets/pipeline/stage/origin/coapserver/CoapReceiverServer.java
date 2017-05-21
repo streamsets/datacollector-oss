@@ -46,6 +46,9 @@ public class CoapReceiverServer {
   public List<Stage.ConfigIssue> init(Stage.Context context) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     NetworkConfig networkConfig = NetworkConfig.createStandardWithoutFile();
+    networkConfig.set(NetworkConfig.Keys.DEDUPLICATOR, NetworkConfig.Keys.NO_DEDUPLICATOR);
+    networkConfig.set(NetworkConfig.Keys.PROTOCOL_STAGE_THREAD_COUNT, coAPServerConfigs.maxConcurrentRequests);
+    networkConfig.set(NetworkConfig.Keys.NETWORK_STAGE_RECEIVER_THREAD_COUNT, coAPServerConfigs.maxConcurrentRequests);
     if (coAPServerConfigs.networkConfigs != null) {
       for (String key: coAPServerConfigs.networkConfigs.keySet()) {
         networkConfig.set(key, coAPServerConfigs.networkConfigs.get(key));
