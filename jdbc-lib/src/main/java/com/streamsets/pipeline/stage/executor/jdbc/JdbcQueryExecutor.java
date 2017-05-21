@@ -62,22 +62,31 @@ public class JdbcQueryExecutor extends BaseExecutor {
     ELVars variables = getContext().createELVars();
     ELEval eval = getContext().createELEval("query");
 
-    Iterator<Record> it = batch.getRecords();
-    while(it.hasNext()) {
-      Record record = it.next();
-      RecordEL.setRecordInContext(variables, record);
+    try (Connection connection = config.getConnection()) {
+      Iterator<Record> it = batch.getRecords();
+      while (it.hasNext()) {
+        Record record = it.next();
+        RecordEL.setRecordInContext(variables, record);
+        String query = eval.eval(variables, config.query, String.class);
+        LOG.info("Executing query: {}", query);
 
-      String query = eval.eval(variables, config.query, String.class);
-      LOG.info("Executing query: {}", query);
-
-      try(Connection connection = config.getConnection();
-          Statement stmt = connection.createStatement();
-      ) {
-        stmt.execute(query);
-      } catch(SQLException ex) {
-        LOG.error("Can't execute query", ex);
-        errorRecordHandler.onError(new OnRecordErrorException(record, QueryExecErrors.QUERY_EXECUTOR_001, query, ex.getMessage()));
+        try (Statement stmt = connection.createStatement()) {
+          stmt.execute(query);
+        } catch (SQLException ex) {
+          LOG.error("Can't execute query", ex);
+          errorRecordHandler.onError(new OnRecordErrorException(record,
+              QueryExecErrors.QUERY_EXECUTOR_001,
+              query,
+              ex.getMessage()
+          ));
+        }
       }
+      if (config.batchCommit) {
+        connection.commit();
+      }
+    } catch (SQLException ex) {
+      LOG.error("Can't get connection", ex);
+      throw new StageException(QueryExecErrors.QUERY_EXECUTOR_002, ex.getMessage());
     }
   }
 

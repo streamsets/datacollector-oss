@@ -55,6 +55,17 @@ public class JdbcQueryExecutorConfig {
   )
   public String query;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Batch Commit",
+      description = "Whether the executor should commit each batch or not.",
+      defaultValue = "true",
+      displayPosition = 52,
+      group = "ADVANCED"
+  )
+  public boolean batchCommit = true;
+
   private HikariDataSource dataSource = null;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
