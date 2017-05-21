@@ -25,6 +25,7 @@ import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.Record;
@@ -63,7 +64,9 @@ public interface Runner {
   // it must assert the current status
   public void resetOffset(String user) throws PipelineException;
 
-  public Map<String, String> getCommittedOffsets() throws PipelineException;
+  public SourceOffset getCommittedOffsets() throws PipelineException;
+
+  public void updateCommittedOffsets(SourceOffset sourceOffset) throws PipelineException;
 
   // pipeline status
   public PipelineState getState() throws PipelineStoreException;

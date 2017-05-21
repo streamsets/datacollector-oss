@@ -31,6 +31,7 @@ import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
@@ -74,8 +75,13 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public Map<String, String> getCommittedOffsets() throws PipelineException {
+  public SourceOffset getCommittedOffsets() throws PipelineException {
     return runner.getCommittedOffsets();
+  }
+
+  @Override
+  public void updateCommittedOffsets(SourceOffset sourceOffset) throws PipelineException {
+    runner.updateCommittedOffsets(sourceOffset);
   }
 
   @Override

@@ -74,6 +74,7 @@ import com.streamsets.datacollector.runner.UserContext;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.datacollector.runner.production.RulesConfigLoaderRunnable;
+import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.updatechecker.UpdateChecker;
@@ -358,13 +359,16 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     offsetTracker.resetOffset(name, rev);
   }
 
-  public Map<String, String> getCommittedOffsets() throws PipelineException {
+  public SourceOffset getCommittedOffsets() throws PipelineException {
+    return OffsetFileUtil.getOffset(runtimeInfo, name, rev);
+  }
+
+  public void updateCommittedOffsets(SourceOffset sourceOffset) throws PipelineException {
     PipelineStatus status = getState().getStatus();
     if (status.isActive()) {
-      return prodPipeline.getCommittedOffsets();
+      throw new PipelineRunnerException(ContainerError.CONTAINER_0118, name);
     }
-    ProductionSourceOffsetTracker offsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
-    return offsetTracker.getOffsets();
+    OffsetFileUtil.saveSourceOffset(runtimeInfo, name, rev, sourceOffset);
   }
 
   @Override

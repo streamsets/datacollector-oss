@@ -364,7 +364,10 @@ public class ApiClient {
       body = "";
 
     if (contentType.startsWith("application/json")) {
-      return json.deserialize(body, returnType);
+      if (body.length() > 0) {
+        return json.deserialize(body, returnType);
+      }
+      return null;
     } else {
       throw new ApiException(500, "can not deserialize Content-Type: " + contentType);
     }

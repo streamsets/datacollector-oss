@@ -60,6 +60,7 @@ import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.UserContext;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
+import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -306,7 +307,12 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
-  public Map<String, String> getCommittedOffsets() throws PipelineException {
+  public SourceOffset getCommittedOffsets() throws PipelineException {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void updateCommittedOffsets(SourceOffset sourceOffset) throws PipelineException {
     throw new UnsupportedOperationException();
   }
 

@@ -32,6 +32,7 @@ import com.streamsets.datacollector.client.model.RecordJson;
 import com.streamsets.datacollector.client.model.SampledRecordJson;
 import com.streamsets.datacollector.client.model.SnapshotDataJson;
 import com.streamsets.datacollector.client.model.SnapshotInfoJson;
+import com.streamsets.datacollector.client.model.SourceOffsetJson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1209,6 +1210,101 @@ public class ManagerApi {
     return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams,
         accept, contentType, authNames, returnType);
 
+  }
+
+  /**
+   * Return Committed Offsets
+   *
+   * @return SourceOffsetJson
+   */
+  public SourceOffsetJson getCommittedOffsets(String pipelineId, String rev) throws ApiException {
+    Object postBody = null;
+    byte[] postBinaryBody = null;
+
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getCommittedOffsets");
+    }
+
+    // create path and map variables
+    String path = "/v1/pipeline/{pipelineId}/committedOffsets".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, Object> formParams = new HashMap<String, Object>();
+
+    queryParams.addAll(apiClient.parameterToPairs("", "rev", rev));
+
+    final String[] accepts = {
+        "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    String[] authNames = new String[] { "basic" };
+
+    TypeRef returnType = new TypeRef<SourceOffsetJson>() {};
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams,
+        accept, contentType, authNames, returnType);
+  }
+
+  /**
+   * Update Pipeline Committed Offsets.
+   *
+   * @param pipelineName
+   * @param rev
+   * @param sourceOffset
+   */
+  public void updateCommittedOffsets(
+      String pipelineId,
+      String rev,
+      SourceOffsetJson sourceOffset
+  ) throws ApiException {
+    Object postBody = sourceOffset;
+    byte[] postBinaryBody = null;
+
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling updateCommittedOffsets");
+    }
+
+    // verify the required parameter 'pipeline' is set
+    if (sourceOffset == null) {
+      throw new ApiException(400, "Missing the required parameter 'sourceOffset' when calling updateCommittedOffsets");
+    }
+
+    // create path and map variables
+    String path = "/v1/pipeline/{pipelineId}/committedOffsets".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, Object> formParams = new HashMap<String, Object>();
+
+
+    queryParams.addAll(apiClient.parameterToPairs("", "rev", rev));
+
+    final String[] accepts = {
+        "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+        "application/json"
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    String[] authNames = new String[] { "basic" };
+
+    apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, null);
   }
 
 }

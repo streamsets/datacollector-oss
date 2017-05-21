@@ -26,6 +26,7 @@ import com.streamsets.datacollector.client.cli.command.manager.DeleteAlertComman
 import com.streamsets.datacollector.client.cli.command.manager.DeletePipelineHistoryCommand;
 import com.streamsets.datacollector.client.cli.command.manager.ErrorMessagesCommand;
 import com.streamsets.datacollector.client.cli.command.manager.ErrorRecordsCommand;
+import com.streamsets.datacollector.client.cli.command.manager.GetCommittedOffsetsCommand;
 import com.streamsets.datacollector.client.cli.command.manager.PipelineHistoryCommand;
 import com.streamsets.datacollector.client.cli.command.manager.PipelineMetricsCommand;
 import com.streamsets.datacollector.client.cli.command.manager.PipelineStatusCommand;
@@ -38,6 +39,7 @@ import com.streamsets.datacollector.client.cli.command.manager.SnapshotListComma
 import com.streamsets.datacollector.client.cli.command.manager.SnapshotStatusCommand;
 import com.streamsets.datacollector.client.cli.command.manager.StartPipelineCommand;
 import com.streamsets.datacollector.client.cli.command.manager.StopPipelineCommand;
+import com.streamsets.datacollector.client.cli.command.manager.UpdateCommittedOffsetsCommand;
 import com.streamsets.datacollector.client.cli.command.preview.PreviewDataCommand;
 import com.streamsets.datacollector.client.cli.command.preview.PreviewStatusCommand;
 import com.streamsets.datacollector.client.cli.command.preview.RunPreviewCommand;
@@ -121,7 +123,9 @@ public class DataCollector {
             SnapshotDataCommand.class,
             SnapshotDeleteCommand.class,
             PipelineHistoryCommand.class,
-            DeletePipelineHistoryCommand.class
+            DeletePipelineHistoryCommand.class,
+            GetCommittedOffsetsCommand.class,
+            UpdateCommittedOffsetsCommand.class
         );
 
     builder.withGroup("system")

@@ -43,7 +43,11 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   private final RuntimeInfo runtimeInfo;
 
   @Inject
-  public ProductionSourceOffsetTracker( @Named("name") String pipelineName,  @Named("rev") String rev, RuntimeInfo runtimeInfo) {
+  public ProductionSourceOffsetTracker(
+      @Named("name") String pipelineName,
+      @Named("rev") String rev,
+      RuntimeInfo runtimeInfo
+  ) {
     this.pipelineName = pipelineName;
     this.rev = rev;
     this.runtimeInfo = runtimeInfo;

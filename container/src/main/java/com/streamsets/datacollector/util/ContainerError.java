@@ -64,6 +64,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0115("Failed to fetch history for pipeline: '{}', '{}' due to: {}"),
   CONTAINER_0116("Cannot load pipeline '{}:{}' configuration: {}"),
   CONTAINER_0117("Could not determine parallelism: {}"),
+  CONTAINER_0118("Cannot update the source offset when the pipeline is running"),
 
   // PipelineRunners
   CONTAINER_0150("Pipeline configuration error: {}"),

@@ -26,6 +26,7 @@ import com.streamsets.datacollector.execution.runner.common.PipelineRunnerExcept
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.PipelineException;
@@ -65,9 +66,15 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public Map<String, String> getCommittedOffsets() throws PipelineException {
+  public SourceOffset getCommittedOffsets() throws PipelineException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
     return runner.getCommittedOffsets();
+  }
+
+  @Override
+  public void updateCommittedOffsets(SourceOffset sourceOffset) throws PipelineException {
+    aclStore.validateExecutePermission(this.getName(), currentUser);
+    runner.updateCommittedOffsets(sourceOffset);
   }
 
   @Override

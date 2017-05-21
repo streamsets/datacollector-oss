@@ -38,6 +38,7 @@ import com.streamsets.datacollector.restapi.bean.RecordJson;
 import com.streamsets.datacollector.restapi.bean.SampledRecordJson;
 import com.streamsets.datacollector.restapi.bean.SnapshotDataJson;
 import com.streamsets.datacollector.restapi.bean.SnapshotInfoJson;
+import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -407,6 +408,7 @@ public class ManagerResource {
   @Path("/pipeline/{pipelineId}/committedOffsets")
   @GET
   @ApiOperation(value = "Return Committed Offsets. Note: Returned offset format will change between releases.",
+      response = SourceOffsetJson.class,
       authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({
@@ -416,13 +418,39 @@ public class ManagerResource {
       AuthzRole.ADMIN_REMOTE
   })
   public Response getCommittedOffsets(
-      @PathParam("pipelineId") String name,
+      @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") @DefaultValue("0") String rev
   ) throws PipelineException {
-    PipelineInfo pipelineInfo = store.getInfo(name);
+    PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    Runner runner = manager.getRunner(name, rev);
-    return Response.ok(runner.getCommittedOffsets()).build();
+    Runner runner = manager.getRunner(pipelineId, rev);
+    return Response.ok()
+        .type(MediaType.APPLICATION_JSON)
+        .entity(BeanHelper.wrapSourceOffset(runner.getCommittedOffsets()))
+        .build();
+  }
+
+  @Path("/pipeline/{pipelineId}/committedOffsets")
+  @POST
+  @ApiOperation(value = "Update Pipeline Committed Offsets.",
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
+  public Response updateCommittedOffsets(
+      @PathParam("pipelineId") String pipelineId,
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      SourceOffsetJson sourceOffset
+  ) throws PipelineException {
+    PipelineInfo pipelineInfo = store.getInfo(pipelineId);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
+    Runner runner = manager.getRunner(pipelineId, rev);
+    runner.updateCommittedOffsets(BeanHelper.unwrapSourceOffset(sourceOffset));
+    return Response.ok().build();
   }
 
   @Path("/pipeline/{pipelineId}/resetOffset")

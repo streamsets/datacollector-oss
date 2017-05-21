@@ -37,6 +37,7 @@ import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
@@ -85,7 +86,12 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public Map<String, String> getCommittedOffsets() throws PipelineException {
+  public SourceOffset getCommittedOffsets() throws PipelineException {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void updateCommittedOffsets(SourceOffset sourceOffset) throws PipelineException {
     throw new UnsupportedOperationException();
   }
 

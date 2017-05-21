@@ -106,12 +106,12 @@ public class OffsetFileUtil {
   }
 
   public static Map<String, String> getOffsets(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
-    SourceOffset sourceOffset = getOffsetInternal(runtimeInfo, pipelineName, rev);
+    SourceOffset sourceOffset = getOffset(runtimeInfo, pipelineName, rev);
     return sourceOffset == null ? DEFAULT_OFFSET : sourceOffset.getOffsets();
   }
 
   public static String getSourceOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
-    SourceOffset sourceOffset = getOffsetInternal(runtimeInfo, pipelineName, rev);
+    SourceOffset sourceOffset = getOffset(runtimeInfo, pipelineName, rev);
     try {
       return ObjectMapperFactory.get().writeValueAsString(new SourceOffsetJson(sourceOffset));
     } catch (JsonProcessingException e) {
@@ -119,7 +119,7 @@ public class OffsetFileUtil {
     }
   }
 
-  private static SourceOffset getOffsetInternal(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
+  public static SourceOffset getOffset(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
     int retries = 0;
     while (retries < MAX_RETRIES) {
       try {
