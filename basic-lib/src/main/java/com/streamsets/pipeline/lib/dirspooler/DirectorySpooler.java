@@ -713,19 +713,27 @@ public class DirectorySpooler {
       for (Path p : toProcess) {
         switch (postProcessing) {
           case DELETE:
-            if(fileMatcher.matches(p.getFileName()) && Files.exists(p)) {
-              Files.delete(p);
-              LOG.debug("Deleting old file '{}'", p);
+            if (fileMatcher.matches(p.getFileName())) {
+              if (Files.exists(p)) {
+                Files.delete(p);
+                LOG.debug("Deleting old file '{}'", p);
+              } else {
+                LOG.debug("The old file '{}' does not exist", p);
+              }
             } else {
-              LOG.debug("failed to delete old file '{}'", p);
+              LOG.debug("Ignoring old file '{}' that do not match the file name pattern '{}'", p, pattern);
             }
             break;
           case ARCHIVE:
-            if(fileMatcher.matches(p.getFileName()) && Files.exists(p)) {
-              moveIt(p, archiveDirPath);
-              LOG.debug("Archiving old file '{}'", p);
+            if (fileMatcher.matches(p.getFileName())) {
+              if (Files.exists(p)) {
+                moveIt(p, archiveDirPath);
+                LOG.debug("Archiving old file '{}'", p);
+              } else {
+                LOG.debug("The old file '{}' does not exist", p);
+              }
             } else {
-              LOG.debug("failed to archive old file '{}'", p);
+              LOG.debug("Ignoring old file '{}' that do not match the file name pattern '{}'", p, pattern);
             }
             break;
           case NONE:
