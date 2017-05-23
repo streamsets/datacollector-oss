@@ -70,15 +70,12 @@ public abstract class TlsConfigBeanUpgraderTestUtil {
     boolean tlsEnabledSeen = false;
     for (Config config : configs) {
       final String name = config.getName();
-      if ((confPrefix+"tlsConfig.hasKeyStore").equals(name)) {
-        Assert.assertEquals(!Strings.isNullOrEmpty(keyStoreFile), config.getValue());
-      } else if ((confPrefix+"tlsConfig.hasTrustStore").equals(name)) {
-        Assert.assertEquals(!Strings.isNullOrEmpty(trustStoreFile), config.getValue());
-      } else if ((confPrefix+"tlsConfig.tlsEnabled").equals(name)) {
+      if ((confPrefix+"tlsConfig.tlsEnabled").equals(name)) {
         tlsEnabledSeen = true;
       }
     }
     Assert.assertTrue("tlsEnabled property not seen in tlsConfig bean", tlsEnabledSeen);
+    ensureNoHasStoreProperties(configs, confPrefix + "tlsConfig");
   }
 
   public static void testRawKeyStoreConfigsToTlsConfigBeanUpgrade(
@@ -124,5 +121,13 @@ public abstract class TlsConfigBeanUpgraderTestUtil {
         oldKeyStoreFile, String.format("%stlsConfigBean.%sStoreFilePath", configPrefix, storeType),
         oldKeyStorePW, String.format("%stlsConfigBean.%sStorePassword", configPrefix, storeType)
     );
+
+    ensureNoHasStoreProperties(configs, configPrefix + "tlsConfigBean");
+  }
+
+  private static void ensureNoHasStoreProperties(List<Config> configs, String configPrefix) {
+    String hasKeyStoreProperty = String.format("%s.hasKeyStore", configPrefix);
+    String hasTrustStoreProperty = String.format("%s.hasTrustStore", configPrefix);
+    UpgraderTestUtils.assertNoneExist(configs, hasKeyStoreProperty, hasTrustStoreProperty);
   }
 }

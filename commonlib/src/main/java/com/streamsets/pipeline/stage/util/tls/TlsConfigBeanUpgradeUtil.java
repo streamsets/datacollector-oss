@@ -50,8 +50,6 @@ public class TlsConfigBeanUpgradeUtil {
       }
     }
 
-    configs.add(new Config(configPrefix + "tlsConfig.hasTrustStore", hasTrustStore));
-    configs.add(new Config(configPrefix + "tlsConfig.hasKeyStore", hasKeyStore));
     configs.add(new Config(configPrefix + "tlsConfig.tlsEnabled", hasTrustStore || hasKeyStore));
   }
 
@@ -108,23 +106,11 @@ public class TlsConfigBeanUpgradeUtil {
         configs,
         configPrefix + oldSslEnabledProperty, newTlsEnabled,
         configPrefix + storePathProperty, newStorePath,
-        configPrefix + storePasswordProperty, String.format("%stlsConfigBean.%sStorePassword",
-            configPrefix, storeType)
+        configPrefix + storePasswordProperty, String.format(
+            "%stlsConfigBean.%sStorePassword",
+            configPrefix,
+            storeType
+        )
     );
-
-    boolean hasStore = false;
-
-    for (Config config : configs) {
-      if (newStorePath.equals(config.getName())) {
-        hasStore = !Strings.isNullOrEmpty((String) config.getValue());
-        break;
-      }
-    }
-
-    configs.add(new Config(String.format(
-        "%stlsConfigBean.has%sStore",
-        configPrefix,
-        StringUtils.capitalize(storeType)
-    ), hasStore));
   }
 }
