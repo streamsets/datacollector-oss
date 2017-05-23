@@ -19,11 +19,11 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +50,10 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
 
   private final String connectionString;
   private final DataSource dataSource;
+  private final String schema;
   private final String tableName;
   private final boolean rollbackOnError;
+  private final boolean caseSensitive;
 
   private Map<String, String> columnsToFields = new HashMap<>();
   private Map<String, String> columnsToParameters = new HashMap<>();
@@ -71,36 +73,57 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   public JdbcBaseRecordWriter(
       String connectionString,
       DataSource dataSource,
-      String tableName,
-      boolean rollbackOnError,
-      List<JdbcFieldColumnParamMapping> customMappings,
-      JDBCOperationType defaultOp,
-      UnsupportedOperationAction unsupportedAction,
-      JdbcRecordReader recordReader
-  ) throws StageException {
-    this(connectionString, dataSource, tableName, rollbackOnError, customMappings, defaultOp, unsupportedAction, recordReader, null);
-  }
-
-  public JdbcBaseRecordWriter(
-      String connectionString,
-      DataSource dataSource,
+      String schema,
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
       JDBCOperationType defaultOp,
       UnsupportedOperationAction unsupportedAction,
       JdbcRecordReader recordReader,
-      List<JdbcFieldColumnMapping> generatedColumnMappings
+      boolean caseSensitive
+  ) throws StageException {
+    this(connectionString, dataSource, schema, tableName, rollbackOnError, customMappings, defaultOp, unsupportedAction, recordReader, null, caseSensitive);
+  }
+
+  public JdbcBaseRecordWriter(
+      String connectionString,
+      DataSource dataSource,
+      String schema,
+      String tableName,
+      boolean rollbackOnError,
+      List<JdbcFieldColumnParamMapping> customMappings,
+      JDBCOperationType defaultOp,
+      UnsupportedOperationAction unsupportedAction,
+      JdbcRecordReader recordReader,
+      List<JdbcFieldColumnMapping> generatedColumnMappings,
+      boolean caseSensitive
   ) throws StageException {
     this.connectionString = connectionString;
     this.dataSource = dataSource;
-    this.tableName = tableName;
+
+
+    if (Strings.isNullOrEmpty(schema) && tableName.contains(".") && !caseSensitive) {
+      // Need to split this into the schema and table parts for column metadata to be retrieved.
+      LOG.warn("Schema in the tableName is no longer supported. Schema should defined in Schema configuration: {}", tableName);
+
+      String[] parts = tableName.split("\\.");
+      if (parts.length != 2) {
+        throw new StageException(JdbcErrors.JDBC_16, tableName);
+      }
+
+      this.schema = parts[0];
+      this.tableName = tableName;
+    } else {
+      this.schema = schema;
+      this.tableName = tableName;
+    }
     this.rollbackOnError = rollbackOnError;
     this.customMappings = customMappings;
     this.defaultOp = defaultOp;
     this.unsupportedAction = unsupportedAction;
     this.recordReader = recordReader;
     this.generatedColumnMappings = generatedColumnMappings;
+    this.caseSensitive = caseSensitive;
 
     createDefaultFieldMappings();
     createCustomFieldMappings();
@@ -121,7 +144,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
     Connection connection = null;
     try {
       connection = dataSource.getConnection();
-      primaryKeyColumns = JdbcUtil.getPrimaryKeys(connection, tableName);
+      primaryKeyColumns = JdbcUtil.getPrimaryKeys(connection, schema, tableName);
     } catch (SQLException e) {
       String formattedError = JdbcUtil.formatSqlException(e);
       LOG.error(formattedError, e);
@@ -150,8 +173,13 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    */
   private void createDefaultFieldMappings() throws StageException {
     try (Connection connection = dataSource.getConnection()) {
-      String tableNameTemp = tableName.replace("\"", "");
-      try (ResultSet columns = JdbcUtil.getColumnMetadata(connection, tableNameTemp)) {
+      try (ResultSet res = JdbcUtil.getTableMetadata(connection, schema, tableName, caseSensitive)) {
+        if (!res.next()) {
+          throw new StageException(JdbcErrors.JDBC_16, getTableName());
+        }
+      }
+
+      try (ResultSet columns = JdbcUtil.getColumnMetadata(connection, schema, tableName)) {
         while (columns.next()) {
           String columnName = columns.getString(COLUMN_NAME);
           columnsToFields.put(columnName, "/" + columnName); // Default implicit field mappings
@@ -237,6 +265,18 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    * @return table name
    */
   protected String getTableName() {
+    if (schema != null & !schema.isEmpty()) {
+      if (caseSensitive) {
+        return "\"" + schema + "\"." + "\"" + tableName + "\"";
+      } else {
+        return schema + "." + tableName;
+      }
+    }
+
+    if (caseSensitive) {
+      return "\"" + tableName + "\"";
+    }
+
     return tableName;
   }
 

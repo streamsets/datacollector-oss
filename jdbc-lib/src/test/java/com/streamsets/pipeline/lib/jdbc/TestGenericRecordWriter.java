@@ -115,7 +115,8 @@ public class TestGenericRecordWriter {
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false, //rollback set to false
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
@@ -162,7 +163,8 @@ public class TestGenericRecordWriter {
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
@@ -210,7 +212,8 @@ public class TestGenericRecordWriter {
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false, //rollback false
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
@@ -259,7 +262,8 @@ public class TestGenericRecordWriter {
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
-        "TEST.COMPOSITE_KEY",
+        "TEST",
+        "COMPOSITE_KEY",
         false,
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
@@ -310,7 +314,8 @@ public class TestGenericRecordWriter {
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
-        "TEST.COMPOSITE_KEY",
+        "TEST",
+        "COMPOSITE_KEY",
         false,
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
@@ -346,7 +351,8 @@ public class TestGenericRecordWriter {
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false, //rollback
         columnMapping,
         PreparedStatementCache.UNLIMITED_CACHE,

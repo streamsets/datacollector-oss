@@ -102,7 +102,8 @@ public class TestJDBCBaseRecordWriter {
     JdbcBaseRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
@@ -128,7 +129,8 @@ public class TestJDBCBaseRecordWriter {
     JdbcBaseRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
-        "TEST.COMPOSITE_KEY",
+        "TEST",
+        "COMPOSITE_KEY",
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
         PreparedStatementCache.UNLIMITED_CACHE,
@@ -166,7 +168,8 @@ public class TestJDBCBaseRecordWriter {
     JdbcGenericRecordWriter writer = new JdbcGenericRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false, //rollback
         columnMapping,
         PreparedStatementCache.UNLIMITED_CACHE,

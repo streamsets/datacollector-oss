@@ -58,7 +58,7 @@ public final class TableContextUtil {
 
   private static Map<String, Integer> getColumnNameType(Connection connection, String schema, String tableName) throws SQLException {
     Map<String, Integer> columnNameToType = new LinkedHashMap<>();
-    try (ResultSet rs = JdbcUtil.getColumnMetadata(connection, tableName)) {
+    try (ResultSet rs = JdbcUtil.getColumnMetadata(connection, schema, tableName)) {
       while (rs.next()) {
         String column = rs.getString(COLUMN_METADATA_COLUMN_NAME);
         int type = rs.getInt(COLUMN_METADATA_COLUMN_TYPE);
@@ -117,7 +117,7 @@ public final class TableContextUtil {
   ) throws SQLException, StageException {
     LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
     //Even though we are using this only find partition column's type, we could cache it if need arises.
-    Map<String, Integer> columnNameToType = getColumnNameType(connection, schemaName, getQualifiedTableName(schemaName, tableName));
+    Map<String, Integer> columnNameToType = getColumnNameType(connection, schemaName, tableName);
     Map<String, String> offsetColumnToStartOffset = new HashMap<>();
 
     if (tableConfigBean.overrideDefaultOffsetColumns) {
@@ -131,7 +131,7 @@ public final class TableContextUtil {
         offsetColumnToType.put(overridenPartitionColumn, columnNameToType.get(overridenPartitionColumn));
       }
     } else {
-      List<String> primaryKeys = JdbcUtil.getPrimaryKeys(connection, getQualifiedTableName(schemaName, tableName));
+      List<String> primaryKeys = JdbcUtil.getPrimaryKeys(connection, schemaName, tableName);
       if (primaryKeys.isEmpty()) {
         throw new StageException(JdbcErrors.JDBC_62, tableName);
       }

@@ -116,7 +116,8 @@ public class TestJdbcMultiRowRecordWriter {
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false,
         mappings,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -144,7 +145,8 @@ public class TestJdbcMultiRowRecordWriter {
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false,
         mappings,
         8,
@@ -176,7 +178,8 @@ public class TestJdbcMultiRowRecordWriter {
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false,
         mappings,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -206,7 +209,8 @@ public class TestJdbcMultiRowRecordWriter {
     JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false,
         mappings,
         JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
@@ -241,7 +245,8 @@ public class TestJdbcMultiRowRecordWriter {
     JdbcMultiRowRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
         dataSource,
-        "TEST.TEST_TABLE",
+        "TEST",
+        "TEST_TABLE",
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
         15,
@@ -300,7 +305,8 @@ public class TestJdbcMultiRowRecordWriter {
     JdbcMultiRowRecordWriter writer = new JdbcMultiRowRecordWriter(
         connectionString,
         dataSource,
-        "\"TEST\".\"TEST_TABLE\"",
+        "TEST",
+        "TEST_TABLE",
         false, //rollback
         new LinkedList<JdbcFieldColumnParamMapping>(),
         15,
