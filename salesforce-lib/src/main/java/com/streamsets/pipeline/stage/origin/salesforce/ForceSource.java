@@ -386,12 +386,17 @@ public class ForceSource extends BaseSource {
     }
 
     // We started the job already, see if the results are ready
-    if (queryResultList == null && job != null) {
+    // Loop here so that we can wait for results in preview mode and not return an empty batch
+    // Preview will cut us off anyway if we wait too long
+    while (queryResultList == null && job != null) {
       // Poll for results
       try {
         LOG.info("Waiting {} milliseconds for batch {}", conf.basicConfig.maxWaitTime, batch.getId());
         Thread.sleep(conf.basicConfig.maxWaitTime);
-      } catch (InterruptedException e) {}
+      } catch (InterruptedException e) {
+        LOG.debug("Interrupted while sleeping");
+        Thread.currentThread().interrupt();
+      }
       try {
         BatchInfo info = bulkConnection.getBatchInfo(job.getId(), batch.getId());
         if (info.getState() == BatchStateEnum.Completed) {
@@ -402,14 +407,13 @@ public class ForceSource extends BaseSource {
         } else if (info.getState() == BatchStateEnum.Failed) {
           LOG.info("Batch {} failed: {}", batch.getId(), info.getStateMessage());
           throw new StageException(Errors.FORCE_03, info.getStateMessage());
-        } else {
+        } else if (!getContext().isPreview()) { // If we're in preview, then don't return an empty batch!
           LOG.info("Batch {} in progress", batch.getId());
           return nextSourceOffset;
         }
       } catch (AsyncApiException e) {
         throw new StageException(Errors.FORCE_02, e);
       }
-
     }
 
     if (rdr == null && queryResultList != null) {
@@ -487,7 +491,32 @@ public class ForceSource extends BaseSource {
             LinkedHashMap<String, Field> map = new LinkedHashMap<>();
             for (int i = 0; i < resultHeader.size(); i++) {
               String fieldName = resultHeader.get(i);
-              com.sforce.soap.partner.Field sfdcField = metadataMap.get(sobjectType).get(fieldName.toLowerCase());
+
+              // Walk the dotted list of subfields
+              String[] parts = fieldName.split("\\.");
+
+              // Process any chain of relationships
+              String parent = sobjectType;
+              for (int j = 0; j < parts.length - 1; j++) {
+                com.sforce.soap.partner.Field sfdcField = null;
+                Map<String, com.sforce.soap.partner.Field> fieldMap = metadataMap.get(parent);
+
+                // Metadata map is indexed by field name, but it's the relationship name in the data
+                for (Map.Entry<String, com.sforce.soap.partner.Field> entry : fieldMap.entrySet()) {
+                  if (entry.getValue().getRelationshipName() != null) {
+                    if (entry.getValue().getRelationshipName().equalsIgnoreCase(parts[j])) {
+                      sfdcField = entry.getValue();
+                      break;
+                    }
+                  }
+                }
+
+                parent = sfdcField.getReferenceTo()[0].toLowerCase();
+              }
+
+              // Now process the actual field itself
+              com.sforce.soap.partner.Field sfdcField = metadataMap.get(parent).get(parts[parts.length - 1].toLowerCase());
+
               Field field = ForceUtils.createField(row.get(i), sfdcField);
               if (conf.createSalesforceNsHeaders) {
                 ForceUtils.setHeadersOnField(field, metadataMap.get(sobjectType).get(fieldName.toLowerCase()), conf.salesforceNsHeaderPrefix);
