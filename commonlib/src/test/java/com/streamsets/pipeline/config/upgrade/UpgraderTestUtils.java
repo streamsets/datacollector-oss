@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Config;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -119,6 +120,25 @@ public class UpgraderTestUtils {
         i+=2;
       }
       assertAllMoved(configs, nameMap);
+    }
+  }
+
+  /**
+   * Ensures that none of the passed propertyNames exist in the configs.  Causes assertion error if any do.
+   *
+   * @param configs the list of configs
+   * @param propertyNames property names to check
+   */
+  public static void assertNoneExist(List<Config> configs, String... propertyNames) {
+    Set<String> allPropertyNames = new HashSet<>(Arrays.asList(propertyNames));
+    for (Config config : configs) {
+      if (allPropertyNames.contains(config.getName())) {
+        Assert.fail(String.format(
+            "Property name %s was contained in configs (with value %s) but should not have been",
+            config.getName(),
+            config.getValue().toString()
+        ));
+      }
     }
   }
 
