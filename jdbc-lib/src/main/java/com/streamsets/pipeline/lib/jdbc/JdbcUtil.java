@@ -24,6 +24,7 @@ import com.google.common.base.Strings;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -184,20 +185,9 @@ public class JdbcUtil {
    *
    * @throws SQLException
    */
-  public static ResultSet getColumnMetadata(Connection connection, String tableName) throws SQLException {
-    String table = tableName;
-    String schema = null;
+  public static ResultSet getColumnMetadata(Connection connection, String schema, String tableName) throws SQLException {
     DatabaseMetaData metadata = connection.getMetaData();
-    if (tableName.contains(".")) {
-      // Need to split this into the schema and table parts for column metadata to be retrieved.
-      String[] parts = tableName.split("\\.");
-      if (parts.length != 2) {
-        throw new IllegalArgumentException();
-      }
-      schema = parts[0];
-      table = parts[1];
-    }
-    return metadata.getColumns(null, schema, table, null); // Get all columns for this table
+    return metadata.getColumns(null, schema, tableName, null); // Get all columns for this table
   }
 
   /**
@@ -237,17 +227,6 @@ public class JdbcUtil {
   public static ResultSet getTableMetadata(Connection connection, String schema, String tableName, boolean caseSensitive) throws SQLException {
     String table = tableName;
     DatabaseMetaData metadata = connection.getMetaData();
-    if (Strings.isNullOrEmpty(schema) && tableName.contains(".") && !caseSensitive) {
-      // Need to split this into the schema and table parts for column metadata to be retrieved.
-      LOG.warn("Schema in the tableName is no longer supported. Schema should defined in Schema configuration: {}", tableName);
-
-      String[] parts = tableName.split("\\.");
-      if (parts.length != 2) {
-        throw new IllegalArgumentException();
-      }
-      schema = parts[0];
-      table = parts[1];
-    }
     return metadata.getTables(null, schema, table, new String[]{"TABLE"});
   }
 
@@ -260,21 +239,9 @@ public class JdbcUtil {
    *
    * @throws SQLException
    */
-  public static List<String> getPrimaryKeys(Connection connection, String tableName) throws SQLException {
+  public static List<String> getPrimaryKeys(Connection connection, String schema, String tableName) throws SQLException {
     String table = tableName;
-    String schema = null;
     DatabaseMetaData metadata = connection.getMetaData();
-    tableName = tableName.replace("\"", "");
-    if (tableName.contains(".")) {
-      // Need to split this into the schema and table parts for column metadata to be retrieved.
-      String[] parts = tableName.split("\\.");
-      if (parts.length != 2) {
-        throw new IllegalArgumentException();
-      }
-      schema = parts[0];
-      table = parts[1];
-    }
-
     List<String> keys = new ArrayList<>();
     ResultSet result = metadata.getPrimaryKeys(null, schema, table);
     while (result.next()) {
@@ -603,7 +570,7 @@ public class JdbcUtil {
         if (!res.next()) {
           issues.add(context.createConfigIssue(Groups.JDBC.name(), TABLE_NAME, JdbcErrors.JDBC_16, tableNameTemplate));
         } else {
-          try(ResultSet columns = JdbcUtil.getColumnMetadata(connection, tableNameTemplate)) {
+          try(ResultSet columns = JdbcUtil.getColumnMetadata(connection, schema, tableNameTemplate)) {
             Set<String> columnNames = new HashSet<>();
             while (columns.next()) {
               columnNames.add(columns.getString(4));
@@ -673,23 +640,21 @@ public class JdbcUtil {
     );
     Set<String> tableNames = partitions.keySet();
     for (String tableName : tableNames) {
-      String tableNameWithSchema = new String(tableName);
-
-      if (!Strings.isNullOrEmpty(schema)) {
-        if (caseSensitive) {
-          tableNameWithSchema = schema + "\".\"" + tableNameWithSchema;
-        } else {
-          tableNameWithSchema = schema + "." + tableNameWithSchema;
+      try {
+        JdbcRecordWriter jdbcRecordWriter = recordWriters.getUnchecked(tableName);
+        List<OnRecordErrorException> errors = jdbcRecordWriter.writeBatch(partitions.get(tableName));
+        for (OnRecordErrorException error : errors) {
+          errorRecordHandler.onError(error);
         }
-      }
-
-      if (caseSensitive) {
-        tableNameWithSchema = "\"" + tableNameWithSchema + "\"";
-      }
-
-      List<OnRecordErrorException> errors = recordWriters.getUnchecked(tableNameWithSchema).writeBatch(partitions.get(tableName));
-      for (OnRecordErrorException error : errors) {
-        errorRecordHandler.onError(error);
+      } catch (UncheckedExecutionException ex) {
+        Throwable throwable = ex.getCause();
+        if (throwable instanceof StageException) {
+          if (((StageException) ex.getCause()).getErrorCode() == JdbcErrors.JDBC_16) {
+            for (Record record : partitions.get(tableName)) {
+              errorRecordHandler.onError(new OnRecordErrorException(record, ((StageException) throwable).getErrorCode(), tableName, ex.getCause()));
+            }
+          }
+        }
       }
     }
   }

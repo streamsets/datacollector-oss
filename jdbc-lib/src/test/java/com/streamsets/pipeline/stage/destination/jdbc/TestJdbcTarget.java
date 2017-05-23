@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.jdbc.*;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import junit.framework.Assert;
 import org.joda.time.Instant;
 import org.junit.After;
 import org.junit.Before;
@@ -882,6 +883,55 @@ public class TestJdbcTarget {
       assertEquals(null, rs.getTimestamp(4));
       assertFalse(rs.next());
     }
+  }
+
+  @Test
+  public void testInvalidTableNameFromRecord() throws Exception {
+    List<JdbcFieldColumnParamMapping> fieldMappings = ImmutableList.of(
+        new JdbcFieldColumnParamMapping("[0]", "P_ID"),
+        new JdbcFieldColumnParamMapping("[1]", "T"),
+        new JdbcFieldColumnParamMapping("[2]", "D"),
+        new JdbcFieldColumnParamMapping("[3]", "DT")
+    );
+
+    Target target = new JdbcTarget(
+        schema,
+        "${record:attribute('tableName')}",
+        fieldMappings,
+        caseSensitive,
+        false,
+        false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        PreparedStatementCache.UNLIMITED_CACHE,
+        ChangeLogFormat.NONE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    Record record1 = RecordCreator.create();
+    List<Field> fields1 = new ArrayList<>();
+    fields1.add(Field.create(2));
+    fields1.add(Field.createTime(null));
+    fields1.add(Field.createDate(null));
+    fields1.add(Field.createDatetime(null));
+    record1.set(Field.create(fields1));
+    record1.getHeader().setAttribute("tableName", "FalseTableName");
+
+    List<Record> records = ImmutableList.of(record1);
+    targetRunner.runInit();
+    try {
+      targetRunner.runWrite(records);
+    } catch (StageException ex) {
+      Assert.fail();
+    }
+
+    assertEquals(1, targetRunner.getErrorRecords().size());
+    assertEquals(JdbcErrors.JDBC_16.getCode(), targetRunner.getErrorRecords().get(0).getHeader().getErrorCode());
+    targetRunner.runDestroy();
   }
 
 }

@@ -61,6 +61,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   public JdbcGenericRecordWriter(
       String connectionString,
       DataSource dataSource,
+      String schema,
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
@@ -70,8 +71,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       JdbcRecordReader recordReader,
       boolean caseSensitive
   ) throws StageException {
-    super(connectionString, dataSource, tableName, rollbackOnError,
-        customMappings, defaultOp, unsupportedAction, recordReader, null);
+    super(connectionString, dataSource, schema, tableName, rollbackOnError,
+        customMappings, defaultOp, unsupportedAction, recordReader, null, caseSensitive);
     this.maxPrepStmtCache = maxStmtCache;
     this.caseSensitive = caseSensitive;
   }
@@ -92,6 +93,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   public JdbcGenericRecordWriter(
       String connectionString,
       DataSource dataSource,
+      String schema,
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
@@ -102,8 +104,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       JdbcRecordReader recordReader,
       boolean caseSensitive
   ) throws StageException {
-    super(connectionString, dataSource, tableName, rollbackOnError,
-        customMappings, defaultOp, unsupportedAction, recordReader, generatedColumnMappings);
+    super(connectionString, dataSource, schema, tableName, rollbackOnError,
+        customMappings, defaultOp, unsupportedAction, recordReader, generatedColumnMappings, caseSensitive);
     this.maxPrepStmtCache = maxStmtCache;
     this.caseSensitive = caseSensitive;
   }

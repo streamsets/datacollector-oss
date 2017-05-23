@@ -33,6 +33,7 @@ public final class JdbcRecordReaderWriterFactory {
   public static JdbcRecordWriter createJdbcRecordWriter(
       String connectionString,
       HikariDataSource dataSource,
+      String schema,
       String tableName,
       List<JdbcFieldColumnParamMapping> customMappings,
       boolean rollbackOnError,
@@ -48,6 +49,7 @@ public final class JdbcRecordReaderWriterFactory {
     return createJdbcRecordWriter(
         connectionString,
         dataSource,
+        schema,
         tableName,
         customMappings,
         null,
@@ -66,6 +68,7 @@ public final class JdbcRecordReaderWriterFactory {
   public static JdbcRecordWriter createJdbcRecordWriter(
        String connectionString,
        HikariDataSource dataSource,
+       String schema,
        String tableName,
        List<JdbcFieldColumnParamMapping> customMappings,
        List<JdbcFieldColumnMapping> generatedColumnMappings,
@@ -85,6 +88,7 @@ public final class JdbcRecordReaderWriterFactory {
       recordWriter = new JdbcMultiRowRecordWriter(
           connectionString,
           dataSource,
+          schema,
           tableName,
           rollbackOnError,
           customMappings,
@@ -99,6 +103,7 @@ public final class JdbcRecordReaderWriterFactory {
       recordWriter = new JdbcGenericRecordWriter(
           connectionString,
           dataSource,
+          schema,
           tableName,
           rollbackOnError,
           customMappings,

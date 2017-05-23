@@ -85,6 +85,7 @@ public class JdbcTarget extends BaseTarget {
       return JdbcRecordReaderWriterFactory.createJdbcRecordWriter(
           hikariConfigBean.connectionString,
           dataSource,
+          schema,
           tableName,
           customMappings,
           rollbackOnError,

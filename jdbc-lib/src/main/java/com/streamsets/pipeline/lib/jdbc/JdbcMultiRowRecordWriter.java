@@ -77,6 +77,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
   public JdbcMultiRowRecordWriter(
       String connectionString,
       DataSource dataSource,
+      String schema,
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
@@ -86,7 +87,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       JdbcRecordReader recordReader,
       boolean caseSensitive
   ) throws StageException {
-    super(connectionString, dataSource, tableName, rollbackOnError, customMappings, defaultOp, unsupportedAction, recordReader);
+    super(connectionString, dataSource, schema, tableName, rollbackOnError, customMappings, defaultOp, unsupportedAction, recordReader, caseSensitive);
     this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
         maxPrepStmtParameters;
     this.caseSensitive = caseSensitive;
@@ -108,6 +109,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
   public JdbcMultiRowRecordWriter(
       String connectionString,
       DataSource dataSource,
+      String schema,
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldColumnParamMapping> customMappings,
@@ -118,8 +120,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       JdbcRecordReader recordReader,
       boolean caseSensitive
   ) throws StageException {
-    super(connectionString, dataSource, tableName, rollbackOnError, customMappings,
-        defaultOp, unsupportedAction, recordReader, generatedColumnMappings);
+    super(connectionString, dataSource, schema, tableName, rollbackOnError, customMappings,
+        defaultOp, unsupportedAction, recordReader, generatedColumnMappings, caseSensitive);
     this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
         maxPrepStmtParameters;
     this.caseSensitive = caseSensitive;

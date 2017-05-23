@@ -128,6 +128,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
       return JdbcRecordReaderWriterFactory.createJdbcRecordWriter(
           hikariConfigBean.connectionString,
           dataSource,
+          schema,
           tableName,
           customMappings,
           generatedColumnMappings,
