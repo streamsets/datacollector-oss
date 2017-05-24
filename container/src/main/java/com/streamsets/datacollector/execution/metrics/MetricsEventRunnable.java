@@ -288,7 +288,8 @@ public class MetricsEventRunnable implements Runnable {
   private void initializeDPMMetricsVariables() {
     try {
       PipelineState state = pipelineStateStore.getState(name, rev);
-      if (isDPMPipeline = isRemotePipeline(state) && isWriteStatsToDPMDirectlyEnabled()) {
+      isDPMPipeline = isRemotePipeline(state);
+      if (isDPMPipeline && isWriteStatsToDPMDirectlyEnabled()) {
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get()
             .create(pipelineConfiguration, new ArrayList<>());
         for (String key : pipelineConfigBean.constants.keySet()) {
