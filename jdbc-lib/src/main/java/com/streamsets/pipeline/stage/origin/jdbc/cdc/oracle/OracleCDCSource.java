@@ -696,8 +696,7 @@ public class OracleCDCSource extends BaseSource {
         connection.setAutoCommit(false);
       } catch (StageException | SQLException e) {
         LOG.error("Error while connecting to DB", e);
-        issues.add(getContext().createConfigIssue(
-            Groups.CREDENTIALS.name(), USERNAME, JDBC_00, configBean.baseConfigBean.database));
+        issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), CONNECTION_STR, JDBC_00, e.toString()));
         return issues;
       }
     }
