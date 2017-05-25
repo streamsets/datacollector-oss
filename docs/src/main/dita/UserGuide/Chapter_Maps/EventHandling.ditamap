@@ -38,6 +38,7 @@
         <topicref href="../Event_Handling/CaseStudy-FileManagement.dita" >
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
         <topicref href="../Event_Handling/CaseStudy-StopPipeline.dita"> <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+        <topicref href="../Event_Handling/CaseStudy-SendEmail.dita"/>
         <topicref href="../Event_Handling/CaseStudy-EventStorage.dita">
         <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
         <topicref href="../Event_Handling/DataPreview_Monitor.dita">

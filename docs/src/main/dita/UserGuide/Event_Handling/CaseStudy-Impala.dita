@@ -16,8 +16,9 @@
 <concept id="concept_szz_xwm_lx">
     <title>Case Study: Impala Metadata Updates for DDS for Hive</title>
     <conbody>
-        <p><indexterm>event framework case studies<indexterm>Drift Synchronization Solution for Hive
-                    with Impala</indexterm></indexterm>You love the <xref
+        <p><indexterm>dataflow trigger case study<indexterm>Drift Synchronization Solution for Hive
+                    with Impala</indexterm></indexterm><indexterm>Hive Query executor<indexterm>case
+                    study</indexterm></indexterm>You love the <xref
                 href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w">Drift
                 Synchronization Solution for Hive</xref> because it automatically updates the Hive
             metastore when needed. But if you've been using it with Impala, you've been trying to

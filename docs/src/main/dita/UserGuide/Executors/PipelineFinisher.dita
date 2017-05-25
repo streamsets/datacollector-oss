@@ -19,10 +19,11 @@
   <p><indexterm>Pipeline Finisher
                     executor<indexterm>overview</indexterm></indexterm><indexterm>executors<indexterm>Pipeline
                     Finisher</indexterm></indexterm>When it receives an event, the Pipeline Finisher
-            executor stops a pipeline and transitions it to a Finished state. </p>
-        <p>Use the Pipeline Finisher as part of an event stream. You should generally trigger the
-            executor with no-more-data events from the JDBC Query Consumer, JDBC Multitable
-            Consumer, and Salesforce origins. </p>
+            executor stops a pipeline and transitions it to a Finished state. This allows the
+            pipeline to complete all expected processing before stopping.</p>
+        <p>Use the Pipeline Finisher as part of an event stream. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/PipeFinish-Use"
+            /></p>
         <p>For example, you might use the executor in a pipeline designed to migrate all existing
             data from Microsoft SQL Server to HDFS. And then use a separate pipeline to process
             incremental updates. Or, you might use the executor to perform traditional "batch"
@@ -32,11 +33,16 @@
             behavior depends on how you configure the origin. If the origin is configured to use an
             offset, when you restart the pipeline the origin begins at the last-saved offset. If you
             configure the origin to process all data from an initial offset, when you restart the
-            pipeline, it does so. For more information, see "Event Generation" in the origin
+            pipeline, it does so. For more information, see "Event Record" in the origin
             documentation.</p>
         <p>The Pipeline Finisher executor has no stage-specific properties, but you might use a
-            precondition to limit the records that enter the stage. Before using the Pipeline
-            Finisher, review the recommended implementation information. </p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"> </p>
+            precondition to limit the records that enter the stage. You might also set up
+            notification to be informed when the Pipeline Finisher stops the pipeline. </p>
+        <p>Before using the Pipeline Finisher, review the recommended implementation information. </p>
+        <p>For a case study about using the Pipeline Finisher, see <xref
+                href="../Event_Handling/CaseStudy-StopPipeline.dita#concept_kff_ykv_lz"/>. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+            /></p>
+        
  </conbody>
 </concept>

@@ -26,6 +26,7 @@
                 id="ul_sww_spb_rx">
                 <li/>
             </ul></p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+            /></p>
  </conbody>
 </concept>

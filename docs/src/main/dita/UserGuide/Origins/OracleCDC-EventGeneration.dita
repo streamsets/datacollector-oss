@@ -44,9 +44,15 @@
             table is dropped and created after the pipeline starts. If the CREATE statement is for a
             table that is already cached, the origin does not include the table schema in the event
             record. </p>
-        <p>Oracle CDC Client <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-EventGen-FileStorage"
-            /></p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
+        <p>Oracle CDC Client events can be used in any logical way. For example: <ul
+                id="ul_a13_dtc_yz">
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"/>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
+                />
+            </ul></p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+        /></p>
     </conbody>
 </concept>

@@ -23,11 +23,14 @@
             events each time it starts a Spark application. </p>
         <p>Spark executor events can be used in any logical way. For example: <ul id="ul_dzf_tpg_zx">
                 <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"/>
+                <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
                 />
             </ul></p>
         <p>Since Spark executor events include the application ID for each application that it
             starts, you might generate events to keep a log of the application IDs.</p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+            /></p>
     </conbody>
 </concept>

@@ -16,8 +16,9 @@
 <concept id="concept_d1q_xl4_lx">
     <title>Case Study: Output File Management</title>
     <conbody>
-        <p><indexterm>event framework case studies<indexterm>output file
-                management</indexterm></indexterm>By default, the Hadoop FS destination creates a
+        <p><indexterm>dataflow trigger case study<indexterm>output file
+                management</indexterm></indexterm><indexterm>Hive Metadata executor<indexterm>case
+                    study</indexterm></indexterm>By default, the Hadoop FS destination creates a
             complex set of directories for output files and late record files, keeping files open
             for writing based on stage configuration. That's great, but once the files are complete,
             you'd like the files moved to a different location. And while you're at it, it would be

@@ -127,7 +127,7 @@
                                     </row>
                                     <row>
                                         <entry>timestamp</entry>
-                                        <entry>Timestamp when the query completed. </entry>
+                                        <entry>Timestamp when the query failed to complete.</entry>
                                     </row>
                                     <row>
                                         <entry>row-count</entry>

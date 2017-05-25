@@ -46,7 +46,11 @@
                 id="ul_dn2_5dk_3w">
                 <li/>
             </ul></p>
-        <p>The core installation includes the Pipeline Finisher executor.</p>
+        <p>The core installation includes the following executors:<ul
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicExecutors"
+                id="ul_fvn_t2g_5z">
+                <li/>
+            </ul></p>
         <p> </p>
  </conbody>
 </concept>
