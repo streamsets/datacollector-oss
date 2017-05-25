@@ -104,8 +104,11 @@ public class DirectorySpooler {
     }
 
     public Builder setDir(String dir) {
-      this.spoolDir = Preconditions.checkNotNull(dir, "dir cannot be null");
-      Preconditions.checkArgument(new File(dir).isAbsolute(), Utils.formatL("dir '{}' must be an absolute path", dir));
+      final String spoolDirInput = Preconditions.checkNotNull(dir, "dir cannot be null");
+      final Path spoolDirPath = FileSystems.getDefault().getPath(spoolDirInput);
+      Preconditions.checkArgument(spoolDirPath.isAbsolute(), Utils.formatL("dir '{}' must be an absolute path", dir));
+      // normalize path to ensure no trailing slash
+      spoolDir = spoolDirPath.toString();
       return this;
     }
 

@@ -85,7 +85,8 @@ public class TestSpoolDirSource {
   private TSpoolDirSource createSource(String initialFile) {
     SpoolDirConfigBean conf = new SpoolDirConfigBean();
     conf.dataFormat = DataFormat.TEXT;
-    conf.spoolDir = createTestDir();
+    // add trailing slash to ensure that works properly
+    conf.spoolDir = createTestDir() + "/";
     conf.batchSize = 10;
     conf.overrunLimit = 100;
     conf.poolingTimeoutSecs = 1;
