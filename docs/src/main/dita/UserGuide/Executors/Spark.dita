@@ -21,10 +21,10 @@
             Spark executor starts a Spark application each time it receives an event. You can use
             the Spark executor with Spark on YARN or Spark on Databricks. The executor is not
             compatible with Spark on Mesos at this time. </p>
-        <p>Use the Spark executor to start a Spark application as part of an event stream. You would
-            generally use the executor to process events from the Hadoop FS, MapR FS, and Amazon S3
-            destinations. For example, you might use the executor to start a Spark application that
-            converts Avro files to Parquet each time the Hadoop FS destination closes a file. </p>
+        <p>Use the Spark executor to start a Spark application as part of an event stream. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Spark-Use"/> For
+            example, you might use the executor to start a Spark application that converts Avro
+            files to Parquet each time the Hadoop FS destination closes a file. </p>
         <p>Note that the Spark executor starts an application in an external system. It does not
             monitor the application or wait for it to complete. The executor becomes available for
             additional processing as soon as it successfully submits an application. </p>
@@ -33,7 +33,8 @@
             cluster manager properties, application details, and security options that you can
             configure. </p>
         <p>Regardless of the cluster manager type, you can configure the executor to generate events
-            for another event stream. For more information about the event framework, see <xref
-                href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
+            for another event stream. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+            /></p>
  </conbody>
 </concept>

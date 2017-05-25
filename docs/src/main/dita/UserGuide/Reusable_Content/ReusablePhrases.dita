@@ -89,8 +89,8 @@
                         HTTP headers and bodies when using HTTPS.</ph></p>
             <p>
                   <draft-comment author="Loretta">List of origins that are part of the Basic stage
-                        library. Used in BasicInstall_Overview and BasicInstall-LibList (Available
-                        Stage Libraries).</draft-comment>
+                        library. Used in CoreInstall_Overview and Available Stage
+                        Libraries.</draft-comment>
             </p>
             <p>
                   <ul id="BasicOrigins">
@@ -112,7 +112,8 @@
            
             <p>
                   <draft-comment author="Loretta">List of destinations that are part of the Core
-                        installation. Used in CoreInstall_Overview and CoreInstall-LibList. </draft-comment>
+                        installation. Used in CoreInstall_Overview and Available Stage
+                        Libraries.</draft-comment>
             </p>
             <p>
                   <ul id="BasicDestinations">
@@ -126,7 +127,17 @@
                         <li>WebSocket Client</li>
                   </ul>
             </p>
-            <p/>
+            <p>
+                  <draft-comment author="Loretta">List of executors in basiclib. Used in
+                        CoreInstall_Overview and Available Stage Libraries.</draft-comment>
+            </p>
+            <p>
+                  <ul id="BasicExecutors">
+                        <li>Email</li>
+                        <li>Pipeline Finisher</li>
+                        <li>Shell</li>
+                  </ul>
+            </p>
             <p>
                   <draft-comment author="Loretta">KafkaSecure - used in KConsumer &amp; Producer
                         encryption areas. Original value: Kafka 0.9.0.0</draft-comment>
@@ -955,22 +966,42 @@ web-0011.log</codeblock></dd>
                         file processing information for later use. For an example, see <xref
                               href="../Event_Handling/CaseStudy-EventStorage.dita#concept_ocb_nnl_px"
                         />.</ph></p>
-            <p id="O-EventGen-xref">For more information about dataflow triggers and the event
-                  framework, see <xref
-                        href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"
-                  />.</p>
             <p>
                   <draft-comment author="Loretta">next one used in executor overviews that generate
                         events.</draft-comment>
             </p>
             <p id="p-Executor-EventXref">You can also configure the executor to generate events for
-                  another event stream. For more information about dataflow triggers and the event
-                  framework, see <xref
-                        href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"
-                  />.</p>
+                  another event stream. <ph id="O-EventGen-xref">For more information about dataflow
+                        triggers and the event framework, see <xref
+                              href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"
+                        />.</ph></p>
             <p>
-                  <draft-comment author="Loretta">Event Generation topic.  Hadoop FS and MapR FS use
-                        ph and ul. Local FS uses ph and some bullets in the list.</draft-comment>
+                  <draft-comment author="Loretta">The following paragraphs are used in respective
+                        executor overviews and Dataflow Trigger > executor stages.</draft-comment>
+            </p>
+            <p><ph id="HiveMetadata-Use">You can use the executor in any logical way, such as
+                        running Hive or Impala queries after the Hive Metadata destination updates
+                        the Hive metastore, or after the Hadoop FS or MapR FS destination closes
+                        files.</ph>
+            </p>
+            <p><ph id="FileMetadata-Use">You can use the executor in any logical way, such as
+                        changing file metadata after receiving file closure events from the Hadoop
+                        FS, Local FS, and MapR FS destinations.</ph>
+            </p>
+            <p><ph id="MapReduce-Use">You can use the executor in any logical way, such as running
+                        MapReduce jobs after the Hadoop FS or MapR FS destination closes files.</ph>
+            </p>
+            <p><ph id="PipeFinish-Use">You can use the Pipeline Finisher in any logical way, such as
+                        stopping a pipeline upon receiving a no-more-data event from the JDBC Query
+                        Consumer, JDBC Multitable Consumer, or Salesforce origins.</ph>
+            </p>
+            <p><ph id="Spark-Use">You can use the executor in any logical way, such as running Spark
+                        applications after the Hadoop FS, MapR FS, or Amazon S3 destination closes
+                        files.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">Event Generation topic. Hadoop FS and MapR FS use
+                        ph and ul. Local FS uses ph and some bullets in the list. All event
+                        generators use the last two bullets.</draft-comment>
             </p>
             <p><ph id="D-ph-EventGen1">can generate events that you can use in an event stream. When
                         you enable event generation, the destination generates event records each
@@ -989,6 +1020,10 @@ web-0011.log</codeblock></dd>
                         <li>With the MapReduce executor to convert completed Avro files to Parquet.
                                     <p>For an example, see <xref
                                           href="../Event_Handling/CaseStudy-Parquet.dita#concept_jkm_rnz_kx"
+                                    />.</p></li>
+                        <li id="D-li-Event-Email">With the Email executor to send a custom email
+                              after receiving an event.<p>For an example, see <xref
+                                          href="../Event_Handling/CaseStudy-SendEmail.dita#concept_t2t_lp5_xz"
                                     />.</p></li>
                         <li id="D-li-Event-FileStore">With a destination to store event information.
                                     <p>For an example, see <xref
@@ -1015,7 +1050,8 @@ web-0011.log</codeblock></dd>
                                     />.</p>
                         </li>
                   </ul></p>
-            <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
+            <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+            /></p>
             <p/>
             <draft-comment author="Loretta">Event Record topics for JDBC Multitable and
                   Salesforce.</draft-comment>

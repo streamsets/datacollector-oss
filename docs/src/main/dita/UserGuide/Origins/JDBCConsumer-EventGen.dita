@@ -37,11 +37,14 @@
                             <xref
                             href="../Event_Handling/CaseStudy-StopPipeline.dita#concept_kff_ykv_lz"
                         />.</p></li>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"/>
             </ul><ul
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EventGen-UseCase-ul"
                 id="ul_cjg_c3s_kz">
                 <li/>
             </ul></p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
+     <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+     /></p>
  </conbody>
 </concept>

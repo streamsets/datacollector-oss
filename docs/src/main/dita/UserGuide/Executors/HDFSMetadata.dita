@@ -19,11 +19,13 @@
   <p><indexterm>executors<indexterm>HDFS File Metadata</indexterm></indexterm><indexterm>HDFS File
                 Metadata executor<indexterm>overview</indexterm></indexterm>The HDFS File Metadata
             executor changes file metadata or creates an empty file each time it receives an event.
-            You cannot perform both tasks in the same executor. To perform both tasks, use an
-            additional executor. </p>
+            You cannot perform both types of tasks in the same executor. To perform both types, use
+            an additional executor. </p>
         <p>Use the HDFS File Metadata executor as part of an event stream. For example, you might
             use the executor to move a file or change file permissions after it receives a file
             closure event from the Hadoop FS destination.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FileMetadata-Use"
+            /></p>
         <p>When changing file metadata, the HDFS File Metadata executor can change the following
             file metadata at the same time:<ul id="ul_gym_xw3_rx">
                 <li>File name</li>
@@ -38,6 +40,8 @@
             the owner, permissions, and ACLs for the file. </p>
      <p>When necessary, you can enable Kerberos authentication and specify an HDFS user. You can
          also use HDFS configuration files and add other HDFS configuration properties as needed. </p>
-     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-Executor-EventXref"></p>
+     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-Executor-EventXref"/>
+        <p>For a case study about using the HDFS File Metadata executor, see <xref
+                href="../Event_Handling/CaseStudy-FileManagement.dita#concept_d1q_xl4_lx"/>.</p>
  </conbody>
 </concept>

@@ -16,7 +16,7 @@
 <concept id="concept_ocb_nnl_px">
  <title>Case Study: Event Storage </title>
  <conbody>
-  <p><indexterm>event framework case studies<indexterm>event storage</indexterm></indexterm>Store
+  <p><indexterm>dataflow trigger case study<indexterm>event storage</indexterm></indexterm>Store
             event records to preserve an audit trail of the events that occur. You can store event
             records from any event-generating stage. For this case study, say you want to keep a log
             of the files written to HDFS by the following pipeline: </p>

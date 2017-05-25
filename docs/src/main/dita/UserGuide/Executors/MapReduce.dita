@@ -23,6 +23,11 @@
         <p>You can use the MapReduce executor to start a custom job, such as a validation job that
             compares the number of records in files. You can also use the MapReduce executor to
             start a predefined job that converts Avro files to Parquet.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapReduce-Use"/>
+            For example, you might use the executor to convert an Avro file to Parquet after the
+            Hadoop FS destination closes a file as part of the <xref
+                href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w">Data Drift
+                Synchronization Solution for Hive</xref>. </p>
         <p>Note that the MapReduce executor starts jobs in an external system. It does not monitor
             jobs or wait for the job to complete. The executor becomes available for additional
             processing as soon as it successfully submits the job. </p>
@@ -34,5 +39,7 @@
             can also use MapReduce configuration files and add other MapReduce configuration
             properties as needed. </p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-Executor-EventXref"/>
+        <p>For a case study about using the MapReduce executor, see <xref
+                href="../Event_Handling/CaseStudy-Parquet.dita#concept_jkm_rnz_kx"/>.</p>
  </conbody>
 </concept>

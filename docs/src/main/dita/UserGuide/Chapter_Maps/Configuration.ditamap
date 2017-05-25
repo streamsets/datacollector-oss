@@ -37,6 +37,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Configuration/Kerberos.dita"/>
+   <topicref href="../Configuration/SendingEmail.dita"/>
    <topicref href="../Configuration/StoringLoadingSensitiveInformation.dita"/>
    <topicref href="../Configuration/ReferencingEnvVariables.dita"/>
    <topicref href="../Configuration/RunningMultiplePipelines.dita"/>

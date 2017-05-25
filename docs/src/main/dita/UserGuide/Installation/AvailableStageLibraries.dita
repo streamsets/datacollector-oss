@@ -121,7 +121,11 @@
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicDestinations"
                                         id="ul_bps_cqh_cw">
                                         <li/>
-                                    </ul></p><p>Includes the Pipeline Finisher executor.</p></entry>
+                                    </ul></p><p>Includes the following executors:<ul
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/BasicExecutors"
+                                        id="ul_ckw_x2g_5z">
+                                        <li/>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-bigtable-lib</entry>

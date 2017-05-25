@@ -21,11 +21,16 @@
                     event generation</indexterm></indexterm>The File Tail origin <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-EventGen1"
             /></p>
-        <p>File Tail events can be used in any logical way. For example: <ul id="ul_dzf_tpg_zx">
+        <p>File Tail events can be used in any logical way. For example: <ul>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"
+                />
+            </ul><ul id="ul_dzf_tpg_zx">
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
                 />
             </ul></p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"/>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
+            /></p>
     </conbody>
 </concept>

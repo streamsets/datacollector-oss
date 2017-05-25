@@ -178,7 +178,9 @@
                             <entry>Hive Query executor</entry>
                             <entry>
                                 <ul id="ul_qsl_bsk_my">
-                                    <li>Determines if the submitted query has completed.</li>
+                                    <li>Determines that the submitted query completed
+                                        successfully.</li>
+                                    <li>Determines that the submitted query failed to complete.</li>
                                 </ul>
                             </entry>
                         </row>

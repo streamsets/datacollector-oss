@@ -19,6 +19,13 @@
         <topicref href="../Executors/Executors-overview.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
         </topicref>
+        <topicref href="../Executors/Email.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../Executors/Email-Prerequisite.dita"/>
+            <topicref href="../Executors/Email-Condition.dita"/>
+            <topicref href="../Executors/Email-Expressions.dita"/>
+            <topicref href="../Executors/Email-Configuring.dita"/>
+        </topicref>
         <topicref href="../Executors/HDFSMetadata.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Executors/HDFSFileMeta-EventStages.dita"/>
@@ -65,7 +72,13 @@
         <topicref href="../Executors/PipelineFinisher.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Executors/PipelineFinisher-Implementation.dita"/>
+            <topicref href="../Executors/PipelineFinisher-Notification.dita"/>
             <topicref href="../Executors/PipelineFinisher-Configuring.dita"/>
+        </topicref>
+        <topicref href="../Executors/Shell.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../Executors/Shell-Impersonation.dita"/>
+            <topicref href="../Executors/Shell-Configuring.dita"/>
         </topicref>
         <topicref href="../Executors/Spark.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>

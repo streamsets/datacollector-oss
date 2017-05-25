@@ -411,14 +411,14 @@
                     </tgroup>
                 </table></p><p id="email">The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file includes the following properties for sending email
-                    alerts:<table frame="all" rowsep="1" colsep="1" id="table_ulz_3pw_1r">
+                /> configuration file includes the following properties for sending email:<table
+                    frame="all" rowsep="1" colsep="1" id="table_ulz_3pw_1r">
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1*"/>
                         <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                         <thead>
                             <row>
-                                <entry>Email Alert Property</entry>
+                                <entry>Email Property</entry>
                                 <entry>Description</entry>
                             </row>
                         </thead>
@@ -460,7 +460,7 @@
                             </row>
                             <row>
                                 <entry>xmail.username</entry>
-                                <entry>User name for the email account to send alert email.</entry>
+                                <entry>User name for the email account to send email.</entry>
                             </row>
                             <row>
                                 <entry>xmail.password</entry>
@@ -473,7 +473,7 @@
                             </row>
                             <row>
                                 <entry>xmail.from.address</entry>
-                                <entry>Email address to send alert email. </entry>
+                                <entry>Email address to use to send email. </entry>
                             </row>
                         </tbody>
                     </tgroup>
@@ -516,7 +516,7 @@
                 </tgroup>
             </table><p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file includes the following stage-specific property:<table
+                /> configuration file includes the following stage-specific properties:<table
                     frame="all" rowsep="1" colsep="1" id="table_y2g_rx5_nz">
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1"/>
@@ -542,6 +542,43 @@
                                         affected stages, see <xref
                                             href="HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
                                         />.</p></entry>
+                            </row>
+                            <row>
+                                <entry>
+                                    <p>stage.conf_com.streamsets.pipeline.stage.executor.
+                                        shell.impersonation_mode </p>
+                                </entry>
+                                <entry>Uses the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> user who starts the pipeline to execute shell scripts defined
+                                    in Shell executors. When not enabled, the operating system user
+                                    who started <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> is used to execute shell scripts.<p>To enable the secure use
+                                        of shell scripts through the Shell executor, we highly
+                                        recommend uncommenting this property. </p><p>Requires the
+                                        user who starts the pipeline to have a matching user account
+                                        in the operating system. For more information about the
+                                        security ramifications, see <xref
+                                            href="../Executors/Shell-Impersonation.dita#concept_n2w_txv_vz"
+                                        />.</p><p>Used by Shell executors.</p></entry>
+                            </row>
+                            <row>
+                                <entry>stage.conf_com.streamsets.pipeline.stage.executor.
+                                    shell.shell</entry>
+                                <entry>Defines the relative or absolute path to the command line
+                                    interpreter to use to execute scripts, such as
+                                        <codeph>/bin/bash</codeph>.<p>Default is
+                                            "<codeph>sh</codeph>".</p><p>Used by Shell
+                                        executors.</p></entry>
+                            </row>
+                            <row>
+                                <entry>stage.conf_com.streamsets.pipeline.stage.executor.
+                                    shell.sudo</entry>
+                                <entry>Defines the relative or absolute path to the sudo to use when
+                                    executing scripts.<p>Default is
+                                        <codeph>sudo</codeph>.</p><p>Used by Shell
+                                    executors.</p></entry>
                             </row>
                         </tbody>
                     </tgroup>
