@@ -33,7 +33,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -145,7 +145,7 @@ public class MapRJsonTarget extends BaseTarget {
 
     if (issues.isEmpty()) {
       generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.JSON)
-          .setMode(JsonMode.MULTIPLE_OBJECTS)
+          .setMode(Mode.MULTIPLE_OBJECTS)
           .setMaxDataLen(-1)
           .setCharset(StandardCharsets.UTF_8)
           .build();
