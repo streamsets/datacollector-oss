@@ -30,8 +30,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
@@ -58,7 +58,6 @@ import org.apache.hive.hcatalog.streaming.TransactionBatch;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -406,7 +405,7 @@ public class HiveTarget extends BaseTarget {
     );
     return builder
         .setCharset(StandardCharsets.UTF_8) // Only UTF-8 is supported.
-        .setMode(JsonMode.MULTIPLE_OBJECTS)
+        .setMode(Mode.MULTIPLE_OBJECTS)
         .build();
   }
 
