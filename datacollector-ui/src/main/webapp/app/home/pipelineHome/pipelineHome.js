@@ -1083,7 +1083,7 @@ angular
         ignoreUpdate = true;
       }
 
-      if ($rootScope.common.isDPMEnabled && pipelineConfig.metadata &&
+      if ($rootScope.common.isDPMEnabled && pipelineConfig.metadata && pipelineConfig.metadata.lastConfigId &&
         (pipelineConfig.metadata.lastConfigId !== pipelineConfig.uuid ||
         pipelineConfig.metadata.lastRulesId !== pipelineRules.uuid)) {
         $scope.isDPMPipelineDirty = true;
