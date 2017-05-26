@@ -311,6 +311,8 @@ public class SupportBundleManager implements BundleContext {
   private String generateBundleName() {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
     StringBuilder builder = new StringBuilder("bundle_");
+    builder.append(configuration.get(Constants.CUSTOMER_ID, Constants.DEFAULT_CUSTOMER_ID));
+    builder.append("_");
     builder.append(runtimeInfo.getId());
     builder.append("_");
     builder.append(dateFormat.format(new Date()));
