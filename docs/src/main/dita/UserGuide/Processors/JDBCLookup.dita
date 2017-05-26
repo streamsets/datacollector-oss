@@ -24,11 +24,13 @@
                     Lookup</indexterm></indexterm>For example, you can configure the processor to
             use a department_ID field as the column to look up department name values in a database
             table, and pass the values to a new department_name output field.</p>
+        <p>When a lookup results in multiple matches, the JDBC Lookup processor can return the first
+            matching value or return all matching values in separate records. </p>
         <p>When you configure JDBC Lookup, you specify connection information and custom JDBC
             configuration properties to determine how the processor connects to the database. You
-            configure the SQL query to define the data to look up in the database, and specify the
-            output fields to write the lookup values to. You can optionally define a default value
-            to use for fields with missing values.</p>
+            configure the SQL query to define the data to look up in the database, specify the
+            output fields to write the lookup values to, and choose the multiple match behavior. You
+            can optionally define a default value to use for fields with missing values.</p>
         <p>You can configure the processor to locally cache the lookup values to improve
             performance.</p>
         <p>To use a JDBC version older than 4.0, you can specify the driver class name and define a
