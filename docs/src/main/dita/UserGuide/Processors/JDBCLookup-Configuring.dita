@@ -45,6 +45,9 @@
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCConnectString_row">
                                     <entry/>
+                                </row>  <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>SQL Query</entry>
@@ -55,14 +58,7 @@
                                             following
                                             query:<codeblock>SELECT DeptName FROM Departments WHERE DeptID = '${record:value('/dept_ID')}'</codeblock></p></entry>
                                 </row>
-                                <row>
-                                    <entry>Enable Local Caching
-                                        <xref
-                                            href="JDBCLookup-Cache.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_h2p_p7v_uh"/></xref></entry>
-                                    <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCLocalCaching"></entry>
-                                </row>
+                              
                                 <row>
                                     <entry>Column Mappings</entry>
                                     <entry>Use to override the default column to field mappings. By
@@ -91,7 +87,32 @@
                                             </ul></p><p>Use the <uicontrol>Add</uicontrol> icon to
                                             create additional column mappings.</p></entry>
                                 </row>
+                                <row>
+                                    <entry>Multiple Values Behavior</entry>
+                                    <entry>Action to take upon finding multiple matching values: <ul
+                                            id="ul_zks_3gj_11b">
+                                            <li>First value only - Returns the first value.</li>
+                                            <li>Split into Multiple Records - Returns every matching
+                                                value in a separate record. </li>
+                                        </ul></entry>
+                                </row>
+                                
                                 <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxClob_row">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Max Blob Size (bytes)</entry>
+                                    <entry>Maximum number of bytes to be read in a Blob field. </entry>
+                                </row>
+                                <row>
+                                    <entry>Enable Local Caching
+                                        <xref
+                                            href="JDBCLookup-Cache.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_h2p_p7v_uh"/></xref></entry>
+                                    <entry conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCLocalCaching"></entry>
+                                </row><row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCMaxEntriesCache">
                                     <entry/>
                                 </row>
@@ -107,18 +128,7 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCtimeUnit">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxClob_row">
-                                    <entry/>
-                                </row>
-                                <row>
-                                    <entry>Max Blob Size (bytes)</entry>
-                                    <entry>Maximum number of bytes to be read in a Blob field. </entry>
-                                </row>
+                                
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCAddtitionalProps_row">
                                     <entry/>

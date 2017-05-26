@@ -1062,12 +1062,12 @@
       </row>
       <row id="row-AutoCommit">
        <entry>Auto Commit</entry>
-       <entry>Determines whether auto-commit mode is enabled or disabled for the
-         connection.<p>Disabled by default.</p></entry>
+       <entry>Determines if auto-commit mode is enabled. In auto-commit mode, the database commits
+        the data for each record. <p>Default is disabled.</p></entry>
       </row>
       <row id="row-EnReadOnly">
        <entry>Enforce Read-only Connection</entry>
-       <entry>Creates read-only connections to avoid any type of write. <p>Enabled by default.
+       <entry>Creates read-only connections to avoid any type of write. <p>Default is enabled.
          Disabling this property is not recommended. </p></entry>
       </row>
       <row id="row-TransactionIsolation">

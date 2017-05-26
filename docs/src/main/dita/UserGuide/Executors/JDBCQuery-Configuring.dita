@@ -102,6 +102,11 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxConLife">
                                     <entry/>
                                 </row>
+                                <row>
+                                    <entry>Batch Commit</entry>
+                                    <entry>Determines if the executor commits to the database after
+                                        each batch. <p>Default is enabled. </p></entry>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-AutoCommit">
                                     <entry/>
