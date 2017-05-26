@@ -53,7 +53,19 @@ angular
                   function(res) {
                     $scope.updatedPipelineConfig = res.data.pipelineConfig;
                     $scope.pipelineVersion = remotePipeline.version;
-                    $modalInstance.close($scope.updatedPipelineConfig);
+                    var newMetadata = res.data.pipelineConfig.metadata;
+                    newMetadata['lastConfigId'] = res.data.pipelineConfig.uuid;
+                    newMetadata['lastRulesId'] = res.data.pipelineRules.uuid;
+                    api.pipelineAgent.savePipelineMetadata(pipelineInfo.pipelineId, newMetadata)
+                      .then(
+                        function(res) {
+                          $modalInstance.close($scope.updatedPipelineConfig);
+                        },
+                        function(res) {
+                          $scope.common.errors = [res.data];
+                          $scope.downloading = false;
+                        }
+                      );
                   },
                   function(res) {
                     $scope.common.errors = [res.data];
