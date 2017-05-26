@@ -73,6 +73,7 @@ import java.util.Map;
 
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_25;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_26;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_27;
 
 public class OAuth2ConfigBean {
 
@@ -338,13 +339,13 @@ public class OAuth2ConfigBean {
     String privKeyPEM = key.replace("-----BEGIN PRIVATE KEY-----\n", "");
     privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", "");
 
-    // Base64 decode the data
-    byte [] encoded = Base64.getDecoder().decode(privKeyPEM.getBytes());
-
-    // PKCS8 decode the encoded RSA private key
-    PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
-
     try {
+      // Base64 decode the data
+      byte [] encoded = Base64.getDecoder().decode(privKeyPEM.getBytes());
+
+      // PKCS8 decode the encoded RSA private key
+      PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
+
       KeyFactory kf = KeyFactory.getInstance(RSA);
       return kf.generatePrivate(keySpec);
     } catch (NoSuchAlgorithmException ex) {
@@ -353,6 +354,9 @@ public class OAuth2ConfigBean {
     } catch (InvalidKeySpecException ex) {
       LOG.error(Utils.format("'{}' algorithm not available", RSA), ex);
       issues.add(context.createConfigIssue(CONFIG_GROUP, PREFIX + "key", HTTP_26));
+    } catch (IllegalArgumentException ex) {
+      LOG.error("Invalid key", ex);
+      issues.add(context.createConfigIssue(CONFIG_GROUP, PREFIX + "key", HTTP_27, ex.toString()));
     }
     return null;
   }
