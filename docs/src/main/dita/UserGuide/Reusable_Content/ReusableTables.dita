@@ -1573,8 +1573,8 @@
        perform all tasks listed below, as well as start and stop <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, view <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-       configuration, JVM metrics, and log information. Install libraries using the Package
-       Manager.</entry>
+       configuration, JVM metrics, and log information. Install libraries using the Package Manager.
+       Generate support bundles.</entry>
      </row>
      <row>
       <entry>manager</entry>

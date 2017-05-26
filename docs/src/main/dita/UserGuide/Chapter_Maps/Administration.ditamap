@@ -44,6 +44,14 @@
   </topicref>
   <topicref href="../Administration/Restarting.dita"/>
   <topicref href="../Administration/ViewingUsersGroups.dita"/>
+  <topicref href="../Administration/SupportBundles.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Administration/SupportBundles-Generators.dita"/>
+   <topicref href="../Administration/SupportBundles-Generating.dita"/>
+   <topicref href="../Administration/SupportBundles-Custom.dita"/>
+  </topicref>
   <topicref href="../Administration/RESTResponse.dita">
    <topicmeta>
     <shortdesc/>

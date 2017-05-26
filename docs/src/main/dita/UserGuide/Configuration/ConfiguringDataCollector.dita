@@ -654,6 +654,16 @@
                                 <entry>Maximum number of pipeline runners to use for a multithreaded
                                         pipeline.<p>Default is 50.</p></entry>
                             </row>
+                            <row>
+                                <entry>bundle.upload.enabled</entry>
+                                <entry>Allows <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> to directly upload <xref
+                                        href="../Administration/SupportBundles.dita#concept_szj_3mw_xz"
+                                        >support bundles</xref> to the StreamSets support team.<p>To
+                                        disable the direct upload, uncomment this property.
+                                    </p></entry>
+                            </row>
                         </tbody>
                     </tgroup>
                 </table>
