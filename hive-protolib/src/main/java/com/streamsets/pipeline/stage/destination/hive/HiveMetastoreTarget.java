@@ -201,14 +201,13 @@ public class HiveMetastoreTarget extends BaseTarget {
     if (cachedColumnTypeInfo == null) {
       //Table Does not exist use the schema from the metadata record as is.
       if (!conf.storedAsAvro) {
-        schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(
-            conf.getHDFSUgi(),
-            conf.getFileSystem(),
-            location,
-            conf.getSchemaFolderLocation(getContext(), metadataRecord),
-            databaseName,
-            tableName,
-            HiveMetastoreUtil.getAvroSchema(metadataRecord)
+        schemaPath = storeSchemaOnHDFS(
+          metadataRecord,
+          HiveMetastoreUtil.getAvroSchema(metadataRecord),
+          location,
+          databaseName,
+          tableName,
+          qualifiedTableName
         );
       }
       //Create Table
@@ -244,14 +243,13 @@ public class HiveMetastoreTarget extends BaseTarget {
         if (!conf.storedAsAvro) {
           Map<String, HiveTypeInfo> mergedTypeInfo = new LinkedHashMap<>(cachedColumnTypeInfo.getColumnTypeInfo());
           mergedTypeInfo.putAll(columnDiff);
-          schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(
-              conf.getHDFSUgi(),
-              conf.getFileSystem(),
-              location,
-              conf.getSchemaFolderLocation(getContext(), metadataRecord),
-              databaseName,
-              tableName,
-              HiveMetastoreUtil.generateAvroSchema(mergedTypeInfo, qualifiedTableName)
+          schemaPath = storeSchemaOnHDFS(
+            metadataRecord,
+            HiveMetastoreUtil.generateAvroSchema(mergedTypeInfo, qualifiedTableName),
+            location,
+            databaseName,
+            tableName,
+            qualifiedTableName
           );
         }
 
@@ -269,6 +267,31 @@ public class HiveMetastoreTarget extends BaseTarget {
           .createAndSend();
       }
     }
+  }
+
+  private String storeSchemaOnHDFS(
+    Record metadataRecord,
+    String avroSchema,
+    String location,
+    String databaseName,
+    String tableName,
+    String qualifiedTableName
+  ) throws StageException {
+    String schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(
+      conf.getHDFSUgi(),
+      conf.getFileSystem(),
+      location,
+      conf.getSchemaFolderLocation(getContext(), metadataRecord),
+      databaseName,
+      tableName,
+      avroSchema
+    );
+    HiveMetastoreEvents.AVRO_SCHEMA_STORED.create(getContext())
+      .with("table", qualifiedTableName)
+      .with("avro_schema", avroSchema)
+      .with("schema_location", schemaPath)
+      .createAndSend();
+    return schemaPath;
   }
 
   private void handlePartitionAddition(

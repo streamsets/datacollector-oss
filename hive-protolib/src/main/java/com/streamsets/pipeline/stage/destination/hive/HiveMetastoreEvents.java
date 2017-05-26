@@ -51,6 +51,15 @@ public final class HiveMetastoreEvents {
     .withRequiredField("partition") // LinkedHashMap<String, String> where key is the partition column name and value is partition value
     .build();
 
+  /**
+   * Fired when a new Avro schema file is being created
+   */
+  public static EventCreator AVRO_SCHEMA_STORED = new EventCreator.Builder("avro-schema-stored", 1)
+    .withRequiredField("table") // Fully qualified Table table name in format `db`.`table`
+    .withRequiredField("avro_schema") // Contains the Avro schema, which was written to HDFS
+    .withRequiredField("schema_location") // Location of the Avro schema file which has been written to HDFS
+    .build();
+
   private HiveMetastoreEvents() {
     // instantiation is prohibited
   }
