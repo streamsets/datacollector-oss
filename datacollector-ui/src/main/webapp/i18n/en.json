@@ -841,7 +841,7 @@
   },
   "sdcSupportBundle": {
     "title": "Support Bundle",
-    "infoMessage": "The support bundle allows you to generate an archive file with the information required to troubleshoot various issues with the data collector. Please select one or more generators to be included in the archive.",
+    "infoMessage": "The support bundle allows you to generate an archive file with the information required to troubleshoot various issues with the Data Collector. Please select one or more generators to be included in the archive.",
     "uploadedMessage" : "Support bundle was successfully uploaded.",
     "generator": "Generator",
     "description": "Description"

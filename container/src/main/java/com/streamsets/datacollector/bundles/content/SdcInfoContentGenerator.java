@@ -57,7 +57,7 @@ import java.util.Set;
 
 @BundleContentGeneratorDef(
   name = "SDC Info",
-  description = "Information about SDC itself (precise build information, configuration and thread dump, ...).",
+  description = "Information about Data Collector itself (precise build information, configuration and thread dump, ...).",
   version = 1,
   enabledByDefault = true
 )
