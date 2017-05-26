@@ -94,7 +94,10 @@
           <a ng-click="openPipeline(pipeline)" ><span>{{pipeline.title || '--'}}</span></a>
 
           <span class="version-text"
-                ng-if="pipeline.metadata && pipeline.metadata['dpm.pipeline.version']"> (v{{pipeline.metadata['dpm.pipeline.version']}})</span>
+                ng-if="pipeline.metadata && pipeline.metadata['dpm.pipeline.version']"> (v{{pipeline.metadata['dpm.pipeline.version']}}) </span>
+
+          <span class="glyphicon glyphicon-asterisk dirty-icon" title="{{'global.messages.info.isDPMPipelineDirty' | translate}}"
+                ng-if="common.isDPMEnabled && pipeline.metadata && (pipeline.metadata.lastConfigId !== pipeline.uuid)"></span>
 
           <span class="pipeline-label"
                 ng-if="pipeline.metadata && pipeline.metadata.labels && pipeline.metadata.labels.length > 0"

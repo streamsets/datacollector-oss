@@ -1217,6 +1217,22 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Sends updated Pipeline metadata to server for update.
+       *
+       * @param name - Pipeline Name
+       * @param metadata - Modified Pipeline UI Info
+       * @returns Updated Pipeline metadata
+       */
+      savePipelineMetadata: function(name, metadata) {
+        var url = apiBase + '/pipeline/' + name + '/metadata';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: metadata
+        });
+      },
+
+      /**
        * Get Sampled data for given sampling rule id.
        *
        * @param pipelineName
@@ -1266,7 +1282,7 @@ angular.module('dataCollectorApp.common')
         var deferred = $q.defer();
         var remoteURL = remoteBaseURL + 'pipelinestore/rest/v1/pipelines';
         var url = apiBase + '/pipeline/' + name + '/export?includeLibraryDefinitions=true';
-
+        var newMetadata;
         $http({
           method: 'GET',
           url: url
@@ -1292,12 +1308,14 @@ angular.module('dataCollectorApp.common')
           var remoteStorePipeline = result.data;
           var pipelineDefinition = JSON.parse(remoteStorePipeline.pipelineDefinition);
           var rulesDefinition = JSON.parse(remoteStorePipeline.currentRules.rulesDefinition);
+          newMetadata = pipelineDefinition.metadata;
+          newMetadata['lastConfigId'] = pipelineDefinition.uuid;
+          newMetadata['lastRulesId'] = rulesDefinition.uuid;
           return $q.all([
-            api.pipelineAgent.savePipelineConfig(name, pipelineDefinition),
-            api.pipelineAgent.savePipelineRules(name, rulesDefinition)
+            api.pipelineAgent.savePipelineMetadata(name, newMetadata)
           ]);
         }).then(function(res) {
-          deferred.resolve(res[0].data.metadata);
+          deferred.resolve(newMetadata);
         }, function(err) {
           deferred.reject(err);
         });

@@ -55,6 +55,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
@@ -339,8 +340,13 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
-  public PipelineConfiguration save(String user, String name, String tag, String tagDescription,
-    PipelineConfiguration pipeline) throws PipelineStoreException {
+  public PipelineConfiguration save(
+      String user,
+      String name,
+      String tag,
+      String tagDescription,
+      PipelineConfiguration pipeline
+  ) throws PipelineStoreException {
     synchronized (lockCache.getLock(name)) {
       if (!hasPipeline(name)) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
@@ -536,6 +542,54 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       json.writeValue(uiInfoFile, uiInfo);
     } catch (Exception ex) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0405, name, ex.toString(), ex);
+    }
+  }
+
+  @Override
+  public PipelineConfiguration saveMetadata(
+      String user,
+      String name,
+      String rev,
+      Map<String, Object> metadata
+  ) throws PipelineException {
+    synchronized (lockCache.getLock(name)) {
+      if (!hasPipeline(name)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
+      }
+      PipelineConfiguration savedPipeline = load(name, rev);
+      PipelineInfo savedInfo = getInfo(name);
+
+      if (pipelineStateStore != null) {
+        PipelineStatus pipelineStatus = pipelineStateStore.getState(name, rev).getStatus();
+        if (pipelineStatus.isActive()) {
+          throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
+        }
+      }
+
+      PipelineInfo updatedInfo = new PipelineInfo(
+          getInfo(name),
+          savedPipeline.getTitle(),
+          savedPipeline.getDescription(),
+          new Date(),
+          user,
+          REV,
+          savedInfo.getUuid(),
+          savedInfo.isValid(),
+          metadata
+      );
+      savedPipeline.setMetadata(metadata);
+      savedPipeline.setPipelineInfo(updatedInfo);
+
+      try (
+          OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
+          OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(name));
+      ) {
+        json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(updatedInfo));
+        json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(savedPipeline));
+      } catch (Exception ex) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0204, name, ex.toString(), ex);
+      }
+      return savedPipeline;
     }
   }
 
