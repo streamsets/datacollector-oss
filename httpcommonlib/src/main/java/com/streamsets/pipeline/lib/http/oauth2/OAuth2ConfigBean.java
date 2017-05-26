@@ -338,6 +338,8 @@ public class OAuth2ConfigBean {
   private static PrivateKey parseRSAKey(String key, Stage.Context context, List<Stage.ConfigIssue> issues) {
     String privKeyPEM = key.replace("-----BEGIN PRIVATE KEY-----\n", "");
     privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", "");
+    privKeyPEM = privKeyPEM.replace("\n", "");
+    privKeyPEM = privKeyPEM.replace("\r", "");
 
     try {
       // Base64 decode the data
