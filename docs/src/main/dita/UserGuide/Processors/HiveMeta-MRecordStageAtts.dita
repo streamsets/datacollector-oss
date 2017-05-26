@@ -42,24 +42,31 @@
                             <li>targetDirectory - The location where each record should be
                                     written.<p>The processor generates the directory based on the
                                     database, table, and partition information for each record and
-                                    writes it to the targetDirectory header attribute.</p><p>To use
-                                    this header attribute, configure the Hadoop FS or MapR FS
-                                    destination to write records using the directory in the record
-                                    header.</p></li>
+                                    writes it to the targetDirectory header attribute. </p><p
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Parquet-TargetDir1"
+                                    /><p
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Parquet-TargetDir2"
+                                    /><note
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Parquet-TargetDir-Note"
+                                    /><p>To use this header attribute, configure the Hadoop FS or
+                                    MapR FS destination to write records using the directory in the
+                                    record header.</p></li>
                             <li>avroSchema - The Avro schema for the record. <p>The processor writes
                                     the Avro schema in the avroSchema header attribute for each
                                     record. When the processor notes a compatible change in the Avro
-                                    schema, it generates a new Avro schema.</p><p>To use this header
+                                    schema, it generates a new Avro schema. This attribute is used
+                                    for both Avro and Parquet data. </p><p>To use this header
                                     attribute, configure the Hadoop FS or MapR FS destination to
                                     write records using the Avro schema in the record
                                 header.</p></li>
                             <li> roll - An indicator to roll the file associated with the record.
                                     <p>The processor generates a roll indicator only when the Avro
-                                    schema changes in a compatible way. </p><p>To use this header
-                                    attribute, configure the Hadoop FS or MapR FS destination to
-                                    roll records when encountering the roll attribute in the record
-                                    header. And then, use the default "roll" as the name of the
-                                    header attribute. </p></li>
+                                    schema changes in a compatible way. Records with incompatible
+                                    changes are sent to the stage for error handling.</p><p>To use
+                                    this header attribute, configure the Hadoop FS or MapR FS
+                                    destination to roll records when encountering the roll attribute
+                                    in the record header. And then, use the default "roll" as the
+                                    name of the header attribute. </p></li>
                         </ul></dd>
                     <dd>For more information about using destinations to process these attributes,
                         see <xref
@@ -69,9 +76,6 @@
                         />. </dd>
                 </dlentry>
             </dl>
-        </p>
-        <p>
-            <note>Records with incompatible changes are sent to the stage for error handling.</note>
         </p>
  </conbody>
 </concept>

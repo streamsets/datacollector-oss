@@ -17,8 +17,11 @@
  <title>Hive Table Generation</title>
  <conbody>
   <p><indexterm>Hive Metastore destination<indexterm>Hive table
-            generation</indexterm></indexterm>The Hive Metastore destination can generate Hive
-            tables using the following methods:<dl>
+            generation</indexterm></indexterm>When the Drift Synchronization Solution for Hive
+            processes Parquet data, the destination uses the Stored as Parquet clause when
+            generating the table so it does not need to generate a new schema for each change. </p>
+        <p>When the Drift Synchronization Solution for Hive processes Avro data, the Hive Metastore
+            destination can generate Hive tables using the following methods:<dl>
                 <dlentry>
                     <dt>With the Stored As Avro clause</dt>
                     <dd>Generates the table with a query that includes the Stored As Avro clause.

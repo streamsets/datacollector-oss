@@ -14,14 +14,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_a1w_kkn_fw">
- <title>Case Study</title>
+ <title>Avro Case Study</title>
  <conbody>
-  <p><indexterm>Drift Synchronization Solution for Hive<indexterm>case
-            study</indexterm></indexterm>Let's say you have a <ph
+  <p><indexterm>Drift Synchronization Solution for Hive<indexterm>Avro case
+                study</indexterm></indexterm>Let's say you have a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            pipeline that writes log data to Kafka. The File Tail origin in the pipeline processes
-            data from several different web services, tagging each record with a "tag" header
-            attribute that identifies the service that generated the data. </p>
+            pipeline that writes Avro log data to Kafka. The File Tail origin in the pipeline
+            processes data from several different web services, tagging each record with a "tag"
+            header attribute that identifies the service that generated the data. </p>
         <p>Now you want a new pipeline to pass the data to HDFS where it can be stored and reviewed,
             and you'd like the data written to tables based on the web service that generated the
             data. Note that you could also write the data to MapR FS -- the steps are almost

@@ -16,15 +16,22 @@
 <concept id="concept_u2t_fgy_1x">
  <title>Impala Support</title>
  <conbody>
-  <p><indexterm>Drift Synchronization Solution<indexterm>Apache Impala
-                support</indexterm></indexterm>Data written by the Drift Synchronization Solution is
-            compatible with Impala.</p>
+  <p><indexterm>Drift Synchronization Solution for Hive<indexterm>Apache Impala
+                support</indexterm></indexterm>Data written by the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HiveDrift-ph"/>
+            is compatible with Impala.</p>
         <p>Impala requires using the Invalidate Metadata command to refresh the Impala metadata
-            cache each time changes occur in the Hive Metastore. To automatically refresh the Impala
-            metadata cache, add an event stream to your pipeline. For details, see <xref
-                href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>.</p>
-        <p>You can alternatively run the Impala Invalidate Metadata command manually. To be notified
-            of when to run the command, add a data rule alert on the link to the Hive Metastore
-            destination to let you know when metadata records are passed to the Hive Metastore. </p>
+            cache each time changes occur in the Hive metastore. </p>
+        <p>When processing Avro data, you can use the Hive Query executor to automatically refresh
+            the Impala metadata cache. For details, see <xref
+                href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"/>. </p>
+        <p>When processing Parquet data, you need to run the Impala Invalidate Metadata command
+            manually after the Hive Metastore destination makes changes to the Hive Metastore and
+            after the MapReduce executor converts a file to Parquet. </p>
+        <p>You can set up an alert to notify you when the Hive Metastore destination makes a change.
+            Simply add a <xref href="../Alerts/DataAlerts.dita#concept_tpm_rsk_zq">data rule
+                alert</xref> on the link to the Hive Metastore destination and have the alert send
+            an email or webhook when metadata records are passed to the Hive Metastore. </p>
+        <p>Use external tools to determine when the Convert Avro to Parquet MapReduce jobs complete. </p>
  </conbody>
 </concept>

@@ -29,6 +29,11 @@
                   Collector</ph></p>
             <p>DPM long only: <ph id="DPM-LongOnly">Dataflow Performance Manager</ph></p>
             <p>DPM short: <ph id="DPM-short">DPM</ph></p>
+            <p>
+                  <draft-comment author="Loretta">Tbe old Hive Drift Solution
+                        rename.</draft-comment>
+            </p>
+            <p><ph id="HiveDrift-ph">Drift Synchronization Solution for Hive</ph></p>
             <draft-comment author="alisontaylor">The following ph's for the current version are used
                   in the install and upgrade steps:</draft-comment>
             <p><ph id="version">2.6.0.0</ph></p>
@@ -109,7 +114,6 @@
             <draft-comment author="Loretta">Core install includes all processors except... </draft-comment>
             <p><ph id="CoreNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase
                         Lookup, Redis Lookup, and Spark Evaluator.</ph></p>
-           
             <p>
                   <draft-comment author="Loretta">List of destinations that are part of the Core
                         installation. Used in CoreInstall_Overview and Available Stage
@@ -395,7 +399,7 @@
             </p>
             <p>
                   <draft-comment author="Loretta">AVRO-HadoopFS - used by Hadoop FS origin - Not
-                        adding the non-avro-compression-codec  compression info</draft-comment>
+                        adding the non-avro-compression-codec compression info</draft-comment>
             </p>
             <p>
                   <dl>
@@ -823,8 +827,9 @@
                   When you use another prefix, enter the prefix. When you use another bucket, enter
                   a prefix and bucket.</p>
             <p id="S3origin-CopyMove2">Copying the object leaves the original object in place. </p>
-            <p>                  <draft-comment author="Loretta"><uicontrol>ul-S3-custSSE</uicontrol> is used by
-                  Amazon S3 origin and destination in the SSE topic:</draft-comment>
+            <p>
+                  <draft-comment author="Loretta"><uicontrol>ul-S3-custSSE</uicontrol> is used by
+                        Amazon S3 origin and destination in the SSE topic:</draft-comment>
             </p>
             <p>
                   <ul id="ul-S3-custSSE">
@@ -944,7 +949,6 @@ web-0011.log</codeblock></dd>
                               href="../Origins/Origins-HTTPComparison.dita#concept_rsz_cnw_qy"
                         />.</note>
             </p>
-            
             <p>
                   <draft-comment author="Loretta"><uicontrol>O-EventHandling-overview</uicontrol> -
                         used by Directory and File Tail</draft-comment>
@@ -999,9 +1003,8 @@ web-0011.log</codeblock></dd>
                         applications after the Hadoop FS, MapR FS, or Amazon S3 destination closes
                         files.</ph></p>
             <p>
-                  <draft-comment author="Loretta">Event Generation topic. Hadoop FS and MapR FS use
-                        ph and ul. Local FS uses ph and some bullets in the list. All event
-                        generators use the last two bullets.</draft-comment>
+                  <draft-comment author="Loretta">Event Generation topic.  Hadoop FS and MapR FS use
+                        ph and ul. Local FS uses ph and some bullets in the list.</draft-comment>
             </p>
             <p><ph id="D-ph-EventGen1">can generate events that you can use in an event stream. When
                         you enable event generation, the destination generates event records each
@@ -1038,7 +1041,7 @@ web-0011.log</codeblock></dd>
             <p>The Salesforce origin <ph id="EventGen-PipeFin-Ph1"><ph id="EventGen-PipeFin-mini"
                               >can generate events that you can use in an event stream. When you
                               enable event generation, the origin generates an event when it
-                              completes processing  the data returned by the specified</ph> query.
+                              completes processing the data returned by the specified</ph> query.
                   </ph></p>
             <p>If the origin is configured to repeat the query, it generates an event each time it
                   completes a query.</p>
@@ -1107,7 +1110,7 @@ web-0011.log</codeblock></dd>
                   time. When incoming data slows, the pipeline runners sit idle, available for use
                   as soon as the data flow increases.</p>
             <p>
-                  <draft-comment author="Loretta">JDBC Consumer,  Oracle CDC Client origin, and JDBC
+                  <draft-comment author="Loretta">JDBC Consumer, Oracle CDC Client origin, and JDBC
                         Query executor use these in the overview:</draft-comment>
             </p>
             <p id="JDBC-legacyInfo"><ph id="ph-JDBC-legacyInfo">To use a JDBC version older than
@@ -1176,6 +1179,26 @@ web-0011.log</codeblock></dd>
                   </ph></p>
             <p>
                   <draft-comment author="Loretta">PROCESSOR INFO –-</draft-comment>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">Parquet doc - used by HM processor > record header
+                        attributes, and Hive Drift > Parquet Processing – the ph is used by the
+                        Parquet case study > HM processor topic</draft-comment>
+            </p>
+            <p id="Parquet-TargetDir1">When processing Parquet data, the Hive Metadata processor <ph
+                        id="HD-CStudy-ProcessorAvro">adds .avro to the target directory that it
+                        generates for each record. This allows the data-processing destination to
+                        write the Avro files to a directory that Hive ignores as a temporary
+                        directory.</ph></p>
+            <p id="Parquet-TargetDir2">As a result, the destination writes files to the following
+                  directories: <codeph id="HD-ParquetDir-ph">&lt;generated
+                  directory>/.avro</codeph>.</p>
+            <p>
+                  <note id="Parquet-TargetDir-Note"><ph id="Parquet-TargetDir-ph">You can configure
+                              the MapReduce executor to write the Parquet files to the parent
+                              generated directory and to delete the Avro files after processing
+                              them. You can also delete the temporary directories after the files
+                              are processed, as needed.</ph></note>
             </p>
             <p>
                   <draft-comment author="Loretta">P-HM-CompatChanges - The following is used in a
@@ -1265,13 +1288,13 @@ web-0011.log</codeblock></dd>
                   <dl id="P-DL-ScriptObjects">
                         <dlentry>
                               <dt>state</dt>
-                              <dd>An object to store information between
-                                    invocations of the init, main, and destroy scripts. A state is a
-                                    map object that includes a collection of key/value pairs. You
-                                    can use the state object to cache data such as lookups,
-                                    counters, or a connection to an external system.</dd>
-                              <dd>The state object functions much like a
-                                    member variable: <ul id="ul_bh4_1yr_kv">
+                              <dd>An object to store information between invocations of the init,
+                                    main, and destroy scripts. A state is a map object that includes
+                                    a collection of key/value pairs. You can use the state object to
+                                    cache data such as lookups, counters, or a connection to an
+                                    external system.</dd>
+                              <dd>The state object functions much like a member variable: <ul
+                                          id="ul_bh4_1yr_kv">
                                           <li>The information is transient and is lost when the
                                                 pipeline stops or restarts.</li>
                                           <li>The state object is available only for the instance of
@@ -1279,13 +1302,13 @@ web-0011.log</codeblock></dd>
                                                 pipeline executes in cluster mode, the state object
                                                 is not shared across nodes.</li>
                                     </ul></dd>
-                              <dd>The same instance of the state object
-                                    is available to all three scripts. For example, you might use
-                                    the init script to open a connection to a database and then
-                                    store a reference to that connection in the state object. In the
-                                    main script, you can access the open connection using the state
-                                    object. Then in the destroy script, you can close the connection
-                                    using the state object.</dd>
+                              <dd>The same instance of the state object is available to all three
+                                    scripts. For example, you might use the init script to open a
+                                    connection to a database and then store a reference to that
+                                    connection in the state object. In the main script, you can
+                                    access the open connection using the state object. Then in the
+                                    destroy script, you can close the connection using the state
+                                    object.</dd>
                               <dd>
                                     <note type="warning">The state object is best used for a fixed
                                           or static set of data. Adding to the cache on every record
@@ -1689,6 +1712,66 @@ input_stream.read()</codeblock></p>
                               included in the fileInfo field.</ph> The information and field names
                         can differ based on the origin system.</note>
             </p>
+            <p>
+                  <draft-comment author="Loretta">Hive Drift / Data Synchronization Avro/Parquet
+                        reused content - used in Avro &amp; Parquet implementation. </draft-comment>
+            </p>
+            <p><ph id="HD-BasicImp-ph">the origin of your choice, the Hive Metadata processor
+                        connnected to the Hive Metastore destination to perform metadata updates,
+                        and to either the Hadoop FS or MapR FS destination to process data</ph></p>
+            <p>As with Avro data, the <ph id="HD-DataStream-ph">Hive Metadata processor passes
+                        records through the first output stream - the data stream. Connect the data
+                        stream to the Hadoop FS or MapR FS destination to write data to the
+                        destination system using record header attributes.</ph></p>
+            <p id="HD-MetadataStream-p">The Hive Metadata processor passes the metadata record
+                  through the second output stream - the metadata output stream. Connect the Hive
+                  Metastore destination to the metadata output stream to enable the destination to
+                  create and update tables in Hive. The metadata output stream contains no record
+                  data. </p>
+            <p id="HD-NestedFields">If your data contains nested fields, you would add a Field
+                  Flattener to flatten records as follows: </p>
+            <p>
+                  <draft-comment author="Loretta">Hive Drift / Data Synchronization Avro/Parquet
+                        reused content - used in Avro &amp; Parquet case studies.</draft-comment>
+            </p>
+            <p id="HD-CStudy-ConnectHMetastore">Connect the destination to the second output stream
+                  of the processor and configure the destination. Configuration of this destination
+                  is a breeze - just configure the Hive connection information and optionally
+                  configure some advanced options. </p>
+            <p><ph id="HM-CStudy-HiveMetastoreUpdates-ph">And if the structure of the record going
+                        to a table changes, like adding a couple new fields, the destination updates
+                        the table so the record can be written to it.</ph></p>
+            <p id="HD-CStudy-HDFS">To write data to Hive using record header attributes, you can use
+                  the Hadoop FS or MapR FS destinations. We'll use Hadoop FS destination.  </p>
+            <p id="HD-CStudy-HDFSuseatts">When you configure the destination, instead of configuring
+                  a directory template, you configure the destination to use the directory in the
+                  record header. Configure the destination to roll files when it sees a "roll"
+                  attribute in the record header, and when configuring the Avro properties, indicate
+                  that the schema is in the record header.  </p>
+            <p id="HD-CStudy-HDFSprocessing-p"><ph id="HD-CStudy-HDFSprocessing-ph">With this
+                        configuration, the destination uses the information in record header
+                        attributes to write data to HDFS. It writes each record to the directory in
+                        the targetDirectory header attribute, using the Avro schema in the
+                        avroSchema header attribute.</ph> And it rolls a file when it spots the roll
+                  attribute in a record header. </p>
+            <p>
+                  <draft-comment author="Loretta">The following used in Parquet case study > Hive
+                        Metastore and the Parquet Processing topic.</draft-comment>
+            </p>
+            <p><ph id="HD-StoredAsParquet-ph">The destination uses the Stored as Parquet clause when
+                        generating the table so it does not need to generate a new schema for each
+                        change.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">The following is used in Parquet case study > Hive
+                        Metadata processor and Wrapup</draft-comment>
+            </p>
+            <p><ph id="HD-CStudy-HMProc-Actions">When a record includes a schema change, the
+                        processor writes the new schema to the avroSchema header attribute and adds
+                        the roll header attribute to the record. It also generates a metadata record
+                        for the Hive Metastore destination. The combination of these actions enables
+                        the Hive Metastore destination to update Parquet tables as needed and for
+                        the Hadoop FS destination to write the file with schema drift to the updated
+                        table.</ph></p>
             <p/>
             <p>
                   <draft-comment author="Loretta">The following paragraphs are used for Expressions
@@ -2016,7 +2099,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   and 02:59 that arrive after the one hour time limit are considered late. The late
                   records are sent to the stage for error handling.</p>
             <draft-comment author="alisontaylor">Timeout to Close Idle Files - used for Hadoop FS,
-                  Local FS, and MapR FS destinations  – also Azure Data Lake Store
+                  Local FS, and MapR FS destinations – also Azure Data Lake Store
                   (lc)</draft-comment>
             <p id="IdleTimeoutOverview">You might want to configure an idle timeout when output
                   files remain open and idle for too long, thus delaying another system from
@@ -2484,40 +2567,45 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <note type="tip" id="Tip_Usernames">To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
                   information, see <xref
-                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>
+                  or <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
             <note type="tip" id="Tip_AccessKeys">To secure sensitive information such as access key
                   pairs, you can use runtime resources or Hashicorp Vault secrets. For more
                   information, see <xref
-                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>
+                  or <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
             <note type="tip" id="Tip_Passwords">To secure sensitive information such as passwords,
                   you can use runtime resources or Hashicorp Vault secrets. For more information,
-                  see <xref href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                        <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
-            <note type="tip" id="Tip_ConsumerKey">To secure sensitive information such as the consumer key and secret,
-                  you can use runtime resources or Hashicorp Vault secrets. For more information,
-                  see <xref href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
-            <note type="tip" id="Tip_ClientID">To secure sensitive information such as the client ID and secret,
-                  you can use runtime resources or Hashicorp Vault secrets. For more information,
-                  see <xref href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
-            <note type="tip" id="Tip_JWTKey">To secure sensitive information such as the JWT signing key,
-                  you can use runtime resources or Hashicorp Vault secrets. For more information,
-                  see <xref href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/> or
-                  <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note><p>
-                        <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka
-                              (Yarn) requirements:</draft-comment>
-                  </p><p>
-                        <ol id="ol-Clust-Stream-loglevel">
-                              <li>Edit the log4j.properties file, located in the following
-                                    directory:
-                                    <codeblock>&lt;spark-home>/conf/log4j.properties</codeblock></li>
-                              <li>Set the <uicontrol>log4j.rootCategory</uicontrol> property to a
-                                    severity of INFO or lower, such as DEBUG or TRACE.</li>
-                        </ol>
-                  </p>
+                  see <xref
+                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>
+                  or <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_ConsumerKey">To secure sensitive information such as the
+                  consumer key and secret, you can use runtime resources or Hashicorp Vault secrets.
+                  For more information, see <xref
+                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>
+                  or <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_ClientID">To secure sensitive information such as the client ID
+                  and secret, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <xref
+                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>
+                  or <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <note type="tip" id="Tip_JWTKey">To secure sensitive information such as the JWT signing
+                  key, you can use runtime resources or Hashicorp Vault secrets. For more
+                  information, see <xref
+                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"/>
+                  or <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"/>.</note>
+            <p>
+                  <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka (Yarn)
+                        requirements:</draft-comment>
+            </p>
+            <p>
+                  <ol id="ol-Clust-Stream-loglevel">
+                        <li>Edit the log4j.properties file, located in the following directory:
+                              <codeblock>&lt;spark-home>/conf/log4j.properties</codeblock></li>
+                        <li>Set the <uicontrol>log4j.rootCategory</uicontrol> property to a severity
+                              of INFO or lower, such as DEBUG or TRACE.</li>
+                  </ol>
+            </p>
             <p>
                   <draft-comment author="Loretta">EXECUTORS</draft-comment>
             </p>
@@ -2792,8 +2880,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   the generated pipeline ID.</p>
             <draft-comment author="alisontaylor">Used in the Credentials topic for MongoDB origin,
                   MongoDB Oplog origin, and MongoDB destination</draft-comment>
-            <p id="MongoDBCredentials">To use username/password or LDAP authentication, enter the required credentials in
-                  one of the following ways:<dl>
+            <p id="MongoDBCredentials">To use username/password or LDAP authentication, enter the
+                  required credentials in one of the following ways:<dl>
                         <dlentry>
                               <dt>Connection string in the MongoDB tab</dt>
                               <dd>Enter credentials in the connection string in the MongoDB
@@ -2814,8 +2902,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                                     the authentication type. </dd>
                         </dlentry>
                   </dl></p>
-            <p id="MongoDBCredentialsConclusion">If you enter credentials in both the connection string and in the Credentials tab,
-                  the Credentials tab takes precedence.</p>
+            <p id="MongoDBCredentialsConclusion">If you enter credentials in both the connection
+                  string and in the Credentials tab, the Credentials tab takes precedence.</p>
             <draft-comment author="alisontaylor">This text is used in Configuring a Pipeline and in
                   Adding Labels to a Pipeline</draft-comment>
             <p id="NestedLabels">You can use nested labels to create a hierarchy of pipeline

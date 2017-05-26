@@ -18,19 +18,33 @@
     <topicref href="../Hive_Drift_Solution/HiveDriftSolution_title.dita" chunk="to-content">
         <topicref href="../Hive_Drift_Solution/HiveDrift-Overview.dita" >
             <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../Hive_Drift_Solution/GeneralProcessing.dita"/>
+            <topicref href="../Hive_Drift_Solution/ParquetProcessing.dita"/>
             <topicref href="../Hive_Drift_Solution/ImpalaSupport.dita"/>
             <topicref href="../Hive_Drift_Solution/FlattenRecords.dita"/>
         </topicref>
-        <topicref href="../Hive_Drift_Solution/BasicImplementation.dita">
-            <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+        <topicref href="../Hive_Drift_Solution/BasicImplement-Avro.dita">
+            <topicmeta>
+                <shortdesc/>
+            </topicmeta>
+        </topicref>
+        <topicref href="../Hive_Drift_Solution/BasicImplement-Parquet.dita"/>
         <topicref href="../Hive_Drift_Solution/Implementation.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
         <topicref href="../Hive_Drift_Solution/CaseStudy.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta>
-            <topicref href="../Hive_Drift_Solution/Example-HMProcessor.dita"/>
-            <topicref href="../Hive_Drift_Solution/Example-HMDestination.dita"/>
-            <topicref href="../Hive_Drift_Solution/HiveMeta-Ex-HDFS.dita"/>
-            <topicref href="../Hive_Drift_Solution/Example-ProcessingData.dita"/>
+            <topicref href="../Hive_Drift_Solution/Avro-HMProcessor.dita"/>
+            <topicref href="../Hive_Drift_Solution/Avro-HMDestination.dita"/>
+            <topicref href="../Hive_Drift_Solution/Avro-HadoopFS.dita"/>
+            <topicref href="../Hive_Drift_Solution/Avro-WrapUp.dita"/>
+        </topicref>
+        <topicref href="../Hive_Drift_Solution/CaseStudy-Parquet.dita">
+            <topicref href="../Hive_Drift_Solution/Parquet-Origin.dita"/>
+            <topicref href="../Hive_Drift_Solution/Parquet-HMProcessor.dita"/>
+            <topicref href="../Hive_Drift_Solution/Parquet-HiveMetastore.dita"/>
+            <topicref href="../Hive_Drift_Solution/Parquet-HadoopFS.dita"/>
+            <topicref href="../Hive_Drift_Solution/Parquet-MapReduceEx.dita"/>
+            <topicref href="../Hive_Drift_Solution/Parquet-WrapUp.dita"/>
         </topicref>
         <topicref href="../Hive_Drift_Solution/HiveDataTypes.dita"/>
     </topicref>

@@ -45,7 +45,7 @@
                         available and Hadoop FS generates an event record each time it closes an
                         output file. The event record includes the file path for the closed file.
                             </p><p><image href="../Graphics/Event-ParquetHDFS.png"
-                            id="image_ibh_mvm_lx" scale="75"/></p></li>
+                            id="image_ibh_mvm_lx" scale="70"/></p></li>
                 <li>Connect the Hadoop FS event output stream to a MapReduce executor. <p>Now, each
                         time the MapReduce executor receives an event, it triggers the jobs that you
                         configure it to run.</p><p><image href="../Graphics/Event-ParquetPipe.png"

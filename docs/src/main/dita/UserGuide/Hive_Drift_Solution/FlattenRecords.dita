@@ -16,9 +16,11 @@
 <concept id="concept_s3v_21p_hx">
  <title>Flatten Records</title>
  <conbody>
-  <p>At this time, the Drift Synchronization Solution does not process records with nested fields.
-            If necessary, you can use the Field Flattener processor to flatten records with nested
-            fields before passing them to the Hive Metadata processor. </p>
+  <p>At this time, the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HiveDrift-ph"/>
+            does not process records with nested fields. If necessary, you can use the Field
+            Flattener processor to flatten records with nested fields before passing them to the
+            Hive Metadata processor. </p>
  </conbody>
     <related-links>
         <link href="../Processors/FieldFlattener.dita#concept_njn_3kk_fx"/>
