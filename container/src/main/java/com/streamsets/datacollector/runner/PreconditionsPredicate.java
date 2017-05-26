@@ -31,60 +31,67 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PreconditionsPredicate implements FilterRecordBatch.Predicate  {
   private final List<String> preconditions;
   private final ELVars elVars;
   private final ELEval elEval;
-  private String failedPrecondition;
+  private List<String> failedPreconditions;
   private Exception exception;
 
   public PreconditionsPredicate(Stage.Context context, List<String> preconditions) {
     this.preconditions = preconditions;
+    this.failedPreconditions = new ArrayList<>();
     elVars = context.createELVars();
-    elEval = context.createELEval(StageConfigBean.STAGE_PRECONDITIONS_CONFIG, RecordEL.class, StringEL.class,
-                                  RuntimeEL.class);
+    elEval = context.createELEval(
+        StageConfigBean.STAGE_PRECONDITIONS_CONFIG,
+        RecordEL.class,
+        StringEL.class,
+        RuntimeEL.class
+    );
   }
 
   @Override
   public boolean evaluate(Record record) {
-    failedPrecondition = null;
     exception = null;
-    boolean eval = true;
+    failedPreconditions.clear();
+
     if (preconditions != null && !preconditions.isEmpty()) {
       RecordEL.setRecordInContext(elVars, record);
       for (String precondition : preconditions) {
         try {
-          failedPrecondition = precondition;
-          eval = elEval.eval(elVars, precondition, Boolean.class);
+          if(!elEval.eval(elVars, precondition, Boolean.class)) {
+            failedPreconditions.add(precondition);
+          }
         } catch (ELEvalException ex) {
-          eval = false;
+          // We hit error while evaluating, store exception and the precondition that generated the error
           exception = ex;
+          preconditions.clear();
+          preconditions.add(precondition);
+
+          return false;
         }
-        if (!eval) {
-          break;
-        }
+
       }
     }
-    if (eval) {
-      failedPrecondition = null;
-    }
-    return eval;
+
+    return failedPreconditions.isEmpty();
   }
 
   @Override
   public ErrorMessage getRejectedMessage() {
-    Preconditions.checkState(failedPrecondition != null || exception != null,
-                             "Called for record that passed all preconditions");
-    ErrorMessage msg = null;
-    if (failedPrecondition != null) {
-      msg = (exception == null) ? new ErrorMessage(ContainerError.CONTAINER_0051, failedPrecondition)
-                                : new ErrorMessage(ContainerError.CONTAINER_0052, failedPrecondition,
-                                                   exception.toString(), exception);
+    Preconditions.checkState(!failedPreconditions.isEmpty(), "Called for record that passed all preconditions");
+    String failures = StringUtils.join(failedPreconditions, ",");
+
+    if(exception == null) {
+      return new ErrorMessage(ContainerError.CONTAINER_0051, failures, ",");
+    } else {
+      return new ErrorMessage(ContainerError.CONTAINER_0052, failures, ",", exception.toString(), exception);
     }
-    return msg;
   }
 
 }

@@ -42,7 +42,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0050("The stage requires records to include the following required fields: '{}'"),
 
   // PreconditionsErrorPredicateSink
-  CONTAINER_0051("Unsatisfied precondition '{}'"),
+  CONTAINER_0051("Unsatisfied precondition(s) '{}'"),
   CONTAINER_0052("Failed to evaluate precondition '{}': {}"),
 
   // PipelineManager

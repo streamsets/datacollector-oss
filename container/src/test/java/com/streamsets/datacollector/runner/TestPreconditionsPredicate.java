@@ -124,15 +124,21 @@ public class TestPreconditionsPredicate {
     Assert.assertFalse(predicate.evaluate(record));
     message = predicate.getRejectedMessage().toString();
     Assert.assertNotNull(message);
-    Assert.assertFalse(message.contains(MODULO_TWO));
-    Assert.assertTrue(message.contains(MODULO_THREE));
+    Assert.assertFalse(message, message.contains(MODULO_TWO));
+    Assert.assertTrue(message, message.contains(MODULO_THREE));
 
     record.set(Field.create(3));
     Assert.assertFalse(predicate.evaluate(record));
     message = predicate.getRejectedMessage().toString();
     Assert.assertNotNull(message);
-    Assert.assertTrue(message.contains(MODULO_TWO));
-    Assert.assertFalse(message.contains(MODULO_THREE));
+    Assert.assertTrue(message, message.contains(MODULO_TWO));
+    Assert.assertFalse(message, message.contains(MODULO_THREE));
+
+    record.set(Field.create(5));
+    Assert.assertFalse(predicate.evaluate(record));
+    message = predicate.getRejectedMessage().toString();
+    Assert.assertTrue(message, message.contains(MODULO_TWO));
+    Assert.assertTrue(message, message.contains(MODULO_THREE));
 
     record.set(Field.create(6));
     Assert.assertTrue(predicate.evaluate(record));
