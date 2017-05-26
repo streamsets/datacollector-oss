@@ -403,10 +403,9 @@
             ng-model="pipelineConfig.title">{{pipelineConfig.title | limitTo: 40}}</h3>
         <h3 class="pull-left version-text"
             ng-if="pipelineConfig.metadata && pipelineConfig.metadata['dpm.pipeline.version']"> (v{{pipelineConfig.metadata['dpm.pipeline.version']}})</h3>
+        <h3 class="pull-left" ng-if="isDPMPipelineDirty" title="{{'global.messages.info.isDPMPipelineDirty' | translate}}"><span class="glyphicon glyphicon-asterisk dirty-icon"></span></h3>
       </div>
-
     </div>
-
 
     <div class="pull-right" ng-cloak
          ng-if="!isPipelineReadOnly && activeConfigStatus.executionMode != pipelineConstant.SLAVE"

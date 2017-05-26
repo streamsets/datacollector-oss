@@ -439,4 +439,35 @@ public class TestFilePipelineStoreTask {
     }
   }
 
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testMetadataSave() throws Exception {
+    try {
+      store.init();
+      createDefaultPipeline(store);
+      PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
+      Assert.assertTrue(pc.getUiInfo().isEmpty());
+
+      // extract uiInfo, modify and save uiInfo only
+      Map<String, Object> metadata = new HashMap<>();
+      metadata.put("key1", "value1");
+      metadata.put("key2", "value2");
+
+      store.saveMetadata(SYSTEM_USER, DEFAULT_PIPELINE_NAME, null, metadata);
+
+      pc = store.load(DEFAULT_PIPELINE_NAME, null);
+      Assert.assertNotNull(pc.getMetadata());
+      Assert.assertEquals(2, pc.getMetadata().size());
+      Assert.assertEquals("value1", pc.getMetadata().get("key1"));
+
+      PipelineInfo info = store.getInfo(DEFAULT_PIPELINE_NAME);
+      Assert.assertNotNull(info.getMetadata());
+      Assert.assertEquals(2, info.getMetadata().size());
+      Assert.assertEquals("value1", info.getMetadata().get("key1"));
+    } finally {
+      store.stop();
+    }
+  }
+
+
 }

@@ -138,6 +138,17 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
   }
 
   @Override
+  public PipelineConfiguration saveMetadata(
+      String user,
+      String name,
+      String rev,
+      Map<String, Object> metadata
+  ) throws PipelineStoreException {
+    //NOP
+    return null;
+  }
+
+  @Override
   public void registerStateListener(StateEventListener stateListener) {
   }
 

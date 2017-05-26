@@ -106,6 +106,7 @@ angular
       existingPipelineLabels: [],
       canWrite: false,
       canExecute: false,
+      isDPMPipelineDirty: false,
 
       /**
        * Add New Pipeline Configuration
@@ -872,52 +873,52 @@ angular
      */
     var loadPipelineConfig = function(configName) {
       $q.all([api.pipelineAgent.getPipelineConfig(configName),
-        api.pipelineAgent.getPipelineRules(configName)]).
-        then(function(results) {
-          var config = results[0].data,
-            rules = results[1].data,
-            clickedAlert = $rootScope.common.clickedAlert;
+        api.pipelineAgent.getPipelineRules(configName)]
+      ).then(function(results) {
+        var config = results[0].data;
+        var rules = results[1].data;
+        var clickedAlert = $rootScope.common.clickedAlert;
 
-          $rootScope.common.errors = [];
+        $rootScope.common.errors = [];
 
-          archive = [];
-          currArchivePos = null;
+        archive = [];
+        currArchivePos = null;
 
-          updateGraph(config, rules);
+        updateGraph(config, rules);
 
-          if (clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.pipelineId) {
-            var edges = $scope.edges,
-                edge;
-            $rootScope.common.clickedAlert = undefined;
+        if (clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.pipelineId) {
+          var edges = $scope.edges,
+            edge;
+          $rootScope.common.clickedAlert = undefined;
 
-            if (clickedAlert.ruleDefinition.metricId) {
-              //Select Pipeline Config
-              updateDetailPane({
-                selectedObject: undefined,
-                type: pipelineConstant.PIPELINE,
-                detailTabName: 'summary'
-              });
-            } else {
-              //Select edge
-              edge = _.find(edges, function(ed) {
-                return ed.outputLane === clickedAlert.ruleDefinition.lane;
-              });
-              updateDetailPane({
-                selectedObject: edge,
-                type: pipelineConstant.LINK,
-                detailTabName: 'summary'
-              });
-            }
-          } else {
+          if (clickedAlert.ruleDefinition.metricId) {
+            //Select Pipeline Config
             updateDetailPane({
               selectedObject: undefined,
-              type: pipelineConstant.PIPELINE
+              type: pipelineConstant.PIPELINE,
+              detailTabName: 'summary'
+            });
+          } else {
+            //Select edge
+            edge = _.find(edges, function(ed) {
+              return ed.outputLane === clickedAlert.ruleDefinition.lane;
+            });
+            updateDetailPane({
+              selectedObject: edge,
+              type: pipelineConstant.LINK,
+              detailTabName: 'summary'
             });
           }
-        },function(resp) {
-          $scope.pipelineConfig = undefined;
-          $rootScope.common.errors = [resp.data];
-        });
+        } else {
+          updateDetailPane({
+            selectedObject: undefined,
+            type: pipelineConstant.PIPELINE
+          });
+        }
+      },function(resp) {
+        $scope.pipelineConfig = undefined;
+        $rootScope.common.errors = [resp.data];
+      });
     };
 
 
@@ -1080,6 +1081,12 @@ angular
 
       if (!manualUpdate) {
         ignoreUpdate = true;
+      }
+
+      if ($rootScope.common.isDPMEnabled && pipelineConfig.metadata &&
+        (pipelineConfig.metadata.lastConfigId !== pipelineConfig.uuid ||
+        pipelineConfig.metadata.lastRulesId !== pipelineRules.uuid)) {
+        $scope.isDPMPipelineDirty = true;
       }
 
       //Force Validity Check - showErrors directive

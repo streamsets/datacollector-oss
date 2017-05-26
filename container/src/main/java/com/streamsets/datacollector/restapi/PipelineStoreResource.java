@@ -661,8 +661,8 @@ public class PipelineStoreResource {
       @PathParam("pipelineId") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("description") String description,
-      @ApiParam(name="pipeline", required = true) PipelineConfigurationJson pipeline)
-      throws URISyntaxException, PipelineException {
+      @ApiParam(name="pipeline", required = true) PipelineConfigurationJson pipeline
+  ) throws URISyntaxException, PipelineException {
     if (store.isRemotePipeline(name, rev)) {
       throw new PipelineException(ContainerError.CONTAINER_01101, "SAVE_PIPELINE", name);
     }
@@ -692,6 +692,26 @@ public class PipelineStoreResource {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     store.saveUiInfo(name, rev, uiInfo);
+    return Response.ok().build();
+  }
+
+  @Path("/pipeline/{pipelineId}/metadata")
+  @POST
+  @ApiOperation(value ="", hidden = true)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
+  @SuppressWarnings("unchecked")
+  public Response saveMetadata(
+      @PathParam("pipelineId") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      Map<String, Object> metadata
+  ) throws PipelineException, URISyntaxException {
+    PipelineInfo pipelineInfo = store.getInfo(name);
+    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
+    store.saveMetadata(user, name, rev, metadata);
     return Response.ok().build();
   }
 

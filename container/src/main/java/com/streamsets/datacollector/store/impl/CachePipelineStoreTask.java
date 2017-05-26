@@ -181,6 +181,20 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
+  public PipelineConfiguration saveMetadata(
+      String user,
+      String name,
+      String rev,
+      Map<String, Object> metadata
+  ) throws PipelineException {
+    synchronized (lockCache.getLock(name)) {
+      PipelineConfiguration pipelineConf = pipelineStore.saveMetadata(user, name, rev, metadata);
+      pipelineInfoMap.put(name, pipelineConf.getInfo());
+      return pipelineConf;
+    }
+  }
+
+  @Override
   public void registerStateListener(StateEventListener stateListener) {
     pipelineStore.registerStateListener(stateListener);
   }

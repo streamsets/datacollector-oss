@@ -811,6 +811,17 @@ public class TestRemoteDataCollector {
     }
 
     @Override
+    public PipelineConfiguration saveMetadata(
+        String user,
+        String name,
+        String rev,
+        Map<String, Object> metadata
+    ) throws PipelineStoreException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
     public void registerStateListener(StateEventListener stateListener) {
 
     }

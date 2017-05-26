@@ -67,6 +67,13 @@ public interface PipelineStoreTask extends Task {
 
   public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineException;
 
+  public PipelineConfiguration saveMetadata(
+      String user,
+      String name,
+      String rev,
+      Map<String, Object> metadata
+  ) throws PipelineException;
+
   void registerStateListener(StateEventListener stateListener);
 
 }

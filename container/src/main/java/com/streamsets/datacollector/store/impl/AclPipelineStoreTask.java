@@ -182,6 +182,17 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
   }
 
   @Override
+  public PipelineConfiguration saveMetadata(
+      String user,
+      String name,
+      String rev,
+      Map<String, Object> metadata
+  ) throws PipelineException {
+    aclStore.validateWritePermission(name, currentUser);
+    return pipelineStore.saveMetadata(user, name, rev, metadata);
+  }
+
+  @Override
   public void registerStateListener(StateEventListener stateListener) {
     pipelineStore.registerStateListener(stateListener);
   }
