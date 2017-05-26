@@ -183,6 +183,7 @@
               "production.maxBatchSize",
               "production.maxErrorRecordsPerStage",
               "production.maxPipelineErrors",
+              "stage.conf_hadoop.always.impersonate.current.user",
               "ui.enable.webSocket",
               "ui.enable.usage.data.collection",
               "dpm.enabled",
@@ -520,6 +521,13 @@
           "description": "The max number of errors per pipeline that will be retained in memory when the pipeline is running. If set to zero, error records will not be retained in memory. If the specified limit is reached the oldest records will be discarded to make room for the newest one.The maximum size that the error output file is allowed to reach before being rolled over to backup files",
           "type": "long",
           "default": 100
+        },
+        {
+          "name": "stage.conf_hadoop.always.impersonate.current.user",
+          "label": "Hadoop Impersonate current user",
+          "description": "Set to true if SDC should always impersonate authenticated user when writing to or reading from Hadoop components.",
+          "type": "boolean",
+          "default": false
         },
         {
           "name": "ldap.hostname",
