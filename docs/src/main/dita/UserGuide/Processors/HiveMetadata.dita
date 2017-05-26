@@ -16,7 +16,8 @@
 <concept id="concept_rz5_nft_zv">
  <title>Hive Metadata</title>
  <shortdesc>The Hive Metadata processor works with the Hive Metastore destination, and the Hadoop FS
-        or MapR FS destinations as part of the Drift Synchronization Solution for Hive. </shortdesc>
+        or MapR FS destinations as part of the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HiveDrift-ph"/>. </shortdesc>
  <conbody>
         <p><indexterm>processors<indexterm>Hive Metadata</indexterm></indexterm><indexterm>Hive
                 Metadata processor<indexterm>overview</indexterm></indexterm>Use the Hive Metadata
@@ -26,12 +27,13 @@
             process the data.</p>
   <p>When you configure the Hive Metadata processor, you define the connection information for Hive
             and the expressions that define the database, table, partitions, and decimal field
-            expressions that the records require. </p>
+            expressions that the records require. You also specify the data format to use: Avro or
+            Parquet. </p>
         <p>You define the location of the Hive and Hadoop configuration files and optionally specify
             additional required properties. You can also configure advanced options, such as the
             maximum cache size, time basis, and decimal precision and scale expressions.</p>
-        <p>For more information about the Drift Synchronization Solution for Hive and a simple case
-            study, see <xref
+        <p>For more information about the Drift Synchronization Solution for Hive and case studies
+            for processing Avro and Parquet data, see <xref
                 href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"/>. For a
             tutorial, check out our <xref
                 href="https://github.com/streamsets/tutorials/blob/master/tutorial-hivedrift/readme.md"

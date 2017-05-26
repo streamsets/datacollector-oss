@@ -100,6 +100,10 @@
                                                 <codeph>/user/hive/warehouse/</codeph>.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Column Comment</entry>
+                                    <entry>Expression that evaluates to column comments. </entry>
+                                </row>
+                                <row>
                                     <entry>Table Path Template</entry>
                                     <entry>Expression that defines the path to use for external
                                         tables. </entry>
@@ -207,6 +211,38 @@
                                     <entry>Data Time Zone</entry>
                                     <entry>Time zone to use with Time Basis to evaluate
                                         datetime-based partition value expressions.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Data Format</wintitle> tab, configure the data format:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_zvy_qw2_wz">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>The data format of data. Select one of the following:<ul
+                                            id="ul_l13_5w2_wz">
+                                            <li>Avro</li>
+                                            <li>Parquet</li>
+                                        </ul>The selected data format determines how the Hive
+                                        Metastore destination creates Hive tables and how the
+                                        processor populates the targetDirectory record header
+                                        attribute. For more information, see <xref
+                                            href="HiveMeta-MRecordStageAtts.dita#concept_g3p_sss_dw"
+                                        />.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

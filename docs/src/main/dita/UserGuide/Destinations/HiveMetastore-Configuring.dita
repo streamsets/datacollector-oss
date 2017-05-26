@@ -99,11 +99,6 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveJDBCdriver">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Data Format</entry>
-                                    <entry>The destination processes only Avro schemas at this
-                                        time.</entry>
-                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveConfigDir">
                                     <entry/>
@@ -138,8 +133,9 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_lqj_pyn_lw"/></xref></entry>
                                     <entry>Uses the Stored As Avro clause in the SQL commands that
-                                        generate Hive tables. When selected, the Avro schema URL is
-                                        not included in the query.</entry>
+                                        generate Hive tables when the Drift Synchronization Solution
+                                        for Hive processes Avro data. When selected, the Avro schema
+                                        URL is not included in the query.</entry>
                                 </row>
                                 <row>
                                     <entry>Schema Folder Location</entry>

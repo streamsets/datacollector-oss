@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jlr_zlk_gw">
- <title>Processing Data</title>
+ <title>Processing Avro Data</title>
     <shortdesc>Now what happens when you start the pipeline?</shortdesc>
     <conbody>
         <p>This pipeline is set up to write data to different tables based on the table name in the

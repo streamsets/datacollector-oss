@@ -94,7 +94,7 @@
                                             following configuration files:<ul id="ul_bhl_zfy_mx">
                                                 <li>core-site.xml</li>
                                                 <li>yarn-site.xml</li>
-                                                <li>mapreduce-site.xml</li>
+                                                <li>mapred-site.xml</li>
                                             </ul></p><p>
                                             <note>Properties in the configuration files are
                                                 overridden by individual properties defined in this
