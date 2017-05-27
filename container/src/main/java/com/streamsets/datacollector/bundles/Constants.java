@@ -30,12 +30,12 @@ public final class Constants {
    */
   public static final String REDACTOR_CONFIG = "support-bundle-redactor.json";
 
+  public static final String CUSTOMER_ID_FILE = "customer.id";
+  public static final String DEFAULT_CUSTOMER_ID = "";
+
   /**
    * Uploading support bundles directly
    */
-  public static final String CUSTOMER_ID = "customer.id";
-  public static final String DEFAULT_CUSTOMER_ID = "";
-
   public static final String UPLOAD_ENABLED = "bundle.upload.enabled";
   public static final boolean DEFAULT_UPLOAD_ENABLED = true;
 
