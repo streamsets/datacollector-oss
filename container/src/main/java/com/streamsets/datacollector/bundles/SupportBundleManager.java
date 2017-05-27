@@ -62,6 +62,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -303,6 +304,19 @@ public class SupportBundleManager implements BundleContext {
     return readBytes;
   }
 
+  private String getCustomerId() {
+    File customerIdFile = new File(runtimeInfo.getDataDir(), Constants.CUSTOMER_ID_FILE);
+    if(!customerIdFile.exists()) {
+      return Constants.DEFAULT_CUSTOMER_ID;
+    }
+
+    try {
+      return com.google.common.io.Files.readFirstLine(customerIdFile, StandardCharsets.UTF_8).trim();
+    } catch (IOException ex) {
+      throw new RuntimeException(Utils.format("Could not read customer ID file '{}': {}", customerIdFile, ex.toString()), ex);
+    }
+  }
+
   private String generateBundleDate() {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     return dateFormat.format(new Date());
@@ -311,7 +325,7 @@ public class SupportBundleManager implements BundleContext {
   private String generateBundleName() {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
     StringBuilder builder = new StringBuilder("bundle_");
-    builder.append(configuration.get(Constants.CUSTOMER_ID, Constants.DEFAULT_CUSTOMER_ID));
+    builder.append(getCustomerId());
     builder.append("_");
     builder.append(runtimeInfo.getId());
     builder.append("_");
@@ -382,7 +396,7 @@ public class SupportBundleManager implements BundleContext {
     metadata.put("sdc.version", buildInfo.getVersion());
     metadata.put("sdc.id", runtimeInfo.getId());
     metadata.put("sdc.acl.enabled", String.valueOf(runtimeInfo.isAclEnabled()));
-    metadata.put("customer.id", configuration.get(Constants.CUSTOMER_ID, Constants.DEFAULT_CUSTOMER_ID));
+    metadata.put("customer.id", getCustomerId());
 
     return metadata;
   }
