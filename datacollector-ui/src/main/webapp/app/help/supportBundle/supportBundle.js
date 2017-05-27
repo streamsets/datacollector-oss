@@ -34,6 +34,11 @@ angular
   $scope.successfulUpload = false;
   // Validate that bundle upload is allowed
   $scope.isSupportBundleUplodEnabled = configuration.isSupportBundleUplodEnabled();
+  api.admin.getSdcId().then(function(res) {
+    $scope.sdc_id = res.data.id;
+  }, function(res) {
+    $scope.common.errors = [res.data];
+  });
   api.system.getSupportBundleGenerators().then(function(res) {
     $scope.showLoading = false;
     $scope.generators = _.map(res.data, function(generator) {
