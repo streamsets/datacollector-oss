@@ -140,4 +140,14 @@ public class InfoResource {
     return Response.status(Response.Status.OK).entity(map).build();
   }
 
+  @GET
+  @Path("/info/id")
+  @ApiOperation(value = "SDC id", response = Map.class, authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
+  public Response getSdcId(@Context SecurityContext context) throws PipelineException, IOException {
+    Map<String, Object> map = new HashMap<>();
+    map.put("id", runtimeInfo.getId());
+    return Response.status(Response.Status.OK).entity(map).build();
+  }
 }

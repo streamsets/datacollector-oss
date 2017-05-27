@@ -165,6 +165,17 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Fetches SDC ID
+       */
+      getSdcId: function() {
+        var url = apiBase + '/system/info/id';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Shutdown the Data Collector.
        * @returns {*}
        */
