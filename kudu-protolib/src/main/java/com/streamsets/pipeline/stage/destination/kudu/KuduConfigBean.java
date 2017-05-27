@@ -97,9 +97,9 @@ public class KuduConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Mutation buffer space",
-      description = "Sets the buffer size that Kudu client uses for a single batch. Should be higher or equal to maximal" +
-        "number of records in a single batch.",
+      label = "Mutation Buffer Space (records)",
+      description = "Sets the buffer size that Kudu client uses for a single batch. Should be greater than or" +
+        " equal to the number of records in the batch passed from the pipeline.",
       defaultValue = "1000",
       displayPosition = 15,
       group = "ADVANCED"
