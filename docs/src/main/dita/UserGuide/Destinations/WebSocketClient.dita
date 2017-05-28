@@ -26,9 +26,8 @@
             written, the destination closes the connection and then opens another connection for the
             next batch of data.</p>
         <p>When you configure the WebSocket Client destination, you define the resource URL and
-            headers to use for the requests. </p>
-        <p>When the resource URL uses the wss protocol for secure connections, you can configure the
-            truststore and keystore files to use if the certificate used by the WebSocket server is
-            not certified or is self-signed.</p>
+            headers to use for the requests. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-overview-ph"
+            /></p>
  </conbody>
 </concept>

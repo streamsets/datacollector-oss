@@ -15,12 +15,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_mrm_qhf_2t">
  <title>Enabling Encryption</title>
- <shortdesc>You can enable SDC RPC pipelines to transfer data securely using TLS. To use TLS, enable
-    TLS in both the SDC RPC destination and the SDC RPC origin.</shortdesc>
+ <shortdesc>You can enable SDC RPC pipelines to transfer data securely using SSL/TLS. To use
+    SSL/TLS, enable TLS in both the SDC RPC destination and the SDC RPC origin.</shortdesc>
  <conbody>
-  <p><indexterm>SDC RPC pipelines<indexterm>enabling TLS</indexterm></indexterm><indexterm>enabling
-          TLS<indexterm>in SDC RPC pipelines</indexterm></indexterm>You need the following
-      information to enable TLS in both stages:<ul id="ul_drg_b3f_2t">
+  <p><indexterm>SDC RPC pipelines<indexterm>enabling
+        SSL/TLS</indexterm></indexterm><indexterm>enabling TLS<indexterm>in SDC RPC
+          pipelines</indexterm></indexterm>You need the following information to enable TLS in both
+        stages:<ul id="ul_drg_b3f_2t">
         <li>A keystore file with the private keys of the TLS certificate, and the password for the
           file.</li>
         <li>For self-signed certificates, a truststore file with the public key of the TLS

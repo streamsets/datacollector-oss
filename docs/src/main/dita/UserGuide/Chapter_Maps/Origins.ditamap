@@ -353,6 +353,17 @@
    <topicref href="../Origins/SFTPClient-DataFormats.dita"/>
    <topicref href="../Origins/SFTP-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/TCPServer.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/TCPServer-MultithreadProc.dita"/>
+   <topicref href="../Origins/TCPServer-Connections.dita"/>
+   <topicref href="../Origins/TCPServer-Acks.dita">
+    <topicref href="../Origins/TCPServer-Acks-Expressions.dita"/>
+   </topicref>
+   <topicref href="../Origins/TCPServer-TCPMode.dita"/>
+   <topicref href="../Origins/TCPServer-DataFormats.dita"/>
+   <topicref href="../Origins/TCPServer-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/UDP.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/UDP-Configuring.dita"/>

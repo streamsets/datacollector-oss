@@ -469,6 +469,30 @@
                 /></entry>
             </row>
             <row>
+              <entry>TCP Server</entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qll_dlk_tz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_g5v_hlk_tz"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_zcs_3lk_tz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_xht_3lk_tz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_v45_3lk_tz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_gds_jlk_tz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_zht_jlk_tz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_j45_llk_tz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_wvv_llk_tz"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_dzw_llk_tz"
+                /></entry>
+            </row>
+            <row>
               <entry>UDP Source</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>

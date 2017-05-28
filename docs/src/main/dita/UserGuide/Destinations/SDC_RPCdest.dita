@@ -26,7 +26,8 @@
       Data Collector. </p>
     <p>When you configure the SDC RPC destination, you specify the RPC ID and RPC connections to
       use. You can optionally enable encryption to pass data securely and define retry and timeout
-      properties.</p>
+      properties. <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-overview-ph"/></p>
  </conbody>
  <related-links>
   <link href="../RPC_Pipelines/SDC_RPCpipeline.dita#concept_lnh_z3z_bt"/>

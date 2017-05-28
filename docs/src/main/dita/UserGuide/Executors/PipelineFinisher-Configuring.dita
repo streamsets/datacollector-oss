@@ -58,10 +58,11 @@
                                         to enter the stage for processing. All other records are
                                         handled based on the <uicontrol>On Record Error</uicontrol>
                                         property. <p>Click <uicontrol>Add</uicontrol> to create
-                                            additional preconditions. </p><note type="tip">To allow
-                                            only the no-more-data event to pass to the executor, use
-                                            the following
-                                            condition:<codeblock>${record:eventType() == 'no-more-data'}</codeblock></note></entry>
+                                            additional preconditions. </p><p>
+                                            <note type="tip">To allow only the no-more-data event to
+                                                pass to the executor, use the following
+                                                condition:<codeblock>${record:eventType() == 'no-more-data'}</codeblock></note>
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>On Record Error <xref

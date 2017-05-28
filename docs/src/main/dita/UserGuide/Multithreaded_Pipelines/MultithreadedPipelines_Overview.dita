@@ -29,10 +29,12 @@
             />.</p>
         <p>At this time, you can use the following origins to create a multithreaded pipeline:<ul
                 id="ul_oql_bym_3z">
+                <li>CoAP Server origin</li>
                 <li>Elasticsearch origin</li>
                 <li>HTTP Server origin</li>
                 <li>JDBC Multitable Consumer origin</li>
                 <li>Kinesis Consumer origin</li>
+                <li>TCP Server origin</li>
                 <li>WebSocket Server origin</li>
             </ul></p>
         <p>You can also use the Dev Data Generator development origin to test multithreaded

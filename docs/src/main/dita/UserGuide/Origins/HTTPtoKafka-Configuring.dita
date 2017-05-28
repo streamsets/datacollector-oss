@@ -111,21 +111,18 @@
                                             />.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Use HTTPS</entry>
-                                    <entry>Enables HTTPS.</entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-RPC-KeystoreFile">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-RPC-KeystorePass">
-                                    <entry/>
+                                    <entry>Application ID in URL</entry>
+                                    <entry>Enables reading the application ID from the URL. Use when
+                                        HTTP clients include the application ID in the URL query
+                                        parameter instead of in the request header.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-All">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

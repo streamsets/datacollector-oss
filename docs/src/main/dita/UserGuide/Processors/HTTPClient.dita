@@ -29,8 +29,8 @@
         <p>You can configure the processor to include response header fields in the record as a set
             of record header attributes or as a map in a record field.</p>
         <p>You can also configure the timeout, request transfer encoding, maximum number of parallel
-            requests, and authentication type. You can optionally use a truststore and keystore, and
-            proxy.</p>
+            requests, and authentication type. You can optionally use an HTTP proxy and configure
+            SSL/TLS properties. </p>
         <p>You can also configure the processor to use the OAuth 2 protocol to connect to an HTTP
             service.</p>
     </conbody>
