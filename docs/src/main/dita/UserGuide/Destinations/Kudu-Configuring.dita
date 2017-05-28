@@ -113,6 +113,13 @@
                                             documentation.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Mutation Buffer Space</entry>
+                                    <entry>The size of the buffer that Kudu uses to write a single
+                                        batch of data, in records. Should be equal to or greater
+                                        than the number of records in the batch passed from the
+                                            pipeline.<p>Default is 1000 records. </p></entry>
+                                </row>
+                                <row>
                                     <entry>Operation Timeout (ms)</entry>
                                     <entry>Number of milliseconds the destination waits to allow an
                                         operation to complete.</entry>
