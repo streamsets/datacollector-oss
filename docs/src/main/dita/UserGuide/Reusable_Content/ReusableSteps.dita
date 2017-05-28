@@ -1619,6 +1619,8 @@
                 <cmd>Optionally, on the <uicontrol>SSL/TLS</uicontrol> tab, configure truststore and
                     keystore details:</cmd>
                 <info>
+                    <draft-comment author="Loretta">delete when fully replaced with
+                        TLS.</draft-comment>
                     <note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"/>
                     <table frame="all" rowsep="1" colsep="1" id="SSLTLS_table">
                         <tgroup cols="2">
@@ -1651,6 +1653,163 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta" id="TLS-Destinations">The following TLS-All step
+                        is used by HTTP Server, HTTP to Kafka, SDC RPC to Kafka. Using Keystore+
+                        rows are: TCP Server, SDC RPC origin. <p>Using Truststore+ rows are: HTTP
+                            Client origin, processor &amp; destination, MQTT consumer &amp;
+                            producer, SDC RPC destination, Websocket, write to another pipeline
+                            </p><p>SunX509 is also a conref'ed ph</p></draft-comment>
+                </cmd>
+            </step>
+            <step id="TLS-All">
+                <cmd>To use SSL/TLS, click the <wintitle>TLS</wintitle> tab and configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_p5k_xqy_tz">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>TLS Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="TLS-EnableTLS-row">
+                                    <entry>Enable TLS</entry>
+                                    <entry>
+                                        <p>Enables the use of TLS. </p>
+                                    </entry>
+                                </row>
+                                <row id="TLS-KeystoreFile-row">
+                                    <entry>Keystore File <xref
+                                            href="../Pipeline_Configuration/SSL-TLS-KeystoreTruststore.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_z24_nfv_zz"
+                                        /></xref></entry>
+                                    <entry>The path to the keystore file. Enter an absolute path to
+                                        the file or a path relative to the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> resources directory: <filepath>$SDC_RESOURCES</filepath>.
+                                            <p>For more information about environment variables, see
+                                                <xref
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                            />.</p><p>By default, no keystore is used. </p></entry>
+                                </row>
+                                <row id="TLS-KeystoreType-row">
+                                    <entry>Keystore Type</entry>
+                                    <entry>Type of keystore to use. Use one of the following
+                                            types:<ul id="ul-keystoreTruststore-Types">
+                                            <li>Java Keystore File (JKS)</li>
+                                            <li>PKCS-12 (p12 file)</li>
+                                        </ul><p>Default is Java Keystore File (JKS). </p></entry>
+                                </row>
+                                <row id="TLS-KeystorePassword-row">
+                                    <entry>Keystore Password</entry>
+                                    <entry>Password to the keystore file. A password is optional,
+                                        but recommended.<p>
+                                            <note
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
+                                            />
+                                        </p></entry>
+                                </row>
+                                <row id="TLS-KeystoreKeyAlgo-row">
+                                    <entry>Keystore Key Algorithm</entry>
+                                    <entry>The algorithm used to manage the keystore. <p>Default is
+                                                <ph>SunX509</ph>.</p></entry>
+                                </row>
+                                <row id="TLS-TruststoreFile-row">
+                                    <entry>Truststore File <xref
+                                            href="../Pipeline_Configuration/SSL-TLS-KeystoreTruststore.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline"/></xref></entry>
+                                    <entry>The path to the truststore file. Enter an absolute path
+                                        to the file or a path relative to the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> resources directory: <filepath>$SDC_RESOURCES</filepath>.
+                                            <p>For more information about environment variables, see
+                                                <xref
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                            />.</p><p>By default, no truststore is used.
+                                        </p></entry>
+                                </row>
+                                <row id="TLS-TruststoreType-row">
+                                    <entry>Truststore Type</entry>
+                                    <entry>Type of truststore to use. Use one of the following types:<ul>
+                                            <li>Java Keystore File (JKS)</li>
+                                            <li>PKCS-12 (p12 file)</li>
+                                        </ul><p>Default is Java Keystore File (JKS). </p></entry>
+                                </row>
+                                <row id="TLS-TruststorePassword-row">
+                                    <entry>Truststore Password</entry>
+                                    <entry>Password to the truststore file. A password is optional,
+                                        but recommended.<p>
+                                            <note
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
+                                            />
+                                        </p></entry>
+                                </row>
+                                <row id="TLS-TruststoreKeyAlgo-row">
+                                    <entry>Truststore Key Algorithm</entry>
+                                    <entry>The algorithm used to manage the truststore. <p>Default
+                                            is <ph id="TLS-DefaultAlgorithm-ph"
+                                        >SunX509</ph>.</p></entry>
+                                </row>
+                                <row id="TLS-DefaultProtocols-row">
+                                    <entry>Use Default Protocols</entry>
+                                    <entry>Determines the transport layer security (TLS) protocol to
+                                        use. The default protocol is <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-defaultProtocol-ph"
+                                        />. To use a different protocol, clear this option.</entry>
+                                </row>
+                                <row id="TLS-TransportProtocols-row">
+                                    <entry>Transport Protocols <xref
+                                            href="../Pipeline_Configuration/SSL-TLS-TransferProtocols.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_h5t_wfv_zz"
+                                        /></xref></entry>
+                                    <entry>The TLS protocols to use. To use a protocol other than
+                                        the default <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-defaultProtocol-ph"
+                                        />, click the <uicontrol>Add</uicontrol> icon and enter the
+                                        protocol name. <note>Older protocols are not as secure as
+                                                <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-defaultProtocol-ph"
+                                            />.</note></entry>
+                                </row>
+                                <row id="TLS-DefaultCipherSuites-Row">
+                                    <entry>Use Default Cipher Suites</entry>
+                                    <entry>Determines the cipher suite to use when performing the
+                                        SSL/TLS handshake. <p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> provides a set of cipher suites that it can use by
+                                            default. For a full list, see <xref
+                                                href="../Pipeline_Configuration/SSL-TLS-CipherSuites.dita#concept_cwx_dyf_5z"
+                                            />.</p></entry>
+                                </row>
+                                <row id="TLS-CipherSuites-row">
+                                    <entry>Cipher Suites</entry>
+                                    <entry>Cipher suites to use. To use a cipher suite that is not a
+                                        part of the default set, click the
+                                            <uicontrol>Add</uicontrol> icon and enter the name of
+                                        the cipher suite.<p>Enter the Java Secure Socket Extension
+                                            (JSSE) name for the additional cipher suites that you
+                                            want to use. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The following TLS-Destinations step should be
+                        used by destinations</draft-comment>
+                </cmd>
             </step>
             <step>
                 <cmd>
@@ -2073,7 +2232,8 @@
                     <draft-comment author="Loretta"><uicontrol>O-UDPprops</uicontrol> - whole step
                         used by UDP Source. Rows in this table by UDP to Kafka. Data format
                         bulletted list is also used by Configuring the Kafka Consumer > Datagram
-                        step.</draft-comment>
+                        step. Some rows/entries used by Configuring the TCP Server
+                        origin.</draft-comment>
                 </cmd>
             </step>
             <step id="O-step-UDPprops">
@@ -2111,13 +2271,15 @@
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> runs on 64-bit Linux.</p></entry>
                                 </row>
-                                <row>
+                                <row id="row-ReceiverThreads">
                                     <entry>Number of Receiver Threads</entry>
-                                    <entry id="entry_ReceiverThreads">Number of receiver threads to
-                                        use for each port. For example, if you configure two threads
-                                        per port and configure the origin to use three ports, the
-                                        origin uses a total of six threads.<p>Set to the expected
-                                            number of CPU cores of the <ph
+                                    <entry id="entry_ReceiverThreads"><ph
+                                            id="Multithread-ReceiverThreads-ph">Number of receiver
+                                            threads to use for each port. For example, if you
+                                            configure two threads per port and configure the origin
+                                            to use three ports, the origin uses a total of six
+                                            threads.</ph><p>Set to the expected number of CPU cores
+                                            of the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> machine that are dedicated to the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -2131,9 +2293,9 @@
                                             <li>syslog </li>
                                         </ul></entry>
                                 </row>
-                                <row>
+                                <row id="row-MaxBatchSize">
                                     <entry>Max Batch Size (messages)</entry>
-                                    <entry>Maximum number of messages include in a batch and pass
+                                    <entry>Maximum number of messages to include in a batch and pass
                                         through the pipeline at one time. Honors values up to the
                                             <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -4220,33 +4382,6 @@
                                     <entry>User-defined ID to allow the destination to pass data to
                                         an SDC RPC origin. Use this ID in all SDC RPC origins to
                                         process data from the destination.</entry>
-                                </row>
-                                <row id="row-SSLenabled">
-                                    <entry>TLS Enabled <xref
-                                            href="../RPC_Pipelines/EnablingEncryption.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_a5x_jzn_vs"
-                                        /></xref></entry>
-                                    <entry>Enables the secure transfer of data using TLS. <p>To use
-                                            encryption, both the SDC RPC origin and SDC RPC
-                                            destination must be enabled for TLS.</p></entry>
-                                </row>
-                                <row id="row-TrustStore">
-                                    <entry>Truststore File</entry>
-                                    <entry>Truststore file for TLS. Required if the keystore file is
-                                        a self-signed certificate.<p>Must be stored in the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> resources directory,
-                                                <filepath>$SDC_RESOURCES</filepath>. For more
-                                            information about environment variables, see <xref
-                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
-                                            />.</p></entry>
-                                </row>
-                                <row id="row-TSpass">
-                                    <entry>Truststore Password</entry>
-                                    <entry>Password for the truststore file.<note
-                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
-                                        /></entry>
                                 </row>
                                 <row id="row-verifyHost">
                                     <entry>Verify Host in Server Certificate</entry>

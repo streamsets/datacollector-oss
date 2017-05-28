@@ -31,8 +31,9 @@
             of the architecture for using the HTTP to Kafka origin:</p>
         <p><image href="../Graphics/HTTPtoKafka-arch.png" id="image_obd_s5p_4y" scale="80"/></p>
         <p>When you configure HTTP to Kafka, you specify the listening port, Kafka configuration
-            information, maximum message size, and the application ID. You can optionally enable
-            HTTPS. </p>
+            information, maximum message size, and the application ID. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-overview-ph"
+            /></p>
         <p>You can add Kafka configuration properties and enable Kafka security as needed. <note
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip-CompareHTTPOrigins"
             /></p>

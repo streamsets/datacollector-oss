@@ -57,15 +57,16 @@
                         origin uses the initial offset values of all columns to determine where to
                         start reading data. For example, you override the primary key with the
                         following offset columns: p1, p2, p3 and define an initial offset value for
-                        each column. The origin generates SQL queries using the following
-                                syntax:<codeblock>SELECT * FROM &lt;table> ORDER BY p1, p2, p3 WHERE (p1 > ${offset1}) OR (p1 = ${offset1} AND p2 > ${offset2}) OR (p1 = ${offset1} AND p2 = ${offset2} AND p3 > ${offset3})</codeblock><note><ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> stores offsets for Datetime columns as Long values. For offset
-                            columns with a Datetime data type, enter the initial value as a Long
-                            value. You can use the time functions to transform a Datetime value to a
-                            Long value. For example, the following expression converts a date
-                            entered as a String to a Date object, and then to a Long
-                            value:<codeblock>${time:dateTimeToMilliseconds(time:extractDateFromString('2017-05-01 20:15:30.915','yyyy-MM-dd HH:mm:ss.SSS'))} </codeblock></note></dd>
+                        each column. The origin generates SQL queries using the following syntax:<codeblock>SELECT * FROM &lt;table> ORDER BY p1, p2, p3 WHERE (p1 > ${offset1}) OR (p1 = ${offset1} AND p2 > ${offset2}) OR (p1 = ${offset1} AND p2 = ${offset2} AND p3 > ${offset3})</codeblock><p>
+                            <note><ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> stores offsets for Datetime columns as Long values. For offset
+                                columns with a Datetime data type, enter the initial value as a Long
+                                value. You can use the time functions to transform a Datetime value
+                                to a Long value. For example, the following expression converts a
+                                date entered as a String to a Date object, and then to a Long
+                                value:<codeblock>${time:dateTimeToMilliseconds(time:extractDateFromString('2017-05-01 20:15:30.915','yyyy-MM-dd HH:mm:ss.SSS'))} </codeblock></note>
+                        </p></dd>
                 </dlentry>
                 <dlentry>
                     <dt>Define additional offset column conditions</dt>

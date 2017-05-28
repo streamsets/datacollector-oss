@@ -32,8 +32,9 @@
         <p><image href="../Graphics/SDCRPCtoKafka-arch.png" id="image_i1l_23n_vw" scale="80"/></p>
         <p>When you configure the SDC RPC to Kafka origin, you define the port that the origin
             listens to for data, the SDC RPC ID, the maximum number of concurrent requests, and
-            maximum batch request size. You can optionally use TLS to connect to the SDC RPC
-            destinations providing data.</p>
+            maximum batch request size. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-overview-ph"
+            /></p>
         <p>You also need to configure connection information for Kafka, including the broker URI,
             topic to write to, and maximum message size. You can add Kafka configuration properties
             and enable Kafka security as needed. </p>

@@ -28,8 +28,9 @@
         <p>Before you configure the origin, perform additional steps to configure the WebSocket
             clients. </p>
         <p>When you configure the WebSocket Server origin, you specify the maximum number of
-            concurrent requests to determine how many threads to use. You also define the listening
-            port, application ID, and the maximum message size. You can optionally enable WSS, the
-            WebSocket protocol over HTTPS. </p>
+            concurrent requests to determine how many threads to use. You define the listening port,
+            application ID, and the maximum message size. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-overview-ph"
+            /></p>
  </conbody>
 </concept>

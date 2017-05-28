@@ -88,18 +88,6 @@
                                     <entry>Maximum size of the request body that the origin can
                                         process. </entry>
                                 </row>
-                                <row>
-                                    <entry>Use HTTPS</entry>
-                                    <entry>Enables HTTPS.</entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-RPC-KeystoreFile">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-RPC-KeystorePass">
-                                    <entry/>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -163,6 +151,9 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/XMLprops">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-All">
                 <cmd/>
             </step>
         </steps>

@@ -21,20 +21,10 @@
   <p>
             <ul id="ul_igl_q4d_py">
                 <li>Use multithreaded origins to create a multithreaded pipeline. You can use the
-                    following origins at this time:<ul id="ul_exg_jym_3z">
-                        <li><xref href="../Origins/Elasticsearch.dita#concept_f1q_vpm_2z"
-                                >Elasticsearch</xref></li>
-                        <li><xref href="../Origins/HTTPServer.dita#concept_s2p_5hb_4y">HTTP
-                                Server</xref></li>
-                        <li><xref href="../Origins/MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y"
-                                >JDBC Multitable Consumer</xref></li>
-                        <li><xref href="../Origins/KinConsumer.dita#concept_anh_4y3_yr">Kinesis
-                                Consumer</xref>
-                        </li>
-                        <li><xref href="../Origins/WebSocketServer.dita#concept_u2r_gpc_3z"
-                                >WebSocket Server</xref></li>
-                        <li><xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"> Dev
-                                Data Generator</xref></li>
+                    following origins at this time:<ul
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Multithread-OriginsList"
+                        id="ul_llv_cwk_tz">
+                        <li/>
                     </ul></li>
                 <li>Unlike a basic, single-threaded pipeline, a multithreaded pipeline cannot
                     guarantee the order of data. <p>Data within a batch is processed in order, but

@@ -79,6 +79,26 @@
                   Requirements and Configuring the Open File Limit</draft-comment>
             <p><ph id="ph-MinFileDescriptors">32768</ph></p>
             <p>
+                  <draft-comment author="Loretta">Used in stage overviews that use the shared TLS
+                        properties.</draft-comment>
+            </p>
+            <p><ph id="TLS-overview-ph">You can also configure SSL/TLS properties, including default
+                        transport protocols and cipher suites.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">default TLS protocol, used in resuable TLS
+                        topics</draft-comment>
+            </p>
+            <p><ph id="TLS-defaultProtocol-ph">TLSv1.2</ph></p>
+            <p>
+                  <draft-comment author="Loretta">The following is used in TCP Server doc in a few
+                        places.</draft-comment>
+            </p>
+            <p><ph id="JavaSyntax-ph">Specify one or more characters using the Java Unicode syntax,
+                        as follows: <codeph>\u&lt;Unicode character code></codeph>. To specify
+                        multiple characters, repeat the syntax for each character, as follows:
+                              <codeph>\u&lt;Unicode character code>\u&lt;Unicode character
+                              code>\u&lt;Unicode character code></codeph>.</ph></p>
+            <p>
                   <draft-comment author="Loretta"><uicontrol>ph-VaultFunctions-Usage</uicontrol> -
                         used in Vault-Step3-CallVault.dita</draft-comment>
             </p>
@@ -107,6 +127,7 @@
                         <li>MQTT Subscriber</li>
                         <li>SDC RPC</li>
                         <li>SFTP/FTP Client</li>
+                        <li>TCP Server</li>
                         <li>UDP Source</li>
                         <li>WebSocket Server</li>
                   </ul>
@@ -1079,6 +1100,37 @@ web-0011.log</codeblock></dd>
                         records within each batch, just like a single-threaded pipeline. But since
                         batches are processed by different pipeline instances, the order that
                         batches are written to destinations is not ensured.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">Used in Origins for Multithreaded and the
+                        Multithreaded summary.</draft-comment>
+            </p>
+            <p>
+                  <ul id="Multithread-OriginsList">
+                        <li><xref href="../Origins/CoAPServer.dita#concept_wfy_ghn_sz">CoAP
+                                    Server</xref> - Listens on a CoAP endpoint and processes the
+                              contents of all authorized CoAP requests.</li>
+                        <li><xref href="../Origins/Elasticsearch.dita#concept_f1q_vpm_2z"
+                                    >Elasticsearch</xref> - Reads data from an Elasticsearch
+                              cluster.</li>
+                        <li><xref href="../Origins/HTTPServer.dita#concept_s2p_5hb_4y">HTTP
+                                    Server</xref> - Listens on a HTTP endpoint and processes the
+                              contents of all authorized HTTP POST requests. </li>
+                        <li><xref href="../Origins/MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y"
+                                    >JDBC Multitable Consumer</xref> - Reads database data from
+                              multiple tables through a JDBC connection.</li>
+                        <li><xref href="../Origins/KinConsumer.dita#concept_anh_4y3_yr">Kinesis
+                                    Consumer</xref> - Reads data from a Kinesis cluster.</li>
+                        <li><xref href="../Origins/TCPServer.dita#concept_ppm_xb1_4z">TCP
+                                    Server</xref> - Listens at the specified ports and processes
+                              incoming data over TCP/IP connections.</li>
+                        <li><xref href="../Origins/WebSocketServer.dita#concept_u2r_gpc_3z"
+                                    >WebSocket Server</xref> - Listens on a WebSocket endpoint and
+                              processes the contents of all authorized WebSocket requests. </li>
+                        <li><xref href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht">Dev
+                                    Data Generator</xref> - Generates random data for development
+                              and testing.</li>
+                  </ul>
+            </p>
             <p>
                   <draft-comment author="Loretta">next couple are used in origin versions of
                         Multithreaded Processing</draft-comment>

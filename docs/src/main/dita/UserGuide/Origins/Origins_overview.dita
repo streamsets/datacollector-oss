@@ -81,6 +81,8 @@
           from an SDC RPC destination in an SDC RPC pipeline and writes it to Kafka.</li>
         <li><xref href="SDCRPCtoKafka.dita#concept_tdk_slk_pw">SFTP/FTP Client</xref> - Reads files
           from an SFTP or FTP server.</li>
+        <li><xref href="TCPServer.dita#concept_ppm_xb1_4z">TCP Server</xref> - Listens at the
+          specified ports and processes incoming data over TCP/IP connections.</li>
         <li><xref href="UDP.dita#concept_rst_2y5_1s">UDP Source</xref> - Reads messages from one or
           more UDP ports. </li>
         <li><xref href="UDPtoKafka.dita#concept_jzq_jcz_pw">UDP to Kafka</xref> - Reads messages

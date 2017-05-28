@@ -63,6 +63,11 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Pipeline_Configuration/SSL-TLS.dita">
+   <topicref href="../Pipeline_Configuration/SSL-TLS-KeystoreTruststore.dita"/>
+   <topicref href="../Pipeline_Configuration/SSL-TLS-TransferProtocols.dita"/>
+   <topicref href="../Pipeline_Configuration/SSL-TLS-CipherSuites.dita"/>
+  </topicref>
   <topicref href="../Pipeline_Configuration/Validation.dita">
    <topicmeta>
     <shortdesc/>

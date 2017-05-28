@@ -28,9 +28,11 @@
             names:<codeblock>/([A-Z a-z]*)[^a-z A-Z 0-9]([A-Z a-z 0-9]*)</codeblock></p>
         <p>Then use the following expression for target field
             names:<codeblock>/$1_invalid_character_removed_$2</codeblock></p>
-        <note>To include regex special characters such as the pipe symbol (|) in field names, use
-            single quotation marks to surround the field name. For example, if you have a field
-            named <codeph>tag|attr</codeph>, enter the field name as follows:
-            <codeblock>/'tag|attr'</codeblock></note>
+        <p>
+            <note>To include regex special characters such as the pipe symbol (|) in field names,
+                use single quotation marks to surround the field name. For example, if you have a
+                field named <codeph>tag|attr</codeph>, enter the field name as follows:
+                <codeblock>/'tag|attr'</codeblock></note>
+        </p>
  </conbody>
 </concept>

@@ -23,10 +23,9 @@
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>MQTT
                     Publisher</indexterm></indexterm>When you configure the destination, you specify
             the information needed to connect to the MQTT broker. You must define connection
-            credentials when the MQTT broker requires a user name and password. When the MQTT broker
-            uses the SSL/TLS protocol for secure connections, you configure the truststore and
-            keystore files to use if the certificate used by the MQTT broker is not certified or is
-            self-signed.</p>
+            credentials when the MQTT broker requires a user name and password. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-overview-ph"
+            /></p>
         <p>You specify the topic on the MQTT broker that the destination delivers the message
             to.</p>
         <p>You also configure the quality of service level and the persistence mechanism that the

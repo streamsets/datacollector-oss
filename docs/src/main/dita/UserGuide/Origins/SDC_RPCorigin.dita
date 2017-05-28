@@ -22,8 +22,8 @@
   <p><indexterm>origins<indexterm>SDC RPC</indexterm></indexterm><indexterm>SDC RPC
           origins<indexterm>overview</indexterm></indexterm>You can use SDC RPC pipelines across a
       single Data Collector instance on a single machine, or across a local network or the public
-      internet to a remote Data Collector. You can configure the origin to use encryption for secure
-      connectivity. </p>
+      internet to a remote Data Collector. <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-overview-ph"/></p>
     <p>When you configure the SDC RPC origin, you define the port that the origin listens to for
       data. The port number must be specified in one of the RPC connections defined in the SDC RPC
       destination. </p>

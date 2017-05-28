@@ -345,6 +345,9 @@
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RPCconnect">
                                     <entry/>
+                                </row><row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RPCID">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RetriesBatch">
@@ -354,16 +357,9 @@
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-BackOffPeriod">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-RPCID">
-                                    <entry/>
-                                </row>
+                                
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ConTimeout">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-SSLenabled">
                                     <entry/>
                                 </row>
                                 <row
@@ -371,21 +367,45 @@
                                     <entry/>
                                 </row>
                                 <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-TrustStore">
-                                    <entry/>
-                                </row>
-                                <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-UseCompression">
                                     <entry/>
                                 </row>
                                 <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-TSpass">
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-EnableTLS-row">
                                     <entry/>
                                 </row>
                                 <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-verifyHost">
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TruststoreFile-row">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TruststoreType-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TruststorePassword-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TruststoreKeyAlgo-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-DefaultProtocols-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TransportProtocols-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-DefaultCipherSuites-Row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-CipherSuites-row">
+                                    <entry/>
+                                </row>   
                             </tbody>
                         </tgroup>
                     </table>
