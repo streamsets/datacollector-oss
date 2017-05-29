@@ -32,7 +32,7 @@
             <li>What partition do you want to use?<p>Let's create a dt partition column for daily
                     partitions using datetime variables in the expression as follows:
                     <codeblock>${YYYY()}-${MM()}-${DD()}</codeblock></p></li>
-            <li>How do you want to configure the precision and scale exprssions for decimal fields?
+            <li>How do you want to configure the precision and scale expressions for decimal fields?
                     <p>Since you have the the JDBC Query Consumer generating record header
                     attributes, you can use the default expressions in the processor:
                     <codeblock>${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.scale'))}

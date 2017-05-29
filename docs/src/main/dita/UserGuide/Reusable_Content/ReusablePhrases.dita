@@ -30,7 +30,7 @@
             <p>DPM long only: <ph id="DPM-LongOnly">Dataflow Performance Manager</ph></p>
             <p>DPM short: <ph id="DPM-short">DPM</ph></p>
             <p>
-                  <draft-comment author="Loretta">Tbe old Hive Drift Solution
+                  <draft-comment author="Loretta">The old Hive Drift Solution
                         rename.</draft-comment>
             </p>
             <p><ph id="HiveDrift-ph">Drift Synchronization Solution for Hive</ph></p>
@@ -85,7 +85,7 @@
             <p><ph id="TLS-overview-ph">You can also configure SSL/TLS properties, including default
                         transport protocols and cipher suites.</ph></p>
             <p>
-                  <draft-comment author="Loretta">default TLS protocol, used in resuable TLS
+                  <draft-comment author="Loretta">default TLS protocol, used in reusable TLS
                         topics</draft-comment>
             </p>
             <p><ph id="TLS-defaultProtocol-ph">TLSv1.2</ph></p>
@@ -2829,7 +2829,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   information about field attribute functions, see <xref
                         href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"/>.</p>
             <p><ph id="warn_FieldRecHeaderAtts">Field attributes and record header attributes are
-                        written to destination systems automatially only when you use the SDC RPC
+                        written to destination systems automatically only when you use the SDC RPC
                         data format in destinations. For more information about working with field
                         attributes and record header attributes, and how to include them in records,
                         see <xref href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"

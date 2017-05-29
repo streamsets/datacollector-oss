@@ -102,7 +102,7 @@
                                 </row>
                                 <row>
                                     <entry>Ack Time Zone</entry>
-                                    <entry>Time zone to use for acknowlegement messages. Any dates
+                                    <entry>Time zone to use for acknowledgement messages. Any dates
                                         returned by functions are adjusted to the specified time
                                         zone. </entry>
                                 </row>
