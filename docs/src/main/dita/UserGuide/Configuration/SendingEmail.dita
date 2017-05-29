@@ -23,7 +23,7 @@
             can send email in the following ways:<ul id="ul_lqj_1xg_xz">
                 <li><xref href="../Alerts/EmailforAlerts-Configuring.dita#task_f3v_1hw_1r">Email
                         alert</xref> - Sends a basic email when an email-enabled alert is triggered,
-                    such as when the error record threshhold has been reached.</li>
+                    such as when the error record threshold has been reached.</li>
                 <li><xref href="../Pipeline_Configuration/Notifications.dita#concept_mtn_k4j_rz"
                         >Pipeline notification</xref> - Sends a basic email when the pipeline state
                     changes to a specified state. For example, you might use pipeline notification
