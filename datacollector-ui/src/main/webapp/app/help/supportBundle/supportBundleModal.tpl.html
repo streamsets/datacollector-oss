@@ -31,15 +31,28 @@
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
     <div
-      ng-if="successfulUpload"
-      class="alert alert-success alert-dismissible"
-      translate="sdcSupportBundle.uploadedMessage"
+      ng-if="message"
+      class="alert alert-{{message.type}} alert-dismissible"
+      translate="{{message.id}}"
       role="alert">
     </div>
 
     <p translate="sdcSupportBundle.infoMessage"></p>
-    <p>SDC ID: {{sdc_id}}</p>
-    <table class="table" ng-show="!showLoading">
+
+    <div class="form-horizontal" style="margin-top: 20px">
+      <div class="form-group form-group-sm">
+        <label class="col-sm-2 control-label">SDC ID:</label>
+        <div class="col-sm-10">
+          <input type="text"
+                 class="form-control"
+                 style="font-family: monospace"
+                 value="{{sdc_id}}"
+                 readonly="readonly">
+        </div>
+      </div>
+    </div>
+
+    <table class="table table-hover" ng-show="!showLoading">
       <thead>
         <tr>
           <th translate="sdcSupportBundle.generator" colspan="2">Generator</th>
@@ -48,7 +61,7 @@
       </thead>
 
       <tbody>
-        <tr ng-repeat="generator in generators">
+        <tr class="generator-row" ng-repeat="generator in generators" ng-click="toggleGenerator($event, generator)">
           <td><input type="checkbox" ng-model="generator.checked"></td>
           <td>{{generator.name}}</td>
           <td>{{generator.description}}</td>
@@ -64,14 +77,15 @@
         ng-click="done()"
         translate="global.form.cancel">Cancel
     </button>
-    <a
-        class="btn btn-primary"
-        ng-href="{{generateBundle()}}"
-        ng-disabled="showLoading || uploading || !hasAnyGeneratorSelected()"
-        target="_self"
-        translate="global.form.download">Download
-    </a>
     <button
+        type="button"
+        class="btn btn-default"
+        ng-click="downloadBundle()"
+        ng-disabled="showLoading || uploading || !hasAnyGeneratorSelected()"
+        translate="global.form.download">Download
+    </button>
+    <button
+        type="button"
         class="btn btn-primary"
         ng-if="isSupportBundleUplodEnabled"
         ng-disabled="showLoading || uploading || !hasAnyGeneratorSelected()"
