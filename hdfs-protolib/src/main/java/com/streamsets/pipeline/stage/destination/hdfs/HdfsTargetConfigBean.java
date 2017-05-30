@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.stage.HadoopConfigurationUtils;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -896,8 +897,7 @@ public class HdfsTargetConfigBean {
     conf.setBoolean("fs.automatic.close", false);
 
     // See SDC-5451, we set hadoop.treat.subject.external automatically to take advantage of HADOOP-13805
-    // Not using constant to make this code compile even for stage libraries that does not have HADOOP-13805 available.
-    conf.setBoolean("hadoop.treat.subject.external", true);
+    HadoopConfigurationUtils.configureHadoopTreatSubjectExternal(conf);
 
     if (hdfsKerberos) {
       conf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
