@@ -102,7 +102,7 @@ public class AclCacheHelper {
     acl.setResourceCreatedTime(pipelineInfo.getCreated().getTime());
     Permission permission = new Permission();
     permission.setSubjectId(pipelineInfo.getCreator());
-    permission.setSubjectType(SubjectType.GROUP);
+    permission.setSubjectType(SubjectType.USER);
     permission.setActions(ImmutableList.of(Action.READ, Action.WRITE, Action.EXECUTE));
     acl.setPermissions(ImmutableList.of(permission));
     cache.put(resourceId, acl);

@@ -130,6 +130,7 @@ public class TestAclCacheHelper {
     Assert.assertEquals(createdDate.getTime(), gotAcl.getResourceCreatedTime());
     Assert.assertEquals(1, gotAcl.getPermissions().size());
     Assert.assertEquals(gotAcl.getResourceOwner(), gotAcl.getPermissions().get(0).getSubjectId());
+    Assert.assertEquals(SubjectType.USER, gotAcl.getPermissions().get(0).getSubjectType());
 
     Acl sameAclObject = aclCacheHelper.getAcl(newResource);
     Assert.assertEquals(gotAcl, sameAclObject);
