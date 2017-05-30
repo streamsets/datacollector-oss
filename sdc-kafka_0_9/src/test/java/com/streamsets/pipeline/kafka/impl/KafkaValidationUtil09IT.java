@@ -30,6 +30,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.testing.NetworkUtils;
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaServer;
 import kafka.utils.TestUtils;
@@ -69,8 +70,8 @@ public class KafkaValidationUtil09IT {
       zkConnect, zkSessionTimeout, zkConnectionTimeout,
       JaasUtils.isZkSecurityEnabled());
 
-    port = TestUtil.getFreePort();
-    kafkaServer = TestUtil.createKafkaServer(port, zkConnect, false);
+    port = NetworkUtils.getRandomPort();
+    kafkaServer = TestUtil09.createKafkaServer(port, zkConnect, false);
     sdcKafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
   }
 
@@ -181,7 +182,7 @@ public class KafkaValidationUtil09IT {
 
   private String createTopic(ZkUtils zkUtils, int partitionCount, KafkaServer kafkaServer) {
     String topic = UUID.randomUUID().toString();
-    TestUtil.createTopic(zkUtils, topic, partitionCount, 1);
+    TestUtil09.createTopic(zkUtils, topic, partitionCount, 1);
     TestUtils.waitUntilMetadataIsPropagated(
       scala.collection.JavaConversions.asScalaBuffer(Arrays.asList(kafkaServer)), topic, 0, 3000);
     return topic;

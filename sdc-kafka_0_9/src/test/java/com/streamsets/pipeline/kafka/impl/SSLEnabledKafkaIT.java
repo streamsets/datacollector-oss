@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
+import com.streamsets.testing.NetworkUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -34,8 +35,8 @@ public class SSLEnabledKafkaIT extends SecureKafkaBase {
 
   @BeforeClass
   public static void beforeClass() throws Exception {
-    plaintextPort = TestUtil.getFreePort();
-    specializedPort = TestUtil.getFreePort();
+    plaintextPort = NetworkUtils.getRandomPort();
+    specializedPort = NetworkUtils.getRandomPort();
     SecureKafkaBase.beforeClass();
   }
 
@@ -46,7 +47,7 @@ public class SSLEnabledKafkaIT extends SecureKafkaBase {
 
   @Override
   protected void addBrokerSecurityConfig(Properties props) {
-    TestUtil.addBrokerSslConfig(props);
+    TestUtil09.addBrokerSslConfig(props);
     StringBuilder listeners = new StringBuilder();
     listeners
       .append(String.format("PLAINTEXT://localhost:%d", getPlainTextPort()))
@@ -58,7 +59,7 @@ public class SSLEnabledKafkaIT extends SecureKafkaBase {
 
   @Override
   protected void addClientSecurityConfig(Map<String, Object> props) {
-    TestUtil.addClientSslConfig(props);
+    TestUtil09.addClientSslConfig(props);
   }
 
   @Override

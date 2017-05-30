@@ -36,25 +36,24 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
 
-public class TestUtil {
-
-  public static int getFreePort() throws IOException {
-    ServerSocket serverSocket = new ServerSocket(0);
-    int port = serverSocket.getLocalPort();
-    serverSocket.close();
-    return port;
-  }
+public class TestUtil10 {
 
   public static KafkaServer createKafkaServer(int port, String zkConnect) {
     return createKafkaServer(port, zkConnect, true);
   }
 
   public static KafkaServer createKafkaServer(int port, String zkConnect, boolean autoCreateTopic) {
-    KafkaConfig config = new KafkaConfig(createKafkaConfig(port, zkConnect, autoCreateTopic));
+    KafkaConfig config = new KafkaConfig(createKafkaConfig(port, zkConnect, autoCreateTopic, 1));
     return TestUtils.createServer(config, SystemTime$.MODULE$);
   }
 
-  public static Properties createKafkaConfig(int port, String zkConnect, boolean autoCreateTopic) {
+  public static KafkaServer createKafkaServer(int port, String zkConnect, boolean autoCreateTopic, int numPartitions) {
+    KafkaConfig config = new KafkaConfig(createKafkaConfig(port, zkConnect, autoCreateTopic, numPartitions));
+    return TestUtils.createServer(config, SystemTime$.MODULE$);
+  }
+
+
+  public static Properties createKafkaConfig(int port, String zkConnect, boolean autoCreateTopic, int numPartitions) {
     final Option<File> noFile = scala.Option.apply(null);
     final Option<SecurityProtocol> noInterBrokerSecurityProtocol = scala.Option.apply(null);
     // new params for kafka 0.10.0
@@ -66,16 +65,17 @@ public class TestUtil {
         noFile, saslProperties, true, false, TestUtils.RandomPort(), false, TestUtils.RandomPort(), false,
         TestUtils.RandomPort(), rack);
     props.setProperty("auto.create.topics.enable", String.valueOf(autoCreateTopic));
-    props.setProperty("num.partitions", "1");
+    props.setProperty("num.partitions", String.valueOf(numPartitions));
+    props.setProperty("offsets.topic.replication.factor", "1");
     props.setProperty("message.max.bytes", "500");
     return props;
   }
 
   public static void addBrokerSslConfig(Properties props) {
     try {
-      URL resource = TestUtil.class.getClassLoader().getResource("server.keystore.jks");
+      URL resource = TestUtil10.class.getClassLoader().getResource("server.keystore.jks");
       String serverKeystore = new File(resource.toURI()).getAbsolutePath();
-      resource = TestUtil.class.getClassLoader().getResource("server.truststore.jks");
+      resource = TestUtil10.class.getClassLoader().getResource("server.truststore.jks");
       String serverTruststore = new File(resource.toURI()).getAbsolutePath();
       props.setProperty("ssl.keystore.location", serverKeystore);
       props.setProperty("ssl.keystore.password", "hnayak");
@@ -91,9 +91,9 @@ public class TestUtil {
 
   public static void addClientSslConfig(Map<String, Object> props) {
     try {
-      URL resource = TestUtil.class.getClassLoader().getResource("client.keystore.jks");
+      URL resource = TestUtil10.class.getClassLoader().getResource("client.keystore.jks");
       String clientKeystore = new File(resource.toURI()).getAbsolutePath();
-      resource = TestUtil.class.getClassLoader().getResource("client.truststore.jks");
+      resource = TestUtil10.class.getClassLoader().getResource("client.truststore.jks");
       String clientTruststore = new File(resource.toURI()).getAbsolutePath();
       props.put("security.protocol", "SSL");
       props.put("ssl.truststore.location", clientTruststore);
