@@ -30,15 +30,17 @@ angular
   $scope.showLoading = true;
   // True if user pressed "Upload" button and the bundle is still "uploading"
   $scope.uploading = false;
-  // True if user pressed "Upload" and we successfully finished uploading the bundle
-  $scope.successfulUpload = false;
+  // Messaging to show on the UI
+  $scope.message = null;
   // Validate that bundle upload is allowed
   $scope.isSupportBundleUplodEnabled = configuration.isSupportBundleUplodEnabled();
+
   api.admin.getSdcId().then(function(res) {
     $scope.sdc_id = res.data.id;
   }, function(res) {
     $scope.common.errors = [res.data];
   });
+
   api.system.getSupportBundleGenerators().then(function(res) {
     $scope.showLoading = false;
     $scope.generators = _.map(res.data, function(generator) {
@@ -72,11 +74,19 @@ angular
       return simpleClassNames;
     },
 
-    generateBundle: function() {
+    toggleGenerator: function($event, generator) {
+      if ($($event.target).is(':not(:checkbox)')) {
+        generator.checked = !generator.checked;
+      }
+    },
+
+    downloadBundle: function() {
       if (!this.hasAnyGeneratorSelected()) {
         return '';
       }
-      return api.system.getGenerateSupportBundleUrl(this.getSelectedGenerators());
+
+      $window.location.href = api.system.getGenerateSupportBundleUrl(this.getSelectedGenerators());
+      $scope.message = {id: 'sdcSupportBundle.downloadingMessage', type: 'success'};
     },
 
     uploadBundle: function() {
@@ -85,10 +95,10 @@ angular
       }
 
       $scope.uploading = true;
-      $scope.successfulUpload = false;
+      $scope.message = null;
       api.system.uploadSupportBundle(this.getSelectedGenerators()).then(function(res) {
         $scope.uploading = false;
-        $scope.successfulUpload = true;
+        $scope.message = {id: 'sdcSupportBundle.uploadedMessage', type: 'success'};
       }, function(res) {
         $scope.uploading = false;
         $scope.common.errors = [res.data];

@@ -840,11 +840,12 @@
     "runPreviewForFieldPaths": "Run preview in background to display available fields"
   },
   "sdcSupportBundle": {
-    "title": "Support Bundle",
-    "infoMessage": "The support bundle allows you to generate an archive file with the information required to troubleshoot various issues with the Data Collector. Please select one or more generators to be included in the archive.",
-    "uploadedMessage" : "Support bundle was successfully uploaded.",
+    "description": "Description",
+    "downloadingMessage" : "Downloading support bundle...",
     "generator": "Generator",
-    "description": "Description"
+    "infoMessage": "The support bundle allows you to generate an archive file with the information required to troubleshoot various issues with the Data Collector. Please select one or more generators to be included in the archive. Then you can either Download the archive file for review, or Upload it directly to StreamSets.",
+    "title": "Support Bundle",
+    "uploadedMessage" : "Support bundle was successfully uploaded."
   },
   "sdcDirectories" : {
     "title": "SDC Directories",
