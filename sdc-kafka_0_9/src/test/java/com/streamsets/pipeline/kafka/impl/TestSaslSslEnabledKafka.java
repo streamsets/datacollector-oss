@@ -41,7 +41,7 @@ public class TestSaslSslEnabledKafka extends TestSaslEnabledKafka {
 
   @Override
   protected void addBrokerSecurityConfig(Properties props) {
-    TestUtil.addBrokerSslConfig(props);
+    TestUtil09.addBrokerSslConfig(props);
     props.setProperty("security.inter.broker.protocol", "SASL_SSL");
     props.setProperty("sasl.kerberos.service.name", "kafkaBroker");
     StringBuilder listeners = new StringBuilder();
@@ -54,7 +54,7 @@ public class TestSaslSslEnabledKafka extends TestSaslEnabledKafka {
 
   @Override
   protected void addClientSecurityConfig(Map<String, Object> props) {
-    TestUtil.addClientSslConfig(props);
+    TestUtil09.addClientSslConfig(props);
     props.put("security.protocol", "SASL_SSL");
     props.put("sasl.kerberos.service.name", "kafkaBroker");
   }

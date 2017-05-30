@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
+import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.hadoop.minikdc.MiniKdc;
 import org.junit.AfterClass;
@@ -88,8 +89,8 @@ public class TestSaslEnabledKafka extends SecureKafkaBase {
     IOUtils.write(jaasConf, outputStream);
     outputStream.close();
 
-    plainTextPort = TestUtil.getFreePort();
-    securePort = TestUtil.getFreePort();
+    plainTextPort = NetworkUtils.getRandomPort();
+    securePort = NetworkUtils.getRandomPort();
 
     // reload configuration when getConfiguration is called next
     Configuration.setConfiguration(null);

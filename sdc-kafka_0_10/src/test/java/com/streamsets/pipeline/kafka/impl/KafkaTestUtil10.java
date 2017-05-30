@@ -21,6 +21,7 @@ package com.streamsets.pipeline.kafka.impl;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
+import com.streamsets.testing.NetworkUtils;
 import kafka.admin.AdminUtils;
 import kafka.admin.RackAwareMode;
 import kafka.javaapi.producer.Producer;
@@ -95,7 +96,7 @@ public class KafkaTestUtil10 extends SdcKafkaTestUtil {
       brokerId = -brokerId;
     }
     for (int i = 0; i < numberOfBrokers; i++) {
-      int port = TestUtil.getFreePort();
+      int port = NetworkUtils.getRandomPort();
       KafkaServer kafkaServer = createKafkaServer(++brokerId, port, zkConnect);
       long start = System.currentTimeMillis();
       while (System.currentTimeMillis() < start + 5000L &&

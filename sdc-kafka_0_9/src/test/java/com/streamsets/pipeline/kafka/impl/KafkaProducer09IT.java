@@ -29,6 +29,7 @@ import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+import com.streamsets.testing.NetworkUtils;
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaServer;
 import kafka.utils.TestUtils;
@@ -82,8 +83,8 @@ public class KafkaProducer09IT {
         zkConnect, zkSessionTimeout, zkConnectionTimeout,
         JaasUtils.isZkSecurityEnabled());
 
-    port = TestUtil.getFreePort();
-    kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
+    port = NetworkUtils.getRandomPort();
+    kafkaServer = TestUtil09.createKafkaServer(port, zkConnect);
     for (int i = 0; i < topics.length; i++) {
       topics[i] = UUID.randomUUID().toString();
       AdminUtils.createTopic(zkUtils, topics[i], 1, 1, new Properties());
@@ -109,7 +110,7 @@ public class KafkaProducer09IT {
 
   @Test
   public void testKafkaProducer09Version() throws IOException {
-    SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(TestUtil.getFreePort(), new HashMap<String, Object>());
+    SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(NetworkUtils.getRandomPort(), new HashMap<>());
     Assert.assertEquals(Kafka09Constants.KAFKA_VERSION, sdcKafkaProducer.getVersion());
   }
 
@@ -185,7 +186,7 @@ public class KafkaProducer09IT {
       Assert.assertEquals(KafkaErrors.KAFKA_50, e.getErrorCode());
     }
 
-    kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
+    kafkaServer = TestUtil09.createKafkaServer(port, zkConnect);
   }
 
   private void verify(

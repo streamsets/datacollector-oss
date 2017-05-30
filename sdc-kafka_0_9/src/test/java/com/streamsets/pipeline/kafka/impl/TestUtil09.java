@@ -35,14 +35,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
 
-public class TestUtil {
-
-  public static int getFreePort() throws IOException {
-    ServerSocket serverSocket = new ServerSocket(0);
-    int port = serverSocket.getLocalPort();
-    serverSocket.close();
-    return port;
-  }
+public class TestUtil09 {
 
   public static KafkaServer createKafkaServer(int port, String zkConnect) {
     return createKafkaServer(port, zkConnect, true);
@@ -72,9 +65,9 @@ public class TestUtil {
 
   public static void addBrokerSslConfig(Properties props) {
     try {
-      URL resource = TestUtil.class.getClassLoader().getResource("server.keystore.jks");
+      URL resource = TestUtil09.class.getClassLoader().getResource("server.keystore.jks");
       String serverKeystore = new File(resource.toURI()).getAbsolutePath();
-      resource = TestUtil.class.getClassLoader().getResource("server.truststore.jks");
+      resource = TestUtil09.class.getClassLoader().getResource("server.truststore.jks");
       String serverTruststore = new File(resource.toURI()).getAbsolutePath();
       props.setProperty("ssl.keystore.location", serverKeystore);
       props.setProperty("ssl.keystore.password", "hnayak");
@@ -90,9 +83,9 @@ public class TestUtil {
 
   public static void addClientSslConfig(Map<String, Object> props) {
     try {
-      URL resource = TestUtil.class.getClassLoader().getResource("client.keystore.jks");
+      URL resource = TestUtil09.class.getClassLoader().getResource("client.keystore.jks");
       String clientKeystore = new File(resource.toURI()).getAbsolutePath();
-      resource = TestUtil.class.getClassLoader().getResource("client.truststore.jks");
+      resource = TestUtil09.class.getClassLoader().getResource("client.truststore.jks");
       String clientTruststore = new File(resource.toURI()).getAbsolutePath();
       props.put("security.protocol", "SSL");
       props.put("ssl.truststore.location", clientTruststore);
