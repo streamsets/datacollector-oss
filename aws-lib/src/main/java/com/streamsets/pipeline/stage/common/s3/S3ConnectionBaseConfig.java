@@ -17,15 +17,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.s3;
+package com.streamsets.pipeline.stage.common.s3;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
@@ -37,6 +35,8 @@ import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
+import com.streamsets.pipeline.stage.origin.s3.Errors;
+import com.streamsets.pipeline.stage.origin.s3.Groups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,10 +44,10 @@ import java.util.List;
 
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
-public class S3Config {
+public abstract class S3ConnectionBaseConfig {
 
-  private static final String AWS_CONFIG_PREFIX = "awsConfig.";
-  private final static Logger LOG = LoggerFactory.getLogger(S3Config.class);
+  public static final String AWS_CONFIG_PREFIX = "awsConfig.";
+  private final static Logger LOG = LoggerFactory.getLogger(S3ConnectionBaseConfig.class);
 
   @ConfigDefBean(groups = "S3")
   public AWSConfig awsConfig;
@@ -75,16 +75,6 @@ public class S3Config {
       group = "#0"
   )
   public String endpoint;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Bucket",
-    description = "",
-    displayPosition = 20,
-    group = "#0"
-  )
-  public String bucket;
 
   @ConfigDef(
     required = false,
@@ -117,7 +107,7 @@ public class S3Config {
       int maxErrorRetries
   ) {
     commonPrefix = AWSUtil.normalizePrefix(commonPrefix, delimiter);
-    validateConnection(context, configPrefix, proxyConfig, issues, maxErrorRetries);
+    createConnection(context, configPrefix, proxyConfig, issues, maxErrorRetries);
   }
 
   public void destroy() {
@@ -132,7 +122,7 @@ public class S3Config {
 
   private AmazonS3 s3Client;
 
-  private void validateConnection(
+  private void createConnection(
       Stage.Context context,
       String configPrefix,
       ProxyConfig proxyConfig,
@@ -163,20 +153,5 @@ public class S3Config {
       builder.withRegion(region.getLabel());
     }
     s3Client = builder.build();
-
-    try {
-      //check if the credentials are right by trying to list an object in the common prefix
-      s3Client.listObjects(new ListObjectsRequest(bucket, commonPrefix, null, delimiter, 1).withEncodingType("url"));
-    } catch (AmazonS3Exception e) {
-      LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), e.toString(), e);
-      issues.add(
-          context.createConfigIssue(
-              Groups.S3.name(),
-              configPrefix + AWS_CONFIG_PREFIX + "awsAccessKeyId",
-              Errors.S3_SPOOLDIR_20,
-              e.toString()
-          )
-      );
-    }
   }
 }

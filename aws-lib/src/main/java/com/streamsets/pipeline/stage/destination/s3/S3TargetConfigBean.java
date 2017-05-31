@@ -32,7 +32,6 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.lib.aws.TransferManagerConfig;
-import com.streamsets.pipeline.stage.origin.s3.S3Config;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class S3TargetConfigBean {
   public static final String S3_TM_CONFIG_PREFIX = S3_TARGET_CONFIG_BEAN_PREFIX + "tmConfig.";
 
   @ConfigDefBean(groups = "S3")
-  public S3Config s3Config;
+  public S3ConnectionTargetConfig s3Config;
 
   @ConfigDefBean(groups = "SSE")
   public S3TargetSSEConfigBean sseConfig;
