@@ -83,6 +83,15 @@ public class TestStringEL {
   }
 
   @Test
+  public void testIndexOf() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testIndexOf", StringEL.class);
+
+    ELVariables variables = new ELVariables();
+    Assert.assertEquals(new Integer(1), eval.eval(variables,
+      "${str:indexOf(\"StreamSets\", \"t\")}", Integer.class));
+  }
+
+  @Test
   public void testToUpper() throws Exception {
     ELEvaluator eval = new ELEvaluator("testToUpper", StringEL.class);
 

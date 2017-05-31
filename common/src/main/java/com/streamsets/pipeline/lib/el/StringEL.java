@@ -75,6 +75,17 @@ public class StringEL {
 
   @ElFunction(
     prefix = "str",
+    name = "indexOf",
+    description = "Returns the index within the string of the first occurrence of the specified substring."
+  )
+  public static int indexOf(
+    @ElParam("string") String string, @ElParam("substring") String substring) {
+    return string.indexOf(substring);
+  }
+
+
+  @ElFunction(
+    prefix = "str",
     name = "trim",
     description = "Removes leading and trailing whitespaces")
   public static String trim(
