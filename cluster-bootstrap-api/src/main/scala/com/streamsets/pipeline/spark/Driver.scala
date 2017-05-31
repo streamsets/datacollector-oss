@@ -78,7 +78,7 @@ object Driver {
     })
     previousGeneratedRDDs += nextResult
 
-    val c = nextResult.cache().count()
+    nextResult.cache().count()
     var id = 0
     transformers.foreach(transformer => {
 

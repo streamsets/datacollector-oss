@@ -226,16 +226,14 @@ public class EmbeddedSDCPool {
     Class<?> clusterFunctionClass = Class.forName("com.streamsets.pipeline.cluster.ClusterFunctionImpl");
     Method getBatch = clusterFunctionClass.getMethod("getNextBatch", int.class, EmbeddedSDC.class);
     Method forward =
-        clusterFunctionClass.getMethod("writeTransformedToProcessor", Iterator.class, int.class, EmbeddedSDC.class);
+        clusterFunctionClass.getMethod("doForward", Iterator.class, int.class, EmbeddedSDC.class);
     sdc.getSource().put(Collections.emptyList());
+    getBatch.invoke(null, 0, sdc);
     for (int i = 0; i <= id - 1; i++) {
-      getBatch.invoke(null, i, sdc);
       forward.invoke(null, Collections.emptyIterator(), i, sdc);
     }
-    getBatch.invoke(null, id, sdc);
     return sdc;
   }
-
 
   private synchronized void checkInAtId(
       int id,
