@@ -265,7 +265,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    * @return table name
    */
   protected String getTableName() {
-    if (schema != null & !schema.isEmpty()) {
+    if (!Strings.isNullOrEmpty(schema)) {
       if (caseSensitive) {
         return "\"" + schema + "\"." + "\"" + tableName + "\"";
       } else {
