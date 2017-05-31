@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,19 +23,13 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.ext.JsonRecordWriter;
 import com.streamsets.pipeline.api.ext.json.Mode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class JsonRecordWriterImpl implements JsonRecordWriter {
-  private static final Logger LOG = LoggerFactory.getLogger(JsonRecordWriter.class);
-
   private final static String EOL = System.getProperty("line.separator");
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static final JsonFactory JSON_FACTORY = OBJECT_MAPPER.getFactory();
@@ -63,7 +57,7 @@ public class JsonRecordWriterImpl implements JsonRecordWriter {
     if (closed) {
       throw new IOException("generator has been closed");
     }
-    generator.writeObject(fieldToJsonObject(record, record.get()));
+    writeFieldToJsonObject(record.get());
   }
 
   @Override
@@ -83,29 +77,80 @@ public class JsonRecordWriterImpl implements JsonRecordWriter {
     generator.close();
   }
 
-  private static Object fieldToJsonObject(Record record, Field field) throws IOException {
-    Object obj;
+  private void writeFieldToJsonObject(Field field) throws IOException {
     if (field == null || field.getValue() == null) {
-      obj = null;
-    } else if(field.getType() == Field.Type.FILE_REF) {
-      throw new IOException("Cannot serialize FileRef fields.");
-    } else if (field.getType() == Field.Type.LIST) {
-      List<Field> list = field.getValueAsList();
-      List<Object> toReturn = new ArrayList<>(list.size());
-      for (Field f : list) {
-        toReturn.add(fieldToJsonObject(record, f));
-      }
-      obj = toReturn;
-    } else if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST_MAP) {
-      Map<String, Field> map = field.getValueAsMap();
-      Map<String, Object> toReturn = new LinkedHashMap<>();
-      for (Map.Entry<String, Field> entry : map.entrySet()) {
-        toReturn.put(entry.getKey(), fieldToJsonObject(record, entry.getValue()));
-      }
-      obj = toReturn;
-    } else {
-      obj = field.getValue();
+      generator.writeNull();
+      return;
     }
-    return obj;
+    switch (field.getType()) {
+      case FILE_REF:
+        throw new IOException("Cannot serialize FileRef fields.");
+      case MAP:
+      case LIST_MAP:
+        generator.writeStartObject();
+        Map<String, Field> map = field.getValueAsMap();
+        for (Map.Entry<String, Field> fieldEntry : map.entrySet()) {
+          generator.writeFieldName(fieldEntry.getKey());
+          writeFieldToJsonObject(fieldEntry.getValue());
+        }
+        generator.writeEndObject();
+        break;
+      case LIST:
+        generator.writeStartArray();
+        List<Field> list = field.getValueAsList();
+        for (Field f : list) {
+          writeFieldToJsonObject(f);
+        }
+        generator.writeEndArray();
+        break;
+      case BOOLEAN:
+        generator.writeBoolean(field.getValueAsBoolean());
+        break;
+      case CHAR:
+        generator.writeString(String.valueOf(field.getValueAsChar()));
+        break;
+      case BYTE:
+        generator.writeBinary(new byte[] {field.getValueAsByte()});
+        break;
+      case SHORT:
+        generator.writeNumber(field.getValueAsShort());
+        break;
+      case INTEGER:
+        generator.writeNumber(field.getValueAsInteger());
+        break;
+      case LONG:
+        generator.writeNumber(field.getValueAsLong());
+        break;
+      case FLOAT:
+        generator.writeNumber(field.getValueAsFloat());
+        break;
+      case DOUBLE:
+        generator.writeNumber(field.getValueAsDouble());
+        break;
+      case DATE:
+        generator.writeNumber(field.getValueAsDate().getTime());
+        break;
+      case DATETIME:
+        generator.writeNumber(field.getValueAsDatetime().getTime());
+        break;
+      case TIME:
+        generator.writeNumber(field.getValueAsTime().getTime());
+        break;
+      case DECIMAL:
+        generator.writeNumber(field.getValueAsDecimal());
+        break;
+      case STRING:
+        generator.writeString(field.getValueAsString());
+        break;
+      case BYTE_ARRAY:
+        generator.writeBinary(field.getValueAsByteArray());
+        break;
+      default:
+        throw new IllegalStateException(String.format(
+            "Unrecognized field type (%s) in field: %s",
+            field.getType().name(),
+            field.toString())
+        );
+    }
   }
 }

@@ -69,6 +69,11 @@ public class MapFieldBuilder extends BaseFieldBuilder<MapFieldBuilder> {
     return this;
   }
 
+  public MapFieldBuilder add(String field, Integer value) {
+    builder.put(field, Field.create(value));
+    return this;
+  }
+
   public MapFieldBuilder add(String field, Long value) {
     builder.put(field, Field.create(value));
     return this;
