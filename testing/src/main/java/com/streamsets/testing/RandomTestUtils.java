@@ -21,7 +21,8 @@
 package com.streamsets.testing;
 
 import com.google.common.base.Strings;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
@@ -33,17 +34,17 @@ public abstract class RandomTestUtils {
 
   private static final Random random = new Random();
 
-  private static final Logger logger = Logger.getLogger(RandomTestUtils.class);
+  private static final Logger LOG = LoggerFactory.getLogger(RandomTestUtils.class);
 
   static {
     long seed;
     final String seedProp = System.getProperty("sdc.testing.random-seed");
     if (!Strings.isNullOrEmpty(seedProp)) {
-      logger.info(String.format("Loading random seed from sdc.testing.random-seed property: %s", seedProp));
+      LOG.info(String.format("Loading random seed from sdc.testing.random-seed property: %s", seedProp));
       seed = Long.parseLong(seedProp);
     } else {
       seed = System.currentTimeMillis();
-      logger.info(String.format("No random seed property; using current system millis timestamp: %d", seed));
+      LOG.info(String.format("No random seed property; using current system millis timestamp: %d", seed));
     }
     random.setSeed(seed);
   }

@@ -25,9 +25,9 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.VaultEL;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -71,7 +71,7 @@ public class TlsConfigBean {
       "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384"
   };
 
-  private static final Logger LOGGER = Logger.getLogger(TlsConfigBean.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TlsConfigBean.class);
 
   @ConfigDef(
       required = true,
@@ -261,8 +261,8 @@ public class TlsConfigBean {
       if (supportedSet.contains(specified)) {
         returnSet.add(specified);
       } else {
-        if (LOGGER.isEnabledFor(Level.WARN)) {
-          LOGGER.warn(String.format(
+        if (LOG.isWarnEnabled()) {
+          LOG.warn(String.format(
               "%s %s was specified, but is not supported within the JVM; disabling",
               type,
               specified

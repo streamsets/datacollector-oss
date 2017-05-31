@@ -21,7 +21,8 @@
 package com.streamsets.pipeline.config.upgrade;
 
 import com.streamsets.pipeline.api.Config;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ import java.util.Map;
 
 public abstract class UpgraderUtils {
 
-  private static final Logger LOGGER = Logger.getLogger(UpgraderUtils.class);
+  private static final Logger LOG = LoggerFactory.getLogger(UpgraderUtils.class);
 
   /**
    * <p>
@@ -76,7 +77,7 @@ public abstract class UpgraderUtils {
         final Object value = config.getValue();
         final String newName = oldToNewNames.get(oldName);
         configsToAdd.add(new Config(newName, value));
-        LOGGER.info(String.format(
+        LOG.info(String.format(
             "Moving config value %s from old name %s to new name %s",
             value,
             oldName,

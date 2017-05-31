@@ -44,7 +44,6 @@ import org.apache.commons.codec.Charsets;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.test.DeploymentContext;
@@ -58,6 +57,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
@@ -211,7 +211,7 @@ public class HttpClientSourceIT extends JerseyTest {
     public Response.ResponseBuilder buildBackoffResponseHelper(int requestNum, long lastRequestTime, long acceptableTime) {
       final long timeSinceLastReq = System.currentTimeMillis() - lastRequestTime;
       if (timeSinceLastReq <= acceptableTime) {
-        Logger.getLogger(HttpClientSourceIT.class).error(String.format(
+        LoggerFactory.getLogger(HttpClientSourceIT.class).error(String.format(
             "Failing backoff test; requestNum %d, lastRequestTime %d, timeSinceLastReq %d",
             requestNum,
             lastRequestTime,

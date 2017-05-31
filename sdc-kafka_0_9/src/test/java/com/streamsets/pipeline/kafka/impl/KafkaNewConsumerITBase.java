@@ -45,10 +45,11 @@ import org.apache.kafka.common.security.JaasUtils;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public abstract class KafkaNewConsumerITBase {
   protected static final String REBALANCE_TOPIC = "TestKafkaConsumerRebalance";
   protected static final String CONSUMER_GROUP_NAME = "testConsumerRebalance";
 
-  protected static final Logger LOG = Logger.getLogger(KafkaNewConsumerITBase.class);
+  protected static final Logger LOG = LoggerFactory.getLogger(KafkaNewConsumerITBase.class);
 
   protected abstract KafkaServer buildKafkaServer(int port, String zkConnect, int numPartitions);
 
