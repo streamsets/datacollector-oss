@@ -56,10 +56,6 @@ object Driver {
     previousGeneratedRDDs.foreach(_.unpersist(false))
 
     previousIncomingData = Option(rdd)
-    val count = rdd.count()
-    if (count == 0) {
-      return
-    }
 
     if (transformers.isEmpty) {
       transformers ++= BootstrapCluster.getTransformers.asScala
