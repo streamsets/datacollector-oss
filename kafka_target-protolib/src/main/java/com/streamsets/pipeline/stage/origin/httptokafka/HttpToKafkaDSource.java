@@ -79,7 +79,11 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
         "conf.partition",
         "conf.singleMessagePerBatch",
         "conf.topicExpression",
-        "conf.topicWhiteList"
+        "conf.topicWhiteList",
+        "configs.tlsConfigBean.trustStoreFilePath",
+        "configs.tlsConfigBean.trustStoreType",
+        "configs.tlsConfigBean.trustStorePassword",
+        "configs.tlsConfigBean.trustStoreAlgorithm"
     }
 )
 public class HttpToKafkaDSource extends DSourceOffsetCommitter {
