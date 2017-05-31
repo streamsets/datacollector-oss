@@ -66,11 +66,6 @@ public class ClusterExecutorSparkProcessor extends SingleLaneProcessor {
       if (IS_DEBUG_ENABLED) {
         LOG.debug("Trying to read batch at " + System.currentTimeMillis());
       }
-      synchronized (this) {
-        if (batch != null) {
-          return batch; // no waiting, if batch was already set.
-        }
-      }
       batchReceived.acquire();
     } catch (InterruptedException ex) { // NOSONAR
       LOG.warn("Interrupted while waiting for batch to be received", ex);
