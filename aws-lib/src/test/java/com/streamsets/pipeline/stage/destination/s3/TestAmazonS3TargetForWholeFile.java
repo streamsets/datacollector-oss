@@ -201,6 +201,7 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
     List<Record> records = new ArrayList<>();
     for (String fileName : Arrays.asList(FILE_NAME_1, FILE_NAME_2)) {
       Record record = RecordCreator.create();
+      record.getHeader().setAttribute("bucket", TARGET_BUCKET_NAME);
       record.set(
           FileRefUtil.getWholeFileRecordRootField(
               new LocalFileRef.Builder()
@@ -241,6 +242,7 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
       S3ObjectSummary s3ObjectSummary = s3ObjectSummaryIterator.next();
       Map<String, Object> metadata = getS3Metadata(s3client.getObject(SOURCE_BUCKET_NAME, s3ObjectSummary.getKey()));
       Record record = RecordCreator.create();
+      record.getHeader().setAttribute("bucket", TARGET_BUCKET_NAME);
       record.set(
           FileRefUtil.getWholeFileRecordRootField(
               new S3FileRef.Builder()
@@ -272,7 +274,7 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
     S3ConnectionTargetConfig s3Config = new S3ConnectionTargetConfig();
     s3Config.region = AWSRegions.OTHER;
     s3Config.endpoint = "http://localhost:" + port;
-    s3Config.bucket = TARGET_BUCKET_NAME;
+    s3Config.bucketTemplate = "${record:attribute('bucket')}";
     s3Config.awsConfig = new AWSConfig();
     s3Config.awsConfig.awsAccessKeyId = "foo";
     s3Config.awsConfig.awsSecretAccessKey = "bar";

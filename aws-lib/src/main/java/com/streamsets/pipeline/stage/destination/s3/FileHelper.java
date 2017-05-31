@@ -72,7 +72,7 @@ abstract class FileHelper {
     cachedEventRecords.clear();
   }
 
-  abstract List<Upload> handle(Iterator<Record> recordIterator, String keyPrefix) throws IOException, StageException;
+  abstract List<Upload> handle(Iterator<Record> recordIterator, String bucket, String keyPrefix) throws IOException, StageException;
 
   protected ObjectMetadata getObjectMetadata() {
     ObjectMetadata metadata = null;
@@ -118,14 +118,14 @@ abstract class FileHelper {
     return metadata;
   }
 
-  Upload doUpload(String fileName, InputStream is, ObjectMetadata metadata) {
+  Upload doUpload(String bucket, String fileName, InputStream is, ObjectMetadata metadata) {
     final PutObjectRequest putObjectRequest = new PutObjectRequest(
-        s3TargetConfigBean.s3Config.bucket,
+        bucket,
         fileName,
         is,
         metadata
     );
-    final String object = s3TargetConfigBean.s3Config.bucket + s3TargetConfigBean.s3Config.delimiter + fileName;
+    final String object = bucket + s3TargetConfigBean.s3Config.delimiter + fileName;
     Upload upload = transferManager.upload(putObjectRequest);
     upload.addProgressListener((ProgressListener) progressEvent -> {
       switch (progressEvent.getEventType()) {

@@ -66,7 +66,7 @@ final class DefaultFileHelper extends FileHelper {
   }
 
   @Override
-  public List<Upload> handle(Iterator<Record> recordIterator, String keyPrefix) throws IOException, StageException {
+  public List<Upload> handle(Iterator<Record> recordIterator, String bucket, String keyPrefix) throws IOException, StageException {
     //For uniqueness
     keyPrefix += System.currentTimeMillis() + "-";
 
@@ -114,14 +114,14 @@ final class DefaultFileHelper extends FileHelper {
       //Create and issue file close event record, but the events are thrown after the batch completion.
       EventRecord eventRecord = S3Events.S3_OBJECT_WRITTEN
           .create(context)
-          .with(BUCKET, s3TargetConfigBean.s3Config.bucket)
+          .with(BUCKET, bucket)
           .with(OBJECT_KEY, fileName)
           .create();
 
       // Avoid making a copy of the internal buffer maintained by the ByteArrayOutputStream by using
       // ByRefByteArrayOutputStream
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bOut.getInternalBuffer(), 0, bOut.size());
-      Upload upload = doUpload(fileName, byteArrayInputStream, getObjectMetadata());
+      Upload upload = doUpload(bucket, fileName, byteArrayInputStream, getObjectMetadata());
       uploads.add(upload);
 
       cachedEventRecords.add(eventRecord);

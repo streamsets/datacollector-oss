@@ -131,7 +131,7 @@ public class ELUtils {
     return partitions;
   }
 
-  private static Date getRecordTime(
+  public static Date getRecordTime(
       ELEval elEvaluator,
       ELVars variables,
       String expression,

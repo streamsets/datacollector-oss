@@ -28,12 +28,14 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
@@ -62,6 +64,7 @@ import java.util.zip.GZIPInputStream;
 public class TestAmazonS3Target {
 
   private static final String BUCKET_NAME = "mybucket";
+  private static final String SECOND_BUCKET_NAME = "yourbucket";
   private static final String DELIMITER = "/";
 
   private static String fakeS3Root;
@@ -93,6 +96,7 @@ public class TestAmazonS3Target {
         .build();
 
     TestUtil.createBucket(s3client, BUCKET_NAME);
+    TestUtil.createBucket(s3client, SECOND_BUCKET_NAME);
   }
 
   @AfterClass
@@ -114,7 +118,7 @@ public class TestAmazonS3Target {
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
-    List<Record> logRecords = TestUtil.createStringRecords();
+    List<Record> logRecords = TestUtil.createStringRecords(BUCKET_NAME);
 
     //Make sure the prefix is empty
     ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);
@@ -123,27 +127,59 @@ public class TestAmazonS3Target {
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
-    //check that prefix contains 1 file
-    objectListing = s3client.listObjects(BUCKET_NAME, prefix);
-    Assert.assertEquals(1, objectListing.getObjectSummaries().size());
+    TestUtil.assertStringRecords(s3client, BUCKET_NAME, prefix);
+  }
 
-    //Check the keys end with given suffix follow by "."
-    suffix = "." + suffix;
-    for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
-      Assert.assertTrue(objectSummary.getKey().endsWith(suffix));
-    }
+  @Test
+  public void testWriteToTwoBuckets() throws Exception {
+    String prefix = "testWriteToTwoBuckets";
+    String suffix = "txt";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
+    targetRunner.runInit();
 
-    S3ObjectSummary objectSummary = objectListing.getObjectSummaries().get(0);
+    List<Record> logRecords = TestUtil.createStringRecords(BUCKET_NAME);
+    logRecords.addAll(TestUtil.createStringRecords(SECOND_BUCKET_NAME));
 
-    //get contents of file and check data - should have 9 lines
-    S3Object object = s3client.getObject(BUCKET_NAME, objectSummary.getKey());
-    S3ObjectInputStream objectContent = object.getObjectContent();
+    //Make sure the prefix is empty
+    ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);
+    Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
 
-    List<String> stringList = IOUtils.readLines(objectContent);
-    Assert.assertEquals(9, stringList.size());
-    for(int i = 0 ; i < 9; i++) {
-      Assert.assertEquals(TestUtil.TEST_STRING + i, stringList.get(i));
-    }
+    objectListing = s3client.listObjects(SECOND_BUCKET_NAME, prefix);
+    Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
+
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    TestUtil.assertStringRecords(s3client, BUCKET_NAME, prefix);
+    TestUtil.assertStringRecords(s3client, SECOND_BUCKET_NAME, prefix);
+  }
+
+  @Test
+  public void testBucketResolvesToEmptyString() throws Exception {
+    final String prefix = "testBucketResolvesToEmptyString";
+    final String suffix = "txt";
+    AmazonS3Target amazonS3Target = createS3targetWithTextData(prefix, false, suffix);
+    TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    targetRunner.runInit();
+
+    // Insert two invalid record (for which the bucket EL resolves to nothing) at the begging and end of valid data
+    List<Record> logRecords = new ArrayList<>();
+    logRecords.add(RecordCreator.create());
+    logRecords.addAll(TestUtil.createStringRecords(BUCKET_NAME));
+    logRecords.add(RecordCreator.create());
+
+    targetRunner.runWrite(logRecords);
+
+    // All data should be written as expected
+    TestUtil.assertStringRecords(s3client, BUCKET_NAME, prefix);
+
+    // Plus have few error records
+    Assert.assertEquals(2, targetRunner.getErrorRecords().size());
+
+    targetRunner.runDestroy();
   }
 
   @Test
@@ -167,7 +203,7 @@ public class TestAmazonS3Target {
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
-    List<Record> logRecords = TestUtil.createStringRecords();
+    List<Record> logRecords = TestUtil.createStringRecords(BUCKET_NAME);
 
     //Make sure the prefix is empty
     ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);
@@ -195,7 +231,7 @@ public class TestAmazonS3Target {
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
-    List<Record> logRecords = TestUtil.createStringRecords();
+    List<Record> logRecords = TestUtil.createStringRecords(BUCKET_NAME);
 
     //Make sure the prefix is empty
     ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);
@@ -260,7 +296,7 @@ public class TestAmazonS3Target {
     S3ConnectionTargetConfig s3Config = new S3ConnectionTargetConfig();
     s3Config.region = AWSRegions.OTHER;
     s3Config.endpoint = "http://localhost:" + port;
-    s3Config.bucket = BUCKET_NAME;
+    s3Config.bucketTemplate = "${record:attribute('bucket')}";
     s3Config.awsConfig = new AWSConfig();
     s3Config.awsConfig.awsAccessKeyId = "foo";
     s3Config.awsConfig.awsSecretAccessKey = "bar";
@@ -305,7 +341,7 @@ public class TestAmazonS3Target {
     TargetRunner targetRunner = new TargetRunner.Builder(AmazonS3DTarget.class, amazonS3Target).build();
     targetRunner.runInit();
 
-    List<Record> logRecords = TestUtil.createStringRecords();
+    List<Record> logRecords = TestUtil.createStringRecords(BUCKET_NAME);
 
     //Make sure the prefix is empty
     ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, prefix);

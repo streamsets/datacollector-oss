@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
 
-  S3_01("Bucket name cannot be empty"),
+  S3_01("Bucket name is empty for record {}"),
   S3_02("Bucket '{}' does not exist"),
   S3_03("Invalid partition template expression '{}': {}"),
   S3_04("Invalid time basis expression '{}': {}"),
