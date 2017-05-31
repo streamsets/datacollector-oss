@@ -20,6 +20,9 @@
 package com.streamsets.pipeline.stage.destination.s3;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.common.s3.S3ConnectionBaseConfig;
 
 public class S3ConnectionTargetConfig extends S3ConnectionBaseConfig {
@@ -28,10 +31,12 @@ public class S3ConnectionTargetConfig extends S3ConnectionBaseConfig {
     required = true,
     type = ConfigDef.Type.STRING,
     label = "Bucket",
-    description = "",
+    description = "Expression that will identify bucket for each record.",
     displayPosition = 20,
+    evaluation = ConfigDef.Evaluation.EXPLICIT,
+    elDefs = { RecordEL.class, TimeEL.class, TimeNowEL.class },
     group = "#0"
   )
-  public String bucket;
+  public String bucketTemplate;
 
 }

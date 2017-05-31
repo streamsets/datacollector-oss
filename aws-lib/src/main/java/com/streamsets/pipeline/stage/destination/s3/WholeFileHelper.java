@@ -97,8 +97,8 @@ final class WholeFileHelper extends FileHelper {
     return fileName.toString();
   }
 
-  private void checkForWholeFileExistence(String objectKey) throws OnRecordErrorException {
-    boolean fileExists = s3TargetConfigBean.s3Config.getS3Client().doesObjectExist(s3TargetConfigBean.s3Config.bucket, objectKey);
+  private void checkForWholeFileExistence(String bucket, String objectKey) throws OnRecordErrorException {
+    boolean fileExists = s3TargetConfigBean.s3Config.getS3Client().doesObjectExist(bucket, objectKey);
     WholeFileExistsAction wholeFileExistsAction =s3TargetConfigBean.dataGeneratorFormatConfig.wholeFileExistsAction;
     if (fileExists && wholeFileExistsAction == WholeFileExistsAction.TO_ERROR) {
       throw new OnRecordErrorException(Errors.S3_51, objectKey);
@@ -106,17 +106,18 @@ final class WholeFileHelper extends FileHelper {
     //else we will do the upload which will overwrite/ version based on the bucket configuration.
   }
 
-  private EventRecord createEventRecordForFileTransfer(Record record, String objectKey) {
+  private EventRecord createEventRecordForFileTransfer(Record record, String bucket, String objectKey) {
     return S3Events.FILE_TRANSFER_COMPLETE_EVENT
         .create(context)
         .with(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
-        .withStringMap(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO, ImmutableMap.of(BUCKET, (Object)s3TargetConfigBean.s3Config.bucket, OBJECT_KEY, objectKey))
+        .withStringMap(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO, ImmutableMap.of(BUCKET, bucket, OBJECT_KEY, objectKey))
         .create();
   }
 
   @Override
   public List<Upload> handle(
       Iterator<Record> recordIterator,
+      String bucket,
       String keyPrefix
   ) throws IOException, StageException {
     List<Upload> uploads = new ArrayList<Upload>();
@@ -134,7 +135,7 @@ final class WholeFileHelper extends FileHelper {
 
         String fileName = getFileNameFromFileNameEL(keyPrefix, record);
 
-        checkForWholeFileExistence(fileName);
+        checkForWholeFileExistence(bucket, fileName);
 
         FileRef fileRef = record.get(FileRefUtil.FILE_REF_FIELD_PATH).getValueAsFileRef();
 
@@ -144,7 +145,7 @@ final class WholeFileHelper extends FileHelper {
         //Mandatory field path specifying size.
         metadata.setContentLength(record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + SIZE).getValueAsLong());
 
-        EventRecord eventRecord = createEventRecordForFileTransfer(record, fileName);
+        EventRecord eventRecord = createEventRecordForFileTransfer(record, bucket, fileName);
 
         //Fyi this gets closed automatically after upload completes.
         InputStream is = FileRefUtil.getReadableStream(
@@ -156,7 +157,7 @@ final class WholeFileHelper extends FileHelper {
             new FileRefStreamCloseEventHandler(eventRecord)
         );
         //We are bypassing the generator because S3 has a convenient notion of taking input stream as a parameter.
-        Upload upload = doUpload(fileName, is, metadata);
+        Upload upload = doUpload(bucket, fileName, is, metadata);
         uploads.add(upload);
 
         //Add event to event lane.

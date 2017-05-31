@@ -84,6 +84,12 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
         // fall through
       case 8:
         upgradeV8ToV9(configs);
+        if (toVersion == 9) {
+          break;
+        }
+        // fall through
+      case 9:
+        upgradeV9ToV10(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -200,5 +206,20 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
 
   private static void upgradeV7ToV8(List<Config> configs) {
     configs.add(new Config(S3TargetConfigBean.S3_CONFIG_PREFIX + "endpoint", ""));
+  }
+
+  private static void upgradeV9ToV10(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for(Config config : configs) {
+      if(config.getName().equals(S3TargetConfigBean.S3_CONFIG_PREFIX + "bucket")) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(S3TargetConfigBean.S3_CONFIG_PREFIX + "bucketTemplate", config.getValue()));
+      }
+    }
+
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
   }
 }
