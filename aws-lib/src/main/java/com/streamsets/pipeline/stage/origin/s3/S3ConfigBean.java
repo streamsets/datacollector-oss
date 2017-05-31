@@ -32,6 +32,15 @@ import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import com.streamsets.pipeline.stage.origin.s3.DataFormatChooserValues;
+import com.streamsets.pipeline.stage.origin.s3.Errors;
+import com.streamsets.pipeline.stage.origin.s3.Groups;
+import com.streamsets.pipeline.stage.origin.s3.S3ArchivingOption;
+import com.streamsets.pipeline.stage.origin.s3.S3ConnectionSourceConfig;
+import com.streamsets.pipeline.stage.origin.s3.S3ErrorConfig;
+import com.streamsets.pipeline.stage.origin.s3.S3FileConfig;
+import com.streamsets.pipeline.stage.origin.s3.S3PostProcessingConfig;
+import com.streamsets.pipeline.stage.origin.s3.S3SSEConfigBean;
 
 import java.util.List;
 
@@ -79,7 +88,7 @@ public class S3ConfigBean {
   public S3FileConfig s3FileConfig;
 
   @ConfigDefBean(groups = {"S3", "ADVANCED"})
-  public S3Config s3Config;
+  public S3ConnectionSourceConfig s3Config;
 
   @ConfigDef(
       required = true,
@@ -149,7 +158,7 @@ public class S3ConfigBean {
       if (postProcessingConfig.postProcessing != PostProcessingOptions.NONE){
         issues.add(context.createConfigIssue(Groups.ERROR_HANDLING.name(),
             ERROR_CONFIG_PREFIX + "errorHandlingOption",
-            Errors.S3_SPOOLDIR_07,
+            com.streamsets.pipeline.stage.origin.s3.Errors.S3_SPOOLDIR_07,
             errorConfig.errorHandlingOption,
             postProcessingConfig.postProcessing));
       }
@@ -169,9 +178,9 @@ public class S3ConfigBean {
   }
 
   private String validatePostProcessing(Stage.Context context, PostProcessingOptions postProcessingOptions,
-                                      S3ArchivingOption s3ArchivingOption, String postProcessBucket,
-                                      String postProcessFolder, String groupName, String bucketConfig,
-                                      String prefixConfig, List<Stage.ConfigIssue> issues) {
+                                        S3ArchivingOption s3ArchivingOption, String postProcessBucket,
+                                        String postProcessFolder, String groupName, String bucketConfig,
+                                        String prefixConfig, List<Stage.ConfigIssue> issues) {
     //validate post processing options
     //In case of post processing option archive user could choose move to bucket or move to prefix [within same bucket]
     if(postProcessingOptions == PostProcessingOptions.ARCHIVE) {
@@ -205,9 +214,9 @@ public class S3ConfigBean {
   private void validateBucket(Stage.Context context, List<Stage.ConfigIssue> issues, AmazonS3 s3Client,
                               String bucket, String groupName, String configName) {
     if(bucket == null || bucket.isEmpty()) {
-      issues.add(context.createConfigIssue(groupName, configName, Errors.S3_SPOOLDIR_11));
+      issues.add(context.createConfigIssue(groupName, configName, com.streamsets.pipeline.stage.origin.s3.Errors.S3_SPOOLDIR_11));
     } else if (!s3Client.doesBucketExist(bucket)) {
-      issues.add(context.createConfigIssue(groupName, configName, Errors.S3_SPOOLDIR_12, bucket));
+      issues.add(context.createConfigIssue(groupName, configName, com.streamsets.pipeline.stage.origin.s3.Errors.S3_SPOOLDIR_12, bucket));
     }
   }
 
@@ -215,7 +224,7 @@ public class S3ConfigBean {
                                             String groupName, String configName, List<Stage.ConfigIssue> issues) {
     //should be non null, non-empty and different from source prefix
     if (postProcessPrefix == null || postProcessPrefix.isEmpty()) {
-      issues.add(context.createConfigIssue(groupName, configName, Errors.S3_SPOOLDIR_13));
+      issues.add(context.createConfigIssue(groupName, configName, com.streamsets.pipeline.stage.origin.s3.Errors.S3_SPOOLDIR_13));
     } else if((postProcessBucket + s3Config.delimiter + postProcessPrefix)
       .equals(s3Config.bucket + s3Config.delimiter + s3Config.commonPrefix)) {
       issues.add(context.createConfigIssue(groupName, configName, Errors.S3_SPOOLDIR_14,

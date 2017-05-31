@@ -309,7 +309,7 @@ public class TestAmazonS3Source2 extends AmazonS3TestSuite {
     s3ConfigBean.s3FileConfig.prefixPattern = "*/*/*.log";
     s3ConfigBean.s3FileConfig.objectOrdering = ObjectOrdering.TIMESTAMP;
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
@@ -352,7 +352,7 @@ public class TestAmazonS3Source2 extends AmazonS3TestSuite {
     s3ConfigBean.dataFormatConfig.compression = Compression.ARCHIVE;
     s3ConfigBean.dataFormatConfig.filePatternInArchive = "*/*.log";
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
@@ -395,7 +395,7 @@ public class TestAmazonS3Source2 extends AmazonS3TestSuite {
     s3ConfigBean.dataFormatConfig.compression = Compression.COMPRESSED_ARCHIVE;
     s3ConfigBean.dataFormatConfig.filePatternInArchive = "*/[!.]*.log";
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
@@ -439,7 +439,7 @@ public class TestAmazonS3Source2 extends AmazonS3TestSuite {
     s3ConfigBean.dataFormatConfig.compression = Compression.COMPRESSED_ARCHIVE;
     s3ConfigBean.dataFormatConfig.filePatternInArchive = "[!.]*.avro";
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;

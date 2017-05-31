@@ -422,7 +422,7 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.prefixPattern = "*.log";
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
@@ -464,7 +464,7 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.prefixPattern = "*.csv";
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
@@ -502,7 +502,7 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.prefixPattern = "*.sdc";
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
@@ -542,7 +542,7 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.prefixPattern = "*.xml";
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
@@ -582,7 +582,7 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.prefixPattern = "*.json";
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
@@ -622,7 +622,7 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3FileConfig.overrunLimit = 128;
     s3ConfigBean.s3FileConfig.prefixPattern = "*.avro";
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
@@ -661,7 +661,7 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3FileConfig.overrunLimit = 128;
     s3ConfigBean.s3FileConfig.prefixPattern = "*";
 
-    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config = new S3ConnectionSourceConfig();
     s3ConfigBean.s3Config.region = AWSRegions.OTHER;
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;

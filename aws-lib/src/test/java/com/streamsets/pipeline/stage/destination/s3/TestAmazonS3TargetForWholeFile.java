@@ -50,7 +50,6 @@ import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.lib.aws.TransferManagerConfig;
-import com.streamsets.pipeline.stage.origin.s3.S3Config;
 import com.streamsets.pipeline.stage.origin.s3.S3FileRef;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -270,7 +269,7 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
   }
 
   private AmazonS3Target createS3targetWithWholeFile() {
-    S3Config s3Config = new S3Config();
+    S3ConnectionTargetConfig s3Config = new S3ConnectionTargetConfig();
     s3Config.region = AWSRegions.OTHER;
     s3Config.endpoint = "http://localhost:" + port;
     s3Config.bucket = TARGET_BUCKET_NAME;
