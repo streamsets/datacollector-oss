@@ -168,16 +168,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   public Iterator<Object> forwardTransformedBatch(Iterator batch, int id) throws Exception {
     EmbeddedSDC sdc = sdcPool.getSDCBatchRead(id);
     try {
-      return Optional.ofNullable(sdc.getSparkProcessorAt(id)).map(t -> {
-        try {
-          Object processor = t.getClass().getMethod("get").invoke(t);
-          final Method continueProcessing = processor.getClass().getDeclaredMethod(CONTINUE_PROCESSING, Iterator.class);
-          continueProcessing.invoke(processor, batch);
-          return getNextBatch(id + 1, sdc);
-        } catch (Exception ex) {
-          throw new RuntimeException(ex);
-        }
-      }).orElse(Collections.emptyIterator());
+      return doForward(batch, id, sdc);
     } finally {
       if (sdc != null) {
         if (IS_TRACE_ENABLED) {
@@ -193,7 +184,20 @@ public class ClusterFunctionImpl implements ClusterFunction  {
     }
   }
 
-  private String getErrorStackTrace(Throwable e) {
+  public static Iterator<Object> doForward(Iterator batch, int id, EmbeddedSDC sdc) {
+    return Optional.ofNullable(sdc.getSparkProcessorAt(id)).map(t -> {
+      try {
+        Object processor = t.getClass().getMethod("get").invoke(t);
+        final Method continueProcessing = processor.getClass().getDeclaredMethod(CONTINUE_PROCESSING, Iterator.class);
+        continueProcessing.invoke(processor, batch);
+        return getNextBatch(id + 1, sdc);
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    }).orElse(Collections.emptyIterator());
+  }
+
+  private static String getErrorStackTrace(Throwable e) {
     StringWriter errorWriter = new StringWriter();
     PrintWriter pw = new PrintWriter(errorWriter);
     pw.println();
