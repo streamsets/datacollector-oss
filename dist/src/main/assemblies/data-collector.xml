@@ -415,6 +415,11 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <fileSet>
+      <directory>${basedir}/../${mapr_spark_2_1_mep_3_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- Jython libs -->
     <fileSet>
       <directory>${basedir}/../${jython_2_7-lib}/target/streamsets-libs/</directory>
