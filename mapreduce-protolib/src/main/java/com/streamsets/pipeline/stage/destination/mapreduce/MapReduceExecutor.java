@@ -126,9 +126,6 @@ public class MapReduceExecutor extends BaseExecutor {
       // Job configuration object is a clone of the original one that we're keeping in mapReduceConfig class
       final Configuration jobConfiguration = new Configuration(mapReduceConfig.getConfiguration());
 
-      // See SDC-5451, we set hadoop.treat.subject.external automatically to take advantage of HADOOP-13805
-      HadoopConfigurationUtils.configureHadoopTreatSubjectExternal(jobConfiguration);
-
       // Evaluate all dynamic properties and store them in the configuration job
       for(Map.Entry<String, String> entry : jobConfig.jobConfigs.entrySet()) {
         String key = eval.evaluateToString("jobConfigs", entry.getKey());
