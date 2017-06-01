@@ -34,7 +34,7 @@
     <avro.version>1.7.7</avro.version>
     <commons-compress.version>1.10</commons-compress.version>
     <commons-codec.version>1.9</commons-codec.version>
-    <commons-csv.version>1.1</commons-csv.version>
+    <commons-csv.version>1.4</commons-csv.version>
     <commons-io.version>2.4</commons-io.version>
     <xz.version>1.5</xz.version>
     <snappy.version>0.4</snappy.version>
