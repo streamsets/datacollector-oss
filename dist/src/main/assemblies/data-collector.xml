@@ -410,6 +410,11 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <fileSet>
+      <directory>${basedir}/../${cdh_spark_2_1_r1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- Jython libs -->
     <fileSet>
       <directory>${basedir}/../${jython_2_7-lib}/target/streamsets-libs/</directory>
