@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.destination.mapreduce.config;
 
 import com.google.common.base.Joiner;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
+import com.streamsets.datacollector.stage.HadoopConfigurationUtils;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.destination.mapreduce.Groups;
@@ -125,6 +126,10 @@ public class MapReduceConfig {
     for (Map.Entry<String, String> entry : mapreduceConfigs.entrySet()) {
       configuration.set(entry.getKey(), entry.getValue());
     }
+
+    // See SDC-5451, where we set "hadoop.treat.subject.external" automatically
+    // in order to take advantage of HADOOP-13805
+    HadoopConfigurationUtils.configureHadoopTreatSubjectExternal(configuration);
 
     // We're doing here the same as HDFS (which should be at some point refactored to shared code)
     try {
