@@ -14,23 +14,24 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_trt_thq_5r">
- <title>File Processing and Archived File Names</title>
+ <title>File Processing and Archive File Names</title>
  <shortdesc>File Tail processes the active file and archived files based on how the source server
-  generates files. When you specify the naming convention for archived files, File Tail determines
-  the file generation method and processes the data accordingly.</shortdesc>
+    generates files. When you specify the naming convention for archived files, File Tail determines
+    the file generation method and processes the data accordingly.</shortdesc>
  <conbody>
-  <p><indexterm>File Tail origin<indexterm>file processing and archive file
-    names</indexterm></indexterm><indexterm>file processing<indexterm>for File
-    Tail</indexterm></indexterm>File Tail can process data based on the following common file
-   generation and archive strategies:<dl>
-    <dlentry>
-     <dt>The server writes data to a single active file and generates archive files as needed</dt>
-     <dd>The server writes new data to a single file, such as weblog.log. Periodically, it rolls
-      older data from the active file to an archive file, such as weblog.log1 or
-      weblog.log.2015-10-15. </dd>
-     <dd>File Tail intelligently tracks its relative progress through new and archived data and is
-      not affected by file name changes.</dd>
-     <dd>File Tail can process archived files that use the following naming conventions:<ul
+  <p><indexterm>File Tail origin<indexterm>file processing and closed file
+        names</indexterm></indexterm><indexterm>file processing<indexterm>for File
+        Tail</indexterm></indexterm>File Tail can process data based on the following common file
+      generation and archive strategies:<dl>
+        <dlentry>
+          <dt>The server writes data to a single active file and generates archive files as
+            needed</dt>
+          <dd>The server writes new data to a single file, such as weblog.log. Periodically, it
+            rolls older data from the active file to an archive file, such as weblog.log1 or
+            weblog.log.2015-10-15. </dd>
+          <dd>File Tail intelligently tracks its relative progress through new and archived data and
+            is not affected by file name changes.</dd>
+          <dd>File Tail can process archived files that use the following naming conventions:<ul
               id="ul_ury_gzq_5r">
               <li><uicontrol>Active File with Reverse Counter</uicontrol> - The server appends a
                 number to the end of each archived file, such as data.1, data.2, and so on.<p>File
@@ -49,22 +50,23 @@
                 not match the provided date patterns.<p>File Tail processes files in alphabetical
                   order before progressing to the active file.</p></li>
             </ul></dd>
-    </dlentry>
-    <dlentry>
-     <dt>The server writes a new active file as needed, archiving the previous file without
+        </dlentry>
+        <dlentry>
+          <dt>The server writes a new active file as needed, archiving the previous file without
             renaming</dt>
-     <dd>The server writes to an active file, creating a new active file as necessary. When it
-      creates a new active file, it archives the previous active file without renaming it. The
-      active file changes, but file names do not change. </dd>
-     <dd>The server generates files using a pattern that you can define with a regular expression. </dd>
-     <dd>Use <uicontrol>Files Matching a Pattern</uicontrol> as the archive file naming
-      convention.</dd>
-     <dd>File Tail processes the files in alphabetical order before progressing to the most recent
-      file - the active file. </dd>
-     <dd>For example, if you use log_[0-9]{4}-[0-9]{2}-[0-9]{2}\\.json as the file name pattern,
-      File Tail might read log-2015-5-01.json, then log-2015-05-02.json, and so on - until it
-      reaches the file for the current date.</dd>
-    </dlentry>
-   </dl></p>
+          <dd>The server writes to an active file, creating a new active file as necessary. When it
+            creates a new active file, it archives the previous active file without renaming it. The
+            active file changes, but file names do not change. </dd>
+          <dd>The server generates files using a pattern that you can define with a regular
+            expression. </dd>
+          <dd>Use <uicontrol>Files Matching a Pattern</uicontrol> as the archive file naming
+            convention.</dd>
+          <dd>File Tail processes the files in alphabetical order before progressing to the most
+            recent file - the active file. </dd>
+          <dd>For example, if you use log_[0-9]{4}-[0-9]{2}-[0-9]{2}\\.json as the file name
+            pattern, File Tail might read log-2015-5-01.json, then log-2015-05-02.json, and so on -
+            until it reaches the file for the current date.</dd>
+        </dlentry>
+      </dl></p>
  </conbody>
 </concept>

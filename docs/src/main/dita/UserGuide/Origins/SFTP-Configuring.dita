@@ -92,6 +92,21 @@
                                             files.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>First File to Process <xref
+                                            href="SFTP-FirstFile.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_odw_cxs_b1b"
+                                        /></xref></entry>
+                                    <entry>Name of the first file to process when you start the
+                                        pipeline. Use a name that uses the file name pattern. Leave
+                                        empty to read all files in the directory with the specified
+                                        naming convention.<p>When you enter a file name, the origin
+                                            starts processing with the specified file.</p>When you
+                                        restart a stopped pipeline, the origin ignores this
+                                        property. It starts where it left off regardless of the
+                                        first file name unless you reset the origin. </entry>
+                                </row>
+                                <row>
                                     <entry>Max Batch Size (records)</entry>
                                     <entry>Maximum number of records to include in a batch and send
                                         through the pipeline at one time.</entry>
