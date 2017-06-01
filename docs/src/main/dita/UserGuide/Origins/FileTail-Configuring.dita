@@ -125,7 +125,11 @@
                                         option.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>First File</entry>
+                                    <entry>First File <xref
+                                            href="FileTail-FirstFile.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_bss_2xs_b1b"
+                                        /></xref></entry>
                                     <entry>Name of the first file to process when you start the
                                         pipeline. Use a name that uses the file name pattern. Leave
                                         empty to read all files in the directory with the specified
@@ -133,7 +137,8 @@
                                             reads the first file and then progresses to the active
                                             file. </p>When you restart a stopped pipeline, File Tail
                                         ignores this property. It starts where it left off
-                                        regardless of the file name unless you reset the origin. </entry>
+                                        regardless of the first file name unless you reset the
+                                        origin. </entry>
                                 </row>
                                 <row>
                                     <entry>Tag <xref

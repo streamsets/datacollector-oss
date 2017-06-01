@@ -1080,6 +1080,14 @@ web-0011.log</codeblock></dd>
             <draft-comment author="Loretta">Event Record topics for JDBC Multitable and
                   Salesforce.</draft-comment>
             <p id="p-ERec-NoMoreData">The no-more-data event record includes no record fields.</p>
+            <p>
+                  <draft-comment author="Loretta">Origins: used in First File to Process for
+                  </draft-comment>
+            </p>
+            <p/>
+            <p>
+                  <draft-comment author="Loretta">multithreaded stuff below. </draft-comment>
+            </p>
             <draft-comment author="Loretta">Used in Pipeline Concepts &amp; Design > Single &amp;
                   Multithreaded Pipes, and Multithreaded > Overview. And in Multithreaded Processing
                   topics in origin sections.</draft-comment>

@@ -74,6 +74,7 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/FileTail-FileProcessing.dita"/>
    <topicref href="../Origins/FileTail-MultipleDirectories.dita"/>
+   <topicref href="../Origins/FileTail-FirstFile.dita"/>
    <topicref href="../Origins/FileTail-LateDirectories.dita"/>
    <topicref href="../Origins/FileTail-Patterns.dita"/>
    <topicref href="../Origins/FileTail-RecordHeaderAtts.dita">
@@ -349,6 +350,7 @@
   <topicref href="../Origins/SFTP.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/SFTP-ReadOrder.dita"/>
+   <topicref href="../Origins/SFTP-FirstFile.dita"/>
    <topicref href="../Origins/SFTP-Credentials.dita"/>
    <topicref href="../Origins/SFTPClient-DataFormats.dita"/>
    <topicref href="../Origins/SFTP-Configuring.dita"/>

@@ -22,7 +22,7 @@
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>SFTP/FTP
                     Client</indexterm></indexterm>When you configure the SFTP/FTP Client origin, you
             specify the URL where the files reside on the remote server. You can specify whether to
-            process files in subdirectories, a file name pattern, and other read properties. </p>
+            process files in subdirectories, a file name pattern, and the first file to process. </p>
         <p>If the server requires authentication, configure the origin to use login credentials. If
             using the SFTP protocol, you can also configure the origin for strict host checking. </p>
         <p>You can configure the origin to download files to an archive directory if the origin
