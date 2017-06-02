@@ -44,6 +44,9 @@
                                         columns. </li>
                                     <li>new partition - Generated when the destination creates a new
                                         partition.</li>
+                                    <li>avro-schema-store - Generated when the destination generates
+                                        and writes a new Avro schema file to the destination
+                                        system.</li>
                                 </ul></entry>
                         </row>
                         <row
@@ -198,6 +201,44 @@
                                 </tgroup>
                             </table></p>
                     </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>New Avro schema file</dt>
+                    <dd>When the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HiveDrift-ph"
+                        /> processes Avro data and the Stored as Avro option in the destination is
+                        not enabled, the destination generates and writes an Avro schema file event
+                        each time it creates or updates a table. </dd>
+                    <dd>New Avro schema files have the <codeph>sdc.event.type</codeph> record header
+                        attribute set to <codeph>avro-schema-store</codeph> and include the
+                        following fields:<table frame="all" rowsep="1" colsep="1"
+                            id="table_lbz_hvx_11b">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Field</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>table</entry>
+                                        <entry>Fully qualified table name using the following
+                                            format: <codeph>&lt;db>.&lt;table></codeph>.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>avro_schema</entry>
+                                        <entry>The new Avro schema.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>schema_location</entry>
+                                        <entry>Location where the schema file was written.</entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table></dd>
                 </dlentry>
             </dl></p>
     </conbody>

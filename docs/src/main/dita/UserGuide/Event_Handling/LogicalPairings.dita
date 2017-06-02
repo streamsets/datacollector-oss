@@ -206,6 +206,8 @@
                                         changing table structures. <p>Particularly useful when using
                                             the Drift Synchronization Solution for Hive with Impala.
                                         </p></li>
+                                    <li>HDFS File Metadata executor to move or update permissions on
+                                        Avro schema files. </li>
                                     <li>Email executor to send email each time the destination
                                         changes the Hive metastore.</li>
                                     <li>Any destination for event storage.</li>
