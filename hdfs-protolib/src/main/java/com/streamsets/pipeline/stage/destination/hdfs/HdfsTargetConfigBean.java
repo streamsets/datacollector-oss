@@ -22,9 +22,8 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.datacollector.stage.HadoopConfigurationUtils;
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
+import com.streamsets.datacollector.stage.HadoopConfigurationUtils;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -43,6 +42,7 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
@@ -767,20 +767,23 @@ public class HdfsTargetConfigBean {
   public void destroy() {
     LOG.info("Destroy");
     try {
-      if(userUgi == null) {
-        return;
-      }
-
-      userUgi.doAs(new PrivilegedExceptionAction<Void>() {
-        @Override
-        public Void run() throws Exception {
+      if(userUgi != null) {
+        userUgi.doAs((PrivilegedExceptionAction<Void>) () -> {
           try {
+            //Don't close the whole files on destroy, we should only do it after
+            //the file is copied (i.e after a record is written, the file will be closed)
+            //For resume cases(i.e file copied fully but not renamed/ file partially copied)
+            //we will overwrite the _tmp file and start copying from scratch
             if (currentWriters != null) {
-              currentWriters.closeAll();
+              if (dataFormat != DataFormat.WHOLE_FILE) {
+                currentWriters.closeAll();
+              }
               currentWriters.getWriterManager().issueCachedEvents();
             }
             if (lateWriters != null) {
-              lateWriters.closeAll();
+              if (dataFormat != DataFormat.WHOLE_FILE) {
+                lateWriters.closeAll();
+              }
               lateWriters.getWriterManager().issueCachedEvents();
             }
           } finally {
@@ -790,8 +793,8 @@ public class HdfsTargetConfigBean {
             }
           }
           return null;
-        }
-      });
+        });
+      }
     } catch (Exception ex) {
       LOG.warn("Error while closing HDFS FileSystem URI='{}': {}", hdfsUri, ex.toString(), ex);
     }
