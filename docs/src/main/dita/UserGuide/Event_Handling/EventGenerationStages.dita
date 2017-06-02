@@ -143,6 +143,7 @@
                                 <ul id="ul_fgw_mt4_qx">
                                     <li>Updates the Hive metastore by creating a table, adding
                                         columns, or creating a partition. </li>
+                                    <li>Generates and writes a new Avro schema file.</li>
                                 </ul>
                             </entry>
                         </row>
