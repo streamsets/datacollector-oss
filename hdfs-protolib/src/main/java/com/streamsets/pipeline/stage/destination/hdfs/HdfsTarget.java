@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -191,11 +192,16 @@ public class HdfsTarget extends BaseTarget {
         if (writer != null) {
           try {
             writer.write(record);
+            //close the file immediately if there are no errors/exceptions
+            if (hdfsTargetConfigBean.dataFormat == DataFormat.WHOLE_FILE) {
+              hdfsTargetConfigBean.getCurrentWriters().release(writer, false);
+            }
             // To avoid double counting, in case of IdleClosedException
             hdfsTargetConfigBean.getToHdfsRecordsCounter().inc();
             hdfsTargetConfigBean.getToHdfsRecordsMeter().mark();
             hdfsTargetConfigBean.getCurrentWriters().release(writer, false);
           } catch (IdleClosedException ex) {
+            //For whole file we will not get here.
             hdfsTargetConfigBean.getCurrentWriters().release(writer, false);
             // Try to write again, this time with a new writer
             write = true;
@@ -215,6 +221,8 @@ public class HdfsTarget extends BaseTarget {
                 lateWriter.write(record);
                 // To avoid double counting, in case of IdleClosedException
                 incrementAndMarkLateRecords();
+                //We anyway close the late record writers after writing,
+                //no need to handle specially for whole file
                 hdfsTargetConfigBean.getLateWriters().release(lateWriter, false);
               } catch (IdleClosedException ex) {
                 // Try to write again, this time with a new lateWriter

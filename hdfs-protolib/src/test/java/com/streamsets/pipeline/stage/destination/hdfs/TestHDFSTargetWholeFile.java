@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
@@ -52,6 +53,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -69,7 +71,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({RecordWriterManager.class})
+@PrepareForTest({RecordWriterManager.class, RecordWriter.class})
 @PowerMockIgnore({"javax.*", "org.*"})
 public class TestHDFSTargetWholeFile {
   private String testDir;
@@ -190,20 +192,13 @@ public class TestHDFSTargetWholeFile {
     runner.runDestroy();
   }
 
-  @Test
-  public void testWholeFilePartialCopy() throws Exception {
-    PowerMockito.replace(
-        MemberMatcher.method(RecordWriterManager.class, "commitWriter", RecordWriter.class)
-    ).with(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        //Close the recordWriter so contents are written.
-        RecordWriter recordWriter = (RecordWriter)args[0];
-        recordWriter.close();
-        //Make it no op so that the _tmp_ file is left behind
-        return null;
-      }
-    });
+
+  private void testPartialOrFailedWrites(
+      Method interceptingMethod,
+      InvocationHandler replacingInvocation,
+      boolean isExceptionThrownByReplacedInvocation
+  )  throws Exception {
+    PowerMockito.replace(interceptingMethod).with(replacingInvocation);
 
     java.nio.file.Path filePath = Paths.get(getTestDir() + "/source_testWholeFilePartialCopy.txt");
     Files.write(filePath, "This is a sample file with some text".getBytes());
@@ -229,8 +224,18 @@ public class TestHDFSTargetWholeFile {
     Record record = getFileRefRecordForFile(filePath);
 
     runner.runInit();
-    runner.runWrite(Collections.singletonList(record));
-    runner.runDestroy();
+    try {
+      runner.runWrite(Collections.singletonList(record));
+      if (isExceptionThrownByReplacedInvocation) {
+        Assert.fail("Should have caused a Stage Exception");
+      }
+    } catch (StageException e){
+      if (!isExceptionThrownByReplacedInvocation) {
+        throw e;
+      }  // else Expected Exception
+    } finally {
+      runner.runDestroy();
+    }
 
     runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -241,32 +246,56 @@ public class TestHDFSTargetWholeFile {
 
     //Make sure _tmp_ file is there
     Assert.assertTrue(Files.exists(Paths.get(tmpTargetFileName)));
-    Assert.assertTrue(Files.size(Paths.get(tmpTargetFileName)) > 0);
 
     //Make sure the file is not renamed to the final file.
     Assert.assertFalse(Files.exists(Paths.get(targetFileName)));
 
-    PowerMockito.replace(
-        MemberMatcher.method(RecordWriterManager.class, "commitWriter", RecordWriter.class)
-    ).with(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        //Set the commit Writer back.
-        return method.invoke(proxy, args);
-      }
+    PowerMockito.replace(interceptingMethod).with((proxy, method, args) -> {
+      //Set the real method call back.
+      return method.invoke(proxy, args);
     });
 
     runner.runInit();
-    runner.runWrite(Collections.singletonList(record));
+    try {
+      runner.runWrite(Collections.singletonList(record));
 
-    //Make sure _tmp_ file is not there
-    Assert.assertFalse(Files.exists(Paths.get(tmpTargetFileName)));
+      //Make sure _tmp_ file is not there
+      Assert.assertFalse(Files.exists(Paths.get(tmpTargetFileName)));
 
-    //Make sure the file is renamed to the final file.
-    Assert.assertTrue(Files.exists(Paths.get(targetFileName)));
-    Assert.assertTrue(Files.size(Paths.get(targetFileName)) > 0);
-    checkFileContent(new FileInputStream(filePath.toString()), new FileInputStream(targetFileName));
-    runner.runDestroy();
+      //Make sure the file is renamed to the final file.
+      Assert.assertTrue(Files.exists(Paths.get(targetFileName)));
+      Assert.assertTrue(Files.size(Paths.get(targetFileName)) > 0);
+      checkFileContent(new FileInputStream(filePath.toString()), new FileInputStream(targetFileName));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testWholeFilePartialCopy() throws Exception {
+    testPartialOrFailedWrites(
+        MemberMatcher.method(RecordWriterManager.class, "commitWriter", RecordWriter.class),
+        (proxy, method, args) -> {
+          //Close the recordWriter so contents are written.
+          RecordWriter recordWriter = (RecordWriter) args[0];
+          recordWriter.close();
+          //Make it no op so that the _tmp_ file is left behind
+          return null;
+        },
+        false
+    );
+  }
+
+  @Test
+  public void testWholeFileWriteFailed() throws Exception {
+    testPartialOrFailedWrites(
+        MemberMatcher.method(RecordWriter.class, "write", Record.class),
+        (proxy, method, args) -> {
+          //Fail the write by throwing an IOException
+          throw new IOException("Write Failed");
+        },
+        true
+    );
   }
 
   @Test
@@ -470,11 +499,15 @@ public class TestHDFSTargetWholeFile {
         Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH));
         Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH));
 
-        Assert.assertEquals(record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap().keySet(), eventRecord.get(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH).getValueAsMap().keySet());
+        Assert.assertEquals(
+            record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap().keySet(),
+            eventRecord.get(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO_PATH).getValueAsMap().keySet());
 
         Assert.assertTrue(eventRecord.has(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/path"));
 
-        Assert.assertEquals(getTestDir()+ "/sdc-"+ filePath.getFileName(), eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/path").getValueAsString());
+        Assert.assertEquals(
+            getTestDir()+ "/sdc-"+ filePath.getFileName(),
+            eventRecord.get(FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO_PATH + "/path").getValueAsString());
       }
 
     } finally {
