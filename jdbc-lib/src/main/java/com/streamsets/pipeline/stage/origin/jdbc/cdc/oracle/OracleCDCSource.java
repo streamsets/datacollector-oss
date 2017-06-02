@@ -165,20 +165,20 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
+  private static final String GET_COMMIT_TS = "SELECT COMMIT_TIMESTAMP FROM V$LOGMNR_CONTENTS";
+  private static final String OFFSET_DELIM = "::";
+  private static final int RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED = 1306;
   private static final String NLS_DATE_FORMAT = "ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MM-YYYY HH24:MI:SS'";
   private static final String NLS_NUMERIC_FORMAT = "ALTER SESSION SET NLS_NUMERIC_CHARACTERS = \'.,\'";
   private static final String NLS_TIMESTAMP_FORMAT =
       "ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'";
-  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-  private static final Pattern TO_DATE_PATTERN = Pattern.compile("TO_DATE\\('(.*)',.*");
+  private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+  private final Pattern toDatePattern = Pattern.compile("TO_DATE\\('(.*)',.*");
   // If a date is set into a timestamp column (or a date field is widened to a timestamp,
   // a timestamp ending with "." is returned (like 2016-04-15 00:00:00.), so we should also ignore the trailing ".".
-  private static final Pattern TO_TIMESTAMP_PATTERN = Pattern.compile("TO_TIMESTAMP\\('(.*[^\\.]).*'");
-  private static final Pattern DDL_PATTERN = Pattern.compile("(CREATE|ALTER|DROP|TRUNCATE).*", Pattern.CASE_INSENSITIVE);
-  private static final String GET_COMMIT_TS = "SELECT COMMIT_TIMESTAMP FROM V$LOGMNR_CONTENTS";
-  public static final String OFFSET_DELIM = "::";
-  public static final int RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED = 1306;
-  private static final DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+  private final Pattern toTimestampPattern = Pattern.compile("TO_TIMESTAMP\\('(.*[^\\.]).*'");
+  private final Pattern ddlPattern = Pattern.compile("(CREATE|ALTER|DROP|TRUNCATE).*", Pattern.CASE_INSENSITIVE);
+  private final DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
   private final OracleCDCConfigBean configBean;
   private final HikariPoolConfigBean hikariConfigBean;
@@ -568,7 +568,7 @@ public class OracleCDCSource extends BaseSource {
   private DDL_EVENT getDdlType(String redoSQL) {
     DDL_EVENT ddlType;
     try {
-      Matcher ddlMatcher = DDL_PATTERN.matcher(redoSQL.toUpperCase());
+      Matcher ddlMatcher = ddlPattern.matcher(redoSQL.toUpperCase());
       if (!ddlMatcher.find()) {
         ddlType = DDL_EVENT.UNKNOWN;
       } else {
@@ -1162,12 +1162,12 @@ public class OracleCDCSource extends BaseSource {
     if (columnValue == null) {
       return Field.create(type, null);
     } else {
-      Optional<String> ts = matchDateTimeString(TO_TIMESTAMP_PATTERN.matcher(columnValue));
+      Optional<String> ts = matchDateTimeString(toTimestampPattern.matcher(columnValue));
       if (ts.isPresent()) {
         return Field.create(type, Timestamp.valueOf(ts.get()));
       }
       // We did not find TO_TIMESTAMP, so try TO_DATE
-      Optional<String> dt = matchDateTimeString(TO_DATE_PATTERN.matcher(columnValue));
+      Optional<String> dt = matchDateTimeString(toDatePattern.matcher(columnValue));
       return Field.create(Field.Type.DATE, dt.isPresent() ? getDate(dt.get()) : null);
     }
   }
@@ -1179,7 +1179,7 @@ public class OracleCDCSource extends BaseSource {
     return Optional.of(m.group(1));
   }
 
-  private static Date getDate(String s) throws ParseException {
+  private Date getDate(String s) throws ParseException {
     return dateFormat.parse(s);
   }
 
