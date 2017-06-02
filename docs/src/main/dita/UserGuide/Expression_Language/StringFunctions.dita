@@ -194,7 +194,15 @@
             number.</dd>
     </dlentry>
         <dlentry>
-          <dt>str:unescapeXML</dt>
+          <dt>str:unescapeJava(&lt;string>)</dt>
+          <dd>Returns an unescaped string from a string with special Java characters. Use to include
+            binary or non-printable characters in any location where you can enter an expression. </dd>
+          <dd>Uses the following argument:<ul id="ul_vm1_g25_b1b">
+              <li>string - The string to process.</li>
+            </ul></dd>
+        </dlentry>
+        <dlentry>
+          <dt>str:unescapeXML(&lt;string>)</dt>
           <dd>Returns an unescaped string from a string that had XML data escaped.</dd>
           <dd>Uses the following argument:<ul id="ul_stl_xcb_qz">
               <li>string - The string that includes escaped XML data.</li>

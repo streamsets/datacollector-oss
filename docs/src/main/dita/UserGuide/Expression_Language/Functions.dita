@@ -168,6 +168,7 @@
           <li>str:toUpper(&lt;string>)</li>
           <li>str:trim(&lt;string>)</li>
           <li>str:truncate(&lt;string>, &lt;length>)</li>
+          <li>str:unescapeJava(&lt;string>)</li>
           <li>str:unescapeXML(&lt;string>)</li>
           <li>str:urlDecode(&lt;URL>, &lt;charset>)</li>
           <li>str:urlEncode(&lt;infoforURL>, &lt;charset>)</li>
