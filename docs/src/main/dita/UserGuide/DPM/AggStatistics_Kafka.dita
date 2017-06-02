@@ -17,15 +17,20 @@
  <title>Write Statistics to Kafka</title>
  <shortdesc>When you write statistics to a Kafka cluster, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        effectively adds a Kafka Producer destination to the pipeline that you are configuring. The
-        system pipeline reads the statistics from Kafka, and then aggregates and sends the
-        statistics to <ph
+        effectively adds a Kafka Producer destination to the pipeline that you are configuring. <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        automatically generates and runs a system pipeline for the job. The system pipeline reads
+        the statistics from Kafka, and then aggregates and sends the statistics to <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </shortdesc>
  <conbody>
         <p><indexterm>aggregated
                     statistics<indexterm>Kafka</indexterm></indexterm><indexterm>Kafka<indexterm>aggregated
-                    statistics</indexterm></indexterm>When you write aggregated statistics to a
-            Kafka cluster, you define connection information and the topic to write to. </p>
+                    statistics</indexterm></indexterm>Write statistics to a Kafka cluster when the
+            job runs on multiple <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />s.</p>
+        <p>When you write statistics to a Kafka cluster, you define connection information and the
+            topic to write to. </p>
         <p>You also configure the partition strategy. The pipeline passes data to partitions in the
             Kafka topic based on the partition strategy that you choose. You can add additional
             Kafka configuration properties as needed. </p>

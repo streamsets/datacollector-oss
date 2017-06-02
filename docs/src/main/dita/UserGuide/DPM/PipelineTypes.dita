@@ -105,8 +105,10 @@
                                     />.</p><p><ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                     /> generates system pipelines as needed. Published pipelines
-                                    that are not configured to aggregate statistics do not require
-                                    system pipelines.</p></li>
+                                    that are not configured to <xref
+                                        href="AggregatedStatistics.dita#concept_h2q_mb5_xw"
+                                        >aggregate statistics</xref> do not require system
+                                    pipelines.</p></li>
                         </ul></dd>
                 </dlentry>
             </dl></p>

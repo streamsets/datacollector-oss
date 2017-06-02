@@ -18,12 +18,16 @@
  <shortdesc> When you write statistics to Amazon Kinesis Streams, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         effectively adds a Kinesis Producer destination to the pipeline that you are configuring.
-        The system pipeline reads the statistics from Kinesis Streams, and then aggregates and sends
-        the statistics to <ph
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        automatically generates and runs a system pipeline for the job. The system pipeline reads
+        the statistics from Kinesis Streams, and then aggregates and sends the statistics to <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </shortdesc>
  <conbody>
-        <p>When you write aggregated statistics to Kinesis Streams, you define connection
-            information and the stream to write to.</p>
+        <p>Write statistics to Kinesis Streams when the job runs on multiple <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />s.</p>
+        <p>When you write statistics to Kinesis Streams, you define connection information and the
+            stream to write to.</p>
         <p>You also configure the partition strategy. The pipeline passes data to partitions in
             Kinesis shards based on the partition strategy that you choose. You can add additional
             Kinesis configuration properties as needed. </p>
