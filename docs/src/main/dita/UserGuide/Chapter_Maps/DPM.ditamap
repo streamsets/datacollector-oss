@@ -44,6 +44,7 @@
         </topicref>
         <topicref href="../DPM/AggregatedStatistics.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../DPM/AggStatistics_DirectlyToDPM.dita"/>
             <topicref href="../DPM/AggStatistics_SDCRPC.dita">
                 <topicref href="../DPM/AggStatistics_SDCRPCBestPractices.dita"/>
             </topicref>

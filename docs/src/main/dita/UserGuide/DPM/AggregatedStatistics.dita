@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_h2q_mb5_xw">
- <title>Aggregated Statistics for Pipelines</title>
+ <title>Pipeline Statistics</title>
  <shortdesc>A <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
         job defines the pipeline to run and the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s that
@@ -22,34 +22,52 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
         remotely runs the pipeline on the group of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s. To
-        monitor the job statistics and metrics, you must configure the pipeline to aggregate
-        statistics across all running pipeline instances.</shortdesc>
+        monitor the job statistics and metrics within <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>, you
+        must configure the pipeline to write statistics to <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> or to
+        another system.</shortdesc>
  <conbody>
   <p><indexterm>DPM<indexterm>aggregated
                     statistics</indexterm></indexterm><indexterm>pipelines<indexterm>aggregated
                     statistics for DPM</indexterm></indexterm><indexterm>aggregated
-                    statistics<indexterm>pipelines</indexterm></indexterm>To aggregate statistics,
-            use <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> to configure the pipeline to write the statistics to one of the following
+                    statistics<indexterm>pipelines</indexterm></indexterm>When a job runs on a
+            single <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+            you can simply configure the pipeline to write the statistics directly to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. By
+            default, pipelines are configured to write statistics directly to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            />.</p>
+        <p>When a job runs on multiple <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s,
+            a remote pipeline instance runs on each of the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s.
+            To view aggregated statistics for the job within <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
+            you must configure the pipeline to write the statistics to one of the following
             systems:</p>
         <ul id="ul_e23_pxp_yy">
             <li>SDC RPC</li>
             <li>Kafka cluster</li>
             <li>Amazon Kinesis Streams</li>
         </ul>
-        <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AggStatsNote"/>
-        <p>When you start a job that includes a pipeline configured to aggregate statistics, <ph
+        <p>When you start a job that includes a pipeline configured to write to Kafka, Kinesis, or
+            SDC RPC, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             automatically generates and runs a system pipeline for the job. The system pipeline
             reads the statistics written by each running pipeline instance to Kafka, Kinesis, or SDC
             RPC. Then, the system pipeline aggregates and sends the statistics to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>.
-            You can view the aggregated statistics and metrics when you monitor the job in <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </p>
+        <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AggStatsNote"/>
+        <p>When a <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+            /> job includes a pipeline that is configured to write statistics, you can view the
+            statistics and metrics when you monitor the job in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
             />:</p>
         <p><image href="../Graphics/DPM_MonitorJob.png" scale="50" id="image_h2w_wxs_gx"/></p>
         <p>When a <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-            /> job includes a pipeline that is not configured to aggregate statistics, <ph
+            /> job includes a pipeline that is configured to discard statistics, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             cannot display statistics and metrics for the job. Instead, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>

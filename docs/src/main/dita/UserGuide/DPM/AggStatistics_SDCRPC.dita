@@ -17,13 +17,18 @@
  <title>Write Statistics to SDC RPC</title>
  <shortdesc>When you write statistics to SDC RPC, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        effectively adds an SDC RPC destination to the pipeline that you are configuring. The system
-        pipeline is a pipeline with a Dev SDC RPC with Buffering origin that reads the statistics
-        passed from the SDC RPC destination, and then aggregates and sends the statistics to <ph
+        effectively adds an SDC RPC destination to the pipeline that you are configuring. <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+        automatically generates and runs a system pipeline for the job. The system pipeline is a
+        pipeline with a Dev SDC RPC with Buffering origin that reads the statistics passed from the
+        SDC RPC destination, and then aggregates and sends the statistics to <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </shortdesc>
  <conbody>
-        <p>When you configure a pipeline to send aggregated statistics to an SDC RPC destination,
-            you specify the following information: <ul id="ul_dzy_wm3_1z">
+        <p>Write statistics to SDC RPC when the job runs on multiple <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />s.</p>
+        <p>When you configure a pipeline to write statistics to an SDC RPC destination, you specify
+            the following information: <ul id="ul_dzy_wm3_1z">
                 <li>SDC RPC connection - The host and port number of the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> machine where <ph

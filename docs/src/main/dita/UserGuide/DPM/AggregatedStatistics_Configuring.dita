@@ -14,24 +14,46 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_lcd_ng5_xw">
-    <title>Configuring a Pipeline to Aggregate Statistics</title>
-    <shortdesc>You can configure a pipeline to aggregate statistics after the Data Collector has
-        been registered with DPM.</shortdesc>
+    <title>Configuring a Pipeline to Write Statistics</title>
+    <shortdesc>You can configure a pipeline to write statistics after the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has
+        been registered with <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+        />.</shortdesc>
     <taskbody>
         <steps>
             <step>
-                <cmd>Open the pipeline in Data Collector. </cmd>
+                <cmd>Open the pipeline in <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />. </cmd>
             </step>
             <step>
                 <cmd>On the <uicontrol>Statistics</uicontrol> tab, select one of the following
                     options for the statistics aggregator:</cmd>
                 <info>
                     <ul id="ul_ljj_brd_dx">
+                        <li>Discard - Discard the pipeline statistics. <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                            /> cannot display statistics and metrics for the job.</li>
+                        <li>Write to <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                            /> Directly - Write the pipeline statistics directly to <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                            />. Use when the job runs on a single <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            />.</li>
                         <li>Write to SDC RPC - Write the pipeline statistics to an SDC RPC
-                            destination. Use for development purposes only.</li>
-                        <li>Write to Kafka - Write the pipeline statistics to a Kafka cluster.</li>
+                            destination. Use when the job runs on multiple <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            />s and for development purposes only.</li>
+                        <li>Write to Kafka - Write the pipeline statistics to a Kafka cluster. Use
+                            when the job runs on multiple <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            />s.</li>
                         <li>Write to Kinesis - Write the pipeline statistics to Amazon Kinesis
-                            Streams.</li>
+                            Streams. Use when the job runs on multiple <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            />s.</li>
                     </ul>
                 </info>
             </step>
@@ -134,9 +156,8 @@
                                 <row>
                                     <entry>Verify Host in Server Certificate</entry>
                                     <entry>Verifies the host in the keystore file on the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> machine that runs the system pipeline. 
-                                    </entry>
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> machine that runs the system pipeline. </entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -226,24 +247,24 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Access Key ID
-                                        <xref
+                                    <entry>Access Key ID <xref
                                             href="../DPM/AggStatistics_KinesisAWSCredentials.dita"
-                                            ><image href="../Graphics/icon_moreInfo.png"
+                                                ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="10" id="image_ekt_x9g_cs"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_AccessKeyID"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_AccessKeyID"
+                                    />
                                 </row>
                                 <row>
-                                    <entry>Secret Access Key
-                                        <xref
+                                    <entry>Secret Access Key <xref
                                             href="../DPM/AggStatistics_KinesisAWSCredentials.dita"
-                                            ><image href="../Graphics/icon_moreInfo.png"
+                                                ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="10" id="image_ekt_x6g_cs"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_SecretAccessKey"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_SecretAccessKey"
+                                    />
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisRegion">
@@ -268,7 +289,6 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisPartitionExp">
                                     <entry/>
                                 </row>
-
                                 <row>
                                     <entry>Kinesis Producer Configuration</entry>
                                     <entry>Additional Kinesis properties.<p>When you add a
