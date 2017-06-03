@@ -305,6 +305,9 @@ public class TestBootstrapMain {
     String userLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "user-libs";
     String commonLibDir = baseDir + BootstrapMain.FILE_SEPARATOR + "libs-common-lib";
 
+    final String PARSER_LIMIT = "parser.limit";
+    final String PARSER_LIMIT_VALUE = "9999999";
+
     File dir = new File(confDir);
     dir.mkdirs();
     Properties props = new Properties();
@@ -313,6 +316,14 @@ public class TestBootstrapMain {
     try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
       props.store(os, "");
     }
+
+    // add this to properties - create sdc.properties file.
+    props.setProperty(PARSER_LIMIT, PARSER_LIMIT_VALUE);
+    try (OutputStream os = new FileOutputStream(new File(dir, "sdc.properties"))) {
+      props.store(os, "");
+    }
+
+
     setClassLoaders = false;
     main = false;
     BootstrapMain.main(new String[]{"-mainClass", TMain.class.getName(), "-apiClasspath", apiDir,
@@ -345,6 +356,9 @@ public class TestBootstrapMain {
         userLibsDir, "-configDir", confDir});
     Assert.assertTrue(setClassLoaders);
     Assert.assertTrue(main);
+
+    Assert.assertEquals(PARSER_LIMIT, PARSER_LIMIT_VALUE, System.getProperty("DataFactoryBuilder.OverRunLimit"));
+    Assert.assertEquals(PARSER_LIMIT, PARSER_LIMIT_VALUE, System.getProperty("overrun.reader.read.limit"));
 
     // extralibs
 

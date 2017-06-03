@@ -83,6 +83,8 @@ public class BootstrapMain {
   private static final String DEBUG_MSG_PREFIX = "DEBUG: ";
   private static final String WARN_MSG_PREFIX = "WARN : ";
 
+  private static final String PARSER_LIMIT = "parser.limit";
+
   private static final String DEBUG_MSG = DEBUG_MSG_PREFIX + "'%s' %s";
   public static final String WARN_MSG = WARN_MSG_PREFIX + "'%s' %s";
 
@@ -266,6 +268,7 @@ public class BootstrapMain {
     libsUrls.putAll(streamsetsLibsUrls);
     libsUrls.putAll(userLibsUrls);
 
+    setOverRunProperties(configDir);
 
     // Create all ClassLoaders
     SDCClassLoader apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, ClassLoader.getSystemClassLoader());
@@ -307,6 +310,16 @@ public class BootstrapMain {
     method = klass.getMethod(MAIN_METHOD, String[].class);
     method.invoke(null, new Object[]{new String[]{}});
   }
+
+  private static void setOverRunProperties(String configDir) {
+    Properties config = readSdcConfiguration(configDir);
+
+    if (config.containsKey(PARSER_LIMIT) && Integer.parseInt(config.getProperty(PARSER_LIMIT)) > 1024 * 1024) {
+      System.setProperty("DataFactoryBuilder.OverRunLimit", config.getProperty(PARSER_LIMIT));
+      System.setProperty("overrun.reader.read.limit", config.getProperty(PARSER_LIMIT));
+    }
+  }
+
   public static Set<String> getSystemStageLibs(String configDir) {
     return getStageLibs(configDir, SYSTEM_LIBS_WHITE_LIST_KEY, SYSTEM_LIBS_BLACK_LIST_KEY);
   }
