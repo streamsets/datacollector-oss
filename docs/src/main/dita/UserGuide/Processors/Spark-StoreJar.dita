@@ -17,9 +17,9 @@
     <title>Installing the Application</title>
     <shortdesc>Install the Spark application JAR file as an external library for <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. If
-        your custom Spark application depends on external libraries other than the
-        streamsets-datacollector-api, streamsets-datacollector-spark-api, and spark-core libraries,
-        install those libraries in the same location as well. </shortdesc>
+        your custom Spark application depends on external libraries other than the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SparkLibraries"
+        />, install those libraries in the same location as well. </shortdesc>
     <taskbody>
         <context>
             <note type="tip">To include all dependent libraries used in your custom Spark

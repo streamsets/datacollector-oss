@@ -49,6 +49,8 @@
             console or the command line interface to install additional stage libraries. </p>
 
         <div class="p">The core installation includes the following origins:<ul class="ul" id="concept_vvw_p3m_s5__ul_h4k_sdk_3w">
+                        <li class="li">CoAP Server</li>
+
                         <li class="li">Directory</li>
 
                         <li class="li">File Tail</li>
@@ -63,6 +65,8 @@
 
                         <li class="li">SFTP/FTP Client</li>
 
+                        <li class="li">TCP Server</li>
+
                         <li class="li">UDP Source</li>
 
                         <li class="li">WebSocket Server</li>
@@ -73,6 +77,8 @@ The core installation includes all processors <span class="ph">except the Groovy
 
         
         <div class="p">The core installation includes the following destinations:<ul class="ul" id="concept_vvw_p3m_s5__ul_dn2_5dk_3w">
+                        <li class="li">CoAP Client</li>
+
                         <li class="li">HTTP Client</li>
 
                         <li class="li">Local FS</li>
@@ -90,7 +96,15 @@ The core installation includes all processors <span class="ph">except the Groovy
                   </ul>
 </div>
 
-        <p class="p">The core installation includes the Pipeline Finisher executor.</p>
+        <div class="p">The core installation includes the following executors:<ul class="ul" id="concept_vvw_p3m_s5__ul_fvn_t2g_5z">
+                        <li class="li">Email</li>
+
+                        <li class="li">Pipeline Finisher</li>
+
+                        <li class="li">Shell</li>
+
+                  </ul>
+</div>
 
         <p class="p"> </p>
 
@@ -133,8 +147,8 @@ The core installation includes all processors <span class="ph">except the Groovy
                 <div class="itemgroup info">
                     <pre class="pre codeblock">tar -xzf streamsets-datacollector-&lt;version&gt;-all-rpms.tgz</pre>
 
-                    <div class="p">For example, to extract version 2.3.0.0, use the following
-                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-2.3.0.0-all-rpms.tgz</pre>
+                    <div class="p">For example, to extract version <span class="ph">2.6.0.0</span>, use the following
+                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-<span class="ph">2.6.0.0</span>-all-rpms.tgz</pre>
 </div>
 
                 </div>
@@ -145,8 +159,8 @@ The core installation includes all processors <span class="ph">except the Groovy
                 <div class="itemgroup info">
                     <pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
 
-                    <div class="p">For example, to install version 2.3.0.0, use the following
-                        command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-2.3.0.0-1.noarch.rpm</pre>
+                    <div class="p">For example, to install version <span class="ph">2.6.0.0</span>, use the following
+                        command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-<span class="ph">2.6.0.0</span>-1.noarch.rpm</pre>
 </div>
 
                 </div>

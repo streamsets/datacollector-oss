@@ -53,12 +53,12 @@
  <h2 class="title topictitle2">Preconditions</h2>
 
   <div class="body conbody">
-     <p class="p">
-                   Preconditions are
-            conditions that a record must satisfy to enter the stage for processing. When you create
-            more than one precondition in a stage, a record must pass all conditions to enter the
-            stage. When a record does not meet all configured preconditions, it is processed based
-            on the error handling configured for the stage. </p>
+     <p class="p">pipeline
+                designPreconditions are conditions that a record
+            must satisfy to enter the stage for processing. Stages process all preconditions before
+            passing a record to the stage or to error handling. When a record does not meet all
+            configured preconditions, it is processed based on the error handling configured for the
+            stage. </p>
 
         <p class="p">You can define preconditions for any processor, executor, and most destination stages.
             You can use most functions, pipeline constants, and runtime properties in preconditions. </p>
@@ -69,6 +69,10 @@
             from outside the United
             States:<pre class="pre codeblock"> ${record:value('/COUNTRY') == 'US'}</pre>
 </div>
+
+        <p class="p">Error records include information about failed preconditions in the errorMessage record
+            header attribute. You can also view error messages when viewing recent error records in
+            Monitor mode, while the pipeline is running. </p>
 
  </div>
 

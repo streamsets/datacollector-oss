@@ -15,24 +15,35 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pdv_qlw_ft">
  <title>Install External Libraries </title>
-  <shortdesc>Install external libraries to make them available to <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> stages. </shortdesc>
  <conbody>
     <p><indexterm>drivers<indexterm>installing additional for
         stages</indexterm></indexterm><indexterm>external libraries<indexterm>installing additional
           for stages</indexterm></indexterm><indexterm>third party libraries<indexterm>installing
-          additional for stages</indexterm></indexterm>Before you use the following stages, install
-      JDBC drivers for the implementation that you want to use: </p>
-   <ul conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_JDBCStages"
-     id="ul_f1l_fnb_cz">
-     <li/>
-   </ul>
-    <p id="AdditionalDrivers_example">For example, to use the JDBC Query Consumer or the JDBC
-      Producer with Oracle, install the Oracle JDBC drivers.</p>
-    <p id="AdditionalDrivers_optional">You can also install external Java libraries to call external
-      Java code from the Groovy, Java, and Jython Evaluator processors.</p>
+          additional for stages</indexterm></indexterm>Install external libraries to make them
+      available to <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> stages.
+      When using multiple stage libraries for a particular stage, install the external libraries for
+      each stage library. </p>
     <p>You can install external libraries using the Package Manager in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user
       interface, or you can install them manually.</p>
+    <p>You can install external libraries for the following stages: <ul id="ul_epd_gyd_d1b">
+        <li>
+          <p>Before you use the following stages, install JDBC drivers for the implementation that
+            you want to use: <ul
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_JDBCStages"
+              id="ul_f1l_fnb_cz">
+              <li/>
+            </ul></p>
+          <p>For example, to use the JDBC Query Consumer or the JDBC Producer with Oracle, install
+            the Oracle JDBC drivers.</p>
+        </li>
+        <li>Before you use the Spark Evaluator processor, install the Spark application JAR file and
+          any dependencies other than the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SparkLibraries"
+          /></li>
+        <li>You can install external Java libraries to call external Java code from the scripting
+          processors: Groovy, Java, and Jython Evaluator.</li>
+      </ul></p>
   </conbody>
 </concept>

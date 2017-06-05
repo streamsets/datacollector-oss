@@ -32,21 +32,22 @@
             custom Jython code. Use the Jython Evaluator to incorporate custom Jython code in a
             pipeline. The Jython Evaluator supports Jython version 2.7.</p>
 
-        <div class="p">You can develop the following scripts for the processor:
-         <ul class="ul" id="concept_a1h_lkf_lr__d48778e18">
-             <li class="li">Initialization script - Optional initialization script that sets up resources or
+        <div class="p">You can develop the following scripts for the processor: <ul class="ul" id="concept_a1h_lkf_lr__d56285e18">
+                <li class="li">Initialization script - Optional initialization script that sets up resources or
                     connections required by the processor. The initialization script is run once
                     when the pipeline starts. </li>
 
-             <li class="li">Main processing script - Main script that processes data. The main script is run for each
-                 record or each batch of data, based on the configured processing mode.</li>
+                <li class="li">Main processing script - Main script that processes data. The main script is run
+                    for each record or each batch of data, based on the configured processing
+                    mode.</li>
 
-             <li class="li">Destroy script - Optional destroy script that closes any resources or connections opened
-                 by the processor. The destroy script is run once when the pipeline stops.</li>
+                <li class="li">Destroy script - Optional destroy script that closes any resources or
+                    connections opened by the processor. The destroy script is run once when the
+                    pipeline stops.</li>
 
-         </ul>
+            </ul>
 
-     </div>
+        </div>
 
   <p class="p">When you use a Jython Evaluator in a pipeline, the <span class="ph">Data
                   Collector</span> passes a
@@ -112,23 +113,94 @@
  <h2 class="title topictitle2">Jython Scripting Objects</h2>
 
  <div class="body conbody">
-  <p class="p">You can use different scripting objects in the Jython
-      Evaluator, based on the type of script.</p>
+  <p class="p">You can use different scripting objects in the
+            Jython Evaluator, based on the type of script:</p>
 
- </div>
+        
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_mqn_5vk_sr__table_bc1_1pp_xz" class="table" frame="border" border="1" rules="all">
+             
+             
+             <thead class="thead" align="left">
+                 <tr>
+                     <th class="entry" valign="top" width="30%" id="d338061e150">Script Type</th>
 
-<div class="topic concept nested2" id="concept_z5h_p5r_kz">
- <h3 class="title topictitle3">Main Script</h3>
+                     <th class="entry" valign="top" width="70%" id="d338061e153">Valid Scripting Objects</th>
 
- <div class="body conbody">
-  <p class="p">You can use the following scripting objects in the main script:</p>
+                 </tr>
+
+             </thead>
+
+             <tbody class="tbody">
+                 <tr>
+                     <td class="entry" valign="top" width="30%" headers="d338061e150 ">Init</td>
+
+                     <td class="entry" valign="top" width="70%" headers="d338061e153 ">You can use the following scripting objects in the initialization
+                         script:<ul class="ul" id="concept_mqn_5vk_sr__d56285e63">
+                             <li class="li">state</li>
+
+                             <li class="li">log</li>
+
+                             <li class="li">sdcFunctions - <samp class="ph codeph">getFieldNull</samp> and
+                                        <samp class="ph codeph">createMap</samp> methods</li>
+
+                         </ul>
+</td>
+
+                 </tr>
+
+                 <tr>
+                     <td class="entry" valign="top" width="30%" headers="d338061e150 ">Main</td>
+
+                     <td class="entry" valign="top" width="70%" headers="d338061e153 ">You can use the following scripting objects in the main
+                         script:<ul class="ul" id="concept_mqn_5vk_sr__d56285e89">
+                             <li class="li">records</li>
+
+                             <li class="li">state</li>
+
+                             <li class="li">log</li>
+
+                             <li class="li">output</li>
+
+                             <li class="li">error</li>
+
+                             <li class="li">sdcFunctions - all methods</li>
+
+                         </ul>
+</td>
+
+                 </tr>
+
+                 <tr>
+                     <td class="entry" valign="top" width="30%" headers="d338061e150 ">Destroy</td>
+
+                     <td class="entry" valign="top" width="70%" headers="d338061e153 ">You can use the following scripting objects in the destroy
+                         script:<ul class="ul" id="concept_mqn_5vk_sr__d56285e119">
+                             <li class="li">state</li>
+
+                             <li class="li">log</li>
+
+                             <li class="li">sdcFunctions - <samp class="ph codeph">getFieldNull</samp>,
+                                        <samp class="ph codeph">createMap</samp>, <samp class="ph codeph">createEvent</samp>,
+                                    and <samp class="ph codeph">toEvent</samp> methods</li>
+
+                         </ul>
+</td>
+
+                 </tr>
+
+             </tbody>
+
+         </table>
+</div>
+
+        <p class="p">The scripting objects work the same within each script type:</p>
 
      <dl class="dl">
              
                  <dt class="dt dlterm">records</dt>
 
                  <dd class="dd">A collection of records to process. The records object includes different elements
-                     based on the processing mode that you use:<ul class="ul" id="concept_z5h_p5r_kz__ul_fdm_5yk_sr">
+                     based on the processing mode that you use:<ul class="ul" id="concept_mqn_5vk_sr__ul_fdm_5yk_sr">
                          <li class="li">Record by Record - The records array includes one record element. A record
                              includes a single <samp class="ph codeph">value</samp> element. The <samp class="ph codeph">value</samp> element
                              contains the data for the record.</li>
@@ -150,14 +222,13 @@
                         
                               <dt class="dt dlterm">state</dt>
 
-                              <dd class="dd">An object to store information between
-                                    invocations of the init, main, and destroy scripts. A state is a
-                                    map object that includes a collection of key/value pairs. You
-                                    can use the state object to cache data such as lookups,
-                                    counters, or a connection to an external system.</dd>
+                              <dd class="dd">An object to store information between invocations of the init,
+                                    main, and destroy scripts. A state is a map object that includes
+                                    a collection of key/value pairs. You can use the state object to
+                                    cache data such as lookups, counters, or a connection to an
+                                    external system.</dd>
 
-                              <dd class="dd">The state object functions much like a
-                                    member variable: <ul class="ul" id="concept_z5h_p5r_kz__d48193e1842">
+                              <dd class="dd">The state object functions much like a member variable: <ul class="ul" id="concept_mqn_5vk_sr__d55700e2107">
                                           <li class="li">The information is transient and is lost when the
                                                 pipeline stops or restarts.</li>
 
@@ -169,13 +240,13 @@
                                     </ul>
 </dd>
 
-                              <dd class="dd">The same instance of the state object
-                                    is available to all three scripts. For example, you might use
-                                    the init script to open a connection to a database and then
-                                    store a reference to that connection in the state object. In the
-                                    main script, you can access the open connection using the state
-                                    object. Then in the destroy script, you can close the connection
-                                    using the state object.</dd>
+                              <dd class="dd">The same instance of the state object is available to all three
+                                    scripts. For example, you might use the init script to open a
+                                    connection to a database and then store a reference to that
+                                    connection in the state object. In the main script, you can
+                                    access the open connection using the state object. Then in the
+                                    destroy script, you can close the connection using the state
+                                    object.</dd>
 
                               <dd class="dd">
                                     <div class="note warning"><span class="warningtitle">Warning:</span> The state object is best used for a fixed
@@ -225,7 +296,7 @@ The
                                     Includes the following methods: </dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_z5h_p5r_kz__d48193e1924">
+                                    <ul class="ul" id="concept_mqn_5vk_sr__d55700e2189">
                                           <li class="li"><samp class="ph codeph">getFieldNull(Record, 'field path')</samp> -
                                                 Method that checks if a field is assigned a constant
                                                 such as NULL_INTEGER or NULL_STRING.</li>
@@ -261,65 +332,6 @@ The
 
  </div>
 
-</div>
-<div class="topic concept nested2" id="concept_mlt_fvr_kz">
- <h3 class="title topictitle3">Init and Destroy Scripts</h3>
-
- <div class="body conbody">
-        <p class="p">You can use the following scripting objects in the initialization and destroy
-            scripts:</p>
-
-        <dl class="dl">
-                  
-                        <dt class="dt dlterm">state</dt>
-
-                        <dd class="dd">An object to store information between invocations of the init, main,
-                              and destroy scripts. A state is a map object that includes a
-                              collection of key/value pairs. You can use the state object to cache
-                              data such as lookups, counters, or a connection to an external
-                              system.</dd>
-
-                        <dd class="dd">The state object functions much like a member variable: <ul class="ul" id="concept_mlt_fvr_kz__d48193e1973">
-                                    <li class="li">The information is transient and is lost when the pipeline
-                                          stops or restarts.</li>
-
-                                    <li class="li">The state object is available only for the instance of the
-                                          processor stage it is defined in. If the pipeline executes
-                                          in cluster mode, the state object is not shared across
-                                          nodes.</li>
-
-                              </ul>
-</dd>
-
-                        <dd class="dd">The same instance of the state object is available to all three scripts.
-                              For example, you might use the init script to open a connection to a
-                              database and then store a reference to that connection in the state
-                              object. In the main script, you can access the open connection using
-                              the state object. Then in the destroy script, you can close the
-                              connection using the state object.</dd>
-
-                  
-                  
-                        <dt class="dt dlterm">log</dt>
-
-                        <dd class="dd">An object to write messages to the log. Includes four methods:
-                              <samp class="ph codeph">info()</samp>, <samp class="ph codeph">warn()</samp>,
-                              <samp class="ph codeph">debug()</samp>, and <samp class="ph codeph">trace()</samp>. </dd>
-
-                        <dd class="dd">The signature of the four methods is as follows:
-                              <pre class="pre codeblock">(message-template, arguments...) </pre>
-The
-                              message template can have positional variables denoted by curly
-                              brackets: { }. The arguments are replaced in the message
-                              template curly brackets in positional manner, i.e., this is the
-                              first argument in the first { } occurrence, and so on.</dd>
-
-                  
-            </dl>
-
- </div>
-
-</div>
 </div>
 <div class="topic concept nested1" id="concept_a1r_5qj_b5">
  <h2 class="title topictitle2">Processing List-Map Data</h2>
@@ -412,13 +424,13 @@ for record in records:
             destination for event storage or to any executor that can be configured to use the
             event. For more information about events and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</p>
 
-     <div class="p">To generate events:<ol class="ol" id="concept_zhd_chh_cy__d48778e47">
+     <div class="p">To generate events:<ol class="ol" id="concept_zhd_chh_cy__d56285e163">
                 <li class="li">On the <span class="keyword wintitle">General</span> tab, select the <span class="ph uicontrol">Produce
                         Events</span> property.<p class="p">This enables the event output stream for use.
                     </p>
 </li>
 
-                <li class="li">In the script, include both of the following scripting objects:<ul class="ul" id="concept_zhd_chh_cy__d48778e62">
+                <li class="li">In the script, include both of the following scripting objects:<ul class="ul" id="concept_zhd_chh_cy__d56285e178">
                         <li class="li"> sdcFunctions.createEvent(String type, int version) - Creates an event
                             record with the specified event type and version number. You can create
                             a new event type or use an existing event type. Existing event types are
@@ -462,7 +474,7 @@ for record in records:
                 <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</p>
 
      <div class="p">The processor provides the following record header variables to work with
-            header attributes:<ul class="ul" id="concept_s2k_qhh_cy__d48778e101">
+            header attributes:<ul class="ul" id="concept_s2k_qhh_cy__d56285e217">
                 <li class="li"><samp class="ph codeph">record.&lt;header name&gt;</samp> - Use to return the value of a
                     read-only header attribute.</li>
 
@@ -488,14 +500,14 @@ for record in records:
      <p class="p">For example, the following image shows a record generated by the
             Directory origin in data preview. </p>
 
-     <p class="p"><img class="image" id="concept_gdp_c3h_cy__d48778e132" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
+     <p class="p"><img class="image" id="concept_gdp_c3h_cy__d56285e248" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
 
-     <p class="p"><span class="ph" id="concept_gdp_c3h_cy__d48778e135">The "Record Header" list displays the set of
+     <p class="p"><span class="ph" id="concept_gdp_c3h_cy__d56285e251">The "Record Header" list displays the set of
                 read-only internal attributes in the record at this point of the pipeline.</span> You
             can use the <samp class="ph codeph">record.&lt;header name&gt;</samp> variable to return values for these
             attributes. </p>
 
-     <p class="p"><span class="ph" id="concept_gdp_c3h_cy__d48778e143">The header attributes under "values" are the
+     <p class="p"><span class="ph" id="concept_gdp_c3h_cy__d56285e259">The header attributes under "values" are the
                 attributes created by the Directory origin.</span> You can use the
                 <samp class="ph codeph">record.attributes</samp> variable to return or modify these attributes.
             When you use the <samp class="ph codeph">record.attributes</samp> variable to create a header
@@ -544,7 +556,7 @@ input_stream.read()</pre>
         from the Jython script that you develop for the processor. </p>
 
         <p class="p">To install an external Java library for the Jython
-            Evaluator, see <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="Install external libraries to make them available to Data Collector stages.">Install External Libraries</a>. </p>
+            Evaluator, see <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.">Install External Libraries</a>. </p>
 
         <div class="p">To call the external Java code from the Jython Evaluator, simply add an import statement
             like so to your
@@ -582,9 +594,9 @@ input_stream.read()</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d307021e772">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d338061e806">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d307021e775">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d338061e809">Description</th>
 
                                 </tr>
 
@@ -592,34 +604,34 @@ input_stream.read()</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d307021e772 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d338061e806 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d307021e775 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d307021e772 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d307021e775 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d338061e809 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d307021e772 ">Produce Events <a class="xref" href="Jython.html#concept_zhd_chh_cy">
+                                    <td class="entry" valign="top" width="30%" headers="d338061e806 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d338061e809 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d338061e806 ">Produce Events <a class="xref" href="Jython.html#concept_zhd_chh_cy">
                                             <img class="image" id="task_fty_jwx_nr__image_fnz_31h_cy" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d307021e775 ">Generates event records when
+                                    <td class="entry" valign="top" width="70%" headers="d338061e809 ">Generates event records when
                                         events occur. Use for event handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-                                            <img class="image" id="task_fty_jwx_nr__d48131e4292" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_fty_jwx_nr__d55638e4428" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d307021e772 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_fty_jwx_nr__d48131e4301" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d338061e806 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_fty_jwx_nr__d55638e4437" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d307021e775 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d338061e809 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -631,10 +643,10 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d307021e772 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_fty_jwx_nr__d48131e4317" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d338061e806 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_fty_jwx_nr__d55638e4453" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d307021e775 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d338061e809 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -645,10 +657,10 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d307021e772 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_fty_jwx_nr__d48131e4335" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d338061e806 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_fty_jwx_nr__d55638e4471" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d307021e775 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d48131e4339">
+                                    <td class="entry" valign="top" width="70%" headers="d338061e809 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d55638e4475">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -679,9 +691,9 @@ input_stream.read()</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d307021e910">Jython Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d338061e944">Jython Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d307021e913">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d338061e947">Description</th>
 
                                 </tr>
 
@@ -689,9 +701,9 @@ input_stream.read()</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d307021e910 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d338061e944 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d307021e913 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d338061e947 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
@@ -705,25 +717,25 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="22.22222222222222%" headers="d307021e910 ">Init Script</td>
+      <td class="entry" valign="top" width="22.22222222222222%" headers="d338061e944 ">Init Script</td>
 
-      <td class="entry" valign="top" width="77.77777777777779%" headers="d307021e913 ">Optional initialization script to use in the processor.<p class="p">Use to set up connections or
+      <td class="entry" valign="top" width="77.77777777777779%" headers="d338061e947 ">Optional initialization script to use in the processor.<p class="p">Use to set up connections or
        resources required by the processor. Runs once when the pipeline starts.</p>
 </td>
 
      </tr>
 <tr>
-     <td class="entry" valign="top" width="22.22222222222222%" headers="d307021e910 ">Script</td>
+     <td class="entry" valign="top" width="22.22222222222222%" headers="d338061e944 ">Script</td>
 
-     <td class="entry" valign="top" width="77.77777777777779%" headers="d307021e913 ">Main processing script to use in the processor.<p class="p">Runs for each record or each batch of
+     <td class="entry" valign="top" width="77.77777777777779%" headers="d338061e947 ">Main processing script to use in the processor.<p class="p">Runs for each record or each batch of
        data, based on the configured processing mode.</p>
 </td>
 
     </tr>
 <tr>
-     <td class="entry" valign="top" width="22.22222222222222%" headers="d307021e910 ">Destroy Script</td>
+     <td class="entry" valign="top" width="22.22222222222222%" headers="d338061e944 ">Destroy Script</td>
 
-     <td class="entry" valign="top" width="77.77777777777779%" headers="d307021e913 ">Optional destroy script to use in the processor.<p class="p">Use to close any connections or
+     <td class="entry" valign="top" width="77.77777777777779%" headers="d338061e947 ">Optional destroy script to use in the processor.<p class="p">Use to close any connections or
        resources required by the processor. Runs once when the pipeline stops.</p>
 </td>
 

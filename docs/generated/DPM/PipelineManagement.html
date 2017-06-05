@@ -130,8 +130,8 @@
                                     longer be viewed in the <span class="ph">Data
                   Collector</span>.</p>
 <p class="p"><span class="ph">DPM</span> generates system pipelines as needed. Published pipelines
-                                    that are not configured to aggregate statistics do not require
-                                    system pipelines.</p>
+                                    that are not configured to <a class="xref" href="AggregatedStatistics.html#concept_h2q_mb5_xw" title="A DPM job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, DPM remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics within DPM, you must configure the pipeline to write statistics to DPM or to another system.">aggregate statistics</a> do not require system
+                                    pipelines.</p>
 </li>
 
                         </ul>
@@ -160,7 +160,7 @@
                   Collector</span>
             displays local pipelines, published pipelines, and DPM controlled pipelines:</p>
 
-        <p class="p"><img class="image" id="concept_ssy_ns3_hx__image_rtj_fvs_gx" src="../Graphics/DPM_LocalDPMControlledPipelines.png" height="257" width="763" /></p>
+        <p class="p"><img class="image" id="concept_ssy_ns3_hx__image_rtj_fvs_gx" src="../Graphics/DPM_LocalDPMControlledPipelines.png" height="277" width="651" /></p>
 
         <p class="p">The <span class="ph">Data
                   Collector</span>
@@ -169,23 +169,22 @@
         <ul class="ul" id="concept_ssy_ns3_hx__ul_oh2_shm_2w">
             <li class="li">Local pipeline that was developed in this <span class="ph">Data
                   Collector</span> and can be run locally on this <span class="ph">Data
-                  Collector</span>. Local pipelines are listed by name. In the image above, Remove Extra Fields is a
-                local pipeline that is not running. The Remove Extra Fields pipeline has not been
-                published to <span class="ph">DPM</span>, as indicated by no version number after its name.</li>
+                  Collector</span>. Local pipelines are listed by title. In the image above, Remove Extra Fields is
+                a local pipeline that is not running. The Remove Extra Fields pipeline has not been
+                published to <span class="ph">DPM</span>, as indicated by no version number after its title.</li>
 
             <li class="li">Published pipeline that was published to <span class="ph">DPM</span>
                 and can still be run locally on this <span class="ph">Data
-                  Collector</span>. Published pipelines are listed by name and version number. In the image above,
+                  Collector</span>. Published pipelines are listed by title and version number. In the image above,
                 Kafka to HDFS is a published pipeline that is not running.</li>
 
             <li class="li">Running published pipeline that was published to <span class="ph">DPM</span>, then run from a job. Published pipelines that are remotely run from jobs are
-                named as follows:<pre class="pre codeblock">&lt;pipeline name&gt;:&lt;job ID&gt;</pre>
-</li>
+                listed with a "<span class="ph">DPM</span>" label. </li>
 
             <li class="li">Running system pipeline that collects, aggregates, and pushes metrics for all of the
-                remote pipeline instances run from the job. Running system pipelines are named as
-                follows:<pre class="pre codeblock">System Pipeline for Job &lt;job name&gt;:&lt;system job ID&gt;</pre>
-</li>
+                remote pipeline instances run from the job. Running system pipelines are listed with
+                a "<span class="ph">DPM</span>
+                system" label. </li>
 
         </ul>
 

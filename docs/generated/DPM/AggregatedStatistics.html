@@ -3,7 +3,7 @@
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Aggregated Statistics for Pipelines" /><meta name="abstract" content="A DPM job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, DPM remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics, you must configure the pipeline to aggregate statistics across all running pipeline instances." /><meta name="description" content="A DPM job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, DPM remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics, you must configure the pipeline to aggregate statistics across all running pipeline instances." /><meta name="DC.Relation" scheme="URI" content="../DPM/DPM_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_h2q_mb5_xw" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Aggregated Statistics for Pipelines</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Pipeline Statistics" /><meta name="abstract" content="A DPM job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, DPM remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics within DPM, you must configure the pipeline to write statistics to DPM or to another system." /><meta name="description" content="A DPM job defines the pipeline to run and the Data Collectors that run the pipeline. When you start a job, DPM remotely runs the pipeline on the group of Data Collectors. To monitor the job statistics and metrics within DPM, you must configure the pipeline to write statistics to DPM or to another system." /><meta name="DC.Relation" scheme="URI" content="../DPM/DPM_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_h2q_mb5_xw" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Statistics</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -26,7 +26,7 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../DPM/DPM_title.html" title="Dataflow Performance Manager">Dataflow Performance Manager</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
 <span class="navparent"><a class="link" href="../DPM/DPM_title.html" title="Dataflow Performance Manager"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Dataflow Performance Manager</span></a></span>  </span></td></tr></tbody></table>
 <div class="nested0" id="concept_h2q_mb5_xw">
- <h1 class="title topictitle1">Aggregated Statistics for Pipelines</h1>
+ <h1 class="title topictitle1">Pipeline Statistics</h1>
 
  
  <div class="body conbody"><p class="shortdesc">A <span class="ph">DPM</span>
@@ -35,12 +35,22 @@
         run the pipeline. When you start a job, <span class="ph">DPM</span>
         remotely runs the pipeline on the group of <span class="ph">Data
                   Collector</span>s. To
-        monitor the job statistics and metrics, you must configure the pipeline to aggregate
-        statistics across all running pipeline instances.</p>
+        monitor the job statistics and metrics within <span class="ph">DPM</span>, you
+        must configure the pipeline to write statistics to <span class="ph">DPM</span> or to
+        another system.</p>
 
-  <p class="p">To aggregate statistics,
-            use <span class="ph">Data
-                  Collector</span> to configure the pipeline to write the statistics to one of the following
+  <p class="p">When a job runs on a
+            single <span class="ph">Data
+                  Collector</span>,
+            you can simply configure the pipeline to write the statistics directly to <span class="ph">DPM</span>. By
+            default, pipelines are configured to write statistics directly to <span class="ph">DPM</span>.</p>
+
+        <p class="p">When a job runs on multiple <span class="ph">Data
+                  Collector</span>s,
+            a remote pipeline instance runs on each of the <span class="ph">Data
+                  Collector</span>s.
+            To view aggregated statistics for the job within <span class="ph">DPM</span>,
+            you must configure the pipeline to write the statistics to one of the following
             systems:</p>
 
         <ul class="ul" id="concept_h2q_mb5_xw__ul_e23_pxp_yy">
@@ -52,20 +62,23 @@
 
         </ul>
 
+        <p class="p">When you start a job that includes a pipeline configured to write to Kafka, Kinesis, or
+            SDC RPC, <span class="ph">DPM</span>
+            automatically generates and runs a system pipeline for the job. The system pipeline
+            reads the statistics written by each running pipeline instance to Kafka, Kinesis, or SDC
+            RPC. Then, the system pipeline aggregates and sends the statistics to <span class="ph">DPM</span>. </p>
+
         <div class="note important"><span class="importanttitle">Important:</span> For a production environment, use a Kafka
                   cluster or Amazon Kinesis Streams to aggregate statistics. Using SDC RPC to
                   aggregate statistics is not highly available and might cause the loss of some
                   data. It should be used for development purposes only.</div>
 
-        <p class="p">When you start a job that includes a pipeline configured to aggregate statistics, <span class="ph">DPM</span>
-            automatically generates and runs a system pipeline for the job. The system pipeline
-            reads the statistics written by each running pipeline instance to Kafka, Kinesis, or SDC
-            RPC. Then, the system pipeline aggregates and sends the statistics to <span class="ph">DPM</span>.
-            You can view the aggregated statistics and metrics when you monitor the job in <span class="ph">DPM</span>:</p>
+        <p class="p">When a <span class="ph">DPM</span> job includes a pipeline that is configured to write statistics, you can view the
+            statistics and metrics when you monitor the job in <span class="ph">DPM</span>:</p>
 
         <p class="p"><img class="image" id="concept_h2q_mb5_xw__image_h2w_wxs_gx" src="../Graphics/DPM_MonitorJob.png" height="416" width="680" /></p>
 
-        <p class="p">When a <span class="ph">DPM</span> job includes a pipeline that is not configured to aggregate statistics, <span class="ph">DPM</span>
+        <p class="p">When a <span class="ph">DPM</span> job includes a pipeline that is configured to discard statistics, <span class="ph">DPM</span>
             cannot display statistics and metrics for the job. Instead, <span class="ph">DPM</span>
             displays the following warning message when you monitor the job:</p>
 
@@ -74,18 +87,46 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_abc_1w1_c1b">
+ <h2 class="title topictitle2">Write Statistics Directly to DPM</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you write statistics directly to <span class="ph">DPM</span>, <span class="ph">DPM</span> does
+        not generate a system pipeline for the job. Instead, the <span class="ph">Data
+                  Collector</span>
+        directly sends the statistics to <span class="ph">DPM</span>.</p>
+
+  <p class="p">Write statistics directly to <span class="ph">DPM</span>
+            when the job runs on a single <span class="ph">Data
+                  Collector</span>.
+            If the job runs on multiple <span class="ph">Data
+                  Collector</span>s,
+                <span class="ph">DPM</span>
+            can display the pipeline statistics for each individual <span class="ph">Data
+                  Collector</span>.
+            However, <span class="ph">DPM</span>
+            cannot display an aggregated view of the statistics across all running pipeline
+            instances.</p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_c53_pzp_yy">
  <h2 class="title topictitle2">Write Statistics to SDC RPC</h2>
 
  
  <div class="body conbody"><p class="shortdesc">When you write statistics to SDC RPC, <span class="ph">Data
                   Collector</span>
-        effectively adds an SDC RPC destination to the pipeline that you are configuring. The system
-        pipeline is a pipeline with a Dev SDC RPC with Buffering origin that reads the statistics
-        passed from the SDC RPC destination, and then aggregates and sends the statistics to <span class="ph">DPM</span>. </p>
+        effectively adds an SDC RPC destination to the pipeline that you are configuring. <span class="ph">DPM</span>
+        automatically generates and runs a system pipeline for the job. The system pipeline is a
+        pipeline with a Dev SDC RPC with Buffering origin that reads the statistics passed from the
+        SDC RPC destination, and then aggregates and sends the statistics to <span class="ph">DPM</span>. </p>
 
-        <div class="p">When you configure a pipeline to send aggregated statistics to an SDC RPC destination,
-            you specify the following information: <ul class="ul" id="concept_c53_pzp_yy__ul_dzy_wm3_1z">
+        <p class="p">Write statistics to SDC RPC when the job runs on multiple <span class="ph">Data
+                  Collector</span>s.</p>
+
+        <div class="p">When you configure a pipeline to write statistics to an SDC RPC destination, you specify
+            the following information: <ul class="ul" id="concept_c53_pzp_yy__ul_dzy_wm3_1z">
                 <li class="li">SDC RPC connection - The host and port number of the <span class="ph">Data
                   Collector</span> machine where <span class="ph">DPM</span> starts the system pipeline. The host must be a <span class="ph">Data
                   Collector</span> machine registered with <span class="ph">DPM</span> that can run a pipeline for the job. A <span class="ph">Data
@@ -122,8 +163,7 @@
 
  <div class="body conbody">
   <div class="p">Consider the following best practices
-            when you configure a pipeline to write aggregated statistics to an SDC RPC destination:
-                <ul class="ul" id="concept_e1d_nzr_yy__ul_irc_szr_yy">
+            when you configure a pipeline to write statistics to an SDC RPC destination: <ul class="ul" id="concept_e1d_nzr_yy__ul_irc_szr_yy">
                 <li class="li">To avoid mixing statistics from different jobs, use a unique SDC RPC ID for each
                     job. </li>
 
@@ -152,12 +192,16 @@
  
  <div class="body conbody"><p class="shortdesc">When you write statistics to a Kafka cluster, <span class="ph">Data
                   Collector</span>
-        effectively adds a Kafka Producer destination to the pipeline that you are configuring. The
-        system pipeline reads the statistics from Kafka, and then aggregates and sends the
-        statistics to <span class="ph">DPM</span>. </p>
+        effectively adds a Kafka Producer destination to the pipeline that you are configuring. <span class="ph">DPM</span>
+        automatically generates and runs a system pipeline for the job. The system pipeline reads
+        the statistics from Kafka, and then aggregates and sends the statistics to <span class="ph">DPM</span>. </p>
 
-        <p class="p">When you write aggregated statistics to a
-            Kafka cluster, you define connection information and the topic to write to. </p>
+        <p class="p">Write statistics to a Kafka cluster when the
+            job runs on multiple <span class="ph">Data
+                  Collector</span>s.</p>
+
+        <p class="p">When you write statistics to a Kafka cluster, you define connection information and the
+            topic to write to. </p>
 
         <p class="p">You also configure the partition strategy. The pipeline passes data to partitions in the
             Kafka topic based on the partition strategy that you choose. You can add additional
@@ -222,7 +266,7 @@
 
  <div class="body conbody">
   <p class="p">Consider the following best practices
-            when you configure a pipeline to write aggregated statistics to a Kafka cluster: </p>
+            when you configure a pipeline to write statistics to a Kafka cluster: </p>
 
         <ul class="ul" id="concept_bmq_ff5_xw__ul_vlq_jg5_xw">
             <li class="li">To avoid mixing statistics from different jobs, use a unique topic name for each
@@ -249,11 +293,15 @@
  <div class="body conbody"><p class="shortdesc"> When you write statistics to Amazon Kinesis Streams, <span class="ph">Data
                   Collector</span>
         effectively adds a Kinesis Producer destination to the pipeline that you are configuring.
-        The system pipeline reads the statistics from Kinesis Streams, and then aggregates and sends
-        the statistics to <span class="ph">DPM</span>. </p>
+            <span class="ph">DPM</span>
+        automatically generates and runs a system pipeline for the job. The system pipeline reads
+        the statistics from Kinesis Streams, and then aggregates and sends the statistics to <span class="ph">DPM</span>. </p>
 
-        <p class="p">When you write aggregated statistics to Kinesis Streams, you define connection
-            information and the stream to write to.</p>
+        <p class="p">Write statistics to Kinesis Streams when the job runs on multiple <span class="ph">Data
+                  Collector</span>s.</p>
+
+        <p class="p">When you write statistics to Kinesis Streams, you define connection information and the
+            stream to write to.</p>
 
         <p class="p">You also configure the partition strategy. The pipeline passes data to partitions in
             Kinesis shards based on the partition strategy that you choose. You can add additional
@@ -311,7 +359,7 @@
 
  <div class="body conbody">
   <p class="p">Consider the following best practices
-            when you configure a pipeline to write aggregated statistics to Amazon Kinesis Streams: </p>
+            when you configure a pipeline to write statistics to Amazon Kinesis Streams: </p>
 
         <ul class="ul" id="concept_fdy_5f5_xw__ul_w44_3g5_xw">
             <li class="li">To avoid mixing statistics from different jobs, use a unique stream name for each
@@ -332,27 +380,38 @@
 </div>
 </div>
 <div class="topic task nested1" id="task_lcd_ng5_xw">
-    <h2 class="title topictitle2">Configuring a Pipeline to Aggregate Statistics</h2>
+    <h2 class="title topictitle2">Configuring a Pipeline to Write Statistics</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">You can configure a pipeline to aggregate statistics after the Data Collector has
-        been registered with DPM.</p>
+    <div class="body taskbody"><p class="shortdesc">You can configure a pipeline to write statistics after the <span class="ph">Data
+                  Collector</span> has
+        been registered with <span class="ph">DPM</span>.</p>
 
         <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">Open the pipeline in Data Collector. </span>
+                <span class="ph cmd">Open the pipeline in <span class="ph">Data
+                  Collector</span>. </span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="ph uicontrol">Statistics</span> tab, select one of the following
                     options for the statistics aggregator:</span>
                 <div class="itemgroup info">
                     <ul class="ul" id="task_lcd_ng5_xw__ul_ljj_brd_dx">
-                        <li class="li">Write to SDC RPC - Write the pipeline statistics to an SDC RPC
-                            destination. Use for development purposes only.</li>
+                        <li class="li">Discard - Discard the pipeline statistics. <span class="ph">DPM</span> cannot display statistics and metrics for the job.</li>
 
-                        <li class="li">Write to Kafka - Write the pipeline statistics to a Kafka cluster.</li>
+                        <li class="li">Write to <span class="ph">DPM</span> Directly - Write the pipeline statistics directly to <span class="ph">DPM</span>. Use when the job runs on a single <span class="ph">Data
+                  Collector</span>.</li>
+
+                        <li class="li">Write to SDC RPC - Write the pipeline statistics to an SDC RPC
+                            destination. Use when the job runs on multiple <span class="ph">Data
+                  Collector</span>s and for development purposes only.</li>
+
+                        <li class="li">Write to Kafka - Write the pipeline statistics to a Kafka cluster. Use
+                            when the job runs on multiple <span class="ph">Data
+                  Collector</span>s.</li>
 
                         <li class="li">Write to Kinesis - Write the pipeline statistics to Amazon Kinesis
-                            Streams.</li>
+                            Streams. Use when the job runs on multiple <span class="ph">Data
+                  Collector</span>s.</li>
 
                     </ul>
 
@@ -369,9 +428,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d41237e553">SDC RPC Properties</th>
+                                    <th class="entry" valign="top" width="30%" id="d44507e695">SDC RPC Properties</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d41237e556">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d44507e698">Description</th>
 
                                 </tr>
 
@@ -379,9 +438,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">SDC RPC Connection</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">SDC RPC Connection</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">Host and port where the system pipeline runs. The host
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">Host and port where the system pipeline runs. The host
                                         must be a machine with a registered <span class="ph">Data
                   Collector</span> that runs a pipeline instance for the job. <p class="p">Use the
                                             following format: <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.
@@ -391,9 +450,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">Retries per Batch</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">Retries per Batch</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">Number of times the SDC RPC destination tries to write a
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">Number of times the SDC RPC destination tries to write a
                                         batch to the Dev SDC RPC with Buffering origin in the system
                                         pipeline. <p class="p">When the SDC RPC destination cannot write the
                                             batch within the configured number of retries, it fails
@@ -404,9 +463,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">Back off Period</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">Back off Period</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">Milliseconds to wait before retrying writing a batch to
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">Milliseconds to wait before retrying writing a batch to
                                         the Dev SDC RPC with Buffering origin in the system
                                             pipeline.<p class="p">The value that you enter increases
                                             exponentially after each retry. For example, if you set
@@ -422,9 +481,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">SDC RPC ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">SDC RPC ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">User-defined ID to allow the SDC RPC destination to pass
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">User-defined ID to allow the SDC RPC destination to pass
                                         statistics to the system pipeline. To avoid mixing
                                         statistics from different jobs, use a unique ID for each
                                             job.<p class="p">You cannot define an expression that evaluates to
@@ -434,9 +493,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">Connection Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">Connection Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">Milliseconds to establish a connection to the system
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">Milliseconds to establish a connection to the system
                                         pipeline. <p class="p">The SDC RPC destination retries the connection
                                             based on the Retries Per Batch property.</p>
 <p class="p">Default
@@ -446,16 +505,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">TLS Enabled</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">TLS Enabled</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">Enables the secure transfer of data using TLS. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">Enables the secure transfer of data using TLS. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">Truststore File</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">Truststore File</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">Truststore file for TLS. Required if the keystore file is
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">Truststore file for TLS. Required if the keystore file is
                                         a self-signed certificate.<p class="p">Must be stored in the <span class="ph">Data
                   Collector</span> resources directory,
                                                 <span class="ph filepath">$SDC_RESOURCES</span>, on each <span class="ph">Data
@@ -466,19 +525,20 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">Truststore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">Truststore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">Password for the truststore file.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">Password for the truststore file.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a> or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a>
+                  or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">Read Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">Read Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">Milliseconds to wait for the Dev SDC RPC with Buffering
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">Milliseconds to wait for the Dev SDC RPC with Buffering
                                         origin in the system pipeline to read data from a batch.
                                             <p class="p">The SDC RPC destination retries the write based on
                                             the Retries Per Batch property.</p>
@@ -489,20 +549,19 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">Use Compression</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">Use Compression</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">Enables the SDC RPC destination to use compression to
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">Enables the SDC RPC destination to use compression to
                                         pass data to the Dev SDC RPC with Buffering origin in the
                                         system pipeline. Enabled by default. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e553 ">Verify Host in Server Certificate</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e695 ">Verify Host in Server Certificate</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e556 ">Verifies the host in the keystore file on the <span class="ph">Data
-                  Collector</span> machine that runs the system pipeline. 
-                                    </td>
+                                    <td class="entry" valign="top" width="70%" headers="d44507e698 ">Verifies the host in the keystore file on the <span class="ph">Data
+                  Collector</span> machine that runs the system pipeline. </td>
 
                                 </tr>
 
@@ -523,9 +582,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d41237e754">Kafka Properties</th>
+                                    <th class="entry" valign="top" width="30%" id="d44507e896">Kafka Properties</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d41237e757">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d44507e899">Description</th>
 
                                 </tr>
 
@@ -533,9 +592,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d41237e754 ">Broker URI</td>
+                                        <td class="entry" valign="top" width="30%" headers="d44507e896 ">Broker URI</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d41237e757 ">Connection string for the Kafka broker. Use the
+                                        <td class="entry" valign="top" width="70%" headers="d44507e899 ">Connection string for the Kafka broker. Use the
                                             following format:
                                                 <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -545,16 +604,16 @@
                                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e754 ">Runtime Topic Resolution </td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e896 ">Runtime Topic Resolution </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e757 ">Do not use at this time. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d44507e899 ">Do not use at this time. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e754 ">Topic</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e896 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e757 ">Topic to use. To avoid mixing statistics from different
+                                    <td class="entry" valign="top" width="70%" headers="d44507e899 ">Topic to use. To avoid mixing statistics from different
                                         jobs, use a unique topic name for each job.<p class="p">You cannot
                                             define an expression that evaluates to the topic name.
                                         </p>
@@ -563,9 +622,9 @@
                                 </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d41237e754 ">Partition Strategy </td>
+                                        <td class="entry" valign="top" width="30%" headers="d44507e896 ">Partition Strategy </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d41237e757 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d7138e7054">
+                                        <td class="entry" valign="top" width="70%" headers="d44507e899 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d8336e7206">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -583,9 +642,9 @@
                                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e754 ">Partition Expression </td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e896 ">Partition Expression </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e757 ">Expression to use when using the expression partition
+                                    <td class="entry" valign="top" width="70%" headers="d44507e899 ">Expression to use when using the expression partition
                                             strategy.<p class="p">Define the expression to evaluate to the
                                             partition where you want statistics written. Partition
                                             numbers start with 0.</p>
@@ -597,9 +656,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e754 ">Kafka Configuration</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e896 ">Kafka Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e757 ">Additional Kafka properties to use. Click the
+                                    <td class="entry" valign="top" width="70%" headers="d44507e899 ">Additional Kafka properties to use. Click the
                                             <span class="ph uicontrol">Add</span> icon and define the Kafka
                                         property name and value.<p class="p">Use the property names and values
                                             as expected by Kafka. Do not use the broker.list
@@ -609,9 +668,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e754 ">ZooKeeper URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e896 ">ZooKeeper URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e757 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                    <td class="entry" valign="top" width="70%" headers="d44507e899 ">Connection string for the ZooKeeper of the Kafka cluster.
                                         Use the following format:
                                             <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To use a
                                             ZooKeeper quorum, enter a comma-separated list.
@@ -642,9 +701,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d41237e897">Kinesis Properties</th>
+                                    <th class="entry" valign="top" width="30%" id="d44507e1039">Kinesis Properties</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d41237e900">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d44507e1042">Description</th>
 
                                 </tr>
 
@@ -652,11 +711,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e897 ">Access Key ID
-                                        <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x9g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d44507e1039 ">Access Key ID <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x9g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e900 ">
+                                    <td class="entry" valign="top" width="70%" headers="d44507e1042 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -666,11 +724,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e897 ">Secret Access Key
-                                        <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d44507e1039 ">Secret Access Key <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e900 ">
+                                    <td class="entry" valign="top" width="70%" headers="d44507e1042 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -680,24 +737,24 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d41237e897 ">Region</td>
+      <td class="entry" valign="top" width="30%" headers="d44507e1039 ">Region</td>
 
-      <td class="entry" valign="top" width="70%" headers="d41237e900 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
+      <td class="entry" valign="top" width="70%" headers="d44507e1042 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d41237e897 ">Endpoint</td>
+      <td class="entry" valign="top" width="30%" headers="d44507e1039 ">Endpoint</td>
 
-      <td class="entry" valign="top" width="70%" headers="d41237e900 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+      <td class="entry" valign="top" width="70%" headers="d44507e1042 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
        name.</td>
 
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e897 ">Stream Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e1039 ">Stream Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e900 ">Kinesis stream name. To avoid mixing statistics from
+                                    <td class="entry" valign="top" width="70%" headers="d44507e1042 ">Kinesis stream name. To avoid mixing statistics from
                                         different jobs, use a unique stream name for each job.<p class="p">You
                                             cannot define an expression that evaluates to the stream
                                             name. </p>
@@ -706,9 +763,9 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d41237e897 ">Partitioning Strategy</td>
+      <td class="entry" valign="top" width="30%" headers="d44507e1039 ">Partitioning Strategy</td>
 
-      <td class="entry" valign="top" width="70%" headers="d41237e900 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_lcd_ng5_xw__d7167e673">
+      <td class="entry" valign="top" width="70%" headers="d44507e1042 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_lcd_ng5_xw__d8365e905">
         <li class="li">Random - Generates a random partition key.</li>
 
         <li class="li">
@@ -722,19 +779,18 @@
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d41237e897 ">Partition Expression</td>
+      <td class="entry" valign="top" width="30%" headers="d44507e1039 ">Partition Expression</td>
 
-      <td class="entry" valign="top" width="70%" headers="d41237e900 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
+      <td class="entry" valign="top" width="70%" headers="d44507e1042 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
         for the expression partition strategy. </p>
 </td>
 
      </tr>
 
-
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d41237e897 ">Kinesis Producer Configuration</td>
+                                    <td class="entry" valign="top" width="30%" headers="d44507e1039 ">Kinesis Producer Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d41237e900 ">Additional Kinesis properties.<p class="p">When you add a
+                                    <td class="entry" valign="top" width="70%" headers="d44507e1042 ">Additional Kinesis properties.<p class="p">When you add a
                                             configuration property, enter the exact property name
                                             and the value. The pipeline does not validate the
                                             property names or values.</p>
