@@ -38,14 +38,20 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>If necessary, specify the location of the spark-submit script.</cmd>
-                <info>The <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> assumes that the spark-submit script, used to submit job requests to Spark
-                    Streaming, is located in the following directory:
-                    <codeblock>/usr/bin/spark-submit</codeblock>If the script is not in this
-                    directory, use the SPARK_SUBMIT_MESOS_COMMAND environment variable to define the
-                    location of the script.</info>
+                <cmd
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/cmd-SparkSubmitScript"/>
+                <info
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/info-SparkSubmit-Default"/>
+                <info>If the script is not in this directory, use the SPARK_SUBMIT_MESOS_COMMAND
+                    environment variable to define the location of the script.</info>
+                <info
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/info-SparkSubmit-Location"/>
+                <info><ph
+                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-SparkSubmit-example"
+                    /><codeblock>export SPARK_SUBMIT_MESOS_COMMAND<ph conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-SparkSubmit-Ex-command"/></codeblock></info>
+                <info
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/info-SparkSubmit-Restart"
+                />
             </step>
             <step>
                 <cmd>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the

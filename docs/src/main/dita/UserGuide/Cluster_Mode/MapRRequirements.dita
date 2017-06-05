@@ -17,21 +17,23 @@
  <title>MapR Requirements</title>
  <conbody>
         <p><indexterm>cluster mode<indexterm>configuration for MapR</indexterm></indexterm>Cluster
-            mode pipelines that read from a MapR cluster have the following minimum requirements:
-                <table frame="all" rowsep="1" colsep="1" id="table_agw_5pn_zw">
+            mode pipelines that read from a MapR cluster have the following requirements: <table
+                frame="all" rowsep="1" colsep="1" id="table_agw_5pn_zw">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                     <colspec colname="c2" colnum="2" colwidth="3.0*"/>
                     <thead>
                         <row>
                             <entry>Component</entry>
-                            <entry>Minimum Requirement</entry>
+                            <entry>Requirement</entry>
                         </row>
                     </thead>
                     <tbody>
                         <row>
-                            <entry>Spark Streaming (for cluster streaming mode)</entry>
-                            <entry>Spark version 1.5.2 through 1.6</entry>
+                            <entry>Spark Streaming for cluster streaming mode</entry>
+                            <entry><ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SparkVersions"
+                                /></entry>
                         </row>
                         <row>
                             <entry>MapR</entry>

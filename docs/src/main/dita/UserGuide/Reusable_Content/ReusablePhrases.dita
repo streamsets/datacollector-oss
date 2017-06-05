@@ -2694,6 +2694,32 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               starting the queries for the next event record. Depending on the speed
                               of the pipeline and the complexity of the queries, the wait for query
                               completion can slow pipeline performance.</ph></note>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">Spark executor, Spark Evaluator, Cluster mode -
+                        supported Spark version!</draft-comment>
+            </p>
+            <p><ph id="ph-SparkVersions">Spark versions 1.3 through 2.1</ph></p>
+            <p>
+                  <draft-comment author="Loretta">Phrases below used in Spark executor, Spark
+                        evaluator > Spark versions &amp; stage libraries topics</draft-comment>
+            </p>
+            <p><ph id="Spark-AppVersion-Stagelib">the Spark version used in the selected stage
+                        library matches the Spark version used to build the application.</ph></p>
+            <p><ph id="Spark-Stagelib-Cluster">in a cluster streaming pipeline, the Spark version in
+                        the selected stage library must also match the Spark version used by the
+                        cluster.</ph>
+            </p>
+            <p><ph id="spark-clusterExample">For example, if your cluster uses Spark 1.6, use a
+                        stage library that includes Spark 1.6.</ph>
+            </p>
+            <p><ph id="Spark-xrefs">available in several CDH and MapR stage libraries. To verify the
+                        Spark version that a stage library includes, see the CDH or MapR
+                        documentation. For more information about the stage libraries that include
+                        the Spark Evaluator, see <xref
+                              href="../Installation/AvailableStageLibraries.dita#concept_evs_xkm_s5"
+                        />.</ph></p>
+            <p>
                   <draft-comment author="Loretta">YARN prerequisites - Conref the first two
                         DLentries - and adopt the 3rd as needed.</draft-comment>
             </p>

@@ -438,6 +438,14 @@
                                     </ul></p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-cdh_spark_2_1_r1-lib</entry>
+                            <entry>For the Cloudera distribution of Spark 2.1.<p>Includes:<ul
+                                        id="ul_uv5_lbh_c1b">
+                                        <li>Spark Evaluator processor</li>
+                                        <li>Spark executor</li>
+                                    </ul></p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-elasticsearch_5-lib</entry>
                             <entry>For Elasticsearch 1.x, 2.x, and 5.x.<p>Includes the Elasticsearch
                                     origin and destination.</p></entry>
@@ -645,6 +653,14 @@
                                         <li>MapR FS destination</li>
                                     </ul>
                                 </p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-mapr_spark_2_1_mep_3_0-lib</entry>
+                            <entry>For the MapR distribution of Spark 2.1.<p>Includes:<ul
+                                        id="ul_ayp_qbh_c1b">
+                                        <li>Spark Evaluator processor</li>
+                                        <li>Spark executor</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mongodb_3-lib</entry>

@@ -164,17 +164,23 @@
                                             the pipeline uses the Data Collector user. </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Custom Spark Home</entry>
+                                    <entry>Custom Spark Home <xref href="Spark-SparkHome.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_crp_srh_c1b"
+                                        /></xref></entry>
                                     <entry>Use to enter a custom Spark home directory. By default,
                                         the origin uses the directory specified in the SPARK_HOME
                                         environment variable on the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> machine. <p>This property overrides the <ph
+                                        /> machine. <p>This property overrides the SPARK_HOME
+                                            environment variable.</p><p>Required if the environment
+                                            variable is not set for the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> environment variable.</p><p>Required if the
-                                            environment variable is not set for the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> machine.</p></entry>
+                                            /> machine or if the variable is set for an incorrect
+                                            version of Spark.</p><p>For example, to run a job
+                                            against Spark 2.1, point this property to the Spark 2.1
+                                            directory if the SPARK_HOME environment variable points
+                                            to an earlier version of Spark.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Custom Java Home</entry>

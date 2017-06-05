@@ -37,15 +37,9 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Cluster-CheckpointStorage">
                 <cmd/>
             </step>
-            <step>
-                <cmd>If necessary, specify the location of the spark-submit script.</cmd>
-                <info>The <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> assumes that the spark-submit script, used to submit job requests to Spark
-                    Streaming, is located in the following directory:
-                    <codeblock>/usr/bin/spark-submit</codeblock>If the script is not in this
-                    directory, use the SPARK_SUBMIT_YARN_COMMAND environment variable to define the
-                    location of the script.</info>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/cluster-SparkSubmitScript">
+                <cmd/>
             </step>
             <step>
                 <cmd>To enable <ph

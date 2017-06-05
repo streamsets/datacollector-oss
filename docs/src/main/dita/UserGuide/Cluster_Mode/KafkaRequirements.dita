@@ -14,12 +14,12 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_gmd_msw_yr">
-    <title>Kafka Requirements</title>
+    <title>Kafka Cluster Requirements</title>
     <taskbody>
         <context>
             <p><indexterm>cluster mode<indexterm>configuration for
                 Kafka</indexterm></indexterm>Cluster mode pipelines that read from a Kafka cluster
-                have the following minimum requirements: <table frame="all" rowsep="1" colsep="1"
+                have the following requirements: <table frame="all" rowsep="1" colsep="1"
                     id="table_agw_5pn_zw">
                     <tgroup cols="2">
                         <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -27,13 +27,15 @@
                         <thead>
                             <row>
                                 <entry>Component</entry>
-                                <entry>Minimum Requirement</entry>
+                                <entry>Requirement</entry>
                             </row>
                         </thead>
                         <tbody>
                             <row>
-                                <entry>Spark Streaming</entry>
-                                <entry>Spark version 1.3 through 1.6</entry>
+                                <entry>Spark Streaming for cluster streaming modes</entry>
+                                <entry><ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SparkVersions"
+                                    /></entry>
                             </row>
                             <row>
                                 <entry>Apache Kafka</entry>

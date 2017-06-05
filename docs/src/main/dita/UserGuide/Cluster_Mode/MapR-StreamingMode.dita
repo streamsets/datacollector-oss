@@ -32,17 +32,20 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>If necessary, specify the location of the spark-submit script. </cmd>
-                <info><ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> assumes that the spark-submit script, used to submit job requests to Spark
-                    Streaming, is located in the following directory:
-                    <codeblock>/usr/bin/spark-submit</codeblock>If the script is not in this
-                    directory, use the SPARK_SUBMIT_YARN_COMMAND environment variable to define the
-                    location of the script.<p>For example, say the spark-submit script is in the
-                        following directory: /opt/mapr/spark/spark-1.6.1/bin/spark-submit. Then, you
-                        might use the following command to define the location of the
-                        script:<codeblock>export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-1.6.1/bin/spark-submit</codeblock></p></info>
+                <cmd
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/cmd-SparkSubmitScript"/>
+                <info
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/info-SparkSubmit-Default"/>
+                <info
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/info-SparkSubmit-envVariable"/>
+                <info
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/info-SparkSubmit-Location"/>
+                <info>For example, say the spark-submit script is in the following directory:
+                        <codeph>/opt/mapr/spark/spark-2.1/bin/spark-submit</codeph>. Then, you might
+                    use the following command to define the location of the script:
+                    <codeblock>export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-2.1/bin/spark-submit</codeblock></info>
+                <info
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/info-SparkSubmit-Restart"/>
             </step>
             <step>
                 <cmd>To enable <ph

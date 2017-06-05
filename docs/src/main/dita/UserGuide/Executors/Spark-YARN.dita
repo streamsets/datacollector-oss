@@ -31,7 +31,7 @@
             those in the Spark application, elsewhere in the Spark executor, and the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             machine.</p>
-        <p>You can specify a custom Spark and Java home directory, and a Hadoop proxy user. You can
+        <p>You can specify custom Spark and Java home directories, and a Hadoop proxy user. You can
             also enter Kerberos credentials if needed.</p>
         <p>When you configure the application details, you specify the language used to write the
             application and then define language-specific properties. </p>
