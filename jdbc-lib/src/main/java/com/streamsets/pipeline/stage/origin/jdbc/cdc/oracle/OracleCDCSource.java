@@ -135,6 +135,8 @@ public class OracleCDCSource extends BaseSource {
   private static final String START_DATE_REFRESHED_TO = "Start date refreshed to: '{}'";
   private static final String TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE =
       "Trying to start LogMiner with start date: {} and end date: {}";
+  private static final String TRYING_TO_START_LOG_MINER_WITH_START_SCN_AND_END_SCN =
+      "Trying to start LogMiner with start SCN: {} and end SCN: {}";
   private static final String COUNT_FOR_BATCH_AND_BATCH_SIZE = "Count for batch = {} and batch size = {}";
   private static final String START_TIME_END_TIME = "Start time = {}, End time = {}";
   private static final String LOG_MINER_SELECT_QUERY_LOG_TEMPLATE = "LogMiner Select Query: {}";
@@ -622,7 +624,7 @@ public class OracleCDCSource extends BaseSource {
       return startDate;
     }
 
-    startLogMinerUsingGivenSCNs(commitSCN, commitSCN.add(BigDecimal.ONE));
+    startLogMinerUsingGivenSCNs(commitSCN, commitSCN);
     try (ResultSet rs = getCommitTimestamp.executeQuery()) {
       if (rs.next()) {
         LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
@@ -647,6 +649,10 @@ public class OracleCDCSource extends BaseSource {
 
   private void startLogMinerUsingGivenSCNs(BigDecimal oldestSCN, BigDecimal endSCN) throws SQLException {
     try {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(TRYING_TO_START_LOG_MINER_WITH_START_SCN_AND_END_SCN,
+            oldestSCN.toPlainString(), endSCN.toPlainString());
+      }
       startLogMnrForCommitSCN.setBigDecimal(1, oldestSCN);
       startLogMnrForCommitSCN.setBigDecimal(2, endSCN);
       startLogMnrForCommitSCN.execute();
