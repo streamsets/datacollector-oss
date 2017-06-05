@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Define rules to enable the Data Collector to capture information about a running pipeline. Enable the alert associated with a rule to be notified when the specified condition occurs. You can enable ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Rules and Alerts" /><meta name="DC.Relation" scheme="URI" content="../Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" /><meta name="DC.Relation" scheme="URI" content="../Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_pgk_brx_rr" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Rules and Alerts</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Define rules to enable the Data Collector to capture information about a running pipeline. You can enable an alert for any rule to be notified when the specified condition occurs. You can create the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Rules and Alerts" /><meta name="DC.Relation" scheme="URI" content="../Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq" /><meta name="DC.Relation" scheme="URI" content="../Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_pgk_brx_rr" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Rules and Alerts</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -35,12 +35,11 @@
  
  <div class="body conbody"><p class="shortdesc">Define rules to enable the <span class="ph">Data
                   Collector</span> to
-        capture information about a running pipeline. Enable the alert associated with a rule to be
+        capture information about a running pipeline. You can enable an alert for any rule to be
         notified when the specified condition occurs.</p>
 
-        <p class="p">You can enable alerts to display in monitor mode or to send an alert email. </p>
-
-        <div class="p">You can create the following types of rules:<ul class="ul" id="concept_ugl_nlh_q5__ul_hcb_pqh_q5">
+        <div class="p">You can create the following
+            types of rules:<ul class="ul" id="concept_ugl_nlh_q5__ul_hcb_pqh_q5">
                 <li class="li">Metric rule - Gathers statistics about the pipeline such as pipeline idle time
                     or error record counts. Provides an alert when enabled.</li>
 
@@ -53,7 +52,18 @@
             </ul>
 </div>
 
- </div>
+        <div class="p">When you enable alerts, you can be informed of the alert in the following ways:<ul class="ul" id="concept_ugl_nlh_q5__ul_hlr_dnk_rz">
+                <li class="li">Pipeline monitoring - All alerts display when you view the pipeline in Monitor
+                    mode. </li>
+
+                <li class="li">Webhooks - All alerts trigger all configured webhooks.</li>
+
+                <li class="li">Email - You can configure rules to send email alerts.</li>
+
+            </ul>
+</div>
+
+    </div>
 
 </div>
 <div class="topic concept nested1" id="concept_abj_nsk_zq">
@@ -381,9 +391,9 @@ The counter
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d4411e552">Metric Rule Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d4963e571">Metric Rule Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d4411e555">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d4963e574">Description</th>
 
                                 </tr>
 
@@ -391,9 +401,9 @@ The counter
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d4411e552 ">Alert Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d4963e571 ">Alert Text</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d4411e555 ">Text to display when the alert is triggered. <p class="p">Enter
+                                    <td class="entry" valign="top" width="70%" headers="d4963e574 ">Text to display when the alert is triggered. <p class="p">Enter
                                             text that explains the reason for the alert. For
                                             example, "Over 1000 pipeline error records."</p>
 </td>
@@ -401,11 +411,11 @@ The counter
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d4411e552 ">Metric Type <a class="xref" href="RulesAlerts_title.html#concept_y4d_tcw_1r" title="You can use different metric types when you create a metric rule. The metric type determines which statistic triggers the alert.">
+                                    <td class="entry" valign="top" width="30%" headers="d4963e571 ">Metric Type <a class="xref" href="RulesAlerts_title.html#concept_y4d_tcw_1r" title="You can use different metric types when you create a metric rule. The metric type determines which statistic triggers the alert.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d4411e555 ">Type of metric information the alert is based on:<ul class="ul" id="task_hcf_11k_br__ul_fwn_zbk_br">
+                                    <td class="entry" valign="top" width="70%" headers="d4963e574 ">Type of metric information the alert is based on:<ul class="ul" id="task_hcf_11k_br__ul_fwn_zbk_br">
                                             <li class="li">Gauge</li>
 
                                             <li class="li">Counter</li>
@@ -422,36 +432,36 @@ The counter
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d4411e552 ">Metric ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d4963e571 ">Metric ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d4411e555 ">Metric to use. Provides a list of available metrics based
+                                    <td class="entry" valign="top" width="70%" headers="d4963e574 ">Metric to use. Provides a list of available metrics based
                                         on the metric type. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d4411e552 ">Metric Element</td>
+                                    <td class="entry" valign="top" width="30%" headers="d4963e571 ">Metric Element</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d4411e555 ">Metric element to use. Provides a list of available
+                                    <td class="entry" valign="top" width="70%" headers="d4963e574 ">Metric element to use. Provides a list of available
                                         elements based on the metric ID.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d4411e552 ">Condition
+                                    <td class="entry" valign="top" width="30%" headers="d4963e571 ">Condition
                                         <a class="xref" href="RulesAlerts_title.html#concept_qyv_1tf_qv" title="When you configure a metric rule, you configure the condition that defines the threshold at which the metric rule triggers an alert. Use the expression language to configure the condition.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d4411e555 ">Condition to trigger the alert. Use the expression
+                                    <td class="entry" valign="top" width="70%" headers="d4963e574 ">Condition to trigger the alert. Use the expression
                                         language to configure the condition. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d4411e552 ">Send Email</td>
+                                    <td class="entry" valign="top" width="30%" headers="d4963e571 ">Send Email</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d4411e555 ">Sends an email when the alert is triggered. <p class="p">To send an
+                                    <td class="entry" valign="top" width="70%" headers="d4963e574 ">Sends an email when the alert is triggered. <p class="p">To send an
                                             email, add email addresses for alerts and configure the
                                             Data Collector email properties. For more information,
                                             see <a class="xref" href="RulesAlerts_title.html#task_f3v_1hw_1r" title="You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list.">Configuring Email for Alerts</a>.</p>
@@ -523,9 +533,9 @@ The counter
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d4411e776">Data Rule Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d4963e795">Data Rule Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d4411e779">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d4963e798">Description</th>
 
                                 </tr>
 
@@ -533,23 +543,23 @@ The counter
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Stream</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Stream</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Link selected for the data rule. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Label</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">The label to display for the data rule. </td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Link selected for the data rule. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Condition</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Label</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Condition that defines the data rule. Use the expression
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">The label to display for the data rule. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Condition</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Condition that defines the data rule. Use the expression
                                         language to configure the condition. <p class="p">For more information
                                             about using the expression language, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a>.</p>
 </td>
@@ -557,9 +567,9 @@ The counter
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Sampling Percentage</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Sampling Percentage</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Percentage of records to sample to generate information
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Percentage of records to sample to generate information
                                         for the data rule. A higher percentage can provide greater
                                         accuracy but use more resources on the <span class="ph">Data
                   Collector</span> machine.</td>
@@ -567,34 +577,34 @@ The counter
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Sampling Records to Retain</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Sampling Records to Retain</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Number of sampled records to keep in memory for
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Number of sampled records to keep in memory for
                                         display.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Enable Meter</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Enable Meter</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Enables gathering information for the data rule. The
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Enables gathering information for the data rule. The
                                         information gathered displays when you select the link in
                                         Monitor mode. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Enable Alert</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Enable Alert</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Enables an alert based on the data rule. Alerts display
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Enables an alert based on the data rule. Alerts display
                                         when the configured conditions occur.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Alert Text</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Alert Text</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Text to display when the alert is triggered. <p class="p">Enter
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Text to display when the alert is triggered. <p class="p">Enter
                                             text that explains the reason for the alert. For
                                             example, "Over 100 missing phone numbers." </p>
 <p class="p">You
@@ -609,9 +619,9 @@ The counter
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Threshold Type</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Threshold Type</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Type of threshold that defines when the alert becomes
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Type of threshold that defines when the alert becomes
                                             active:<ul class="ul" id="task_utt_p2k_br__ul_mj5_2gk_br">
                                             <li class="li">Count - A specified number of records.</li>
 
@@ -623,25 +633,25 @@ The counter
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Threshold Value</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Threshold Value</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Value that defines the threshold at which the rule
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Value that defines the threshold at which the rule
                                         triggers an alert. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Min Volume</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Min Volume</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Minimum number of records to process before evaluating a
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Minimum number of records to process before evaluating a
                                         percentage threshold type. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e776 ">Send Email</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e795 ">Send Email</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e779 ">Sends an email when the alert is triggered. <p class="p">To send an
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e798 ">Sends an email when the alert is triggered. <p class="p">To send an
                                             email, add email addresses for alerts and configure the
                                                 <span class="ph">Data
                   Collector</span> email properties. For more information, see <a class="xref" href="RulesAlerts_title.html#task_f3v_1hw_1r" title="You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list.">Configuring Email for Alerts</a>.</p>
@@ -718,11 +728,11 @@ The counter
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d4411e1061">Data Drift Rule</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d4963e1080">Data Drift Rule</th>
 
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d4411e1064">Drift Function</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d4963e1083">Drift Function</th>
 
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d4411e1067">Valid Field Data Types</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d4963e1086">Valid Field Data Types</th>
 
                         </tr>
 
@@ -730,41 +740,41 @@ The counter
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1061 ">Field name changes</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1080 ">Field name changes</td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1064 "><samp class="ph codeph">drift:name()</samp></td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1083 "><samp class="ph codeph">drift:name()</samp></td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1067 ">list-map<p class="p">map</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1086 ">list-map<p class="p">map</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1061 ">Field order changes</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1080 ">Field order changes</td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1064 "><samp class="ph codeph">drift:order()</samp></td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1083 "><samp class="ph codeph">drift:order()</samp></td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1067 ">list-map</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1086 ">list-map</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1061 ">Number of fields</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1080 ">Number of fields</td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1064 "><samp class="ph codeph">drift:size()</samp></td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1083 "><samp class="ph codeph">drift:size()</samp></td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1067 ">list<p class="p">list-map</p>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1086 ">list<p class="p">list-map</p>
 <p class="p">map</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1061 ">Field data type</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1080 ">Field data type</td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1064 "><samp class="ph codeph">drift:type()</samp></td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1083 "><samp class="ph codeph">drift:type()</samp></td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1067 ">any</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1086 ">any</td>
 
                         </tr>
 
@@ -792,33 +802,33 @@ The counter
             have an alert that triggers when the number of fields in the record changes. When
             processing the records with the following number of columns, an alert triggers for both
             the third and fourth records:<table cellpadding="4" cellspacing="0" summary="" id="concept_rj4_y4g_q5__simpletable_xwv_stg_q5" border="1" class="simpletable"><tr class="sthead">
-                    <th valign="bottom" align="left" id="d4411e1176" class="stentry" width="50%">Record Number</th>
+                    <th valign="bottom" align="left" id="d4963e1195" class="stentry" width="50%">Record Number</th>
 
-                    <th valign="bottom" align="left" id="d4411e1179" class="stentry" width="50%">Number of Columns</th>
-
-                </tr>
-<tr class="strow">
-                    <td valign="top" headers="d4411e1176" class="stentry">1</td>
-
-                    <td valign="top" headers="d4411e1179" class="stentry">10</td>
+                    <th valign="bottom" align="left" id="d4963e1198" class="stentry" width="50%">Number of Columns</th>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d4411e1176" class="stentry">2</td>
+                    <td valign="top" headers="d4963e1195" class="stentry">1</td>
 
-                    <td valign="top" headers="d4411e1179" class="stentry">10</td>
-
-                </tr>
-<tr class="strow">
-                    <td valign="top" headers="d4411e1176" class="stentry">3</td>
-
-                    <td valign="top" headers="d4411e1179" class="stentry">15</td>
+                    <td valign="top" headers="d4963e1198" class="stentry">10</td>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d4411e1176" class="stentry">4</td>
+                    <td valign="top" headers="d4963e1195" class="stentry">2</td>
 
-                    <td valign="top" headers="d4411e1179" class="stentry">10</td>
+                    <td valign="top" headers="d4963e1198" class="stentry">10</td>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d4963e1195" class="stentry">3</td>
+
+                    <td valign="top" headers="d4963e1198" class="stentry">15</td>
+
+                </tr>
+<tr class="strow">
+                    <td valign="top" headers="d4963e1195" class="stentry">4</td>
+
+                    <td valign="top" headers="d4963e1198" class="stentry">10</td>
 
                 </tr>
 </table>
@@ -868,9 +878,9 @@ The counter
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d4411e1289">Data Rule Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d4963e1308">Data Rule Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d4411e1292">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d4963e1311">Description</th>
 
                                 </tr>
 
@@ -878,35 +888,35 @@ The counter
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1289 ">Stream</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1308 ">Stream</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e1292 ">Link selected for the data drift rule. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1289 ">Label</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e1292 ">The label to display for the data drift rule. </td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e1311 ">Link selected for the data drift rule. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1289 ">Condition
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1308 ">Label</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e1311 ">The label to display for the data drift rule. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1308 ">Condition
                                         <a class="xref" href="../Expression_Language/Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">
                                             <img class="image" id="task_dyk_ptm_q5__image_jwh_mcn_q5" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e1292 ">Condition that defines the data drift rule. You can use
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e1311 ">Condition that defines the data drift rule. You can use
                                         data drift functions and other aspects of the expression
                                         language to configure the condition.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1289 ">Sampling Percentage</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1308 ">Sampling Percentage</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e1292 ">Percentage of records to sample to generate information
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e1311 ">Percentage of records to sample to generate information
                                         for the data drift rule. A higher percentage can provide
                                         greater accuracy but use more resources on the <span class="ph">Data
                   Collector</span> machine.</td>
@@ -914,34 +924,34 @@ The counter
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1289 ">Sampling Records to Retain</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1308 ">Sampling Records to Retain</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e1292 ">Number of sampled records to keep in memory for
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e1311 ">Number of sampled records to keep in memory for
                                         display.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1289 ">Enable Meter</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1308 ">Enable Meter</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e1292 ">Enables gathering information for the data drift rule.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e1311 ">Enables gathering information for the data drift rule.
                                         The information gathered displays when you select the link
                                         in Monitor mode. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1289 ">Enable Alert</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1308 ">Enable Alert</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e1292 ">Enables an alert based on the data drift rule. Alerts
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e1311 ">Enables an alert based on the data drift rule. Alerts
                                         display upon when the configured conditions occur.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1289 ">Alert Text</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1308 ">Alert Text</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e1292 ">Text to display when the alert is triggered. You can use
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e1311 ">Text to display when the alert is triggered. You can use
                                         the expression language to define the alert text. For more
                                         information about using the expression language, see <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq">Expression Language</a>.<p class="p">By default, uses the following expression to
                                             return text related to the drift alert:
@@ -951,9 +961,9 @@ The counter
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4411e1289 ">Send Email</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d4963e1308 ">Send Email</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4411e1292 ">Sends an email when the alert is triggered. <p class="p">To send an
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d4963e1311 ">Sends an email when the alert is triggered. <p class="p">To send an
                                             email, add email addresses for alerts and configure the
                                                 <span class="ph">Data
                   Collector</span> email properties. For more information, see <a class="xref" href="RulesAlerts_title.html#task_f3v_1hw_1r" title="You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list.">Configuring Email for Alerts</a>.</p>
@@ -983,6 +993,186 @@ The counter
 
 </div>
 </div>
+<div class="topic concept nested1" id="concept_rtm_sfk_rz">
+ <h2 class="title topictitle2">Alert Webhooks</h2>
+
+ <div class="body conbody">
+  <p class="p">You can configure webhooks
+            that are sent when alerts are triggered. <span class="ph">A webhook is a user-defined HTTP callback - an HTTP request
+                        that the pipeline sends automatically when certain actions occur. You can
+                        use webhooks to automatically trigger external tasks based on an HTTP
+                        request. Tasks can be as simple as sending a message through an application
+                        API or as powerful as passing commands to the <span class="ph">Data
+                  Collector</span> command line interface.</span>
+        </p>
+
+        <p class="p">The pipeline sends all alert webhooks each time an alert is triggered. So when you
+            configure an alert webhook, create a webhook payload that is applicable for all
+            triggered alerts. You can configure a payload that includes the details of each
+            alert.</p>
+
+        <div class="p">
+                  <div class="note important"><span class="importanttitle">Important:</span> You must configure webhooks as expected by the receiving
+                        system. For details on how to configure incoming webhooks check the
+                        receiving system's documentation. You might also need to enable webhook
+                        usage within that system.</div>
+
+            </div>
+
+        <p class="p">When you configure an alert webhook, <span class="ph">you specify the URL to send the request and the HTTP
+                        method to use. Some HTTP methods allow you to include a request body or
+                        payload.</span>
+            <span class="ph">In the payload, you can use parameters to include
+                        information about the cause of the trigger, such as</span> the pipeline that triggered the alert and the alert details. <span class="ph">You can also
+                        include request headers, content type, authentication type, username and
+                        password as needed.</span></p>
+
+        <p class="p">For details about webhook methods, payloads and parameters, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_mp1_t3l_rz">Webhooks</a>.</p>
+
+ </div>
+
+<div class="topic task nested2" id="task_l2p_53t_rz">
+    <h3 class="title topictitle3">Configuring an Alert Webhook</h3>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure an alert
+                webhook to automatically send an HTTP request each time the pipeline triggers an
+                alert.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">To view pipeline configuration options, click an unused section of the pipeline
+                    canvas.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, click <span class="ph uicontrol">Rules</span>, and then click
+                        <span class="ph uicontrol">Webhooks</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Webhooks</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_l2p_53t_rz__table_qmt_jmt_rz" class="table" frame="border" border="1" rules="all">
+     
+     
+     <thead class="thead" align="left">
+      <tr>
+       <th class="entry" valign="top" width="30%" id="d4963e1590">Webhook Property</th>
+
+       <th class="entry" valign="top" width="70%" id="d4963e1593">Description</th>
+
+      </tr>
+
+     </thead>
+
+     <tbody class="tbody">
+      <tr>
+       <td class="entry" id="task_l2p_53t_rz__d1732e128" valign="top" width="30%" headers="d4963e1590 ">Webhooks <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_mp1_t3l_rz">
+         <img class="image" id="task_l2p_53t_rz__d1732e132" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d4963e1593 ">Webhook to send when an alert triggers. Click the <span class="ph uicontrol">Add</span> icon to
+        add additional webhooks.</td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1732e141">
+       <td class="entry" valign="top" width="30%" headers="d4963e1590 ">Webhook URL</td>
+
+       <td class="entry" valign="top" width="70%" headers="d4963e1593 ">URL to send the HTTP request.</td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1732e150">
+       <td class="entry" valign="top" width="30%" headers="d4963e1590 ">Headers</td>
+
+       <td class="entry" valign="top" width="70%" headers="d4963e1593 ">Optional HTTP request headers. </td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1732e159">
+       <td class="entry" valign="top" width="30%" headers="d4963e1590 ">HTTP Method</td>
+
+       <td class="entry" valign="top" width="70%" headers="d4963e1593 ">HTTP method. Use one of the following methods: <ul class="ul" id="task_l2p_53t_rz__d1732e166">
+         <li class="li">GET</li>
+
+         <li class="li">PUT</li>
+
+         <li class="li">POST</li>
+
+         <li class="li">DELETE</li>
+
+         <li class="li">HEAD</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+      <tr>
+       <td class="entry" id="task_l2p_53t_rz__d1732e187" valign="top" width="30%" headers="d4963e1590 ">Payload <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_rby_1rl_rz">
+         <img class="image" id="task_l2p_53t_rz__d1732e191" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d4963e1593 ">Optional payload to include. Available for PUT, POST, and DELETE methods. <p class="p">Use any
+         valid content type.</p>
+<p class="p">You can use webhook parameters in the payload to include
+         information about the triggering event, such as the alert name or condition. Enclose
+         webhook parameters in double curly brackets as follows:
+         <samp class="ph codeph">{{ALERT_NAME}}</samp>.</p>
+</td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1732e205">
+       <td class="entry" valign="top" width="30%" headers="d4963e1590 ">Content Type</td>
+
+       <td class="entry" valign="top" width="70%" headers="d4963e1593 ">Optional content type of the payload. Configure this property when the content type is
+        not declared in the request headers.</td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1732e214">
+       <td class="entry" valign="top" width="30%" headers="d4963e1590 ">Authentication Type</td>
+
+       <td class="entry" valign="top" width="70%" headers="d4963e1593 ">Optional authentication type to include in the request. Use None, Basic, Digest, or
+         Universal.<p class="p">Use Basic for Form authentication.</p>
+</td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1732e225">
+       <td class="entry" valign="top" width="30%" headers="d4963e1590 ">User Name </td>
+
+       <td class="entry" valign="top" width="70%" headers="d4963e1593 ">User name to include when using authentication. </td>
+
+      </tr>
+
+      <tr id="task_l2p_53t_rz__d1732e234">
+       <td class="entry" valign="top" width="30%" headers="d4963e1590 ">Password</td>
+
+       <td class="entry" valign="top" width="70%" headers="d4963e1593 ">Password to include when using authentication.</td>
+
+      </tr>
+
+     </tbody>
+
+    </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To create an additional webhook, click the <span class="ph uicontrol">Add</span>
+                    icon.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
 <div class="topic task nested1" id="task_f3v_1hw_1r">
     <h2 class="title topictitle2">Configuring Email for Alerts</h2>
 
@@ -993,9 +1183,11 @@ The counter
         an email to every address in the list. </p>
 
         <div class="section prereq p">To send email alerts, create an email account to send the
-            alerts and define the SMTP properties in the <span class="ph">Data
+            alerts and define the email alert properties in the <span class="ph">Data
                   Collector</span>
-            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. </div>
+            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. <p class="p">For information about
+                configuring these properties, see the email alert table in <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Configuring Data Collector</a>.</p>
+</div>
 
         <div class="section context"></div>
 
@@ -1004,7 +1196,8 @@ The counter
                     canvas.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">In the Properties panel, click <span class="ph uicontrol">Email IDs</span>. </span>
+                <span class="ph cmd">In the Properties panel, click <span class="ph uicontrol">Rules</span>, and then click
+                        <span class="ph uicontrol">Email IDs</span>.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Enter an email address where you want to send email alerts.</span>
@@ -1018,10 +1211,6 @@ The counter
 
     </div>
 
-    <div class="related-links"><div class="relinfo reltasks"><strong>Related tasks</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Configuring Data Collector</a></div>
-</div>
-</div>
 </div>
 </div>
 <div class="navfooter"><!---->

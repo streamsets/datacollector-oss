@@ -46,6 +46,8 @@
                   Collector</span>.</p>
 
         <div class="p">At this time, you can use the following origins to create a multithreaded pipeline:<ul class="ul" id="concept_zpp_2xc_py__ul_oql_bym_3z">
+                <li class="li">CoAP Server origin</li>
+
                 <li class="li">Elasticsearch origin</li>
 
                 <li class="li">HTTP Server origin</li>
@@ -53,6 +55,8 @@
                 <li class="li">JDBC Multitable Consumer origin</li>
 
                 <li class="li">Kinesis Consumer origin</li>
+
+                <li class="li">TCP Server origin</li>
 
                 <li class="li">WebSocket Server origin</li>
 
@@ -90,7 +94,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data
                   Collector</span> creates a number of pipeline runners based on the pipeline Max Runners
-                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d28036e1534">Each
+                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d31587e1721">Each
                               thread connects to the origin system and creates a batch of data, and
                               passes the batch to an available pipeline runner.</span></span></p>
 
@@ -143,28 +147,36 @@
 
     <div class="body conbody">
         <div class="p">You can use the following origins
-            to create multithreaded pipelines:<ul class="ul" id="concept_wcz_tpd_py__ul_d2v_vpd_py">
-                <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch cluster.</li>
+            to create multithreaded pipelines:<ul class="ul" id="concept_wcz_tpd_py__ul_djp_zvk_tz">
+                        <li class="li"><a class="xref" href="../Origins/CoAPServer.html#concept_wfy_ghn_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Server origin is a multithreaded origin that listens on a CoAP endpoint and processes the contents of all authorized CoAP requests.">CoAP
+                                    Server</a> - Listens on a CoAP endpoint and processes the
+                              contents of all authorized CoAP requests.</li>
 
-                <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP Server</a> -
-                    Listens on a HTTP endpoint and processes the contents of all authorized HTTP
-                    POST requests. </li>
+                        <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch
+                              cluster.</li>
 
-                <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC
-                        Multitable Consumer</a> - Reads database data from multiple tables
-                    through a JDBC connection.</li>
+                        <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
+                                    Server</a> - Listens on a HTTP endpoint and processes the
+                              contents of all authorized HTTP POST requests. </li>
 
-                <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis
-                        Consumer</a> - Reads data from a Kinesis cluster.</li>
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC Multitable Consumer</a> - Reads database data from
+                              multiple tables through a JDBC connection.</li>
 
-                <li class="li"><a class="xref" href="../Origins/WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket requests. Use the WebSocket Server origin to read high volumes of WebSocket requests using multiple threads.">WebSocket
-                        Server</a> - Listens on a WebSocket endpoint and processes the contents
-                    of all authorized WebSocket requests. </li>
+                        <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis
+                                    Consumer</a> - Reads data from a Kinesis cluster.</li>
 
-                <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Data
-                        Generator</a> - Generates random data for development and testing.</li>
+                        <li class="li"><a class="xref" href="../Origins/TCPServer.html#concept_ppm_xb1_4z">TCP
+                                    Server</a> - Listens at the specified ports and processes
+                              incoming data over TCP/IP connections.</li>
 
-            </ul>
+                        <li class="li"><a class="xref" href="../Origins/WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket requests. Use the WebSocket Server origin to read high volumes of WebSocket requests using multiple threads.">WebSocket Server</a> - Listens on a WebSocket endpoint and
+                              processes the contents of all authorized WebSocket requests. </li>
+
+                        <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev
+                                    Data Generator</a> - Generates random data for development
+                              and testing.</li>
+
+                  </ul>
 </div>
 
         <p class="p">The origins use different properties and perform processing differently based on the
@@ -335,24 +347,36 @@
   <div class="p">
             <ul class="ul" id="concept_sfp_1nd_py__ul_igl_q4d_py">
                 <li class="li">Use multithreaded origins to create a multithreaded pipeline. You can use the
-                    following origins at this time:<ul class="ul" id="concept_sfp_1nd_py__ul_exg_jym_3z">
-                        <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a></li>
+                    following origins at this time:<ul class="ul" id="concept_sfp_1nd_py__ul_llv_cwk_tz">
+                        <li class="li"><a class="xref" href="../Origins/CoAPServer.html#concept_wfy_ghn_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Server origin is a multithreaded origin that listens on a CoAP endpoint and processes the contents of all authorized CoAP requests.">CoAP
+                                    Server</a> - Listens on a CoAP endpoint and processes the
+                              contents of all authorized CoAP requests.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch
+                              cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
-                                Server</a></li>
+                                    Server</a> - Listens on a HTTP endpoint and processes the
+                              contents of all authorized HTTP POST requests. </li>
 
-                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC Multitable Consumer</a></li>
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC Multitable Consumer</a> - Reads database data from
+                              multiple tables through a JDBC connection.</li>
 
                         <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis
-                                Consumer</a>
-                        </li>
+                                    Consumer</a> - Reads data from a Kinesis cluster.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket requests. Use the WebSocket Server origin to read high volumes of WebSocket requests using multiple threads.">WebSocket Server</a></li>
+                        <li class="li"><a class="xref" href="../Origins/TCPServer.html#concept_ppm_xb1_4z">TCP
+                                    Server</a> - Listens at the specified ports and processes
+                              incoming data over TCP/IP connections.</li>
 
-                        <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht"> Dev
-                                Data Generator</a></li>
+                        <li class="li"><a class="xref" href="../Origins/WebSocketServer.html#concept_u2r_gpc_3z" title="The WebSocket Server origin is a multithreaded origin that listens on a WebSocket endpoint and processes the contents of all authorized WebSocket requests. Use the WebSocket Server origin to read high volumes of WebSocket requests using multiple threads.">WebSocket Server</a> - Listens on a WebSocket endpoint and
+                              processes the contents of all authorized WebSocket requests. </li>
 
-                    </ul>
+                        <li class="li"><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev
+                                    Data Generator</a> - Generates random data for development
+                              and testing.</li>
+
+                  </ul>
 </li>
 
                 <li class="li">Unlike a basic, single-threaded pipeline, a multithreaded pipeline cannot

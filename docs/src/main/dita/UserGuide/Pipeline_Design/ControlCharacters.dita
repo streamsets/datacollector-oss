@@ -32,6 +32,7 @@
     <p>You can use the <uicontrol>Ignore Ctrl Characters</uicontrol> property in the following
       stages to remove control characters: <ul id="ul_hm5_nlm_js">
         <li>Amazon S3 origin</li>
+        <li>CoAP Server origin</li>
         <li>Directory origin</li>
         <li>File Tail origin</li>
         <li>Hadoop FS origin</li>

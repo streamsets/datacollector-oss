@@ -2720,6 +2720,12 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               href="../Installation/AvailableStageLibraries.dita#concept_evs_xkm_s5"
                         />.</ph></p>
             <p>
+                  <draft-comment author="Loretta">Used by Spark Evaluator > Installing the
+                        Application and Config > Install External Libraries.</draft-comment>
+            </p>
+            <p><ph id="ph-SparkLibraries">streamsets-datacollector-api,
+                        streamsets-datacollector-spark-api, and spark-core libraries</ph></p>
+            <p>
                   <draft-comment author="Loretta">YARN prerequisites - Conref the first two
                         DLentries - and adopt the 3rd as needed.</draft-comment>
             </p>

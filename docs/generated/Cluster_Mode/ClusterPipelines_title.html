@@ -231,8 +231,8 @@
  <div class="body conbody">
   <div class="p">Please
       note the following limitations to pipeline configuration options at this time:<ul class="ul" id="concept_xxz_nft_ls__ul_vf1_zft_ls">
-        <li class="li"><span class="ph uicontrol">Memory Limit Exceeded</span> - Use the log or log and alert options.
-          Stopping the pipeline is not supported at this time. </li>
+        <li class="li"><span class="ph uicontrol">Memory Limit Exceeded</span> - Use either the Log option or the Log and
+          Alert option. The Log, Alert, and Stop Pipeline option is not supported at this time. </li>
 
         <li class="li"><span class="ph uicontrol">Error Records</span> - Write error records to Kafka or discard the
           records. Stopping the pipeline or writing records to file is not supported at this time.
@@ -263,8 +263,8 @@
 
     <div class="p">Metric and data alerts are defined for the pipeline, but triggered by individual workers.
       When you define a metric or data alert, each worker inherits the alert and triggers the alert
-      based on the statistics for the worker.<div class="note note"><span class="notetitle">Note:</span> You cannot take snapshots when monitoring in
-        cluster pipelines.</div>
+      based on the statistics for the worker.<div class="note note"><span class="notetitle">Note:</span> You cannot take snapshots when monitoring cluster
+        pipelines.</div>
 </div>
 
   </div>
@@ -272,20 +272,20 @@
 </div>
 </div>
 <div class="topic task nested1" id="task_gmd_msw_yr">
-    <h2 class="title topictitle2">Kafka Requirements</h2>
+    <h2 class="title topictitle2">Kafka Cluster Requirements</h2>
 
     <div class="body taskbody">
         <div class="section context">
             <div class="p">Cluster mode pipelines that read from a Kafka cluster
-                have the following minimum requirements: 
+                have the following requirements: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gmd_msw_yr__table_agw_5pn_zw" class="table" frame="border" border="1" rules="all">
                         
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d25638e475">Component</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d27979e475">Component</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d25638e478">Minimum Requirement</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d27979e478">Requirement</th>
 
                             </tr>
 
@@ -293,16 +293,16 @@
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d25638e475 ">Spark Streaming</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d27979e475 ">Spark Streaming for cluster streaming modes</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d25638e478 ">Spark version 1.3 through 1.6</td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d27979e478 "><span class="ph">Spark versions 1.3 through 2.1</span></td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d25638e475 ">Apache Kafka</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d27979e475 ">Apache Kafka</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d25638e478 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d27979e478 ">Spark Streaming on YARN requires a Cloudera or Hortonworks
                                     distribution of an Apache Kafka cluster. <p class="p">Spark Streaming on
                                         Mesos requires Apache Kafka on Apache Mesos.</p>
 </td>
@@ -343,20 +343,52 @@
                   Collector</span> on a Spark and YARN gateway node.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">If necessary, specify the location of the spark-submit script.</span>
-                <div class="itemgroup info">The <span class="ph">Data
-                  Collector</span> assumes that the spark-submit script, used to submit job requests to Spark
-                    Streaming, is located in the following directory:
+                <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the SDC_USER
+                    environment variable write permission on
+                    <span class="ph filepath">/user/$SDC_USER</span>.</span>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7838">The SDC_USER environment variable defines the system
+                    user used to run Data Collector as a service. The variable is defined in the
+                    $SDC_DIST/libexec/sdcd-env.sh file. </div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7841">For example, say SDC_USER is defined as
+                        <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
+                    might use the following commands to create the directory and configure the
+                    necessary write
+                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2422e7846">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd" id="task_hhk_bfv_cy__d2422e7889">If necessary, specify the location of the
+                    spark-submit script.</span>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7892"><span class="ph">Data
+                  Collector</span> assumes that the spark-submit script used to submit job requests to Spark
+                    Streaming is located in the following directory:
                     <pre class="pre codeblock">/usr/bin/spark-submit</pre>
-If the script is not in this
-                    directory, use the SPARK_SUBMIT_YARN_COMMAND environment variable to define the
-                    location of the script.</div>
+</div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7898">If the script is not in this directory, use
+                    the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
+                    script.</div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7901">The location of the script may differ depending
+                    on the Spark version and distribution that you use.</div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7904"><span class="ph" id="task_hhk_bfv_cy__d2422e7905">For example,
+                        when using CDH Spark 2.1, the spark-submit script is in the following
+                        directory by default: /usr/bin/spark2-submit. Then, you might use the
+                        following command to define the location of the
+                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2422e7909">=/usr/bin/spark2-submit</span></pre>
+</div>
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7913">
+                    <div class="note note" id="task_hhk_bfv_cy__d2422e7915"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                        restart <span class="ph">Data
+                  Collector</span> to
+                        capture the change.</div>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To enable <span class="ph">Data
                   Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
                 <div class="itemgroup info">
-                    <ul class="ul" id="task_hhk_bfv_cy__ul_qf3_r1j_cy">
+                    <ul class="ul" id="task_hhk_bfv_cy__ul_dk3_3pp_qz">
                         <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
                             ID associated with the <span class="ph">Data
                   Collector</span> user ID, typically named "sdc".</li>
@@ -374,15 +406,14 @@ If the script is not in this
                     lower.</span>
                 <div class="itemgroup info">YARN sets the Spark logging level to INFO by default. To change the logging
                         level:<ol class="ol" type="a" id="task_hhk_bfv_cy__ol_tzg_ggl_px">
-                              <li class="li">Edit the log4j.properties file, located in the following
-                                    directory:
-                                    <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
+                        <li class="li">Edit the log4j.properties file, located in the following directory:
+                              <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
 </li>
 
-                              <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a
-                                    severity of INFO or lower, such as DEBUG or TRACE.</li>
+                        <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a severity
+                              of INFO or lower, such as DEBUG or TRACE.</li>
 
-                        </ol>
+                  </ol>
 </div>
             </li>
 <li class="li step stepexpand">
@@ -390,13 +421,13 @@ If the script is not in this
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <p class="p">When Kerberos is
-                        enabled for <span class="ph">Data
-                  Collector</span>, <span class="ph">Data
-                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any
-                        YARN cluster that uses Kerberos. </p>
-<p class="p">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2422e7962"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                        keytab when configuring <span class="ph">Data
+                  Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
+                <div class="itemgroup info">Once enabled, <span class="ph">Data
+                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any YARN
+                    cluster that uses Kerberos. For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
@@ -442,14 +473,43 @@ If the script is not in this
                   Collector</span> on a Spark and Mesos gateway node.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">If necessary, specify the location of the spark-submit script.</span>
-                <div class="itemgroup info">The <span class="ph">Data
-                  Collector</span> assumes that the spark-submit script, used to submit job requests to Spark
-                    Streaming, is located in the following directory:
+                <span class="ph cmd">To enable checkpoint metadata storage, grant $SDC_USER write permission on
+                        <span class="ph filepath">/user/$SDC_USER</span>.</span>
+                <div class="itemgroup info">The SDC_USER environment variable defines the system
+                    user used to run Data Collector as a service. The variable is defined in the
+                    $SDC_DIST/libexec/sdcd-env.sh file. </div>
+                <div class="itemgroup info">For example, say $SDC_USER is defined as <span class="ph filepath">sdc</span>. Then you
+                    might use the following commands to create the directory and configure the
+                    necessary write
+                    permissions:<pre class="pre codeblock">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If necessary, specify the location of the
+                    spark-submit script.</span>
+                <div class="itemgroup info"><span class="ph">Data
+                  Collector</span> assumes that the spark-submit script used to submit job requests to Spark
+                    Streaming is located in the following directory:
                     <pre class="pre codeblock">/usr/bin/spark-submit</pre>
-If the script is not in this
-                    directory, use the SPARK_SUBMIT_MESOS_COMMAND environment variable to define the
-                    location of the script.</div>
+</div>
+                <div class="itemgroup info">If the script is not in this directory, use the SPARK_SUBMIT_MESOS_COMMAND
+                    environment variable to define the location of the script.</div>
+                <div class="itemgroup info">The location of the script may differ depending
+                    on the Spark version and distribution that you use.</div>
+                <div class="itemgroup info"><span class="ph">For example,
+                        when using CDH Spark 2.1, the spark-submit script is in the following
+                        directory by default: /usr/bin/spark2-submit. Then, you might use the
+                        following command to define the location of the
+                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_MESOS_COMMAND<span class="ph">=/usr/bin/spark2-submit</span></pre>
+</div>
+                <div class="itemgroup info">
+                    <div class="note note" id="task_kf1_fgv_cy__d2422e7915"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                        restart <span class="ph">Data
+                  Collector</span> to
+                        capture the change.</div>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
@@ -481,16 +541,15 @@ If the script is not in this
 
  <div class="body conbody">
         <div class="p">Cluster
-            mode pipelines that read from a MapR cluster have the following minimum requirements:
-                
+            mode pipelines that read from a MapR cluster have the following requirements: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_kry_gn5_lx__table_agw_5pn_zw" class="table" frame="border" border="1" rules="all">
                     
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d25638e857">Component</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d27979e943">Component</th>
 
-                            <th class="entry" valign="top" width="66.66666666666666%" id="d25638e860">Minimum Requirement</th>
+                            <th class="entry" valign="top" width="66.66666666666666%" id="d27979e946">Requirement</th>
 
                         </tr>
 
@@ -498,16 +557,16 @@ If the script is not in this
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d25638e857 ">Spark Streaming (for cluster streaming mode)</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d27979e943 ">Spark Streaming for cluster streaming mode</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d25638e860 ">Spark version 1.5.2 through 1.6</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d27979e946 "><span class="ph">Spark versions 1.3 through 2.1</span></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d25638e857 ">MapR</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d27979e943 ">MapR</td>
 
-                            <td class="entry" valign="top" width="66.66666666666666%" headers="d25638e860 ">MapR version 5.1 or 5.2</td>
+                            <td class="entry" valign="top" width="66.66666666666666%" headers="d27979e946 ">MapR version 5.1 or 5.2</td>
 
                         </tr>
 
@@ -541,10 +600,24 @@ If the script is not in this
                   Collector</span> on a YARN gateway node.</span>
             </li>
 <li class="li step stepexpand">
+                <span class="ph cmd">Grant the user defined in the SDC_USER environment variable write permission on
+                        <span class="ph filepath">/user/$SDC_USER</span>.</span>
+                <div class="itemgroup info">The SDC_USER environment variable defines the system
+                    user used to run Data Collector as a service. The variable is defined in the
+                    $SDC_DIST/libexec/sdcd-env.sh file. </div>
+                <div class="itemgroup info">For example, say SDC_USER is defined as
+                        <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
+                    might use the following commands to create the directory and configure the
+                    necessary write
+                    permissions:<pre class="pre codeblock" id="task_n2l_z45_lx__Cluster-Code-SDCUserCode">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
+</div>
+            </li>
+<li class="li step stepexpand">
                 <span class="ph cmd">To enable <span class="ph">Data
                   Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
                 <div class="itemgroup info">
-                    <ul class="ul" id="task_n2l_z45_lx__ul_qf3_r1j_cy">
+                    <ul class="ul" id="task_n2l_z45_lx__ul_gzd_jpp_qz">
                         <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
                             ID associated with the <span class="ph">Data
                   Collector</span> user ID, typically named "sdc".</li>
@@ -553,6 +626,9 @@ If the script is not in this
                   Collector</span> user name, typically "sdc", to the allowed.system.users
                             property.</li>
 
+                    </ul>
+
+                    <ul class="ul" id="task_n2l_z45_lx__ul_qf3_r1j_cy">
                         <li class="li">After you create the pipeline, specify a Hadoop FS user in the MapR FS
                             origin. <p class="p">For the Hadoop FS User property, enter a user with an ID that
                                 is higher than the min.user.id property, or with a user name that is
@@ -585,13 +661,13 @@ If the script is not in this
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <p class="p">When Kerberos is
-                        enabled for <span class="ph">Data
-                  Collector</span>, <span class="ph">Data
-                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any
-                        YARN cluster that uses Kerberos. </p>
-<p class="p">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2422e7962"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                        keytab when configuring <span class="ph">Data
+                  Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
+                <div class="itemgroup info">Once enabled, <span class="ph">Data
+                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any YARN
+                    cluster that uses Kerberos. For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
@@ -632,25 +708,51 @@ If the script is not in this
                   Collector</span> on a Spark and YARN gateway node.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">If necessary, specify the location of the spark-submit script. </span>
+                <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the SDC_USER
+                    environment variable write permission on
+                    <span class="ph filepath">/user/$SDC_USER</span>.</span>
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2422e7838">The SDC_USER environment variable defines the system
+                    user used to run Data Collector as a service. The variable is defined in the
+                    $SDC_DIST/libexec/sdcd-env.sh file. </div>
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2422e7841">For example, say SDC_USER is defined as
+                        <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
+                    might use the following commands to create the directory and configure the
+                    necessary write
+                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2422e7846">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">If necessary, specify the location of the
+                    spark-submit script.</span>
                 <div class="itemgroup info"><span class="ph">Data
-                  Collector</span> assumes that the spark-submit script, used to submit job requests to Spark
-                    Streaming, is located in the following directory:
+                  Collector</span> assumes that the spark-submit script used to submit job requests to Spark
+                    Streaming is located in the following directory:
                     <pre class="pre codeblock">/usr/bin/spark-submit</pre>
-If the script is not in this
-                    directory, use the SPARK_SUBMIT_YARN_COMMAND environment variable to define the
-                    location of the script.<div class="p">For example, say the spark-submit script is in the
-                        following directory: /opt/mapr/spark/spark-1.6.1/bin/spark-submit. Then, you
-                        might use the following command to define the location of the
-                        script:<pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-1.6.1/bin/spark-submit</pre>
 </div>
+                <div class="itemgroup info">If the script is not in this directory, use
+                    the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
+                    script.</div>
+                <div class="itemgroup info">The location of the script may differ depending
+                    on the Spark version and distribution that you use.</div>
+                <div class="itemgroup info">For example, say the spark-submit script is in the following directory:
+                        <samp class="ph codeph">/opt/mapr/spark/spark-2.1/bin/spark-submit</samp>. Then, you might
+                    use the following command to define the location of the script:
+                    <pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-2.1/bin/spark-submit</pre>
 </div>
+                <div class="itemgroup info">
+                    <div class="note note" id="task_i3h_q3w_hx__d2422e7915"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                        restart <span class="ph">Data
+                  Collector</span> to
+                        capture the change.</div>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To enable <span class="ph">Data
                   Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
                 <div class="itemgroup info">
-                    <ul class="ul" id="task_i3h_q3w_hx__ul_tzs_zbj_cy">
+                    <ul class="ul" id="task_i3h_q3w_hx__ul_jdl_kpp_qz">
                         <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
                             ID associated with the <span class="ph">Data
                   Collector</span> user ID, typically named "sdc".</li>
@@ -667,15 +769,14 @@ If the script is not in this
                 <span class="ph cmd">If necessary, set the Spark logging level to a severity of INFO or lower.</span>
                 <div class="itemgroup info">By default, MapR sets the Spark logging level to WARN. To change the logging
                         level:<ol class="ol" type="a" id="task_i3h_q3w_hx__ol_nfd_jgl_px">
-                              <li class="li">Edit the log4j.properties file, located in the following
-                                    directory:
-                                    <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
+                        <li class="li">Edit the log4j.properties file, located in the following directory:
+                              <pre class="pre codeblock">&lt;spark-home&gt;/conf/log4j.properties</pre>
 </li>
 
-                              <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a
-                                    severity of INFO or lower, such as DEBUG or TRACE.</li>
+                        <li class="li">Set the <span class="ph uicontrol">log4j.rootCategory</span> property to a severity
+                              of INFO or lower, such as DEBUG or TRACE.</li>
 
-                        </ol>
+                  </ol>
 </div>
                 <div class="itemgroup info">For example, when using Spark 1.6.1, you would edit
                         <samp class="ph codeph">/opt/mapr/spark/spark-1.6.1/conf/log4j.properties</samp>, and you
@@ -688,13 +789,13 @@ If the script is not in this
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <p class="p">When Kerberos is
-                        enabled for <span class="ph">Data
-                  Collector</span>, <span class="ph">Data
-                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any
-                        YARN cluster that uses Kerberos. </p>
-<p class="p">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2422e7962"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                        keytab when configuring <span class="ph">Data
+                  Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
+                <div class="itemgroup info">Once enabled, <span class="ph">Data
+                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any YARN
+                    cluster that uses Kerberos. For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
@@ -725,13 +826,11 @@ If the script is not in this
     <h2 class="title topictitle2">HDFS Requirements</h2>
 
     <div class="body taskbody">
-        <div class="section context">
-            <p class="p">Cluster mode pipelines that read from HDFS require the
-                Cloudera distribution of Hadoop (CDH) or Hortonworks Data Platform (HDP).</p>
-
-            <p class="p">Complete the following steps to configure a cluster mode pipeline to read from HDFS: </p>
-
-        </div>
+        <div class="section context">Cluster mode pipelines that read from HDFS require the
+            Cloudera distribution of Hadoop (CDH) or Hortonworks Data Platform (HDP).<p class="p">Complete the
+                following steps to configure a cluster mode pipeline to read from HDFS:
+            </p>
+</div>
 
         <ol class="ol steps" id="task_akz_w5b_ws__steps_ldn_rhw_cy"><li class="li step stepexpand">
                 <span class="ph cmd">Verify the installation of HDFS and YARN.</span>
@@ -741,10 +840,24 @@ If the script is not in this
                   Collector</span> on a YARN gateway node.</span>
             </li>
 <li class="li step stepexpand">
+                <span class="ph cmd">Grant the user defined in the SDC_USER environment variable write permission on
+                        <span class="ph filepath">/user/$SDC_USER</span>.</span>
+                <div class="itemgroup info">The SDC_USER environment variable defines the system
+                    user used to run Data Collector as a service. The variable is defined in the
+                    $SDC_DIST/libexec/sdcd-env.sh file. </div>
+                <div class="itemgroup info">For example, say SDC_USER is defined as
+                        <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
+                    might use the following commands to create the directory and configure the
+                    necessary write
+                    permissions:<pre class="pre codeblock" id="task_akz_w5b_ws__Cluster-Code-SDCUserCode">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+$sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
+</div>
+            </li>
+<li class="li step stepexpand">
                 <span class="ph cmd">To enable <span class="ph">Data
                   Collector</span> to submit YARN jobs, perform one of the following tasks:</span>
                 <div class="itemgroup info">
-                    <ul class="ul" id="task_akz_w5b_ws__ul_qf3_r1j_cy">
+                    <ul class="ul" id="task_akz_w5b_ws__ul_ult_d5p_qz">
                         <li class="li">On YARN, set the min.user.id to a value equal to or lower than the user
                             ID associated with the <span class="ph">Data
                   Collector</span> user ID, typically named "sdc".</li>
@@ -753,6 +866,9 @@ If the script is not in this
                   Collector</span> user name, typically "sdc", to the allowed.system.users
                             property.</li>
 
+                    </ul>
+
+                    <ul class="ul" id="task_akz_w5b_ws__ul_qf3_r1j_cy">
                         <li class="li">After you create the pipeline, specify a Hadoop FS user in the Hadoop FS
                             origin. <p class="p">For the Hadoop FS User property, enter a user with an ID that
                                 is higher than the min.user.id property, or with a user name that is
@@ -785,13 +901,13 @@ If the script is not in this
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <p class="p">When Kerberos is
-                        enabled for <span class="ph">Data
-                  Collector</span>, <span class="ph">Data
-                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any
-                        YARN cluster that uses Kerberos. </p>
-<p class="p">For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</p>
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2422e7962"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                        keytab when configuring <span class="ph">Data
+                  Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
+                <div class="itemgroup info">Once enabled, <span class="ph">Data
+                  Collector</span> automatically uses the Kerberos principal and keytab to connect to any YARN
+                    cluster that uses Kerberos. For more information, see <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Enabling Kerberos Authentication</a>.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
@@ -821,6 +937,44 @@ If the script is not in this
 <div class="related_link"><a class="navheader_parent_path" href="../Origins/HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). Use this origin only in pipelines configured for cluster execution mode.">Hadoop FS</a></div>
 </div>
 </div>
+</div>
+<div class="topic concept nested1" id="concept_pdf_r5y_fz">
+ <h2 class="title topictitle2">Stage Limitations</h2>
+
+ <div class="body conbody">
+  <div class="p">Please note the
+            following stage limitations in cluster pipelines:<ul class="ul" id="concept_pdf_r5y_fz__ul_rrk_s5y_fz">
+                <li class="li">Non-cluster origins - Do not use non-cluster origins in cluster pipelines. For a
+                    description of the origins to use, see <a class="xref" href="ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using the cluster batch or the cluster streaming execution mode.">Cluster Batch and Streaming Execution Modes</a>.</li>
+
+                <li class="li">Record Deduplicator processor - This processor is not supported in cluster
+                    pipelines at this time. </li>
+
+                <li class="li">RabbitMQ Producer destination - This destination is not supported in cluster
+                    pipelines at this time. </li>
+
+                <li class="li">Scripting processors - The state object is available only for the instance of
+                    the processor stage it is defined in. If the pipeline executes in cluster mode,
+                    the state object is not shared across nodes. </li>
+
+                <li class="li">Spark Evaluator processor - Use in cluster streaming pipelines only. Do not use
+                    in cluster batch pipelines. You can also use the Spark Evaluator in standalone
+                    pipelines. </li>
+
+                <li class="li">Spark Evaluator processor and Spark executor - When using Spark stages, the
+                    stages must use the same Spark version as the cluster. For example, if the
+                    cluster uses Spark 2.1, the Spark Evaluator must use a Spark 2.1 stage library.
+                        <p class="p">Both stages are <span class="ph">available in several CDH and MapR stage libraries. To verify the
+                        Spark version that a stage library includes, see the CDH or MapR
+                        documentation. For more information about the stage libraries that include
+                        the Spark Evaluator, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">Available Stage Libraries</a>.</span></p>
+</li>
+
+            </ul>
+</div>
+
+ </div>
+
 </div>
 </div>
 <div class="navfooter"><!---->

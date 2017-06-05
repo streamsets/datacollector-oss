@@ -113,9 +113,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="35%" id="d36191e190">Environment Variable</th>
+                        <th class="entry" valign="top" width="35%" id="d39213e190">Environment Variable</th>
 
-                        <th class="entry" valign="top" width="65%" id="d36191e193">Description</th>
+                        <th class="entry" valign="top" width="65%" id="d39213e193">Description</th>
 
                     </tr>
 
@@ -123,11 +123,11 @@
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d36191e190 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
+                        <td class="entry" valign="top" width="35%" headers="d39213e190 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d36191e193 ">
+                        <td class="entry" valign="top" width="65%" headers="d39213e193 ">
                             <p class="p">Defines the configuration directory for the Data Collector
                                 configuration file, <samp class="ph codeph">sdc.properties</samp>, and related
                                 realm properties files and keystore files. Also includes the logj4
@@ -147,9 +147,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d36191e190 ">SDC_DATA</td>
+                        <td class="entry" valign="top" width="35%" headers="d39213e190 ">SDC_DATA</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d36191e193 ">
+                        <td class="entry" valign="top" width="65%" headers="d39213e193 ">
                             <p class="p">Defines the data directory for pipeline configuration and run
                                 details. </p>
 
@@ -167,9 +167,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d36191e190 ">SDC_LOG</td>
+                        <td class="entry" valign="top" width="35%" headers="d39213e190 ">SDC_LOG</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d36191e193 ">
+                        <td class="entry" valign="top" width="65%" headers="d39213e193 ">
                             <p class="p">Defines the log directory. </p>
 
                             <p class="p">Default values:</p>
@@ -186,11 +186,11 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d36191e190 ">SDC_RESOURCES <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
+                        <td class="entry" valign="top" width="35%" headers="d39213e190 ">SDC_RESOURCES <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d36191e193 ">Defines the directory for runtime resource files. <p class="p">Default
+                        <td class="entry" valign="top" width="65%" headers="d39213e193 ">Defines the directory for runtime resource files. <p class="p">Default
                                 values:</p>
 <ul class="ul">
                                 <li class="li">Manual start: <samp class="ph codeph">$SDC_DIST/resources</samp></li>
@@ -239,11 +239,13 @@
  <h2 class="title topictitle2">Java Configuration Options</h2>
 
  <div class="body conbody">
-  <p class="p">You can edit the <span class="ph">Data
-                  Collector</span>
-      environment configuration file to add or update Java configuration options. </p>
+  <p class="p">You can define the Java configuration options used by <span class="ph">Data
+                  Collector</span>.</p>
 
-    <p class="p">You can update Java configuration options in the following environment variables:</p>
+    <p class="p">For a tarball or RPM installation, define Java configuration options in the following
+      environment variables in the <span class="ph">Data
+                  Collector</span>
+      environment configuration file:</p>
 
     <ul class="ul" id="concept_vrx_4fg_qr__ul_xfx_q33_vx">
       <li class="li">SDC_JAVA_OPTS - Includes configuration options for Java.</li>
@@ -257,10 +259,13 @@
       the value of the version-specific environment variable and adds it to the SDC_JAVA_OPTS
       environment variable.</p>
 
-    <p class="p">To modify Java configuration options for the <span class="ph">Data
+    <p class="p">For a Cloudera Manager installation, define Java configuration options in the Java Options
+      property for the StreamSets service in Cloudera Manager.</p>
+
+    <div class="note note"><span class="notetitle">Note:</span> To modify Java configuration options for the <span class="ph">Data
                   Collector</span> command
       line interface, use the SDC_CLI_JAVA_OPTS environment variable. For more information, see
-        <a class="xref" href="../Administration/Administration_title.html#concept_zrc_qch_xw" title="Use the SDC_CLI_JAVA_OPTS environment variable to modify Java configuration options for the cli command.">Java Configuration Options for the Cli Command</a>.</p>
+        <a class="xref" href="../Administration/Administration_title.html#concept_zrc_qch_xw" title="Use the SDC_CLI_JAVA_OPTS environment variable to modify Java configuration options for the cli command.">Java Configuration Options for the Cli Command</a>.</div>
 
  </div>
 
@@ -268,9 +273,10 @@
  <h3 class="title topictitle3">Java Heap Size</h3>
 
  
- <div class="body conbody"><p class="shortdesc">You can define the <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">Increase or decrease the <span class="ph">Data
                   Collector</span> Java heap
-    size. By default, the  Java heap size is 1024 MB. </p>
+    size as necessary, based on the resources available on the host machine. By default, the Java
+    heap size is 1024 MB. </p>
 
   <p class="p">The Java heap size determines the heap
       size allocated to <span class="ph">Data
@@ -278,11 +284,6 @@
       affects the amount of memory <span class="ph">Data
                   Collector</span> can use
       when it runs a pipeline. Running a pipeline can use up to 65% of the allocated heap size. </p>
-
-   <p class="p">Define the heap size as part of the SDC_JAVA_OPTS environment variable in the <span class="ph">Data
-                  Collector</span>
-      environment configuration file. Increase or decrease the heap size as necessary, based on the
-      resources available on the host machine.</p>
 
     <div class="p">Use the following Java options to define the Java heap size:<ul class="ul" id="concept_mdc_shg_qr__ul_vyw_rzl_qr">
         <li class="li">Xmx - Defines the maximum heap size.</li>
@@ -293,21 +294,52 @@
 </div>
 
     <div class="p">
-      <div class="note tip"><span class="tiptitle">Tip:</span> To avoid constant recalculation of the allocated heap size, set the both
+      <div class="note tip"><span class="tiptitle">Tip:</span> To avoid constant recalculation of the allocated heap size, set both
         properties to the same value. To define the unit of measure, use m for MB and g for GB. </div>
 
     </div>
 
-    <div class="p">For example, to double the heap size, you might change the following default
-      settings:<pre class="pre codeblock">SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx1024m -Xms1024m</span> -server ${SDC_JAVA_OPTS}"</pre>
+    <p class="p">Define the heap size based on your installation:</p>
+
+    <dl class="dl">
+      
+        <dt class="dt dlterm">Tarball or RPM installation</dt>
+
+        <dd class="dd">
+          <p class="p">Define the heap size in the SDC_JAVA_OPTS environment variable.</p>
+
+          <p class="p">If you start Data Collector as a service, set the environment
+                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
+                  If you start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+
+          <div class="p">For example, to double the heap size, change the following default settings in the
+            environment configuration
+            file:<pre class="pre codeblock">export SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx1024m -Xms1024m</span> -server ${SDC_JAVA_OPTS}"</pre>
 </div>
 
-    <p class="p">to increase the Xmx and Xms settings as follows:</p>
+          <p class="p">to increase the Xmx and Xms settings as follows:</p>
 
-    <div class="p">
-      <pre class="pre codeblock">SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx2048m -Xms2048m</span> -server ${SDC_JAVA_OPTS}"</pre>
+          <div class="p">
+            <pre class="pre codeblock">export SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx2048m -Xms2048m</span> -server ${SDC_JAVA_OPTS}"</pre>
 
-    </div>
+          </div>
+
+        </dd>
+
+      
+      
+        <dt class="dt dlterm">Cloudera Manager installation</dt>
+
+        <dd class="dd">Define the heap size in the Java Options property for the StreamSets service in Cloudera
+          Manager.</dd>
+
+        <dd class="dd">For example, to double the heap size, add the Xmx and Xms settings to the property as
+          follows:<pre class="pre codeblock">-Xmx2048m -Xms2048m</pre>
+</dd>
+
+      
+    </dl>
 
     <div class="p">With a heap size of 2048 MB, you can configure a pipeline to use up to 65% - that's 1331 MB
       of memory.<div class="note note"><span class="notetitle">Note:</span> In the pipeline properties, you can use the jvm:maxMemoryMB() function to help
@@ -323,21 +355,52 @@
  
  <div class="body conbody"><p class="shortdesc">You can enable remote debugging to debug a <span class="ph">Data
                   Collector</span>
-        instance running on a remote machine. To enable remote debugging, define debugging options
-        in the SDC_JAVA_OPTS environment variable in the <span class="ph">Data
-                  Collector</span>
-        environment configuration file.</p>
+        instance running on a remote machine. </p>
 
-        <div class="p">Add the following debugging options to the
-            SDC_JAVA_OPTS environment variable, where <samp class="ph codeph">port_number</samp> is an open port
-            number on the remote machine running <span class="ph">Data
+        <div class="p">Enable remote debugging based on your installation:<dl class="dl">
+                
+                    <dt class="dt dlterm">Tarball or RPM installation</dt>
+
+                    <dd class="dd">
+                        <p class="p">Define debugging options in the SDC_JAVA_OPTS environment variable.</p>
+
+                        <p class="p">If you start Data Collector as a service, set the environment
+                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
+                  If you start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+
+                    </dd>
+
+                    <dd class="dd">
+                        <div class="p">Add the following debugging options to the environment variable, where
+                                <samp class="ph codeph">port_number</samp> is an open port number on the remote
+                            machine running <span class="ph">Data
                   Collector</span>:<pre class="pre codeblock">-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=&lt;port_number&gt;,suspend=n</pre>
 </div>
 
-        <div class="p">For example, to debug <span class="ph">Data
-                  Collector</span> on
-            a remote machine using port number 2005, define SDC_JAVA_OPTS as follows:
-            <pre class="pre codeblock">SDC_JAVA_OPTS="-Xmx1024m  -Xms1024m <span class="ph uicontrol">-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=2005,suspend=n</span> -server ${SDC_JAVA_OPTS}"</pre>
+                        <div class="p">For example, to debug <span class="ph">Data
+                  Collector</span> on a remote machine using port number 2005, define SDC_JAVA_OPTS as
+                            follows:
+                            <pre class="pre codeblock">export SDC_JAVA_OPTS="-Xmx1024m  -Xms1024m <span class="ph uicontrol">-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=2005,suspend=n</span> -server ${SDC_JAVA_OPTS}"</pre>
+</div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Cloudera Manager installation</dt>
+
+                    <dd class="dd">Define the debugging options in the Java Options property for the StreamSets
+                        service in Cloudera Manager.</dd>
+
+                    <dd class="dd">For example, to debug <span class="ph">Data
+                  Collector</span> on a remote machine using port number 2005, add the debugging options to
+                        the property as
+                        follows:<pre class="pre codeblock">-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=2005,suspend=n</pre>
+</dd>
+
+                
+            </dl>
 </div>
 
     </div>
@@ -361,29 +424,92 @@
             performance before making the same change in a production environment. Garbage collector
             performance depends on each particular use case.</p>
 
-        <p class="p">Define the garbage collector in the SDC_JAVA8_OPTS environment variable in the <span class="ph">Data
-                  Collector</span>
-            environment configuration file. </p>
+        <p class="p">Define the garbage collector based on your installation:</p>
 
-        <p class="p">For example, the default garbage collector is defined as follows:</p>
+        <dl class="dl">
+            
+                <dt class="dt dlterm">Tarball or RPM installation</dt>
 
-        <pre class="pre codeblock">SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<span class="ph uicontrol">-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</span>"}</pre>
+                <dd class="dd">Define the garbage collector in the SDC_JAVA8_OPTS environment variable. </dd>
 
-        <p class="p">To use the G1 garbage collector, set the option as follows: </p>
+                <dd class="dd">
+                    <p class="p">If you start Data Collector as a service, set the environment
+                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
+                  If you start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
 
-        <pre class="pre codeblock">SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<span class="ph uicontrol">-XX:+UseG1GC</span>"}</pre>
+                </dd>
+
+                <dd class="dd">
+                    <p class="p">For example, the default garbage collector is defined as follows:</p>
+
+                    <pre class="pre codeblock">export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<span class="ph uicontrol">-XX:+UseConcMarkSweepGC -XX:+UseParNewGC</span>"}</pre>
+
+                    <p class="p">To use the G1 garbage collector, set the option as follows: </p>
+
+                    <pre class="pre codeblock">export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"<span class="ph uicontrol">-XX:+UseG1GC</span>"}</pre>
+
+                </dd>
+
+            
+            
+                <dt class="dt dlterm">Cloudera Manager installation</dt>
+
+                <dd class="dd">Define the garbage collector in the Java Options property for the StreamSets
+                    service in Cloudera Manager.</dd>
+
+                <dd class="dd">For example, to use the G1 garbage collector, add the option to the property as
+                    follows:<pre class="pre codeblock"> -XX:+UseG1GC</pre>
+</dd>
+
+            
+        </dl>
 
         <div class="section" id="concept_kqh_lj3_vx__section_gqv_q21_vy"><h4 class="title sectiontitle">Logging</h4>
             
-            <div class="p"><span class="ph">Data
+            <p class="p"><span class="ph">Data
                   Collector</span>
-                enables garbage collector logging by default to facilitate troubleshooting. To
-                disable logging, set the following environment variable to false in the <span class="ph">Data
-                  Collector</span> environment configuration
-                file:<pre class="pre codeblock">export SDC_GC_LOGGING=true</pre>
-</div>
+                enables garbage collector logging by default to facilitate troubleshooting. Log
+                files are written to <samp class="ph codeph">$SDC_LOG/gc.log</samp>. You can disable logging.</p>
 
-            <p class="p"> Log files are written to <samp class="ph codeph">$SDC_LOG/gc.log</samp>. </p>
+            <p class="p">Disable garbage collector logging based on your installation:</p>
+
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">Tarball or RPM installation</dt>
+
+                    <dd class="dd">Set the SDC_GC_LOGGING environment variable to false in the <span class="ph">Data
+                  Collector</span> environment configuration file.</dd>
+
+                    <dd class="dd">
+                        <p class="p">If you start Data Collector as a service, set the environment
+                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
+                  If you start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+
+                    </dd>
+
+                    <dd class="dd">For example:</dd>
+
+                    <dd class="dd">
+                        <pre class="pre codeblock">export SDC_GC_LOGGING=false</pre>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Cloudera Manager installation</dt>
+
+                    <dd class="dd">Set the SDC_GC_LOGGING environment variable to false in the
+                            <samp class="ph codeph">sdc-env.sh</samp> safety valve for the StreamSets service in
+                        Cloudera Manager.</dd>
+
+                    <dd class="dd">For example, add the following to the <samp class="ph codeph">sdc-env.sh</samp> safety
+                        valve:<pre class="pre codeblock">export SDC_GC_LOGGING=false</pre>
+</dd>
+
+                
+            </dl>
 
         </div>
 

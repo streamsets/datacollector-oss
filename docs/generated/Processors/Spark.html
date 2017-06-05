@@ -3,7 +3,7 @@
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Spark Evaluator" /><meta name="abstract" content="The Spark Evaluator performs custom processing within a pipeline based on a Spark application that you develop. Use the Spark Evaluator in pipelines configured for standalone mode. In a development or test environment, you can also use the processor in pipelines configured for cluster execution mode." /><meta name="description" content="The Spark Evaluator performs custom processing within a pipeline based on a Spark application that you develop. Use the Spark Evaluator in pipelines configured for standalone mode. In a development or test environment, you can also use the processor in pipelines configured for cluster execution mode." /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_cpx_1lm_zx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Spark Evaluator</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Spark Evaluator" /><meta name="abstract" content="The Spark Evaluator performs custom processing within a pipeline based on a Spark application that you develop." /><meta name="description" content="The Spark Evaluator performs custom processing within a pipeline based on a Spark application that you develop." /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_cpx_1lm_zx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Spark Evaluator</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -30,9 +30,7 @@
 
  
  <div class="body conbody"><p class="shortdesc">The Spark Evaluator performs custom processing within a pipeline based on a Spark
-        application that you develop. Use the Spark Evaluator in pipelines configured for standalone
-        mode. In a development or test environment, you can also use the processor in pipelines
-        configured for cluster execution mode. </p>
+        application that you develop.</p>
 
         <p class="p">The Spark Evaluator processor is especially
             useful when you need to perform heavy custom processing within a pipeline, such as image
@@ -59,6 +57,40 @@
     </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_nbj_1jb_c1b">
+ <h2 class="title topictitle2">Spark Versions and Stage Libraries</h2>
+
+ <div class="body conbody">
+  <p class="p">The Spark Evaluator processor supports <span class="ph">Spark versions 1.3 through 2.1</span>. </p>
+
+        <div class="p">When you use the Spark Evaluator processor, make sure the Spark version is the same
+            across all related components, as follows:<ul class="ul" id="concept_nbj_1jb_c1b__ul_yct_nqb_c1b">
+                <li class="li">
+                    <p class="p">Make sure <span class="ph">the Spark version used in the selected stage
+                        library matches the Spark version used to build the application.</span></p>
+
+                    <p class="p">For example, if you use Spark 2.1 to build the application, use a Spark
+                        Evaluator provided in one of the Spark 2.1 stage libraries. </p>
+
+                </li>
+
+                <li class="li"><p class="p">When using the processor <span class="ph">in a cluster streaming pipeline, the Spark version in
+                        the selected stage library must also match the Spark version used by the
+                        cluster.</span></p>
+<span class="ph">For example, if your cluster uses Spark 1.6, use a
+                        stage library that includes Spark 1.6.</span></li>
+
+            </ul>
+</div>
+
+        <p class="p">The Spark Evaluator is <span class="ph">available in several CDH and MapR stage libraries. To verify the
+                        Spark version that a stage library includes, see the CDH or MapR
+                        documentation. For more information about the stage libraries that include
+                        the Spark Evaluator, see <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">Available Stage Libraries</a>.</span></p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_hpm_tns_hz">
  <h2 class="title topictitle2">Standalone Pipelines</h2>
 
@@ -83,20 +115,12 @@
 
 </div>
 <div class="topic concept nested1" id="concept_b1l_5lv_jz">
- <h2 class="title topictitle2">Cluster Pipelines (Beta)</h2>
+ <h2 class="title topictitle2">Cluster Pipelines</h2>
 
     
- <div class="body conbody"><p class="shortdesc">The Spark Evaluator processor provides beta support of cluster mode pipelines. In a
-        development or test environment, you can use the processor in pipelines that process data
-        from a Kafka or MapR cluster in cluster streaming mode. You cannot use the processor in
-        cluster pipelines that process data from a MapR cluster in cluster batch mode or from HDFS. </p>
-
-        <div class="p">
-            <div class="note warning"><span class="warningtitle">Warning:</span> At this time, do not use the Spark Evaluator processor in cluster
-                mode pipelines in a production environment. In a future release, it will be
-                supported in a production environment.</div>
-
-        </div>
+ <div class="body conbody"><p class="shortdesc">You can use the Spark Evaluator processor in cluster pipelines that process data from
+        a Kafka or MapR cluster in cluster streaming mode. You cannot use the processor in cluster
+        pipelines that process data from a MapR cluster in cluster batch mode or from HDFS. </p>
 
         <p class="p">In a cluster pipeline, the cluster manager spawns a <span class="ph">Data
                   Collector</span>
@@ -128,7 +152,11 @@
 
         <div class="p">Use the following rules and guidelines when you write the Spark application and configure
             the processor for a cluster pipeline:<ul class="ul" id="concept_b1l_5lv_jz__ul_dg5_nmv_jz">
-                <li class="li">To maintain the state of each RDD, use the <samp class="ph codeph">RDD.checkpoint()</samp> or
+                <li class="li">Ensure that the Spark version you use to build the application matches the Spark
+                    version used by the cluster and the Spark Evaluator stage library.</li>
+
+                <li class="li">To maintain the states of the RDDs that are used more than once in the
+                    application, use the <samp class="ph codeph">RDD.checkpoint()</samp> or
                         <samp class="ph codeph">RDD.cache()</samp> method in your custom Spark application. When
                     you checkpoint or cache the RDDs, the Spark Transformer can access the RDDs from
                     previous batches.<p class="p">The Spark Evaluator processor cleans up checkpoints when the
@@ -223,22 +251,20 @@
     
     <div class="body taskbody"><p class="shortdesc">Install the Spark application JAR file as an external library for <span class="ph">Data
                   Collector</span>. If
-        your custom Spark application depends on external libraries other than the
-        streamsets-datacollector-api, streamsets-datacollector-spark-api, and spark-core libraries,
-        install those libraries in the same location as well. </p>
+        your custom Spark application depends on external libraries other than the <span class="ph">streamsets-datacollector-api,
+                        streamsets-datacollector-spark-api, and spark-core libraries</span>, install those libraries in the same location as well. </p>
 
         <div class="section context">
             <div class="note tip"><span class="tiptitle">Tip:</span> To include all dependent libraries used in your custom Spark
                 application, you can use the Apache Maven Dependency Plugin. For more information
                 about the Dependency Plugin, see <a class="xref" href="http://maven.apache.org/plugins/maven-dependency-plugin/" target="_blank">http://maven.apache.org/plugins/maven-dependency-plugin/</a>.</div>
 
-            <p class="p">To install an external library for the Spark Evaluator, see <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="Install external libraries to make them available to Data Collector stages.">Install External Libraries</a>.</p>
+            <p class="p">To install an external library for the Spark Evaluator, see <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.">Install External Libraries</a>.</p>
 
             <div class="p">
-                <div class="note note"><span class="notetitle">Note:</span> The Spark Evaluator processor is included in the Cloudera CDH and the MapR 5.2
-                    stage libraries. When you install external libraries for the processor, you must
-                    make them accessible to the appropriate Cloudera CDH stage library or to the
-                    MapR 5.2 stage library.</div>
+                <div class="note note"><span class="notetitle">Note:</span> The Spark Evaluator processor is included in several CDH and MapR stage
+                    libraries. When you install external libraries for the processor, you must make
+                    them accessible to the stage library that you are using.</div>
 
             </div>
 
@@ -263,14 +289,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_g1p_gqn_zx__d48131e4113" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_g1p_gqn_zx__d55638e4248" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d316405e377">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d347566e431">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d316405e380">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d347566e434">Description</th>
 
                                 </tr>
 
@@ -278,31 +304,31 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d316405e377 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d347566e431 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d316405e380 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d316405e377 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d316405e380 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d347566e434 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d316405e377 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d347566e431 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d316405e380 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d347566e434 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d316405e377 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_g1p_gqn_zx__d48131e4168" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d347566e431 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d316405e380 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d347566e434 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d347566e431 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_g1p_gqn_zx__d55638e4303" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d347566e434 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -314,10 +340,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d316405e377 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_g1p_gqn_zx__d48131e4184" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d347566e431 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_g1p_gqn_zx__d55638e4319" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d316405e380 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d347566e434 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -328,10 +354,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d316405e377 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_g1p_gqn_zx__d48131e4202" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d347566e431 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_g1p_gqn_zx__d55638e4337" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d316405e380 ">Error record handling for the stage: <ul class="ul" id="task_g1p_gqn_zx__d48131e4206">
+                                    <td class="entry" valign="top" width="70%" headers="d347566e434 ">Error record handling for the stage: <ul class="ul" id="task_g1p_gqn_zx__d55638e4341">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -362,9 +388,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d316405e507">Spark Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d347566e561">Spark Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d316405e510">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d347566e564">Description</th>
 
                                 </tr>
 
@@ -372,9 +398,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d316405e507 ">Parallelism</td>
+                                    <td class="entry" valign="top" width="30%" headers="d347566e561 ">Parallelism</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d316405e510 ">For standalone mode, the number of partitions to create
+                                    <td class="entry" valign="top" width="70%" headers="d347566e564 ">For standalone mode, the number of partitions to create
                                         per batch of records. For example, if set to 4, then the
                                         Spark Transformer simultaneously runs 4 parallel jobs to
                                         process the batch. <p class="p">Set the value based on the number of
@@ -389,9 +415,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d316405e507 ">Application Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d347566e561 ">Application Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d316405e510 ">For standalone mode, the name of the Spark application.
+                                    <td class="entry" valign="top" width="70%" headers="d347566e564 ">For standalone mode, the name of the Spark application.
                                         Spark displays this application name in the log files. <p class="p">If
                                             you run pipelines that include multiple Spark Evaluator
                                             processors, be sure to use a unique application name for
@@ -404,11 +430,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d316405e507 ">Spark Transformer Class
+                                    <td class="entry" valign="top" width="30%" headers="d347566e561 ">Spark Transformer Class
                                         <a class="xref" href="Spark.html#concept_lfl_dvd_1y">
                                             <img class="image" id="task_g1p_gqn_zx__image_h4p_p5v_yq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d316405e510 ">Fully qualified name of the custom Spark class that
+                                    <td class="entry" valign="top" width="70%" headers="d347566e564 ">Fully qualified name of the custom Spark class that
                                         implements the StreamSets Spark Transformer API. Enter the
                                         class name using the following
                                             format:<pre class="pre codeblock">com.streamsets.spark.&lt;custom class&gt;</pre>
@@ -427,11 +453,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d316405e507 ">Init Method Arguments
+                                    <td class="entry" valign="top" width="30%" headers="d347566e561 ">Init Method Arguments
                                         <a class="xref" href="Spark.html#concept_lfl_dvd_1y">
                                             <img class="image" id="task_g1p_gqn_zx__image_h3p_p6v_yq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d316405e510 ">Arguments to pass to the <samp class="ph codeph">init</samp> method in
+                                    <td class="entry" valign="top" width="70%" headers="d347566e564 ">Arguments to pass to the <samp class="ph codeph">init</samp> method in
                                         the custom Spark class. Enter arguments as required by your
                                         custom Spark class.<p class="p">In standalone mode, enter a constant
                                             or an expression for the argument value. In cluster

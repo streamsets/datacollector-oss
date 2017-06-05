@@ -126,15 +126,14 @@
             </ul>
 </div>
 
-        <p class="p">For example, if you are upgrading version 2.3.0.0, copy the Data Collector data directory
-            and rename it as follows: <samp class="ph codeph">/var/lib/sdc2300</samp>. Create a backup of the
-            environment configuration file by renaming the file as follows:
-                <samp class="ph codeph">sdcd-env-2300.sh</samp>.</p>
+        <p class="p">For example, if you are upgrading version <span class="ph">2.6.0.0</span>, copy
+            the Data Collector data directory and rename it as follows: <samp class="ph codeph">/var/lib/sdc<span class="ph">2600</span></samp>. Create a backup of the environment configuration file by renaming the
+            file as follows: <samp class="ph codeph">sdcd-env-<span class="ph">2600</span>.sh</samp>.</p>
 
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -156,8 +155,8 @@
                 <div class="itemgroup info">
                     <pre class="pre codeblock">tar -xzf streamsets-datacollector-&lt;version&gt;-all-rpms.tgz</pre>
 
-                    <div class="p">For example, to extract version 2.5.0.0, use the following
-                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-2.5.0.0-all-rpms.tgz</pre>
+                    <div class="p">For example, to extract version <span class="ph">2.6.0.0</span>, use the following
+                        command:<pre class="pre codeblock">tar -xzf streamsets-datacollector-<span class="ph">2.6.0.0</span>-all-rpms.tgz</pre>
 </div>
 
                 </div>
@@ -175,8 +174,8 @@
                     as needed, use the following command:</span>
                 <div class="itemgroup info"><pre class="pre codeblock">yum localinstall streamsets-datacollector-&lt;version&gt;-1.noarch.rpm</pre>
 For
-                    example, to install version 2.5.0.0, use the following
-                    command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-2.5.0.0-1.noarch.rpm</pre>
+                    example, to install version <span class="ph">2.6.0.0</span>, use the following
+                    command:<pre class="pre codeblock">yum localinstall streamsets-datacollector-<span class="ph">2.6.0.0</span>-1.noarch.rpm</pre>
 </div>
             </li>
 </ol>
@@ -202,8 +201,7 @@ For
         <ol class="ol steps"><li class="li step stepexpand">
                 <span class="ph cmd">Open the environment configuration file that you backed up in the previous
                     version.</span>
-                <div class="itemgroup info">For example, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-2300.sh</samp>
-                    file.</div>
+                <div class="itemgroup info">For example, open the <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env-<span class="ph">2600</span>.sh</samp> file.</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the new version of <span class="ph">Data
@@ -219,7 +217,7 @@ For
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. To enable remote debugging, define debugging options in the SDC_JAVA_OPTS environment variable in the Data Collector environment configuration file.You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -324,9 +322,8 @@ For
                     Collector
                         version:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "&lt;version&gt;"</pre>
 <div class="p">For
-                        example, to list all stage libraries used by Data Collector version 2.3.0.0,
-                        run the following
-                        command:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "2.3.0.0"</pre>
+                        example, to list all stage libraries used by Data Collector version <span class="ph">2.6.0.0</span>, run the following
+                        command:<pre class="pre codeblock">yum list installed | grep "datacollector" | grep "<span class="ph">2.6.0.0</span>"</pre>
 </div>
 </li>
 

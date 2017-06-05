@@ -62,60 +62,28 @@
     </div>
 
 <div class="related-links"></div>
-<div class="topic concept nested1" id="concept_itf_55z_dz">
- <h2 class="title topictitle2">Internal Attributes</h2>
-
- <div class="body conbody">
-  <p class="p"><span class="ph">Data
-                  Collector</span> generates
-            and updates some read-only internal record header attributes as records move from stage
-            to stage. These attributes can be viewed for debugging issues, but cannot be altered by
-            users.</p>
-
-        <div class="p"><span class="ph">Data
-                  Collector</span>
-            uses the following read-only internal record header attributes:<ul class="ul" id="concept_itf_55z_dz__ul_u4t_1wz_dz">
-                <li class="li">stageCreator - The ID of the stage that created the record.</li>
-
-                <li class="li">sourceId - Source of the record. Can include different information based on the
-                    origin type.</li>
-
-                <li class="li">stagesPath - List of stages that processed the record in order, by stage name. </li>
-
-                <li class="li">trackingId - The route the record has taken through the pipeline, starting with
-                    the sourceId, then listing the stages that processed the record.</li>
-
-                <li class="li">previousTrackingId - The tracking Id of the record before it entered the current
-                    stage.</li>
-
-            </ul>
-</div>
-
- </div>
-
-</div>
 <div class="topic concept nested1" id="concept_rd2_ghz_dz">
- <h2 class="title topictitle2">Creating and Updating Header Attributes</h2>
+ <h2 class="title topictitle2">Working with Header Attributes</h2>
 
  <div class="body conbody">
-  <p class="p">Some stages
-            automatically create record header attributes. Others can be quickly configured to
-            create record header attributes. For example, the JDBC Query Consumer has an option on
-            the Advanced tab to create JDBC header attributes. </p>
+  <p class="p">You can use
+            the Expression Evaluator or any scripting processor to create or update record header
+            attributes. For example, the MongoDB destination requires a CRUD operation to be
+            specified in a record header attribute. If the origin providing the data does not
+            generate that information automatically, you can use the Expression Evaluator or
+            scripting processor to set the attribute value.</p>
 
-        <p class="p">You can also use the Expression Evaluator or any scripting processor to create or update
-            record header attributes. You can use these processors to create or update header
-            attributes for downstream stages. For example, the MongoDB destination requires a CRUD
-            operation to be specified in a record header attribute. If the origin providing the data
-            does not generate that information automatically, you can use the Expression Evaluator
-            or scripting processor to set the attribute value.</p>
+        <p class="p">You can also use <a class="xref" href="../Expression_Language/Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">record:attribute functions</a> in any expression to include attribute values in
+            calculations. </p>
 
-        <div class="p">The expression language includes <a class="xref" href="../Expression_Language/Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">record:attribute functions</a> that you can use to work with attributes. <div class="note important"><span class="importanttitle">Important:</span> Record header attributes do not have field paths. When using an
+        <div class="p">
+            <div class="note important"><span class="importanttitle">Important:</span> Record header attributes do not have field paths. When using an
                 attribute in an expression, use just the attribute name, surrounded by quotation
                 marks since attributes are strings, as
                 follows:<pre class="pre codeblock"> ${record:attribute('&lt;attribute name&gt;')}</pre>
 </div>
-</div>
+
+        </div>
 
         <p class="p">For example, the following Expression Evaluator adds the file and offset record header
             attributes created by the Directory origin to the record: </p>
@@ -124,6 +92,157 @@
 
  </div>
 
+<div class="topic concept nested2" id="concept_itf_55z_dz">
+ <h3 class="title topictitle3">Internal Attributes</h3>
+
+ <div class="body conbody">
+  <p class="p"><span class="ph">Data
+                  Collector</span> generates
+            and updates some read-only internal record header attributes as records move from stage
+            to stage. These attributes can be viewed for debugging issues, but can only be updated
+            by <span class="ph">Data
+                  Collector</span>.</p>
+
+        <div class="p">The record:attribute function does not allow access to internal record header attributes.
+            The following table describes the internal record header attributes and the functions
+            that you can use to access the data in the pipeline:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_itf_55z_dz__table_mj1_q2y_rz" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="25%" id="d299693e139">Internal Record Header Attribute</th>
+
+                            <th class="entry" valign="top" width="50%" id="d299693e142">Description</th>
+
+                            <th class="entry" valign="top" width="25%" id="d299693e145">Related Function </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="25%" headers="d299693e139 ">stageCreator</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d299693e142 ">The ID of the stage that created the record.</td>
+
+                            <td class="entry" valign="top" width="25%" headers="d299693e145 ">record:creator()</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="25%" headers="d299693e139 ">sourceId</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d299693e142 ">Source of the record. Can include different information based on
+                                the origin type.</td>
+
+                            <td class="entry" valign="top" width="25%" headers="d299693e145 ">record:id()</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="25%" headers="d299693e139 ">stagesPath</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d299693e142 ">List of stages that processed the record in order, by stage name. </td>
+
+                            <td class="entry" valign="top" width="25%" headers="d299693e145 ">record:path()</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="25%" headers="d299693e139 ">trackingId</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d299693e142 ">The route the record has taken through the pipeline, starting
+                                with the sourceId, then listing the stages that processed the
+                                record.</td>
+
+                            <td class="entry" valign="top" width="25%" headers="d299693e145 ">n/a</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="25%" headers="d299693e139 ">previousTrackingId</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d299693e142 ">The tracking Id of the record before it entered the current
+                                stage.</td>
+
+                            <td class="entry" valign="top" width="25%" headers="d299693e145 ">n/a</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="25%" headers="d299693e139 ">errorStage</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d299693e142 ">The stage that generated the error. <p class="p">In error records
+                                only.</p>
+</td>
+
+                            <td class="entry" valign="top" width="25%" headers="d299693e145 ">
+                                <p class="p">record:errorStage() </p>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="25%" headers="d299693e139 ">errorCode</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d299693e142 ">The error code.<p class="p">In error records only.</p>
+</td>
+
+                            <td class="entry" valign="top" width="25%" headers="d299693e145 ">record:errorCode()</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="25%" headers="d299693e139 ">errorMessage</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d299693e142 ">The error message. <p class="p">In error records only.</p>
+</td>
+
+                            <td class="entry" valign="top" width="25%" headers="d299693e145 ">
+                                <p class="p">record:errorMessage() </p>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="25%" headers="d299693e139 ">errorTimestamp</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d299693e142 ">The time that the error occurred.<p class="p">In error records
+                                only.</p>
+</td>
+
+                            <td class="entry" valign="top" width="25%" headers="d299693e145 ">
+                                <p class="p">record:errorTime() </p>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="25%" headers="d299693e139 ">errorStackTrace</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d299693e142 ">The stack trace associated with the error.<p class="p">In error records
+                                    only.</p>
+</td>
+
+                            <td class="entry" valign="top" width="25%" headers="d299693e145 ">n/a</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+</div>
+
+ </div>
+
+</div>
 </div>
 <div class="topic concept nested1" id="concept_t1l_xwf_2z">
  <h2 class="title topictitle2">Viewing Attributes in Data Preview</h2>
@@ -136,7 +255,7 @@
         <p class="p">For example, the following image shows a record generated by the
             Directory origin in data preview. </p>
 
-        <p class="p"><img class="image" id="concept_t1l_xwf_2z__d46449e132" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
+        <p class="p"><img class="image" id="concept_t1l_xwf_2z__d53856e248" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
 
         <p class="p"><span class="ph">The "Record Header" list displays the set of
                 read-only internal attributes in the record at this point of the pipeline.</span>
@@ -157,9 +276,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d270205e203">Stage</th>
+                            <th class="entry" valign="top" width="30%" id="d299693e357">Stage</th>
 
-                            <th class="entry" valign="top" width="70%" id="d270205e206">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d299693e360">Description</th>
 
                         </tr>
 
@@ -167,9 +286,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Amazon S3 origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Amazon S3 origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Can be configured to include system-defined and user-defined
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Can be configured to include system-defined and user-defined
                                     object metadata in record header attributes.
                                 <a class="xref" href="../Origins/AmazonS3.html#concept_inh_qjx_yw">
                                     <img class="image" id="concept_ih1_3f1_2z__image_kjt_3m4_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
@@ -177,9 +296,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Directory origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Directory origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes <span class="ph">information about the
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes <span class="ph">information about the
                     origins of the record</span> in record header attributes.
                                 <a class="xref" href="../Origins/Directory.html#concept_tlj_3g1_2z">
                                     <img class="image" id="concept_ih1_3f1_2z__image_cy1_jm4_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
@@ -191,9 +310,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">File Tail origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">File Tail origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes <span class="ph">information about the
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes <span class="ph">information about the
                     origins of the record</span>
                                 <a class="xref" href="../Origins/FileTail.html#concept_tlj_3g1_2z" title="A tag is an optional record header attribute that you can define for sets of files. In the pipeline, you can use a function to return the value of the tag attribute.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_j1n_ycv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Can be configured to use
@@ -207,26 +326,26 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">HTTP Client origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">HTTP Client origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes response header fields in record header attributes.<a class="xref" href="../Origins/HTTPClient.html#concept_ccn_jzt_zw">
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes response header fields in record header attributes.<a class="xref" href="../Origins/HTTPClient.html#concept_ccn_jzt_zw">
                                     <img class="image" id="concept_ih1_3f1_2z__image_wsz_k2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">JDBC Multitable Consumer origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">JDBC Multitable Consumer origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes table and data type information in record header
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes table and data type information in record header
                                 attributes. <a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_xrx_11y_4y">
                                     <img class="image" id="concept_ih1_3f1_2z__image_ezd_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">JDBC Query Consumer origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">JDBC Query Consumer origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Can be configured to include table and data type information in
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Can be configured to include table and data type information in
                                 record header attributes. <a class="xref" href="../Origins/JDBCConsumer.html#concept_egw_d4c_kw">
                                     <img class="image" id="concept_ih1_3f1_2z__image_wfh_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Includes the CRUD operation
                                     type in the sdc.operation.type record header attribute when
@@ -237,35 +356,35 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Kafka Consumer origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Kafka Consumer origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes information about the origins of the record in record
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes information about the origins of the record in record
                                 header attributes. <a class="xref" href="../Origins/KConsumer.html#concept_tlj_3g1_2z">
                                     <img class="image" id="concept_ih1_3f1_2z__image_mgp_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">MongoDB Oplog origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">MongoDB Oplog origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes CRUD information in CDC header attributes. <a class="xref" href="../Origins/MongoDBOplog.html#concept_isy_thx_ty">
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes CRUD information in CDC header attributes. <a class="xref" href="../Origins/MongoDBOplog.html#concept_isy_thx_ty">
                                     <img class="image" id="concept_ih1_3f1_2z__image_xts_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">MySQL Binary Log origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">MySQL Binary Log origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes the CRUD operation type in the sdc.operation.type header
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes the CRUD operation type in the sdc.operation.type header
                                 attribute. <a class="xref" href="../Origins/MySQLBinaryLog.html#concept_rfd_15l_dy">
                                     <img class="image" id="concept_ih1_3f1_2z__image_orv_l2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Oracle CDC Client origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Oracle CDC Client origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes CRUD and CDC information in record header attributes.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes CRUD and CDC information in record header attributes.
                                     <a class="xref" href="../Origins/OracleCDC.html#concept_x4h_m42_5y"> <img class="image" id="concept_ih1_3f1_2z__image_ep2_xcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Includes event header
                                     attributes when generating events. <a class="xref" href="../Origins/OracleCDC.html#concept_cbz_sz1_vy">
                                         <img class="image" id="concept_ih1_3f1_2z__image_asz_wcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
@@ -274,9 +393,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Salesforce origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Salesforce origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes Salesforce information about the origins of the record
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes Salesforce information about the origins of the record
                                 in record header attributes. <a class="xref" href="../Origins/Salesforce.html#concept_psx_1wg_cy" title="The Salesforce origin generates Salesforce record header attributes that provide additional information about each record, such as the source objects for the record. The origin receives these details from Salesforce.">
                                     <img class="image" id="concept_ih1_3f1_2z__image_rkv_wcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Includes the CRUD operation
                                     type in the sdc.operation.type header attribute. <a class="xref" href="../Origins/Salesforce.html#concept_yns_y2m_5y">
@@ -286,18 +405,18 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Expression Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Expression Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Can be configured to create or update record header attributes.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Can be configured to create or update record header attributes.
                                     <a class="xref" href="../Processors/Expression.html#concept_qf3_mfq_f5">
                                     <img class="image" id="concept_ih1_3f1_2z__image_fxq_144_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Groovy Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Groovy Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">
                                 <p class="p">Can be configured to create or update record header attributes.
                                         <a class="xref" href="../Processors/Groovy.html#concept_uw4_kqw_1y">
                                         <img class="image" id="concept_ih1_3f1_2z__image_k22_wcv_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></p>
@@ -310,18 +429,18 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Hive Metadata processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Hive Metadata processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Generates record header attributes for record-based writes as
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Generates record header attributes for record-based writes as
                                 part of the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift Synchronization Solution for Hive</a>. <a class="xref" href="../Processors/HiveMetadata.html#concept_g3p_sss_dw">
                                     <img class="image" id="concept_ih1_3f1_2z__image_u1j_m2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">HTTP Client processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">HTTP Client processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes response header fields in record header attributes.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes response header fields in record header attributes.
                                     <a class="xref" href="../Processors/HTTPClient.html#concept_ekz_wrz_zw">
                                     <img class="image" id="concept_ih1_3f1_2z__image_fqg_m2v_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                             </td>
@@ -329,9 +448,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">JavaScript Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">JavaScript Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Can be configured to create or update record header attributes.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Can be configured to create or update record header attributes.
                                     <a class="xref" href="../Processors/JavaScript.html#concept_sh1_khh_cy">
                                     <img class="image" id="concept_ih1_3f1_2z__image_r5p_xc4_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Includes event header
                                     attributes when generating events. <a class="xref" href="../Processors/JavaScript.html#concept_sh1_khh_cy">
@@ -341,9 +460,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Jython Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Jython Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Can be configured to create or update record header attributes.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Can be configured to create or update record header attributes.
                                     <a class="xref" href="../Processors/Jython.html#concept_s2k_qhh_cy">
                                     <img class="image" id="concept_ih1_3f1_2z__image_z4j_byn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a><p class="p">Includes event header
                                     attributes when generating events. <a class="xref" href="../Processors/Jython.html#concept_zhd_chh_cy">
@@ -353,63 +472,63 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Hadoop FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Hadoop FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes event header attributes when generating events.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes event header attributes when generating events.
                                 <a class="xref" href="../Destinations/HadoopFS-destination.html#concept_dmx_1ln_qx">
                                     <img class="image" id="concept_ih1_3f1_2z__image_tkv_m44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Hive Metastore destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Hive Metastore destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes event header attributes when generating events.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes event header attributes when generating events.
                                 <a class="xref" href="../Destinations/HiveMetastore.html#concept_x4p_fyc_rx">
                                     <img class="image" id="concept_ih1_3f1_2z__image_b11_n44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Local FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Local FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes event header attributes when generating events.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes event header attributes when generating events.
                                 <a class="xref" href="../Destinations/LocalFS.html#concept_tyc_scc_rx">
                                     <img class="image" id="concept_ih1_3f1_2z__image_ksd_n44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">MapR FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">MapR FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes event header attributes when generating events.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes event header attributes when generating events.
                                 <a class="xref" href="../Destinations/MapRFS.html#concept_z15_qcc_rx">
                                     <img class="image" id="concept_ih1_3f1_2z__image_vk3_n44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">HDFS File Metadata executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">HDFS File Metadata executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes event header attributes when generating events.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes event header attributes when generating events.
                                 <a class="xref" href="../Executors/HDFSMetadata.html#concept_omr_3tk_rx">
                                     <img class="image" id="concept_ih1_3f1_2z__image_lbm_n44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">Hive Query executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">Hive Query executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes event header attributes when generating events.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes event header attributes when generating events.
                                 <a class="xref" href="../Executors/HiveQuery.html#concept_iwg_r2p_my">
                                     <img class="image" id="concept_ih1_3f1_2z__image_myq_n44_2z" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d270205e203 ">MapReduce executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d299693e357 ">MapReduce executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d270205e206 ">Includes event header attributes when generating events.
+                            <td class="entry" valign="top" width="70%" headers="d299693e360 ">Includes event header attributes when generating events.
                                 <a class="xref" href="../Executors/MapReduce.html#concept_vjr_cn5_sx">
                                     <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 

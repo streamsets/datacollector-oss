@@ -35,10 +35,10 @@
             record with the XML Parser processor. </p>
 
         <p class="p">You can use the XML data format and the XML Parser to process well-formed XML documents.
-                <span class="ph">If you want to
-                                          process invalid XML documents, you can try using the text
-                                          data format with custom delimiters. For more information,
-                                          see <a class="xref" href="TextCDelim.html#concept_okt_kmg_jx">Processing XML Data with Custom Delimiters</a>.</span></p>
+                <span class="ph">If
+                                                you want to process invalid XML documents, you can
+                                                try using the text data format with custom
+                                                delimiters. For more information, see <a class="xref" href="TextCDelim.html#concept_okt_kmg_jx">Processing XML Data with Custom Delimiters</a>.</span></p>
 
         <div class="p"><span class="ph">Data
                   Collector</span>
@@ -159,7 +159,7 @@ Processing
 
         <p class="p">The following image shows a Directory origin configured to process this data:</p>
 
-        <p class="p"><img class="image" id="concept_ilc_r3g_2y__image_nc4_wvm_gy" src="../Graphics/XML-Delim-Namespace.png" height="210" width="583" /></p>
+        <p class="p"><img class="image" id="concept_ilc_r3g_2y__image_nc4_wvm_gy" src="../Graphics/XML-Delim-Namespace.png" height="219" width="531" /></p>
 
  </div>
 
@@ -254,7 +254,7 @@ Processing
 
         <p class="p">The following image shows a Directory origin configured to process this data:</p>
 
-        <p class="p"><img class="image" id="concept_mkk_3zj_dy__image_i5z_5ml_dy" src="../Graphics/XML-Namespace.png" height="225" width="541" /></p>
+        <p class="p"><img class="image" id="concept_mkk_3zj_dy__image_i5z_5ml_dy" src="../Graphics/XML-Namespace.png" height="219" width="531" /></p>
 
     </div>
 
@@ -477,6 +477,70 @@ The following expression selects every
 
 </div>
 </div>
+<div class="topic concept nested1" id="concept_w3k_1ch_qz">
+ <h2 class="title topictitle2">Including Field XPaths and Namespaces</h2>
+
+ <div class="body conbody">
+  <p class="p">You can include field
+            XPath expressions and namespaces in the record by enabling the Include Field XPaths
+            property. </p>
+
+        <p class="p">When enabled, the record includes the XPath expression for each field as a field
+            attribute and includes each namespace in an xmlns record header attribute. By default,
+            this information is not included in the record.</p>
+
+        <div class="p">For example, say you have the following XML document:
+            <pre class="pre codeblock">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;bookstore xmlns:prc="http://books.com/price"&gt;
+   &lt;b:book xmlns:b="http://books.com/book"&gt;
+      &lt;title lang="en"&gt;Harry Potter&lt;/title&gt;
+      &lt;prc:price&gt;29.99&lt;/prc:price&gt;
+   &lt;/b:book&gt;
+   &lt;b:book xmlns:b="http://books.com/book"&gt;
+      &lt;title lang="en_us"&gt;Learning XML&lt;/title&gt;
+      &lt;prc:price&gt;39.95&lt;/prc:price&gt;
+   &lt;/b:book&gt;
+&lt;/bookstore&gt;</pre>
+</div>
+
+        <p class="p">When you use <samp class="ph codeph">/*[1]/*</samp> as the delimiter element and enable the Include
+            Field XPaths property, <span class="ph">Data
+                  Collector</span>
+            generates the following records with the highlighted field XPath expressions and
+            namespace record header attributes:</p>
+
+        <p class="p"><img class="image" id="concept_w3k_1ch_qz__image_qlw_hwh_qz" src="../Graphics/XML-FieldXPath.png" height="364" width="283" /></p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes and record header attributes are
+                        written to destination systems automatically only when you use the SDC RPC
+                        data format in destinations. For more information about working with field
+                        attributes and record header attributes, and how to include them in records,
+                        see <a class="xref" href="FieldAttributes.html#concept_xfm_wtp_1z" title="Field attributes are attributes that provide additional information about each field that you can use in pipeline logic, as needed.">Field Attributes</a> and <a class="xref" href="RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</span></div>
+
+        </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_jll_4wh_qz">
+ <h2 class="title topictitle2">XML Attributes and Namespace Declarations</h2>
+
+ <div class="body conbody">
+  <p class="p">Parsed XML includes XML attributes and namespace
+            declarations in the record as individual fields by default. You can use the Output Field
+            Attributes property to place the information in field attributes instead.</p>
+
+        <p class="p">Place the information in field attributes to avoid adding unnecessary information in the
+            record fields. </p>
+
+        <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes are automatically included in
+                        records written to destination systems only when you use the SDC RPC data
+                        format in the destination.</span> For more information about working with field attributes, see <a class="xref" href="FieldAttributes.html#concept_xfm_wtp_1z" title="Field attributes are attributes that provide additional information about each field that you can use in pipeline logic, as needed.">Field Attributes</a>.</div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_tzk_1gk_dy">
  <h2 class="title topictitle2">Parsed XML</h2>
 
@@ -512,7 +576,7 @@ The following expression selects every
 
         <p class="p">Then, you define both namespaces in the origin. </p>
 
-        <p class="p">When processing the XML document, <span class="ph">Data
+        <p class="p">When processing the XML document using default XML properties, <span class="ph">Data
                   Collector</span>
             produces two records, as shown in the following data preview of the origin:</p>
 

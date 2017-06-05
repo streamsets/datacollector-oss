@@ -121,6 +121,24 @@
                     </dd>
                 </dlentry>
                 <dlentry>
+                    <dt>Dataflow Performance Manager (DPM)</dt>
+                    <dd>
+                        <ul id="ul_pht_hld_d1b">
+                            <li><xref href="../DPM/AggregatedStatistics.dita#concept_h2q_mb5_xw"
+                                    >Pipeline statistics</xref> - You can now configure a pipeline
+                                to <xref
+                                    href="../DPM/AggStatistics_DirectlyToDPM.dita#concept_abc_1w1_c1b"
+                                    >write statistics directly to DPM</xref>. Write statistics
+                                directly to DPM when you run a job for the pipeline on a single Data
+                                Collector. <p>When you run a job on multiple Data Collectors, a
+                                    remote pipeline instance runs on each of the Data Collectors. To
+                                    view aggregated statistics for the job within DPM, you must
+                                    configure the pipeline to write the statistics to a Kafka
+                                    cluster, Amazon Kinesis Streams, or SDC RPC.</p></li>
+                        </ul>
+                    </dd>
+                </dlentry>
+                <dlentry>
                     <dt>Origins</dt>
                     <dd>
                         <ul id="ul_xb4_bty_11b">
@@ -206,13 +224,13 @@
                                             >Hive Metadata processor.</xref>
                                         <p>Since the Hive Metastore previously supported only Avro
                                             data, there is no upgrade impact. </p></li>
-                                    <li dir="ltr">
-                                        <p><xref href="../Destinations/Kudu.dita#concept_chy_xxg_4v"
-                                                >Kudu destination enhancement</xref> - You can use
-                                            the new Mutation Buffer Space property to set the buffer
-                                            size that the Kudu client uses to write each batch.</p>
-                                    </li>
                                 </ul></li>
+                            <li dir="ltr">
+                                <p><xref href="../Destinations/Kudu.dita#concept_chy_xxg_4v">Kudu
+                                        destination enhancement</xref> - You can use the new
+                                    Mutation Buffer Space property to set the buffer size that the
+                                    Kudu client uses to write each batch.</p>
+                            </li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -293,30 +311,23 @@
                                         >TLS property enhancements</xref> - Stages that support
                                     SSL/TLS now provide the following enhanced set of properties
                                     that enable more specific configuration:<ul id="ul_v5g_w5y_11b">
-                                        <li><xref
-                                                href="../Pipeline_Configuration/SSL-TLS-KeystoreTruststore.dita#concept_kqb_rqf_5z"
-                                                >Keystore and truststore type</xref> - You can now
-                                            choose between Java Keystore (JKS) and PKCS-12 (p-12).
+                                        <li>Keystore and truststore type - You can now choose
+                                            between Java Keystore (JKS) and PKCS-12 (p-12).
                                             Previously, Data Collector only supported JKS.</li>
-                                        <li><xref
-                                                href="../Pipeline_Configuration/SSL-TLS-TransferProtocols.dita#concept_mvs_cxf_5z"
-                                                >Transport protocols</xref> - You can now specify
-                                            the transport protocols that you want to allow. By
-                                            default, Data Collector allows only TLSv1.2. </li>
-                                        <li><xref
-                                                href="../Pipeline_Configuration/SSL-TLS-CipherSuites.dita#concept_cwx_dyf_5z"
-                                                >Cipher suites</xref> - You can now specify the
-                                            cipher suites to allow. Data Collector provides a modern
-                                            set of default cipher suites. Previously, Data Collector
-                                            always allowed the default cipher suites for the
-                                            JRE.</li>
+                                        <li>Transport protocols - You can now specify the transport
+                                            protocols that you want to allow. By default, Data
+                                            Collector allows only TLSv1.2. </li>
+                                        <li>Cipher suites - You can now specify the cipher suites to
+                                            allow. Data Collector provides a modern set of default
+                                            cipher suites. Previously, Data Collector always allowed
+                                            the default cipher suites for the JRE.</li>
                                     </ul>To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                     existing pipelines are preserved during upgrade. </p>
                             </li>
                             <li>
                                 <p><xref
                                         href="../Cluster_Mode/ClusterPipelines.dita#concept_hmh_kfn_1s"
-                                        >Cluster mode</xref> enhancement - Cluster streaming mode
+                                        >Cluster mode enhancement</xref> - Cluster streaming mode
                                     now supports Spark 2.x. For information about using Spark 2.x
                                     stages with cluster mode, see <xref
                                         href="../Cluster_Mode/StageLimitations.dita#concept_pdf_r5y_fz"

@@ -66,11 +66,14 @@
             names:<pre class="pre codeblock">/$1_invalid_character_removed_$2</pre>
 </div>
 
-        <div class="note note"><span class="notetitle">Note:</span> To include regex special characters such as the pipe symbol (|) in field names, use
-            single quotation marks to surround the field name. For example, if you have a field
-            named <samp class="ph codeph">tag|attr</samp>, enter the field name as follows:
-            <pre class="pre codeblock">/'tag|attr'</pre>
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> To include regex special characters such as the pipe symbol (|) in field names,
+                use single quotation marks to surround the field name. For example, if you have a
+                field named <samp class="ph codeph">tag|attr</samp>, enter the field name as follows:
+                <pre class="pre codeblock">/'tag|attr'</pre>
 </div>
+
+        </div>
 
  </div>
 
@@ -87,14 +90,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_y5g_4hh_ht__d48131e3993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_y5g_4hh_ht__d55638e4128" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d284829e128">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d315023e131">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d284829e131">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d315023e134">Description</th>
 
                                 </tr>
 
@@ -102,24 +105,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d284829e128 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d315023e131 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d284829e131 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d284829e128 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d284829e131 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d315023e134 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d284829e128 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_y5g_4hh_ht__d48131e4039" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d315023e131 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d284829e131 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d315023e134 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d315023e131 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_y5g_4hh_ht__d55638e4174" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d315023e134 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -131,10 +134,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d284829e128 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_y5g_4hh_ht__d48131e4055" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d315023e131 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_y5g_4hh_ht__d55638e4190" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d284829e131 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d315023e134 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -145,10 +148,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d284829e128 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_y5g_4hh_ht__d48131e4072" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d315023e131 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_y5g_4hh_ht__d55638e4207" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d284829e131 ">Error record handling for the stage: <ul class="ul" id="task_y5g_4hh_ht__d48131e4076">
+                                    <td class="entry" valign="top" width="70%" headers="d315023e134 ">Error record handling for the stage: <ul class="ul" id="task_y5g_4hh_ht__d55638e4211">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -179,9 +182,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d284829e248">Field Renamer Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d315023e251">Field Renamer Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d284829e251">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d315023e254">Description</th>
 
                                 </tr>
 
@@ -189,9 +192,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d284829e248 ">Fields to Rename</td>
+                                    <td class="entry" valign="top" width="30%" headers="d315023e251 ">Fields to Rename</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d284829e251 ">To rename fields, enter or select the fields to rename
+                                    <td class="entry" valign="top" width="70%" headers="d315023e254 ">To rename fields, enter or select the fields to rename
                                         and enter the new name for the field. Click
                                             <span class="ph uicontrol">Add</span> to rename additional fields.
                                             <p class="p">You can use regex in both properties to rename sets
@@ -203,21 +206,27 @@
                                             wildcard to represent all array indices and map
                                             elements. <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                             </a></p>
-<div class="note note"><span class="notetitle">Note:</span> You cannot use regex to select a subset
-                                            of array indices and map elements. For example, if the
+<div class="p">You cannot use regex to select a subset of
+                                            array indices and map elements. For example, if the
                                             Division array contains 20 indices, you cannot use the
                                             following regex to rename the field path for the first
                                             10
-                                        indices:<pre class="pre codeblock">/Division[0-9]</pre>
+                                            indices:<pre class="pre codeblock">/Division[0-9]</pre>
 </div>
+<div class="note note"><span class="notetitle">Note:</span> If
+                                            you rename fields within a list or list-map field, the
+                                            processor lists the renamed fields at the end of the
+                                            list or list-map field. You can use a Field Order
+                                            processor to reorder fields in a list-map
+                                        field.</div>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d284829e248 ">Source Field Does Not Exist</td>
+                                    <td class="entry" valign="top" width="30%" headers="d315023e251 ">Source Field Does Not Exist</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d284829e251 ">Behavior when a source field does not exist in a
+                                    <td class="entry" valign="top" width="70%" headers="d315023e254 ">Behavior when a source field does not exist in a
                                             record:<ul class="ul" id="task_y5g_4hh_ht__ul_uhd_115_jt">
                                             <li class="li">Continue - Continues processing the record, ignoring
                                                 missing source fields.</li>
@@ -231,9 +240,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d284829e248 ">Target Field Already Exists</td>
+                                    <td class="entry" valign="top" width="30%" headers="d315023e251 ">Target Field Already Exists</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d284829e251 ">Behavior when the record includes a field name that
+                                    <td class="entry" valign="top" width="70%" headers="d315023e254 ">Behavior when the record includes a field name that
                                         matches a proposed target field:<ul class="ul" id="task_y5g_4hh_ht__ul_d3f_5fg_lw">
                                             <li class="li">Replace - Replaces the existing field with the
                                                 renamed field.</li>
@@ -253,9 +262,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d284829e248 ">Multiple Source Field Matches</td>
+                                    <td class="entry" valign="top" width="30%" headers="d315023e251 ">Multiple Source Field Matches</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d284829e251 ">Behavior when a source field matches more than one source
+                                    <td class="entry" valign="top" width="70%" headers="d315023e254 ">Behavior when a source field matches more than one source
                                         field expression:<ul class="ul" id="task_y5g_4hh_ht__ul_csy_wnn_lw">
                                             <li class="li">Continue - Continues processing the record, skipping
                                                 fields with multiple matches.</li>
