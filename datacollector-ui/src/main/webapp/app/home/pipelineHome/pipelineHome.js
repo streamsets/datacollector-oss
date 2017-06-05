@@ -279,6 +279,8 @@ angular
        *
        */
       previewPipeline: function (showPreviewConfig) {
+        //Clear Previous errors
+        $rootScope.common.errors = [];
         if (!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe || showPreviewConfig) {
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
           var modalInstance = $modal.open({
@@ -1890,9 +1892,10 @@ angular
       }
     });
 
-    errorsWatchListener = $rootScope.$watch('common.errors', function() {
+    errorsWatchListener = $rootScope.$watch('common.errors', function(newValue, oldValue) {
       var commonErrors = $rootScope.common.errors;
-      if (commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
+      if ((commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) ||
+        (oldValue && oldValue.length && commonErrors && commonErrors.length === 0)){
         $scope.refreshGraph();
       }
     });

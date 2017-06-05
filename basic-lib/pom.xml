@@ -39,6 +39,7 @@
     <h2.version>1.4.187</h2.version>
     <jersey.version>2.23.1</jersey.version>
     <joda.version>2.8</joda.version>
+    <milo.version>0.1.3</milo.version>
     <xerces.version>2.11.0</xerces.version>
     <jetty.version>9.4.2.v20170220</jetty.version>
     <paho.version>1.0.2</paho.version>
@@ -221,6 +222,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.eclipse.milo</groupId>
+      <artifactId>sdk-client</artifactId>
+      <version>${milo.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.iq80.snappy</groupId>
       <artifactId>snappy</artifactId>
       <version>${snappy.version}</version>
@@ -286,6 +293,12 @@
     </dependency>
 
     <!-- Test Dependencies -->
+    <dependency>
+      <groupId>org.eclipse.milo</groupId>
+      <artifactId>sdk-server</artifactId>
+      <version>${milo.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

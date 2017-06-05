@@ -37,3 +37,4 @@ dependency-reduced-pom.xml
 
 container/runInfo
 container/var
+datacollector-ui/package-lock.json

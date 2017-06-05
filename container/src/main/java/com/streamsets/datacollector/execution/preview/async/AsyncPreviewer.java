@@ -138,7 +138,7 @@ public class AsyncPreviewer implements Previewer {
 
   @Override
   public PreviewOutput getOutput() {
-    return (future.isDone()) ? syncPreviewer.getOutput() : null;
+    return (future.isDone() || syncPreviewer.getOutput() != null) ? syncPreviewer.getOutput() : null;
   }
 
   private void scheduleTimeout(long timeoutMillis) {
