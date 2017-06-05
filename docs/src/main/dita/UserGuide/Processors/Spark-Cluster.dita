@@ -46,7 +46,10 @@
             /></p>
         <p>Use the following rules and guidelines when you write the Spark application and configure
             the processor for a cluster pipeline:<ul id="ul_dg5_nmv_jz">
-                <li>To maintain the state of each RDD, use the <codeph>RDD.checkpoint()</codeph> or
+                <li>Ensure that the Spark version you use to build the application matches the Spark
+                    version used by the cluster and the Spark Evaluator stage library.</li>
+                <li>To maintain the states of the RDDs that are used more than once in the
+                    application, use the <codeph>RDD.checkpoint()</codeph> or
                         <codeph>RDD.cache()</codeph> method in your custom Spark application. When
                     you checkpoint or cache the RDDs, the Spark Transformer can access the RDDs from
                     previous batches.<p>The Spark Evaluator processor cleans up checkpoints when the

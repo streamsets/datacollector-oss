@@ -23,22 +23,28 @@
                     <dt>Installation</dt>
                     <dd>
                         <ul id="ul_s2s_lky_11b">
-                            <li>MapR prerequisites - You can now run the <codeph>setup-mapr</codeph>
-                                command in interactive or non-interactive mode. In interactive mode,
-                                the command prompts you for the MapR version and home directory. In
-                                non-interactive mode, you define the MapR version and home directory
-                                in environment variables before running the command.</li>
+                            <li><xref
+                                    href="../Installation/MapR-Prerequisites.dita#concept_jgs_qpg_2v"
+                                    >MapR prerequisites</xref> - You can now run the
+                                    <codeph>setup-mapr</codeph> command in interactive or
+                                non-interactive mode. In interactive mode, the command prompts you
+                                for the MapR version and home directory. In non-interactive mode,
+                                you define the MapR version and home directory in environment
+                                variables before running the command.</li>
                         </ul>
                     </dd>
                 </dlentry>
                 <dlentry>
                     <dt>Stage Libraries</dt>
-                    <dd>Data Collector now supports the following stage libraries:<ul
-                            id="ul_zcv_4ky_11b">
+                    <dd>Data Collector now supports the following <xref
+                            href="../Installation/AvailableStageLibraries.dita#concept_evs_xkm_s5"
+                            >stage libraries</xref>:<ul id="ul_zcv_4ky_11b">
                             <li dir="ltr">
                                 <p dir="ltr">Hortonworks version 2.6 distribution of Apache
                                     Hadoop</p>
                             </li>
+                            <li>Cloudera distribution of Spark 2.1</li>
+                            <li>MapR distribution of Spark 2.1</li>
                         </ul></dd>
                 </dlentry>
                 <dlentry>
@@ -48,10 +54,10 @@
                                     href="../Hive_Drift_Solution/ParquetProcessing.dita#concept_ndg_3zw_vz"
                                     >Parquet support</xref> - You can now use the <xref
                                     href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"
-                                    >Drift Synchronization for Hive</xref> to generate Parquet
-                                files. Previously, the Data Synchronization Solution supported only
-                                Avro data. This enhancement includes the following updates:<ul
-                                    id="ul_dt1_sky_11b">
+                                    >Drift Synchronization Solution for Hive</xref> to generate
+                                Parquet files. Previously, the Data Synchronization Solution
+                                supported only Avro data. This enhancement includes the following
+                                    updates:<ul id="ul_dt1_sky_11b">
                                     <li><xref
                                             href="../Processors/HiveMetadata.dita#concept_rz5_nft_zv"
                                             >Hive Metadata processor</xref> data format property -
@@ -65,7 +71,7 @@
                                         that information is now configured in the Hive Metadata
                                         processor. </li>
                                 </ul></li>
-                        </ul>See the documentation <xref
+                        </ul>See the documentation for <xref
                             href="../Hive_Drift_Solution/Implementation.dita#concept_y5w_dj3_fw"
                             >implementation details</xref> and a <xref
                             href="../Hive_Drift_Solution/CaseStudy-Parquet.dita#concept_vl3_v2f_zz"
@@ -77,8 +83,11 @@
                             href="../Multithreaded_Pipelines/MultithreadedPipelines_Overview.dita#concept_zpp_2xc_py"
                             >multithreaded framework</xref> includes the following enhancements:<ul
                             id="ul_a2d_4ry_11b">
-                            <li>Origins for multithreaded pipelines - You can now use the following
-                                origins to create multithreaded pipelines:<ul id="ul_efl_4ry_11b">
+                            <li><xref
+                                    href="../Multithreaded_Pipelines/Origins.dita#concept_wcz_tpd_py"
+                                    >Origins for multithreaded pipelines</xref> - You can now use
+                                the following origins to create multithreaded pipelines:<ul
+                                    id="ul_efl_4ry_11b">
                                     <li dir="ltr">
                                         <p dir="ltr"><xref
                                                 href="../Origins/CoAPServer.dita#concept_wfy_ghn_sz"
@@ -126,9 +135,10 @@
                                 connections, and then processes the incoming data. The origin can
                                 process NetFlow, syslog, and most Data Collector data formats as
                                 separated records.</li>
-                            <li>SFTP/FTP Client origin enhancement - You can now specify the first
-                                file to process. This enables you to skip processing files with
-                                earlier timestamps. </li>
+                            <li><xref href="../Origins/SFTP-FirstFile.dita#concept_g5p_5ks_b1b"
+                                    >SFTP/FTP Client origin enhancement</xref> - You can now specify
+                                the first file to process. This enables you to skip processing files
+                                with earlier timestamps. </li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -136,14 +146,20 @@
                     <dt>Processors</dt>
                     <dd>
                         <ul id="ul_dvb_jty_11b">
-                            <li>Groovy, JavaScript, and Jython Evaluator processors enhancements:<ul
-                                    id="ul_e4s_jty_11b">
+                            <li><xref href="../Processors/Groovy.dita#concept_ldh_sct_gv"
+                                    >Groovy</xref>, <xref
+                                    href="../Processors/JavaScript.dita#concept_n2p_jgf_lr"
+                                    >JavaScript</xref>, and <xref
+                                    href="../Processors/Jython.dita#concept_a1h_lkf_lr">Jython
+                                    Evaluator</xref> processors enhancements:<ul id="ul_e4s_jty_11b">
                                     <li>You can now include some methods of the sdcFunctions
                                         scripting object in the initialization and destroy scripts
                                         for the processors.</li>
-                                    <li>You can now access pipeline constants through scripts.</li>
+                                    <li>You can now use runtime parameters in the code developed for
+                                        a Groovy Evaluator processor.</li>
                                 </ul></li>
-                            <li>Hive Metadata processor enhancements:<ul id="ul_v3b_lty_11b">
+                            <li><xref href="../Processors/HiveMetadata.dita#concept_rz5_nft_zv">Hive
+                                    Metadata processor enhancements</xref>:<ul id="ul_v3b_lty_11b">
                                     <li>The Hive Metadata processor can now <xref
                                             href="../Hive_Drift_Solution/ParquetProcessing.dita#concept_ndg_3zw_vz"
                                             >process Parquet data as part of the Drift
@@ -153,15 +169,21 @@
                                     <li>You can now configure an expression that defines comments
                                         for generated columns. </li>
                                 </ul></li>
-                            <li>JDBC Lookup processor enhancements:<ul id="ul_vls_4ty_11b">
+                            <li><xref href="../Processors/JDBCLookup.dita#concept_ysc_ccy_hw">JDBC
+                                    Lookup processor enhancements</xref>:<ul id="ul_vls_4ty_11b">
                                     <li>The JDBC Lookup processor can now return multiple values.
                                         You can now configure the lookup to return the first value
                                         or to return all matches as separate records. </li>
-                                    <li>When you monitor a pipeline that includes the JDBC Lookup
-                                        processor, you can now view stage statistics about the
-                                        number of queries the processor makes and the average time
-                                        of the queries.</li>
+                                    <li>When you <xref
+                                            href="../Processors/JDBCLookup-Monitoring.dita#concept_k3l_hrd_wz"
+                                            >monitor a pipeline that includes the JDBC Lookup
+                                            processor</xref>, you can now view stage statistics
+                                        about the number of queries the processor makes and the
+                                        average time of the queries.</li>
                                 </ul></li>
+                            <li><xref href="../Processors/Spark-Versions.dita#concept_nbj_1jb_c1b"
+                                    >Spark Evaluator enhancement</xref> - The Spark Evaluator now
+                                supports Spark 2.x.</li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -172,19 +194,23 @@
                             <li><xref href="../Destinations/CoAPClient.dita#concept_hw5_s3n_sz">New
                                     CoAP Client destination</xref> - A destination that writes to a
                                 CoAP endpoint.</li>
-                            <li>Hive Metastore destination enhancements:<ul id="ul_y5w_sty_11b">
+                            <li><xref href="../Destinations/HiveMetastore.dita#concept_gcr_z2t_zv"
+                                    >Hive Metastore destination enhancements</xref>:<ul
+                                    id="ul_y5w_sty_11b">
                                     <li>The destination can now <xref
                                             href="../Destinations/HiveMetastore-TableGen.dita#concept_wyr_5jv_hw"
                                             >create and update Parquet tables in Hive</xref>. </li>
-                                    <li>Also, the data format property has been removed. <xref
+                                    <li>Also, the data format property has been removed. You now
+                                        specify the data format in the <xref
                                             href="../Processors/HiveMetadata.dita#concept_rz5_nft_zv"
-                                            >You now specify the data format in the Hive Metadata
-                                            processor.</xref> Since the Hive Metastore previously
-                                        supported only Avro data, there is no upgrade impact. </li>
+                                            >Hive Metadata processor.</xref>
+                                        <p>Since the Hive Metastore previously supported only Avro
+                                            data, there is no upgrade impact. </p></li>
                                     <li dir="ltr">
-                                        <p>Kudu destination enhancement - You can use the new
-                                            Mutation Buffer Space property to set the buffer size
-                                            that the Kudu client uses to write each batch.</p>
+                                        <p><xref href="../Destinations/Kudu.dita#concept_chy_xxg_4v"
+                                                >Kudu destination enhancement</xref> - You can use
+                                            the new Mutation Buffer Space property to set the buffer
+                                            size that the Kudu client uses to write each batch.</p>
                                     </li>
                                 </ul></li>
                         </ul>
@@ -215,8 +241,10 @@
                                             For upgraded pipelines, the property is disabled to
                                             prevent changes in pipeline behavior. </p>
                                     </li>
-                                    <li dir="ltr">Spark executor enhancement - The executor now
-                                        supports Spark 2.0. </li>
+                                    <li dir="ltr"><xref
+                                            href="../Executors/Spark-Versions.dita#concept_vbm_ywb_c1b"
+                                            >Spark executor enhancement</xref> - The executor now
+                                        supports Spark 2.x. </li>
                                 </ul></li>
                         </ul>
                     </dd>
@@ -239,8 +267,10 @@
                                 of records included in a batch. Use in <xref
                                     href="../Origins/TCPServer-Acks-Expressions.dita#concept_xgd_zr5_zz"
                                     >TCP Server origin custom acknowledgement messages</xref>. </li>
-                            <li>vault:read enhancement - The vault:read function now supports
-                                returning the value for a key nested in a map.</li>
+                            <li><xref
+                                    href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"
+                                    >vault:read enhancement</xref> - The vault:read function now
+                                supports returning the value for a key nested in a map.</li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -248,34 +278,56 @@
                     <dt>General Enhancements</dt>
                     <dd>
                         <ul id="ul_rlz_55y_11b">
-                            <li>Support bundles - You can now use Data Collector to generate a
-                                support bundle. A support bundle is a ZIP file that includes Data
-                                Collector logs, environment and configuration information, pipeline
-                                JSON files, resource files, and pipeline snapshots. <p>You upload
-                                    the generated file to the StreamSets support team so that we can
-                                    use the information to troubleshoot your support
-                                tickets.</p></li>
+                            <li><xref
+                                    href="../Administration/SupportBundles.dita#concept_szj_3mw_xz"
+                                    >Support bundles</xref> - You can now use Data Collector to
+                                generate a support bundle. A support bundle is a ZIP file that
+                                includes Data Collector logs, environment and configuration
+                                information, pipeline JSON files, resource files, and pipeline
+                                snapshots. <p>You upload the generated file to the StreamSets
+                                    support team so that we can use the information to troubleshoot
+                                    your support tickets.</p></li>
                             <li>
-                                <p>TLS property enhancements - Stages that support SSL/TLS now
-                                    provide the following enhanced set of properties that enable
-                                    more specific configuration:<ul id="ul_v5g_w5y_11b">
-                                        <li>Keystore and truststore type - You can now choose
-                                            between Java Keystore (JKS) and PKCS-12 (p-12).
-                                            Previously, Data Collector always used JKS.</li>
-                                        <li>Transport protocols- You can now specify the transport
-                                            protocols that you want to allow. By default, Data
-                                            Collector uses TLSv1.2. </li>
-                                        <li>Cipher suites - You can now specify the cipher suite to
-                                            use. Data Collector provides a set of default cipher
-                                            suites. Previously, Data Collector always used the
-                                            default cipher suites.</li>
+                                <p><xref
+                                        href="../Pipeline_Configuration/SSL-TLS.dita#concept_dd1_n3f_5z"
+                                        >TLS property enhancements</xref> - Stages that support
+                                    SSL/TLS now provide the following enhanced set of properties
+                                    that enable more specific configuration:<ul id="ul_v5g_w5y_11b">
+                                        <li><xref
+                                                href="../Pipeline_Configuration/SSL-TLS-KeystoreTruststore.dita#concept_kqb_rqf_5z"
+                                                >Keystore and truststore type</xref> - You can now
+                                            choose between Java Keystore (JKS) and PKCS-12 (p-12).
+                                            Previously, Data Collector only supported JKS.</li>
+                                        <li><xref
+                                                href="../Pipeline_Configuration/SSL-TLS-TransferProtocols.dita#concept_mvs_cxf_5z"
+                                                >Transport protocols</xref> - You can now specify
+                                            the transport protocols that you want to allow. By
+                                            default, Data Collector allows only TLSv1.2. </li>
+                                        <li><xref
+                                                href="../Pipeline_Configuration/SSL-TLS-CipherSuites.dita#concept_cwx_dyf_5z"
+                                                >Cipher suites</xref> - You can now specify the
+                                            cipher suites to allow. Data Collector provides a modern
+                                            set of default cipher suites. Previously, Data Collector
+                                            always allowed the default cipher suites for the
+                                            JRE.</li>
                                     </ul>To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                     existing pipelines are preserved during upgrade. </p>
                             </li>
                             <li>
-                                <p>Cluster pipeline enhancement - Cluster streaming mode now
-                                    supports Spark 2.0.</p>
+                                <p><xref
+                                        href="../Cluster_Mode/ClusterPipelines.dita#concept_hmh_kfn_1s"
+                                        >Cluster mode</xref> enhancement - Cluster streaming mode
+                                    now supports Spark 2.x. For information about using Spark 2.x
+                                    stages with cluster mode, see <xref
+                                        href="../Cluster_Mode/StageLimitations.dita#concept_pdf_r5y_fz"
+                                    />.</p>
                             </li>
+                            <li><xref
+                                    href="../Pipeline_Design/Preconditions.dita#concept_msl_yd4_fs"
+                                    >Precondition enhancement</xref> - Stages with user-defined
+                                preconditions now process all preconditions before passing a record
+                                to error handling. This allows error records to include all
+                                precondition failures in the error message.</li>
                         </ul>
                     </dd>
                 </dlentry>

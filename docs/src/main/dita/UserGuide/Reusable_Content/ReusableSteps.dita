@@ -4608,6 +4608,37 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</codeblock></info>
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta">Spark Submit Script step - whole step used by
+                        Kafka Yarn Streaming, Kafka Mesos and Mapr Streaming use parts of
+                        it.</draft-comment>
+                </cmd>
+            </step>
+            <step id="cluster-SparkSubmitScript">
+                <cmd id="cmd-SparkSubmitScript">If necessary, specify the location of the
+                    spark-submit script.</cmd>
+                <info id="info-SparkSubmit-Default"><ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> assumes that the spark-submit script used to submit job requests to Spark
+                    Streaming is located in the following directory:
+                    <codeblock>/usr/bin/spark-submit</codeblock></info>
+                <info id="info-SparkSubmit-envVariable">If the script is not in this directory, use
+                    the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
+                    script.</info>
+                <info id="info-SparkSubmit-Location">The location of the script may differ depending
+                    on the Spark version and distribution that you use.</info>
+                <info id="info-SparkSubmit-example"><ph id="ph-SparkSubmit-example">For example,
+                        when using CDH Spark 2.1, the spark-submit script is in the following
+                        directory by default: /usr/bin/spark2-submit. Then, you might use the
+                        following command to define the location of the
+                    script:</ph><codeblock>export SPARK_SUBMIT_YARN_COMMAND<ph id="ph-SparkSubmit-Ex-command">=/usr/bin/spark2-submit</ph></codeblock></info>
+                <info id="info-SparkSubmit-Restart">
+                    <note id="in">If you change the location of the spark-submit script, you must
+                        restart <ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+                        capture the change.</note>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta">MapR Cluster Batch and HDFS (cluster
                         batch)</draft-comment>
                 </cmd>

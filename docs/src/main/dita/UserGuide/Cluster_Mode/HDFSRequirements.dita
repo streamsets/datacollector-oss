@@ -16,12 +16,11 @@
 <task id="task_akz_w5b_ws">
     <title>HDFS Requirements</title>
     <taskbody>
-        <context>
-            <p><indexterm>cluster mode<indexterm>configuration for
-                HDFS</indexterm></indexterm>Cluster mode pipelines that read from HDFS require the
-                Cloudera distribution of Hadoop (CDH) or Hortonworks Data Platform (HDP).</p>
-            <p>Complete the following steps to configure a cluster mode pipeline to read from HDFS: </p>
-        </context>
+        <context><indexterm>cluster mode<indexterm>configuration for
+            HDFS</indexterm></indexterm>Cluster mode pipelines that read from HDFS require the
+            Cloudera distribution of Hadoop (CDH) or Hortonworks Data Platform (HDP).<p>Complete the
+                following steps to configure a cluster mode pipeline to read from HDFS:
+            </p></context>
         <steps id="steps_ldn_rhw_cy">
             <step>
                 <cmd>Verify the installation of HDFS and YARN.</cmd>
