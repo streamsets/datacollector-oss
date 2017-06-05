@@ -610,9 +610,10 @@ public class HttpClientSource extends BaseSource {
         throw e;
       }
     }
+
+    Record record = null;
+    int subRecordCount = 0;
     try {
-      int subRecordCount = 0;
-      Record record;
 
       do {
         record = parser.parse();
@@ -632,15 +633,20 @@ public class HttpClientSource extends BaseSource {
 
       } while (recordCount < maxRecords && !waitTimeExpired(start));
 
-      if (record == null) {
-        // Done reading this response
-        cleanupResponse(in);
-      }
-
-      incrementSourceOffset(sourceOffset, subRecordCount);
     } catch (IOException e) {
       errorRecordHandler.onError(Errors.HTTP_00, e.toString(), e);
+
+    } finally {
+      try {
+        if (record == null) {
+          cleanupResponse(in);
+        }
+        incrementSourceOffset(sourceOffset, subRecordCount);
+      } catch(IOException e) {
+        errorRecordHandler.onError(Errors.HTTP_28, e.toString(), e);
+      }
     }
+
     return sourceOffset.toString();
   }
 
@@ -666,15 +672,32 @@ public class HttpClientSource extends BaseSource {
    * @throws IOException If a resource is not closed properly
    */
   private void cleanupResponse(InputStream in) throws IOException {
+    IOException ex = null;
+
     LOG.debug("Cleanup after request processing complete.");
-    parser.close();
-    parser = null;
-    if (in != null) {
-      in.close();
-    }
     lastRequestCompletedTime = System.currentTimeMillis();
+
+    if (in != null) {
+      try {
+        in.close();
+      } catch(IOException e) {
+        ex = e;
+      }
+    }
+
     response.close();
     response = null;
+
+    try {
+      parser.close();
+    } catch(IOException e) {
+      ex = e;
+    }
+    parser = null;
+
+    if(ex != null) {
+      throw ex;
+    }
   }
 
   /**

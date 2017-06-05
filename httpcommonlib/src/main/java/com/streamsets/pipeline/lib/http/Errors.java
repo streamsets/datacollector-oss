@@ -54,6 +54,7 @@ public enum Errors implements ErrorCode {
   HTTP_25("Unable to parse expression"), // Don't log expression as it could contain secure data
   HTTP_26("Algorithm '{}' is unavailable"),
   HTTP_27("Key is invalid: {}"),
+  HTTP_28("Exception in post processing or cleanup: {}"),
 
 
   // HTTP Target
