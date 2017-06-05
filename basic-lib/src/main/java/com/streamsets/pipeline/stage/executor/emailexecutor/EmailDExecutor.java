@@ -34,7 +34,7 @@ import java.util.List;
     label="Email Executor",
     description = "Sends emails upon receipt of specific events",
     icon="envelope.png",
-    onlineHelpRefUrl = "index.html#Executor/Email.html#task_pyx_tfp_qz"
+    onlineHelpRefUrl = "index.html#Executors/Email.html#task_pyx_tfp_qz"
 )
 
 @ConfigGroups(Groups.class)
