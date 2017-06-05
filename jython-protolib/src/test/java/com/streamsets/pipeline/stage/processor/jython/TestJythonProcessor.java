@@ -472,7 +472,7 @@ public class TestJythonProcessor {
   @Test
   public void testConstants() throws Exception {
     String script = "for record in records:\n" +
-        "  record.value['company'] = sdcFunctions.pipelineConstants()['company']\n" +
+        "  record.value['company'] = sdcFunctions.pipelineParameters()['company']\n" +
         "  output.write(record)";
     Processor processor = new JythonProcessor(ProcessingMode.BATCH, script);
     ScriptingProcessorTestUtil.verifyConstants(JythonProcessor.class, processor);

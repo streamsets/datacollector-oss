@@ -567,7 +567,7 @@ public class TestJavaScriptProcessor {
   @Test
   public void testConstants() throws Exception {
     String script = "for(var i = 0; i < records.length; i++) {\n" +
-        "  records[i].value['company'] = sdcFunctions.pipelineConstants()['company'];\n" +
+        "  records[i].value['company'] = sdcFunctions.pipelineParameters()['company'];\n" +
         "  output.write(records[i]);\n" +
         "}";
     Processor processor = new JavaScriptProcessor(ProcessingMode.BATCH, script);
