@@ -112,7 +112,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       return getScriptObjectFactory().createMap(listMap);
     }
 
-    public Map<String, Object> pipelineConstants() {
+    public Map<String, Object> pipelineParameters() {
       return getContext().getPipelineConstants();
     }
   }

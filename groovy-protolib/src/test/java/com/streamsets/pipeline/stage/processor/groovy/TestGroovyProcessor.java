@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptingProcessorTestUtil;
@@ -352,7 +351,7 @@ public class TestGroovyProcessor {
   @Test
   public void testConstants() throws Exception {
     String script = "for(record in records) {\n" +
-        "  record.value['company'] = sdcFunctions.pipelineConstants()['company'];\n" +
+        "  record.value['company'] = sdcFunctions.pipelineParameters()['company'];\n" +
         "  output.write(record);\n" +
         "}";
     Processor processor = new GroovyProcessor(ProcessingMode.BATCH, script);
