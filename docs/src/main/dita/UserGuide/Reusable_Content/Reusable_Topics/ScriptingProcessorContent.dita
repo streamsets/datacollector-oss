@@ -43,8 +43,9 @@
                  </row>
              </thead>
              <tbody>
-                 <row>
-                     <entry>Init</entry>
+                 <row id="row_InitJythonJavaScript">
+                     <entry>Init<draft-comment author="alisontaylor">Jython,
+                                JavaScript</draft-comment></entry>
                      <entry>You can use the following scripting objects in the initialization
                          script:<ul id="ul_xg5_khp_xz">
                              <li>state</li>
@@ -53,7 +54,19 @@
                                         <codeph>createMap</codeph> methods</li>
                          </ul></entry>
                  </row>
-                 <row>
+                    <row id="row_InitGroovy">
+                        <entry>Init<draft-comment author="alisontaylor"
+                            >Groovy</draft-comment></entry>
+                        <entry>You can use the following scripting objects in the initialization
+                                script:<ul id="ul_g5l_c1k_d1b">
+                                <li>state</li>
+                                <li>log</li>
+                                <li>sdcFunctions - <codeph>getFieldNull</codeph>,
+                                        <codeph>createMap</codeph>, and
+                                        <codeph>pipelineParameters</codeph> methods</li>
+                            </ul></entry>
+                    </row>
+                 <row id="row_Main">
                      <entry>Main</entry>
                      <entry>You can use the following scripting objects in the main
                          script:<ul id="ul_q5q_jw4_xz">
@@ -65,8 +78,9 @@
                              <li>sdcFunctions - all methods</li>
                          </ul></entry>
                  </row>
-                 <row>
-                     <entry>Destroy</entry>
+                 <row id="row_DestroyJythonJavaScript">
+                     <entry>Destroy<draft-comment author="alisontaylor">JavaScript,
+                                Jython</draft-comment></entry>
                      <entry>You can use the following scripting objects in the destroy
                          script:<ul id="ul_n23_mw4_xz">
                              <li>state</li>
@@ -76,6 +90,19 @@
                                     and <codeph>toEvent</codeph> methods</li>
                          </ul></entry>
                  </row>
+                    <row id="row_DestroyGroovy">
+                        <entry>Destroy<draft-comment author="alisontaylor"
+                            >Groovy</draft-comment></entry>
+                        <entry>You can use the following scripting objects in the destroy script:<ul
+                                id="ul_owt_f1k_d1b">
+                                <li>state</li>
+                                <li>log</li>
+                                <li>sdcFunctions - <codeph>getFieldNull</codeph>,
+                                        <codeph>createMap</codeph>, <codeph>createEvent</codeph>,
+                                        <codeph>toEvent</codeph>, and
+                                        <codeph>pipelineParameters</codeph> methods</li>
+                            </ul></entry>
+                    </row>
              </tbody>
          </tgroup>
      </table>
