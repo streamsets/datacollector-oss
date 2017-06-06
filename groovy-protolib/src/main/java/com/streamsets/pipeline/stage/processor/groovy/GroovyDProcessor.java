@@ -173,6 +173,7 @@ public class GroovyDProcessor extends DProcessor {
           " *                          to check if the field is typed field with value null\n" +
           " *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n" +
           " *                          Pass true to this function to create a list map (ordered map)\n" +
+          " *   sdcFunctions.pipelineParameters(): Map with pipeline runtime parameters.\n" +
           " */\n" +
           "\n" +
           "// state['connection'] = new Connection().open();\n" +
@@ -195,6 +196,7 @@ public class GroovyDProcessor extends DProcessor {
           " *                          Create new empty event with standard headers.\n" +
           " *   sdcFunctions.toEvent(Record): Send event to event stream\n" +
           " *                          Only events created with sdcFunctions.createEvent are supported.\n" +
+          " *   sdcFunctions.pipelineParameters(): Map with pipeline runtime parameters.\n" +
           " *\n" +
           " */\n" +
           "\n" +
