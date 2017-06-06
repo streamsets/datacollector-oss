@@ -283,6 +283,27 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
+     * Import link command handler
+     */
+    this.importPipelinesFromArchive = function($event) {
+      var modalInstance = $modal.open({
+        templateUrl: 'app/home/library/importFromArchive/importFromArchiveModal.tpl.html',
+        controller: 'ImportFromArchiveModalInstanceController',
+        size: '',
+        backdrop: 'static'
+      });
+
+      if ($event) {
+        $event.stopPropagation();
+      }
+
+      modalInstance.result.then(function() {
+        $route.reload();
+      }, function () {
+      });
+    };
+
+    /**
      * Share Pipeline Configuration Command Handler
      */
     this.sharePipelineConfigCommand = function(pipelineInfo, $event) {

@@ -41,6 +41,7 @@ import com.streamsets.datacollector.validation.RuleIssue;
 import com.streamsets.datacollector.validation.ValidationError;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
@@ -114,6 +115,7 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
       {
         register(new PipelineStoreResourceConfig());
         register(PipelineStoreResource.class);
+        register(MultiPartFeature.class);
       }
     };
   }

@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
@@ -38,6 +39,7 @@ import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.AddLabelsRequestJson;
@@ -71,6 +73,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +95,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriBuilder;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -107,6 +113,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 @Path("/v1")
 @Api(value = "store")
@@ -520,6 +529,94 @@ public class PipelineStoreResource {
     return Response.ok().entity(deletepipelineIds).build();
   }
 
+  @Path("/pipelines/import")
+  @POST
+  @ApiOperation(value = "Import Pipelines from compressed archive",
+      authorizations = @Authorization(value = "basic"))
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
+  public Response importPipelines(
+      @FormDataParam("file") InputStream uploadedInputStream,
+      @Context SecurityContext context
+  ) throws PipelineException, IOException {
+    RestAPIUtils.injectPipelineInMDC("*");
+    List<PipelineInfoJson> successEntities = new ArrayList<>();
+    List<String> errorMessages = new ArrayList<>();
+
+    ObjectMapper objectMapper = ObjectMapperFactory.get();
+    try (ZipInputStream zipInputStream = new ZipInputStream(uploadedInputStream)) {
+      ZipEntry entry;
+      while ((entry = zipInputStream.getNextEntry()) != null) {
+        if (!entry.getName().startsWith("__MACOSX") && !entry.getName().startsWith(".") &&
+            entry.getName().endsWith(".json") && !entry.isDirectory()) {
+          try {
+            String pipelineEnvelopeString = IOUtils.toString(zipInputStream);
+            PipelineEnvelopeJson envelope = objectMapper.readValue(pipelineEnvelopeString, PipelineEnvelopeJson.class);
+            importPipelineEnvelope(
+                envelope.getPipelineConfig().getTitle(),
+                "0",
+                false,
+                true,
+                envelope
+            );
+            successEntities.add(envelope.getPipelineConfig().getInfo());
+          } catch (Exception ex) {
+            errorMessages.add(Utils.format(
+                "Failed to import from file: {}. Error: {} ",
+                entry.getName(),
+                ex.getMessage()
+            ));
+          }
+        }
+      }
+    }
+
+    return Response.status(207)
+        .type(MediaType.APPLICATION_JSON)
+        .entity(new MultiStatusResponseJson<>(successEntities, errorMessages)).build();
+  }
+
+  @Path("/pipelines/export")
+  @POST
+  @ApiOperation(value = "Export Pipelines in single compressed archive",
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_OCTET_STREAM)
+  @PermitAll
+  public Response exportPipelines(
+      List<String> pipelineIds,
+      @QueryParam("includeLibraryDefinitions") @DefaultValue("false") boolean includeLibraryDefinitions,
+      @Context SecurityContext context
+  ) throws PipelineException {
+    RestAPIUtils.injectPipelineInMDC("*");
+    String fileName = "pipelines.zip";
+    StreamingOutput streamingOutput = output -> {
+      ZipOutputStream pipelineZip = new ZipOutputStream(new BufferedOutputStream(output));
+      for(String pipelineId: pipelineIds) {
+        try {
+          PipelineConfiguration pipelineConfig = store.load(pipelineId, "0");
+          RuleDefinitions ruleDefinitions = store.retrieveRules(pipelineId, "0");
+          PipelineEnvelopeJson pipelineEnvelope = getPipelineEnvelope(
+              pipelineConfig,
+              ruleDefinitions,
+              includeLibraryDefinitions
+          );
+          pipelineZip.putNextEntry(new ZipEntry(pipelineConfig.getPipelineId() + ".json"));
+          pipelineZip.write(ObjectMapperFactory.get().writeValueAsString(pipelineEnvelope).getBytes());
+          pipelineZip.closeEntry();
+        } catch (Exception ex) {
+          LOG.error("Failed to export pipeline: {}", ex.getMessage());
+        }
+      }
+      pipelineZip.close();
+    };
+
+    return Response.ok(streamingOutput)
+        .header("Content-Disposition", "attachment; filename=\""+ fileName +"\"")
+        .build();
+  }
+
   @Path("/pipeline/{pipelineId}")
   @GET
   @ApiOperation(value = "Find Pipeline Configuration by name and revision", response = PipelineConfigurationJson.class,
@@ -781,53 +878,16 @@ public class PipelineStoreResource {
   ) throws PipelineException, URISyntaxException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
+
     PipelineConfiguration pipelineConfig = store.load(name, rev);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     pipelineConfig = validator.validate();
-
     RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
-
-    PipelineEnvelopeJson pipelineEnvelope = new PipelineEnvelopeJson();
-    pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
-    pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
-
-    if (includeLibraryDefinitions) {
-      DefinitionsJson definitions = new DefinitionsJson();
-
-      // Add only stage definitions for stages present in pipeline config
-      List<StageDefinition> stageDefinitions = new ArrayList<>();
-      Map<String, String> stageIcons = new HashMap<>();
-
-      for (StageConfiguration conf : pipelineConfig.getStages()) {
-        fetchStageDefinition(conf, stageDefinitions, stageIcons);
-      }
-
-      StageConfiguration errorStageConfig = pipelineConfig.getErrorStage();
-      if (errorStageConfig != null) {
-        fetchStageDefinition(errorStageConfig, stageDefinitions, stageIcons);
-      }
-
-      StageConfiguration statsAggregatorStageConfig = pipelineConfig.getStatsAggregatorStage();
-      if (statsAggregatorStageConfig != null) {
-        fetchStageDefinition(statsAggregatorStageConfig, stageDefinitions, stageIcons);
-      }
-
-      List<StageDefinitionJson> stages = new ArrayList<>();
-      stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
-      definitions.setStages(stages);
-
-      definitions.setStageIcons(stageIcons);
-
-      List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
-      pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
-      definitions.setPipeline(pipeline);
-
-      List<PipelineRulesDefinitionJson> pipelineRules = new ArrayList<>(1);
-      pipelineRules.add(BeanHelper.wrapPipelineRulesDefinition(stageLibrary.getPipelineRules()));
-      definitions.setPipelineRules(pipelineRules);
-
-      pipelineEnvelope.setLibraryDefinitions(definitions);
-    }
+    PipelineEnvelopeJson pipelineEnvelope = getPipelineEnvelope(
+        pipelineConfig,
+        ruleDefinitions,
+        includeLibraryDefinitions
+    );
 
     if (attachment) {
       String fileName = pipelineConfig.getTitle() != null ?
@@ -867,12 +927,63 @@ public class PipelineStoreResource {
     }
   }
 
+  private PipelineEnvelopeJson getPipelineEnvelope(
+      PipelineConfiguration pipelineConfig,
+      RuleDefinitions ruleDefinitions,
+      boolean includeLibraryDefinitions
+  ) {
+    PipelineEnvelopeJson pipelineEnvelope = new PipelineEnvelopeJson();
+    pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
+    pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+    if (includeLibraryDefinitions) {
+      DefinitionsJson definitions = new DefinitionsJson();
+
+      // Add only stage definitions for stages present in pipeline config
+      List<StageDefinition> stageDefinitions = new ArrayList<>();
+      Map<String, String> stageIcons = new HashMap<>();
+
+      for (StageConfiguration conf : pipelineConfig.getStages()) {
+        fetchStageDefinition(conf, stageDefinitions, stageIcons);
+      }
+
+      StageConfiguration errorStageConfig = pipelineConfig.getErrorStage();
+      if (errorStageConfig != null) {
+        fetchStageDefinition(errorStageConfig, stageDefinitions, stageIcons);
+      }
+
+      StageConfiguration statsAggregatorStageConfig = pipelineConfig.getStatsAggregatorStage();
+      if (statsAggregatorStageConfig != null) {
+        fetchStageDefinition(statsAggregatorStageConfig, stageDefinitions, stageIcons);
+      }
+
+      List<StageDefinitionJson> stages = new ArrayList<>();
+      stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
+      definitions.setStages(stages);
+
+      definitions.setStageIcons(stageIcons);
+
+      List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
+      pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
+      definitions.setPipeline(pipeline);
+
+      List<PipelineRulesDefinitionJson> pipelineRules = new ArrayList<>(1);
+      pipelineRules.add(BeanHelper.wrapPipelineRulesDefinition(stageLibrary.getPipelineRules()));
+      definitions.setPipelineRules(pipelineRules);
+
+      pipelineEnvelope.setLibraryDefinitions(definitions);
+    }
+
+    return pipelineEnvelope;
+  }
+
   @Path("/pipeline/{pipelineId}/import")
   @POST
   @ApiOperation(value = "Import Pipeline Configuration & Rules", response = PipelineEnvelopeJson.class,
       authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @PermitAll
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
   public Response importPipeline(
       @PathParam("pipelineId") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
@@ -881,7 +992,18 @@ public class PipelineStoreResource {
       @ApiParam(name="pipelineEnvelope", required = true) PipelineEnvelopeJson pipelineEnvelope
   ) throws PipelineException, URISyntaxException {
     RestAPIUtils.injectPipelineInMDC("*");
+    pipelineEnvelope = importPipelineEnvelope(name, rev, overwrite, autoGenerateName, pipelineEnvelope);
+    return Response.ok().
+        type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
+  }
 
+  private PipelineEnvelopeJson importPipelineEnvelope(
+      String name,
+      String rev,
+      boolean overwrite,
+      boolean autoGenerateName,
+      PipelineEnvelopeJson pipelineEnvelope
+  ) throws PipelineException {
     PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
 
@@ -922,8 +1044,8 @@ public class PipelineStoreResource {
 
     pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
     pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
-    return Response.ok().
-        type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
+
+    return pipelineEnvelope;
   }
 
   @Path("/pipelines/addLabels")

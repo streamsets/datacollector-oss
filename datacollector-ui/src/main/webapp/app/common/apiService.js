@@ -707,13 +707,59 @@ angular.module('dataCollectorApp.common')
       /**
        * Export Pipelines.
        *
-       * @param pipelineNames
+       * @param pipelineIds
        * @param includeLibraryDefinitions
        */
-      exportSelectedPipelines: function(pipelineNames, includeLibraryDefinitions) {
-        angular.forEach(pipelineNames, function (name) {
-          api.pipelineAgent.exportPipelineConfig(name, includeLibraryDefinitions);
-        });
+      exportSelectedPipelines: function(pipelineIds, includeLibraryDefinitions) {
+
+        var url = apiBase + '/pipelines/export';
+        if (includeLibraryDefinitions) {
+          url += '?includeLibraryDefinitions=true';
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = function () {
+          if (this.status === 200) {
+            var filename = "";
+            var disposition = xhr.getResponseHeader('Content-Disposition');
+            if (disposition && disposition.indexOf('attachment') !== -1) {
+              var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+              var matches = filenameRegex.exec(disposition);
+              if (matches !== null && matches[1]) {
+                filename = matches[1].replace(/['"]/g, '');
+              }
+            }
+            var type = xhr.getResponseHeader('Content-Type');
+
+            var blob = new Blob([this.response], { type: type });
+
+            var URL = window.URL || window.webkitURL;
+            var downloadUrl = URL.createObjectURL(blob);
+
+            if (filename) {
+              // use HTML5 a[download] attribute to specify filename
+              var a = document.createElement("a");
+              // safari doesn't support this yet
+              if (typeof a.download === 'undefined') {
+                window.location = downloadUrl;
+              } else {
+                a.href = downloadUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+              }
+            } else {
+              window.location = downloadUrl;
+            }
+
+            setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 100); // cleanup
+          }
+        };
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.setRequestHeader('X-Requested-By', 'Data Collector');
+        xhr.send(JSON.stringify(pipelineIds));
       },
 
       /**
@@ -733,6 +779,16 @@ angular.module('dataCollectorApp.common')
           method: 'POST',
           url: url,
           data: pipelineEnvelope
+        });
+      },
+
+      importPipelines: function(formData) {
+        var url = apiBase + '/pipelines/import';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: formData,
+          headers: {'Content-Type': undefined}
         });
       },
 
