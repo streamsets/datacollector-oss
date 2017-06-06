@@ -20,17 +20,37 @@
                 objects</indexterm></indexterm><indexterm>scripting objects<indexterm>Jython
                     Evaluator</indexterm></indexterm>You can use different scripting objects in the
             Jython Evaluator, based on the type of script:</p>
-        <table
-            conref="../Reusable_Content/Reusable_Topics/ScriptingProcessorContent.dita#concept_oxj_vbh_cy/table_vyy_2w4_xz"
-            id="table_bc1_1pp_xz">
-            <tgroup cols="1">
-                <tbody>
-                    <row>
-                        <entry/>
-                    </row>
-                </tbody>
-            </tgroup>
-        </table>
+     <table frame="all" rowsep="1" colsep="1" id="table_x12_fbk_d1b">
+         <tgroup cols="2">
+             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+             <thead>
+                 <row>
+                     <entry>Script Type</entry>
+                     <entry>Valid Scripting Objects</entry>
+                 </row>
+             </thead>
+             <tbody>
+                 <row
+                     conref="../Reusable_Content/Reusable_Topics/ScriptingProcessorContent.dita#concept_oxj_vbh_cy/row_InitJythonJavaScript">
+                     <entry/>
+                 </row>
+                 <row
+                     conref="../Reusable_Content/Reusable_Topics/ScriptingProcessorContent.dita#concept_oxj_vbh_cy/row_Main">
+                     <entry/>
+                 </row>
+                 <row
+                     conref="../Reusable_Content/Reusable_Topics/ScriptingProcessorContent.dita#concept_oxj_vbh_cy/row_DestroyJythonJavaScript">
+                     <entry/>
+                 </row>
+             </tbody>
+         </tgroup>
+     </table>
+     <note>You do not need to use a scripting object to call <xref
+                href="../Pipeline_Configuration/RuntimeParameters.dita#concept_rjh_ntz_qr">pipeline
+                runtime parameters</xref> from the Jython Evaluator. You can simply use the
+            following syntax in any of the processor scripts: <codeph>${&lt;parameter
+                name>}</codeph>. </note>
         <p>The scripting objects work the same within each script type:</p>
      <draft-comment author="Loretta">Port changes to
          "record" over to JavaScript Scripting Objects and Groovy Scripting Objects, as
@@ -56,5 +76,20 @@
                  <dd/>
              </dlentry>
          </dl>
+        <dl>
+            <dlentry>
+                <dt>sdcFunctions</dt>
+                <dd>An object that runs functions that evaluate or modify data. Includes the
+                    following methods: </dd>
+                <dd>
+                    <ul id="ul_phy_2lc_d1b">
+                        <li
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li_getFieldNull"
+                            conrefend="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li_toEvent"
+                        />
+                    </ul>
+                </dd>
+            </dlentry>
+        </dl>
  </conbody>
 </concept>

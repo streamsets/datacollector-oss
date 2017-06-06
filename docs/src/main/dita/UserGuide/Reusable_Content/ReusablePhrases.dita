@@ -1400,38 +1400,47 @@ web-0011.log</codeblock></dd>
                                     handling. Includes a <codeph>write(Record, message)</codeph>
                                     method.</dd>
                         </dlentry>
-                        <dlentry>
-                              <dt>sdcFunctions</dt>
-                              <dd>An object that runs functions that evaluate or modify data.
-                                    Includes the following methods: </dd>
-                              <dd>
-                                    <ul id="ul_th2_3lr_mx">
-                                          <li><codeph>getFieldNull(Record, 'field path')</codeph> -
-                                                Method that checks if a field is assigned a constant
-                                                such as NULL_INTEGER or NULL_STRING.</li>
-                                          <li><codeph>createRecord(String, 'recordId')</codeph> -
-                                                Method that creates a new record with the specified
-                                                fields and values. The recordId uniquely identifies
-                                                the record. It should include enough information to
-                                                track down the record source.</li>
-                                          <li><codeph>createMap(boolean listMap)</codeph> - Method
-                                                that creates a map for use as a field in a record.
-                                                Pass true to create a list-map field, or false to
-                                                create a map field.</li>
-                                          <li><codeph>createEvent(String type, int version)</codeph>
-                                                - Method that creates a new event record with the
-                                                specified event type and version. Be sure to enable
-                                                event generation in the stage before implementing
-                                                event methods. </li>
-                                          <li><codeph>toEvent(Record)</codeph> - Method that sends
-                                                an event record to the Event output stream. Be sure
-                                                to enable event generation in the stage before
-                                                implementing event methods. </li>
-                                    </ul>
-                              </dd>
-                        </dlentry>
                   </dl>
             </p>
+            <draft-comment author="alisontaylor">- Groovy, JavaScript, Jython Processor sdcFunction
+                  scripting object. Groovy uses all of the methods. JavaScript ad Jython use all but
+                  the last method.</draft-comment>
+            <dl>
+                  <dlentry>
+                        <dt>sdcFunctions</dt>
+                        <dd>An object that runs functions that evaluate or modify data. Includes the
+                              following methods: </dd>
+                        <dd>
+                              <ul id="ul_th2_3lr_mx">
+                                    <li id="li_getFieldNull"><codeph>getFieldNull(Record, 'field path')</codeph> - Method
+                                          that checks if a field is assigned a constant such as
+                                          NULL_INTEGER or NULL_STRING.</li>
+                                    <li id="li_createRecord"><codeph>createRecord(String, 'recordId')</codeph> - Method
+                                          that creates a new record with the specified fields and
+                                          values. The recordId uniquely identifies the record. It
+                                          should include enough information to track down the record
+                                          source.</li>
+                                    <li id="li_createMap"><codeph>createMap(boolean listMap)</codeph> - Method that
+                                          creates a map for use as a field in a record. Pass true to
+                                          create a list-map field, or false to create a map
+                                          field.</li>
+                                    <li id="li_createEvent"><codeph>createEvent(String type, int version)</codeph> -
+                                          Method that creates a new event record with the specified
+                                          event type and version. Be sure to enable event generation
+                                          in the stage before implementing event methods. </li>
+                                    <li id="li_toEvent"><codeph>toEvent(Record)</codeph> - Method that sends an
+                                          event record to the Event output stream. Be sure to enable
+                                          event generation in the stage before implementing event
+                                          methods. </li>
+                                    <li id="li_pipelineParams"><codeph>pipelineParameters()</codeph>
+                                          - Method that returns a map of all <xref
+                                                href="../Pipeline_Configuration/RuntimeParameters.dita#concept_rjh_ntz_qr"
+                                                >runtime parameters</xref> defined for the
+                                          pipeline.</li>
+                              </ul>
+                        </dd>
+                  </dlentry>
+            </dl>
             <draft-comment author="alisontaylor">Groovy, JavaScript, Jython Evaluators use this text
                   in Accessing Whole Files topic</draft-comment>
             <p id="Script-WholeFile">The processor can access the fileref field in a whole file
