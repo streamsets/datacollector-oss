@@ -23,6 +23,15 @@
         </button>
       </div>
 
+      <div>
+        <button class="btn btn-primary pull-left download-pipeline-btn"
+                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+                ng-click="importPipelinesFromArchive()">
+          <span class="fa fa-arrow-circle-down"></span>
+          <span translate="home.importPipelinesFromArchive">Import Pipelines From Archive</span>
+        </button>
+      </div>
+
       <div ng-if="common.isDPMEnabled">
         <button class="btn btn-primary download-pipeline-btn"
                 ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"

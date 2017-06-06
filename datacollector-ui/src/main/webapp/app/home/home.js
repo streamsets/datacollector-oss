@@ -166,6 +166,13 @@ angular
       },
 
       /**
+       * Import Pipelines from Archive
+       */
+      importPipelinesFromArchive: function($event) {
+        pipelineService.importPipelinesFromArchive($event);
+      },
+
+      /**
        * Delete Pipeline Configuration
        */
       deletePipelineConfig: function(pipelineInfo, $event) {

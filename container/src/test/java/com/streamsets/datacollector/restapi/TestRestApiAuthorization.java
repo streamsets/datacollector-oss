@@ -241,6 +241,8 @@ public class TestRestApiAuthorization {
     list.add(new RestApi("/rest/v1/pipelines", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/pipelines/delete", Method.POST, AuthzRole.CREATOR, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipelines/deleteByFiltering", Method.POST, AuthzRole.CREATOR, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipelines/import", Method.POST, AuthzRole.CREATOR, AuthzRole.ADMIN));
+    list.add(new RestApi("/rest/v1/pipelines/export", Method.POST, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/pipeline/foo", Method.GET, AuthzRole.ALL_ROLES));
     list.add(new RestApi("/rest/v1/pipeline/foo", Method.PUT, AuthzRole.CREATOR, AuthzRole.ADMIN));
     list.add(new RestApi("/rest/v1/pipeline/foo", Method.DELETE, AuthzRole.CREATOR, AuthzRole.ADMIN));

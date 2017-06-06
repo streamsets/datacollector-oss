@@ -1,0 +1,38 @@
+<form class="import-modal-form" role="form" ng-submit="import()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.header.importPipelinesFromArchive">Import Pipelines From Archive</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div class="input-group" ng-hide="operationDone">
+      <span class="input-group-btn">
+          <span class="btn btn-primary btn-file">
+              {{'home.import.browse' | translate}}&hellip; <input type="file" ng-disabled="operationInProgress" fileread="uploadFile">
+          </span>
+      </span>
+      <input type="text" class="form-control" readonly ng-model="uploadFile.name"
+             placeholder="{{'home.import.fileUploadPlaceholder' | translate}}">
+    </div>
+
+    <div class="input-group" ng-if="operationDone && successEntities && successEntities.length > 0">
+      <p translate="home.header.successImportConfirmationMessage"></p>
+      <p ng-repeat="pipeline in successEntities">{{pipeline.title}} ({{pipeline.pipelineId}})</p>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-hide="operationDone || operationInProgress"
+            translate="global.form.cancel">Cancel</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!uploadFile.name || operationInProgress"
+            ng-hide="operationDone">{{(operationInProgress ? 'global.form.importing' : 'global.form.import') | translate}}</button>
+
+    <button type="reset" class="btn btn-default" ng-click="close()" ng-show="operationDone"
+            translate="global.form.close">Close</button>
+  </div>
+</form>
