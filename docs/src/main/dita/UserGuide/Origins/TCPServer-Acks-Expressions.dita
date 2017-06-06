@@ -34,10 +34,12 @@ pipeline: ${pipeline:title()}.</codeblock></p>
         <p>You can set the time zone to use for datetime values returned by expressions. By default,
             the origin uses UTC.</p>
         <p><note>In a batch completion message, record functions return information from the last
-                record in the batch. You can use the batchSize variable to return the number of
-                records included in the batch.</note>For example, the following message includes the
-            number of records in the batch, the transaction ID of the last record in the batch, and
-            the pipeline that performed the
+                record in the batch. </note>You can use the batchSize variable to return the number
+            of records included in the batch. The batchSize variable can be used only with the TCP
+            Server origin and must be typed into the message. The batchSize variable does not appear
+            in the expression completion list.</p>
+        <p>For example, the following message includes the number of records in the batch, the
+            transaction ID of the last record in the batch, and the pipeline that performed the
             processing:<codeblock>Pipeline: ${pipeline:title()} committed a batch whose last record was 
 ${record:value('/transactionID')} and included ${batchSize} messages.</codeblock></p>
  </conbody>
