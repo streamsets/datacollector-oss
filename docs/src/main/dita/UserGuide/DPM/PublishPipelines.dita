@@ -25,6 +25,12 @@
                 />, you publish the pipelines to the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
                 pipeline repository. You can publish pipelines that are valid. </p>
+            <note type="tip">When you update a published pipeline, <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> displays an asterisk next to the pipeline name to indicate that the pipeline has
+                been updated since it was last published, as follows:<p><image
+                        href="../Graphics/DPM_UpdatedPublishedPipeline.png" scale="80"
+                        id="image_yxn_mlk_d1b"/></p></note>
         </context>
         <steps>
             <step>
@@ -33,7 +39,7 @@
                         href="../Graphics/icon_RemoteStore.png" scale="80" id="image_svp_msc_fx"/>.
                     Or to publish a pipeline from the pipeline canvas, click the <uicontrol>DPM
                         Options</uicontrol> icon <image href="../Graphics/icon_RemoteStore.png"
-                        id="image_lc3_kbf_2w" placement="inline" scale="80"/>, and then click
+                        id="image_lc3_kbf_2w" placement="inline" scale="70"/>, and then click
                         <uicontrol>Publish Pipeline</uicontrol>. </cmd>
                 <info>The <uicontrol>Publish Pipeline</uicontrol> dialog box appears.</info>
             </step>

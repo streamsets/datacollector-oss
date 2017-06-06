@@ -135,6 +135,11 @@
                                     view aggregated statistics for the job within DPM, you must
                                     configure the pipeline to write the statistics to a Kafka
                                     cluster, Amazon Kinesis Streams, or SDC RPC.</p></li>
+                            <li><xref href="../DPM/PublishPipelines.dita#task_rxy_xqc_fx">Update
+                                    published pipelines</xref> - When you update a published
+                                pipeline, Data Collector now displays a red asterisk next to the
+                                pipeline name to indicate that the pipeline has been updated since
+                                it was last published.</li>
                         </ul>
                     </dd>
                 </dlentry>
