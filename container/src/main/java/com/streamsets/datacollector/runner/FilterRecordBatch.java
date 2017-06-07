@@ -21,6 +21,7 @@ package com.streamsets.datacollector.runner;
 
 import com.google.common.collect.AbstractIterator;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -31,6 +32,7 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.Errors;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 /**
  * Filter record entering stage.
@@ -60,7 +62,13 @@ public class FilterRecordBatch implements Batch {
   public FilterRecordBatch(Batch batch, Predicate[] predicates, Stage.Context context) {
     this.batch = batch;
     this.predicates = predicates;
-    this.errorHandler = new DefaultErrorRecordHandler(context, (ToErrorContext) context);
+    // Some stages can use '@HideConfigs(onErrorRecord = true)' to hide the on-error-record behavior. In such case
+    // we default to TO_ERROR to preserve behavior with older SDC versions.
+    this.errorHandler = new DefaultErrorRecordHandler(
+      Optional.ofNullable(context.getOnErrorRecord()).orElse(OnRecordError.TO_ERROR),
+      context,
+      (ToErrorContext) context
+    );
   }
 
   @Override
