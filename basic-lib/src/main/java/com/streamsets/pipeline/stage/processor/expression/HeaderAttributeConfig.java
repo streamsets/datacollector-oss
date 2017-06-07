@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.processor.expression;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 public class HeaderAttributeConfig {
 
@@ -42,7 +43,7 @@ public class HeaderAttributeConfig {
       label = "Header Attribute Expression",
       description = "Use the expression language to modify or set new attributes in the header.",
       displayPosition = 40,
-      elDefs = {RecordEL.class, ELSupport.class},
+      elDefs = {RecordEL.class, TimeNowEL.class, ELSupport.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "EXPRESSIONS"
   )

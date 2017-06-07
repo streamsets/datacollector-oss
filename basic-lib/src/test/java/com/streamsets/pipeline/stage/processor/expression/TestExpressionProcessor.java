@@ -617,8 +617,17 @@ public class TestExpressionProcessor {
     expressionProcessorConfig.expression = "${time:now()}";
     expressionProcessorConfig.fieldToSet = "/myDateTime";
 
+    ExpressionProcessorConfig expressionProcessorConfig2 = new ExpressionProcessorConfig();
+    expressionProcessorConfig2.expression = "${time:now()}";
+    expressionProcessorConfig2.fieldToSet = "/myDateTime2";
+
+    HeaderAttributeConfig headerAttributeConfig = new HeaderAttributeConfig();
+    headerAttributeConfig.headerAttributeExpression = "${time:now()}";
+    headerAttributeConfig.attributeToSet = "ABCD";
+
     ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
-      .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+      .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig, expressionProcessorConfig2))
+      .addConfiguration("headerAttributeConfigs", ImmutableList.of(headerAttributeConfig))
       .addOutputLane("a").build();
     runner.runInit();
 
@@ -636,11 +645,22 @@ public class TestExpressionProcessor {
       Field field = output.getRecords().get("a").get(0).get();
       Assert.assertTrue(field.getValue() instanceof Map);
       Map<String, Field> result = field.getValueAsMap();
-      Assert.assertEquals(2, result.size());
+      Assert.assertEquals(3, result.size());
       Assert.assertTrue(result.containsKey("myDateTime"));
       long myDate = result.get("myDateTime").getValueAsDatetime().getTime();
       Assert.assertTrue(myDate >= startTime);
       Assert.assertTrue(myDate <= endTime);
+
+      // test that the TimeNowEL is initialized properly.
+      // if left uninitialized, the time:now() method will return a different
+      // value for every subsequent call
+      long myDate2 = result.get("myDateTime2").getValueAsDatetime().getTime();
+      Assert.assertEquals(myDate, myDate2);
+
+      // test the header value populated by a TimeNow method
+      Record.Header header = output.getRecords().get("a").get(0).getHeader();
+      String headerDate = header.getAttribute("ABCD");
+      Assert.assertNotNull(headerDate);
 
     } finally {
       runner.runDestroy();

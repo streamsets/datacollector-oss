@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
 import java.math.BigDecimal;
@@ -119,6 +120,8 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     RecordEL.setRecordInContext(expressionVars, record);
+    TimeNowEL.setTimeNowInContext(expressionVars, new Date());
+
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
       String fieldToSet = expressionProcessorConfig.fieldToSet;
       if(fieldToSet == null || fieldToSet.isEmpty()) {
