@@ -31,7 +31,6 @@
   <packaging>jar</packaging>
   <properties>
     <spark.version>1.6.0</spark.version>
-    <jackson.version>2.4.3</jackson.version>
   </properties>
 
   <dependencies>
@@ -80,6 +79,12 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-httpcommonlib</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>io.jsonwebtoken</groupId>
+          <artifactId>jjwt</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
