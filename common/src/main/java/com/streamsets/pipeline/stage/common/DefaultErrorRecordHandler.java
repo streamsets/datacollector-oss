@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.common;
 
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
@@ -40,6 +41,22 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
 
   private final ToErrorContext toError;
   private final Stage.Context context;
+  private final OnRecordError onRecordError;
+
+  /**
+   * Special constructor for internal Data Collector needs.
+   *
+   * It allows to override the OnRecordError configured in the stage with a custom value.
+   *
+   * @param onRecordError Overridden on record error action
+   * @param context Context of the stage with configuration of what should happen when error record occur.
+   * @param toError Error sink into which records will be send if TO_ERROR is configured by user.
+   */
+  public DefaultErrorRecordHandler(OnRecordError onRecordError, Stage.Context context, ToErrorContext toError) {
+    this.context = context;
+    this.toError = toError;
+    this.onRecordError = onRecordError;
+  }
 
   /**
    * Proper constructor that separate configuration from error sink.
@@ -48,18 +65,32 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
    * @param toError Error sink into which records will be send if TO_ERROR is configured by user.
    */
   public DefaultErrorRecordHandler(Stage.Context context, ToErrorContext toError) {
-    this.context = context;
-    this.toError = toError;
+    this(context.getOnErrorRecord(), context, toError);
   }
 
+  /**
+   * Convenience constructor for Source.
+   *
+   * @param context context that implements both ToErrorContext and Stage.Context
+   */
   public DefaultErrorRecordHandler(Source.Context context) {
     this(context, context);
   }
 
+  /**
+   * Convenience constructor for Processor.
+   *
+   * @param context context that implements both ToErrorContext and Stage.Context
+   */
   public DefaultErrorRecordHandler(Processor.Context context) {
     this(context, context);
   }
 
+  /**
+   * Convenience constructor for Target.
+   *
+   * @param context context that implements both ToErrorContext and Stage.Context
+   */
   public DefaultErrorRecordHandler(Target.Context context) {
     this(context, context);
   }
@@ -67,7 +98,7 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
   @Override
   public void onError(ErrorCode errorCode, Object... params) throws StageException {
     validateGetOnErrorRecord(null, errorCode, params);
-    switch (context.getOnErrorRecord()) {
+    switch (onRecordError) {
       case DISCARD:
         break;
       case TO_ERROR:
@@ -76,14 +107,14 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
       case STOP_PIPELINE:
         throw new StageException(errorCode, params);
       default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", context.getOnErrorRecord()));
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", onRecordError));
     }
   }
 
   @Override
   public void onError(OnRecordErrorException error) throws StageException {
     validateGetOnErrorRecord(error, null, null);
-    switch (context.getOnErrorRecord()) {
+    switch (onRecordError) {
       case DISCARD:
         break;
       case TO_ERROR:
@@ -92,14 +123,14 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
       case STOP_PIPELINE:
         throw error;
       default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", context.getOnErrorRecord()), error);
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", onRecordError), error);
     }
   }
 
   @Override
   public void onError(List<Record> batch, StageException error) throws StageException {
     validateGetOnErrorRecord(error, null, null);
-    switch (context.getOnErrorRecord()) {
+    switch (onRecordError) {
       case DISCARD:
         break;
       case TO_ERROR:
@@ -112,12 +143,12 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
       case STOP_PIPELINE:
         throw error;
       default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", context.getOnErrorRecord()), error);
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", onRecordError), error);
     }
   }
 
   private void validateGetOnErrorRecord(Exception ex, ErrorCode errorCode, Object ... params) {
-    if(context.getOnErrorRecord() == null) {
+    if(onRecordError == null) {
       if(ex != null) {
         LOG.error("Can't propagate exception to error stream", ex);
       }
