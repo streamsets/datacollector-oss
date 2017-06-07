@@ -48,6 +48,21 @@
                         </ul></dd>
                 </dlentry>
                 <dlentry>
+                    <dt>Data Collector Configuration</dt>
+                    <dd>
+                        <ul id="ul_jys_cpm_d1b">
+                            <li>New parser buffer size configuration - You can now use a new
+                                parser.limit configuration property to increase the Data Collector
+                                parser buffer size. The parser buffer is used by the origin to
+                                process many data formats, including Delimited, JSON, and XML. The
+                                parser buffer size limits the size of the records that origins can
+                                process. The Data Collector parser buffer size is 1048576 bytes by
+                                default. </li>
+                        </ul>
+                    </dd>
+                </dlentry>
+            </dl><dl>
+                <dlentry>
                     <dt>Drift Synchronization Solution for Hive</dt>
                     <dd><ul id="ul_x5p_zky_11b">
                             <li><xref
@@ -100,7 +115,12 @@
                                     </li>
                                 </ul></li>
                             <li>Multithreaded origin icons - The icons for multithreaded origins now
-                                include a multithreaded indicator.</li>
+                                include the following multithreaded indicator: <image
+                                    href="../Graphics/icon_Multithreaded.png" id="image_al4_tpm_d1b"
+                                    scale="30"/><p>For example, here’s the updated Elasticsearch
+                                    origin icon:</p><p><image
+                                        href="../Graphics/Multithreaded-icon.png"
+                                        id="image_iml_ypm_d1b" scale="30"/></p></li>
                         </ul></dd>
                 </dlentry>
                 <dlentry>
@@ -157,7 +177,9 @@
                                 ports, establishes TCP sessions with clients that initiate TCP
                                 connections, and then processes the incoming data. The origin can
                                 process NetFlow, syslog, and most Data Collector data formats as
-                                separated records.</li>
+                                separated records. You can configure custom acknowledgement messages
+                                and use a new batchSize variable, as well as other expressions, in
+                                the messages.</li>
                             <li><xref href="../Origins/SFTP-FirstFile.dita#concept_g5p_5ks_b1b"
                                     >SFTP/FTP Client origin enhancement</xref> - You can now specify
                                 the first file to process. This enables you to skip processing files
@@ -174,7 +196,7 @@
                                     href="../Processors/JavaScript.dita#concept_n2p_jgf_lr"
                                     >JavaScript</xref>, and <xref
                                     href="../Processors/Jython.dita#concept_a1h_lkf_lr">Jython
-                                    Evaluator</xref> processors enhancements:<ul id="ul_e4s_jty_11b">
+                                    Evaluator</xref> processor enhancements:<ul id="ul_e4s_jty_11b">
                                     <li>You can now include some methods of the sdcFunctions
                                         scripting object in the initialization and destroy scripts
                                         for the processors.</li>
@@ -278,7 +300,10 @@
                         <ul id="ul_ktv_k5y_11b">
                             <li>Offset management - Both the REST API and command line interface can
                                 now retrieve the last-saved offset for a pipeline and set the offset
-                                for a pipeline when it is not running. </li>
+                                for a pipeline when it is not running. Use these commands to
+                                implement pipeline failover using an external storage system.
+                                Otherwise, pipeline offsets are managed by Data Collector and there
+                                is no need to update the offsets.</li>
                         </ul>
                     </dd>
                 </dlentry>
@@ -286,10 +311,6 @@
                     <dt>Expression Language</dt>
                     <dd>
                         <ul id="ul_fm5_m5y_11b">
-                            <li>New batchSize variable - The batchSize variable returns the number
-                                of records included in a batch. Use in <xref
-                                    href="../Origins/TCPServer-Acks-Expressions.dita#concept_xgd_zr5_zz"
-                                    >TCP Server origin custom acknowledgement messages</xref>. </li>
                             <li><xref
                                     href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"
                                     >vault:read enhancement</xref> - The vault:read function now
@@ -298,7 +319,7 @@
                     </dd>
                 </dlentry>
                 <dlentry>
-                    <dt>General Enhancements</dt>
+                    <dt>General</dt>
                     <dd>
                         <ul id="ul_rlz_55y_11b">
                             <li><xref
@@ -344,6 +365,10 @@
                                 preconditions now process all preconditions before passing a record
                                 to error handling. This allows error records to include all
                                 precondition failures in the error message.</li>
+                            <li>Pipeline import/export enhancement - When you export multiple
+                                pipelines, Data Collector now includes all pipelines in a single zip
+                                file. You can also import multiple pipelines from a single zip file.
+                            </li>
                         </ul>
                     </dd>
                 </dlentry>

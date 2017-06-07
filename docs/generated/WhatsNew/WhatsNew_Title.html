@@ -80,6 +80,26 @@
 
                 
                 
+                    <dt class="dt dlterm">Data Collector Configuration</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_bsw_cky_11b__ul_jys_cpm_d1b">
+                            <li class="li">New parser buffer size configuration - You can now use a new
+                                parser.limit configuration property to increase the Data Collector
+                                parser buffer size. The parser buffer is used by the origin to
+                                process many data formats, including Delimited, JSON, and XML. The
+                                parser buffer size limits the size of the records that origins can
+                                process. The Data Collector parser buffer size is 1048576 bytes by
+                                default. </li>
+
+                        </ul>
+
+                    </dd>
+
+                
+            </dl>
+<dl class="dl">
+                
                     <dt class="dt dlterm">Drift Synchronization Solution for Hive</dt>
 
                     <dd class="dd"><ul class="ul" id="concept_bsw_cky_11b__ul_x5p_zky_11b">
@@ -124,7 +144,10 @@ See the documentation for <a class="xref" href="../Hive_Drift_Solution/HiveDrift
 </li>
 
                             <li class="li">Multithreaded origin icons - The icons for multithreaded origins now
-                                include a multithreaded indicator.</li>
+                                include the following multithreaded indicator: <img class="image" id="concept_bsw_cky_11b__image_al4_tpm_d1b" src="../Graphics/icon_Multithreaded.png" height="16" width="14" /><p class="p">For example, here’s the updated Elasticsearch
+                                    origin icon:</p>
+<p class="p"><img class="image" id="concept_bsw_cky_11b__image_iml_ypm_d1b" src="../Graphics/Multithreaded-icon.png" height="40" width="63" /></p>
+</li>
 
                         </ul>
 </dd>
@@ -165,6 +188,12 @@ See the documentation for <a class="xref" href="../Hive_Drift_Solution/HiveDrift
                                     cluster, Amazon Kinesis Streams, or SDC RPC.</p>
 </li>
 
+                            <li class="li"><a class="xref" href="../DPM/PipelineManagement.html#task_rxy_xqc_fx">Update
+                                    published pipelines</a> - When you update a published
+                                pipeline, Data Collector now displays a red asterisk next to the
+                                pipeline name to indicate that the pipeline has been updated since
+                                it was last published.</li>
+
                         </ul>
 
                     </dd>
@@ -186,7 +215,9 @@ See the documentation for <a class="xref" href="../Hive_Drift_Solution/HiveDrift
                                 ports, establishes TCP sessions with clients that initiate TCP
                                 connections, and then processes the incoming data. The origin can
                                 process NetFlow, syslog, and most Data Collector data formats as
-                                separated records.</li>
+                                separated records. You can configure custom acknowledgement messages
+                                and use a new batchSize variable, as well as other expressions, in
+                                the messages.</li>
 
                             <li class="li"><a class="xref" href="../Origins/SFTP.html#concept_g5p_5ks_b1b">SFTP/FTP Client origin enhancement</a> - You can now specify
                                 the first file to process. This enables you to skip processing files
@@ -203,7 +234,7 @@ See the documentation for <a class="xref" href="../Hive_Drift_Solution/HiveDrift
                     <dd class="dd">
                         <ul class="ul" id="concept_bsw_cky_11b__ul_dvb_jty_11b">
                             <li class="li"><a class="xref" href="../Processors/Groovy.html#concept_ldh_sct_gv" title="You can choose the processing mode that the Groovy Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the Groovy Evaluator. Simply install the external Java library to make it available to the Groovy Evaluator. Then, call the external Java code from the Groovy script that you develop for the processor. If Data Collector is using the Java Security Manager and the Groovy code needs to access network resources, you must update the Data Collector security policy to include Groovy scripts. The Java Security Manager is enabled by default.">Groovy</a>, <a class="xref" href="../Processors/JavaScript.html#concept_n2p_jgf_lr" title="You can choose the processing mode that the JavaScript Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the JavaScript Evaluator. Simply install the external Java library to make it available to the JavaScript Evaluator. Then, call the external Java code from the script that you develop for the processor.">JavaScript</a>, and <a class="xref" href="../Processors/Jython.html#concept_a1h_lkf_lr" title="You can choose the processing mode that the Jython Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.In scripts that process list-map data, treat the data as maps. You can call external Java code from the Jython Evaluator. Simply install the external Java library to make it available to the Jython Evaluator. Then, call the external Java code from the Jython script that you develop for the processor.">Jython
-                                    Evaluator</a> processors enhancements:<ul class="ul" id="concept_bsw_cky_11b__ul_e4s_jty_11b">
+                                    Evaluator</a> processor enhancements:<ul class="ul" id="concept_bsw_cky_11b__ul_e4s_jty_11b">
                                     <li class="li">You can now include some methods of the sdcFunctions
                                         scripting object in the initialization and destroy scripts
                                         for the processors.</li>
@@ -328,7 +359,10 @@ See the documentation for <a class="xref" href="../Hive_Drift_Solution/HiveDrift
                         <ul class="ul" id="concept_bsw_cky_11b__ul_ktv_k5y_11b">
                             <li class="li">Offset management - Both the REST API and command line interface can
                                 now retrieve the last-saved offset for a pipeline and set the offset
-                                for a pipeline when it is not running. </li>
+                                for a pipeline when it is not running. Use these commands to
+                                implement pipeline failover using an external storage system.
+                                Otherwise, pipeline offsets are managed by Data Collector and there
+                                is no need to update the offsets.</li>
 
                         </ul>
 
@@ -340,9 +374,6 @@ See the documentation for <a class="xref" href="../Hive_Drift_Solution/HiveDrift
 
                     <dd class="dd">
                         <ul class="ul" id="concept_bsw_cky_11b__ul_fm5_m5y_11b">
-                            <li class="li">New batchSize variable - The batchSize variable returns the number
-                                of records included in a batch. Use in <a class="xref" href="../Origins/TCPServer.html#concept_xgd_zr5_zz">TCP Server origin custom acknowledgement messages</a>. </li>
-
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_ddw_ld1_1s">vault:read enhancement</a> - The vault:read function now
                                 supports returning the value for a key nested in a map.</li>
 
@@ -352,7 +383,7 @@ See the documentation for <a class="xref" href="../Hive_Drift_Solution/HiveDrift
 
                 
                 
-                    <dt class="dt dlterm">General Enhancements</dt>
+                    <dt class="dt dlterm">General</dt>
 
                     <dd class="dd">
                         <ul class="ul" id="concept_bsw_cky_11b__ul_rlz_55y_11b">
@@ -399,6 +430,11 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 preconditions now process all preconditions before passing a record
                                 to error handling. This allows error records to include all
                                 precondition failures in the error message.</li>
+
+                            <li class="li">Pipeline import/export enhancement - When you export multiple
+                                pipelines, Data Collector now includes all pipelines in a single zip
+                                file. You can also import multiple pipelines from a single zip file.
+                            </li>
 
                         </ul>
 

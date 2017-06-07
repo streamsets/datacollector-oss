@@ -41,7 +41,7 @@
         <li>Before you use the Spark Evaluator processor, install the Spark application JAR file and
           any dependencies other than the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SparkLibraries"
-          /></li>
+          />.</li>
         <li>You can install external Java libraries to call external Java code from the scripting
           processors: Groovy, Java, and Jython Evaluator.</li>
       </ul></p>
