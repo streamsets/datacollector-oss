@@ -57,6 +57,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +143,7 @@ public class BeanHelper {
 
   public static List<ConfigConfigurationJson> wrapConfigConfiguration(List<Config> config) {
     if(config == null) {
-      return null;
+      return Collections.emptyList();
     }
     List<ConfigConfigurationJson> unwrappedConfig = new ArrayList<>(config.size());
     for(Config c : config) {
