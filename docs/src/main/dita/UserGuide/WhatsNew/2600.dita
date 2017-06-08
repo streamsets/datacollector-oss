@@ -365,10 +365,13 @@
                                 preconditions now process all preconditions before passing a record
                                 to error handling. This allows error records to include all
                                 precondition failures in the error message.</li>
-                            <li>Pipeline import/export enhancement - When you export multiple
-                                pipelines, Data Collector now includes all pipelines in a single zip
-                                file. You can also import multiple pipelines from a single zip file.
-                            </li>
+                            <li><xref
+                                    href="../Pipeline_Maintenance/ImportingPipelines.dita#task_fdf_hrr_5q"
+                                    >Pipeline import</xref>/<xref
+                                    href="../Pipeline_Maintenance/ExportingPipelines.dita#task_dtz_4tr_5q"
+                                    >export enhancement</xref> - When you export multiple pipelines,
+                                Data Collector now includes all pipelines in a single zip file. You
+                                can also import multiple pipelines from a single zip file. </li>
                         </ul>
                     </dd>
                 </dlentry>
