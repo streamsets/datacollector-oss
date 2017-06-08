@@ -304,6 +304,19 @@
                                     pipeline runs.<p>Default is 1000.</p></entry>
                             </row>
                             <row>
+                                <entry>parser.limit </entry>
+                                <entry>Maximum parser buffer size that origins can use to process
+                                    data. Limits the size of the data that can be parsed and
+                                    converted to a record.<p>By default, the parser buffer size is
+                                            <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-DefaultMaxRecordSize"
+                                        />. To increase the size, uncomment and configure this
+                                        property. For more information about how this property
+                                        affects record sizes, see <xref
+                                            href="../Origins/MaxRecordSize.dita#concept_svg_2zl_d1b"
+                                        />.</p></entry>
+                            </row>
+                            <row>
                                 <entry>production.maxErrorRecordsPerStage</entry>
                                 <entry>Maximum number of error records to save in memory for each
                                     stage to display in monitor mode. When the limit is reached,

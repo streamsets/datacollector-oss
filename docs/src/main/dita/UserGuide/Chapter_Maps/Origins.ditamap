@@ -20,6 +20,7 @@
     <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Origins-HTTPComparison.dita"/>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
+   <topicref href="../Origins/MaxRecordSize.dita"/>
    <topicref href="../Origins/FileCompressionFormats.dita"/>
   <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>
   <topicref href="../Origins/AmazonS3.dita" chunk="to-content">

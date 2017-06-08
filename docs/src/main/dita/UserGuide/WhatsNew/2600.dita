@@ -51,13 +51,15 @@
                     <dt>Data Collector Configuration</dt>
                     <dd>
                         <ul id="ul_jys_cpm_d1b">
-                            <li>New parser buffer size configuration - You can now use a new
+                            <li><xref
+                                    href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"
+                                    >New buffer size configuration</xref> - You can now use a new
                                 parser.limit configuration property to increase the Data Collector
                                 parser buffer size. The parser buffer is used by the origin to
                                 process many data formats, including Delimited, JSON, and XML. The
                                 parser buffer size limits the size of the records that origins can
                                 process. The Data Collector parser buffer size is 1048576 bytes by
-                                default. </li>
+                                default.</li>
                         </ul>
                     </dd>
                 </dlentry>
