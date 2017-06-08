@@ -14,24 +14,27 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_fdf_hrr_5q">
-    <title>Importing Pipelines</title>
+    <title>Importing a Single Pipeline</title>
     <taskbody>
-        <context><indexterm>pipelines<indexterm>importing</indexterm></indexterm>Import pipelines to
-            use pipelines developed on a different <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or
-            to restore backup files. Import pipelines from pipeline files. Pipeline files are JSON
-            files exported from a <ph
+        <context id="context_rnx_wjm_d1b"><indexterm>importing<indexterm>a single
+                    pipeline</indexterm></indexterm>You can import a single pipeline from a pipeline
+            JSON file exported from a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            instance.</context>
+            instance. When you import a single pipeline, you can rename the pipeline during the
+            import. </context>
         <steps id="steps_slv_nrr_5q">
             <step>
-                <cmd>From the <wintitle>Home</wintitle> page or <wintitle>Getting Started</wintitle>
-                    page, click <uicontrol>Import Pipeline</uicontrol>. </cmd>
+                <cmd>To import a single pipeline, from the <wintitle>Home</wintitle> page or
+                        <wintitle>Getting Started</wintitle> page, click <uicontrol>Import
+                        Pipeline</uicontrol>. </cmd>
             </step>
             <step>
                 <cmd>In the <wintitle>Import Pipeline</wintitle> dialog box, enter a pipeline name
-                    and optional description. Browse and select the pipeline file and click
-                        <uicontrol>Import</uicontrol>. </cmd>
+                    and optional description. Browse and select the pipeline file, and then click
+                        <uicontrol>Open</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>To import the pipeline, click <uicontrol>Import</uicontrol>. </cmd>
             </step>
         </steps>
     </taskbody>

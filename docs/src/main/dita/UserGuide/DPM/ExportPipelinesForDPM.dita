@@ -32,12 +32,18 @@
             <p><indexterm>pipelines<indexterm>exporting for DPM</indexterm></indexterm>You can
                 export a pipeline for use in <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
-                when the pipeline is valid. </p>
-            <p>When you export the pipeline, <ph
+                when the pipeline is valid. You can export a single pipeline or a set of pipelines
+                at one time.</p>
+            <p>When you export a single pipeline, <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> generates a JSON file named after the pipeline, as follows:
                     <systemoutput>&lt;pipeline name>.json</systemoutput>. The generated JSON file
                 includes the definition of each stage library used in the pipeline.</p>
+            <p>When you export a set of pipelines, <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> creates a ZIP file named <codeph>pipelines.zip</codeph>.</p>
+            <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                saves the files to your default downloads directory.</p>
             <note>To export pipelines for use in another <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />, see <xref href="../Pipeline_Maintenance/ExportingPipelines.dita#task_dtz_4tr_5q"
@@ -45,18 +51,19 @@
         </context>
         <steps>
             <step>
-                <cmd>From the <uicontrol>Home</uicontrol> page, select pipelines in the list, click
-                    the <uicontrol>More</uicontrol> icon, and then click <uicontrol>Export for
-                        DPM</uicontrol>.</cmd>
+                <cmd>To export a single pipeline, from the <uicontrol>Home</uicontrol> page, select
+                    the pipeline from the list, click the <uicontrol>More</uicontrol> icon, and then
+                    click <uicontrol>Export for DPM</uicontrol>.</cmd>
+                <info>
+                    <p>To export a set of pipelines, select multiple pipelines, click the
+                            <uicontrol>More</uicontrol> icon, and then click <uicontrol>Export for
+                            DPM</uicontrol>.</p>
+                </info>
             </step>
             <step>
                 <cmd>Or, to export a pipeline in the pipeline canvas, click the
                         <uicontrol>More</uicontrol> icon for the pipeline and then click
                         <uicontrol>Export for DPM</uicontrol>.</cmd>
-                <info><ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> generates the JSON files and saves them to your default downloads
-                    directory.</info>
             </step>
         </steps>
     </taskbody>

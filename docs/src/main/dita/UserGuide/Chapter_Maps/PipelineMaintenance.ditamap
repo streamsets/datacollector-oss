@@ -37,10 +37,13 @@
   <shortdesc/>
  </topicmeta>
  </topicref>
-  <topicref href="../Pipeline_Maintenance/ImportingPipelines.dita">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
+  <topicref href="../Pipeline_Maintenance/ImportPipelines.dita">
+   <topicref href="../Pipeline_Maintenance/ImportingPipelines.dita">
+    <topicmeta>
+     <shortdesc/>
+    </topicmeta>
+   </topicref>
+   <topicref href="../Pipeline_Maintenance/ImportingPipelines-Set.dita"/>
   </topicref>
   <topicref href="../Pipeline_Maintenance/SharingPipelines.dita">
    <topicref href="../Pipeline_Maintenance/SharingAPipeline.dita"/>

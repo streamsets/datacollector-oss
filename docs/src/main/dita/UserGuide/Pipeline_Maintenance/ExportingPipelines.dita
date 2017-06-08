@@ -15,35 +15,42 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_dtz_4tr_5q">
     <title>Exporting Pipelines</title>
-    <shortdesc>Export pipelines to create backups or to use the pipelines with another <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>exporting</indexterm></indexterm>To export pipelines
-                for use in <ph
+            <p><indexterm>pipelines<indexterm>exporting</indexterm></indexterm>Export pipelines to
+                create backups or to use the pipelines with another <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                />. You can export a single pipeline or a set of pipelines at one time.</p>
+            <p>When you export a single pipeline, <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> generates a JSON file named after the pipeline, as follows: <codeph>&lt;pipeline
+                    name>.json</codeph>. </p>
+            <p>When you export a set of pipelines, <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> creates a ZIP file named <codeph>pipelines.zip</codeph>.</p>
+            <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                saves the files to your default downloads directory.</p>
+            <p>To export pipelines for use in <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"
                 /> (<ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                 />), see <xref href="../DPM/ExportPipelinesForDPM.dita#task_emc_p42_fx"/>.</p>
-            <p>When you export a pipeline, <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> generates a JSON file named after the pipeline, as follows: <codeph>&lt;pipeline
-                    name>.json</codeph>. </p>
         </context>
         <steps id="steps_cns_ztr_5q">
             <step>
-                <cmd>From the <wintitle>Home</wintitle> page, select pipelines in the list, click
-                    the <uicontrol>More</uicontrol> icon, and then click
-                        <uicontrol>Export</uicontrol>.</cmd>
+                <cmd>To export a single pipeline, from the <wintitle>Home</wintitle> page, select
+                    the pipeline from the list, click the <uicontrol>More</uicontrol> icon, and then
+                    click <uicontrol>Export</uicontrol>.</cmd>
+                <info>
+                    <p>To export a set of pipelines, select multiple pipelines, click the
+                            <uicontrol>More</uicontrol> icon, and then click
+                            <uicontrol>Export</uicontrol>.</p>
+                </info>
             </step>
             <step>
-                <cmd>Or, to export a pipeline in the pipeline canvas, click the
+                <cmd>Or, to export a single pipeline from the pipeline canvas, click the
                         <uicontrol>More</uicontrol> icon for the pipeline and then click
                         <uicontrol>Export</uicontrol>.</cmd>
-                <stepresult><ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> generates the JSON files and saves them to your default downloads
-                    directory.</stepresult>
             </step>
         </steps>
     </taskbody>
