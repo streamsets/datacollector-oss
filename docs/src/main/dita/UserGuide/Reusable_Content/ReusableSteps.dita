@@ -761,7 +761,9 @@
                                 <row id="O-row-Del-MaxRecLength">
                                     <entry>Max Record Length (chars)</entry>
                                     <entry>Maximum length of a record in characters. Longer records
-                                        are not read. </entry>
+                                        are not read. <p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MaxRecordSize"
+                                            /></p></entry>
                                 </row>
                                 <row id="O-row-Del-DelChar">
                                     <entry>Delimiter Character</entry>
@@ -867,7 +869,9 @@
                                     <entry>Maximum Object Length (chars)</entry>
                                     <entry>Maximum number of characters in a JSON object. <p>Longer
                                             objects are diverted to the pipeline for error handling.
-                                        </p></entry>
+                                                </p><p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MaxRecordSize"
+                                            /></p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
@@ -936,7 +940,9 @@
                                 <row id="O-row-MaxLine">
                                     <entry>Max Line Length</entry>
                                     <entry>Maximum length of a log line. The origin truncates longer
-                                        lines. </entry>
+                                        lines. <p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MaxRecordSize"
+                                            /></p></entry>
                                 </row>
                                 <row id="O-row-RetainOLine">
                                     <entry>Retain Original Line</entry>
@@ -1208,7 +1214,9 @@
                                     <entry>Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p>Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
-                                            Truncated. </p></entry>
+                                            Truncated. </p><p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MaxRecordSize"
+                                            /></p></entry>
                                 </row>
                                 <row>
                                     <entry>Use Custom Delimiter <xref
@@ -1271,7 +1279,9 @@
                                     <entry>Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p>Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
-                                            Truncated. </p></entry>
+                                            Truncated. </p><p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MaxRecordSize"
+                                            /></p></entry>
                                 </row>
                                 <row id="O-row-UseCDelim">
                                     <entry>Use Custom Delimiter <xref
@@ -1489,11 +1499,14 @@
                                             selected.</p></entry>
                                 </row>
                                 <row id="O-row-XML-MaxRecLength">
-                                    <entry>Max Record Length (chars)</entry>
+                                    <entry>Max Record Length (chars) </entry>
                                     <entry>
                                         <p>The maximum number of characters in a record. Longer
                                             records are diverted to the pipeline for error handling.
                                         </p>
+                                        <p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MaxRecordSize"
+                                            /></p>
                                     </entry>
                                 </row>
                                 <row
@@ -1713,8 +1726,7 @@
                                     <entry>Password to the keystore file. A password is optional,
                                         but recommended.<p>
                                             <note
-                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
-                                            />
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"/>
                                         </p></entry>
                                 </row>
                                 <row id="TLS-KeystoreKeyAlgo-row">
@@ -1749,8 +1761,7 @@
                                     <entry>Password to the truststore file. A password is optional,
                                         but recommended.<p>
                                             <note
-                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
-                                            />
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"/>
                                         </p></entry>
                                 </row>
                                 <row id="TLS-TruststoreKeyAlgo-row">

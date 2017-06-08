@@ -362,6 +362,9 @@
                                         <p>The maximum number of characters in a field. Longer
                                             fields are diverted to the pipeline for error handling.
                                         </p>
+                                        <p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MaxRecordSize"
+                                            /></p>
                                     </entry>
                                 </row>
                                 <row

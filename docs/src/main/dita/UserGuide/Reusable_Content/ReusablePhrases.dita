@@ -39,6 +39,12 @@
             <p><ph id="version">2.6.0.0</ph></p>
             <p><ph id="version_DirName">2600</ph></p>
             <p>
+                  <draft-comment author="Loretta">Data Collector max buffer size for records,
+                        overridden by the parser.limit SDC property. used in Configuring SDC and
+                        origins > Max Record Size.</draft-comment>
+            </p>
+            <p><ph id="ph-DefaultMaxRecordSize">1048576 bytes</ph></p>
+            <p>
                   <draft-comment author="Loretta">The following ph is used by the registration DPM
                         topics. </draft-comment>
             </p>
@@ -320,6 +326,14 @@
             <p>
                   <draft-comment author="Loretta">ORIGIN DATA FORMATS</draft-comment>
             </p>
+            <p>
+                  <draft-comment author="Loretta">Used in Max &lt;record size> Data Format property
+                        descriptions in reusable steps. </draft-comment>
+            </p>
+            <p><ph id="ph-MaxRecordSize">This property can be limited by the <ph
+                              conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> parser
+                        buffer size. For more information, see <xref
+                              href="../Origins/MaxRecordSize.dita#concept_svg_2zl_d1b"/>.</ph></p>
             <p>
                   <draft-comment author="Loretta">AVRO - Used by Kafka Consumer </draft-comment>
                   <dl>
