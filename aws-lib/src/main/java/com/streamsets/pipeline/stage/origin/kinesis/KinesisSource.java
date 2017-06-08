@@ -19,7 +19,14 @@
  */
 package com.streamsets.pipeline.stage.origin.kinesis;
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
@@ -67,7 +74,11 @@ public class KinesisSource extends BasePushSource {
 
   private DataParserFactory parserFactory;
   private ExecutorService executor;
-  private AmazonDynamoDB dynamoDBClient = null;
+
+  private ClientConfiguration clientConfiguration;
+  private AWSCredentialsProvider credentials;
+  private AmazonDynamoDB dynamoDBClient;
+  private AmazonCloudWatch cloudWatchClient;
   private IMetricsFactory metricsFactory = null;
   private Worker worker;
 
@@ -105,6 +116,21 @@ public class KinesisSource extends BasePushSource {
       parserFactory = conf.dataFormatConfig.getParserFactory();
     }
 
+    clientConfiguration = AWSUtil.getClientConfiguration(conf.proxyConfig);
+    credentials = AWSUtil.getCredentialsProvider(conf.awsConfig);
+
+    // KCL currently requires a mutable client
+    dynamoDBClient = new AmazonDynamoDBClient(credentials, clientConfiguration);
+    cloudWatchClient = new AmazonCloudWatchClient(credentials, clientConfiguration);
+    if (conf.region == AWSRegions.OTHER) {
+      dynamoDBClient.setEndpoint(conf.endpoint);
+      cloudWatchClient.setEndpoint(conf.endpoint);
+    } else {
+      Region region = Region.getRegion(Regions.valueOf(conf.region.name()));
+      dynamoDBClient.setRegion(region);
+      cloudWatchClient.setRegion(region);
+    }
+
     return issues;
   }
 
@@ -123,7 +149,7 @@ public class KinesisSource extends BasePushSource {
         new KinesisClientLibConfiguration(
             conf.applicationName,
             conf.streamName,
-            AWSUtil.getCredentialsProvider(conf.awsConfig),
+            credentials,
             getWorkerId()
         );
 
@@ -132,7 +158,7 @@ public class KinesisSource extends BasePushSource {
         .withCallProcessRecordsEvenForEmptyRecordList(false)
         .withIdleTimeBetweenReadsInMillis(conf.idleTimeBetweenReads)
         .withInitialPositionInStream(conf.initialPositionInStream)
-        .withKinesisClientConfig(AWSUtil.getClientConfiguration(conf.proxyConfig));
+        .withKinesisClientConfig(clientConfiguration);
 
     if (conf.region == AWSRegions.OTHER) {
       kclConfig.withKinesisEndpoint(conf.endpoint);
@@ -144,6 +170,7 @@ public class KinesisSource extends BasePushSource {
         .recordProcessorFactory(recordProcessorFactory)
         .metricsFactory(metricsFactory)
         .dynamoDBClient(dynamoDBClient)
+        .cloudWatchClient(cloudWatchClient)
         .execService(executor)
         .config(kclConfig)
         .build();
