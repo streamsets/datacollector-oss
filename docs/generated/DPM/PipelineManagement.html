@@ -354,30 +354,41 @@
         <div class="section context">
             <p class="p">You can
                 export a pipeline for use in <span class="ph">DPM</span>
-                when the pipeline is valid. </p>
+                when the pipeline is valid. You can export a single pipeline or a set of pipelines
+                at one time.</p>
 
-            <p class="p">When you export the pipeline, <span class="ph">Data
+            <p class="p">When you export a single pipeline, <span class="ph">Data
                   Collector</span> generates a JSON file named after the pipeline, as follows:
                     <samp class="ph systemoutput">&lt;pipeline name&gt;.json</samp>. The generated JSON file
                 includes the definition of each stage library used in the pipeline.</p>
 
+            <p class="p">When you export a set of pipelines, <span class="ph">Data
+                  Collector</span> creates a ZIP file named <samp class="ph codeph">pipelines.zip</samp>.</p>
+
+            <p class="p"><span class="ph">Data
+                  Collector</span>
+                saves the files to your default downloads directory.</p>
+
             <div class="note note"><span class="notetitle">Note:</span> To export pipelines for use in another <span class="ph">Data
-                  Collector</span>, see <a class="xref" href="../Pipeline_Maintenance/PipelineMaintenance_title.html#task_dtz_4tr_5q" title="Export pipelines to create backups or to use the pipelines with another Data Collector.">Exporting Pipelines</a>.</div>
+                  Collector</span>, see <a class="xref" href="../Pipeline_Maintenance/PipelineMaintenance_title.html#task_dtz_4tr_5q">Exporting Pipelines</a>.</div>
 
         </div>
 
         <ol class="ol steps"><li class="li step stepexpand">
-                <span class="ph cmd">From the <span class="ph uicontrol">Home</span> page, select pipelines in the list, click
-                    the <span class="ph uicontrol">More</span> icon, and then click <span class="ph uicontrol">Export for
-                        DPM</span>.</span>
+                <span class="ph cmd">To export a single pipeline, from the <span class="ph uicontrol">Home</span> page, select
+                    the pipeline from the list, click the <span class="ph uicontrol">More</span> icon, and then
+                    click <span class="ph uicontrol">Export for DPM</span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">To export a set of pipelines, select multiple pipelines, click the
+                            <span class="ph uicontrol">More</span> icon, and then click <span class="ph uicontrol">Export for
+                            DPM</span>.</p>
+
+                </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Or, to export a pipeline in the pipeline canvas, click the
                         <span class="ph uicontrol">More</span> icon for the pipeline and then click
                         <span class="ph uicontrol">Export for DPM</span>.</span>
-                <div class="itemgroup info"><span class="ph">Data
-                  Collector</span> generates the JSON files and saves them to your default downloads
-                    directory.</div>
             </li>
 </ol>
 

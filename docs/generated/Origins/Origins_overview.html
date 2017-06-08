@@ -184,9 +184,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="28.57142857142857%" id="d252619e404">Origin</th>
+                            <th class="entry" valign="top" width="28.57142857142857%" id="d253687e404">Origin</th>
 
-                            <th class="entry" valign="top" width="71.42857142857143%" id="d252619e407">Description</th>
+                            <th class="entry" valign="top" width="71.42857142857143%" id="d253687e407">Description</th>
 
                         </tr>
 
@@ -194,10 +194,10 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d252619e404 "><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d253687e404 "><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP
                                     Client</a></td>
 
-                            <td class="entry" valign="top" width="71.42857142857143%" headers="d252619e407 ">
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d253687e407 ">
                                 <ul class="ul" id="concept_rsz_cnw_qy__ul_ixb_t5v_qy">
                                     <li class="li">Initiates HTTP requests for an external system.</li>
 
@@ -219,10 +219,10 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d252619e404 "><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d253687e404 "><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
                                     Server</a></td>
 
-                            <td class="entry" valign="top" width="71.42857142857143%" headers="d252619e407 ">
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d253687e407 ">
                                 <ul class="ul" id="concept_rsz_cnw_qy__ul_vsb_x5v_qy">
                                     <li class="li">Listens for incoming HTTP requests and processes them while
                                         the sender waits for confirmation.</li>
@@ -244,10 +244,10 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d252619e404 "><a class="xref" href="HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d253687e404 "><a class="xref" href="HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to
                                     Kafka</a></td>
 
-                            <td class="entry" valign="top" width="71.42857142857143%" headers="d252619e407 ">
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d253687e407 ">
                                 <ul class="ul" id="concept_rsz_cnw_qy__ul_uj1_v5v_qy">
                                     <li class="li">Listens for incoming HTTP requests and writes them
                                         immediately to Kafka with no additional processing. </li>
@@ -309,6 +309,36 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_svg_2zl_d1b">
+ <h2 class="title topictitle2">Maximum Record Size</h2>
+
+ <div class="body conbody">
+  <p class="p">Most data formats
+            have a property that limits the maximum size of the record that an origin can parse. For
+            example, the delimited data format has a Max Record Length property, the JSON data
+            format has Max Object Length, and the text data format has Max Line Length.</p>
+
+        <p class="p">When the origin processes data that is larger than the specified length, the behavior
+            differs based on the origin and the data format. For example, with some data formats,
+            oversized records are handled based on the record error handling configured for the
+            origin. While in other data formats, the origin might truncate the data. For details on
+            how an origin handles size overruns for each data format, see the "Data Formats" section
+            of the origin documentation.</p>
+
+        <p class="p">When available, the maximum record size properties are limited by the <span class="ph">Data
+                  Collector</span>
+            parser buffer size, which is <span class="ph">1048576 bytes</span> by default. So, when raising the maximum record size property in the origin does not
+            change the origin's behavior, you might need to increase the <span class="ph">Data
+                  Collector</span> parser buffer size by configuring the parser.limit property in the <a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties."><span class="ph">Data
+                  Collector</span> configuration file</a>. </p>
+
+        <p class="p">Note that most of the maximum record size properties are specified in characters, while
+            the <span class="ph">Data
+                  Collector</span> limit is defined in bytes. </p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_uxr_g52_qs">
  <h2 class="title topictitle2">File Compression Formats</h2>
 
@@ -326,9 +356,9 @@
           
           <thead class="thead" align="left">
             <tr>
-              <th class="entry" valign="top" width="30%" id="d252619e594">Compression Format</th>
+              <th class="entry" valign="top" width="30%" id="d253687e656">Compression Format</th>
 
-              <th class="entry" valign="top" width="70%" id="d252619e597">Description</th>
+              <th class="entry" valign="top" width="70%" id="d253687e659">Description</th>
 
             </tr>
 
@@ -336,16 +366,16 @@
 
           <tbody class="tbody">
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d252619e594 ">Uncompressed</td>
+              <td class="entry" valign="top" width="30%" headers="d253687e656 ">Uncompressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d252619e597 ">Processes uncompressed files of the configured data format.</td>
+              <td class="entry" valign="top" width="70%" headers="d253687e659 ">Processes uncompressed files of the configured data format.</td>
 
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d252619e594 ">Compressed</td>
+              <td class="entry" valign="top" width="30%" headers="d253687e656 ">Compressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d252619e597 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
+              <td class="entry" valign="top" width="70%" headers="d253687e659 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
                   <li class="li">gzip</li>
 
                   <li class="li">bgzip2</li>
@@ -366,9 +396,9 @@
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d252619e594 ">Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d253687e656 ">Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d252619e597 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
+              <td class="entry" valign="top" width="70%" headers="d253687e659 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
                   <li class="li">7z</li>
 
                   <li class="li">ar</li>
@@ -389,9 +419,9 @@
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d252619e594 ">Compressed Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d253687e656 ">Compressed Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d252619e597 ">Processes files in compressed archives created by supported compression and
+              <td class="entry" valign="top" width="70%" headers="d253687e659 ">Processes files in compressed archives created by supported compression and
                 archive formats.</td>
 
             </tr>
@@ -442,9 +472,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d252619e774">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d253687e835">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d252619e777">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d253687e838">Description</th>
 
                                 </tr>
 
@@ -452,38 +482,38 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d252619e774 ">Topic</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d253687e835 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d252619e777 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d252619e774 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d252619e777 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d253687e838 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d252619e774 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d253687e835 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d252619e777 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d253687e838 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d253687e835 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d253687e838 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d252619e774 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d253687e835 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d252619e777 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d253687e838 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d252619e774 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d253687e835 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d252619e777 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d253687e838 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>
