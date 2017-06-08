@@ -18,6 +18,7 @@ package com.streamsets.datacollector.runner;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -660,6 +661,11 @@ public class MockStages {
     @Override
     public List<StageDefinition> getStages() {
       return stages;
+    }
+
+    @Override
+    public List<LineagePublisherDefinition> getLineagePublisherDefinitions() {
+      return Collections.emptyList();
     }
 
     @Override

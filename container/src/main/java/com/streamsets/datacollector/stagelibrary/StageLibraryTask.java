@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.stagelibrary;
 
+import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
@@ -30,11 +31,15 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   public static final String EL_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.ELDEFS_FILE;
 
+  public static final String LINEAGE_PUBLISHERS_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.LINEAGE_PUBLISHERS_FILE;
+
   public PipelineDefinition getPipeline();
 
   public PipelineRulesDefinition getPipelineRules();
 
   public List<StageDefinition> getStages();
+
+  public List<LineagePublisherDefinition> getLineagePublisherDefinitions();
 
   public StageDefinition getStage(String library, String name, boolean forExecution);
 

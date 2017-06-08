@@ -24,11 +24,13 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
+import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
+import com.streamsets.datacollector.definition.LineagePublisherDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
@@ -43,6 +45,7 @@ import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.LineagePublisher;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.KeyedObjectPool;
@@ -90,6 +93,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private List<? extends ClassLoader> stageClassLoaders;
   private Map<String, StageDefinition> stageMap;
   private List<StageDefinition> stageList;
+  private List<LineagePublisherDefinition> lineagePublisherDefinitions;
   private LoadingCache<Locale, List<StageDefinition>> localizedStageList;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
@@ -187,9 +191,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     json = ObjectMapperFactory.get();
     stageList = new ArrayList<>();
     stageMap = new HashMap<>();
+    lineagePublisherDefinitions = new ArrayList<>();
     loadStages();
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
+    lineagePublisherDefinitions = ImmutableList.copyOf(lineagePublisherDefinitions);
 
     // localization cache for definitions
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
@@ -276,7 +282,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     if (LOG.isDebugEnabled()) {
       for (ClassLoader cl : stageClassLoaders) {
-        LOG.debug("About to load stages from library '{}'", StageLibraryUtils.getLibraryName(cl));
+        LOG.debug("Found stage library '{}'", StageLibraryUtils.getLibraryName(cl));
       }
     }
 
@@ -293,6 +299,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     try {
       int libs = 0;
       int stages = 0;
+      int lineagePublishers = 0;
       long start = System.currentTimeMillis();
       LocaleInContext.set(Locale.getDefault());
       for (ClassLoader cl : stageClassLoaders) {
@@ -310,43 +317,72 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
           // Load stages from the stage library
           StageLibraryDefinition libDef = StageLibraryDefinitionExtractor.get().extract(cl);
-          LOG.debug("Loading stages from library '{}'", libDef.getName());
+          LOG.debug("Loading stages and plugins from library '{}'", libDef.getName());
           libs++;
-          Enumeration<URL> resources = cl.getResources(STAGES_DEFINITION_RESOURCE);
-          while (resources.hasMoreElements()) {
-            Map<String, String> stagesInLibrary = new HashMap<>();
-            URL url = resources.nextElement();
-            try (InputStream is = url.openStream()) {
-              List<String> stageList = json.readValue(is, List.class);
-              stageList = removeIgnoreStagesFromList(libDef, stageList);
-              for (String className : stageList) {
-                stages++;
-                Class<? extends Stage> klass = (Class<? extends Stage>) cl.loadClass(className);
-                StageDefinition stage = StageDefinitionExtractor.get().
-                    extract(libDef, klass, Utils.formatL("Library='{}'", libDef.getName()));
-                String key = createKey(libDef.getName(), stage.getName());
-                LOG.debug("Loaded stage '{}'  version {} (library:name)", key, stage.getVersion());
-                if (stagesInLibrary.containsKey(key)) {
-                  throw new IllegalStateException(Utils.format(
-                      "Library '{}' contains more than one definition for stage '{}', class '{}' and class '{}'",
-                      libDef.getName(), key, stagesInLibrary.get(key), stage.getStageClass()));
-                }
-                stagesInLibrary.put(key, stage.getClassName());
-                this.stageList.add(stage);
-                stageMap.put(key, stage);
-              }
-            }
+
+          // Load Stages
+          for(Class klass : loadClassesFromResource(libDef, cl, STAGES_DEFINITION_RESOURCE)) {
+            stages++;
+            StageDefinition stage = StageDefinitionExtractor.get().extract(libDef, klass, Utils.formatL("Library='{}'", libDef.getName()));
+            String key = createKey(libDef.getName(), stage.getName());
+            LOG.debug("Loaded stage '{}'  version {}", key, stage.getVersion());
+            stageList.add(stage);
+            stageMap.put(key, stage);
+          }
+
+          // Load Lineage publishers
+          for(Class klass : loadClassesFromResource(libDef, cl, LINEAGE_PUBLISHERS_DEFINITION_RESOURCE)) {
+            lineagePublishers++;
+            LineagePublisherDefinition lineage = LineagePublisherDefinitionExtractor.get().extract(libDef, klass);
+            String key = createKey(libDef.getName(), lineage.getName());
+            LOG.debug("Loaded lineage plugin '{}'", key);
+            lineagePublisherDefinitions.add(lineage);
           }
         } catch (IOException | ClassNotFoundException ex) {
           throw new RuntimeException(
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.toString()), ex);
         }
       }
-      LOG.debug("Loaded '{}' libraries with a total of '{}' stages in '{}ms'", libs, stages,
-                System.currentTimeMillis() - start);
+      LOG.debug(
+        "Loaded '{}' libraries with a total of '{}' stages and '{}' lineage publishers in '{}ms'",
+        libs,
+        stages,
+        lineagePublishers,
+        System.currentTimeMillis() - start
+      );
     } finally {
       LocaleInContext.set(null);
     }
+  }
+
+  private <T> List<Class<? extends T>> loadClassesFromResource(
+    StageLibraryDefinition libDef,
+    ClassLoader cl,
+    String resourceName
+  ) throws IOException, ClassNotFoundException {
+    Set<String> dedup = new HashSet<>();
+    List<Class<? extends T>> list = new ArrayList<>();
+
+    // Load all resource files with given name
+    Enumeration<URL> resources = cl.getResources(resourceName);
+    while (resources.hasMoreElements()) {
+      URL url = resources.nextElement();
+      try (InputStream is = url.openStream()) {
+        List<String> plugins = json.readValue(is, List.class);
+        plugins = removeIgnoreStagesFromList(libDef, plugins);
+        for (String className : plugins) {
+          if(dedup.contains(className)) {
+            throw new IllegalStateException(Utils.format(
+              "Library '{}' contains more than one definition for '{}'",
+              libDef.getName(), className));
+          }
+          dedup.add(className);
+          list.add((Class<? extends T>) cl.loadClass(className));
+        }
+      }
+    }
+
+    return list;
   }
 
   void validateStageVersions(List<StageDefinition> stageList) {
@@ -400,6 +436,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       LOG.warn("Error loading locale '{}', {}", LocaleInContext.get(), ex.toString(), ex);
       return stageList;
     }
+  }
+
+  @Override
+  public List<LineagePublisherDefinition> getLineagePublisherDefinitions() {
+    return lineagePublisherDefinitions;
   }
 
   @Override
