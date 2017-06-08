@@ -67,7 +67,7 @@ public class HttpProcessorConfig {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Header Attribute Prefix",
-      description = "A prefix to to the response header name to add in the record header.",
+      description = "A prefix to add to record header attributes in the response",
       displayPosition = 30,
       group = "HTTP",
       dependsOn = "headerOutputLocation",
