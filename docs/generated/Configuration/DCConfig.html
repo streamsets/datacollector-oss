@@ -983,6 +983,19 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d34179e1014 ">parser.limit </td>
+
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d34179e1017 ">Maximum parser buffer size that origins can use to process
+                                    data. Limits the size of the data that can be parsed and
+                                    converted to a record.<p class="p">By default, the parser buffer size is
+                                            <span class="ph">1048576 bytes</span>. To increase the size, uncomment and configure this
+                                        property. For more information about how this property
+                                        affects record sizes, see <a class="xref" href="../Origins/Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</p>
+</td>
+
+                            </tr>
+
+                            <tr>
                                 <td class="entry" valign="top" width="33.33333333333333%" headers="d34179e1014 ">production.maxErrorRecordsPerStage</td>
 
                                 <td class="entry" valign="top" width="66.66666666666666%" headers="d34179e1017 ">Maximum number of error records to save in memory for each
@@ -1151,9 +1164,9 @@ user.stagelibs.blacklist</pre>
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="22.22222222222222%" id="d34179e1719">Email Property</th>
+                                <th class="entry" valign="top" width="22.22222222222222%" id="d34179e1737">Email Property</th>
 
-                                <th class="entry" valign="top" width="77.77777777777779%" id="d34179e1722">Description</th>
+                                <th class="entry" valign="top" width="77.77777777777779%" id="d34179e1740">Description</th>
 
                             </tr>
 
@@ -1161,83 +1174,83 @@ user.stagelibs.blacklist</pre>
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">mail.transport.protocol</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">mail.transport.protocol</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">Use smtp or smtps. <p class="p">Default is smtp.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">Use smtp or smtps. <p class="p">Default is smtp.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">mail.smtp.host</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">mail.smtp.host</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">SMTP host name.<p class="p">Default is localhost.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">SMTP host name.<p class="p">Default is localhost.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">mail.smtp.port</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">mail.smtp.port</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">SMTP port number.<p class="p">Default is 25.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">SMTP port number.<p class="p">Default is 25.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">mail.smtp.auth</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">mail.smtp.auth</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">Whether the SMTP host uses authentication. Use true or
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">Whether the SMTP host uses authentication. Use true or
                                         false.<p class="p">Default is false.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">mail.smtp.starttls.enable</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">mail.smtp.starttls.enable</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">Whether the SMTP host uses STARTTLS encryption. Use true or
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">Whether the SMTP host uses STARTTLS encryption. Use true or
                                         false.<p class="p">Default is false. </p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">mail.smtps.host</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">mail.smtps.host</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">SMTPS host name. <p class="p">Default is localhost.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">SMTPS host name. <p class="p">Default is localhost.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">mail.smtps.port</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">mail.smtps.port</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">SMTPS port number.<p class="p">Default is 25.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">SMTPS port number.<p class="p">Default is 25.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">mail.smtps.auth</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">mail.smtps.auth</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">Whether the SMTPS host uses authentication. Use true or
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">Whether the SMTPS host uses authentication. Use true or
                                         false.<p class="p">Default is false.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">xmail.username</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">xmail.username</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">User name for the email account to send email.</td>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">User name for the email account to send email.</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">xmail.password</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">xmail.password</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">File that contains the password for the email account.<p class="p">By
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">File that contains the password for the email account.<p class="p">By
                                         default, the file name is
                                             <span class="ph filepath">email-password.txt</span> and expected in
                                         the <samp class="ph codeph">$SDC_CONF</samp> directory.</p>
@@ -1249,9 +1262,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1719 ">xmail.from.address</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1737 ">xmail.from.address</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1722 ">Email address to use to send email. </td>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1740 ">Email address to use to send email. </td>
 
                             </tr>
 
@@ -1268,9 +1281,9 @@ The <span class="ph">Data
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="22.22222222222222%" id="d34179e1873">Advanced Property</th>
+                            <th class="entry" valign="top" width="22.22222222222222%" id="d34179e1891">Advanced Property</th>
 
-                            <th class="entry" valign="top" width="77.77777777777779%" id="d34179e1876">Description</th>
+                            <th class="entry" valign="top" width="77.77777777777779%" id="d34179e1894">Description</th>
 
                         </tr>
 
@@ -1278,10 +1291,10 @@ The <span class="ph">Data
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1873 ">runtime.conf.location <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."><img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                            <td class="entry" valign="top" width="22.22222222222222%" headers="d34179e1891 ">runtime.conf.location <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."><img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                 </a></td>
 
-                            <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1876 ">Location of runtime properties. Use to declare where runtime
+                            <td class="entry" valign="top" width="77.77777777777779%" headers="d34179e1894 ">Location of runtime properties. Use to declare where runtime
                                 properties are defined:<ul class="ul" id="task_lxk_kjw_1r__ul_mh4_rrn_1s">
                                     <li class="li">embedded - The runtime properties are defined in the file.
                                             <p class="p">Use the following naming convention to define runtime
@@ -1314,9 +1327,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" id="d34179e1942">Stage-Specific Properties</th>
+                                <th class="entry" valign="top" id="d34179e1960">Stage-Specific Properties</th>
 
-                                <th class="entry" valign="top" id="d34179e1945">Description</th>
+                                <th class="entry" valign="top" id="d34179e1963">Description</th>
 
                             </tr>
 
@@ -1324,9 +1337,9 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" headers="d34179e1942 ">stage.conf_hadoop.always.impersonate.current.user</td>
+                                <td class="entry" valign="top" headers="d34179e1960 ">stage.conf_hadoop.always.impersonate.current.user</td>
 
-                                <td class="entry" valign="top" headers="d34179e1945 ">Ensures that Hadoop-related stages use the currently logged
+                                <td class="entry" valign="top" headers="d34179e1963 ">Ensures that Hadoop-related stages use the currently logged
                                     in <span class="ph">Data
                   Collector</span> user to perform tasks, such as writing data, in Hadoop
                                     systems. With this property enabled, <span class="ph">Data
@@ -1340,13 +1353,13 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" headers="d34179e1942 ">
+                                <td class="entry" valign="top" headers="d34179e1960 ">
                                     <p class="p">stage.conf_com.streamsets.pipeline.stage.executor.
                                         shell.impersonation_mode </p>
 
                                 </td>
 
-                                <td class="entry" valign="top" headers="d34179e1945 ">Uses the <span class="ph">Data
+                                <td class="entry" valign="top" headers="d34179e1963 ">Uses the <span class="ph">Data
                   Collector</span> user who starts the pipeline to execute shell scripts defined
                                     in Shell executors. When not enabled, the operating system user
                                     who started <span class="ph">Data
@@ -1363,10 +1376,10 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" headers="d34179e1942 ">stage.conf_com.streamsets.pipeline.stage.executor.
+                                <td class="entry" valign="top" headers="d34179e1960 ">stage.conf_com.streamsets.pipeline.stage.executor.
                                     shell.shell</td>
 
-                                <td class="entry" valign="top" headers="d34179e1945 ">Defines the relative or absolute path to the command line
+                                <td class="entry" valign="top" headers="d34179e1963 ">Defines the relative or absolute path to the command line
                                     interpreter to use to execute scripts, such as
                                         <samp class="ph codeph">/bin/bash</samp>.<p class="p">Default is
                                             "<samp class="ph codeph">sh</samp>".</p>
@@ -1377,10 +1390,10 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" headers="d34179e1942 ">stage.conf_com.streamsets.pipeline.stage.executor.
+                                <td class="entry" valign="top" headers="d34179e1960 ">stage.conf_com.streamsets.pipeline.stage.executor.
                                     shell.sudo</td>
 
-                                <td class="entry" valign="top" headers="d34179e1945 ">Defines the relative or absolute path to the sudo to use when
+                                <td class="entry" valign="top" headers="d34179e1963 ">Defines the relative or absolute path to the sudo to use when
                                     executing scripts.<p class="p">Default is
                                         <samp class="ph codeph">sudo</samp>.</p>
 <p class="p">Used by Shell
@@ -1402,9 +1415,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d34179e2057">Observer Properties</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d34179e2075">Observer Properties</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d34179e2060">Description</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d34179e2078">Description</th>
 
                             </tr>
 
@@ -1412,9 +1425,9 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d34179e2057 ">observer.queue.size</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d34179e2075 ">observer.queue.size</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d34179e2060 ">Maximum queue size for data rule evaluation requests. Each
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d34179e2078 ">Maximum queue size for data rule evaluation requests. Each
                                     data rule generates an evaluation request for every batch that
                                     passes through the stream. When the number of requests outstrips
                                     the queue size, requests are dropped.<p class="p">Default is 100.
@@ -1424,9 +1437,9 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d34179e2057 ">observer.sampled.records.cache.size</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d34179e2075 ">observer.sampled.records.cache.size</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d34179e2060 ">Maximum number of records to be cached for display for each
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d34179e2078 ">Maximum number of records to be cached for display for each
                                     rule. The exact number of records is specified in the data rule.
                                         <p class="p">Default is 100. You can reduce this number as
                                     needed.</p>
@@ -1435,9 +1448,9 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d34179e2057 ">observer.queue.offer.max.wait.time.ms</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d34179e2075 ">observer.queue.offer.max.wait.time.ms</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d34179e2060 ">Maximum number of milliseconds to wait before dropping a data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d34179e2078 ">Maximum number of milliseconds to wait before dropping a data
                                     rule evaluation request when the observer queue is full.</td>
 
                             </tr>
@@ -1456,9 +1469,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d34179e2119">Miscellaneous Property</th>
+                                <th class="entry" valign="top" width="30%" id="d34179e2137">Miscellaneous Property</th>
 
-                                <th class="entry" valign="top" width="70%" id="d34179e2122">Description</th>
+                                <th class="entry" valign="top" width="70%" id="d34179e2140">Description</th>
 
                             </tr>
 
@@ -1466,18 +1479,18 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d34179e2119 ">max.stage.private.classloaders</td>
+                                <td class="entry" valign="top" width="30%" headers="d34179e2137 ">max.stage.private.classloaders</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d34179e2122 ">Maximum number of stage libraries <span class="ph">Data
+                                <td class="entry" valign="top" width="70%" headers="d34179e2140 ">Maximum number of stage libraries <span class="ph">Data
                   Collector</span> allows. <p class="p">Default is 50.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d34179e2119 ">runner.thread.pool.size</td>
+                                <td class="entry" valign="top" width="30%" headers="d34179e2137 ">runner.thread.pool.size</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d34179e2122 ">Pre-multiplier size of the thread pool. One running pipeline
+                                <td class="entry" valign="top" width="70%" headers="d34179e2140 ">Pre-multiplier size of the thread pool. One running pipeline
                                     requires five threads, and pipelines share threads in the pool.
                                     To calculate the approximate runner thread pool size, multiply
                                     the number of running pipelines by 2.2.<p class="p">Increasing this value
@@ -1491,18 +1504,18 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d34179e2119 ">pipeline.max.runners.count</td>
+                                <td class="entry" valign="top" width="30%" headers="d34179e2137 ">pipeline.max.runners.count</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d34179e2122 ">Maximum number of pipeline runners to use for a multithreaded
+                                <td class="entry" valign="top" width="70%" headers="d34179e2140 ">Maximum number of pipeline runners to use for a multithreaded
                                         pipeline.<p class="p">Default is 50.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d34179e2119 ">bundle.upload.enabled</td>
+                                <td class="entry" valign="top" width="30%" headers="d34179e2137 ">bundle.upload.enabled</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d34179e2122 ">Allows <span class="ph">Data
+                                <td class="entry" valign="top" width="70%" headers="d34179e2140 ">Allows <span class="ph">Data
                   Collector</span> to directly upload <a class="xref" href="../Administration/Administration_title.html#concept_szj_3mw_xz" title="You can use Data Collector to generate a support bundle. A support bundle is a ZIP file that includes Data Collector logs, environment and configuration information, pipeline JSON files, resource files, and pipeline snapshots. You upload the generated file to the StreamSets support team so that we can use the information to troubleshoot your support tickets. Or, you can download the generated file and then send the file to another StreamSets community member.">support bundles</a> to the StreamSets support team.<p class="p">To
                                         disable the direct upload, uncomment this property.
                                     </p>
@@ -1537,10 +1550,10 @@ Generally,
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d34179e2222">Blacklist / Whitelist Property <a class="xref" href="DCConfig.html#concept_gfx_rvf_qv" title="By default, almost all installed stage libraries are available for use in Data Collector. You can use blacklist and whitelist properties to limit the stage libraries that can be used."><img class="image" id="task_lxk_kjw_1r__image_pvr_lgg_qv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                <th class="entry" valign="top" width="30%" id="d34179e2240">Blacklist / Whitelist Property <a class="xref" href="DCConfig.html#concept_gfx_rvf_qv" title="By default, almost all installed stage libraries are available for use in Data Collector. You can use blacklist and whitelist properties to limit the stage libraries that can be used."><img class="image" id="task_lxk_kjw_1r__image_pvr_lgg_qv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                     </a></th>
 
-                                <th class="entry" valign="top" width="70%" id="d34179e2235">Description</th>
+                                <th class="entry" valign="top" width="70%" id="d34179e2253">Description</th>
 
                             </tr>
 
@@ -1548,20 +1561,20 @@ Generally,
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d34179e2222 ">system.stagelibs.whitelist<p class="p">system.stagelibs.blacklist</p>
+                                <td class="entry" valign="top" width="30%" headers="d34179e2240 ">system.stagelibs.whitelist<p class="p">system.stagelibs.blacklist</p>
 </td>
 
-                                <td class="entry" valign="top" width="70%" headers="d34179e2235 ">Use one list to limit the StreamSets stage libraries that can
+                                <td class="entry" valign="top" width="70%" headers="d34179e2253 ">Use one list to limit the StreamSets stage libraries that can
                                     be used in <span class="ph">Data
                   Collector</span>. Do not use both.</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d34179e2222 ">user.stagelibs.whitelist<p class="p">user.stagelibs.blacklist</p>
+                                <td class="entry" valign="top" width="30%" headers="d34179e2240 ">user.stagelibs.whitelist<p class="p">user.stagelibs.blacklist</p>
 </td>
 
-                                <td class="entry" valign="top" width="70%" headers="d34179e2235 ">Use one list to limit the third-party stage libraries that
+                                <td class="entry" valign="top" width="70%" headers="d34179e2253 ">Use one list to limit the third-party stage libraries that
                                     can be used in <span class="ph">Data
                   Collector</span>. Do not use both.</td>
 
@@ -1582,9 +1595,9 @@ Generally,
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d34179e2292">Additional Files Property</th>
+                            <th class="entry" valign="top" width="30%" id="d34179e2310">Additional Files Property</th>
 
-                            <th class="entry" valign="top" width="70%" id="d34179e2295">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d34179e2313">Description</th>
 
                         </tr>
 
@@ -1592,9 +1605,9 @@ Generally,
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d34179e2292 ">config.includes</td>
+                            <td class="entry" valign="top" width="30%" headers="d34179e2310 ">config.includes</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d34179e2295 ">Additional configuration files to include in the <span class="ph">Data
+                            <td class="entry" valign="top" width="70%" headers="d34179e2313 ">Additional configuration files to include in the <span class="ph">Data
                   Collector</span> configuration. The files must be stored in a directory relative
                                 to the <samp class="ph systemoutput">$SDC_CONF</samp> directory.<p class="p">You can
                                     enter multiple file names separated by commas. The files are
@@ -1633,9 +1646,9 @@ Generally,
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="40%" id="d34179e2357">Record Sampling Property</th>
+                            <th class="entry" valign="top" width="40%" id="d34179e2375">Record Sampling Property</th>
 
-                            <th class="entry" valign="top" width="60%" id="d34179e2360">Description</th>
+                            <th class="entry" valign="top" width="60%" id="d34179e2378">Description</th>
 
                         </tr>
 
@@ -1643,17 +1656,17 @@ Generally,
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d34179e2357 ">sdc.record.sampling.sample.size</td>
+                            <td class="entry" valign="top" width="40%" headers="d34179e2375 ">sdc.record.sampling.sample.size</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d34179e2360 ">Size of the sample set.<p class="p">Default is 1.</p>
+                            <td class="entry" valign="top" width="60%" headers="d34179e2378 ">Size of the sample set.<p class="p">Default is 1.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d34179e2357 ">sdc.record.sampling.population.size</td>
+                            <td class="entry" valign="top" width="40%" headers="d34179e2375 ">sdc.record.sampling.population.size</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d34179e2360 ">Size of the total number of records.<p class="p">Default is
+                            <td class="entry" valign="top" width="60%" headers="d34179e2378 ">Size of the total number of records.<p class="p">Default is
                                 10,000.</p>
 </td>
 
@@ -1678,9 +1691,9 @@ Generally,
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="40%" id="d34179e2424">Pipeline State Cache Property</th>
+                            <th class="entry" valign="top" width="40%" id="d34179e2442">Pipeline State Cache Property</th>
 
-                            <th class="entry" valign="top" width="60%" id="d34179e2427">Description</th>
+                            <th class="entry" valign="top" width="60%" id="d34179e2445">Description</th>
 
                         </tr>
 
@@ -1688,9 +1701,9 @@ Generally,
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d34179e2424 ">store.pipeline.state.cache.maximum.size</td>
+                            <td class="entry" valign="top" width="40%" headers="d34179e2442 ">store.pipeline.state.cache.maximum.size</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d34179e2427 ">Maximum number of pipeline states that <span class="ph">Data
+                            <td class="entry" valign="top" width="60%" headers="d34179e2445 ">Maximum number of pipeline states that <span class="ph">Data
                   Collector</span> caches. When the maximum number is reached, <span class="ph">Data
                   Collector</span> evicts the oldest states from the cache.<p class="p">Default is 100.
                                 </p>
@@ -1699,9 +1712,9 @@ Generally,
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d34179e2424 ">store.pipeline.state.cache.expire.after.access</td>
+                            <td class="entry" valign="top" width="40%" headers="d34179e2442 ">store.pipeline.state.cache.expire.after.access</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d34179e2427 ">Amount of time in minutes that a pipeline state can remain in the
+                            <td class="entry" valign="top" width="60%" headers="d34179e2445 ">Amount of time in minutes that a pipeline state can remain in the
                                 cache after the entry's creation, the most recent replacement of its
                                 value, or its last access.<p class="p">Default is 10 minutes.</p>
 </td>

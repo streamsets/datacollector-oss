@@ -76,7 +76,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_754418561"/>
+               path="Installation/CMInstall-Overview.html#unique_374256059"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -483,6 +483,8 @@
                path="Origins/Origins_overview.html#concept_rsz_cnw_qy"/>
    <appContext helpID="concept_ypd_vgr_5q"
                path="Origins/Origins_overview.html#concept_ypd_vgr_5q"/>
+   <appContext helpID="concept_svg_2zl_d1b"
+               path="Origins/Origins_overview.html#concept_svg_2zl_d1b"/>
    <appContext helpID="concept_uxr_g52_qs"
                path="Origins/Origins_overview.html#concept_uxr_g52_qs"/>
    <appContext helpID="task_jp5_ql1_tq"
@@ -2147,8 +2149,12 @@
                path="Pipeline_Maintenance/PipelineMaintenance_title.html#task_hdg_j1s_5q"/>
    <appContext helpID="task_ylb_f1s_5q"
                path="Pipeline_Maintenance/PipelineMaintenance_title.html#task_ylb_f1s_5q"/>
+   <appContext helpID="concept_elp_zjt_d1b"
+               path="Pipeline_Maintenance/PipelineMaintenance_title.html#concept_elp_zjt_d1b"/>
    <appContext helpID="task_fdf_hrr_5q"
                path="Pipeline_Maintenance/PipelineMaintenance_title.html#task_fdf_hrr_5q"/>
+   <appContext helpID="task_cr5_mkr_d1b"
+               path="Pipeline_Maintenance/PipelineMaintenance_title.html#task_cr5_mkr_d1b"/>
    <appContext helpID="concept_jrg_1vy_wy"
                path="Pipeline_Maintenance/PipelineMaintenance_title.html#concept_jrg_1vy_wy"/>
    <appContext helpID="task_elc_qn1_xy"
@@ -2278,7 +2284,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_2057596284"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_445813737"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"

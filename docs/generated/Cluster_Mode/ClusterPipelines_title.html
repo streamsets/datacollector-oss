@@ -346,38 +346,38 @@
                 <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the SDC_USER
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7838">The SDC_USER environment variable defines the system
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7851">The SDC_USER environment variable defines the system
                     user used to run Data Collector as a service. The variable is defined in the
                     $SDC_DIST/libexec/sdcd-env.sh file. </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7841">For example, say SDC_USER is defined as
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7854">For example, say SDC_USER is defined as
                         <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
                     might use the following commands to create the directory and configure the
                     necessary write
-                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2422e7846">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+                    permissions:<pre class="pre codeblock" id="task_hhk_bfv_cy__d2422e7859">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd" id="task_hhk_bfv_cy__d2422e7889">If necessary, specify the location of the
+                <span class="ph cmd" id="task_hhk_bfv_cy__d2422e7902">If necessary, specify the location of the
                     spark-submit script.</span>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7892"><span class="ph">Data
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7905"><span class="ph">Data
                   Collector</span> assumes that the spark-submit script used to submit job requests to Spark
                     Streaming is located in the following directory:
                     <pre class="pre codeblock">/usr/bin/spark-submit</pre>
 </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7898">If the script is not in this directory, use
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7911">If the script is not in this directory, use
                     the SPARK_SUBMIT_YARN_COMMAND environment variable to define the location of the
                     script.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7901">The location of the script may differ depending
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7914">The location of the script may differ depending
                     on the Spark version and distribution that you use.</div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7904"><span class="ph" id="task_hhk_bfv_cy__d2422e7905">For example,
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7917"><span class="ph" id="task_hhk_bfv_cy__d2422e7918">For example,
                         when using CDH Spark 2.1, the spark-submit script is in the following
                         directory by default: /usr/bin/spark2-submit. Then, you might use the
                         following command to define the location of the
-                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2422e7909">=/usr/bin/spark2-submit</span></pre>
+                    script:</span><pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND<span class="ph" id="task_hhk_bfv_cy__d2422e7922">=/usr/bin/spark2-submit</span></pre>
 </div>
-                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7913">
-                    <div class="note note" id="task_hhk_bfv_cy__d2422e7915"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                <div class="itemgroup info" id="task_hhk_bfv_cy__d2422e7926">
+                    <div class="note note" id="task_hhk_bfv_cy__d2422e7928"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data
                   Collector</span> to
                         capture the change.</div>
@@ -421,7 +421,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2422e7962"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_hhk_bfv_cy__d2422e7975"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
@@ -504,7 +504,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     script:</span><pre class="pre codeblock">export SPARK_SUBMIT_MESOS_COMMAND<span class="ph">=/usr/bin/spark2-submit</span></pre>
 </div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_kf1_fgv_cy__d2422e7915"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_kf1_fgv_cy__d2422e7928"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data
                   Collector</span> to
                         capture the change.</div>
@@ -661,7 +661,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2422e7962"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_n2l_z45_lx__d2422e7975"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
@@ -711,14 +711,14 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                 <span class="ph cmd">To enable checkpoint metadata storage, grant the user defined in the SDC_USER
                     environment variable write permission on
                     <span class="ph filepath">/user/$SDC_USER</span>.</span>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2422e7838">The SDC_USER environment variable defines the system
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2422e7851">The SDC_USER environment variable defines the system
                     user used to run Data Collector as a service. The variable is defined in the
                     $SDC_DIST/libexec/sdcd-env.sh file. </div>
-                <div class="itemgroup info" id="task_i3h_q3w_hx__d2422e7841">For example, say SDC_USER is defined as
+                <div class="itemgroup info" id="task_i3h_q3w_hx__d2422e7854">For example, say SDC_USER is defined as
                         <span class="ph filepath">sdc</span> and the cluster does not use Kerberos. Then you
                     might use the following commands to create the directory and configure the
                     necessary write
-                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2422e7846">$sudo -u hdfs hadoop fs -mkdir /user/sdc
+                    permissions:<pre class="pre codeblock" id="task_i3h_q3w_hx__d2422e7859">$sudo -u hdfs hadoop fs -mkdir /user/sdc
 $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
 </div>
             </li>
@@ -741,7 +741,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                     <pre class="pre codeblock">export SPARK_SUBMIT_YARN_COMMAND=/opt/mapr/spark/spark-2.1/bin/spark-submit</pre>
 </div>
                 <div class="itemgroup info">
-                    <div class="note note" id="task_i3h_q3w_hx__d2422e7915"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
+                    <div class="note note" id="task_i3h_q3w_hx__d2422e7928"><span class="notetitle">Note:</span> If you change the location of the spark-submit script, you must
                         restart <span class="ph">Data
                   Collector</span> to
                         capture the change.</div>
@@ -789,7 +789,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2422e7962"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_i3h_q3w_hx__d2422e7975"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
@@ -901,7 +901,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</pre>
                   Collector</span> to use Kerberos authentication. </span>
                 <div class="itemgroup info">When you configure Kerberos authentication for <span class="ph">Data
                   Collector</span>, you enable <span class="ph">Data
-                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2422e7962"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
+                  Collector</span> to use Kerberos and define the principal and keytab. <div class="note important" id="task_akz_w5b_ws__d2422e7975"><span class="importanttitle">Important:</span> For cluster pipelines, enter an absolute path to the
                         keytab when configuring <span class="ph">Data
                   Collector</span>. Standalone pipelines do not require an absolute path.</div>
 </div>
