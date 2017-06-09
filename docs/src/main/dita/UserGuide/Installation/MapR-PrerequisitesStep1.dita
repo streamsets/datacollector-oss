@@ -34,9 +34,13 @@
                                 download the files for your operating system
                                 here:<codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>&lt;version>/</codeblock></p></li>
                         <li>Kafka client library - Typically named
-                                <codeph>mapr-kafka-&lt;version>.&lt;ext></codeph>. <p>You can
-                                download the files for your operating system here:
-                                <codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>ecosystem-&lt;version>/</codeblock></p></li>
+                                <codeph>mapr-kafka-&lt;version>.&lt;ext></codeph>. <p>For MapR
+                                versions 5.0.0 or 5.1.0, you can download the files for your
+                                operating system here:
+                                <codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>ecosystem-&lt;version>/</codeblock>For
+                                MapR version 5.2.0, you can download the files for your operating
+                                system here:
+                                <codeblock><xref href="http://package.mapr.com/releases/MEP/" format="html" scope="external"/>MEP-&lt;version>/</codeblock></p></li>
                     </ul></p></li>
             <li
                 conref="../Reusable_Content/Reusable_Topics/MapRPrereqs.dita#concept_xlw_hjc_yy/MapR_loginAuth"/>
