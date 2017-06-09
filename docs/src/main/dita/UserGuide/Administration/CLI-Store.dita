@@ -15,14 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xc2_vyw_yt">
  <title>Store Command</title>
- <shortdesc>The <codeph>store</codeph> command provides arguments to view a list of all pipelines
+ <shortdesc>The <codeph>store</codeph> command provides subcommands to view a list of all pipelines
         and to import a pipeline. </shortdesc>
  <conbody>
   <p><indexterm>command line interface<indexterm>store command</indexterm></indexterm>You can use
-            the following arguments with the <codeph>store</codeph> command:<dl>
+            the following subcommands with the <codeph>store</codeph> command:<dl>
                 <dlentry>
                     <dt>list</dt>
-                    <dd>Lists all available pipelines. The <codeph>list</codeph> argument uses the
+                    <dd>Lists all available pipelines. The <codeph>list</codeph> subcommand uses the
                         following syntax:<codeblock>store list</codeblock></dd>
                     <dd>Returns the following information for each
                         pipeline:<codeblock> {
@@ -60,7 +60,7 @@
                         from a <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         />. Returns a message when the import is successful. </dd>
-                    <dd>The <codeph>import</codeph> argument uses the following syntax:</dd>
+                    <dd>The <codeph>import</codeph> subcommand uses the following syntax:</dd>
                     <dd>
                         <codeblock>store import \
 (-n &lt;pipelineTitle> | --name &lt;pipelineTitle>) \

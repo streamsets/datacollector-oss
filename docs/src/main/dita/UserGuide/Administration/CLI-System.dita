@@ -15,12 +15,12 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bdt_5ky_fz">
  <title>System Command</title>
- <shortdesc>The <codeph>system</codeph> command provides arguments to register and unregister the
+ <shortdesc>The <codeph>system</codeph> command provides subcommands to register and unregister the
             <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         with <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </shortdesc>
  <conbody>
   <p><indexterm>command line interface<indexterm>system command</indexterm></indexterm>You can use
-            the following arguments with the <codeph>system</codeph> command:</p>
+            the following subcommands with the <codeph>system</codeph> command:</p>
         <dl>
             <dlentry>
                 <dt>enableDPM</dt>

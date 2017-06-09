@@ -300,12 +300,13 @@
                     <dt>REST API / Command Line Interface</dt>
                     <dd>
                         <ul id="ul_ktv_k5y_11b">
-                            <li>Offset management - Both the REST API and command line interface can
-                                now retrieve the last-saved offset for a pipeline and set the offset
-                                for a pipeline when it is not running. Use these commands to
-                                implement pipeline failover using an external storage system.
-                                Otherwise, pipeline offsets are managed by Data Collector and there
-                                is no need to update the offsets.</li>
+                            <li>Offset management - Both the REST API and <xref
+                                    href="../Administration/CLI-Overview.dita#concept_ywx_d5x_pt"
+                                    >command line interface</xref> can now retrieve the last-saved
+                                offset for a pipeline and set the offset for a pipeline when it is
+                                not running. Use these commands to implement pipeline failover using
+                                an external storage system. Otherwise, pipeline offsets are managed
+                                by Data Collector and there is no need to update the offsets.</li>
                         </ul>
                     </dd>
                 </dlentry>
