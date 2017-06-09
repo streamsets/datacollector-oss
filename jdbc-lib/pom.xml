@@ -30,7 +30,7 @@
   <name>StreamSets Data Collector JDBC Lib</name>
 
   <properties>
-    <h2.version>1.4.187</h2.version>
+    <h2.version>1.4.195</h2.version>
     <guava.version>18.0</guava.version>
     <commons-lang.version>3.4</commons-lang.version>
     <antlr.version>4.5.3</antlr.version>

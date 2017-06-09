@@ -52,13 +52,17 @@ import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -442,6 +446,18 @@ public class JdbcUtil {
           case Types.TIMESTAMP:
             field = Field.create(Field.Type.DATETIME, rs.getTimestamp(columnIndex));
             break;
+          // Ugly hack until we can support LocalTime, LocalDate, LocalDateTime, etc.
+          case Types.TIME_WITH_TIMEZONE:
+            OffsetTime offsetTime = rs.getObject(columnIndex, OffsetTime.class);
+            field = Field.create(Field.Type.TIME, Date.from(offsetTime.atDate(LocalDate.MIN).toInstant()));
+            break;
+          case Types.TIMESTAMP_WITH_TIMEZONE:
+            OffsetDateTime offsetDateTime = rs.getObject(columnIndex, OffsetDateTime.class);
+            field = Field.create(Field.Type.DATETIME, Date.from(offsetDateTime.toInstant()));
+            break;
+          //case Types.REF_CURSOR: // JDK8 only
+          case Types.SQLXML:
+          case Types.STRUCT:
           case Types.ARRAY:
           case Types.DATALINK:
           case Types.DISTINCT:
@@ -449,11 +465,6 @@ public class JdbcUtil {
           case Types.NULL:
           case Types.OTHER:
           case Types.REF:
-            //case Types.REF_CURSOR: // JDK8 only
-          case Types.SQLXML:
-          case Types.STRUCT:
-            //case Types.TIME_WITH_TIMEZONE: // JDK8 only
-            //case Types.TIMESTAMP_WITH_TIMEZONE: // JDK8 only
           default:
             return null;
         }
