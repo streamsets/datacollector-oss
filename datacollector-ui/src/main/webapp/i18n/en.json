@@ -194,7 +194,7 @@
       "info": {
         "deleteOriginConfirmationMsg": "Deleting origin stage resets the current origin offset. Are you sure you want to delete?",
         "graphErrorBadgeLabel": "Total Error records + Stage errors.",
-        "isDPMPipelineDirty": "Pipeline Config is updated from last publish",
+        "isDPMPipelineDirty": "Pipeline has been updated since it was last published",
         "noParametersDefinedMsg": "No parameters are defined for this pipeline. To pass parameter values to the pipeline at runtime, first define parameters in the Parameters tab for the pipeline. For more information, see <a href=\"https://streamsets.com/documentation/datacollector/latest/help/index.html#Pipeline_Configuration/PipelineConfiguration_title.html#concept_rjh_ntz_qr\" target=\"_blank\">Using Runtime Parameters.</a>",
         "noPipelineExists": "No Pipeline found with name '{{name}}'",
         "noDataAvailable": "No Data Available.",
