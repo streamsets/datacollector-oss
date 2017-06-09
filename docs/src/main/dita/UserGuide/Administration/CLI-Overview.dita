@@ -30,27 +30,30 @@
       with the basic <codeph>cli</codeph> command:<dl>
         <dlentry>
           <dt>help</dt>
-          <dd>Provides information about each command.</dd>
+          <dd>Provides information about each command or subcommand.</dd>
         </dlentry>
         <dlentry>
           <dt>manager</dt>
-          <dd>Provides the following arguments:<ul id="ul_u4z_51y_pt">
+          <dd>Provides the following subcommands:<ul id="ul_u4z_51y_pt">
               <li>start - Starts a pipeline.</li>
               <li>status - Returns the status of a pipeline.</li>
               <li>stop - Stops a pipeline.</li>
               <li>reset-origin - Resets the origin when possible. </li>
+              <li>get-committed-offsets - Returns the last-saved offset for pipeline failover.</li>
+              <li>update-committed-offsets - Updates the last-saved offset for pipeline
+                failover.</li>
             </ul></dd>
         </dlentry>
         <dlentry>
           <dt>store</dt>
-          <dd>Provides the following arguments:<ul id="ul_e3z_syy_pt">
+          <dd>Provides the following subcommands:<ul id="ul_e3z_syy_pt">
               <li>import - Imports a pipeline.</li>
               <li>list - Lists information for all available pipelines.</li>
             </ul></dd>
         </dlentry>
         <dlentry>
           <dt>system</dt>
-          <dd>Provides the following arguments:<ul id="ul_nwj_fsx_fz">
+          <dd>Provides the following subcommands:<ul id="ul_nwj_fsx_fz">
               <li>enableDPM - Register the <ph
                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
                 with <ph

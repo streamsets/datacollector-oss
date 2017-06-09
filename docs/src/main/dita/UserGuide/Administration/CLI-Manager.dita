@@ -15,13 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_msh_k2q_yt">
  <title>Manager Command</title>
- <shortdesc>The <codeph>manager</codeph> command provides arguments to start and stop a pipeline,
-        view the status of all pipelines, and reset the origin for a pipeline.</shortdesc>
+ <shortdesc>The <codeph>manager</codeph> command provides subcommands to start and stop a pipeline,
+        view the status of all pipelines, and reset the origin for a pipeline. It can also be used
+        to get the last-saved offset and to update the last-saved offset for a pipeline.</shortdesc>
  <conbody>
         <p><indexterm>command line interface<indexterm>manager command</indexterm></indexterm>The
                 <codeph>manager</codeph> command returns the pipeline status object after it
-            successfully completes the specified argument. The following is a sample of the pipeline
-            status object:
+            successfully completes the specified subcommand. The following is a sample of the
+            pipeline status object:
             <codeblock>{
   "user" : "admin",
   "name" : "MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db",
@@ -37,17 +38,17 @@
   "nextRetryTimeStamp" : 0
 }</codeblock></p>
         <p>Note that the timestamp is in the Long data format. </p>
-        <p>You can use the following <codeph>manager</codeph> arguments:</p>
+        <p>You can use the following <codeph>manager</codeph> subcommands:</p>
   <p>
             <dl>
                 <dlentry>
                     <dt>start</dt>
                     <dd>Starts a pipeline. Returns the pipeline status when successful. </dd>
-                    <dd>The <codeph>start</codeph> argument uses the following
+                    <dd>The <codeph>start</codeph> subcommand uses the following
                         syntax:<codeblock>manager start \
 (-n &lt;pipelineID> | --name &lt;pipelineID>) \
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)] \
 [--stack] \
-[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]
 [(-R &lt;runtimeParametersString> | --runtimeParameters &lt;runtimeParametersString>)]</codeblock></dd>
                     <dd>
                         <table frame="all" rowsep="1" colsep="1" id="table_q2d_1pq_yt">
@@ -69,19 +70,19 @@
                                             /></entry>
                                     </row>
                                     <row>
-                                        <entry>--stack</entry>
-                                        <entry>Optional. Returns additional information when the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> cannot start the pipeline. <p>Use to debug the
-                                                problem or pass to StreamSets for help.</p></entry>
-                                    </row>
-                                    <row>
                                         <entry>-r &lt;pipelineRev><p>or</p><p>-- revision
                                                 &lt;pipelineRev></p></entry>
                                         <entry>Optional. The revision of the pipeline. Use to start
                                             an older version of the pipeline. <p>By default, the <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> starts the most recent version.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>--stack</entry>
+                                        <entry>Optional. Returns additional information when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> cannot start the pipeline. <p>Use to debug the
+                                                problem or pass to StreamSets for help.</p></entry>
                                     </row>
                                     <row>
                                         <entry>-R &lt;runtimeParametersString>
@@ -107,30 +108,29 @@
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is not registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                        />:<codeblock>bin/streamsets cli -U http://localhost:18630  manager start -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
-                    <dd>The following command starts the pipeline with an ID of
-                        MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db when the <ph
+                        />:<codeblock>bin/streamsets cli -U http://localhost:18630 manager start -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
+                    <dd>The following command starts the same pipeline when the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                        />:<codeblock>bin/streamsets cli -U http://localhost:18630  -a dpm -u user1@mycompany -p MyPassword \
+                        />:<codeblock>bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
 --dpmURL https://cloud.streamsets.com manager start -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
-                    <dd>The following command starts the first version of the pipeline with an ID of
-                        MyPipelinejh65k1f8-dfc1-603h-8124-718nj6e561db when the <ph
+                    <dd>The following command starts the first version of the same pipeline when the
+                            <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is not registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                        />:<codeblock>bin/streamsets cli -U http://localhost:18630  manager start -n MyPipeilnejh65k1f8-dfc1-603h-8124-718nj6e561db -r 1</codeblock></dd>
+                        />:<codeblock>bin/streamsets cli -U http://localhost:18630 manager start -n MyPipeilnejh65k1f8-dfc1-603h-8124-718nj6e561db -r 1</codeblock></dd>
                 </dlentry>
                 <dlentry>
                     <dt>stop</dt>
                     <dd>Stops a pipeline. Returns the pipeline status when successful. </dd>
-                    <dd>The <codeph>stop</codeph> argument uses the following
+                    <dd>The <codeph>stop</codeph> subcommand uses the following
                         syntax:<codeblock>manager stop \
 [--forceStop] \
 (-n &lt;pipelineID> | --name &lt;pipelineID>) \
-[--stack] \
-[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]</codeblock></dd>
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)] \
+[--stack] </codeblock></dd>
                     <dd>
                         <table frame="all" rowsep="1" colsep="1" id="table_xh1_3gr_yt">
                             <tgroup cols="2">
@@ -163,19 +163,19 @@
                                             /></entry>
                                     </row>
                                     <row>
-                                        <entry>--stack</entry>
-                                        <entry>Optional. Returns additional information when the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> cannot stop the pipeline. <p>Use to debug the problem
-                                                or pass to StreamSets for help.</p></entry>
-                                    </row>
-                                    <row>
                                         <entry>-r &lt;pipelineRev><p>or</p><p>-- revision
                                                 &lt;pipelineRev></p></entry>
                                         <entry>Optional. The revision of the pipeline. Use to stop
                                             an older version of the pipeline. <p>By default, the <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> stops the most recent version.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>--stack</entry>
+                                        <entry>Optional. Returns additional information when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> cannot stop the pipeline. <p>Use to debug the problem
+                                                or pass to StreamSets for help.</p></entry>
                                     </row>
                                 </tbody>
                             </tgroup>
@@ -186,15 +186,14 @@
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is not registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                        />:<codeblock>bin/streamsets cli -U http://localhost:18630  manager stop -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
-                    <dd>The following command stops the pipeline with an ID of
-                        MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db when the <ph
+                        />:<codeblock>bin/streamsets cli -U http://localhost:18630 manager stop -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
+                    <dd>The following command stops the same pipeline when the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                        />:<codeblock>bin/streamsets cli -U http://localhost:18630  -a dpm -u user1@mycompany -p MyPassword \
+                        />:<codeblock>bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
 --dpmURL https://cloud.streamsets.com manager stop -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
-                    <dd>The following command forces the first version of a pipeline to stop
+                    <dd>The following command forces the first version of the same pipeline to stop
                         immediately when the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is not registered with <ph
@@ -206,11 +205,11 @@
                     <dt>status</dt>
                     <dd>Returns the status of a pipeline. Returns the pipeline status when
                         successful. </dd>
-                    <dd>The <codeph>status</codeph> argument uses the following
+                    <dd>The <codeph>status</codeph> subcommand uses the following
                         syntax:<codeblock>manager status \
 (-n &lt;pipelineID> | --name &lt;pipelineID>) \
-[--stack] \
-[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]</codeblock></dd>
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)] \
+[--stack] </codeblock></dd>
                     <dd>
                         <table frame="all" rowsep="1" colsep="1" id="table_i4m_vjr_yt">
                             <tgroup cols="2">
@@ -231,14 +230,6 @@
                                             /></entry>
                                     </row>
                                     <row>
-                                        <entry>--stack</entry>
-                                        <entry>Optional. Returns additional information when the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> cannot return the status of the pipeline. <p>Use to
-                                                debug the problem or pass to StreamSets for
-                                                help.</p></entry>
-                                    </row>
-                                    <row>
                                         <entry>-r &lt;pipelineRev><p>or</p><p>-- revision
                                                 &lt;pipelineRev></p></entry>
                                         <entry>Optional. The revision of the pipeline. Use for older
@@ -246,6 +237,14 @@
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> returns information for the most recent
                                                 version.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>--stack</entry>
+                                        <entry>Optional. Returns additional information when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> cannot return the status of the pipeline. <p>Use to
+                                                debug the problem or pass to StreamSets for
+                                                help.</p></entry>
                                     </row>
                                 </tbody>
                             </tgroup>
@@ -257,16 +256,14 @@
                         /> is not registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                         />:<codeblock>bin/streamsets cli -U http://localhost:18630  manager status -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
-                    <dd>The following command returns the status of the pipeline with an ID of
-                        MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db when the <ph
+                    <dd>The following command returns the status of the same pipeline when the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                         />:<codeblock>bin/streamsets cli -U http://localhost:18630  -a dpm -u user1@mycompany -p MyPassword \
 --dpmURL https://cloud.streamsets.com manager status -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
-                    <dd>The following command returns the status of the first version of the
-                        pipeline with an ID of MyPipelinejh65k1f8-dfc1-603h-8124-718nj6e561db when
-                        the <ph
+                    <dd>The following command returns the status of the first version of the same
+                        pipeline when the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is not registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
@@ -277,11 +274,11 @@
                     <dd>Resets the origin of a pipeline. Use for pipeline origins that can be reset.
                         Some pipeline origins cannot be reset. Returns the pipeline status when
                         successful. </dd>
-                    <dd>The <codeph>reset-origin</codeph> argument uses the following
+                    <dd>The <codeph>reset-origin</codeph> subcommand uses the following
                         syntax:<codeblock>manager reset-origin \
 (-n &lt;pipelineID> | --name &lt;pipelineID>) \
-[--stack] \
-[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]</codeblock></dd>
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)] \
+[--stack]</codeblock></dd>
                     <dd>
                         <table frame="all" rowsep="1" colsep="1" id="table_y5t_vtw_yt">
                             <tgroup cols="2">
@@ -302,13 +299,6 @@
                                             /></entry>
                                     </row>
                                     <row>
-                                        <entry>--stack</entry>
-                                        <entry>Optional. Returns additional information when the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> cannot reset the origin. <p>Use to debug the problem
-                                                or pass to StreamSets for help.</p></entry>
-                                    </row>
-                                    <row>
                                         <entry>-r &lt;pipelineRev><p>or</p><p>-- revision
                                                 &lt;pipelineRev></p></entry>
                                         <entry>Optional. The revision of the pipeline. Use to reset
@@ -317,6 +307,13 @@
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> resets the origin for the most recent
                                                 version.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>--stack</entry>
+                                        <entry>Optional. Returns additional information when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> cannot reset the origin. <p>Use to debug the problem
+                                                or pass to StreamSets for help.</p></entry>
                                     </row>
                                 </tbody>
                             </tgroup>
@@ -328,13 +325,169 @@
                         /> is not registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                         />:<codeblock>bin/streamsets cli -U http://localhost:18630  manager reset-origin -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
-                    <dd>The following command resets the origin of the pipeline with an ID of
-                        MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db when the <ph
+                    <dd>The following command resets the origin of the same pipeline when the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> is registered with <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                         />:<codeblock>bin/streamsets cli -U http://localhost:18630  -a dpm -u user1@mycompany -p MyPassword \
 --dpmURL https://cloud.streamsets.com manager reset-origin -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>get-committed-offsets</dt>
+                    <dd>Returns the last-saved offset for a pipeline with an origin that saves
+                        offsets. Some origins, such as the HTTP Server, have no need to save
+                        offsets. </dd>
+                    <dd>Pipeline offsets are managed by <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />. There's no need to get or replace the last-saved offset unless
+                        implementing pipeline failover using an external storage system. </dd>
+                    <dd>When implementing pipeline failover, use this subcommand to store the
+                        last-saved offset to a file. When necessary, you can use the
+                            <codeph>update-committed-offsets command</codeph> to update the pipeline
+                        offset with the contents of the file. </dd>
+                    <dd>The <codeph>get-committed-offsets</codeph> subcommand uses the following
+                        syntax:<codeblock>manager get-committed-offsets \
+(-n &lt;pipelineID> | --name &lt;pipelineID>) \
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)] \
+[--stack] </codeblock></dd>
+                    <dd>
+                        <table frame="all" rowsep="1" colsep="1" id="table_zv1_bws_d1b">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Get Offset Option</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>-n &lt;pipelineID><p>or </p><p>--name
+                                                &lt;pipelineID></p></entry>
+                                        <entry>Required. ID of the pipeline.<p
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CliPipelineName"
+                                            /></entry>
+                                    </row>
+                                    <row>
+                                        <entry>-r &lt;pipelineRev><p>or</p><p>-- revision
+                                                &lt;pipelineRev></p></entry>
+                                        <entry>Optional. The revision of the pipeline. Use to reset
+                                            the origin for an older version of the pipeline. <p>By
+                                                default, the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> uses the most recent version.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>--stack</entry>
+                                        <entry>Optional. Returns additional information when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> cannot retrieve the last-saved offset.<p>Use to debug
+                                                the problem or pass to StreamSets for
+                                            help.</p></entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </dd>
+                    <dd>For example, the following command returns the last-saved offset for a
+                        pipeline with an ID of MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e236lc when
+                        the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> is not registered with <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />:<codeblock>bin/streamsets cli -U http://localhost:18630 manager get-committed-offsets \
+ -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e236lc</codeblock></dd>
+                    <dd>The following command returns the last-saved offset of the same pipeline
+                        when the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> is registered with <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />:<codeblock>bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
+--dpmURL https://cloud.streamsets.com manager get-committed-offsets -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e236lc</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>update-committed-offsets</dt>
+                    <dd>Updates the last-saved offset for a pipeline with an origin that saves
+                        offsets. Some origins, such as the HTTP Server, have no need to save
+                        offsets. </dd>
+                    <dd>Pipeline offsets are managed by <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />. There's no need to update the last-saved offset unless performing
+                        pipeline failover from a file that contains the last-saved offset stored by
+                        using <codeph>get-committed-offsets</codeph>.</dd>
+                    <dd>Change the last-saved offset with great caution and only when the pipeline
+                        is not running. </dd>
+                    <dd>The <codeph>updated-committed-offsets</codeph> subcommand uses the following
+                        syntax:<codeblock>manager update-committed-offsets \
+(-f &lt;fileName> | --file &lt;fileName>) \
+(-n &lt;pipelineID> | --name &lt;pipelineID>) \
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)] \
+[--stack] </codeblock></dd>
+                    <dd>
+                        <table frame="all" rowsep="1" colsep="1" id="table_cjp_n1t_d1b">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Update Offset Option</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>-f &lt;fileName><p>or</p><p>--file
+                                            &lt;fileName></p></entry>
+                                        <entry>Required. Relative or absolute path to the file that
+                                            contains the last-saved offset.<p>The file should
+                                                contain only the last-saved offset retrieved by
+                                                using the <codeph>get-committed-offset</codeph>
+                                                subcommand.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>-n &lt;pipelineID><p>or </p><p>--name
+                                                &lt;pipelineID></p></entry>
+                                        <entry>Required. ID of the pipeline.<p
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CliPipelineName"
+                                            /></entry>
+                                    </row>
+                                    <row>
+                                        <entry>-r &lt;pipelineRev><p>or</p><p>-- revision
+                                                &lt;pipelineRev></p></entry>
+                                        <entry>Optional. The revision of the pipeline. Use to update
+                                            the last-saved offset for an older version of the
+                                            pipeline. <p>By default, the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> uses the most recent version.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>--stack</entry>
+                                        <entry>Optional. Returns additional information when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> cannot update the last-saved offset.<p>Use to debug
+                                                the problem or pass to StreamSets for
+                                            help.</p></entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </dd>
+                    <dd>For example, the following command updates the last-saved offset for a
+                        pipeline using the offset in the specified file when the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> is not registered with <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />:<codeblock>bin/streamsets cli -U http://localhost:18630 manager get-committed-offsets \
+-f /sdc/offsetfiles/mypipeline/offset.txt -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e236lc</codeblock></dd>
+                    <dd>The following command updates the last-saved offset for the same pipeline
+                        using the offset in the specified file when the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> is registered with <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
+                        />:<codeblock>bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
+--dpmURL https://cloud.streamsets.com manager get-committed-offsets -f /sdc/offsetfiles/mypipeline/offset.txt \
+-n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e236lc</codeblock></dd>
                 </dlentry>
             </dl>
         </p>

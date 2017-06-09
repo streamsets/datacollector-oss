@@ -71,6 +71,11 @@
                             <entry>Required. Command to perform.</entry>
                         </row>
                         <row>
+                            <entry>&lt;subcommand> </entry>
+                            <entry>Required for all commands except help. Subcommand to
+                                perform.</entry>
+                        </row>
+                        <row>
                             <entry>&lt;args></entry>
                             <entry>Optional. Include arguments and options as needed.</entry>
                         </row>

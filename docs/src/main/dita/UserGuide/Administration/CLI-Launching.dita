@@ -28,7 +28,7 @@
 [(-u &lt;sdcUser> | --user &lt;sdcUser>)] \
 [(-p &lt;sdcPassword> | --password &lt;sdcPassword>)] \
 [(-D &lt;dpmURL> | --dpmURL &lt;dpmURL>)] \
-&lt;command> [&lt;args>] </codeblock></p>
+&lt;command> &lt;subcommand> [&lt;args>] </codeblock></p>
     <p>The usage of the basic command options depends on whether or not the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
       registered with <ph

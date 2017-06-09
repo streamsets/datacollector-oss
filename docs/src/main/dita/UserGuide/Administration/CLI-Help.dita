@@ -27,7 +27,7 @@
 [(-u &lt;sdcUser> | --user &lt;sdcUser>)] \
 [(-p &lt;sdcPassword> | --password &lt;sdcPassword>)] \
 [(-D &lt;dpmURL> | --dpmURL &lt;dpmURL>)] \
-<b>help &lt;command></b></codeblock></p>
+<b>help &lt;command> [&lt;subcommand>]</b></codeblock></p>
      <p>For example, the following command displays the details for the manager command. Use the
             same command options when the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
