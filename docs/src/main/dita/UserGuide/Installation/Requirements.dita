@@ -60,7 +60,7 @@
           </row>
           <row>
             <entry>Java</entry>
-            <entry>Oracle Java 8.<note>Open JDK is not supported.</note></entry>
+            <entry>Oracle Java 8.<note>OpenJDK is not supported.</note></entry>
           </row>
           <row>
             <entry>Browser</entry>
