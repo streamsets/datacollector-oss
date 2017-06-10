@@ -91,7 +91,7 @@ function prepend_file_content {
   work_file=$1
   prepend_file=$2
 
-  echo "Prepending content from $prepend_file to $work_file"
+  log "Prepending content from $prepend_file to $work_file"
   cat $prepend_file $work_file > work.tmp
   mv work.tmp $work_file
 }
@@ -121,9 +121,9 @@ function create_config_symlinks {
 function support_bundle_redaction_configuration {
   REDACT_CONF="$CONF_DIR/support-bundle-redactor.json"
   if [ -s $REDACT_CONF ] ; then
-    echo "Found non-empty support-bundle-redactor.json configuration, using it."
+    log "Found non-empty support-bundle-redactor.json configuration, using it."
   else
-    echo "Using default parcel file for support-bundle-redactor.json"
+    log "Using default parcel file for support-bundle-redactor.json"
     cp $SDC_DIST/etc/support-bundle-redactor.json $REDACT_CONF
   fi
 }
@@ -282,7 +282,7 @@ function dpm_verify_config {
 # Register auth token for this SDC instance in DPM
 function dpm {
   if [[ -f "$DPM_TOKEN_FILE" ]]; then
-    echo "DPM token already exists, skipping for now."
+    log "DPM token already exists, skipping for now."
     return
   fi
 
@@ -318,9 +318,9 @@ if [ -f $SDC_PROPERTIES ]; then
 
   # Propagate system white and black lists
   if ! grep -q "system.stagelibs.*list" $SDC_PROPERTIES; then
-    echo "System white nor black list found in configuration"
+    log "System white nor black list found in configuration"
     if [ -f ${SDC_PROP_FILE} ]; then
-      echo "Propagating default white and black list from parcel"
+      log "Propagating default white and black list from parcel"
       line_nums=$(grep -n "system.stagelibs.*list" ${SDC_PROP_FILE} | cut -f1 -d:)
       list_start=$(echo ${line_nums} | cut -f1 -d' ')  # line number of where whitelist starts
       list_end=$(echo ${line_nums} | cut -f2 -d' ')    # line number of where blacklist starts
@@ -331,10 +331,10 @@ if [ -f $SDC_PROPERTIES ]; then
           list_end=$((list_end+1))
           blacklist=$(sed "${list_end}q;d" ${SDC_PROP_FILE})
       done
-      echo "Copying lines from ${list_start} to ${list_end} in $SDC_PROP_FILE to $SDC_PROPERTIES"
+      log "Copying lines from ${list_start} to ${list_end} in $SDC_PROP_FILE to $SDC_PROPERTIES"
       sed -n "${list_start},${list_end}p" ${SDC_PROP_FILE} >> $SDC_PROPERTIES
     else
-      echo "Parcel doesn't contain default configuration file, skipping white/black list propagation"
+      log "Parcel doesn't contain default configuration file, skipping white/black list propagation"
     fi
   fi
 
