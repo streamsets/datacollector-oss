@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.origin.opcua;
 
-import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
@@ -72,7 +71,7 @@ public class TestOpcUaClientSource {
       Assert.assertTrue(false);
     } catch (StageException ex){
       Assert.assertNotNull(ex.getErrorCode());
-      Assert.assertEquals(ex.getErrorCode().getCode(), ContainerError.CONTAINER_0010.getCode());
+      Assert.assertEquals(ex.getErrorCode().getCode(), "CONTAINER_0010");
     }
   }
 
