@@ -112,6 +112,7 @@ final class DefaultFileHelper extends FileHelper {
           .create(context)
           .with(BUCKET, bucket)
           .with(OBJECT_KEY, fileName)
+          .with(RECORD_COUNT, writtenRecordCount)
           .create();
 
       // Avoid making a copy of the internal buffer maintained by the ByteArrayOutputStream by using
