@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
@@ -437,6 +438,10 @@ public class FileTailSource extends BaseSource {
               record.getHeader().setAttribute(HeaderAttributeConstants.FILE, chunk.getFile().getPath().toString());
               record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, chunk.getFile().getPath().getFileName().toString());
               record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(line.getFileOffset()));
+              record.getHeader().setAttribute(
+                HeaderAttributeConstants.LAST_MODIFIED_TIME,
+                String.valueOf(Files.getLastModifiedTime(chunk.getFile().getPath()).toMillis())
+              );
               batchMaker.addRecord(record, outputLane);
               recordCounter++;
             }

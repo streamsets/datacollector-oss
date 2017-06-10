@@ -36,6 +36,13 @@ public class HeaderAttributeConstants {
   public static final String FILE_NAME = "filename";
 
   /**
+   * Last modified time of the file.
+   *
+   * Applicable for LogTail, Directory spooling, ...
+   */
+  public static final String LAST_MODIFIED_TIME = "mtime";
+
+  /**
    * Offset in the source.
    *
    * Can be file offset in directory spooling, log tail or for example partition offset

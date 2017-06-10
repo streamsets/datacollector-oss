@@ -38,6 +38,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -469,6 +470,10 @@ public class TestSpoolDirSource {
         Assert.assertEquals(2, records.size());
 
         Assert.assertEquals(Utils.format("file-{}.log", i), records.get(0).getHeader().getAttribute(HeaderAttributeConstants.FILE_NAME));
+        Assert.assertEquals(
+          String.valueOf(Files.getLastModifiedTime(Paths.get(f.getAbsolutePath(), Utils.format("file-{}.log", i))).toMillis()),
+          records.get(0).getHeader().getAttribute(HeaderAttributeConstants.LAST_MODIFIED_TIME)
+        );
         Assert.assertEquals("a-" + i, records.get(0).get("/A").getValueAsString());
         Assert.assertEquals("b-" + i, records.get(0).get("/B").getValueAsString());
 

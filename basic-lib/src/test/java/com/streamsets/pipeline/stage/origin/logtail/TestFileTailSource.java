@@ -142,10 +142,18 @@ public class TestFileTailSource {
       Assert.assertEquals(fileInfo.fileFullPath, record.getHeader().getAttribute(HeaderAttributeConstants.FILE));
       Assert.assertEquals("logFile.txt", record.getHeader().getAttribute(HeaderAttributeConstants.FILE_NAME));
       Assert.assertEquals("0", record.getHeader().getAttribute(HeaderAttributeConstants.OFFSET));
+      Assert.assertEquals(
+        String.valueOf(Files.getLastModifiedTime(Paths.get(fileInfo.fileFullPath)).toMillis()),
+        record.getHeader().getAttribute(HeaderAttributeConstants.LAST_MODIFIED_TIME)
+      );
       record = output.getRecords().get("lane").get(1);
       Assert.assertEquals(fileInfo.fileFullPath, record.getHeader().getAttribute(HeaderAttributeConstants.FILE));
       Assert.assertEquals("logFile.txt", record.getHeader().getAttribute(HeaderAttributeConstants.FILE_NAME));
       Assert.assertEquals("6", record.getHeader().getAttribute(HeaderAttributeConstants.OFFSET));
+      Assert.assertEquals(
+        String.valueOf(Files.getLastModifiedTime(Paths.get(fileInfo.fileFullPath)).toMillis()),
+        record.getHeader().getAttribute(HeaderAttributeConstants.LAST_MODIFIED_TIME)
+      );
       Assert.assertEquals("LAST", record.get("/text").getValueAsString());
       record = output.getRecords().get("lane").get(2);
       Assert.assertEquals("HELLO", record.get("/text").getValueAsString());

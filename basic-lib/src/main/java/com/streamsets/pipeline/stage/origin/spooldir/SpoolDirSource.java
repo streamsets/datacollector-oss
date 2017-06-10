@@ -608,6 +608,7 @@ public class SpoolDirSource extends BaseSource {
   private void setHeaders(Record record, File file, String offset) {
     record.getHeader().setAttribute(HeaderAttributeConstants.FILE, file.getPath());
     record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, file.getName());
+    record.getHeader().setAttribute(HeaderAttributeConstants.LAST_MODIFIED_TIME, String.valueOf(file.lastModified()));
     record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
     record.getHeader().setAttribute(BASE_DIR, conf.spoolDir);
   }

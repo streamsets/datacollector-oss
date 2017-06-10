@@ -396,6 +396,10 @@ public class RemoteDownloadSource extends BaseSource {
           record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME,
               FilenameUtils.getName(remoteFile.filename)
           );
+          record.getHeader().setAttribute(
+            HeaderAttributeConstants.LAST_MODIFIED_TIME,
+            String.valueOf(remoteFile.lastModified)
+          );
           record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
           batchMaker.addRecord(record);
           offset = parser.getOffset();
