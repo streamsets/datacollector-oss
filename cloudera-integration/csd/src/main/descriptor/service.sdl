@@ -279,6 +279,10 @@
             "sourceFilename": "aux/sdc-env.sh"
           },
           {
+            "filename": "support-bundle-redactor.json",
+            "sourceFilename": "aux/support-bundle-redactor.json"
+          },
+          {
             "filename": "ldap-login.conf"
           }
         ]

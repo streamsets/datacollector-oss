@@ -120,6 +120,19 @@ function create_config_symlinks {
   fi
 }
 
+# Make sure that proper redaction configuration is available
+# Logic is as such - if user configured it in CM, use it as it is, otherwise load
+# default file from the parcel itself.
+function support_bundle_redaction_configuration {
+  REDACT_CONF="$CONF_DIR/support-bundle-redactor.json"
+  if [ -s $REDACT_CONF ] ; then
+    echo "Found non-empty support-bundle-redactor.json configuration, using it."
+  else
+    echo "Using default parcel file for support-bundle-redactor.json"
+    cp $SDC_DIST/etc/support-bundle-redactor.json $REDACT_CONF
+  fi
+}
+
 # Start SDC (exec into it)
 function start {
   log "Starting StreamSets Data Collector"
@@ -138,6 +151,7 @@ function start {
   create_config_symlinks
 
   # Load default configuration from the parcel
+  support_bundle_redaction_configuration
   prepend_file_content $CONF_DIR/sdc-security.policy $SDC_DIST/etc/sdc-security.policy
   prepend_file_content $CONF_DIR/sdc-env.sh $SDC_DIST/libexec/sdc-env.sh
 
