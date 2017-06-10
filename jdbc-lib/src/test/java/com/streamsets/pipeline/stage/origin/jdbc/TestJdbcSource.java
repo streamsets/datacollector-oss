@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc;
 
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -29,6 +30,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.h2.tools.SimpleResultSet;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -952,6 +954,52 @@ public class TestJdbcSource {
       Field field = record.get("/P_UUID");
       assertNotNull(field);
       assertEquals(Field.Type.BYTE_ARRAY, field.getType());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testNoMoreDataEvent() throws Exception {
+    JdbcSource origin = new JdbcSource(
+        true,
+        query,
+        "0",
+        "P_ID",
+        false,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        // Using "0" leads to SDC-6429
+        new CommonSourceConfigBean(10, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        false,
+        "",
+        createConfigBean(h2ConnectionString, username, password)
+        );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      StageRunner.Output output;
+
+      // First batch should read all 4 records
+      output = runner.runProduce(null, 10);
+      Assert.assertEquals(4, output.getRecords().get("lane").size());
+      Assert.assertEquals(1, runner.getEventRecords().size());
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals(4, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
+
+      // Second batch should generate empty batch and run "empty" query
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(0, output.getRecords().get("lane").size());
+      Assert.assertEquals(2, runner.getEventRecords().size());
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals(4, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
 
     } finally {
       runner.runDestroy();

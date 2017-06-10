@@ -117,6 +117,7 @@ public class JdbcSource extends BaseSource {
   private int numQueryErrors = 0;
   private SQLException firstQueryException = null;
   private boolean shouldSendNoMoreDataEvent = true;
+  private long noMoreDataRecordCount = 0;
 
   public JdbcSource(
       boolean isIncrementalMode,
@@ -310,7 +311,10 @@ public class JdbcSource extends BaseSource {
 
       // send event only once for each time we run out of data.
       if(shouldSendNoMoreDataEvent) {
-        CommonEvents.NO_MORE_DATA.create(getContext()).createAndSend();
+        CommonEvents.NO_MORE_DATA.create(getContext())
+          .with("record-count", noMoreDataRecordCount)
+          .createAndSend();
+        noMoreDataRecordCount = 0;
         shouldSendNoMoreDataEvent = false;
       }
 
@@ -383,6 +387,7 @@ public class JdbcSource extends BaseSource {
           }
           ++rowCount;
           ++queryRowCount;
+          ++noMoreDataRecordCount;
         }
         LOG.debug("Processed rows: " + rowCount);
 

@@ -25,8 +25,9 @@ public class CommonEvents {
   /**
    * Fired by the Origin when it is out of data.
    */
-  public static EventCreator NO_MORE_DATA = new EventCreator.Builder(CommonEvents.NO_MORE_DATA_TAG, 1)
-      .build();
+  public static EventCreator NO_MORE_DATA = new EventCreator.Builder(CommonEvents.NO_MORE_DATA_TAG, 2)
+    .withOptionalField("record-count")
+    .build();
 
   private CommonEvents() {
     // instantiation not permitted.
