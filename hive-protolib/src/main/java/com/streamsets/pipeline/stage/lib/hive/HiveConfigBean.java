@@ -252,10 +252,15 @@ public class HiveConfigBean {
           "HIVE",
           JOINER.join(prefix, HIVE_JDBC_URL),
           Errors.HIVE_22,
-          hiveJDBCUrl,
+          jdbcUrlSafeForUser(),
           e.getMessage()
       ));
     }
+  }
+
+  public String jdbcUrlSafeForUser() {
+    // Return all before ";" - all sensitive information is in the params afterwards
+    return hiveJDBCUrl.split(";")[0];
   }
 
   public void destroy() {
