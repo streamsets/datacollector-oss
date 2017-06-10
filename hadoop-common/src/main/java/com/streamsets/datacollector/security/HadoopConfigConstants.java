@@ -30,4 +30,10 @@ public class HadoopConfigConstants {
    */
   public static final String IMPERSONATION_ALWAYS_CURRENT_USER = "hadoop.always.impersonate.current.user";
 
+  /**
+   * Used in sdc.properties as stage config property. If set to true, then user name will be lower cased when used
+   * when impersonated.
+   */
+  public static final String LOWERCASE_USER = "hadoop.always.lowercase.user";
+
 }

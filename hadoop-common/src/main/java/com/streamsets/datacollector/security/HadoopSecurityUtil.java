@@ -77,6 +77,14 @@ public class HadoopSecurityUtil {
       return loginUser;
     }
 
+    // Optionally lower case the user name
+    String lowercasedString = Optional
+      .ofNullable(context.getConfig(HadoopConfigConstants.LOWERCASE_USER))
+      .orElse("false");
+    if(Boolean.parseBoolean(lowercasedString)) {
+      user = user.toLowerCase();
+    }
+
     // Otherwise impersonate the "user"
     AccessControlContext accessContext = AccessController.getContext();
     synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {

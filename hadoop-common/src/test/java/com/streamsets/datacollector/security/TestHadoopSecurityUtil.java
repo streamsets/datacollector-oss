@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -65,7 +66,7 @@ public class TestHadoopSecurityUtil {
     Stage.Context context = mock(Stage.Context.class);
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
-    when(context.getConfig(anyString())).thenReturn("true");
+    when(context.getConfig(eq(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER))).thenReturn("true");
     when(context.getUserContext()).thenReturn(() -> "test-user");
 
     UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
@@ -99,6 +100,26 @@ public class TestHadoopSecurityUtil {
 
     Assert.assertEquals(1, issues.size());
   }
+
+  @Test
+  public void testGetProxyLowerCaseUser() throws Exception {
+    final UserGroupInformation fooUgi = UserGroupInformation.createUserForTesting("BRYAN", new String[] { "all" });
+    Stage.Context context = mock(Stage.Context.class);
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+
+    when(context.getConfig(eq(HadoopConfigConstants.IMPERSONATION_ALWAYS_CURRENT_USER))).thenReturn("true");
+    when(context.getConfig(eq(HadoopConfigConstants.LOWERCASE_USER))).thenReturn("true");
+    when(context.getUserContext()).thenReturn(() -> "REAL_BRYAN");
+
+    UserGroupInformation ugi = HadoopSecurityUtil.getProxyUser(
+      "",
+      context,
+      fooUgi,
+      issues,
+      "config",
+      "userName"
+    );
+    Assert.assertEquals("real_bryan", ugi.getUserName());
+  }
+
 }
-
-
