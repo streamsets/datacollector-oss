@@ -125,9 +125,15 @@ public class TestAmazonS3Target {
     Assert.assertTrue(objectListing.getObjectSummaries().isEmpty());
 
     targetRunner.runWrite(logRecords);
-    targetRunner.runDestroy();
 
     TestUtil.assertStringRecords(s3client, BUCKET_NAME, prefix);
+
+    List<Record> events = targetRunner.getEventRecords();
+    Assert.assertNotNull(events);
+    Assert.assertEquals(1, events.size());
+    Assert.assertEquals(9, events.get(0).get("/recordCount").getValueAsLong());
+
+    targetRunner.runDestroy();
   }
 
   @Test

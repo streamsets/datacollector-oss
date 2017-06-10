@@ -47,6 +47,7 @@ abstract class FileHelper {
 
   protected static final String BUCKET = "bucket";
   protected static final String OBJECT_KEY = "objectKey";
+  protected static final String RECORD_COUNT = "recordCount";
 
   private final TransferManager transferManager;
 

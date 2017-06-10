@@ -27,9 +27,10 @@ public final class S3Events {
   /**
    * Fired after a S3Object is created
    */
-  public static EventCreator S3_OBJECT_WRITTEN = new EventCreator.Builder("S3 Object Written", 1)
+  public static EventCreator S3_OBJECT_WRITTEN = new EventCreator.Builder("S3 Object Written", 2)
       .withRequiredField("bucket")
       .withRequiredField("objectKey")
+      .withRequiredField("recordCount")
       .build();
 
   /**
