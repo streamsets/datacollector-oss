@@ -75,7 +75,6 @@ public class MapRJsonTarget extends BaseTarget {
   private ELVars tableNameVars;
   private String tab;
   private boolean hasEL;
-  private String literals;
   private Map<String, Table> theTables = new HashMap<>();
 
   public MapRJsonTarget(MapRJsonConfigBean mapRJsonConfigBean) {
@@ -105,28 +104,15 @@ public class MapRJsonTarget extends BaseTarget {
         tableNameVars = getContext().createELVars();
         ELUtils.validateExpression(
             tableNameEval,
-            getContext().createELVars(),
+            tableNameVars,
             mapRJsonConfigBean.tableName,
             getContext(),
             Groups.MAPR_JSON.name(),
-            TABLE_NAME,
+            mapRJsonConfigBean.tableName,
             Errors.MAPR_JSON_16,
             String.class,
             issues
         );
-
-        Record rec = getContext().createRecord("test");
-        RecordEL.setRecordInContext(tableNameVars, rec);
-        try {
-          literals = tableNameEval.eval(tableNameVars, mapRJsonConfigBean.tableName, String.class);
-        } catch (ELEvalException ex) {
-          LOG.error(Errors.MAPR_JSON_18.getMessage(), mapRJsonConfigBean.tableName, ex);
-          issues.add(getContext().createConfigIssue(
-              Groups.MAPR_JSON.getLabel(),
-              "mapRJsonConfigBean.tableName",
-              Errors.MAPR_JSON_18
-          ));
-        }
 
       } else {
         tab = mapRJsonConfigBean.tableName;
@@ -188,22 +174,17 @@ public class MapRJsonTarget extends BaseTarget {
         throw new OnRecordErrorException(rec, Errors.MAPR_JSON_16, mapRJsonConfigBean.tableName, ex);
 
       }
-
-      // check if the EL returned an empty string...  "literals" (created in init())
-      // will represent the concatenated prefix and suffix if they exist -
-      // otherwise it's just an empty String.
-      if (tab.equals(literals)) {
-        LOG.error(Errors.MAPR_JSON_16.getMessage(), mapRJsonConfigBean.tableName);
-        throw new OnRecordErrorException(rec, Errors.MAPR_JSON_16, mapRJsonConfigBean.tableName);
-
-      }
     }
+    // if tableName contains an EL, "tab" was initialized above,
+    // otherwise use the tableName from the UI
 
-    // if maprJsonConfigBean.tableName does not contain EL, tab was initialized in the init routine.
+    // if we've encountered this table name already, it's open.
     if(theTables.containsKey(tab)) {
       return;
     }
 
+    // open table (optionally create it)
+    // and add to the group of open tables.
     try {
       theTables.put(tab, MapRDB.getTable(tab));
 
