@@ -39,11 +39,4 @@ public class ClusterMapRFSSource extends ClusterHdfsSource {
     return false;
   }
 
-  @Override
-  protected String getScheme() {
-    return "maprfs";
-  }
-
-
-
 }

@@ -230,14 +230,6 @@ public class ClusterHDFSSourceIT {
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_02"));
 
-      conf.hdfsUri = "file://localhost:8020/";
-      clusterHdfsSource = createSource(conf);
-      issues = clusterHdfsSource.init(null, ContextInfoCreator
-          .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane"), resourcesDir));
-      assertEquals(String.valueOf(issues), 1, issues.size());
-      assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_12"));
-
       conf.hdfsUri = "hdfs:///noauthority";
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator

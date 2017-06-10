@@ -567,11 +567,6 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     return hadoopConf;
   }
 
-  protected String getScheme() {
-    return "hdfs";
-  }
-
-
   @VisibleForTesting
   void validateHadoopFS(List<ConfigIssue> issues) {
     boolean validHapoopFsUri;
@@ -655,15 +650,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     if (conf.hdfsUri.contains("://")) {
       try {
         URI uri = new URI(conf.hdfsUri);
-        if (!getScheme().equals(uri.getScheme())) {
-          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
-              Errors.HADOOPFS_12,
-              uri.getScheme(),
-              getScheme()
-          ));
-          validHapoopFsUri = false;
-        } else if (isURIAuthorityRequired() && uri.getAuthority() == null) {
+        if (isURIAuthorityRequired() && uri.getAuthority() == null) {
           issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
               CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
               Errors.HADOOPFS_13,
