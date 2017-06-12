@@ -29,10 +29,11 @@
                     <codeblock>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</codeblock></p><p>To
                     also install drivers for stages included with the JMS stage library, create the
                     following subdirectory:
-                    </p><codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock><p>To
-                    also install drivers for stages included with the MySQL binary logs stage
-                    library, create the following subdirectory:
-                </p><codeblock>/opt/sdc-extras/streamsets-datacollector-mysql-binlog-lib/lib/</codeblock></li>
+                    </p><codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock><note
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/note-extLib-Allstagelibs"
+                        /><p><ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SparkExample"
+                    /></p></li>
             <li>Copy the external libraries to the appropriate subdirectories.</li>
             <li
                 conref="../Reusable_Content/Reusable_Topics/Reusable-InstallExternalLibs.dita#concept_nnc_wqt_gz/RPMTarball_EnvVar"/>

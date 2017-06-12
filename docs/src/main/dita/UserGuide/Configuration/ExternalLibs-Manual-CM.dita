@@ -30,7 +30,11 @@
                     node:
                     <codeblock>/opt/sdc-extras/streamsets-datacollector-jdbc-lib/lib/</codeblock></p><p>To
                     also install drivers for JMS, create the following subdirectory on every node:
-                    <codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p></li>
+                    <codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p><note
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/note-extLib-Allstagelibs"
+                        /><p><ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SparkExample"
+                    /></p></li>
             <li>Copy the external libraries to the appropriate subdirectories on every node.</li>
             <li
                 conref="../Reusable_Content/Reusable_Topics/Reusable-InstallExternalLibs.dita#concept_nnc_wqt_gz/CM_Security"/>

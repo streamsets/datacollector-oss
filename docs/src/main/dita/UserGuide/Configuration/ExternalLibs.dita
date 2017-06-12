@@ -22,8 +22,8 @@
           additional for stages</indexterm></indexterm>Install external libraries to make them
       available to <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> stages.
-      When using multiple stage libraries for a particular stage, install the external libraries for
-      each stage library. </p>
+      When using multiple stage libraries for a particular stage, to make external libraries
+      available to all versions of the stage, install the external libraries for each stage library. </p>
     <p>You can install external libraries using the Package Manager in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user
       interface, or you can install them manually.</p>
