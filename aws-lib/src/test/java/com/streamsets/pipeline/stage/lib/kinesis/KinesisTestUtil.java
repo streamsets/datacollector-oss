@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.lib.kinesis;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.types.UserRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -104,9 +105,12 @@ public class KinesisTestUtil {
   public static void mockKinesisUtil(long numShards) {
     PowerMockito.mockStatic(KinesisUtil.class);
 
-    when(
-        KinesisUtil.checkStreamExists(
-          any(KinesisConfigBean.class), any(String.class), any(List.class), any(Stage.Context.class)
+    when(KinesisUtil.checkStreamExists(
+        any(ClientConfiguration.class),
+        any(KinesisConfigBean.class),
+        any(String.class),
+        any(List.class),
+        any(Stage.Context.class)
         )
     ).thenReturn(numShards);
   }

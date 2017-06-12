@@ -100,7 +100,13 @@ public class KinesisSource extends BasePushSource {
       return issues;
     }
 
-    KinesisUtil.checkStreamExists(conf, conf.streamName, issues, getContext());
+    KinesisUtil.checkStreamExists(
+        AWSUtil.getClientConfiguration(conf.proxyConfig),
+        conf,
+        conf.streamName,
+        issues,
+        getContext()
+    );
     conf.dataFormatConfig.stringBuilderPoolSize = getNumberOfThreads();
 
     if (issues.isEmpty()) {
@@ -187,7 +193,9 @@ public class KinesisSource extends BasePushSource {
   }
 
   private void previewProcess(int maxBatchSize, BatchMaker batchMaker) throws IOException, DataParserException {
-    String shardId = KinesisUtil.getLastShardId(conf, conf.streamName);
+    ClientConfiguration awsClientConfig = AWSUtil.getClientConfiguration(conf.proxyConfig);
+
+    String shardId = KinesisUtil.getLastShardId(awsClientConfig, conf, conf.streamName);
 
     GetShardIteratorRequest getShardIteratorRequest = new GetShardIteratorRequest();
     getShardIteratorRequest.setStreamName(conf.streamName);
@@ -195,6 +203,7 @@ public class KinesisSource extends BasePushSource {
     getShardIteratorRequest.setShardIteratorType(conf.initialPositionInStream.name());
 
     List<com.amazonaws.services.kinesis.model.Record> results = KinesisUtil.getPreviewRecords(
+        awsClientConfig,
         conf,
         Math.min(conf.maxBatchSize, maxBatchSize),
         getShardIteratorRequest
