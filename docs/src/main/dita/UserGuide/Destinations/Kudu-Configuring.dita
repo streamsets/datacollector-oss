@@ -61,6 +61,12 @@
                                                   the table doesn't exist, the records are treated
                                                   as error records.</li>
                                             </ul>
+                                        </p><p>
+                                            <note>Impala creates Kudu tables with the following
+                                                naming convention:
+                                                  <codeblock>impala::&lt;table name></codeblock><p>When
+                                                  using a table created by Impala, be sure to use
+                                                  the entire table name. </p></note>
                                         </p></entry>
                                 </row>
                                 <row>
