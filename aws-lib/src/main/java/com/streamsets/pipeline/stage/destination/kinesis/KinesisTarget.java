@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.kinesis;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.services.kinesis.producer.Attempt;
 import com.amazonaws.services.kinesis.producer.KinesisProducer;
 import com.amazonaws.services.kinesis.producer.KinesisProducerConfiguration;
@@ -115,6 +116,7 @@ public class KinesisTarget extends BaseTarget {
     }
 
     KinesisUtil.checkStreamExists(
+        new ClientConfiguration(),
         conf,
         conf.streamName,
         issues,

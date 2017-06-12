@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.kinesis;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.services.kinesis.producer.KinesisProducer;
 import com.amazonaws.services.kinesis.producer.UserRecordResult;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -107,9 +108,12 @@ public class TestKinesisTarget {
 
     PowerMockito.mockStatic(KinesisUtil.class);
 
-    when(
-        KinesisUtil.checkStreamExists(
-            any(KinesisConfigBean.class), any(String.class), any(List.class), any(Stage.Context.class)
+    when(KinesisUtil.checkStreamExists(
+        any(ClientConfiguration.class),
+        any(KinesisConfigBean.class),
+        any(String.class),
+        any(List.class),
+        any(Stage.Context.class)
         )
     ).thenReturn(1L);
 
