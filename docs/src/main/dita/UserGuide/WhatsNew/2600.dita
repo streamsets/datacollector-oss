@@ -88,9 +88,7 @@
                                         that information is now configured in the Hive Metadata
                                         processor. </li>
                                 </ul></li>
-                        </ul>See the documentation for <xref
-                            href="../Hive_Drift_Solution/Implementation.dita#concept_y5w_dj3_fw"
-                            >implementation details</xref> and a <xref
+                        </ul>See the documentation for implementation details and a <xref
                             href="../Hive_Drift_Solution/CaseStudy-Parquet.dita#concept_vl3_v2f_zz"
                             >Parquet case study</xref>. </dd>
                 </dlentry>

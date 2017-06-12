@@ -85,6 +85,18 @@
                   Requirements and Configuring the Open File Limit</draft-comment>
             <p><ph id="ph-MinFileDescriptors">32768</ph></p>
             <p>
+                  <draft-comment author="Loretta">Note &amp; ph used in manual &amp; package manager
+                        steps for Install External Libraries</draft-comment>
+            </p>
+            <p><note id="note-extLib-Allstagelibs">If you use multiple stage libraries for a
+                        particular stage, and you want to use an external library with all stage
+                        libraries, you must install the external library for each stage library.
+                        </note><ph id="ph-SparkExample">For example, say you want to use an external
+                        library with the Spark Evaluator processor, but you use two versions of the
+                        processor - each from a different stage library. To make the external
+                        library available to both processor versions, you must upload the external
+                        library to both stage libraries.</ph></p>
+            <p>
                   <draft-comment author="Loretta">Used in stage overviews that use the shared TLS
                         properties.</draft-comment>
             </p>

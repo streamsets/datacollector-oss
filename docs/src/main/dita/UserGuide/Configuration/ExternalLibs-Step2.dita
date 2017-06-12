@@ -23,34 +23,58 @@
             <step>
                 <cmd>In <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />, click the <uicontrol>Package Manager</uicontrol> icon: <image
-                        href="../Graphics/icon_PackageManager.png" scale="80" id="image_rt4_qsl_nx"
-                    />.</cmd>
+                    />, in the top right toolbar, click the <uicontrol>Package Manager</uicontrol>
+                    icon:</cmd>
+                <info><image href="../Graphics/PackageManager-iconrow.png" id="image_nw1_2gz_d1b"
+                        scale="50"/></info>
             </step>
             <step>
-                <cmd>Click <uicontrol>External Libraries</uicontrol> in the left navigation.</cmd>
+                <cmd>In the navigation panel, click <uicontrol>External Libraries</uicontrol>:</cmd>
+                <info><image href="../Graphics/PackageManager-ExternalLibs.png"
+                        id="image_ah1_rgz_d1b" scale="60"/></info>
                 <info><ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> lists any currently installed external libraries.</info>
             </step>
             <step>
-                <cmd>Click the <uicontrol>Install External Libraries</uicontrol> icon: <image
-                        href="../Graphics/icon_InstallExternalLibs.png" scale="70"
-                        id="image_d4h_fq5_bz"/>.</cmd>
+                <cmd id="cmd-ExtLibIcon">Immediately under the top right toolbar, click the
+                        <uicontrol>Install External Libraries</uicontrol> icon:</cmd>
+                <info><image href="../Graphics/PackageManager_InstallExtLib.png"
+                        id="image_dl1_bjz_d1b" scale="55"/></info>
             </step>
             <step>
-                <cmd>Select the stage library that needs to access the external library.</cmd>
+                <cmd>In the <wintitle>Install External Libraries</wintitle> dialog box, select the
+                    stage library that needs to access the external library.</cmd>
                 <info>For example, if you are installing a JDBC driver for the JDBC Multitable
                     Consumer origin, select the JDBC stage library. If you are installing an
                     external Java library for the Groovy Evaluator processor, select the Groovy
                     stage library.</info>
             </step>
             <step>
-                <cmd>Browse to select the external library to install, and then click
-                        <uicontrol>Upload</uicontrol>.</cmd>
+                <cmd id="step-Upload">Browse to select the external library to install and click
+                        <uicontrol>Open</uicontrol>. </cmd>
             </step>
             <step>
-                <cmd>Restart the <ph
+                <cmd id="cmd-UploadExtLib">To install the external library to the specified stage
+                    library, click <uicontrol>Upload</uicontrol>.</cmd>
+                <info><ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> installs the external library and displays a message offering to restart <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />.</info>
+            </step>
+            <step>
+                <cmd>To install additional external libraries, click <uicontrol>Cancel</uicontrol>,
+                    then repeat steps <xref href="#task_jng_dkt_bz/cmd-UploadExtLib" format="dita"
+                        >3</xref> - <xref href="#task_jng_dkt_bz/cmd-UploadExtLib" format="dita"
+                        >6</xref> for every stage library that needs access to the external
+                    library.</cmd>
+                <info><ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SparkExample"
+                    /></info>
+            </step>
+            <step>
+                <cmd>After installing all of the external libraries that you want, restart the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> in one of the following ways:</cmd>
                 <choices id="choices_ost_pkm_nw">
