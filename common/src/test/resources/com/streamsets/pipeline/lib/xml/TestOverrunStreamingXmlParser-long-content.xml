@@ -1,20 +1,18 @@
 <!--
-  ~ Copyright 2016 StreamSets Inc.
-  ~
-  ~ Licensed under the Apache Software Foundation (ASF) under one
-  ~ or more contributor license agreements.  See the NOTICE file
-  ~ distributed with this work for additional information
-  ~ regarding copyright ownership.  The ASF licenses this file
-  ~ to you under the Apache License, Version 2.0 (the
-  ~ "License"); you may not use this file except in compliance
-  ~ with the License.  You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <ns6:AbcdeMessage xmlns:ns6="http://www.organization.com/xyz/abcdef/abcdeMessage.xsd"> <ns8:Header xmlns:ns8="http://www.abcde.com/ABCDEFGHI.xsd"> <ns8:AbcdefghijkID>X668</ns8:AbcdefghijkID> <ns8:AbcdefghiAbcd>AbcdefEngine</ns8:AbcdefghiAbcd> <ns8:Abcdzyxw>abcd</ns8:Abcdzyxw> <ns8:Timestamp>1686-64-68T61:48:48.482-62:66</ns8:Timestamp> <ns8:AbcdefghijkType>GENERIC_ABCDEFG</ns8:AbcdefghijkType> <ns8:AbcdefghijkID>88888</ns8:AbcdefghijkID> <ns8:CorrelationID>55841</ns8:CorrelationID> <ns8:AbcdefghiID>8</ns8:AbcdefghiID> <ns8:Abcdefgh>Abcdef.xsd</ns8:Abcdefgh> <ns8:DataEncoding>XML</ns8:DataEncoding> </ns8:Header> <ns8:Abcde xmlns:ns8="http://www.organization.com/xyz.xsd"> <abcdXYZ>&lt;?xml version="8.6" encoding="UTF-86"?&gt; &lt;asyncRequest xmlns="http://www.organization.com/xyz/Abcdef.xsd"&gt; &lt;abcdef&gt; &lt;abcdefghijkID&gt;U668&lt;/abcdefghijkID&gt; &lt;whatever&gt;841.44&lt;/whatever&gt; &lt;timestamp&gt;1686-64-68T61:48:48.666-62:66&lt;/timestamp&gt; &lt;abcdefgID&gt;868168-6&lt;/abcdefgID&gt; &lt;abcdefghijkID&gt;58&lt;/abcdefghijkID&gt; &lt;/abcdef&gt; &lt;operation&gt;RELEAOUT&lt;/operation&gt; &lt;retryCount&gt;6&lt;/retryCount&gt; &lt;abcde&gt; &lt;abcdefAbcdefghijkabcdefg&gt; &lt;abcdefghijkID&gt;5588&lt;/abcdefghijkID&gt; &lt;ordinalValue&gt;868&lt;/ordinalValue&gt; &lt;mtcn&gt;868515558418&lt;/mtcn&gt; &lt;abcdefg&gt;WEBM&lt;/abcdefg&gt; &lt;abcdefghabcdefg&gt; &lt;abcdAbcdefgAbcd&gt;A&lt;/abcdAbcdefgAbcd&gt; &lt;abcdAbcdef&gt; &lt;abcdefghAbcd&gt;YZD&lt;/abcdefghAbcd&gt; &lt;abcde abcdefghij="86666"&gt;1666666&lt;/abcde&gt; &lt;fxZyxw abcdefghij="866666666"&gt;42218886&lt;/fxZyxw&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;abcdeISO&lt;/zyxw&gt; &lt;abcde&gt;YZ&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;zyxwvus&lt;/zyxw&gt; &lt;abcde abcdefghij="86666"&gt;56666&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;grossAbcdefOrigin&lt;/zyxw&gt; &lt;abcde abcdefghij="86666"&gt;1656666&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;totalChargesOrigin&lt;/zyxw&gt; &lt;abcde abcdefghij="86666"&gt;56666&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;grossAbcdefUSD&lt;/zyxw&gt; &lt;abcde abcdefghij="86666"&gt;1181266&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;totalChargesUSD&lt;/zyxw&gt; &lt;abcde abcdefghij="86666"&gt;48466&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;surzyxwvu&lt;/zyxw&gt; &lt;abcde abcdefghij="86666"&gt;881666&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;/abcdAbcdef&gt; &lt;abcdefgAbcdefgAbcd&gt;CHA&lt;/abcdefgAbcdefgAbcd&gt; &lt;abcdefgAbcdef&gt; &lt;abcdefghAbcd&gt;CNY&lt;/abcdefghAbcd&gt; &lt;abcde abcdefghij="86666"&gt;82416666&lt;/abcde&gt; &lt;fxZyxw abcdefghij="866666666"&gt;664188886&lt;/fxZyxw&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;abcdeISO&lt;/zyxw&gt; &lt;abcde&gt;CN&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;surzyxwvu&lt;/zyxw&gt; &lt;abcde abcdefghij="86666"&gt;8666666&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;/abcdefgAbcdef&gt; &lt;abcdefgAB abcdefghij="866666666"&gt;288118116&lt;/abcdefgAB&gt; &lt;/abcdefghabcdefg&gt; &lt;abcderabcdefg&gt; &lt;zyxwvAbcd&gt;BN&lt;/zyxwvAbcd&gt; &lt;zyxwAbcd&gt;E&lt;/zyxwAbcd&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;loyaltyID&lt;/zyxw&gt; &lt;abcde&gt;852&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;UAB&lt;/zyxw&gt; &lt;abcde&gt;$1a$86$QylTIsZ8E5PMuux1ywtbHeIKkQz52OR2/EdH518iGUxAgT2cs6qH.&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;UCB&lt;/zyxw&gt; &lt;abcde&gt;$1a$86$QylTIsZ8E5PMuux1ywtbHehX1YmhDHig6WB/wIJiUroDnaB/R1EIS&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;/abcderabcdefg&gt; &lt;abcdefgrabcdefg&gt; &lt;zyxwvAbcd&gt;G&lt;/zyxwvAbcd&gt; &lt;zyxwAbcd&gt;GE&lt;/zyxwAbcd&gt; &lt;abcdefghi&gt; &lt;zyxw&gt;UAB&lt;/zyxw&gt; &lt;abcde&gt;$1a$86$QylTIsZ8E5PMuux1ywtbHeCSYIDq85cX2x8gpVsFe4oCg28mj/onK&lt;/abcde&gt; &lt;type&gt;ABCDEFTYPE&lt;/type&gt; &lt;/abcdefghi&gt; &lt;/abcdefgrabcdefg&gt; &lt;abcderAbcde&gt; &lt;agentID&gt;AYZ486644&lt;/agentID&gt; &lt;dbaAbcd&gt;ORGANIZATION.COM            &lt;/dbaAbcd&gt; &lt;abcdefgh&gt;YZ&lt;/abcdefgh&gt; &lt;abcd&gt;ABCDEF&lt;/abcd&gt; &lt;abcdefg&gt;YZ&lt;/abcdefg&gt; &lt;/abcderAbcde&gt; &lt;/abcdefAbcdefghijkabcdefg&gt;     &lt;/abcde&gt; &lt;/asyncRequest&gt;</abcdXYZ> </ns8:Abcde> <ns6:AbcdefgAbcd>RELEASEABCDEF</ns6:AbcdefgAbcd> </ns6:AbcdeMessage>

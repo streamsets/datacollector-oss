@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?><toc xmlns="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml"><title><span xmlns="http://www.w3.org/1999/xhtml" class="booktitle">  <span class="ph mainbooktitle">Data Collector User Guide</span>  </span></title><topic href="Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" data-id="concept_htw_ghg_jq"><title>Getting Started</title><topicmeta></topicmeta><topic href="Getting_Started/GettingStarted_Title.html#concept_sjz_rmx_3q" data-id="concept_sjz_rmx_3q"><title>What is StreamSets Data Collector?</title><shortdesc><p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 </shortdesc><topicmeta></topicmeta><topic href="Getting_Started/GettingStarted_Title.html#concept_rlj_ftm_lq" data-id="concept_rlj_ftm_lq"><title>How should I use Data Collector?</title><shortdesc><p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Use StreamSets <span class="ph">Data                   Collector</span> like a pipe     for a data stream. Throughout your enterprise data topology, you have streams of data that you     need to move, collect, and process on the way to their destinations. <span class="ph">Data                   Collector</span> provides the     crucial connection between hops in the stream. </p>
 </shortdesc><topicmeta></topicmeta></topic><topic href="Getting_Started/GettingStarted_Title.html#concept_bl5_dl4_1r" data-id="concept_bl5_dl4_1r"><title>How does this really work?</title><shortdesc><p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc">Let's walk through it...</p>
 </shortdesc><topicmeta></topicmeta></topic></topic><topic href="Getting_Started/GettingStarted_Title.html#task_qsy_lsf_tq" data-id="task_qsy_lsf_tq"><title>Logging In and Creating a Pipeline</title><shortdesc><p xmlns="http://www.w3.org/1999/xhtml" class="shortdesc"></p>

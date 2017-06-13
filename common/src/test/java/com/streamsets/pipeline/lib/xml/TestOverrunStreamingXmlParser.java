@@ -1,13 +1,9 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
- * Licensed under the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -81,25 +77,6 @@ public class TestOverrunStreamingXmlParser {
 
   private Reader getXml(String name) throws Exception {
     return new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(name));
-  }
-
-  @Test
-  public void testXmlObjectOverrun() throws Exception {
-    StreamingXmlParser parser = new OverrunStreamingXmlParser(getXml("TestStreamingXmlParser-records.xml"), "record", 0,
-                                                              50);
-
-    Field f = parser.read();
-    Assert.assertNotNull(f);
-    try {
-      f = parser.read();
-      Assert.fail();
-    } catch (ObjectLengthException ex) {
-    }
-    f = parser.read();
-    Assert.assertNotNull(f);
-    Assert.assertEquals("r2", f.getValueAsMap().get("value").getValue());
-
-    parser.close();
   }
 
   @Test

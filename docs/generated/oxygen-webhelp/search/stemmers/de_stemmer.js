@@ -1,15 +1,18 @@
 /*
- * Author: Joder Illi
+ * Copyright 2017 StreamSets Inc.
  *
- * Copyright (c) 2010, FormBlitz AG
- * All rights reserved.
- * Implementation of the stemming algorithm from http://snowball.tartarus.org/algorithms/german/stemmer.html
- * Copyright of the algorithm is: Copyright (c) 2001, Dr Martin Porter and can be found at http://snowball.tartarus.org/license.php
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Redistribution and use in source and binary forms, with or without modification, is covered by the standard BSD license.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 //var stemmer = function Stemmer() {
     /*
     German includes the following accented forms,
