@@ -1323,4 +1323,63 @@ public class TestAvroTypeUtil {
     Assert.assertTrue(defaults.containsKey("array1_record.field1"));
   }
 
+  @Test
+  public void testNullValueWithNoDefault() throws IOException {
+
+    // Default values are missing and record has a null value for the field.
+    // This should send the record to error.
+    String schema = "{ \"type\": \"record\", "+
+        "  \"name\": \"NoDefaultValues\"," +
+        "  \"fields\" : [{\"name\": \"value\", \"type\": \"string\"}] " +
+        "  }" +
+        "}";
+    Schema parse = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Map<String, Field> fields = new HashMap<>();
+    fields.put("value", Field.create(Field.Type.STRING, null));
+    record.set(Field.create(fields));
+
+    try {
+      AvroTypeUtil.sdcRecordToAvro(
+          record,
+          parse,
+          AvroTypeUtil.getDefaultValuesFromSchema(parse, new HashSet<String>())
+      );
+      Assert.fail();
+    } catch (DataGeneratorException e) {
+      Assert.assertEquals(Errors.AVRO_GENERATOR_01, e.getErrorCode());
+    } catch (StageException e){
+      Assert.fail();
+    }
+  }
+
+  @Test
+  public void testNullValueInUnionWithNoDefault() throws IOException {
+
+    // Default values are missing and record has a null value.
+    // Since union has a type null, this should succeed.
+    String schema = "{ \"type\": \"record\", "+
+        "  \"name\": \"NoDefaultValues\"," +
+        "  \"fields\" : [" +
+        "      {\"name\": \"value\", \"type\": [\"string\", \"null\"]}" +
+        "    ]}" +
+        "}";
+    Schema parse = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Map<String, Field> fields = new HashMap<>();
+    fields.put("value", Field.create(Field.Type.STRING, null));
+    record.set(Field.create(fields));
+
+    try {
+      AvroTypeUtil.sdcRecordToAvro(
+          record,
+          parse,
+          AvroTypeUtil.getDefaultValuesFromSchema(parse, new HashSet<String>())
+      );
+    } catch (DataGeneratorException e) {
+      Assert.fail();
+    } catch (StageException e){
+      Assert.fail();
+    }
+  }
 }
