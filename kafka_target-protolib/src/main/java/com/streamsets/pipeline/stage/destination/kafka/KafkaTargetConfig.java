@@ -165,8 +165,9 @@ public class KafkaTargetConfig {
     type = ConfigDef.Type.STRING,
     defaultValue = "${0}",
     label = "Partition Expression",
-    description = "Determines the partition key to use with default kafka partitioner class in case of 'Default " +
-      "Partition Strategy'. In case of 'Expression Partition Strategy' it determines the partition number",
+    description = "When using the default partition strategy, enter an expression to evaluate the partition key " +
+        "from record, which will be used with hash function to determine the topic's partition. " +
+        "When using Expression, enter an expression that determines the partition number. ",
     displayPosition = 40,
     group = "#0",
     dependsOn = "partitionStrategy",
