@@ -109,12 +109,10 @@ public class ForceStreamConsumer {
       public void onMessage(ClientSessionChannel channel, Message message) {
         LOG.info("Placing message on queue: {}", message);
         try {
-          boolean accepted = messageQueue.offer(message, 1000L, TimeUnit.MILLISECONDS);
-          if (!accepted) {
-            LOG.error("Response buffer full, dropped record.");
-          }
+          messageQueue.put(message);
         } catch (InterruptedException e) {
           LOG.error(Errors.FORCE_10.getMessage(), e);
+          Thread.currentThread().interrupt();
         }
       }
     });
@@ -138,12 +136,10 @@ public class ForceStreamConsumer {
 
           // Pass these back to the source as we need to resubscribe or propagate the error
           try {
-            boolean accepted = messageQueue.offer(message, 1000L, TimeUnit.MILLISECONDS);
-            if (!accepted) {
-              LOG.error("Response buffer full, dropped record.");
-            }
+            messageQueue.put(message);
           } catch (InterruptedException e) {
-            LOG.error(Errors.FORCE_10.getMessage(), e.getMessage(), e);
+            LOG.error(Errors.FORCE_10.getMessage(), e);
+            Thread.currentThread().interrupt();
           }
         }
 
@@ -171,13 +167,11 @@ public class ForceStreamConsumer {
                   subscribeForNotifications(ForceSource.READ_EVENTS_FROM_START);
                   return;
                 } else {
-                    boolean accepted = messageQueue.offer(message, 1000L, TimeUnit.MILLISECONDS);
-                    if (!accepted) {
-                      LOG.error("Response buffer full, dropped record.");
-                    }
+                  messageQueue.put(message);
                 }
               } catch (InterruptedException e) {
-                LOG.error(Errors.FORCE_10.getMessage(), e.getMessage(), e);
+                LOG.error(Errors.FORCE_10.getMessage(), e);
+                Thread.currentThread().interrupt();
               }
             }
           }

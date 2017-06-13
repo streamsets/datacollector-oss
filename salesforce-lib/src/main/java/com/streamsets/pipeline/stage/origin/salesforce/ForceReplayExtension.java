@@ -64,14 +64,11 @@ public class ForceReplayExtension<Type> extends Adapter {
         if (ext == null || ext.get(REPLAY).equals(Boolean.FALSE)) {
           // Houston, we have a problem!
           try {
-            entityQueue.offer(
-                message,
-                1000L/* conf.requestTimeoutMillis */,
-                TimeUnit.MILLISECONDS
-            );
+            entityQueue.put(message);
             return false;
           } catch (InterruptedException e) {
             LOG.error(Errors.FORCE_10.getMessage(), e);
+            Thread.currentThread().interrupt();
           }
         }
     }
