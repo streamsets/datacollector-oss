@@ -1,0 +1,224 @@
+/**
+ * Copyright 2017 StreamSets Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.stage.executor.s3;
+
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GetObjectTaggingRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.Tag;
+import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.common.FakeS3;
+import com.streamsets.pipeline.stage.common.TestUtil;
+import com.streamsets.pipeline.stage.executor.s3.config.AmazonS3ExecutorConfig;
+import com.streamsets.pipeline.stage.executor.s3.config.TaskType;
+import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
+import org.apache.commons.io.IOUtils;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class TestAmazonS3Executor {
+
+  private static final String BUCKET_NAME = "mybucket";
+  private static final String SECOND_BUCKET_NAME = "yourbucket";
+
+  private static String fakeS3Root;
+  private static FakeS3 fakeS3;
+  private static AmazonS3 s3client;
+  private static ExecutorService executorService;
+  private static int port;
+
+  private String objectName;
+
+  @BeforeClass
+  public static void setUpClass() throws IOException, InterruptedException {
+    File dir = new File(new File("target", UUID.randomUUID().toString()), "fakes3_root").getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    fakeS3Root = dir.getAbsolutePath();
+    port = TestUtil.getFreePort();
+    fakeS3 = new FakeS3(fakeS3Root, port);
+    Assume.assumeTrue("Please install fakes3 in your system", fakeS3.fakes3Installed());
+    //Start the fakes3 server
+    executorService = Executors.newSingleThreadExecutor();
+    executorService.submit(fakeS3);
+
+    BasicAWSCredentials credentials = new BasicAWSCredentials("foo", "bar");
+    s3client = AmazonS3ClientBuilder
+        .standard()
+        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+        .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("http://localhost:" + port, null))
+        .withPathStyleAccessEnabled(true)
+        .withChunkedEncodingDisabled(true) // FakeS3 does not correctly calculate checksums with chunked encoding enabled.
+        .build();
+
+    TestUtil.createBucket(s3client, BUCKET_NAME);
+    TestUtil.createBucket(s3client, SECOND_BUCKET_NAME);
+  }
+
+  @AfterClass
+  public static void tearDownClass() {
+    if(executorService != null) {
+      executorService.shutdownNow();
+    }
+    if(fakeS3 != null) {
+      fakeS3.shutdown();
+    }
+  }
+
+  @Before
+  public void generateObjectName() {
+    objectName = UUID.randomUUID().toString();
+  }
+
+  @Test
+  public void testApplyTags() throws Exception {
+    AmazonS3ExecutorConfig config = getConfig();
+    config.taskConfig.tags = ImmutableMap.of(
+      "${record:value('/key')}", "${record:value('/value')}"
+    );
+
+    AmazonS3Executor executor = new AmazonS3Executor(config);
+    TargetRunner runner = new TargetRunner.Builder(AmazonS3DExecutor.class, executor)
+      .build();
+    runner.runInit();
+
+    try {
+      s3client.putObject(new PutObjectRequest(BUCKET_NAME, objectName, IOUtils.toInputStream("content"), new ObjectMetadata()));
+      runner.runWrite(ImmutableList.of(getTestRecord()));
+
+      List<Tag> tags = s3client.getObjectTagging(new GetObjectTaggingRequest(BUCKET_NAME, objectName)).getTagSet();
+      Assert.assertEquals(1, tags.size());
+      Assert.assertEquals("Owner", tags.get(0).getKey());
+      Assert.assertEquals("Earth", tags.get(0).getValue());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testBrokenEL() throws Exception {
+    AmazonS3ExecutorConfig config = getConfig();
+    config.taskConfig.tags = ImmutableMap.of(
+      "${record:value('/ke", "${record:value('/value')}"
+    );
+
+    AmazonS3Executor executor = new AmazonS3Executor(config);
+    TargetRunner runner = new TargetRunner.Builder(AmazonS3DExecutor.class, executor)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    runner.runInit();
+
+    try {
+      runner.runWrite(ImmutableList.of(getTestRecord()));
+
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testEmptyBucket() throws Exception {
+    AmazonS3ExecutorConfig config = getConfig();
+    config.s3Config.bucketTemplate = "";
+
+    AmazonS3Executor executor = new AmazonS3Executor(config);
+    TargetRunner runner = new TargetRunner.Builder(AmazonS3DExecutor.class, executor)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    runner.runInit();
+
+    try {
+      runner.runWrite(ImmutableList.of(getTestRecord()));
+
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testEmptyObjectpath() throws Exception {
+    AmazonS3ExecutorConfig config = getConfig();
+    config.taskConfig.objectPath = "";
+
+    AmazonS3Executor executor = new AmazonS3Executor(config);
+    TargetRunner runner = new TargetRunner.Builder(AmazonS3DExecutor.class, executor)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
+    runner.runInit();
+
+    try {
+      runner.runWrite(ImmutableList.of(getTestRecord()));
+
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private AmazonS3ExecutorConfig getConfig() {
+    AmazonS3ExecutorConfig config = new AmazonS3ExecutorConfig();
+
+    config.s3Config.region = AWSRegions.OTHER;
+    config.s3Config.endpoint = "http://localhost:" + port;
+    config.s3Config.bucketTemplate = "${record:attribute('bucket')}";
+    config.s3Config.awsConfig = new AWSConfig();
+    config.s3Config.awsConfig.awsAccessKeyId = "foo";
+    config.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    config.s3Config.awsConfig.disableChunkedEncoding = true;
+
+    config.taskConfig.taskType = TaskType.CHANGE_EXISTING_OBJECT;
+    config.taskConfig.objectPath = "${record:value('/object')}";
+
+    return config;
+  }
+
+  private Record getTestRecord() {
+    Record record = RecordCreator.create();
+    record.getHeader().setAttribute("bucket", BUCKET_NAME);
+    record.set(Field.create(Field.Type.MAP, ImmutableMap.of(
+      "object", Field.create(objectName),
+      "key", Field.create("Owner"),
+      "value", Field.create("Earth")
+    )));
+
+    return record;
+  }
+}
