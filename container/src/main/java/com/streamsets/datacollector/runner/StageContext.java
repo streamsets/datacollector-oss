@@ -157,6 +157,11 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       public String getInstanceName() {
         return instanceName;
       }
+
+      @Override
+      public String getLabel() {
+        return instanceName;
+      }
     };
     this.userContext = new UserContext("sdk-user");
     pipelineInfo = ImmutableList.of(stageInfo);

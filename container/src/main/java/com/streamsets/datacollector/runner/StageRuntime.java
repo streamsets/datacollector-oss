@@ -90,6 +90,11 @@ public class StageRuntime implements PushSourceContextDelegate {
       }
 
       @Override
+      public String getLabel() {
+        return conf.getUiInfo().get("label").toString();
+      }
+
+      @Override
       public String toString() {
         return Utils.format("Info[instance='{}' name='{}' version='{}']", getInstanceName(), getName(), getVersion());
       }

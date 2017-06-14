@@ -52,6 +52,11 @@ public class ContextInfoCreator {
       public String getInstanceName() {
         return instanceName;
       }
+
+      @Override
+      public String getLabel() {
+        return instanceName;
+      }
     };
   }
 
