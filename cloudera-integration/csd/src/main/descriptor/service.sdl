@@ -38,6 +38,7 @@
       "runMode" : "all"
     }
   ],
+  "rolesWithExternalLinks" : ["DATACOLLECTOR"],
   "roles": [
     {
       "name": "DATACOLLECTOR",
