@@ -557,6 +557,19 @@
                                         />.</p></entry>
                             </row>
                             <row>
+                                <entry>stage.conf_hadoop.always.lowercase.user <xref
+                                        href="HadoopImpersonationMode-Lowercase.dita"
+                                            ><image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_t4c_hby_f1b"/>
+                                    </xref></entry>
+                                <entry>Converts the user name to lowercase before passing it to
+                                    Hadoop. <p>Use to lowercase user names from case insensitive
+                                        systems, such as a case-insensitive LDAP installation,
+                                        before passing the user names to Hadoop systems.</p><p>To
+                                        use this property, uncomment the property and set it to
+                                        true.</p></entry>
+                            </row>
+                            <row>
                                 <entry>
                                     <p>stage.conf_com.streamsets.pipeline.stage.executor.
                                         shell.impersonation_mode </p>
