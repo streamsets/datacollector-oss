@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
@@ -76,6 +77,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private static final String PRECISION_EXPRESSION = "precisionExpression";
   private static final String COMMENT_EXPRESSION = "commentExpression";
   private static final String TEMP_AVRO_DIR_NAME = "/.avro";
+  private static final String ATTRIBUTE_EXPRESSION = "metadataHeaderAttributeConfigs";
 
   protected static final String HDFS_HEADER_ROLL = "roll";
   protected static final String HDFS_HEADER_AVROSCHEMA = "avroSchema";
@@ -91,6 +93,9 @@ public class HiveMetadataProcessor extends RecordProcessor {
   private final TimeZone timeZone;
   private final HMPDataFormat dataFormat;
   private final String commentExpression;
+  private final Map<String, String> metadataHeaderAttributeConfigs;
+
+  private boolean metadataHeadersToAddExist;
 
   private HiveConfigBean hiveConfigBean;
 
@@ -128,6 +133,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     private ELEval scaleEL;
     private ELEval precisionEL;
     private ELEval commentEL;
+    private ELEval metadataHeaderAttributeEL;
 
     public void init(Stage.Context context) {
       dbNameELEval = context.createELEval(HIVE_DB_NAME);
@@ -139,6 +145,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       scaleEL = context.createELEval(SCALE_EXPRESSION);
       precisionEL = context.createELEval(PRECISION_EXPRESSION);
       commentEL = context.createELEval(COMMENT_EXPRESSION);
+      metadataHeaderAttributeEL = context.createELEval(ATTRIBUTE_EXPRESSION);
     }
   }
 
@@ -154,7 +161,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       DecimalDefaultsConfig decimalDefaultsConfig,
       TimeZone timezone,
       HMPDataFormat dataFormat,
-      String commentExpression
+      String commentExpression,
+      Map<String, String> metadataHeaderAttributeConfigs
   ) {
     this.databaseEL = databaseEL;
     this.tableEL = tableEL;
@@ -171,6 +179,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
     this.timeZone = timezone;
     this.dataFormat = dataFormat;
     this.commentExpression = commentExpression;
+    this.metadataHeaderAttributeConfigs = metadataHeaderAttributeConfigs;
   }
 
   @Override
@@ -276,6 +285,37 @@ public class HiveMetadataProcessor extends RecordProcessor {
             e.getMessage()
         ));
       }
+
+      if(!metadataHeaderAttributeConfigs.isEmpty()) {
+        metadataHeadersToAddExist = true;
+        for (Map.Entry<String, String> entry : metadataHeaderAttributeConfigs.entrySet()) {
+          String attributeNameExpression = entry.getKey();
+          String attributeValueExpression = entry.getValue();
+
+          ELUtils.validateExpression(
+                  elEvals.metadataHeaderAttributeEL,
+                  getContext().createELVars(),
+                  attributeNameExpression,
+                  getContext(),
+                  ATTRIBUTE_EXPRESSION,
+                  "headerAttributeConfigs",
+                  Errors.HIVE_METADATA_12,
+                  Object.class,
+                  issues);
+          ELUtils.validateExpression(
+                  elEvals.metadataHeaderAttributeEL,
+                  getContext().createELVars(),
+                  attributeValueExpression,
+                  getContext(),
+                  ATTRIBUTE_EXPRESSION,
+                  "headerAttributeConfigs",
+                  Errors.HIVE_METADATA_12,
+                  Object.class,
+                  issues);
+        }
+      } else {
+        metadataHeadersToAddExist = false;
+      }
     }
     return issues;
   }
@@ -364,7 +404,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
         throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, targetPath);
       }
 
-      // Obtain the record structure from current record
+        // Obtain the record structure from current record
       LinkedHashMap<String, HiveTypeInfo> recordStructure = HiveMetastoreUtil.convertRecordToHMSType(
           record,
           elEvals.scaleEL,
@@ -460,7 +500,23 @@ public class HiveMetadataProcessor extends RecordProcessor {
       if (schemaDrift) {
         avroSchema = HiveMetastoreUtil.generateAvroSchema(finalStructure, qualifiedName);
         LOG.trace("Schema Drift. Generated new Avro schema for table {}: {}", qualifiedName, avroSchema);
-        handleSchemaChange(dbName, tableName, recordStructure, targetPath, avroSchema, batchMaker, qualifiedName, tableCache, schemaCache);
+
+        // Add custom metadata attributes if they are specified
+        Map<String, String> metadataHeaderAttributeMap = new LinkedHashMap();
+        if(metadataHeadersToAddExist) {
+          for (Map.Entry<String, String> entry : metadataHeaderAttributeConfigs.entrySet()) {
+            String attributeNameExpression = entry.getKey();
+            String nameResult = HiveMetastoreUtil.resolveEL(elEvals.metadataHeaderAttributeEL, variables, attributeNameExpression);
+            if (nameResult.isEmpty()) {
+              continue;
+            }
+            String attributeValueExpression = entry.getValue();
+            String valueResult = HiveMetastoreUtil.resolveEL(elEvals.metadataHeaderAttributeEL, variables, attributeValueExpression);
+            metadataHeaderAttributeMap.put(nameResult, valueResult);
+          }
+        }
+
+        handleSchemaChange(dbName, tableName, recordStructure, targetPath, avroSchema, batchMaker, qualifiedName, tableCache, schemaCache, metadataHeaderAttributeMap);
       } else {
         if (schemaCache == null) { // Table exists in Hive, but this is cold start so the cache is null
           avroSchema = HiveMetastoreUtil.generateAvroSchema(finalStructure, qualifiedName);
@@ -521,7 +577,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       LinkedHashMap<String, HiveTypeInfo> columnList,
       LinkedHashMap<String, HiveTypeInfo> partitionTypeList,
       String location,
-      String avroSchema
+      String avroSchema,
+      Map<String, String> metadataHeaderAttributes
   ) throws HiveStageCheckedException
   {
     //creating a record with uuid as postfix so multiple SDCs won't generate the record with same id.
@@ -538,7 +595,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
         dataFormat
     );
     metadataRecord.set(metadataField);
-    return metadataRecord;
+
+    for (Map.Entry<String, String> entry : metadataHeaderAttributes.entrySet()){
+      metadataRecord.getHeader().setAttribute(entry.getKey(), entry.getValue());
+    }
+
+      return metadataRecord;
   }
 
   private void handleSchemaChange(
@@ -550,9 +612,10 @@ public class HiveMetadataProcessor extends RecordProcessor {
       BatchMaker batchMaker,
       String qualifiedName,
       TypeInfoCacheSupport.TypeInfo tableCache,
-      AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache
+      AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache,
+      Map<String, String> metadataHeaderAttributes
   ) throws StageException {
-    Record r = generateSchemaChangeRecord(dbName, tableName, recordStructure, partitionTypeInfo, targetDir, avroSchema);
+    Record r = generateSchemaChangeRecord(dbName, tableName, recordStructure, partitionTypeInfo, targetDir, avroSchema, metadataHeaderAttributes);
     batchMaker.addRecord(r, hmsLane);
     // update or insert the new record structure to cache
     if (tableCache != null) {

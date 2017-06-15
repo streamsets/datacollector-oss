@@ -21,7 +21,9 @@ import com.streamsets.pipeline.stage.processor.hive.HMPDataFormat;
 import com.streamsets.pipeline.stage.processor.hive.HiveMetadataProcessor;
 import com.streamsets.pipeline.stage.processor.hive.PartitionConfig;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class HiveMetadataProcessorBuilder {
@@ -36,6 +38,7 @@ public class HiveMetadataProcessorBuilder {
   private TimeZone timeZone;
   private HMPDataFormat dataFormat;
   private String commentEL;
+  private Map<String, String> metadataHeaderAttributeConfig;
 
   public HiveMetadataProcessorBuilder() {
     database = "default";
@@ -51,6 +54,7 @@ public class HiveMetadataProcessorBuilder {
     timeZone = TimeZone.getTimeZone("UTC");
     dataFormat = HMPDataFormat.AVRO;
     commentEL = "${field:field()}";
+    metadataHeaderAttributeConfig = Collections.emptyMap();
   }
 
   public HiveMetadataProcessorBuilder database(String database) {
@@ -121,6 +125,11 @@ public class HiveMetadataProcessorBuilder {
     return this;
   }
 
+  public HiveMetadataProcessorBuilder metadataHeaderAttributeConfig(Map<String, String> metadataHeaderAttributeConfig) {
+    this.metadataHeaderAttributeConfig = metadataHeaderAttributeConfig;
+    return this;
+  }
+
   public HiveMetadataProcessor build() {
     return new HiveMetadataProcessor(
       database,
@@ -134,7 +143,8 @@ public class HiveMetadataProcessorBuilder {
       decimalDefaultsConfig,
       timeZone,
       dataFormat,
-      commentEL
+      commentEL,
+      metadataHeaderAttributeConfig
     );
   }
 }

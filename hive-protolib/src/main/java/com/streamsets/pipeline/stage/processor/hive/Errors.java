@@ -31,6 +31,7 @@ public enum Errors implements ErrorCode {
   HIVE_METADATA_09("Invalid type for partition: {}"),
   HIVE_METADATA_10("Unsupported character to use for partition value: {}"),
   HIVE_METADATA_11("Invalid comment for column '{}': {}"),
+  HIVE_METADATA_12("Cannot evaluate expression '{}' for record '{}': {}")
   ;
 
 

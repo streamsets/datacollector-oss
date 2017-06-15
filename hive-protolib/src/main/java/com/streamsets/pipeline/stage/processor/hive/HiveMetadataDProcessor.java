@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.lib.hive.FieldPathEL;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 @StageDef(
@@ -177,6 +178,20 @@ public class HiveMetadataDProcessor extends DProcessor {
   public String timeZoneID;
 
   @ConfigDef(
+      required = false,
+      defaultValue = "{}",
+      type = ConfigDef.Type.MAP,
+      label = "Header Attribute Expressions",
+      description = "Header attributes to insert into the metadata record output",
+      displayPosition = 120,
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      group = "ADVANCED"
+  )
+  @ListBeanModel
+  public Map<String, String> metadataHeaderAttributeConfigs;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
@@ -200,7 +215,8 @@ public class HiveMetadataDProcessor extends DProcessor {
       decimalDefaultsConfig,
       TimeZone.getTimeZone(timeZoneID),
       dataFormat,
-      commentExpression
+      commentExpression,
+      metadataHeaderAttributeConfigs
     ));
   }
 
