@@ -145,6 +145,15 @@ public class TestHiveMetadataProcessor {
   )
   );
 
+  static final Map<String, String> SAMPLE_HEADERS
+      = new LinkedHashMap<>(ImmutableMap.of(
+      "sample_header_1",
+      "sample_value_1",
+      "sample_header_2",
+      "sample_value_2"
+  )
+  );
+
   @Before
   public void setup() throws Exception {
     // do not resolve JDBC URL
@@ -360,7 +369,8 @@ public class TestHiveMetadataProcessor {
         HiveMetastoreUtil.generateAvroSchema( // Using this function since this isn't to test contents of avro schema
             SAMPLE_RECORD1,
             HiveMetastoreUtil.getQualifiedTableName(dbName, tableName)
-        )
+        ),
+        SAMPLE_HEADERS
     );
     checkRecordForColumnsAndPartitionList(record, SAMPLE_RECORD1, SAMPLE_PARTITION);
   }
@@ -382,7 +392,8 @@ public class TestHiveMetadataProcessor {
         HiveMetastoreUtil.generateAvroSchema( // Using this function since this isn't to test contents of avro schema
             DECIMAL_RECORD1,
             HiveMetastoreUtil.getQualifiedTableName(dbName, tableName)
-        )
+        ),
+        SAMPLE_HEADERS
     );
     checkRecordForColumnsAndPartitionList(record, DECIMAL_RECORD1, DECIMAL_RECORD2);
     runner.runDestroy();
