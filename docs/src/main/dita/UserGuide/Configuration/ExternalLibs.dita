@@ -38,6 +38,9 @@
           <p>For example, to use the JDBC Query Consumer or the JDBC Producer with Oracle, install
             the Oracle JDBC drivers.</p>
         </li>
+        <li>Before you use the Hadoop FS origin to read from non-HDFS systems, install all required
+          file system application JAR files. See the file system documentation for details about the
+          files to install.</li>
         <li>Before you use the Spark Evaluator processor, install the Spark application JAR file and
           any dependencies other than the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SparkLibraries"

@@ -93,7 +93,8 @@
       </ul></p>
     <p>In cluster pipelines, you can use the following origins:<ul id="ul_unr_xhb_ws">
         <li><xref href="HadoopFS-origin.dita#concept_lw2_tnm_vs">Hadoop FS</xref> - Reads data from
-          the Hadoop Distributed File System (HDFS). </li>
+          the Hadoop Distributed File System (HDFS). Can read from other file systems using the
+          Hadoop FileSystem interface.</li>
         <li><xref href="KConsumer.dita#concept_msz_wnr_5q">Kafka Consumer</xref> - Reads messages
           from Kafka. Use the cluster version of the origin.</li>
         <li><xref href="MapRFS.dita#concept_psz_db4_lx">MapR FS</xref> - Reads data from MapR

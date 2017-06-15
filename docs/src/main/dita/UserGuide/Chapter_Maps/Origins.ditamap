@@ -93,6 +93,7 @@
   </topicref>
   <topicref href="../Origins/HadoopFS-origin.dita" chunk="to-content">   
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/Hadoop-OtherFS.dita"/>
    <topicref href="../Origins/HadoopFS-Kerberos.dita"/>
    <topicref href="../Origins/HadoopFS-HDFSUser-origin.dita"/>
    <topicref href="../Origins/HadoopFS-HadoopProperties-origin.dita"/>

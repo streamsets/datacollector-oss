@@ -40,10 +40,15 @@
                             <tbody>
                                 <row>
                                     <entry>Hadoop FS URI</entry>
-                                    <entry>HDFS URI. Include the HDFS scheme and authority as
-                                        follows:
+                                    <entry>URI to use. To read from HDFS, include the HDFS scheme
+                                        and authority as follows:
                                             <codeph>&lt;scheme>://&lt;authority></codeph>.<p>For
-                                            example:<codeblock>hdfs://nameservice</codeblock></p></entry>
+                                            example:<codeblock>hdfs://nameservice</codeblock></p><p>To
+                                            read from other file systems using the Hadoop FileSystem
+                                            interface, enter the appropriate URI for the file
+                                            system. For more information, see <xref
+                                                href="Hadoop-OtherFS.dita#concept_ogc_xzd_f1b"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Input Paths</entry>
