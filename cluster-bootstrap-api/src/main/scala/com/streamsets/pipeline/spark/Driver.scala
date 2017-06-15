@@ -50,7 +50,7 @@ import scala.collection.mutable.ArrayBuffer
 object Driver {
 
   val transformers: ArrayBuffer[SparkTransformer] = ArrayBuffer()
-  private var previousIncomingData: Option[RDD[(Array[Byte], Array[Byte])]] = Option.empty
+  private var previousIncomingData: mutable.Queue[RDD[(Array[Byte], Array[Byte])]] = mutable.Queue()
   private var previousGeneratedRDDs: mutable.Queue[RDD[Record]] = mutable.Queue()
   private val SDC_MESOS_BASE_DIR = "sdc_mesos"
   private var initialized = false
@@ -58,6 +58,7 @@ object Driver {
   private val EMPTY_LIST = new util.ArrayList[Record]()
   private val ERROR_HEADER = "streamsetsInternalClusterErrorReason"
   private var offsetManager: KafkaOffsetManager = _
+  private var partitionCount = -1
 
   def foreach(dstream: DStream[(Array[Byte], Array[Byte])], kafkaOffsetManager: KafkaOffsetManager) {
     dstream.foreachRDD(rdd => process(rdd))
@@ -66,19 +67,33 @@ object Driver {
 
   def process(rdd: RDD[(Array[Byte], Array[Byte])]): Unit = synchronized {
     previousIncomingData.foreach(_.unpersist(false))
+    previousIncomingData.clear()
 
-    previousGeneratedRDDs.clear()
     previousGeneratedRDDs.foreach(_.unpersist(false))
+    previousGeneratedRDDs.clear()
 
-    previousIncomingData = Option(rdd)
+    previousIncomingData += rdd
 
     if (transformers.isEmpty) {
       transformers ++= BootstrapCluster.getTransformers.asScala
     }
 
-    val partitionCount =  rdd.partitions.length
+    if (partitionCount == -1) {
+      // Count the number of executors (subtract 1 since the getExecutorStorageStatus
+      // returns the storage stages for the driver as well.
+      partitionCount = rdd.sparkContext.getExecutorStorageStatus.length - 1
+    }
 
-    var nextResult: RDD[Record] =  rdd.mapPartitions(iterator => {
+    def repartition[T](rdd: RDD[T]) : RDD[T] = {
+      if (rdd.partitions.length != partitionCount) rdd.repartition(partitionCount)
+      else rdd
+    }
+
+    val incoming = if (transformers.nonEmpty) repartition(rdd) else rdd
+
+    previousIncomingData += incoming
+
+    var nextResult: RDD[Record] =  incoming.mapPartitions(iterator => {
       initialize()
       val batch = iterator.map({ pair  =>
           val key = if (pair._1 == null) {
@@ -98,11 +113,6 @@ object Driver {
     transformers.foreach(transformer => {
 
       val result = transformer.transform(nextResult)
-
-      def repartition[T](rdd: RDD[T]) : RDD[T] = {
-        if (rdd.partitions.length != partitionCount) rdd.repartition(partitionCount)
-        else rdd
-      }
 
       repartition(result.getErrors.rdd).foreachPartition(batch => {
         initialize()

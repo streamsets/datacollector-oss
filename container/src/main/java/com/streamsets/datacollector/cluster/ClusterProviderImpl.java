@@ -798,7 +798,8 @@ public class ClusterProviderImpl implements ClusterProvider {
     errors.clear();
     PipelineConfigBean config = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
     Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
-    String numExecutors = sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY);
+    String numExecutors = config.workerCount == 0 ?
+        sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY) : String.valueOf(config.workerCount);
     List<String> args;
     File hostingDir = null;
     if (executionMode == ExecutionMode.CLUSTER_BATCH) {

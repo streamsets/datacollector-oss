@@ -180,15 +180,28 @@ public class PipelineConfigBean implements Stage {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
+      label = "Worker Count",
+      description = "Number of workers. 0 to start as many workers as Kafka partitions for topic.",
+      defaultValue = "0",
+      min = 0,
+      displayPosition = 100,
+      group = "CLUSTER",
+      dependsOn = "executionMode",
+      triggeredByValue = {"CLUSTER_YARN_STREAMING"}
+  )
+  public long workerCount;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
       label = "Worker Memory (MB)",
       defaultValue = "1024",
-      displayPosition = 100,
+      displayPosition = 150,
       group = "CLUSTER",
       dependsOn = "executionMode",
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
   )
-  public long clusterSlaveMemory;
-
+  public int clusterSlaveMemory;
 
   @ConfigDef(
     required = true,
