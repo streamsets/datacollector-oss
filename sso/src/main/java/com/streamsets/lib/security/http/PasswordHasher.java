@@ -52,7 +52,8 @@ public class PasswordHasher {
   // hashes (user + password), to avoid swap-ability of passwords in storage
   public static final String V2 = "v2";
 
-  // V2 but using SHA1 instead of SHA512 because of Java 7 not supporting the later
+  // V2 but using SHA1 instead of SHA512. Deprecated since Java 7 is no longer supported.
+  @Deprecated
   public static final String V3 = "v3";
 
   static {
@@ -91,7 +92,7 @@ public class PasswordHasher {
   public static final String CONFIG_PREFIX = "passwordHandler.";
 
   public static final String HASH_VERSION_KEY = CONFIG_PREFIX + "hashVersion";
-  public static final String HASH_VERSION_DEFAULT = V3;
+  public static final String HASH_VERSION_DEFAULT = V2;
 
   public static final String ITERATIONS_KEY = CONFIG_PREFIX + "iterations";
   public static final int ITERATIONS_DEFAULT = 100000;

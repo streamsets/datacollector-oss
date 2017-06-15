@@ -28,7 +28,7 @@ public class TestPasswordHasher {
   @Test
   public void testConfiguration() {
     PasswordHasher hasher = new PasswordHasher(new Configuration());
-    Assert.assertEquals(PasswordHasher.V3, hasher.getCurrentVersion());
+    Assert.assertEquals(PasswordHasher.V2, hasher.getCurrentVersion());
     Assert.assertEquals(100000, hasher.getIterations());
     Assert.assertEquals(256, hasher.getKeyLength());
     Assert.assertEquals(32, hasher.getSaltLength());
@@ -162,7 +162,7 @@ public class TestPasswordHasher {
     Mockito.verify(hasher, Mockito.times(2)).getVerifyCache();
     Mockito
         .verify(hasher, Mockito.times(1))
-        .computeHash(Mockito.eq(PasswordHasher.V3), Mockito.anyInt(), Mockito.any(byte[].class), Mockito.anyString());
+        .computeHash(Mockito.eq(PasswordHasher.V2), Mockito.anyInt(), Mockito.any(byte[].class), Mockito.anyString());
 
     Mockito.reset(hasher);
     // in cache
