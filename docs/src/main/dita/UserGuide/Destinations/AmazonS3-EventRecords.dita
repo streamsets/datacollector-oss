@@ -81,6 +81,10 @@
                                         <entry>objectKey</entry>
                                         <entry>Object key name that was written.</entry>
                                     </row>
+                                    <row>
+                                        <entry>recordCount</entry>
+                                        <entry>Number of records written to the object.</entry>
+                                    </row>
                                 </tbody>
                             </tgroup>
                         </table></dd>

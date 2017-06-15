@@ -17,7 +17,7 @@
  <title>Partition Prefix</title>
  <shortdesc>You can use a partition prefix to organize objects by partitions. You can use the
         partition prefix to write to existing partitions or to create new partitions as needed. When
-        a partition specified in the partition prefix does not exist, Amazon S3 creates the
+        a partition specified in the partition prefix does not exist, the destination creates the
         partition.</shortdesc>
  <conbody>
         <p><indexterm>Amazon S3 destination<indexterm>partition
@@ -30,5 +30,8 @@
         <p>With this expression, the destination writes records to partitions based on the country
             data in the record, and creates partitions for countries that do not already have a
             partition.</p>
+        <p>If you use datetime variables in the expression, be sure to configure the <xref
+                href="AmazonS3-TimeBasis.dita#concept_qtb_njg_vw">time basis</xref> for the
+            stage.</p>
     </conbody>
 </concept>

@@ -14,13 +14,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qtb_njg_vw">
- <title>Time Basis and Time-Based Partition Prefixes</title>
- <shortdesc>The time basis is the time used by the Amazon S3 destination to write records to a
-        time-based partition prefix. When a partition prefix has no time component, you can ignore
-        the time basis property.</shortdesc>
+ <title>Time Basis and Time-Based Buckets and Partition Prefixes</title>
  <conbody>
-        <p>A partition prefix has a time component when it includes datetime variables, such as
-                <codeph>${YYYY()}</codeph> or <codeph>${DD()}</codeph>, or when it includes an
+        <p><indexterm>time basis<indexterm>for time-based properties</indexterm></indexterm>The time
+            basis is the time used by the Amazon S3 destination to write records to a time-based
+            bucket or partition prefix. When the configured bucket or partition prefix does not
+            include time-based functions, you can ignore the time basis property.</p>
+        <p>A bucket or partition prefix has a time component when it includes datetime variables,
+            such as <codeph>${YYYY()}</codeph> or <codeph>${DD()}</codeph>, or when it includes an
             expression that evaluates to a datetime value, such as
                 <codeph>${record:valueOrDefault("/Timestamp")}.</codeph></p>
         <p>For details about datetime variables, see <xref
@@ -28,9 +29,9 @@
         <p>You can use the following times as the time basis: <dl>
                 <dlentry>
                     <dt>Processing Time</dt>
-                    <dd>When you use processing time as the time basis, the destination writes to
-                        partitions based on the processing time and the partition prefix. The
-                        processing time is the time associated with the <ph
+                    <dd>When you use processing time as the time basis, the destination performs
+                        writes based on the processing time and the configured bucket and partition
+                        prefix. The processing time is the time associated with the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> running the pipeline. To use the processing time as the time basis, use
                         the following expression: <codeblock>${time:now()}</codeblock>This is the
@@ -39,8 +40,8 @@
                 <dlentry>
                     <dt>Record Time</dt>
                     <dd>When you use the time associated with a record as the time basis, you
-                        specify a date field in the record. The destination writes data to
-                        partitions based on the datetimes associated with the records. </dd>
+                        specify a date field in the record. The destination writes data based on the
+                        datetimes associated with the records. </dd>
                     <dd>To use a time associated with the record, use an expression that calls a
                         field and resolves to a datetime value, such as
                             <codeph>${record:value("/Timestamp")}</codeph>. </dd>
@@ -51,6 +52,14 @@
         <p>If you use the time of processing as the time basis, the destination writes records to
             partitions based on when it processes each record. If you use the time associated with
             the data, such as a transaction timestamp, then the destination writes records to the
-            partitions based on that timestamp. </p>
+            partitions based on that timestamp. If a partition does not exist, the destination
+            creates the needed partition.</p>
+        <p>Or, say you define the Bucket property as
+            follows:<codeblock>${YYYY()}-${MM()}</codeblock></p>
+        <p>If you use the time of processing as the time basis, the destination writes records to
+            buckets based on when it processes each record. If you use the time associated with the
+            data, such as a transaction timestamp, then the destination writes records to the
+            buckets based on that timestamp. If a bucket does not exist, the destination handles the
+            record based on the error record handling configured for the stage.</p>
  </conbody>
 </concept>
