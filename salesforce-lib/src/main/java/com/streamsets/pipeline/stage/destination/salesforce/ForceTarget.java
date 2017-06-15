@@ -141,6 +141,7 @@ public class ForceTarget extends BaseTarget {
         bulkConnection = ForceUtils.getBulkConnection(partnerConfig, conf);
         LOG.info("Successfully authenticated as {}", conf.username);
       } catch (ConnectionException | AsyncApiException ce) {
+        LOG.error("Can't connect to SalesForce", ce);
         issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
             "connectorConfig",
             Errors.FORCE_00,
