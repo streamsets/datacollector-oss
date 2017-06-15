@@ -40,6 +40,7 @@ import java.security.PrivilegedAction;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 public class StageRuntime implements PushSourceContextDelegate {
@@ -73,6 +74,7 @@ public class StageRuntime implements PushSourceContextDelegate {
     this.def = stageBean.getDefinition();
     this.stageBean = stageBean;
     this.conf = stageBean.getConfiguration();
+    String label = Optional.ofNullable(conf.getUiInfo().get("label")).orElse("").toString();
     info = new Stage.Info() {
       @Override
       public String getName() {
@@ -91,7 +93,7 @@ public class StageRuntime implements PushSourceContextDelegate {
 
       @Override
       public String getLabel() {
-        return conf.getUiInfo().get("label").toString();
+        return label;
       }
 
       @Override

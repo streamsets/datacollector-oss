@@ -89,7 +89,10 @@ public class SourcePipe extends StagePipe implements ReportErrorDelegate {
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     batchContext.setBatchMaker(batchMaker);
 
-    batchContext.setOriginStageName(getStage().getInfo().getInstanceName());
+    batchContext.setOriginStageName(
+      getStage().getInfo().getInstanceName(),
+      getStage().getInfo().getLabel()
+    );
 
     updateStatsAtStart(batchContext.getStartTime());
   }

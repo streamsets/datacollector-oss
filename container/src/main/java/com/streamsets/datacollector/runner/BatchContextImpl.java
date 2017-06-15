@@ -48,9 +48,14 @@ public class BatchContextImpl implements BatchContext {
   private long startTime;
 
   /**
-   * Stage name of the source to properly route event and error records.
+   * Internal and unique stage name of the source to properly route event and error records.
    */
   private String originStageName;
+
+  /**
+   * User stage label of the source to properly route event and error records.
+   */
+  private String originStageLabel;
 
   public BatchContextImpl(FullPipeBatch pipeBatch) {
     this.pipeBatch = pipeBatch;
@@ -90,7 +95,7 @@ public class BatchContextImpl implements BatchContext {
       recordImpl.getHeader().setSourceRecord(recordImpl);
       recordImpl.setInitialRecord(false);
     }
-    recordImpl.getHeader().setError(originStageName, errorMessage);
+    recordImpl.getHeader().setError(originStageName, originStageLabel, errorMessage);
     pipeBatch.getErrorSink().addRecord(originStageName, recordImpl);
   }
 
@@ -113,8 +118,9 @@ public class BatchContextImpl implements BatchContext {
     this.batchMaker = batchMaker;
   }
 
-  public void setOriginStageName(String name) {
-    this.originStageName = name;
+  public void setOriginStageName(String originStage, String originStageLabel) {
+    this.originStageName = originStage;
+    this.originStageLabel = originStageLabel;
   }
 
   public FullPipeBatch getPipeBatch() {

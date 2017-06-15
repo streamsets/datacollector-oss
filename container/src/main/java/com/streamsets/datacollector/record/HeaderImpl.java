@@ -43,6 +43,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   private static final String ERROR_CODE_ATTR = RESERVED_PREFIX + "errorCode";
   private static final String ERROR_MESSAGE_ATTR = RESERVED_PREFIX + "errorMessage";
   private static final String ERROR_STAGE_ATTR = RESERVED_PREFIX + "errorStage";
+  private static final String ERROR_STAGE_LABEL_ATTR = RESERVED_PREFIX + "errorStageLabel";
   private static final String ERROR_TIMESTAMP_ATTR = RESERVED_PREFIX + "errorTimestamp";
   private static final String SOURCE_RECORD_ATTR = RESERVED_PREFIX + "sourceRecord";
   private static final String ERROR_DATACOLLECTOR_ID_ATTR = RESERVED_PREFIX + "dataCollectorId";
@@ -136,6 +137,11 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   }
 
   @Override
+  public String getErrorStageLabel() {
+    return (String) map.get(ERROR_STAGE_LABEL_ATTR);
+  }
+
+  @Override
   public long getErrorTimestamp() {
     final Object time = map.get(ERROR_TIMESTAMP_ATTR);
     return (time != null) ? (long) time : 0;
@@ -183,10 +189,24 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     return (Map) Maps.filterKeys(map, this);
   }
 
-  public HeaderImpl(String stageCreator, String sourceId, String stagesPath, String trackingId,
-                    String previousTrackingId, byte[] raw, String rawMimeType, String errorDataCollectorId,
-                    String errorPipelineName, String errorStageInstance, String errorCode, String errorMessage,
-                    long errorTimestamp, String errorStackTrace, Map<String, Object> map) {
+  public HeaderImpl(
+    String stageCreator,
+    String sourceId,
+    String stagesPath,
+    String trackingId,
+    String previousTrackingId,
+    byte[] raw,
+    String rawMimeType,
+    String errorDataCollectorId,
+    String errorPipelineName,
+    String errorStage,
+    String errorStageName,
+    String errorCode,
+    String errorMessage,
+    long errorTimestamp,
+    String errorStackTrace,
+    Map<String, Object> map
+  ) {
     this.map = map;
     setStageCreator(stageCreator);
     setSourceId(sourceId);
@@ -200,7 +220,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
       setErrorContext(errorDataCollectorId, errorPipelineName);
     }
     if (errorCode != null) {
-      setError(errorStageInstance, errorCode, errorMessage, errorTimestamp, errorStackTrace);
+      setError(errorStage, errorStageName, errorCode, errorMessage, errorTimestamp, errorStackTrace);
     }
     if (previousTrackingId != null) {
       setPreviousTrackingId(previousTrackingId);
@@ -249,14 +269,28 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     map.put(RAW_MIME_TYPE_ATTR, rawMime);
   }
 
-  public void setError(String errorStage, ErrorMessage errorMessage) {
+  public void setError(String errorStage, String errorStageName, ErrorMessage errorMessage) {
     Preconditions.checkNotNull(errorMessage, "errorCode cannot be null");
-    setError(errorStage, errorMessage.getErrorCode(), errorMessage.getNonLocalized(), System.currentTimeMillis(), errorMessage.getErrorStackTrace());
+    setError(
+      errorStage,
+      errorStageName,
+      errorMessage.getErrorCode(),
+      errorMessage.getNonLocalized(),
+      System.currentTimeMillis(),
+      errorMessage.getErrorStackTrace()
+    );
   }
 
   public void copyErrorFrom(Record record) {
     Record.Header header = record.getHeader();
-    setError(header.getErrorStage(), header.getErrorCode(), header.getErrorMessage(), header.getErrorTimestamp(), header.getErrorStackTrace());
+    setError(
+      header.getErrorStage(),
+      header.getErrorStageLabel(),
+      header.getErrorCode(),
+      header.getErrorMessage(),
+      header.getErrorTimestamp(),
+      header.getErrorStackTrace()
+    );
   }
 
   public void setErrorContext(String datacollector, String pipelineName) {
@@ -264,8 +298,16 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     map.put(ERROR_PIPELINE_NAME_ATTR, pipelineName);
 
   }
-  private void setError(String errorStage, String errorCode, String errorMessage, long errorTimestamp, String errorStackTrace) {
+  private void setError(
+    String errorStage,
+    String errorStageName,
+    String errorCode,
+    String errorMessage,
+    long errorTimestamp,
+    String errorStackTrace
+  ) {
     map.put(ERROR_STAGE_ATTR, errorStage);
+    map.put(ERROR_STAGE_LABEL_ATTR, errorStageName);
     map.put(ERROR_CODE_ATTR, errorCode);
     map.put(ERROR_MESSAGE_ATTR, errorMessage);
     map.put(ERROR_TIMESTAMP_ATTR, errorTimestamp);

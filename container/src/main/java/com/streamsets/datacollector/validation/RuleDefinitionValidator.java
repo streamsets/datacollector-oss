@@ -268,6 +268,11 @@ public class RuleDefinitionValidator {
           }
 
           @Override
+          public String getErrorStageLabel() {
+            return null;
+          }
+
+          @Override
           public long getErrorTimestamp() {
             return 0;
           }

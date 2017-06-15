@@ -38,16 +38,32 @@ public class HeaderJson {
       @JsonProperty("rawMimeType") String rawMimeType,
       @JsonProperty("errorDataCollectorId") String errorDataCollectorId,
       @JsonProperty("errorPipelineName") String errorPipelineName,
-      @JsonProperty("errorStage") String errorStageInstance,
+      @JsonProperty("errorStage") String errorStage,
+      @JsonProperty("errorStageLabel") String errorStageLabel,
       @JsonProperty("errorCode") String errorCode,
       @JsonProperty("errorMessage") String errorMessage,
       @JsonProperty("errorTimestamp") long errorTimestamp,
       @JsonProperty("errorStackTrace") String errorStackTrace,
       @JsonProperty("values") Map<String, Object> map
   ) {
-    this.header = new HeaderImpl(stageCreator, sourceId, stagesPath, trackingId, previousTrackingId, raw, rawMimeType,
-        errorDataCollectorId, errorPipelineName, errorStageInstance, errorCode, errorMessage, errorTimestamp,
-        errorStackTrace, map);
+    this.header = new HeaderImpl(
+      stageCreator,
+      sourceId,
+      stagesPath,
+      trackingId,
+      previousTrackingId,
+      raw,
+      rawMimeType,
+      errorDataCollectorId,
+      errorPipelineName,
+      errorStage,
+      errorStageLabel,
+      errorCode,
+      errorMessage,
+      errorTimestamp,
+      errorStackTrace,
+      map
+    );
   }
 
   public HeaderJson(HeaderImpl header) {
@@ -78,6 +94,8 @@ public class HeaderJson {
   public String getErrorMessage() {return header.getErrorMessage();}
 
   public String getErrorStage() {return header.getErrorStage();}
+
+  public String getErrorStageLabel() {return header.getErrorStageLabel();}
 
   public long getErrorTimestamp() {return header.getErrorTimestamp();}
 

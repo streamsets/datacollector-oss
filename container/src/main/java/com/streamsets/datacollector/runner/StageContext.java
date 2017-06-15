@@ -547,7 +547,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       recordImpl.getHeader().setSourceRecord(recordImpl);
       recordImpl.setInitialRecord(false);
     }
-    recordImpl.getHeader().setError(stageInfo.getInstanceName(), errorMessage);
+    recordImpl.getHeader().setError(stageInfo.getInstanceName(), stageInfo.getLabel(), errorMessage);
     errorSink.addRecord(stageInfo.getInstanceName(), recordImpl);
   }
 
