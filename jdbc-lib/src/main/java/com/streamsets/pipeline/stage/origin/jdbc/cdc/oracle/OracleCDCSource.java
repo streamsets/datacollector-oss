@@ -295,7 +295,7 @@ public class OracleCDCSource extends BaseSource {
           }
           LOG.debug(STARTING_COMMIT_SCN_ROWS_SKIPPED, startCommitSCN, rowsToSkip);
         } else {
-          if (configBean.startValue == StartValues.DATE) {
+          if (configBean.startValue != StartValues.SCN) {
             startDate = LocalDateTime.parse(configBean.startDate, dtFormatter).minusSeconds(configBean.txnWindow);
             String dateChangesString = Utils.format(baseLogEntriesSql,
                 "((COMMIT_TIMESTAMP >= TO_DATE('" + configBean.startDate + "', 'DD-MM-YYYY HH24:MI:SS')) " +
@@ -728,6 +728,10 @@ public class OracleCDCSource extends BaseSource {
                 getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startSCN", JDBC_47, scn.toPlainString()));
           }
           break;
+        case LATEST:
+          // If LATEST is used, use now() as the startDate and proceed as if a startDate was specified
+          configBean.startDate = LocalDateTime.now().format(dtFormatter);
+          // fall-through
         case DATE:
           try {
             LocalDateTime startDate = getDate(configBean.startDate);
@@ -738,9 +742,6 @@ public class OracleCDCSource extends BaseSource {
             LOG.error("Invalid date", ex);
             issues.add(getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startDate", JDBC_49));
           }
-          break;
-        case LATEST:
-          configBean.startSCN = scn.toPlainString();
           break;
         default:
           throw new IllegalStateException("Unknown start value!");
