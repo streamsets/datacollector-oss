@@ -56,8 +56,8 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -170,7 +170,6 @@ public class OracleCDCSource extends BaseSource {
   private static final String NLS_NUMERIC_FORMAT = "ALTER SESSION SET NLS_NUMERIC_CHARACTERS = \'.,\'";
   private static final String NLS_TIMESTAMP_FORMAT =
       "ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'";
-  private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
   private final Pattern toDatePattern = Pattern.compile("TO_DATE\\('(.*)',.*");
   // If a date is set into a timestamp column (or a date field is widened to a timestamp,
   // a timestamp ending with "." is returned (like 2016-04-15 00:00:00.), so we should also ignore the trailing ".".
@@ -731,8 +730,8 @@ public class OracleCDCSource extends BaseSource {
           break;
         case DATE:
           try {
-            Date startDate = getDate(configBean.startDate);
-            if (startDate.after(new Date(System.currentTimeMillis()))) {
+            LocalDateTime startDate = getDate(configBean.startDate);
+            if (startDate.isAfter(LocalDateTime.now())) {
               issues.add(getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startDate", JDBC_48));
             }
           } catch (ParseException ex) {
@@ -1170,7 +1169,8 @@ public class OracleCDCSource extends BaseSource {
       }
       // We did not find TO_TIMESTAMP, so try TO_DATE
       Optional<String> dt = matchDateTimeString(toDatePattern.matcher(columnValue));
-      return Field.create(Field.Type.DATE, dt.isPresent() ? getDate(dt.get()) : null);
+      return Field.create(Field.Type.DATE, dt.isPresent() ?
+          Date.from(getDate(dt.get()).atZone(ZoneId.systemDefault()).toInstant()) : null);
     }
   }
 
@@ -1181,8 +1181,8 @@ public class OracleCDCSource extends BaseSource {
     return Optional.of(m.group(1));
   }
 
-  private Date getDate(String s) throws ParseException {
-    return dateFormat.parse(s);
+  private LocalDateTime getDate(String s) throws ParseException {
+    return LocalDateTime.parse(s, dtFormatter);
   }
 
   private void alterSession() throws SQLException {
