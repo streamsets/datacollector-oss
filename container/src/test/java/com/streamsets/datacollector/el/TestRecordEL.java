@@ -79,6 +79,7 @@ public class TestRecordEL {
 
     Record.Header header = Mockito.mock(Record.Header.class);
     Mockito.when(header.getErrorStage()).thenReturn("stage");
+    Mockito.when(header.getErrorStageLabel()).thenReturn("label");
     Mockito.when(header.getErrorCode()).thenReturn("code");
     Mockito.when(header.getErrorMessage()).thenReturn("message");
     Mockito.when(header.getErrorDataCollectorId()).thenReturn("collector");
@@ -90,6 +91,7 @@ public class TestRecordEL {
     RecordEL.setRecordInContext(variables, record);
 
     Assert.assertEquals("stage", eval.eval(variables, "${record:errorStage()}", String.class));
+    Assert.assertEquals("label", eval.eval(variables, "${record:errorStageLabel()}", String.class));
     Assert.assertEquals("code", eval.eval(variables, "${record:errorCode()}", String.class));
     Assert.assertEquals("message", eval.eval(variables, "${record:errorMessage()}", String.class));
     Assert.assertEquals("collector", eval.eval(variables, "${record:errorCollectorId()}", String.class));
