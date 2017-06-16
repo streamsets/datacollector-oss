@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -109,7 +110,8 @@ public class JdbcLookupLoader extends CacheLoader<String, List<Map<String, Field
           maxClobSize,
           maxBlobSize,
           columnsToTypes,
-          errorRecordHandler
+          errorRecordHandler,
+          UnknownTypeAction.STOP_PIPELINE
         );
 
         int numColumns = md.getColumnCount();

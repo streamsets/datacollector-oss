@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 
 import java.util.List;
 
@@ -126,6 +128,18 @@ public class TableJdbcConfigBean {
   )
   @ValueChooserModel(TableOrderStrategyChooserValues.class)
   public TableOrderStrategy tableOrderStrategy;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "On Unknown Type",
+      description = "Action that should be performed when an unknown type is detected in the result set.",
+      defaultValue = "STOP_PIPELINE",
+      displayPosition = 220,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(UnknownTypeActionChooserValues.class)
+  public UnknownTypeAction unknownTypeAction = UnknownTypeAction.STOP_PIPELINE;
 
   @ConfigDef(
       required = true,

@@ -153,7 +153,14 @@ public class TestJdbcUtil {
           // Currently only validates TIMESTAMP WITH TIME ZONE (H2 does not support TIME WITH TIME ZONE)
           ResultSet resultSet = stmt.executeQuery("SELECT * FROM " + schema + "." + dataTypesTestTable);
           assertTrue(resultSet.next());
-          Field field = JdbcUtil.resultToField(resultSet.getMetaData(), resultSet, 2, 0, 0);
+          Field field = JdbcUtil.resultToField(
+            resultSet.getMetaData(),
+            resultSet,
+            2,
+            0,
+            0,
+            UnknownTypeAction.STOP_PIPELINE
+          );
           assertEquals(Field.Type.DATETIME, field.getType());
           assertEquals(new Date(MINUS_2HRS_OFFSET), field.getValueAsDatetime());
         }

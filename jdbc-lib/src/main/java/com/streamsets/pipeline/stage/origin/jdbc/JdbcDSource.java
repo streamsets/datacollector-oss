@@ -26,6 +26,8 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.lib.el.OffsetEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 
 @StageDef(
     version = 9,
@@ -164,6 +166,18 @@ public class JdbcDSource extends DSource {
   )
   public boolean disableValidation = false;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "On Unknown Type",
+      description = "Action that should be performed when an unknown type is detected in the result set.",
+      defaultValue = "STOP_PIPELINE",
+      displayPosition = 230,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(UnknownTypeActionChooserValues.class)
+  public UnknownTypeAction unknownTypeAction = UnknownTypeAction.STOP_PIPELINE;
+
   @Override
   protected Source createSource() {
     return new JdbcSource(
@@ -178,7 +192,8 @@ public class JdbcDSource extends DSource {
         commonSourceConfigBean,
         createJDBCNsHeaders,
         jdbcNsHeaderPrefix,
-        hikariConfigBean
+        hikariConfigBean,
+        unknownTypeAction
       );
   }
 }

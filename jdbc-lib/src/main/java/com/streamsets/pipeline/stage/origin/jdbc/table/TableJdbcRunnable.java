@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
@@ -362,7 +363,8 @@ public final class TableJdbcRunnable implements Runnable {
         rs,
         commonSourceConfigBean.maxClobSize,
         commonSourceConfigBean.maxBlobSize,
-        errorRecordHandler
+        errorRecordHandler,
+        tableJdbcConfigBean.unknownTypeAction
     );
 
     String offsetFormat = OffsetQueryUtil.getOffsetFormatFromColumns(tableContext, fields);

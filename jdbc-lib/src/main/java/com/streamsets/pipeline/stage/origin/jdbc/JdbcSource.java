@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.MSOperationCode;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -100,6 +101,7 @@ public class JdbcSource extends BaseSource {
   private final boolean createJDBCNsHeaders;
   private final String jdbcNsHeaderPrefix;
   private final boolean disableValidation;
+  private final UnknownTypeAction unknownTypeAction;
 
   private ErrorRecordHandler errorRecordHandler;
   private long queryIntervalMillis = Long.MIN_VALUE;
@@ -127,7 +129,8 @@ public class JdbcSource extends BaseSource {
       CommonSourceConfigBean commonSourceConfigBean,
       boolean createJDBCNsHeaders,
       String jdbcNsHeaderPrefix,
-      HikariPoolConfigBean hikariConfigBean
+      HikariPoolConfigBean hikariConfigBean,
+      UnknownTypeAction unknownTypeAction
   ) {
     this.isIncrementalMode = isIncrementalMode;
     this.query = query;
@@ -143,6 +146,7 @@ public class JdbcSource extends BaseSource {
     this.hikariConfigBean = hikariConfigBean;
     this.createJDBCNsHeaders = createJDBCNsHeaders;
     this.jdbcNsHeaderPrefix = jdbcNsHeaderPrefix;
+    this.unknownTypeAction = unknownTypeAction;
   }
 
   @Override
@@ -467,7 +471,8 @@ public class JdbcSource extends BaseSource {
         resultSet,
         commonSourceConfigBean.maxClobSize,
         commonSourceConfigBean.maxBlobSize,
-        errorRecordHandler
+        errorRecordHandler,
+        unknownTypeAction
     );
 
     if (fields.size() != numColumns) {

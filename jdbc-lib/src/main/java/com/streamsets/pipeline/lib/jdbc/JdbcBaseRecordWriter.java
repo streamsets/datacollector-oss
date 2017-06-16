@@ -354,7 +354,14 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
         try {
           // Assuming generated columns can't be CLOBs/BLOBs, so just pass
           // zero for maxClobSize
-          Field field = JdbcUtil.resultToField(md, resultSet, i, 0, 0);
+          Field field = JdbcUtil.resultToField(
+            md,
+            resultSet,
+            i,
+            0,
+            0,
+            UnknownTypeAction.STOP_PIPELINE
+          );
 
           if (field == null) {
             LOG.error(JdbcErrors.JDBC_03.getMessage(), md.getColumnName(i), resultSet.getObject(i));
@@ -363,7 +370,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
           }
 
           record.set(generatedColumnMappings.get(i - 1).field, field);
-        } catch (IOException e) {
+        } catch (IOException|StageException e) {
           LOG.error(JdbcErrors.JDBC_03.getMessage(), md.getColumnName(i), resultSet.getObject(i), e);
           errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_03,
               md.getColumnName(i), resultSet.getObject(i)));
