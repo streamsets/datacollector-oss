@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.jsonparser;
+
+package com.streamsets.pipeline.stage.processor.jsongenerator;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -25,14 +26,14 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
     version = 1,
-    label = "JSON Parser",
-    description = "Parses a string field with JSON data",
+    label = "JSON Generator",
+    description = "Serializes a field to a string field in JSON format",
     icon = "json.png",
-    onlineHelpRefUrl = "index.html#Processors/JSONParser.html#task_kwz_lg2_zq"
+    onlineHelpRefUrl = "index.html#Processors/JSONGenerator.html#task_kgk_3w1_h1b"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
-public class JsonParserDProcessor extends DProcessor {
+public class JsonGeneratorDProcessor extends DProcessor {
 
   @ConfigDef(
       required = true,
@@ -44,18 +45,7 @@ public class JsonParserDProcessor extends DProcessor {
       group = "JSON"
   )
   @FieldSelectorModel(singleValued = true)
-  public String fieldPathToParse;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Ignore Control Characters",
-      description = "Use only if required as it impacts reading performance",
-      displayPosition = 20,
-      group = "JSON"
-  )
-  public boolean removeCtrlChars;
+  public String fieldPathToSerialize;
 
   @ConfigDef(
       required = true,
@@ -66,10 +56,10 @@ public class JsonParserDProcessor extends DProcessor {
       displayPosition = 30,
       group = "JSON"
   )
-  public String parsedFieldPath;
+  public String outputFieldPath;
 
   @Override
   protected Processor createProcessor() {
-    return new JsonParserProcessor(fieldPathToParse, removeCtrlChars, parsedFieldPath);
+    return new JsonGeneratorProcessor(fieldPathToSerialize, outputFieldPath);
   }
 }
