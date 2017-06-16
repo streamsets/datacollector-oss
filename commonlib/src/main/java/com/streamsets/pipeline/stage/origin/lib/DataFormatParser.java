@@ -233,6 +233,17 @@ public class DataFormatParser {
           );
         }
         break;
+      case BINARY:
+        if (dataFormatConfig.binaryMaxObjectLen < 1) {
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.DATA_FORMAT.name(),
+                  DATA_FORMAT_CONFIG_PREFIX + "binaryMaxObjectLen",
+                  ParserErrors.PARSER_04
+              )
+          );
+        }
+        break;
       default:
         issues.add(
             context.createConfigIssue(
@@ -323,6 +334,9 @@ public class DataFormatParser {
         break;
       case WHOLE_FILE:
         builder.setMaxDataLen(dataFormatConfig.wholeFileMaxObjectLen);
+        break;
+      case BINARY:
+        builder.setMaxDataLen(dataFormatConfig.binaryMaxObjectLen);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unknown data format: {}", dataFormat));

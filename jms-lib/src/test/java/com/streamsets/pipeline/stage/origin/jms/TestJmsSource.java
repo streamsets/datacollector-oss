@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
@@ -70,6 +71,7 @@ public class TestJmsSource {
   private File dataDir;
   private File passwordFile;
 
+  private Connection connection;
   private BrokerService broker;
   private BasicConfig basicConfig;
   private CredentialsConfig credentialsConfig;
@@ -115,21 +117,25 @@ public class TestJmsSource {
     jmsConfig.connectionFactory = CONNECTION_FACTORY;
     jmsConfig.destinationName = JNDI_PREFIX + DESTINATION_NAME;
     jmsConfig.providerURL = BROKER_BIND_URL;
+    // Create a connection and start
+    ConnectionFactory factory = new ActiveMQConnectionFactory(USERNAME,
+        PASSWORD, BROKER_BIND_URL);
+    connection = factory.createConnection();
+    connection.start();
   }
 
   @After
   public void tearDown() throws Exception {
+    if ( connection != null){
+      connection.close();
+    }
+
     if (broker != null) {
       broker.stop();
     }
   }
 
   private void putQueue(List<String> events) throws Exception {
-    ConnectionFactory factory = new ActiveMQConnectionFactory(USERNAME,
-      PASSWORD, BROKER_BIND_URL);
-    Connection connection = factory.createConnection();
-    connection.start();
-
     Session session = connection.createSession(true,
       Session.AUTO_ACKNOWLEDGE);
     Destination destination = session.createQueue(DESTINATION_NAME);
@@ -154,7 +160,6 @@ public class TestJmsSource {
     }
     session.commit();
     session.close();
-    connection.close();
   }
 
   private SourceRunner createRunner() {
@@ -259,6 +264,70 @@ public class TestJmsSource {
       Map<String, List<Record>> recordMap = output.getRecords();
       List<Record> parsedRecords = recordMap.get("lane");
       Assert.assertEquals(2, parsedRecords.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testBinaryMessageSuccess() throws Exception {
+    Session session = connection.createSession(true,
+        Session.AUTO_ACKNOWLEDGE);
+    Destination destination = session.createQueue(DESTINATION_NAME);
+    MessageProducer producer = session.createProducer(destination);
+
+    String str = "this is a binary message\n";
+    byte[] bytesArray = str.getBytes();
+    BytesMessage msg = session.createBytesMessage();
+    msg.writeBytes(bytesArray);
+    producer.send(msg);
+    session.commit();
+    session.close();
+
+    dataFormat = DataFormat.BINARY;
+    dataFormatConfig.binaryMaxObjectLen = 1024;
+    SourceRunner runner = createRunner();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 2);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+      Assert.assertEquals(1, parsedRecords.size());
+      Field field = parsedRecords.get(0).get();
+      Assert.assertEquals(Field.Type.BYTE_ARRAY, field.getType());
+      Assert.assertEquals(str, new String(field.getValueAsByteArray()));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testBinaryMessageMaxSizeError() throws Exception {
+    Session session = connection.createSession(true,
+        Session.AUTO_ACKNOWLEDGE);
+    Destination destination = session.createQueue(DESTINATION_NAME);
+    MessageProducer producer = session.createProducer(destination);
+
+    String str = "another message\n";
+    byte[] bytesArray = str.getBytes();
+    BytesMessage msg = session.createBytesMessage();
+    msg.writeBytes(bytesArray);
+    producer.send(msg);
+    session.commit();
+    session.close();
+    connection.close();
+
+    dataFormat = DataFormat.BINARY;
+    //Max size is tiny. Record should be sent to error.
+    dataFormatConfig.binaryMaxObjectLen = 1;
+    SourceRunner runner = createRunner();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 2);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+      Assert.assertEquals(0, parsedRecords.size());
+      Assert.assertEquals(1, runner.getErrorRecords().size());
     } finally {
       runner.runDestroy();
     }
