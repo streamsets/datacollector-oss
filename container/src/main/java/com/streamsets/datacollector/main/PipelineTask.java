@@ -20,6 +20,7 @@ import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.http.DataCollectorWebServerTask;
 import com.streamsets.datacollector.http.WebServerTask;
+import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.CompositeTask;
@@ -32,16 +33,26 @@ public class PipelineTask extends CompositeTask {
   private final PipelineStoreTask pipelineStoreTask;
   private final StageLibraryTask stageLibraryTask;
   private final WebServerTask webServerTask;
+  private final LineagePublisherTask lineagePublisherTask;
 
   @Inject
-  public PipelineTask(StageLibraryTask library, PipelineStoreTask store, Manager manager,
-      DataCollectorWebServerTask webServerTask, EventHandlerTask eventHandlerTask) {
-    super("pipelineNode", ImmutableList.of(library, store, webServerTask , manager, eventHandlerTask),
+  public PipelineTask(
+    StageLibraryTask library,
+    PipelineStoreTask store,
+    Manager manager,
+    DataCollectorWebServerTask webServerTask,
+    EventHandlerTask eventHandlerTask,
+    LineagePublisherTask lineagePublisherTask
+  ) {
+    super(
+      "pipelineNode",
+      ImmutableList.of(library, lineagePublisherTask, store, webServerTask , manager, eventHandlerTask),
       true);
     this.webServerTask = webServerTask;
     this.stageLibraryTask = library;
     this.pipelineStoreTask = store;
     this.manager = manager;
+    this.lineagePublisherTask = lineagePublisherTask;
   }
 
   public Manager getManager() {
@@ -55,5 +66,8 @@ public class PipelineTask extends CompositeTask {
   }
   public WebServerTask getWebServerTask() {
     return webServerTask;
+  }
+  public LineagePublisherTask getLineagePublisherTask() {
+    return lineagePublisherTask;
   }
 }

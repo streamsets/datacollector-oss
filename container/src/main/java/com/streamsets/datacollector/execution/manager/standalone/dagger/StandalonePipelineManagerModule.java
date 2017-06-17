@@ -22,6 +22,7 @@ import com.streamsets.datacollector.execution.preview.common.dagger.PreviewerPro
 import com.streamsets.datacollector.execution.runner.provider.dagger.StandaloneAndClusterRunnerProviderModule;
 import com.streamsets.datacollector.execution.snapshot.cache.dagger.CacheSnapshotStoreModule;
 import com.streamsets.datacollector.execution.store.CachePipelineStateStoreModule;
+import com.streamsets.datacollector.lineage.LineageModule;
 import com.streamsets.datacollector.store.CacheAclStoreModule;
 import com.streamsets.datacollector.store.CachePipelineStoreModule;
 
@@ -41,7 +42,8 @@ import dagger.Module;
     PreviewerProviderModule.class,
     StandaloneAndClusterRunnerProviderModule.class,
     CacheSnapshotStoreModule.class,
-    SupportBundleModule.class
+    SupportBundleModule.class,
+    LineageModule.class
 })
 public class StandalonePipelineManagerModule {
 

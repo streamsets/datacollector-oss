@@ -18,6 +18,7 @@ package com.streamsets.datacollector.main;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.http.SlaveWebServerTask;
+import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 
@@ -26,8 +27,21 @@ import javax.inject.Inject;
 public class SlavePipelineTask extends PipelineTask {
 
   @Inject
-  public SlavePipelineTask(StageLibraryTask library, PipelineStoreTask store, Manager manager,
-      SlaveWebServerTask slaveWebServerTask, EventHandlerTask eventHandlerTask) {
-    super(library, store, manager, slaveWebServerTask, eventHandlerTask);
+  public SlavePipelineTask(
+    StageLibraryTask library,
+    PipelineStoreTask store,
+    Manager manager,
+    SlaveWebServerTask slaveWebServerTask,
+    EventHandlerTask eventHandlerTask,
+    LineagePublisherTask lineagePublisherTask
+  ) {
+    super(
+      library,
+      store,
+      manager,
+      slaveWebServerTask,
+      eventHandlerTask,
+      lineagePublisherTask
+    );
   }
 }
