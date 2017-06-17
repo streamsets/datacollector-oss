@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.StageBean;
@@ -26,6 +27,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 
 public class TestStageRuntime {
@@ -35,6 +38,9 @@ public class TestStageRuntime {
     PipelineBean pipelineBean = Mockito.mock(PipelineBean.class);
     StageBean stageBean = Mockito.mock(StageBean.class);
     Mockito.when(stageBean.getSystemConfigs()).thenReturn(new StageConfigBean());
+    StageConfiguration conf = Mockito.mock(StageConfiguration.class);
+    Mockito.when(conf.getUiInfo()).thenReturn(Collections.emptyMap());
+    Mockito.when(stageBean.getConfiguration()).thenReturn(conf);
     StageDefinition def = Mockito.mock(StageDefinition.class);
     Mockito.when(stageBean.getDefinition()).thenReturn(def);
     StageContext context = Mockito.mock(StageContext.class);
@@ -92,6 +98,9 @@ public class TestStageRuntime {
   public void testReleaseClassLoader() throws Exception {
     PipelineBean pipelineBean = Mockito.mock(PipelineBean.class);
     StageBean stageBean = Mockito.mock(StageBean.class);
+    StageConfiguration conf = Mockito.mock(StageConfiguration.class);
+    Mockito.when(conf.getUiInfo()).thenReturn(Collections.emptyMap());
+    Mockito.when(stageBean.getConfiguration()).thenReturn(conf);
     Mockito.when(stageBean.getStage()).thenReturn(Mockito.mock(Stage.class));
     StageDefinition def = Mockito.mock(StageDefinition.class);
     Mockito.when(stageBean.getDefinition()).thenReturn(def);
