@@ -27,6 +27,7 @@ import com.streamsets.datacollector.execution.runner.common.TestProductionPipeli
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.execution.snapshot.common.SnapshotInfoImpl;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
+import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.MockStages;
@@ -174,8 +175,16 @@ public class TestProdPipelineRunnable {
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
 
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(TestUtil.MY_PIPELINE, "0", conf, runtimeInfo,
-      MockStages.createStageLibrary(), runner, null).build(MockStages.userContext(), MockStages.createPipelineConfigurationSourceProcessorTarget());
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(
+      TestUtil.MY_PIPELINE,
+      "0",
+      conf,
+      runtimeInfo,
+      MockStages.createStageLibrary(),
+      runner,
+      null,
+      Mockito.mock(LineagePublisherTask.class)
+    ).build(MockStages.userContext(), MockStages.createPipelineConfigurationSourceProcessorTarget());
 
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null, null, null, 0, 0);
 

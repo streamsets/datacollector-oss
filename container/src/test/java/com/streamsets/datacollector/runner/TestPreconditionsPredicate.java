@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.util.Configuration;
@@ -60,7 +61,8 @@ public class TestPreconditionsPredicate {
         DeliveryGuarantee.AT_LEAST_ONCE,
         "",
         new EmailSender(new Configuration()),
-        new Configuration()
+        new Configuration(),
+        new LineagePublisherDelegator.NoopDelegator()
     );
   }
 

@@ -25,6 +25,8 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
+import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.util.Configuration;
@@ -171,7 +173,8 @@ public class TestStageContext {
       DeliveryGuarantee.AT_LEAST_ONCE,
       null,
       sender,
-      new Configuration()
+      new Configuration(),
+      new LineagePublisherDelegator.NoopDelegator()
     );
 
     try {
@@ -201,7 +204,8 @@ public class TestStageContext {
       DeliveryGuarantee.AT_LEAST_ONCE,
       null,
       sender,
-      new Configuration()
+      new Configuration(),
+      new LineagePublisherDelegator.NoopDelegator()
     );
 
     context.notify(ImmutableList.of("foo", "bar"), "SUBJECT", "BODY");
@@ -419,7 +423,8 @@ public class TestStageContext {
       DeliveryGuarantee.AT_LEAST_ONCE,
       null,
       new EmailSender(new Configuration()),
-      configuration
+      configuration,
+      new LineagePublisherDelegator.NoopDelegator()
     );
   }
 }

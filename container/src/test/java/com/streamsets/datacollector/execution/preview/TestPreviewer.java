@@ -24,6 +24,7 @@ import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.PreviewerListener;
 import com.streamsets.datacollector.execution.RawPreview;
 import com.streamsets.datacollector.execution.preview.sync.SyncPreviewer;
+import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -81,8 +82,17 @@ public abstract class TestPreviewer {
   protected PipelineStoreTask pipelineStore;
   protected ObjectGraph objectGraph;
 
-  @Module(injects = {RuntimeInfo.class, Configuration.class, StageLibraryTask.class, PipelineStoreTask.class, SyncPreviewer.class},
-    library = true)
+  @Module(
+    injects = {
+      RuntimeInfo.class,
+      Configuration.class,
+      StageLibraryTask.class,
+      PipelineStoreTask.class,
+      SyncPreviewer.class,
+      LineagePublisherTask.class
+    },
+    library = true
+  )
   static class TestPreviewModule {
     @Provides
     @Singleton
@@ -105,6 +115,12 @@ public abstract class TestPreviewer {
     @Provides @Singleton
     public StageLibraryTask provideStageLibraryTask() {
       return MockStages.createStageLibrary(new URLClassLoader(new URL[0]));
+    }
+
+    @Provides
+    @Singleton
+    public LineagePublisherTask providesLineagePublisherTask() {
+      return Mockito.mock(LineagePublisherTask.class);
     }
 
   }

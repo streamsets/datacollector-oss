@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution.runner.common;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.Field;
@@ -82,8 +83,16 @@ public class TestFailedProdRun {
     runner.setOffsetTracker(tracker);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, conf, runtimeInfo,
-      MockStages.createStageLibrary(), runner, null).build(MockStages.userContext(), pipelineConfiguration);
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(
+      PIPELINE_NAME,
+      REVISION,
+      conf,
+      runtimeInfo,
+      MockStages.createStageLibrary(),
+      runner,
+      null,
+      Mockito.mock(LineagePublisherTask.class)
+    ).build(MockStages.userContext(), pipelineConfiguration);
 
 
   }
@@ -130,8 +139,16 @@ public class TestFailedProdRun {
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, conf, runtimeInfo,
-      MockStages.createStageLibrary(), runner, null).build(MockStages.userContext(), pipelineConfiguration);
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(
+      PIPELINE_NAME,
+      REVISION,
+      conf,
+      runtimeInfo,
+      MockStages.createStageLibrary(),
+      runner,
+      null,
+      Mockito.mock(LineagePublisherTask.class)
+    ).build(MockStages.userContext(), pipelineConfiguration);
     try {
       pipeline.registerStatusListener(new TestProductionPipeline.MyStateListener());
       pipeline.run();

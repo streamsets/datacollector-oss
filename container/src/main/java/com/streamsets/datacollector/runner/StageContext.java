@@ -32,6 +32,7 @@ import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.EventRecordImpl;
@@ -69,6 +70,7 @@ import com.streamsets.pipeline.api.ext.Sampler;
 import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.lib.sampling.RecordSampler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +122,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final EmailSender emailSender;
   private final Sampler sampler;
   private final Map<String, Object> sharedRunnerMap;
+  private final LineagePublisherDelegator lineagePublisherDelegator;
   private PipelineFinisherDelegate pipelineFinisherDelegate;
 
   //for SDK
@@ -136,7 +139,8 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       DeliveryGuarantee deliveryGuarantee,
       String resourcesDir,
       EmailSender emailSender,
-      Configuration configuration
+      Configuration configuration,
+      LineagePublisherDelegator lineagePublisherDelegator
   ) {
     this.pipelineName = "myPipeline";
     this.sdcId = "mySDC";
@@ -186,6 +190,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     // sample all records while testing
     this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX);
     this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, 0, 0);
+    this.lineagePublisherDelegator = lineagePublisherDelegator;
   }
 
   public StageContext(
@@ -204,7 +209,8 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       RuntimeInfo runtimeInfo,
       EmailSender emailSender,
       Configuration configuration,
-      Map<String, Object> sharedRunnerMap
+      Map<String, Object> sharedRunnerMap,
+      LineagePublisherDelegator lineagePublisherDelegator
   ) {
     this.pipelineName = pipelineName;
     this.rev = rev;
@@ -230,6 +236,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     int populationSize = configuration.get(SDC_RECORD_SAMPLING_POPULATION_SIZE, 10000);
     this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, sampleSize, populationSize);
     this.sharedRunnerMap = sharedRunnerMap;
+    this.lineagePublisherDelegator = lineagePublisherDelegator;
   }
 
   private Map<String, Class<?>[]> getConfigToElDefMap(StageRuntime stageRuntime) {
@@ -586,6 +593,11 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public EventRecord createEventRecord(String type, int version, String recordSourceId) {
     return new EventRecordImpl(type, version, stageInfo.getInstanceName(), recordSourceId, null, null);
+  }
+
+  @Override
+  public void publishLineageEvent(LineageEvent event) {
+    lineagePublisherDelegator.publishLineageEvent(event);
   }
 
   @Override

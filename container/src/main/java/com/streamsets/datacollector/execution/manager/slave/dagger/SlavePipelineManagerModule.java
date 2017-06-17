@@ -20,6 +20,7 @@ import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager
 import com.streamsets.datacollector.execution.runner.provider.dagger.SlaveRunnerProviderModule;
 import com.streamsets.datacollector.execution.snapshot.cache.dagger.SlaveCacheSnapshotStoreModule;
 import com.streamsets.datacollector.execution.store.SlavePipelineStateStoreModule;
+import com.streamsets.datacollector.lineage.LineageModule;
 import com.streamsets.datacollector.store.SlaveAclStoreModule;
 import com.streamsets.datacollector.store.SlavePipelineStoreModule;
 
@@ -37,7 +38,8 @@ import dagger.Module;
     SlaveAclStoreModule.class,
     SlaveExecutorModule.class,
     SlaveRunnerProviderModule.class,
-    SlaveCacheSnapshotStoreModule.class
+    SlaveCacheSnapshotStoreModule.class,
+    LineageModule.class
 })
 public class SlavePipelineManagerModule {
 

@@ -17,6 +17,7 @@ package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
@@ -92,7 +93,8 @@ public class ContextInfoCreator {
         DeliveryGuarantee.AT_LEAST_ONCE,
         resourcesDir,
         new EmailSender(new Configuration()),
-        new Configuration()
+        new Configuration(),
+        new LineagePublisherDelegator.NoopDelegator()
     );
   }
 

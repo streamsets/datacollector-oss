@@ -15,9 +15,6 @@
  */
 package com.streamsets.datacollector.main;
 
-import com.streamsets.datacollector.main.LogConfigurator;
-import com.streamsets.datacollector.main.RuntimeInfo;
-
 import dagger.Module;
 
 @Module(injects = {SlavePipelineTask.class, LogConfigurator.class, RuntimeInfo.class},

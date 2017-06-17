@@ -23,6 +23,7 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
+import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.record.RecordImpl;
@@ -201,7 +202,8 @@ public class TestErrorRecord {
         runtimeInfo,
         MockStages.createStageLibrary(),
         runner,
-        null
+        null,
+        Mockito.mock(LineagePublisherTask.class)
     ).build(
         MockStages.userContext(),
         MockStages.createPipelineConfigurationSourceProcessorTarget()

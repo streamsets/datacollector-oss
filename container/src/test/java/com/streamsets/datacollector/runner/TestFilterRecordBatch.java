@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Batch;
@@ -51,7 +52,8 @@ public class TestFilterRecordBatch {
       DeliveryGuarantee.AT_LEAST_ONCE,
       "",
       new EmailSender(new Configuration()),
-      new Configuration()
+      new Configuration(),
+      new LineagePublisherDelegator.NoopDelegator()
     );
   }
 

@@ -24,6 +24,7 @@ import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.snapshot.common.SnapshotInfoImpl;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
+import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -419,9 +420,16 @@ public class TestProductionPipeline {
         break;
     }
 
-    ProductionPipeline pipeline =
-        new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, config, runtimeInfo, MockStages.createStageLibrary(), runner, null)
-            .build(MockStages.userContext(), pConf);
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(
+      PIPELINE_NAME,
+      REVISION,
+      config,
+      runtimeInfo,
+      MockStages.createStageLibrary(),
+      runner,
+      null,
+      Mockito.mock(LineagePublisherTask.class)
+    ).build(MockStages.userContext(), pConf);
     runner.setOffsetTracker(tracker);
 
     if (captureNextBatch) {

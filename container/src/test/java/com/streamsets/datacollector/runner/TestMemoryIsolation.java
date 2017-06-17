@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.memory.MemoryUsageCollector;
 import com.streamsets.datacollector.memory.TestMemoryUsageCollector;
@@ -78,7 +79,16 @@ public class TestMemoryIsolation {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
       PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),"label",
         null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
-    Pipeline.Builder builder = new Pipeline.Builder(lib, new Configuration(), "name",  "name", "0", MockStages.userContext(), pipelineConf);
+    Pipeline.Builder builder = new Pipeline.Builder(
+      lib,
+      new Configuration(),
+      "name",
+      "name",
+      "0",
+      MockStages.userContext(),
+      pipelineConf,
+      Mockito.mock(LineagePublisherTask.class)
+    );
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
