@@ -146,6 +146,12 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-navigator-protolib</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
           <groupId>com.streamsets</groupId>
