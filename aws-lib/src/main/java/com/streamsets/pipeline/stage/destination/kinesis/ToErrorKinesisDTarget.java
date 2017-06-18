@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,32 +15,38 @@
  */
 package com.streamsets.pipeline.stage.destination.kinesis;
 
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ConfigGroups;
+
+import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
     // We're reusing upgrader for both ToErrorKinesisDTarget & KinesisDTarget, make sure that you
     // upgrade both versions at the same time when changing.
     version = 6,
-    label = "Kinesis Producer",
-    description = "Writes data to Amazon Kinesis",
-    icon = "kinesis.png",
-    upgrader = KinesisTargetUpgrader.class,
-    onlineHelpRefUrl = "index.html#Destinations/KinProducer.html#task_q2j_ml4_yr"
+    label = "Write to Kinesis",
+    description = "Writes records to Kinesis as SDC Records",
+    onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r",
+    upgrader = KinesisTargetUpgrader.class
 )
-@ConfigGroups(value = Groups.class)
+@ErrorStage
+@HideConfigs(
+    preconditions = true,
+    onErrorRecord = true,
+    value = {
+        "kinesisConfig.dataFormat"
+    }
+)
 @GenerateResourceBundle
-public class KinesisDTarget extends DTarget {
-
-  @ConfigDefBean(groups = "KINESIS")
-  public KinesisProducerConfigBean kinesisConfig;
+public class ToErrorKinesisDTarget extends KinesisDTarget {
 
   @Override
   protected Target createTarget() {
+    kinesisConfig.dataFormat = DataFormat.SDC_JSON;
     return new KinesisTarget(kinesisConfig);
   }
+
 }
