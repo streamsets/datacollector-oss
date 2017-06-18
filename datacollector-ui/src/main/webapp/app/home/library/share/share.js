@@ -107,12 +107,12 @@ angular
             $scope.acl = res.data;
             if ($rootScope.common.isUserAdmin || $rootScope.common.userName === $scope.acl.resourceOwner) {
               $scope.isACLReadyOnly = false;
-            }
 
-            if (configuration.isDPMEnabled()) {
-              fetchRemoteUsersAndGroups();
-            } else {
-              fetchUsersAndGroups();
+              if (configuration.isDPMEnabled()) {
+                fetchRemoteUsersAndGroups();
+              } else {
+                fetchUsersAndGroups();
+              }
             }
           },
           function(res) {
