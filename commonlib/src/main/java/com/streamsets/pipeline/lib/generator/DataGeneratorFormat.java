@@ -26,6 +26,7 @@ import com.streamsets.pipeline.lib.generator.protobuf.ProtobufDataGeneratorFacto
 import com.streamsets.pipeline.lib.generator.sdcrecord.SdcRecordDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.wholefile.WholeFileDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.xml.XmlDataGeneratorFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -37,6 +38,8 @@ public enum DataGeneratorFormat implements DataFormat<DataGeneratorFactory> {
   JSON(JsonDataGeneratorFactory.class, JsonDataGeneratorFactory.MODES, JsonDataGeneratorFactory.CONFIGS),
   DELIMITED(DelimitedDataGeneratorFactory.class, DelimitedDataGeneratorFactory.MODES,
     DelimitedDataGeneratorFactory.CONFIGS),
+  XML(XmlDataGeneratorFactory.class, XmlDataGeneratorFactory.MODES,
+      XmlDataGeneratorFactory.CONFIGS),
   SDC_RECORD(SdcRecordDataGeneratorFactory.class, SdcRecordDataGeneratorFactory.MODES,
     SdcRecordDataGeneratorFactory.CONFIGS),
   AVRO(AvroDataGeneratorFactory.class, AvroDataGeneratorFactory.MODES, AvroDataGeneratorFactory.CONFIGS),
