@@ -47,6 +47,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 5:
         upgradeV5ToV6(configs);
+        // fall through
+      case 6:
+        upgradeV6ToV7(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -106,4 +109,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config("webhookConfigs", Collections.EMPTY_LIST));
   }
 
+  private void upgradeV6ToV7(List<Config> configs) {
+    configs.add(new Config("workerCount", 0));
+  }
 }

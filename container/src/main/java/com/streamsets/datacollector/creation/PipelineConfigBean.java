@@ -53,7 +53,7 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 6;
+  public static final int VERSION = 7;
 
   @ConfigDef(
       required = true,
@@ -201,7 +201,7 @@ public class PipelineConfigBean implements Stage {
       dependsOn = "executionMode",
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
   )
-  public int clusterSlaveMemory;
+  public long clusterSlaveMemory;
 
   @ConfigDef(
     required = true,
