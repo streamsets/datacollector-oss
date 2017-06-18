@@ -944,8 +944,8 @@
           "name": "dpm.user",
           "type": "string",
           "default": "",
-          "label": "DPM Username",
-          "description": "Username of organization admin that have privileges to register new SDCs.",
+          "label": "DPM User ID",
+          "description": "User ID of organization admin that have privileges to register new SDCs.",
           "required": "false"
         },
         {
