@@ -6,7 +6,6 @@
     <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.status !== 'STOPPING' && activeConfigStatus.status !== 'CONNECTING' && activeConfigStatus.status !== 'DISCONNECTING'">
 
       <div class="btn-group" dropdown
-           ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
            ng-hide="previewMode || snapshotMode">
        <span class="btn btn-link dropdown-toggle icon-button" dropdown-toggle aria-expanded="true"
              tooltip-placement="bottom" tooltip="{{'home.header.more' | translate}}"
@@ -55,14 +54,14 @@
             </a>
           </li>
 
-          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
+          <li role="presentation">
             <a href="#" dropdown-toggle ng-click="exportPipelineConfig(activeConfigInfo, false, $event)">
               <i class="glyphicon glyphicon-export"></i>
               <span>{{'global.form.export' | translate}}</span>
             </a>
           </li>
 
-          <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]) && activeConfigInfo.valid">
+          <li role="presentation" ng-if="activeConfigInfo.valid">
             <a href="#" dropdown-toggle ng-click="exportPipelineConfig(activeConfigInfo, true, $event)">
               <i class="glyphicon glyphicon-export"></i>
               <span>{{'global.form.exportWithLibraryDefinitions' | translate}}</span>
