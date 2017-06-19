@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline;
 
+import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class Utils {
   private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
@@ -34,7 +36,6 @@ public class Utils {
   private static final Map<String, String[]> TEMPLATES = new ConcurrentHashMap<>();
 
   private static final String TOKEN = "{}";
-
 
   public static final String CLUSTER_HDFS_CONFIG_BEAN_PREFIX = "clusterHDFSConfigBean.";
   public static final String CLUSTER_HDFS_DATA_FORMAT_CONFIG_PREFIX = CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
@@ -220,6 +221,15 @@ public class Utils {
           + e;
       throw new IllegalArgumentException(msg, e);
     }
+  }
+
+  public static Map<String, String> getExtraKafkaConfigs(Properties properties) {
+    return properties.entrySet().stream().filter(e -> e.getKey().toString().startsWith(ClusterModeConstants
+        .EXTRA_KAFKA_CONFIG_PREFIX)).collect(
+        Collectors.toMap(
+            e -> e.getKey().toString().replaceFirst(ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX, ""),
+            e -> e.getValue().toString()
+        ));
   }
 
   public static int getNumberOfPartitions(Properties properties) {

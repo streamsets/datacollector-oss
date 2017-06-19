@@ -101,7 +101,8 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
         groupId,
         autoOffsetValue,
         isRunningInMesos,
-        Utils.getKafkaPartitionRateLimit(getProperties())
+        Utils.getKafkaPartitionRateLimit(getProperties()),
+        Utils.getExtraKafkaConfigs(getProperties())
     );
   }
 
@@ -114,7 +115,7 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
     private final String groupId;
     private final boolean isRunningInMesos;
     private final int maxRatePerPartition;
-
+    private final Map<String, String> extraKafkaConfigs;
     private String autoOffsetValue;
 
     public JavaStreamingContextFactoryImpl(
@@ -126,7 +127,8 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
         String groupId,
         String autoOffsetValue,
         boolean isRunningInMesos,
-        int maxRatePerPartition
+        int maxRatePerPartition,
+        Map<String, String> extraKafkaConfigs
     ) {
       this.sparkConf = sparkConf;
       this.duration = duration;
@@ -137,17 +139,21 @@ public class SparkStreamingBinding extends AbstractStreamingBinding {
       this.isRunningInMesos = isRunningInMesos;
       this.groupId = groupId;
       this.maxRatePerPartition = maxRatePerPartition;
+      this.extraKafkaConfigs = extraKafkaConfigs;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public JavaStreamingContext create() {
-
       sparkConf.set("spark.streaming.kafka.maxRatePerPartition", String.valueOf(maxRatePerPartition));
       sparkConf.set("spark.locality.wait", "30s");
       sparkConf.set("spark.cleaner.ttl", "60s"); // force all old RDD metadata out
       JavaStreamingContext result = new JavaStreamingContext(sparkConf, new Duration(duration));
       Map<String, String> props = new HashMap<>();
+      props.putAll(extraKafkaConfigs);
+      for (Map.Entry<String, String> map : props.entrySet()) {
+        logMessage(Utils.format("Adding extra kafka config, {}:{}", map.getKey(), map.getValue()), isRunningInMesos);
+      }
       props.put("metadata.broker.list", metaDataBrokerList);
       props.put(GROUP_ID_KEY, groupId);
       if (!autoOffsetValue.isEmpty()) {
