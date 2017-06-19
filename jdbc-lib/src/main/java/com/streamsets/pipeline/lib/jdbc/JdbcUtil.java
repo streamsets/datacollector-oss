@@ -688,7 +688,8 @@ public class JdbcUtil {
       List<String> primaryKeyParams,
       SortedMap<String, String> columns,
       int numRecords,
-      boolean caseSensitive
+      boolean caseSensitive,
+      boolean multiRow
   ) throws OnRecordErrorException {
     String query;
     String valuePlaceholder;
@@ -714,12 +715,20 @@ public class JdbcUtil {
         case OperationType.DELETE_CODE:
           valuePlaceholder = String.format("(%s)", joiner.join(primaryKeyParams));
           valuePlaceholders = org.apache.commons.lang3.StringUtils.repeat(valuePlaceholder, ", ", numRecords);
-          query = String.format(
-              "DELETE FROM %s WHERE (%s) IN (%s)",
-              tableName,
-              joiner.join(primaryKeys),
-              valuePlaceholders
-          );
+          if (multiRow) {
+            query = String.format(
+                "DELETE FROM %s WHERE (%s) IN (%s)",
+                tableName,
+                joiner.join(primaryKeys),
+                valuePlaceholders
+            );
+          } else {
+            query = String.format(
+                "DELETE FROM %s WHERE %s = ?",
+                tableName,
+                joinerWhereClause.join(primaryKeys)
+            );
+          }
           break;
         case OperationType.UPDATE_CODE:
           query = String.format(
@@ -749,12 +758,20 @@ public class JdbcUtil {
         case OperationType.DELETE_CODE:
           valuePlaceholder = String.format("(%s)", joiner.join(primaryKeyParams));
           valuePlaceholders = org.apache.commons.lang3.StringUtils.repeat(valuePlaceholder, ", ", numRecords);
-          query = String.format(
-              "DELETE FROM %s WHERE (\"%s\") IN (%s)",
-              tableName,
-              joinerWithQuote.join(primaryKeys),
-              valuePlaceholders
-          );
+          if (multiRow) {
+            query = String.format(
+                "DELETE FROM %s WHERE (\"%s\") IN (%s)",
+                tableName,
+                joinerWithQuote.join(primaryKeys),
+                valuePlaceholders
+            );
+          } else {
+            query = String.format(
+                "DELETE FROM %s WHERE \"%s\" = ?",
+                tableName,
+                joinerWhereClauseWitheQuote.join(primaryKeys)
+            );
+          }
           break;
         case OperationType.UPDATE_CODE:
           query = String.format(

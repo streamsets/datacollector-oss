@@ -53,7 +53,6 @@ public class PreparedStatementCache {
   private final boolean caseSensitive;
   public static final int UNLIMITED_CACHE = -1;
 
-
   private final LoadingCache<SortedMap<String, String>, PreparedStatement> cacheMap;
 
   class PreparedStatementLoader extends CacheLoader<SortedMap<String, String>, PreparedStatement> {
@@ -120,8 +119,8 @@ public class PreparedStatementCache {
     }
 
     final int recordSize = 1;
-    String query = JdbcUtil.generateQuery(opCode, tableName, primaryKeyColumns, primaryKeyParams, columns, recordSize, caseSensitive);
-
+    String query = JdbcUtil.generateQuery(opCode, tableName, primaryKeyColumns, primaryKeyParams, columns, recordSize, caseSensitive, false);
+    LOG.debug("Generated single-row query:" + query);
     return query;
   }
 
