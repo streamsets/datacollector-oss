@@ -735,16 +735,12 @@ public class HdfsTargetConfigBean {
         // Recover previously written files (promote all _tmp_ to their final form).
         //
         // We want to run the recovery only if
+        // * Not preview
         // * This is not a WHOLE_FILE since it doesn't make sense there (tmp files will be discarded instead)
         // * User explicitly did not disabled the recovery in configuration
         // * We do have the directory template available (e.g. it's not in header)
         // * Only for the first runner, since it would be empty operation for the others
-        if(dataFormat != DataFormat.WHOLE_FILE && !skipOldTempFileRecovery && !dirPathTemplateInHeader && context.getRunnerId() == 0) {
-          userUgi.doAs((PrivilegedExceptionAction<Void>) () -> {
-            getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
-            return null;
-          });
-        }
+        recoveryOldTempFile(context);
       } catch (Exception ex) {
         LOG.error(Errors.HADOOPFS_59.getMessage(), ex.toString(), ex);
         issues.add(
@@ -1210,4 +1206,12 @@ public class HdfsTargetConfigBean {
     }
   }
 
+  private void recoveryOldTempFile(Stage.Context context) throws IOException, InterruptedException {
+    if(!context.isPreview() && dataFormat != DataFormat.WHOLE_FILE && !skipOldTempFileRecovery && !dirPathTemplateInHeader && context.getRunnerId() == 0) {
+      userUgi.doAs((PrivilegedExceptionAction<Void>) () -> {
+        getCurrentWriters().getWriterManager().handleAlreadyExistingFiles();
+        return null;
+      });
+    }
+  }
 }
