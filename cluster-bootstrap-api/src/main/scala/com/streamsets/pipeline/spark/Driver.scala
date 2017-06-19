@@ -40,12 +40,14 @@ import java.util
 import com.streamsets.pipeline.api.Record
 import com.streamsets.pipeline.spark.api.SparkTransformer
 import com.streamsets.pipeline.{BootstrapCluster, ClusterFunctionProvider}
+import org.apache.spark.api.java.JavaRDD
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.dstream.DStream
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import scala.reflect.ClassTag
 
 object Driver {
 
@@ -84,9 +86,17 @@ object Driver {
       partitionCount = rdd.sparkContext.getExecutorStorageStatus.length - 1
     }
 
-    def repartition[T](rdd: RDD[T]) : RDD[T] = {
-      if (rdd.partitions.length != partitionCount) rdd.repartition(partitionCount)
-      else rdd
+    def repartition[T: ClassTag](rdd: RDD[T]) : RDD[T] = {
+      if (rdd.partitions.length > partitionCount) {
+        // Hack: RDD.coalesce() changed in non-binary compatible way between Spark 1.x and 2.y
+        // (but code-compatible, since a new param with default was added), but the JavaRDD.coalesce() method is binary
+        // compatible between Spark 1.x and 2.y, so use that to coalesce and return underlying RDD
+        JavaRDD.fromRDD(rdd).coalesce(partitionCount).rdd
+      } else if (rdd.partitions.length < partitionCount) {
+        rdd.repartition(partitionCount)
+      } else {
+        rdd
+      }
     }
 
     val incoming = if (transformers.nonEmpty) repartition(rdd) else rdd
