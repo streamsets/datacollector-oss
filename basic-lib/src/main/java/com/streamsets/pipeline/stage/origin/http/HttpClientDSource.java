@@ -38,11 +38,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
 )
 @HideConfigs(value = {
     "conf.dataFormatConfig.jsonContent",
-    "conf.client.numThreads",
-    "conf.client.tlsConfig.keyStoreFilePath",
-    "conf.client.tlsConfig.keyStoreType",
-    "conf.client.tlsConfig.keyStorePassword",
-    "conf.client.tlsConfig.keyStoreAlgorithm"
+    "conf.client.numThreads"
 })
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

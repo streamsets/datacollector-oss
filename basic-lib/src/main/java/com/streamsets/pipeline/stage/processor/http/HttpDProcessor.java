@@ -35,11 +35,7 @@ import com.streamsets.pipeline.lib.http.Groups;
 )
 @HideConfigs(value = {
     "conf.dataFormatConfig.compression",
-    "conf.dataFormatConfig.jsonContent",
-    "conf.client.tlsConfig.keyStoreFilePath",
-    "conf.client.tlsConfig.keyStoreType",
-    "conf.client.tlsConfig.keyStorePassword",
-    "conf.client.tlsConfig.keyStoreAlgorithm"
+    "conf.dataFormatConfig.jsonContent"
 })
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.destination.http;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
@@ -34,12 +33,6 @@ import com.streamsets.pipeline.lib.http.Groups;
     upgrader = HttpClientTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
-@HideConfigs({
-    "conf.client.tlsConfig.keyStoreFilePath",
-    "conf.client.tlsConfig.keyStoreType",
-    "conf.client.tlsConfig.keyStorePassword",
-    "conf.client.tlsConfig.keyStoreAlgorithm"
-})
 @GenerateResourceBundle
 public class HttpClientDTarget extends DTarget {
 
