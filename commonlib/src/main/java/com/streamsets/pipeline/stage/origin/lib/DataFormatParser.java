@@ -346,6 +346,7 @@ public class DataFormatParser {
       Record record = context.createRecord(messageId);
       record.set(Field.create(payload));
       handleException(context, messageId, ex, record);
+      return records;
     }
     if (messageConfig != null && messageConfig.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
