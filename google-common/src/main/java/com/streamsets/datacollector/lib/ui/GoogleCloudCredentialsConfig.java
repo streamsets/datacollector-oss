@@ -22,17 +22,8 @@ public class GoogleCloudCredentialsConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Project ID",
-      displayPosition = 10,
-      group = "CREDENTIALS"
-  )
-  public String projectId = "";
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
       label = "Credentials File Path (JSON)",
-      description = "Path relative to resources directory",
+      description = "Absolute path or path relative to Data Collector resources directory",
       displayPosition = 20,
       group = "CREDENTIALS"
   )
