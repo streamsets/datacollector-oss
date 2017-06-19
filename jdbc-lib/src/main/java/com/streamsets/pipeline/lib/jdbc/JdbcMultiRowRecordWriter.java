@@ -297,7 +297,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       int numRecords
   ) throws OnRecordErrorException, SQLException {
 
-    String query = JdbcUtil.generateQuery(opCode, getTableName(), primaryKeys, getPrimaryKeyParams(), columns, numRecords, caseSensitive);
+    String query = JdbcUtil.generateQuery(opCode, getTableName(), primaryKeys, getPrimaryKeyParams(), columns, numRecords, caseSensitive, true);
 
     LOG.debug("Generated multi-row operation query: {}", query);
     return query;
