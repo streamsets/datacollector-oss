@@ -78,7 +78,8 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
         Utils.getPropertyOrEmptyString(getProperties(), AUTO_OFFSET_RESET),
         groupId,
         isRunningInMesos,
-        Utils.getMaprStreamsRateLimit(getProperties())
+        Utils.getMaprStreamsRateLimit(getProperties()),
+        Utils.getExtraKafkaConfigs(getProperties())
     );
   }
 
@@ -92,6 +93,7 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
     private final String autoOffsetValue;
     private final String groupId;
     private final int maxRatePerPartition;
+    private final Map<String, String> extraKafkaConfigs;
 
     public JavaStreamingContextFactoryImpl(
         SparkConf sparkConf,
@@ -101,7 +103,8 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
         String autoOffsetValue,
         String groupId,
         boolean isRunningInMesos,
-        int maxRatePerPartition
+        int maxRatePerPartition,
+        Map<String, String> extraKafkaConfigs
     ) {
       this.sparkConf = sparkConf;
       this.duration = duration;
@@ -111,6 +114,7 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
       this.groupId = groupId;
       this.isRunningInMesos = isRunningInMesos;
       this.maxRatePerPartition = maxRatePerPartition;
+      this.extraKafkaConfigs = extraKafkaConfigs;
 
     }
 
@@ -135,6 +139,10 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
       }
       logMessage("topic list " + topic, isRunningInMesos);
       logMessage("Auto offset reset is set to " + autoOffsetValue, isRunningInMesos);
+      props.putAll(extraKafkaConfigs);
+      for (Map.Entry<String, String> map : props.entrySet()) {
+        logMessage(Utils.format("Adding extra kafka config, {}:{}", map.getKey(), map.getValue()), isRunningInMesos);
+      }
       props.put("key.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
       props.put("value.deserializer", "org.apache.kafka.common.serialization.ByteArrayDeserializer");
       props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);

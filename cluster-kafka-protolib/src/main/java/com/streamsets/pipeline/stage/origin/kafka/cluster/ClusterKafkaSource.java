@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitter;
@@ -32,8 +33,10 @@ import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Ingests kafka produce data from spark streaming
@@ -138,9 +141,15 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   @Override
   public Map<String, String> getConfigsToShip() {
     try {
-      return ImmutableMap.of(NO_OF_PARTITIONS, String.valueOf(getParallelism()));
+      Map<String, String> configBeanPrefixedMap = new HashMap<>();
+      conf.kafkaConsumerConfigs.forEach((k, v) -> configBeanPrefixedMap.put(
+          ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX + k,
+          v
+      ));
+      return new ImmutableMap.Builder<String, String>().put(NO_OF_PARTITIONS, String.valueOf(getParallelism())).putAll(
+          configBeanPrefixedMap).build();
     } catch (StageException e) {
-      //Won't happen as getParallelism is already called which would have caught and bubbled as exception.
+      // Won't happen as getParallelism is already called which would have caught and bubbled as exception.
       throw new RuntimeException(e);
     }
   }

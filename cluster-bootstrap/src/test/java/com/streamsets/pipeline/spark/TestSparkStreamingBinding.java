@@ -20,6 +20,7 @@ import com.streamsets.pipeline.Utils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Map;
 import java.util.Properties;
 
 public class TestSparkStreamingBinding {
@@ -60,5 +61,17 @@ public class TestSparkStreamingBinding {
     SparkStreamingBinding sparkStreamingBinding = new SparkStreamingBinding(properties);
     Assert.assertEquals("topic", sparkStreamingBinding.getTopic());
     Assert.assertEquals("consumerGroup", sparkStreamingBinding.getConsumerGroup());
+  }
+
+  @Test
+  public void testExtraConfigs() {
+    Properties properties = new Properties();
+    properties.put(ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX + "AAA", "ValueAAA");
+    properties.put(ClusterModeConstants.EXTRA_KAFKA_CONFIG_PREFIX + "BBB", "ValueBBB");
+    Map<String, String> extraMap = Utils.getExtraKafkaConfigs(properties);
+    Assert.assertTrue(extraMap.containsKey("AAA"));
+    Assert.assertEquals("ValueAAA", extraMap.get("AAA"));
+    Assert.assertTrue(extraMap.containsKey("BBB"));
+    Assert.assertEquals("ValueBBB", extraMap.get("BBB"));
   }
 }

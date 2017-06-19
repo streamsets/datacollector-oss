@@ -54,7 +54,7 @@ public abstract class AbstractStreamingBinding implements ClusterBinding {
     isRunningInMesos = System.getProperty("SDC_MESOS_BASE_DIR") != null ? true: false;
   }
 
-  protected  Properties getProperties() {
+  protected Properties getProperties() {
     return properties;
   }
 
