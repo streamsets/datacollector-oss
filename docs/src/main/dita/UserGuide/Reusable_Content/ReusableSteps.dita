@@ -1765,7 +1765,7 @@
                                         </p></entry>
                                 </row>
                                 <row id="TLS-TruststoreKeyAlgo-row">
-                                    <entry>Truststore Key Algorithm</entry>
+                                    <entry>Truststore Trust Algorithm</entry>
                                     <entry>The algorithm used to manage the truststore. <p>Default
                                             is <ph id="TLS-DefaultAlgorithm-ph"
                                         >SunX509</ph>.</p></entry>
