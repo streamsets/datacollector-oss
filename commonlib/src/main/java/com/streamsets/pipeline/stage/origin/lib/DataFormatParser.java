@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
@@ -341,11 +342,19 @@ public class DataFormatParser {
   public List<Record> parse(Source.Context context, String messageId, byte[] payload) throws StageException {
     List<Record> records = new ArrayList<>();
     try (DataParser parser = parserFactory.getParser(messageId, payload)) {
-      Record record = parser.parse();
-      while (record != null) {
-        records.add(record);
-        record = parser.parse();
-      }
+      Record record = null;
+      do {
+        try {
+          record = parser.parse();
+        } catch (RecoverableDataParserException e) {
+          handleException(context, messageId, e, e.getUnparsedRecord());
+          //Go to next record
+          continue;
+        }
+        if (record != null) {
+          records.add(record);
+        }
+      } while (record != null);
     } catch (IOException |DataParserException ex) {
       Record record = context.createRecord(messageId);
       record.set(Field.create(payload));

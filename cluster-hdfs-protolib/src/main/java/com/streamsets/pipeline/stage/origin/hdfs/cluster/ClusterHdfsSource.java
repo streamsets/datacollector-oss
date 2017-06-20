@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.cluster.Consumer;
@@ -41,6 +42,7 @@ import com.streamsets.pipeline.impl.Pair;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.avro.file.DataFileReader;
@@ -810,11 +812,24 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       }
     } else {
       try (DataParser parser = parserFactory.getParser(messageId, String.valueOf(message))) {
-        Record record = parser.parse();
-        while (record != null) {
-          records.add(record);
-          record = parser.parse();
-        }
+        Record record = null;
+        do {
+          try {
+            record = parser.parse();
+          } catch (RecoverableDataParserException e) {
+            errorRecordHandler.onError(
+                new OnRecordErrorException(
+                    e.getUnparsedRecord(),
+                    e.getErrorCode(),
+                    e.getParams())
+            );
+            //Go to next record
+            continue;
+          }
+          if (record != null) {
+            records.add(record);
+          }
+        } while(record != null);
       } catch (IOException | DataParserException ex) {
         LOG.debug("Got exception: '{}'", ex, ex);
         errorRecordHandler.onError(Errors.HADOOPFS_08, messageId, ex.toString(), ex);
