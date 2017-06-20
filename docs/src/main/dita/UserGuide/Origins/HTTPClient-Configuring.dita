@@ -241,6 +241,23 @@
                                     <entry/>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-KeystoreFile-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-KeystoreType-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-KeystorePassword-row">
+                                    <entry/>
+                                </row>
+                                
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-KeystoreKeyAlgo-row">
+                                    <entry/>
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TruststoreFile-row">
                                     <entry/>
                                 </row>
