@@ -82,6 +82,16 @@ public class SpoolDirSource extends BaseSource {
   private ELEval rateLimitElEval;
   private ELVars rateLimitElVars;
 
+  private boolean shouldSendNoMoreDataEvent;
+  private long noMoreDataRecordCount;
+  private long noMoreDataErrorCount;
+  private long noMoreDataFileCount;
+
+  private long perFileRecordCount;
+  private long perFileErrorCount;
+
+  private long totalFiles;
+
   public SpoolDirSource(SpoolDirConfigBean conf) {
     this.conf = conf;
   }
@@ -226,6 +236,16 @@ public class SpoolDirSource extends BaseSource {
       rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());;
       rateLimitElVars = getContext().createELVars();
     }
+
+    shouldSendNoMoreDataEvent = false;
+    noMoreDataRecordCount = 0;
+    noMoreDataErrorCount = 0;
+    noMoreDataFileCount = 0;
+
+    perFileErrorCount = 0;
+    perFileRecordCount = 0;
+
+    totalFiles = 0;
 
     return issues;
   }
@@ -430,7 +450,14 @@ public class SpoolDirSource extends BaseSource {
           // no file to process
           LOG.debug("No new file available in spool directory after '{}' secs, producing empty batch",
               conf.poolingTimeoutSecs);
+
+          // no-more-data event needs to be sent.
+          shouldSendNoMoreDataEvent = true;
+
         } else {
+          // since we have data to process, don't trigger the no-more-data event.
+          shouldSendNoMoreDataEvent = false;
+
           // file to process
           currentFile = nextAvailFile;
 
@@ -456,9 +483,13 @@ public class SpoolDirSource extends BaseSource {
         }
 
         if(currentFile != null) {
+          perFileRecordCount = 0;
+          perFileErrorCount = 0;
           SpoolDirEvents.NEW_FILE.create(getContext())
             .with("filepath", currentFile.getAbsolutePath())
             .createAndSend();
+          noMoreDataFileCount++;
+          totalFiles++;
         }
 
       } catch (InterruptedException ex) {
@@ -477,6 +508,8 @@ public class SpoolDirSource extends BaseSource {
         if(MINUS_ONE.equals(offset)) {
           SpoolDirEvents.FINISHED_FILE.create(getContext())
             .with("filepath", currentFile.getAbsolutePath())
+              .with("error-count", perFileErrorCount)
+              .with("record-count", perFileRecordCount)
             .createAndSend();
         }
       } catch (BadSpoolFileException ex) {
@@ -493,6 +526,21 @@ public class SpoolDirSource extends BaseSource {
         offset = MINUS_ONE;
       }
     }
+
+      if(shouldSendNoMoreDataEvent) {
+        LOG.info("sending no-more-data event.  records {} errors {} files {} ",
+            noMoreDataRecordCount, noMoreDataErrorCount, noMoreDataFileCount);
+        SpoolDirEvents.NO_MORE_DATA.create(getContext())
+            .with("record-count", noMoreDataRecordCount)
+            .with("error-count", noMoreDataErrorCount)
+            .with("file-count", noMoreDataFileCount)
+            .createAndSend();
+        shouldSendNoMoreDataEvent = false;
+        noMoreDataRecordCount = 0;
+        noMoreDataErrorCount = 0;
+        noMoreDataFileCount = 0;
+      }
+
     // create a new offset using the current file and offset
     return createSourceOffset(file, offset);
   }
@@ -536,7 +584,8 @@ public class SpoolDirSource extends BaseSource {
             record = ex.getUnparsedRecord();
             setHeaders(record, file, offset);
             errorRecordHandler.onError(new OnRecordErrorException(record, ex.getErrorCode(), ex.getParams()));
-
+            perFileErrorCount++;
+            noMoreDataErrorCount++;
             // We'll simply continue reading once this
             continue;
           }
@@ -545,6 +594,10 @@ public class SpoolDirSource extends BaseSource {
             setHeaders(record, file, offset);
             batchMaker.addRecord(record);
             offset = parser.getOffset();
+
+            noMoreDataRecordCount++;
+            perFileRecordCount++;
+
           } else {
             parser.close();
             parser = null;
@@ -555,6 +608,8 @@ public class SpoolDirSource extends BaseSource {
           String exOffset = offset;
           offset = MINUS_ONE;
           errorRecordHandler.onError(Errors.SPOOLDIR_02, sourceFile, exOffset, ex);
+          perFileErrorCount++;
+          noMoreDataErrorCount++;
         }
       }
     } catch (IOException|DataParserException ex) {

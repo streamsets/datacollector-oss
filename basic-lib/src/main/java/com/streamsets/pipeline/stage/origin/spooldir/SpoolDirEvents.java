@@ -23,14 +23,21 @@ public class SpoolDirEvents {
    * Fired when a new file is being spooled.
    */
   public static EventCreator NEW_FILE = new EventCreator.Builder("new-file", 1)
-    .withRequiredField("filepath") // Absolute path to the opened file
-    .build();
+      .withRequiredField("filepath") // Absolute path to the opened file
+      .build();
 
   /**
    * Fired when a file is finished tailing.
    */
-  public static EventCreator FINISHED_FILE = new EventCreator.Builder("finished-file", 1)
-    .withRequiredField("filepath") // Absolute path to the done file
-    .build();
+  public static EventCreator FINISHED_FILE = new EventCreator.Builder("finished-file", 2)
+      .withRequiredField("filepath") // Absolute path to the done file
+      .withOptionalField("record-count")
+      .withOptionalField("error-count")
+      .build();
 
+  public static EventCreator NO_MORE_DATA = new EventCreator.Builder("no-more-data", 1)
+      .withOptionalField("record-count")
+      .withOptionalField("error-count")
+      .withOptionalField("file-count")
+      .build();
 }
