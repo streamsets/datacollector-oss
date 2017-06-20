@@ -68,11 +68,12 @@
                                         <codeph>https://cloud.streamsets.com</codeph></entry>
                                 </row>
                                 <row>
-                                    <entry>User Name</entry>
+                                    <entry>User ID</entry>
                                     <entry>Enter your <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                        /> user name using the following
-                                        format:<codeblock>&lt;user account name>@&lt;organization name></codeblock></entry>
+                                        /> user ID using the following format:<p
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-DPMUserNameFormat"
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>User Password</entry>

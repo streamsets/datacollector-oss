@@ -54,11 +54,11 @@
                         </row>
                         <row>
                             <entry>-u &lt;sdcUser><p>or</p><p>--user &lt;sdcUser></p></entry>
-                            <entry>Required. User name to log in. Enter your <ph
+                            <entry>Required. User account to log in. Enter your <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                /> user name using the following
-                                    format:<codeblock>&lt;user account name>@&lt;organization name></codeblock><p>The
-                                    roles assigned to the <ph
+                                /> user ID using the following format:<p
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-DPMUserNameFormat"
+                                    /><p>The roles assigned to the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                     /> user account determine the tasks that you can
                                     perform.</p><p>If you omit this option, <ph

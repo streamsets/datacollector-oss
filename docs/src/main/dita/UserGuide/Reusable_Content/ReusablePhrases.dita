@@ -48,6 +48,11 @@
                         origins > Max Record Size.</draft-comment>
             </p>
             <p><ph id="ph-DefaultMaxRecordSize">1048576 bytes</ph></p>
+            <p><draft-comment author="alisontaylor">The following p is used in the registering and
+                  unregistering from DPM topics.</draft-comment></p>
+            <p id="p-DPMUserNameFormat">
+                  <codeblock>&lt;ID>@&lt;organization ID></codeblock>
+            </p>
             <p>
                   <draft-comment author="Loretta">The following ph is used by the registration DPM
                         topics. </draft-comment>

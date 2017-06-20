@@ -80,9 +80,9 @@ system disableDPM</codeblock></p>
                             <entry>-u &lt;sdcUser><p>or</p><p>--user &lt;sdcUser></p></entry>
                             <entry>Required. Enter your <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                /> user name using the following
-                                    format:<codeblock>&lt;user account name>@&lt;organization name></codeblock><p>If
-                                    you omit this option, <ph
+                                /> user ID using the following format:<p
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-DPMUserNameFormat"
+                                    /><p>If you omit this option, <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> uses the <codeph>admin</codeph> user account, which causes
                                     the disableDPM command to fail.</p></entry>

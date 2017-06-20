@@ -92,8 +92,9 @@ system enableDPM \
                             <entry>--dpmUser &lt;dpmUserID></entry>
                             <entry>Required. Enter your <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                                /> user name using the following
-                                format:<codeblock>&lt;user account name>@&lt;organization name></codeblock></entry>
+                                /> user ID using the following format:<p
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-DPMUserNameFormat"
+                                /></entry>
                         </row>
                         <row>
                             <entry>--dpmPassword &lt;dpmUserPassword></entry>
