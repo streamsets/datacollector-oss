@@ -95,8 +95,10 @@
                                             <li>Cluster Yarn Streaming - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> spawns additional workers as needed to process
-                                                data. Use to stream data from a Kafka or MapR
-                                                cluster that uses Spark Streaming on YARN.</li>
+                                                data, by default. You can limit the number of
+                                                workers with the Worker Count cluster property. Use
+                                                to stream data from a Kafka or MapR cluster that
+                                                uses Spark Streaming on YARN.</li>
                                             <li>Cluster Mesos Streaming - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> spawns additional workers as needed to process
@@ -603,8 +605,9 @@
                             </tbody>
                         </tgroup>
                     </table></info>
-                <info>For Spark Streaming or MapReduce on YARN, configure the following properties.
-                        <table frame="all" rowsep="1" colsep="1" id="table_mkj_kdr_wr">
+                <info id="YarnStreaming-WorkerCount">For Spark Streaming or MapReduce on YARN,
+                    configure the following properties. <table frame="all" rowsep="1" colsep="1"
+                        id="table_mkj_kdr_wr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -616,10 +619,12 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Worker Memory (MB)</entry>
-                                    <entry>Maximum amount of memory allocated to each <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> worker in the cluster.<p>Default is 1024 MB.</p></entry>
+                                    <entry>Worker Count</entry>
+                                    <entry>Number of workers used in a Cluster Yarn Streaming
+                                        pipeline. Use to limit the number of workers spawned for
+                                        processing. By default, one worker is spawned for every
+                                        partition in the topic. <p>Default is 0 for one worker for
+                                            each partition. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Worker Java Options</entry>
@@ -644,6 +649,12 @@
                                             launcher. Click the <uicontrol>Add</uicontrol> icon and
                                             define the property name and value. </p>
                                     </entry>
+                                </row>
+                                <row>
+                                    <entry>Worker Memory (MB)</entry>
+                                    <entry>Maximum amount of memory allocated to each <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> worker in the cluster.<p>Default is 1024 MB.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
