@@ -43,13 +43,24 @@
                     <dd>Writes each record to a partition based on the results of the partition
                         expression. Use to perform semantic partitioning. </dd>
                     <dd>When you configure the partition expression, define the expression to
-                        evaluate to the partition where you want each record written. For example,
-                        the following expression writes records to two partitions based on the value
-                        in the Age
+                        evaluate to the partition where you want each record written. The expression
+                        must return a numeric value. </dd>
+                    <dd>For example, the following expression writes records to two partitions based
+                        on the value in the Age
                         field:<codeblock>${record:value('/Age') &lt; 21 ? 0 : 1}</codeblock></dd>
                     <dd>The following example writes to three partitions based on the value of the
                         Age
                         field:<codeblock>${record:value('/a') &lt; 21 ? 0 : record:value('/a') &lt; 55 ? 1 : 2}</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Default</dt>
+                    <dd>Writes each record using the default partition strategy that MapR Streams
+                        provides.</dd>
+                    <dd>When you use the default partition strategy, you configure a partition
+                        expression that returns the partition key from the records, such as
+                            <codeph>${record:value('/partitionkey')}</codeph>.  The expression must
+                        return a string value.<p>The MapR Streams Producer writes each record to a
+                            partition based on a hash of the partition key. </p></dd>
                 </dlentry>
             </dl></p>
     </conbody>

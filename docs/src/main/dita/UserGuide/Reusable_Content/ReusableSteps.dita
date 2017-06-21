@@ -4226,16 +4226,22 @@
                                                 By default, all topic names are valid.</p></entry>
                                     </row>
                                     <row id="KPPartStrategy">
-                                        <entry>Partition Strategy </entry>
+                                        <entry>Partition Strategy  <xref
+                                                href="../Destinations/KProducer-PartitionStrategy.dita#concept_qpm_xp4_4r">
+                                                <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_l3j_vpb_h1b"/></xref></entry>
                                         <entry>Strategy to use to write to partitions:<ul
                                                 id="ul_tq2_yr3_br">
                                                 <li>Round Robin - Takes turns writing to different
                                                   partitions.</li>
                                                 <li>Random - Writes to partitions randomly.</li>
                                                 <li>Expression - Uses an expression to write data to
-                                                  different partitions. </li>
-                                                <li>Default - Uses the default partition strategy
-                                                  that Kafka provides.</li>
+                                                  different partitions. Writes records to the
+                                                  partitions specified by the results of the
+                                                  expression.</li>
+                                                <li>Default - Uses an expression to extract a
+                                                  partition key from the record. Writes records to
+                                                  partitions based on a hash of the partition key. </li>
                                             </ul></entry>
                                     </row>
                                     <row id="KPPartExpr">
@@ -4243,11 +4249,16 @@
                                                 href="../Destinations/KProducer-PartitionStrategy.dita#concept_qpm_xp4_4r">
                                                 <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_as2_sc1_ft"/></xref></entry>
-                                        <entry id="KPPartExpr_entry">Expression to use when using
-                                            the expression partition strategy. <p>Define the
-                                                expression to evaluate to the partition where you
-                                                want each record written. Partition numbers start
-                                                with 0.</p><p
+                                        <entry id="KPPartExpr_entry">Expression to use with the
+                                            default or expression partition strategy. <p>When using
+                                                the default partition strategy, specify an
+                                                expression that returns the partition key from the
+                                                record. The expression must evaluate to a string
+                                                value. </p><p>When using the expression partition
+                                                strategy, specify an expression that evaluates to
+                                                the partition where you want each record written.
+                                                Partition numbers start with 0. The expression must
+                                                evaluate to a numeric value.</p><p
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
                                             /></entry>
                                     </row>
