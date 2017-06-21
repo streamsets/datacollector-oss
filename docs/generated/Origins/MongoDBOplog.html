@@ -1,5 +1,13 @@
-<!--
 
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The MongoDB Oplog origin reads entries from MongoDB Oplog. MongoDB stores information about changes to the database in a local capped collection called an Oplog. The Oplog contains information about ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MongoDB Oplog" /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_mjn_yqw_4y" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MongoDB Oplog</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
     Copyright 2017 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,29 +21,6 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
--->
-
-<!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The MongoDB Oplog origin reads entries from MongoDB Oplog. MongoDB stores information about changes to the database in a local capped collection called an Oplog. The Oplog contains information about ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MongoDB Oplog" /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_mjn_yqw_4y" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MongoDB Oplog</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
-            
-            var prefix = "../index.html";
-            
-            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
-<!--
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
 -->
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
@@ -155,7 +140,7 @@
         <p class="p">The read preference determines how the origin reads data from different members
    of the MongoDB replica set. </p>
 
-        <div class="p">You can use the following MongoDB read preferences:<ul class="ul" id="concept_cwt_gd3_sy__d45542e27">
+        <div class="p">You can use the following MongoDB read preferences:<ul class="ul" id="concept_cwt_gd3_sy__d46059e27">
     <li class="li">Primary - Requires reading from the primary member.</li>
 
     <li class="li">Primary Preferred - Prefers reading from the primary, but allows reads from a secondary
@@ -267,7 +252,7 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 <li class="li step stepexpand">
                 <span class="ph cmd">Define the following options in the SDC_JAVA_OPTS environment variable in the
                     Data Collector environment configuration file:</span>
-                <ul class="ul choices" id="task_tcy_gg3_sy__d31951e7791">
+                <ul class="ul choices" id="task_tcy_gg3_sy__d32405e7796">
                     <li class="li choice"><samp class="ph codeph">javax.net.ssl.trustStore</samp> - path to truststore
                         file</li>
 
@@ -318,14 +303,14 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qj5_drw_4y__d31951e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qj5_drw_4y__d32405e331" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d242692e443">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d244306e443">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d242692e446">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d244306e446">Description</th>
 
                                 </tr>
 
@@ -333,24 +318,24 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d242692e443 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d244306e443 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d242692e446 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d242692e443 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d242692e446 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d244306e446 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d242692e443 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_qj5_drw_4y__d31951e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d244306e443 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d242692e446 ">Error record handling for the stage: <ul class="ul" id="task_qj5_drw_4y__d31951e381">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d244306e446 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d244306e443 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                            <img class="image" id="task_qj5_drw_4y__d32405e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d244306e446 ">Error record handling for the stage: <ul class="ul" id="task_qj5_drw_4y__d32405e381">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -380,9 +365,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d242692e528">MongoDB Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d244306e528">MongoDB Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d242692e531">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d244306e531">Description</th>
 
                                 </tr>
 
@@ -390,9 +375,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                             <tbody class="tbody">
                                 <tr id="task_qj5_drw_4y__row-MongoConnectString">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d242692e528 ">Connection String</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d244306e528 ">Connection String</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d242692e531 ">Connection string for the MongoDB instance. Use the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d244306e531 ">Connection string for the MongoDB instance. Use the
                                         following
                                         format:<pre class="pre codeblock">mongodb://host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]</pre>
 When
@@ -406,9 +391,9 @@ When
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d242692e528 ">Enable Single Mode</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d244306e528 ">Enable Single Mode</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d242692e531 ">Select to connect to a single MongoDB server or node. If
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d244306e531 ">Select to connect to a single MongoDB server or node. If
        multiple nodes are defined in the connection string, the
        origin connects only to the first node. <p class="p">Use this option
         with care. If the origin cannot connect or the
@@ -418,9 +403,9 @@ When
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d242692e528 ">Collection</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d244306e528 ">Collection</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d242692e531 ">Name of the MongoDB Oplog collection to use, typically
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d244306e531 ">Name of the MongoDB Oplog collection to use, typically
                                             <span class="ph filepath">oplog.rs</span>.<p class="p">The collection name
                                             must start with "oplog".</p>
 </td>
@@ -428,11 +413,11 @@ When
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d242692e528 ">Initial Timestamp <a class="xref" href="MongoDBOplog.html#concept_iry_ykm_sy">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d244306e528 ">Initial Timestamp <a class="xref" href="MongoDBOplog.html#concept_iry_ykm_sy">
                                             <img class="image" id="task_qj5_drw_4y__image_asz_q1n_sy" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d242692e531 ">Timestamp in the Oplog <samp class="ph codeph">ts</samp> timestamp
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d244306e531 ">Timestamp in the Oplog <samp class="ph codeph">ts</samp> timestamp
                                         field to begin reading data. <p class="p">Use the MongoDB timestamp
                                             format, the seconds since the Unix epoch. For more
                                             information about the Oplog timestamp, see the MongoDB
@@ -444,11 +429,11 @@ When
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d242692e528 ">Ordinal <a class="xref" href="MongoDBOplog.html#concept_iry_ykm_sy">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d244306e528 ">Ordinal <a class="xref" href="MongoDBOplog.html#concept_iry_ykm_sy">
                                             <img class="image" id="task_qj5_drw_4y__image_kbd_r1n_sy" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d242692e531 ">Integer ordinal to specify the entry to use within a set
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d244306e531 ">Integer ordinal to specify the entry to use within a set
                                         of identical timestamps. <p class="p">Required when you specify an
                                             initial timestamp. Use -1 to opt out of this property.
                                         </p>
@@ -457,9 +442,9 @@ When
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d242692e528 ">Operation Types</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d244306e528 ">Operation Types</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d242692e531 ">Operations to process. The origin reads the selected
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d244306e531 ">Operations to process. The origin reads the selected
                                         operations. Choose from the following data operations:<ul class="ul" id="task_qj5_drw_4y__ul_xkv_k1n_sy">
                                             <li class="li">INSERT</li>
 
@@ -486,29 +471,29 @@ When
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="33.33333333333333%" headers="d242692e528 ">Batch Size (records)</td>
+      <td class="entry" valign="top" width="33.33333333333333%" headers="d244306e528 ">Batch Size (records)</td>
 
-      <td class="entry" valign="top" width="66.66666666666666%" headers="d242692e531 ">Maximum number of records allowed in a batch.</td>
+      <td class="entry" valign="top" width="66.66666666666666%" headers="d244306e531 ">Maximum number of records allowed in a batch.</td>
 
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d242692e528 ">Max Batch Wait Time <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d244306e528 ">Max Batch Wait Time <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_qj5_drw_4y__image_mwv_b52_zq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d242692e531 ">Amount of time the origin
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d244306e531 ">Amount of time the origin
        will wait to fill a batch before sending an empty batch.
       </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d242692e528 ">Read Preference <a class="xref" href="MongoDBOplog.html#concept_cwt_gd3_sy">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d244306e528 ">Read Preference <a class="xref" href="MongoDBOplog.html#concept_cwt_gd3_sy">
                                             <img class="image" id="task_qj5_drw_4y__image_o23_1rd_ww" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d242692e531 ">Determines how the origin reads
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d244306e531 ">Determines how the origin reads
        data from different members of the MongoDB replica
        set.</td>
 
@@ -533,11 +518,11 @@ When
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d242692e721">Credentials
+                                    <th class="entry" valign="top" width="30%" id="d244306e721">Credentials
                                         <a class="xref" href="MongoDBOplog.html#concept_ovt_vpt_tz">
                                             <img class="image" id="task_qj5_drw_4y__image_o89_5rd_ww" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
 
-                                    <th class="entry" valign="top" width="70%" id="d242692e728">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d244306e728">Description</th>
 
                                 </tr>
 
@@ -545,22 +530,22 @@ When
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d242692e721 ">Authentication Type</td>
+      <td class="entry" valign="top" width="30%" headers="d244306e721 ">Authentication Type</td>
 
-      <td class="entry" valign="top" width="70%" headers="d242692e728 ">Authentication used by the MongoDB server:
+      <td class="entry" valign="top" width="70%" headers="d244306e728 ">Authentication used by the MongoDB server:
        Username/Password or LDAP.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="30%" headers="d242692e721 ">Username</td>
+      <td class="entry" valign="top" width="30%" headers="d244306e721 ">Username</td>
 
-      <td class="entry" valign="top" width="70%" headers="d242692e728 ">MongoDB or LDAP user name.</td>
+      <td class="entry" valign="top" width="70%" headers="d244306e728 ">MongoDB or LDAP user name.</td>
 
      </tr>
 <tr>
-      <td class="entry" valign="top" width="30%" headers="d242692e721 ">Password</td>
+      <td class="entry" valign="top" width="30%" headers="d244306e721 ">Password</td>
 
-      <td class="entry" valign="top" width="70%" headers="d242692e728 ">MongoDB or LDAP password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+      <td class="entry" valign="top" width="70%" headers="d244306e728 ">MongoDB or LDAP password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
                   information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a>
                   or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
@@ -585,9 +570,9 @@ When
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="34.01360544217687%" id="d242692e813">Advanced Property</th>
+                                        <th class="entry" valign="top" width="34.01360544217687%" id="d244306e813">Advanced Property</th>
 
-                                        <th class="entry" valign="top" width="65.98639455782312%" id="d242692e816">Description</th>
+                                        <th class="entry" valign="top" width="65.98639455782312%" id="d244306e816">Description</th>
 
                                     </tr>
 
@@ -595,34 +580,34 @@ When
 
                                 <tbody class="tbody">
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Connections Per Host</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Connections Per Host</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Min Connections Per Host</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Min Connections Per Host</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Connection Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Connection Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
        10,000.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Max Connection Idle Time</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Max Connection Idle Time</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Maximum time in milliseconds that a pooled connection can remain idle. When a pooled
        connection exceeds the idle time, the connection is closed. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
@@ -630,9 +615,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Max Connection Lifetime</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Max Connection Lifetime</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Maximum time in milliseconds that a pooled connection can be active. When a pooled
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Maximum time in milliseconds that a pooled connection can be active. When a pooled
        connection exceeds the lifetime, the connection is closed. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
@@ -640,9 +625,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Max Wait Time</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Max Wait Time</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Maximum time in milliseconds that a thread can wait for a connection to become
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Maximum time in milliseconds that a thread can wait for a connection to become
        available. Use 0 to opt out of this property. Use a negative value to wait
         indefinitely.<p class="p">Default is 120,000.</p>
 </td>
@@ -650,9 +635,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Server Selection Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Server Selection Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Maximum time in milliseconds that <span class="ph">Data
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Maximum time in milliseconds that <span class="ph">Data
                   Collector</span> waits for a server selection
        before throwing an exception. If you use 0, an exception is thrown immediately if no server
        is available. Use a negative value to wait indefinitely.<p class="p">Default is 30,000.</p>
@@ -661,9 +646,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Threads Allowed to Block for Connection Multiplier</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Threads Allowed to Block for Connection Multiplier</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Multiplier that determines the maximum number of threads that can wait for a connection
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Multiplier that determines the maximum number of threads that can wait for a connection
        to become available from the pool. This number multiplied by the Connections Per Host value
        determines the maximum number of threads.<p class="p">Default is 5.</p>
 </td>
@@ -671,9 +656,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Heartbeat Frequency</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Heartbeat Frequency</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">The frequency in milliseconds at which <span class="ph">Data
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">The frequency in milliseconds at which <span class="ph">Data
                   Collector</span> attempts to determine the
        current state of each server in the cluster.<p class="p">Default is 10,000.</p>
 </td>
@@ -681,9 +666,9 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Min Heartbeat Frequency</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Min Heartbeat Frequency</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data
                   Collector</span> waits at least this long
        before checking the state of each server.<p class="p">Default is 500.</p>
 </td>
@@ -691,27 +676,27 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Heartbeat Connection Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Heartbeat Connection Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Maximum time in milliseconds to wait for a connection used for the cluster
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Maximum time in milliseconds to wait for a connection used for the cluster
         heartbeat.<p class="p">Default is 20,000.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Heartbeat Socket Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Heartbeat Socket Timeout</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Maximum time in milliseconds for a socket timeout for connections used for the cluster
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Maximum time in milliseconds for a socket timeout for connections used for the cluster
         heartbeat.<p class="p">Default is 20,000.</p>
 </td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Local Threshold</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Local Threshold</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is less
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is less
        than or equal to the server with the fastest ping time plus the local threshold
         value.<p class="p">Default is 15.</p>
 </td>
@@ -719,39 +704,39 @@ When
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Required Replica Set Name</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Required Replica Set Name</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Required replica set name to use for the cluster.</td>
-
-     </tr>
-
-                                    <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Cursor Finalizer Enabled</td>
-
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Specifies whether to enable cursor finalizers.</td>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Required replica set name to use for the cluster.</td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Socket Keep Alive</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Cursor Finalizer Enabled</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Specifies whether to enable socket keep alive. </td>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Specifies whether to enable cursor finalizers.</td>
 
      </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">Socket Timeout</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Socket Keep Alive</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Specifies whether to enable socket keep alive. </td>
+
+     </tr>
+
+                                    <tr>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">Socket Timeout</td>
+
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
         property.<p class="p">Default is 0.</p>
 </td>
 
      </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">SSL Enabled </td>
+                                        <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">SSL Enabled </td>
 
-                                        <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Enables SSL/TLS between <span class="ph">Data
+                                        <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Enables SSL/TLS between <span class="ph">Data
                   Collector</span> and MongoDB.<p class="p">You also must define the truststore
                                                 file and password in the SDC_JAVA_OPTS environment
                                                 variable, as described in <a class="xref" href="MongoDBOplog.html#task_tcy_gg3_sy">Enabling SSL/TLS</a>.</p>
@@ -760,9 +745,9 @@ When
                                     </tr>
 
                                     <tr>
-      <td class="entry" valign="top" width="34.01360544217687%" headers="d242692e813 ">SSL Invalid Host Name Allowed</td>
+      <td class="entry" valign="top" width="34.01360544217687%" headers="d244306e813 ">SSL Invalid Host Name Allowed</td>
 
-      <td class="entry" valign="top" width="65.98639455782312%" headers="d242692e816 ">Specifies whether invalid host names are allowed in SSL/TLS certificates.</td>
+      <td class="entry" valign="top" width="65.98639455782312%" headers="d244306e816 ">Specifies whether invalid host names are allowed in SSL/TLS certificates.</td>
 
      </tr>
 
@@ -781,7 +766,23 @@ When
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

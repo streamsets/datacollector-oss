@@ -1,20 +1,5 @@
-/*
- * Copyright 2017 StreamSets Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 fil = new Array();
-fil["0"]= "Administration/Administration_title.html@@@Administration@@@The system command provides arguments to register and unregister the Data Collector with DPM...";
+fil["0"]= "Administration/Administration_title.html@@@Administration@@@The system command provides subcommands to register and unregister the Data Collector with DPM...";
 fil["1"]= "Alerts/RulesAlerts_title.html@@@Rules and Alerts@@@You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list...";
 fil["2"]= "Apx-DataFormats/DataFormat_Title.html@@@Data Formats by Stage@@@The following table lists the data formats supported by each destination...";
 fil["3"]= "Apx-GrokPatterns/GrokPatterns_title.html@@@Grok Patterns@@@You can use the grok patterns in this appendix to define the structure of log data...";
@@ -117,7 +102,7 @@ fil["99"]= "Origins/FileTail.html@@@File Tail@@@When you use an origin to read l
 fil["100"]= "Origins/HTTPClient.html@@@HTTP Client@@@The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data...";
 fil["101"]= "Origins/HTTPServer.html@@@HTTP Server@@@Configure the HTTP clients to include the HTTP Server application ID in each request...";
 fil["102"]= "Origins/HTTPtoKafka.html@@@HTTP to Kafka@@@The HTTP to Kafka origin listens on an HTTP endpoint and writes the contents of all authorized HTTP POST requests directly to Kafka. Use the HTTP to Kafka origin to write large volumes of HTTP POST...";
-fil["103"]= "Origins/HadoopFS-origin.html@@@Hadoop FS@@@The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). Use this origin only in pipelines configured for cluster execution mode...";
+fil["103"]= "Origins/HadoopFS-origin.html@@@Hadoop FS@@@The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS) or from other file systems using the Hadoop FileSystem interface. Use this origin only in pipelines configured for cluster batch execution mode...";
 fil["104"]= "Origins/JDBCConsumer.html@@@JDBC Query Consumer@@@You can define any type of SQL query for full mode...";
 fil["105"]= "Origins/JMS.html@@@JMS Consumer@@@Configure a JMS Consumer origin to read JMS messages...";
 fil["106"]= "Origins/KConsumer.html@@@Kafka Consumer@@@Configure a Kafka Consumer to read data from a Kafka cluster...";

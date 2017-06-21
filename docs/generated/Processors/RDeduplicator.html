@@ -1,5 +1,14 @@
-<!--
 
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Record Deduplicator" /><meta name="abstract" content="The Record Deduplicator evaluates records for duplicate data and routes data to two streams - one for unique records and one for duplicate records. Use the Record Deduplicator to discard duplicate data or route duplicate data through different processing logic." /><meta name="description" content="The Record Deduplicator evaluates records for duplicate data and routes data to two streams - one for unique records and one for duplicate records. Use the Record Deduplicator to discard duplicate data or route duplicate data through different processing logic." /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_z3m_v52_zq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Record Deduplicator</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
     Copyright 2017 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,30 +22,6 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
--->
-
-<!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Record Deduplicator" /><meta name="abstract" content="The Record Deduplicator evaluates records for duplicate data and routes data to two streams - one for unique records and one for duplicate records. Use the Record Deduplicator to discard duplicate data or route duplicate data through different processing logic." /><meta name="description" content="The Record Deduplicator evaluates records for duplicate data and routes data to two streams - one for unique records and one for duplicate records. Use the Record Deduplicator to discard duplicate data or route duplicate data through different processing logic." /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_z3m_v52_zq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Record Deduplicator</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
-            
-            var prefix = "../index.html";
-            
-            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
-<!--
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
 -->
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
@@ -91,14 +76,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ikr_c2f_zq__d57382e4525" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ikr_c2f_zq__d57910e4525" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d345819e111">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d347813e111">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d345819e114">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d347813e114">Description</th>
 
                                 </tr>
 
@@ -106,24 +91,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d345819e111 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d347813e111 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d345819e114 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d345819e111 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d345819e114 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d347813e114 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d345819e111 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_ikr_c2f_zq__d57382e4571" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d347813e111 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d345819e114 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d347813e114 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d347813e111 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_ikr_c2f_zq__d57910e4571" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d347813e114 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -135,10 +120,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d345819e111 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_ikr_c2f_zq__d57382e4587" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d347813e111 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_ikr_c2f_zq__d57910e4587" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d345819e114 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d347813e114 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -165,9 +150,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d345819e201">Record Deduplicator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d347813e201">Record Deduplicator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d345819e204">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d347813e204">Description</th>
 
                                 </tr>
 
@@ -175,18 +160,18 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d345819e201 ">Max Records to Compare</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d347813e201 ">Max Records to Compare</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d345819e204 ">The maximum number of records to compare. Upon reaching
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d347813e204 ">The maximum number of records to compare. Upon reaching
                                         this number, the Record Deduplicator clears its
                                         cache.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d345819e201 ">Time to Compare</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d347813e201 ">Time to Compare</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d345819e204 ">Number of seconds to compare records. This property takes
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d347813e204 ">Number of seconds to compare records. This property takes
                                         precedence over the Max Records to Compare. <p class="p">Use 0 to opt
                                             out of this property.</p>
 </td>
@@ -194,9 +179,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d345819e201 ">Compare</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d347813e201 ">Compare</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d345819e204 ">Specifies the fields to compare. Use one of the following
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d347813e204 ">Specifies the fields to compare. Use one of the following
                                             options:<ul class="ul" id="task_ikr_c2f_zq__ul_ahq_dtp_1r">
                                             <li class="li">All Fields - Compares all fields in the record.</li>
 
@@ -209,9 +194,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d345819e201 ">Fields to Compare</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d347813e201 ">Fields to Compare</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d345819e204 ">Subset of fields to compare for duplicate data. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d347813e204 ">Subset of fields to compare for duplicate data. </td>
 
                                 </tr>
 
@@ -229,7 +214,23 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
