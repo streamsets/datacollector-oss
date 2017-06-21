@@ -25,6 +25,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
 import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
@@ -289,23 +290,38 @@ public class KinesisSource extends BasePushSource {
     }
   }
 
-  private void resetOffsets(Map<String, String> lastOffsets) {
+  private void resetOffsets(Map<String, String> lastOffsets) throws StageException {
     if (lastOffsets.isEmpty() && !resetOffsetAttempted.getAndSet(true)) {
       DynamoDB dynamoDB = new DynamoDB(dynamoDBClient);
       Table offsetTable = dynamoDB.getTable(conf.applicationName);
+
+      if (!tableExists(conf.applicationName)) {
+        return;
+      }
 
       try {
         offsetTable.delete();
         offsetTable.waitForDelete();
         LOG.info("Deleted DynamoDB table for application '{}' since reset offset was invoked.", conf.applicationName);
-      } catch (final ResourceNotFoundException e) {
-        if (LOG.isTraceEnabled()) {
-          LOG.trace("Table '{}' did not exist in DynamoDB, continuing.", conf.applicationName, e);
-        }
+      } catch (AmazonDynamoDBException e) {
+        LOG.error(Errors.KINESIS_11.getMessage(), conf.applicationName, e);
+        throw new StageException(Errors.KINESIS_11, conf.applicationName, e);
       } catch (InterruptedException e) {
         LOG.error("Interrupted while waiting for table '{}' deletion", conf.applicationName, e);
         Thread.currentThread().interrupt();
       }
+    }
+  }
+
+  private boolean tableExists(String tableName) {
+    try {
+      dynamoDBClient.describeTable(tableName);
+      return true;
+    } catch (ResourceNotFoundException e) {
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Table'{}' did not exist.", tableName, e);
+      }
+      return false;
     }
   }
 }

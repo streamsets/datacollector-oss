@@ -32,6 +32,7 @@ public enum Errors implements ErrorCode {
   KINESIS_08("Serialized record is {} bytes, which is larger than the allowed 1MB"),
   KINESIS_09("Endpoint cannot be empty"),
   KINESIS_10("Error fetching preview data: '{}'"),
+  KINESIS_11("Unable to delete DynamoDB table '{}'. Please verify that you have sufficient privileges"),
   ;
   private final String msg;
 
