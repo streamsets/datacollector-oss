@@ -40,6 +40,7 @@ import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import org.awaitility.Duration;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -56,7 +57,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -182,35 +185,41 @@ public class KinesisSourceIT {
   @Test
   public void testConsume() throws Exception {
     KinesisConsumerConfigBean config = getKinesisConsumerConfig(streamName);
+    final Map<String, String> lastSourceOffsets = new HashMap<>();
 
-    KinesisSource kinesisSource = new KinesisSource(config);
-    PushSourceRunner runner = new PushSourceRunner.Builder(KinesisDSource.class, kinesisSource)
-        .addOutputLane("lane")
-        .setOnRecordError(OnRecordError.TO_ERROR)
-        .build();
+    for (int i = 0; i < 2; i++) {
+      KinesisSource kinesisSource = new KinesisSource(config);
+      PushSourceRunner runner = new PushSourceRunner.Builder(KinesisDSource.class, kinesisSource).addOutputLane("lane")
+          .setOnRecordError(OnRecordError.TO_ERROR)
+          .build();
 
-    runner.runInit();
-    kinesisSource.setDynamoDBClient(getDynamoDBClient());
-    kinesisSource.setMetricsFactory(new NullMetricsFactory());
+      runner.runInit();
+      kinesisSource.setDynamoDBClient(getDynamoDBClient());
+      kinesisSource.setMetricsFactory(new NullMetricsFactory());
 
-    final List<Record> records = new ArrayList<>(numRecords);
-    final AtomicInteger batchCount = new AtomicInteger(0);
-    try {
-      runner.runProduce(new HashMap<>(), 5, output -> {
-        records.addAll(output.getRecords().get("lane"));
-        // If we don't get all records after a few batches, stop anyway so the test doesn't get stuck.
-        if (records.size() == numRecords || batchCount.incrementAndGet() > 10) {
-          runner.setStop();
-        }
-      });
+      final List<Record> records = new ArrayList<>(numRecords);
+      final AtomicBoolean isDone = new AtomicBoolean(false);
 
-      runner.waitOnProduce();
-      assertEquals(numErrorRecords, runner.getErrorRecords().size());
-    } finally {
-      runner.runDestroy();
+      try {
+        runner.runProduce(lastSourceOffsets, 5, output -> {
+          records.addAll(output.getRecords().get("lane"));
+          if (records.size() == numRecords) {
+            isDone.set(true);
+            runner.setStop();
+          }
+        });
+
+        // This stage doesn't produce empty batches, so timeout the test
+        // if it doesn't run to completion in a reasonable amount of time.
+        await().atMost(Duration.TWO_MINUTES).untilTrue(isDone);
+        runner.waitOnProduce();
+        assertEquals(numErrorRecords, runner.getErrorRecords().size());
+      } finally {
+        runner.runDestroy();
+      }
+
+      assertEquals(numRecords, records.size());
     }
-
-    assertEquals(numRecords, records.size());
   }
 
   @Test
@@ -288,7 +297,6 @@ public class KinesisSourceIT {
     assertEquals(1, batchCount.get());
     assertEquals(4, records.size());
   }
-
 
   private KinesisConsumerConfigBean getKinesisConsumerConfig(String streamName) {
     KinesisConsumerConfigBean conf = new KinesisConsumerConfigBean();

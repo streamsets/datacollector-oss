@@ -30,6 +30,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     icon = "kinesis_multithreaded.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
+    resetOffset = true,
     upgrader = KinesisSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/KinConsumer.html#task_p4b_vv4_yr"
 )
