@@ -121,7 +121,7 @@
 </li>
 
                         </ul>
-See the documentation for <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_y5w_dj3_fw">implementation details</a> and a <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_vl3_v2f_zz" title="Now to process the metadata records - and to automatically create and update Parquet tables in Hive - you need the Hive Metastore destination.">Parquet case study</a>. </dd>
+See the documentation for implementation details and a <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_vl3_v2f_zz" title="Now to process the metadata records - and to automatically create and update Parquet tables in Hive - you need the Hive Metastore destination.">Parquet case study</a>. </dd>
 
                 
                 
@@ -357,12 +357,11 @@ See the documentation for <a class="xref" href="../Hive_Drift_Solution/HiveDrift
 
                     <dd class="dd">
                         <ul class="ul" id="concept_bsw_cky_11b__ul_ktv_k5y_11b">
-                            <li class="li">Offset management - Both the REST API and command line interface can
-                                now retrieve the last-saved offset for a pipeline and set the offset
-                                for a pipeline when it is not running. Use these commands to
-                                implement pipeline failover using an external storage system.
-                                Otherwise, pipeline offsets are managed by Data Collector and there
-                                is no need to update the offsets.</li>
+                            <li class="li">Offset management - Both the REST API and <a class="xref" href="../Administration/Administration_title.html#concept_ywx_d5x_pt" title="Data Collector provides a command line interface that includes a basic cli command. Use the command to perform some of the same actions that you can complete from the Data Collector console. Data Collector must be running before you can use the cli command.">command line interface</a> can now retrieve the last-saved
+                                offset for a pipeline and set the offset for a pipeline when it is
+                                not running. Use these commands to implement pipeline failover using
+                                an external storage system. Otherwise, pipeline offsets are managed
+                                by Data Collector and there is no need to update the offsets.</li>
 
                         </ul>
 
@@ -569,7 +568,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             you can configure a webhook to start another pipeline when the pipeline
                             state is changed to Finished or Stopped.</li>
 
-                        <li class="li"><a class="xref" href="../Administration/Administration_title.html#concept_msh_k2q_yt" title="The manager command provides arguments to start and stop a pipeline, view the status of all pipelines, and reset the origin for a pipeline.">Force
+                        <li class="li"><a class="xref" href="../Administration/Administration_title.html#concept_msh_k2q_yt" title="The manager command provides subcommands to start and stop a pipeline, view the status of all pipelines, and reset the origin for a pipeline. It can also be used to get the last-saved offset and to update the last-saved offset for a pipeline.">Force
                                 a pipeline to stop from the command line</a> - If a pipeline
                             remains in a Stopping state, you can now use the command line to force
                             stop the pipeline immediately.</li>

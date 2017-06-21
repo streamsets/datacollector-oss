@@ -1,5 +1,5 @@
 fil = new Array();
-fil["0"]= "Administration/Administration_title.html@@@Administration@@@The system command provides arguments to register and unregister the Data Collector with DPM...";
+fil["0"]= "Administration/Administration_title.html@@@Administration@@@The system command provides subcommands to register and unregister the Data Collector with DPM...";
 fil["1"]= "Alerts/RulesAlerts_title.html@@@Rules and Alerts@@@You can define the email addresses to receive metric and data alerts. When an alert triggers an email, the Data Collector sends an email to every address in the list...";
 fil["2"]= "Apx-DataFormats/DataFormat_Title.html@@@Data Formats by Stage@@@The following table lists the data formats supported by each destination...";
 fil["3"]= "Apx-GrokPatterns/GrokPatterns_title.html@@@Grok Patterns@@@You can use the grok patterns in this appendix to define the structure of log data...";
