@@ -29,15 +29,15 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-cdh_5_11-cluster-cdh_kafka_2_1-lib</artifactId>
   <version>2.7.0.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector CDH 5.11.0 Cluster Cloudera Kafka 2.1.0 Lib</description>
-  <name>StreamSets Data Collector 5.11.0 Cluster Kafka 2.1.0 Lib</name>
+  <description>StreamSets Data Collector CDH 5.11.1 Cluster Cloudera Kafka 2.1.1 Lib</description>
+  <name>StreamSets Data Collector 5.11.1 Cluster Kafka 2.1.1 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
     <kafka.version>0.10.0-kafka-2.1.1</kafka.version>
     <scala.version>2.10.6</scala.version>
-    <spark.version>1.6.0-cdh5.11.0</spark.version>
-    <zookeeper.version>3.4.5-cdh5.11.0</zookeeper.version>
+    <spark.version>1.6.0-cdh5.11.1</spark.version>
+    <zookeeper.version>3.4.5-cdh5.11.1</zookeeper.version>
     <h2.version>1.4.187</h2.version>
   </properties>
 

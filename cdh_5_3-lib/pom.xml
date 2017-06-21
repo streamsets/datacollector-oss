@@ -29,16 +29,16 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-cdh_5_3-lib</artifactId>
   <version>2.7.0.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector CDH 5.3.9 Lib</description>
-  <name>StreamSets Data Collector CDH 5.3.9 Lib</name>
+  <description>StreamSets Data Collector CDH 5.3.10 Lib</description>
+  <name>StreamSets Data Collector CDH 5.3.10 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <hadoop.version>2.5.0-cdh5.3.9</hadoop.version>
-    <hbase.version>0.98.6-cdh5.3.9</hbase.version>
-    <solr.version>4.4.0-cdh5.3.9</solr.version>
+    <hadoop.version>2.5.0-cdh5.3.10</hadoop.version>
+    <hbase.version>0.98.6-cdh5.3.10</hbase.version>
+    <solr.version>4.4.0-cdh5.3.10</solr.version>
     <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
-    <flume.version>1.5.0-cdh5.3.9</flume.version>
+    <flume.version>1.5.0-cdh5.3.10</flume.version>
     <thrift.version>0.9.0-cdh5-3</thrift.version>
     <avro.version>1.7.7</avro.version>
   </properties>
