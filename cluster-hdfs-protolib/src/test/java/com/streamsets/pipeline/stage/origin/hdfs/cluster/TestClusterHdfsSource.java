@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.Assert;
 import org.junit.Test;
@@ -75,7 +76,8 @@ public class TestClusterHdfsSource {
     Mockito.doReturn(UserGroupInformation.createRemoteUser("foo")).when(clusterHdfsSource).getUGI();
     FileStatus[] fileStatuses = new FileStatus[1];
     fileStatuses[0] = new FileStatus();
-    clusterHdfsSource.readInPreview(fileStatuses, new ArrayList<Stage.ConfigIssue>());
+    FileSystem fs = null; // will not be used in this test
+    clusterHdfsSource.readInPreview(fs, fileStatuses, new ArrayList<Stage.ConfigIssue>());
     Mockito.verify(clusterHdfsSource, Mockito.times(1)).getUGI();
   }
 
