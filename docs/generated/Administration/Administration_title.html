@@ -1,13 +1,5 @@
-
-<!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="To view Data Collector configuration properties, click Administration &gt; Configuration . For details about the configuration properties or to edit the configuration file, see Configuring Data Collector ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Administration" /><meta name="DC.Relation" scheme="URI" content="../Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q" /><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_yms_ftm_sq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Administration</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
-            
-            var prefix = "../index.html";
-            
-            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
 <!--
+
     Copyright 2017 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +13,29 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
+-->
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="To view Data Collector configuration properties, click Administration &gt; Configuration . For details about the configuration properties or to edit the configuration file, see Configuring Data Collector ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Administration" /><meta name="DC.Relation" scheme="URI" content="../Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q" /><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_yms_ftm_sq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Administration</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 -->
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
@@ -773,13 +788,13 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
         
           <dt class="dt dlterm">help</dt>
 
-          <dd class="dd">Provides information about each command or subcommand.</dd>
+          <dd class="dd">Provides information about each command.</dd>
 
         
         
           <dt class="dt dlterm">manager</dt>
 
-          <dd class="dd">Provides the following subcommands:<ul class="ul" id="concept_ywx_d5x_pt__ul_u4z_51y_pt">
+          <dd class="dd">Provides the following arguments:<ul class="ul" id="concept_ywx_d5x_pt__ul_u4z_51y_pt">
               <li class="li">start - Starts a pipeline.</li>
 
               <li class="li">status - Returns the status of a pipeline.</li>
@@ -788,11 +803,6 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
               <li class="li">reset-origin - Resets the origin when possible. </li>
 
-              <li class="li">get-committed-offsets - Returns the last-saved offset for pipeline failover.</li>
-
-              <li class="li">update-committed-offsets - Updates the last-saved offset for pipeline
-                failover.</li>
-
             </ul>
 </dd>
 
@@ -800,7 +810,7 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
         
           <dt class="dt dlterm">store</dt>
 
-          <dd class="dd">Provides the following subcommands:<ul class="ul" id="concept_ywx_d5x_pt__ul_e3z_syy_pt">
+          <dd class="dd">Provides the following arguments:<ul class="ul" id="concept_ywx_d5x_pt__ul_e3z_syy_pt">
               <li class="li">import - Imports a pipeline.</li>
 
               <li class="li">list - Lists information for all available pipelines.</li>
@@ -812,7 +822,7 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
         
           <dt class="dt dlterm">system</dt>
 
-          <dd class="dd">Provides the following subcommands:<ul class="ul" id="concept_ywx_d5x_pt__ul_nwj_fsx_fz">
+          <dd class="dd">Provides the following arguments:<ul class="ul" id="concept_ywx_d5x_pt__ul_nwj_fsx_fz">
               <li class="li">enableDPM - Register the <span class="ph">Data
                   Collector</span>
                 with <span class="ph">DPM</span>.</li>
@@ -867,7 +877,7 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 [(-u &lt;sdcUser&gt; | --user &lt;sdcUser&gt;)] \
 [(-p &lt;sdcPassword&gt; | --password &lt;sdcPassword&gt;)] \
 [(-D &lt;dpmURL&gt; | --dpmURL &lt;dpmURL&gt;)] \
-&lt;command&gt; &lt;subcommand&gt; [&lt;args&gt;] </pre>
+&lt;command&gt; [&lt;args&gt;] </pre>
 </div>
 
     <p class="p">The usage of the basic command options depends on whether or not the <span class="ph">Data
@@ -888,9 +898,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d60e1687">Option</th>
+                            <th class="entry" valign="top" width="30%" id="d60e1680">Option</th>
 
-                            <th class="entry" valign="top" width="70%" id="d60e1690">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d60e1683">Description</th>
 
                         </tr>
 
@@ -898,10 +908,10 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1687 ">-U &lt;sdcURL&gt; <p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d60e1680 ">-U &lt;sdcURL&gt; <p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1690 ">Required. URL of the <span class="ph">Data
+                            <td class="entry" valign="top" width="70%" headers="d60e1683 ">Required. URL of the <span class="ph">Data
                   Collector</span>. <p class="p">The default URL is
                                     <samp class="ph codeph">http://localhost:18630/</samp>.</p>
 </td>
@@ -909,20 +919,20 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1687 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d60e1680 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
 --auth-type &lt;sdcAuthType&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1690 ">Optional. HTTP authentication type used by the <span class="ph">Data
+                            <td class="entry" valign="top" width="70%" headers="d60e1683 ">Optional. HTTP authentication type used by the <span class="ph">Data
                   Collector</span>. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1687 ">-u &lt;sdcUser&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d60e1680 ">-u &lt;sdcUser&gt;<p class="p">or</p>
 <p class="p">--user &lt;sdcUser&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1690 ">Optional. User name to use to log in. The roles assigned to the
+                            <td class="entry" valign="top" width="70%" headers="d60e1683 ">Optional. User name to use to log in. The roles assigned to the
                                 user account determine the tasks that you can perform.<p class="p">If you omit
                                     this option, the <span class="ph">Data
                   Collector</span> allows admin access.</p>
@@ -931,44 +941,36 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1687 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d60e1680 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
 <p class="p">--password
                                 &lt;sdcPassword&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1690 ">Optional. Required when you enter a user name. Password for the
+                            <td class="entry" valign="top" width="70%" headers="d60e1683 ">Optional. Required when you enter a user name. Password for the
                                 user account.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1687 ">-D &lt;dpmURL&gt; <p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d60e1680 ">-D &lt;dpmURL&gt; <p class="p">or</p>
 --dpmURL &lt;dpmURL&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1690 ">Not applicable. Do not use when the <span class="ph">Data
+                            <td class="entry" valign="top" width="70%" headers="d60e1683 ">Not applicable. Do not use when the <span class="ph">Data
                   Collector</span> is not registered with <span class="ph">DPM</span>.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1687 ">&lt;command&gt; </td>
+                            <td class="entry" valign="top" width="30%" headers="d60e1680 ">&lt;command&gt; </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1690 ">Required. Command to perform.</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1687 ">&lt;subcommand&gt; </td>
-
-                            <td class="entry" valign="top" width="70%" headers="d60e1690 ">Required for all commands except help. Subcommand to
-                                perform.</td>
+                            <td class="entry" valign="top" width="70%" headers="d60e1683 ">Required. Command to perform.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1687 ">&lt;args&gt;</td>
+                            <td class="entry" valign="top" width="30%" headers="d60e1680 ">&lt;args&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1690 ">Optional. Include arguments and options as needed.</td>
+                            <td class="entry" valign="top" width="70%" headers="d60e1683 ">Optional. Include arguments and options as needed.</td>
 
                         </tr>
 
@@ -993,9 +995,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d60e1844">Option</th>
+                            <th class="entry" valign="top" width="30%" id="d60e1828">Option</th>
 
-                            <th class="entry" valign="top" width="70%" id="d60e1847">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d60e1831">Description</th>
 
                         </tr>
 
@@ -1003,10 +1005,10 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1844 ">-U &lt;sdcURL&gt; <p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d60e1828 ">-U &lt;sdcURL&gt; <p class="p">or</p>
 --url &lt;sdcURL&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1847 ">Required. URL of the <span class="ph">Data
+                            <td class="entry" valign="top" width="70%" headers="d60e1831 ">Required. URL of the <span class="ph">Data
                   Collector</span>. <p class="p">The default URL is
                                     <samp class="ph codeph">http://localhost:18630/</samp>.</p>
 </td>
@@ -1014,10 +1016,10 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1844 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d60e1828 ">-a &lt;sdcAuthType&gt;<p class="p">or</p>
 --auth-type &lt;sdcAuthType&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1847 ">Required. Authentication type used by the <span class="ph">Data
+                            <td class="entry" valign="top" width="70%" headers="d60e1831 ">Required. Authentication type used by the <span class="ph">Data
                   Collector</span>. Set to <samp class="ph systemoutput">dpm</samp>.<p class="p">If you omit this
                                     option, <span class="ph">Data
                   Collector</span> uses the Form authentication type, which causes the command
@@ -1027,15 +1029,14 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1844 ">-u &lt;sdcUser&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d60e1828 ">-u &lt;sdcUser&gt;<p class="p">or</p>
 <p class="p">--user &lt;sdcUser&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1847 ">Required. User account to log in. Enter your <span class="ph">DPM</span> user ID using the following format:<div class="p">
-                  <pre class="pre codeblock">&lt;ID&gt;@&lt;organization ID&gt;</pre>
-
-            </div>
-<p class="p">The roles assigned to the <span class="ph">DPM</span> user account determine the tasks that you can
+                            <td class="entry" valign="top" width="70%" headers="d60e1831 ">Required. User name to log in. Enter your <span class="ph">DPM</span> user name using the following
+                                    format:<pre class="pre codeblock">&lt;user account name&gt;@&lt;organization name&gt;</pre>
+<p class="p">The
+                                    roles assigned to the <span class="ph">DPM</span> user account determine the tasks that you can
                                     perform.</p>
 <p class="p">If you omit this option, <span class="ph">Data
                   Collector</span> uses the <samp class="ph systemoutput">admin</samp> user account,
@@ -1045,43 +1046,35 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1844 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d60e1828 ">-p &lt;sdcPassword&gt;<p class="p">or</p>
 <p class="p">--password
                                 &lt;sdcPassword&gt;</p>
 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1847 ">Required. Enter the password for your DPM user account.</td>
+                            <td class="entry" valign="top" width="70%" headers="d60e1831 ">Required. Enter the password for your DPM user account.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1844 ">-D &lt;dpmURL&gt; <p class="p">or</p>
+                            <td class="entry" valign="top" width="30%" headers="d60e1828 ">-D &lt;dpmURL&gt; <p class="p">or</p>
 --dpmURL &lt;dpmURL&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1847 ">Required. Set to:
+                            <td class="entry" valign="top" width="70%" headers="d60e1831 ">Required. Set to:
                                     <samp class="ph systemoutput">https://cloud.streamsets.com</samp>.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1844 ">&lt;command&gt; </td>
+                            <td class="entry" valign="top" width="30%" headers="d60e1828 ">&lt;command&gt; </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1847 ">Required. Command to perform.</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1844 ">&lt;subcommand&gt; </td>
-
-                            <td class="entry" valign="top" width="70%" headers="d60e1847 ">Required for all commands except help. Subcommand to
-                                perform.</td>
+                            <td class="entry" valign="top" width="70%" headers="d60e1831 ">Required. Command to perform.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d60e1844 ">&lt;args&gt;</td>
+                            <td class="entry" valign="top" width="30%" headers="d60e1828 ">&lt;args&gt;</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d60e1847 ">Optional. Include arguments and options as needed.</td>
+                            <td class="entry" valign="top" width="70%" headers="d60e1831 ">Optional. Include arguments and options as needed.</td>
 
                         </tr>
 
@@ -1111,7 +1104,7 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 [(-u &lt;sdcUser&gt; | --user &lt;sdcUser&gt;)] \
 [(-p &lt;sdcPassword&gt; | --password &lt;sdcPassword&gt;)] \
 [(-D &lt;dpmURL&gt; | --dpmURL &lt;dpmURL&gt;)] \
-<strong class="ph b">help &lt;command&gt; [&lt;subcommand&gt;]</strong></pre>
+<strong class="ph b">help &lt;command&gt;</strong></pre>
 </div>
 
      <div class="p">For example, the following command displays the details for the manager command. Use the
@@ -1128,14 +1121,13 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
  <h3 class="title topictitle3">Manager Command</h3>
 
  
- <div class="body conbody"><p class="shortdesc">The <samp class="ph codeph">manager</samp> command provides subcommands to start and stop a pipeline,
-        view the status of all pipelines, and reset the origin for a pipeline. It can also be used
-        to get the last-saved offset and to update the last-saved offset for a pipeline.</p>
+ <div class="body conbody"><p class="shortdesc">The <samp class="ph codeph">manager</samp> command provides arguments to start and stop a pipeline,
+        view the status of all pipelines, and reset the origin for a pipeline.</p>
 
         <div class="p">The
                 <samp class="ph codeph">manager</samp> command returns the pipeline status object after it
-            successfully completes the specified subcommand. The following is a sample of the
-            pipeline status object:
+            successfully completes the specified argument. The following is a sample of the pipeline
+            status object:
             <pre class="pre codeblock">{
   "user" : "admin",
   "name" : "MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db",
@@ -1154,7 +1146,7 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
         <p class="p">Note that the timestamp is in the Long data format. </p>
 
-        <p class="p">You can use the following <samp class="ph codeph">manager</samp> subcommands:</p>
+        <p class="p">You can use the following <samp class="ph codeph">manager</samp> arguments:</p>
 
   <div class="p">
             <dl class="dl">
@@ -1163,11 +1155,11 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                     <dd class="dd">Starts a pipeline. Returns the pipeline status when successful. </dd>
 
-                    <dd class="dd">The <samp class="ph codeph">start</samp> subcommand uses the following
+                    <dd class="dd">The <samp class="ph codeph">start</samp> argument uses the following
                         syntax:<pre class="pre codeblock">manager start \
 (-n &lt;pipelineID&gt; | --name &lt;pipelineID&gt;) \
-[(-r &lt;pipelineRev&gt; | --revision &lt;pipelineRev&gt;)] \
 [--stack] \
+[(-r &lt;pipelineRev&gt; | --revision &lt;pipelineRev&gt;)]
 [(-R &lt;runtimeParametersString&gt; | --runtimeParameters &lt;runtimeParametersString&gt;)]</pre>
 </dd>
 
@@ -1178,9 +1170,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e2098">Start Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d60e2070">Start Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d60e2101">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d60e2073">Description</th>
 
                                     </tr>
 
@@ -1188,12 +1180,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2098 ">-n &lt;pipelineID&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2070 ">-n &lt;pipelineID&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineID&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2101 ">Required. ID of the pipeline to start. <p class="p"><span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e2073 ">Required. ID of the pipeline to start. <p class="p"><span class="ph">Data
                   Collector</span> generates the ID when the pipeline is created. <span class="ph">Data
                   Collector</span> uses the alphanumeric characters entered for the pipeline title as a prefix for
                   the generated pipeline ID.</p>
@@ -1202,22 +1194,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2098 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
-<p class="p">-- revision
-                                                &lt;pipelineRev&gt;</p>
-</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2070 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2101 ">Optional. The revision of the pipeline. Use to start
-                                            an older version of the pipeline. <p class="p">By default, the <span class="ph">Data
-                  Collector</span> starts the most recent version.</p>
-</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2098 ">--stack</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d60e2101 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e2073 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot start the pipeline. <p class="p">Use to debug the
                                                 problem or pass to StreamSets for help.</p>
 </td>
@@ -1225,13 +1204,26 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2098 ">-R &lt;runtimeParametersString&gt;
+                                        <td class="entry" valign="top" width="30%" headers="d60e2070 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+<p class="p">-- revision
+                                                &lt;pipelineRev&gt;</p>
+</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d60e2073 ">Optional. The revision of the pipeline. Use to start
+                                            an older version of the pipeline. <p class="p">By default, the <span class="ph">Data
+                  Collector</span> starts the most recent version.</p>
+</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2070 ">-R &lt;runtimeParametersString&gt;
                                                 <p class="p">or</p>
 <p class="p">--runtimeParameters
                                                 &lt;runtimeParametersString&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2101 ">Optional. Runtime parameter values to start the
+                                        <td class="entry" valign="top" width="70%" headers="d60e2073 ">Optional. Runtime parameter values to start the
                                             pipeline with. Overrides the parameter default values
                                             defined for the pipeline.<div class="p">Enter the runtime parameters
                                                 using the following
@@ -1257,17 +1249,18 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                     <dd class="dd">For example, the following command starts the pipeline with an ID of
                         MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db when the <span class="ph">Data
-                  Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630 manager start -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</pre>
+                  Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  manager start -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</pre>
 </dd>
 
-                    <dd class="dd">The following command starts the same pipeline when the <span class="ph">Data
-                  Collector</span> is registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
+                    <dd class="dd">The following command starts the pipeline with an ID of
+                        MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db when the <span class="ph">Data
+                  Collector</span> is registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  -a dpm -u user1@mycompany -p MyPassword \
 --dpmURL https://cloud.streamsets.com manager start -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</pre>
 </dd>
 
-                    <dd class="dd">The following command starts the first version of the same pipeline when the
-                            <span class="ph">Data
-                  Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630 manager start -n MyPipeilnejh65k1f8-dfc1-603h-8124-718nj6e561db -r 1</pre>
+                    <dd class="dd">The following command starts the first version of the pipeline with an ID of
+                        MyPipelinejh65k1f8-dfc1-603h-8124-718nj6e561db when the <span class="ph">Data
+                  Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  manager start -n MyPipeilnejh65k1f8-dfc1-603h-8124-718nj6e561db -r 1</pre>
 </dd>
 
                 
@@ -1276,12 +1269,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                     <dd class="dd">Stops a pipeline. Returns the pipeline status when successful. </dd>
 
-                    <dd class="dd">The <samp class="ph codeph">stop</samp> subcommand uses the following
+                    <dd class="dd">The <samp class="ph codeph">stop</samp> argument uses the following
                         syntax:<pre class="pre codeblock">manager stop \
 [--forceStop] \
 (-n &lt;pipelineID&gt; | --name &lt;pipelineID&gt;) \
-[(-r &lt;pipelineRev&gt; | --revision &lt;pipelineRev&gt;)] \
-[--stack] </pre>
+[--stack] \
+[(-r &lt;pipelineRev&gt; | --revision &lt;pipelineRev&gt;)]</pre>
 </dd>
 
                     <dd class="dd">
@@ -1291,9 +1284,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e2250">Stop Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d60e2222">Stop Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d60e2253">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d60e2225">Description</th>
 
                                     </tr>
 
@@ -1301,9 +1294,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2250 ">--forceStop</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2222 ">--forceStop</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2253 ">Optional. Forces the pipeline to stop
+                                        <td class="entry" valign="top" width="70%" headers="d60e2225 ">Optional. Forces the pipeline to stop
                                                 immediately.<p class="p">In some situations, a pipeline can
                                                 remain in a Stopping state for up to five minutes.
                                                 For example, if a scripting processor in the
@@ -1316,12 +1309,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2250 ">-n &lt;pipelineID&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2222 ">-n &lt;pipelineID&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineID&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2253 ">Required. ID of the pipeline to stop. <p class="p"><span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e2225 ">Required. ID of the pipeline to stop. <p class="p"><span class="ph">Data
                   Collector</span> generates the ID when the pipeline is created. <span class="ph">Data
                   Collector</span> uses the alphanumeric characters entered for the pipeline title as a prefix for
                   the generated pipeline ID.</p>
@@ -1330,24 +1323,24 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2250 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
-<p class="p">-- revision
-                                                &lt;pipelineRev&gt;</p>
-</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2222 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2253 ">Optional. The revision of the pipeline. Use to stop
-                                            an older version of the pipeline. <p class="p">By default, the <span class="ph">Data
-                  Collector</span> stops the most recent version.</p>
+                                        <td class="entry" valign="top" width="70%" headers="d60e2225 ">Optional. Returns additional information when the <span class="ph">Data
+                  Collector</span> cannot stop the pipeline. <p class="p">Use to debug the problem
+                                                or pass to StreamSets for help.</p>
 </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2250 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2222 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+<p class="p">-- revision
+                                                &lt;pipelineRev&gt;</p>
+</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2253 ">Optional. Returns additional information when the <span class="ph">Data
-                  Collector</span> cannot stop the pipeline. <p class="p">Use to debug the problem
-                                                or pass to StreamSets for help.</p>
+                                        <td class="entry" valign="top" width="70%" headers="d60e2225 ">Optional. The revision of the pipeline. Use to stop
+                                            an older version of the pipeline. <p class="p">By default, the <span class="ph">Data
+                  Collector</span> stops the most recent version.</p>
 </td>
 
                                     </tr>
@@ -1361,15 +1354,16 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                     <dd class="dd">For example, the following command stops the pipeline with an ID of
                         MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db when the <span class="ph">Data
-                  Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630 manager stop -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</pre>
+                  Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  manager stop -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</pre>
 </dd>
 
-                    <dd class="dd">The following command stops the same pipeline when the <span class="ph">Data
-                  Collector</span> is registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
+                    <dd class="dd">The following command stops the pipeline with an ID of
+                        MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db when the <span class="ph">Data
+                  Collector</span> is registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  -a dpm -u user1@mycompany -p MyPassword \
 --dpmURL https://cloud.streamsets.com manager stop -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</pre>
 </dd>
 
-                    <dd class="dd">The following command forces the first version of the same pipeline to stop
+                    <dd class="dd">The following command forces the first version of a pipeline to stop
                         immediately when the <span class="ph">Data
                   Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  manager stop --forceStop -n MyPipelinejh65k1f8-dfc1-603h-8124-718nj6e561db -r 1</pre>
 </dd>
@@ -1383,11 +1377,11 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                     <dd class="dd">Returns the status of a pipeline. Returns the pipeline status when
                         successful. </dd>
 
-                    <dd class="dd">The <samp class="ph codeph">status</samp> subcommand uses the following
+                    <dd class="dd">The <samp class="ph codeph">status</samp> argument uses the following
                         syntax:<pre class="pre codeblock">manager status \
 (-n &lt;pipelineID&gt; | --name &lt;pipelineID&gt;) \
-[(-r &lt;pipelineRev&gt; | --revision &lt;pipelineRev&gt;)] \
-[--stack] </pre>
+[--stack] \
+[(-r &lt;pipelineRev&gt; | --revision &lt;pipelineRev&gt;)]</pre>
 </dd>
 
                     <dd class="dd">
@@ -1397,9 +1391,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e2398">Status Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d60e2370">Status Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d60e2401">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d60e2373">Description</th>
 
                                     </tr>
 
@@ -1407,12 +1401,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2398 ">-n &lt;pipelineID&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2370 ">-n &lt;pipelineID&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineID&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2401 ">Required. ID of the pipeline. <p class="p"><span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e2373 ">Required. ID of the pipeline. <p class="p"><span class="ph">Data
                   Collector</span> generates the ID when the pipeline is created. <span class="ph">Data
                   Collector</span> uses the alphanumeric characters entered for the pipeline title as a prefix for
                   the generated pipeline ID.</p>
@@ -1421,26 +1415,26 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2398 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
-<p class="p">-- revision
-                                                &lt;pipelineRev&gt;</p>
-</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2370 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2401 ">Optional. The revision of the pipeline. Use for older
-                                            versions of the pipeline. <p class="p">By default, the <span class="ph">Data
-                  Collector</span> returns information for the most recent
-                                                version.</p>
+                                        <td class="entry" valign="top" width="70%" headers="d60e2373 ">Optional. Returns additional information when the <span class="ph">Data
+                  Collector</span> cannot return the status of the pipeline. <p class="p">Use to
+                                                debug the problem or pass to StreamSets for
+                                                help.</p>
 </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2398 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2370 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+<p class="p">-- revision
+                                                &lt;pipelineRev&gt;</p>
+</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2401 ">Optional. Returns additional information when the <span class="ph">Data
-                  Collector</span> cannot return the status of the pipeline. <p class="p">Use to
-                                                debug the problem or pass to StreamSets for
-                                                help.</p>
+                                        <td class="entry" valign="top" width="70%" headers="d60e2373 ">Optional. The revision of the pipeline. Use for older
+                                            versions of the pipeline. <p class="p">By default, the <span class="ph">Data
+                  Collector</span> returns information for the most recent
+                                                version.</p>
 </td>
 
                                     </tr>
@@ -1457,13 +1451,15 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                   Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  manager status -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</pre>
 </dd>
 
-                    <dd class="dd">The following command returns the status of the same pipeline when the <span class="ph">Data
+                    <dd class="dd">The following command returns the status of the pipeline with an ID of
+                        MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db when the <span class="ph">Data
                   Collector</span> is registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  -a dpm -u user1@mycompany -p MyPassword \
 --dpmURL https://cloud.streamsets.com manager status -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</pre>
 </dd>
 
-                    <dd class="dd">The following command returns the status of the first version of the same
-                        pipeline when the <span class="ph">Data
+                    <dd class="dd">The following command returns the status of the first version of the
+                        pipeline with an ID of MyPipelinejh65k1f8-dfc1-603h-8124-718nj6e561db when
+                        the <span class="ph">Data
                   Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  manager status -n MyPipelinejh65k1f8-dfc1-603h-8124-718nj6e561db -r 1</pre>
 </dd>
 
@@ -1475,11 +1471,11 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                         Some pipeline origins cannot be reset. Returns the pipeline status when
                         successful. </dd>
 
-                    <dd class="dd">The <samp class="ph codeph">reset-origin</samp> subcommand uses the following
+                    <dd class="dd">The <samp class="ph codeph">reset-origin</samp> argument uses the following
                         syntax:<pre class="pre codeblock">manager reset-origin \
 (-n &lt;pipelineID&gt; | --name &lt;pipelineID&gt;) \
-[(-r &lt;pipelineRev&gt; | --revision &lt;pipelineRev&gt;)] \
-[--stack]</pre>
+[--stack] \
+[(-r &lt;pipelineRev&gt; | --revision &lt;pipelineRev&gt;)]</pre>
 </dd>
 
                     <dd class="dd">
@@ -1489,9 +1485,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e2529">Reset Origin Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d60e2501">Reset Origin Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d60e2532">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d60e2504">Description</th>
 
                                     </tr>
 
@@ -1499,12 +1495,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2529 ">-n &lt;pipelineID&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2501 ">-n &lt;pipelineID&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineID&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2532 ">Required. ID of the pipeline to reset the origin. <p class="p"><span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e2504 ">Required. ID of the pipeline to reset the origin. <p class="p"><span class="ph">Data
                   Collector</span> generates the ID when the pipeline is created. <span class="ph">Data
                   Collector</span> uses the alphanumeric characters entered for the pipeline title as a prefix for
                   the generated pipeline ID.</p>
@@ -1513,26 +1509,26 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2529 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
-<p class="p">-- revision
-                                                &lt;pipelineRev&gt;</p>
-</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2501 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2532 ">Optional. The revision of the pipeline. Use to reset
-                                            the origin for an older version of the pipeline. <p class="p">By
-                                                default, the <span class="ph">Data
-                  Collector</span> resets the origin for the most recent
-                                                version.</p>
+                                        <td class="entry" valign="top" width="70%" headers="d60e2504 ">Optional. Returns additional information when the <span class="ph">Data
+                  Collector</span> cannot reset the origin. <p class="p">Use to debug the problem
+                                                or pass to StreamSets for help.</p>
 </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2529 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2501 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
+<p class="p">-- revision
+                                                &lt;pipelineRev&gt;</p>
+</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e2532 ">Optional. Returns additional information when the <span class="ph">Data
-                  Collector</span> cannot reset the origin. <p class="p">Use to debug the problem
-                                                or pass to StreamSets for help.</p>
+                                        <td class="entry" valign="top" width="70%" headers="d60e2504 ">Optional. The revision of the pipeline. Use to reset
+                                            the origin for an older version of the pipeline. <p class="p">By
+                                                default, the <span class="ph">Data
+                  Collector</span> resets the origin for the most recent
+                                                version.</p>
 </td>
 
                                     </tr>
@@ -1549,222 +1545,10 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                   Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  manager reset-origin -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</pre>
 </dd>
 
-                    <dd class="dd">The following command resets the origin of the same pipeline when the <span class="ph">Data
+                    <dd class="dd">The following command resets the origin of the pipeline with an ID of
+                        MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db when the <span class="ph">Data
                   Collector</span> is registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630  -a dpm -u user1@mycompany -p MyPassword \
 --dpmURL https://cloud.streamsets.com manager reset-origin -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e831db</pre>
-</dd>
-
-                
-                
-                    <dt class="dt dlterm">get-committed-offsets</dt>
-
-                    <dd class="dd">Returns the last-saved offset for a pipeline with an origin that saves
-                        offsets. Some origins, such as the HTTP Server, have no need to save
-                        offsets. </dd>
-
-                    <dd class="dd">Pipeline offsets are managed by <span class="ph">Data
-                  Collector</span>. There's no need to get or replace the last-saved offset unless
-                        implementing pipeline failover using an external storage system. </dd>
-
-                    <dd class="dd">When implementing pipeline failover, use this subcommand to store the
-                        last-saved offset to a file. When necessary, you can use the
-                            <samp class="ph codeph">update-committed-offsets command</samp> to update the pipeline
-                        offset with the contents of the file. </dd>
-
-                    <dd class="dd">The <samp class="ph codeph">get-committed-offsets</samp> subcommand uses the following
-                        syntax:<pre class="pre codeblock">manager get-committed-offsets \
-(-n &lt;pipelineID&gt; | --name &lt;pipelineID&gt;) \
-[(-r &lt;pipelineRev&gt; | --revision &lt;pipelineRev&gt;)] \
-[--stack] </pre>
-</dd>
-
-                    <dd class="dd">
-                        
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_msh_k2q_yt__table_zv1_bws_d1b" class="table" frame="border" border="1" rules="all">
-                                
-                                
-                                <thead class="thead" align="left">
-                                    <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e2662">Get Offset Option</th>
-
-                                        <th class="entry" valign="top" width="70%" id="d60e2665">Description</th>
-
-                                    </tr>
-
-                                </thead>
-
-                                <tbody class="tbody">
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2662 ">-n &lt;pipelineID&gt;<p class="p">or </p>
-<p class="p">--name
-                                                &lt;pipelineID&gt;</p>
-</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d60e2665 ">Required. ID of the pipeline.<p class="p"><span class="ph">Data
-                  Collector</span> generates the ID when the pipeline is created. <span class="ph">Data
-                  Collector</span> uses the alphanumeric characters entered for the pipeline title as a prefix for
-                  the generated pipeline ID.</p>
-</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2662 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
-<p class="p">-- revision
-                                                &lt;pipelineRev&gt;</p>
-</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d60e2665 ">Optional. The revision of the pipeline. Use to reset
-                                            the origin for an older version of the pipeline. <p class="p">By
-                                                default, the <span class="ph">Data
-                  Collector</span> uses the most recent version.</p>
-</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2662 ">--stack</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d60e2665 ">Optional. Returns additional information when the <span class="ph">Data
-                  Collector</span> cannot retrieve the last-saved offset.<p class="p">Use to debug
-                                                the problem or pass to StreamSets for
-                                            help.</p>
-</td>
-
-                                    </tr>
-
-                                </tbody>
-
-                            </table>
-</div>
-
-                    </dd>
-
-                    <dd class="dd">For example, the following command returns the last-saved offset for a
-                        pipeline with an ID of MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e236lc when
-                        the <span class="ph">Data
-                  Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630 manager get-committed-offsets \
- -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e236lc</pre>
-</dd>
-
-                    <dd class="dd">The following command returns the last-saved offset of the same pipeline
-                        when the <span class="ph">Data
-                  Collector</span> is registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
---dpmURL https://cloud.streamsets.com manager get-committed-offsets -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e236lc</pre>
-</dd>
-
-                
-                
-                    <dt class="dt dlterm">update-committed-offsets</dt>
-
-                    <dd class="dd">Updates the last-saved offset for a pipeline with an origin that saves
-                        offsets. Some origins, such as the HTTP Server, have no need to save
-                        offsets. </dd>
-
-                    <dd class="dd">Pipeline offsets are managed by <span class="ph">Data
-                  Collector</span>. There's no need to update the last-saved offset unless performing
-                        pipeline failover from a file that contains the last-saved offset stored by
-                        using <samp class="ph codeph">get-committed-offsets</samp>.</dd>
-
-                    <dd class="dd">Change the last-saved offset with great caution and only when the pipeline
-                        is not running. </dd>
-
-                    <dd class="dd">The <samp class="ph codeph">updated-committed-offsets</samp> subcommand uses the following
-                        syntax:<pre class="pre codeblock">manager update-committed-offsets \
-(-f &lt;fileName&gt; | --file &lt;fileName&gt;) \
-(-n &lt;pipelineID&gt; | --name &lt;pipelineID&gt;) \
-[(-r &lt;pipelineRev&gt; | --revision &lt;pipelineRev&gt;)] \
-[--stack] </pre>
-</dd>
-
-                    <dd class="dd">
-                        
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_msh_k2q_yt__table_cjp_n1t_d1b" class="table" frame="border" border="1" rules="all">
-                                
-                                
-                                <thead class="thead" align="left">
-                                    <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e2795">Update Offset Option</th>
-
-                                        <th class="entry" valign="top" width="70%" id="d60e2798">Description</th>
-
-                                    </tr>
-
-                                </thead>
-
-                                <tbody class="tbody">
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2795 ">-f &lt;fileName&gt;<p class="p">or</p>
-<p class="p">--file
-                                            &lt;fileName&gt;</p>
-</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d60e2798 ">Required. Relative or absolute path to the file that
-                                            contains the last-saved offset.<p class="p">The file should
-                                                contain only the last-saved offset retrieved by
-                                                using the <samp class="ph codeph">get-committed-offset</samp>
-                                                subcommand.</p>
-</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2795 ">-n &lt;pipelineID&gt;<p class="p">or </p>
-<p class="p">--name
-                                                &lt;pipelineID&gt;</p>
-</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d60e2798 ">Required. ID of the pipeline.<p class="p"><span class="ph">Data
-                  Collector</span> generates the ID when the pipeline is created. <span class="ph">Data
-                  Collector</span> uses the alphanumeric characters entered for the pipeline title as a prefix for
-                  the generated pipeline ID.</p>
-</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2795 ">-r &lt;pipelineRev&gt;<p class="p">or</p>
-<p class="p">-- revision
-                                                &lt;pipelineRev&gt;</p>
-</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d60e2798 ">Optional. The revision of the pipeline. Use to update
-                                            the last-saved offset for an older version of the
-                                            pipeline. <p class="p">By default, the <span class="ph">Data
-                  Collector</span> uses the most recent version.</p>
-</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e2795 ">--stack</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d60e2798 ">Optional. Returns additional information when the <span class="ph">Data
-                  Collector</span> cannot update the last-saved offset.<p class="p">Use to debug
-                                                the problem or pass to StreamSets for
-                                            help.</p>
-</td>
-
-                                    </tr>
-
-                                </tbody>
-
-                            </table>
-</div>
-
-                    </dd>
-
-                    <dd class="dd">For example, the following command updates the last-saved offset for a
-                        pipeline using the offset in the specified file when the <span class="ph">Data
-                  Collector</span> is not registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630 manager get-committed-offsets \
--f /sdc/offsetfiles/mypipeline/offset.txt -n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e236lc</pre>
-</dd>
-
-                    <dd class="dd">The following command updates the last-saved offset for the same pipeline
-                        using the offset in the specified file when the <span class="ph">Data
-                  Collector</span> is registered with <span class="ph">DPM</span>:<pre class="pre codeblock">bin/streamsets cli -U http://localhost:18630 -a dpm -u user1@mycompany -p MyPassword \
---dpmURL https://cloud.streamsets.com manager get-committed-offsets -f /sdc/offsetfiles/mypipeline/offset.txt \
--n MyPipelinejf45e1f1-dfc1-402c-8587-918bc6e236lc</pre>
 </dd>
 
                 
@@ -1780,15 +1564,15 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
  <h3 class="title topictitle3">Store Command</h3>
 
  
- <div class="body conbody"><p class="shortdesc">The <samp class="ph codeph">store</samp> command provides subcommands to view a list of all pipelines
+ <div class="body conbody"><p class="shortdesc">The <samp class="ph codeph">store</samp> command provides arguments to view a list of all pipelines
         and to import a pipeline. </p>
 
   <div class="p">You can use
-            the following subcommands with the <samp class="ph codeph">store</samp> command:<dl class="dl">
+            the following arguments with the <samp class="ph codeph">store</samp> command:<dl class="dl">
                 
                     <dt class="dt dlterm">list</dt>
 
-                    <dd class="dd">Lists all available pipelines. The <samp class="ph codeph">list</samp> subcommand uses the
+                    <dd class="dd">Lists all available pipelines. The <samp class="ph codeph">list</samp> argument uses the
                         following syntax:<pre class="pre codeblock">store list</pre>
 </dd>
 
@@ -1833,7 +1617,7 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                         from a <span class="ph">Data
                   Collector</span>. Returns a message when the import is successful. </dd>
 
-                    <dd class="dd">The <samp class="ph codeph">import</samp> subcommand uses the following syntax:</dd>
+                    <dd class="dd">The <samp class="ph codeph">import</samp> argument uses the following syntax:</dd>
 
                     <dd class="dd">
                         <pre class="pre codeblock">store import \
@@ -1850,9 +1634,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d60e3005">Import Option</th>
+                                        <th class="entry" valign="top" width="30%" id="d60e2694">Import Option</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d60e3008">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d60e2697">Description</th>
 
                                     </tr>
 
@@ -1860,12 +1644,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e3005 ">-n &lt;pipelineTitle&gt;<p class="p">or </p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2694 ">-n &lt;pipelineTitle&gt;<p class="p">or </p>
 <p class="p">--name
                                                 &lt;pipelineTitle&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e3008 ">Required. Title for the imported pipeline. <p class="p">If the
+                                        <td class="entry" valign="top" width="70%" headers="d60e2697 ">Required. Title for the imported pipeline. <p class="p">If the
                                                 title includes spaces, surround the title in
                                                 quotation marks.</p>
 </td>
@@ -1873,9 +1657,9 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e3005 ">--stack</td>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2694 ">--stack</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e3008 ">Optional. Returns additional information when the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d60e2697 ">Optional. Returns additional information when the <span class="ph">Data
                   Collector</span> cannot import the pipeline. <p class="p">Use to debug the
                                                 problem or pass to StreamSets for help.</p>
 </td>
@@ -1883,12 +1667,12 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d60e3005 ">-f &lt;fileName&gt;<p class="p">or</p>
+                                        <td class="entry" valign="top" width="30%" headers="d60e2694 ">-f &lt;fileName&gt;<p class="p">or</p>
 <p class="p">--file
                                             &lt;fileName&gt;</p>
 </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d60e3008 ">Optional. The location and name of the file to
+                                        <td class="entry" valign="top" width="70%" headers="d60e2697 ">Optional. The location and name of the file to
                                             import. <p class="p">Enter a path relative to the <span class="ph">Data
                   Collector</span> installation directory.</p>
 </td>
@@ -1926,13 +1710,13 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
  <h3 class="title topictitle3">System Command</h3>
 
  
- <div class="body conbody"><p class="shortdesc">The <samp class="ph codeph">system</samp> command provides subcommands to register and unregister the
+ <div class="body conbody"><p class="shortdesc">The <samp class="ph codeph">system</samp> command provides arguments to register and unregister the
             <span class="ph">Data
                   Collector</span>
         with <span class="ph">DPM</span>. </p>
 
   <p class="p">You can use
-            the following subcommands with the <samp class="ph codeph">system</samp> command:</p>
+            the following arguments with the <samp class="ph codeph">system</samp> command:</p>
 
         <dl class="dl">
             
@@ -1958,23 +1742,7 @@ log4j.logger.com.streamsets.datacollector=DEBUG</pre>
 </div>
 <div class="navfooter"><!---->
 <span class="navprev"><a class="link" href="../Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q" title="Pipeline Maintenance"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Maintenance</span></a></span>  
-<span class="navnext"><a class="link" href="../Tutorial/Tutorial-title.html" title="Tutorial"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Tutorial</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
---><!-- SDC google analytics --><script>
+<span class="navnext"><a class="link" href="../Tutorial/Tutorial-title.html" title="Tutorial"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Tutorial</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

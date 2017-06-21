@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <map>
    <appContext helpID="concept_htw_ghg_jq"
                path="Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq"/>
@@ -76,7 +93,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_858322909"/>
+               path="Installation/CMInstall-Overview.html#unique_374256059"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -168,8 +185,6 @@
                path="Configuration/DCConfig.html#concept_xxz_vlr_dw"/>
    <appContext helpID="concept_pmr_sy5_nz"
                path="Configuration/DCConfig.html#concept_pmr_sy5_nz"/>
-   <appContext helpID="concept_dcq_mpk_f1b"
-               path="Configuration/DCConfig.html#concept_dcq_mpk_f1b"/>
    <appContext helpID="concept_gfx_rvf_qv"
                path="Configuration/DCConfig.html#concept_gfx_rvf_qv"/>
    <appContext helpID="task_lxk_kjw_1r"
@@ -591,8 +606,6 @@
    <appContext helpID="task_unq_wdw_yq" path="Origins/FileTail.html#task_unq_wdw_yq"/>
    <appContext helpID="concept_lw2_tnm_vs"
                path="Origins/HadoopFS-origin.html#concept_lw2_tnm_vs"/>
-   <appContext helpID="concept_ogc_xzd_f1b"
-               path="Origins/HadoopFS-origin.html#concept_ogc_xzd_f1b"/>
    <appContext helpID="concept_xy5_4tm_vs"
                path="Origins/HadoopFS-origin.html#concept_xy5_4tm_vs"/>
    <appContext helpID="concept_u4h_lwt_ls"
@@ -1330,16 +1343,14 @@
                path="Destinations/AmazonS3.html#concept_avx_bnq_rt"/>
    <appContext helpID="concept_bmp_zlg_vw"
                path="Destinations/AmazonS3.html#concept_bmp_zlg_vw"/>
-   <appContext helpID="concept_bnp_gwp_f1b"
-               path="Destinations/AmazonS3.html#concept_bnp_gwp_f1b"/>
-   <appContext helpID="concept_qw5_gtq_yv"
-               path="Destinations/AmazonS3.html#concept_qw5_gtq_yv"/>
-   <appContext helpID="concept_qtb_njg_vw"
-               path="Destinations/AmazonS3.html#concept_qtb_njg_vw"/>
    <appContext helpID="concept_lkp_jd3_yv"
                path="Destinations/AmazonS3.html#concept_lkp_jd3_yv"/>
    <appContext helpID="concept_iqn_1k4_jx"
                path="Destinations/AmazonS3.html#concept_iqn_1k4_jx"/>
+   <appContext helpID="concept_qw5_gtq_yv"
+               path="Destinations/AmazonS3.html#concept_qw5_gtq_yv"/>
+   <appContext helpID="concept_qtb_njg_vw"
+               path="Destinations/AmazonS3.html#concept_qtb_njg_vw"/>
    <appContext helpID="concept_aqq_tt2_px"
                path="Destinations/AmazonS3.html#concept_aqq_tt2_px"/>
    <appContext helpID="concept_nly_sw2_px"
@@ -2290,7 +2301,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_1969914220"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_445813737"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
