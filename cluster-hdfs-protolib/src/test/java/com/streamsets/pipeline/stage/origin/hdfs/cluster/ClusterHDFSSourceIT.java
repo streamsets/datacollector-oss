@@ -447,6 +447,73 @@ public class ClusterHDFSSourceIT {
     Mockito.verify(source, Mockito.times(1)).readInPreview(Mockito.any(FileStatus.class), Mockito.any(List.class));
   }
 
+  @Test(timeout = 30000)
+  public void testReadFileInSubdirectoryInPreview() throws Exception {
+    /* Directory structure
+       dummy/subdirectory/sample.txt
+    */
+    String dirLocation = dir.toUri().getPath() + "/dummy/dummy2";
+    Path filePath = new Path(dirLocation + "/sample.txt");
+    writeTextToFileAndGetFileStatus(filePath, "this is a sample text file");
+
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Collections.singletonList(dirLocation);
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsKerberos = false;
+    conf.hdfsConfDir = hadoopConfDir;
+    conf.recursive = false;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    ClusterHdfsSource source = Mockito.spy(createSource(conf));
+    SourceRunner sourceRunner = new SourceRunner.Builder(
+        ClusterHdfsDSource.class,
+        source
+    ).setPreview(true).addOutputLane("lane").setExecutionMode(ExecutionMode.CLUSTER_BATCH).setResourcesDir
+        (resourcesDir).build();
+
+    sourceRunner.runInit();
+    // readInPreview should be called once
+    Mockito.verify(source, Mockito.times(1)).readInPreview(Mockito.any(FileStatus.class), Mockito.any(List.class));
+  }
+
+  @Test(timeout = 30000)
+  public void testReadFileRecursiveInPreview() throws Exception {
+    /* Directory structure. Since text files are small, both files should be read
+       /dummy/subdirectory/sample.txt
+       /dummy/subdirectory/subdirectory2/sample2.txt
+    */
+    String dirLocation = dir.toUri().getPath() + "/dummy/subdirectory";
+    Path filePath = new Path(dirLocation + "/sample.txt");
+
+    String text = "this is a sample text file";
+    writeTextToFileAndGetFileStatus(filePath, text);
+    writeTextToFileAndGetFileStatus(new Path(dirLocation + "/subdirectory2/sample2.txt"), text);
+
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Collections.singletonList(dirLocation);
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsKerberos = false;
+    conf.hdfsConfDir = hadoopConfDir;
+    conf.recursive = false;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    ClusterHdfsSource source = Mockito.spy(createSource(conf));
+    SourceRunner sourceRunner = new SourceRunner.Builder(
+        ClusterHdfsDSource.class,
+        source
+    ).setPreview(true).addOutputLane("lane").setExecutionMode(ExecutionMode.CLUSTER_BATCH).setResourcesDir
+        (resourcesDir).build();
+
+    sourceRunner.runInit();
+    // readInPreview should be called twice for both text files
+    Mockito.verify(source, Mockito.times(2)).readInPreview(Mockito.any(FileStatus.class), Mockito.any(List.class));
+  }
 
   @Test(timeout = 30000)
   public void testProduceCustomDelimiterByPreview() throws Exception {

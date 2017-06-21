@@ -86,6 +86,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -233,7 +234,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                     )
                 );
               } else if (getContext().isPreview()) {
-                readInPreview(files, issues);
+                readInPreview(fs, files, issues);
               }
             } catch (IOException | InterruptedException ex) {
               issues.add(
@@ -275,11 +276,23 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   @VisibleForTesting
-  void readInPreview(final FileStatus[] files, final List<ConfigIssue> issues) throws IOException,InterruptedException {
+  void readInPreview(final FileSystem fs, final FileStatus[] files, final List<ConfigIssue> issues) throws IOException,InterruptedException {
+    // Setup for recursive visits to files in subdirectories
+    List<FileStatus> queue = new LinkedList<>();
+    for(FileStatus f: files){
+      queue.add(f);
+    }
     getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
-      for (FileStatus fileStatus : files) {
-        if (previewBuffer.size() < PREVIEW_SIZE && fileStatus.isFile()) {
+      while(previewBuffer.size() < PREVIEW_SIZE && !queue.isEmpty()){
+        FileStatus fileStatus = queue.remove(0);
+        if (fileStatus.isFile()){
           readInPreview(fileStatus, issues);
+        } else if (fileStatus.isDirectory()){
+          Path ph = fs.makeQualified(new Path(fileStatus.getPath().toString()));
+          FileStatus[] subs = fs.listStatus(ph);
+          for(FileStatus f: subs){
+            queue.add(f);
+          }
         }
       }
       return null;
