@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_dt1_4mq_h1b">
+ <title>Resetting the Origin</title>
+ <conbody>
+        <p><indexterm>Kinesis Consumer origin<indexterm>resetting the
+                    origin</indexterm></indexterm><indexterm>offset<indexterm>resetting for Kinesis
+                    Consumer</indexterm></indexterm>You can reset the origin for Kinesis Consumer to
+            process all available data instead of continuing from the last-saved offset. For general
+            information about resetting the origin, see <xref href="#concept_dt1_4mq_h1b"
+                format="dita"/>.</p>
+        <p>When you reset the origin for a Kinesis Consumer pipeline, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            resets the origin for every Kinesis Consumer pipeline that uses the same application
+            name. </p>
+        <p>Note the following requirement and guidelines before resetting the origin:<dl>
+                <dlentry>
+                    <dt>Requirement: Delete table permission on DynamoDB</dt>
+                    <dd>Because Kinesis Streams stores offsets in DynamoDB, the IAM user or IAM role
+                        associated with the pipeline must have delete table permissions for tables
+                        matching the application name used in your pipelines, as follows:<ul
+                            id="ul_xgn_kwq_h1b">
+                            <li>If you use access keys to authenticate with Amazon Web Services, the
+                                IAM user associated with the access keys must have delete table
+                                permission.</li>
+                            <li>If <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> uses instance profiles to authenticate, the IAM role for the EC2
+                                instance must have delete permission.</li>
+                        </ul></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Guidelines for resetting the origin</dt>
+                    <dd>To reset the origin for a Kinesis Consumer pipeline, perform the following
+                            steps:<ol id="ol_ekq_xpr_h1b">
+                            <li>Stop the pipeline that you want to reset. <p>If other pipelines use
+                                    the same application name, stop all of the pipelines.</p></li>
+                            <li>Reset the origin: In the pipeline canvas or from the Home page,
+                                click the More icon <image href="../Graphics/icon_MonMore.png"
+                                    id="image_t3f_4dy_h1b" scale="70"/>, then click <uicontrol>Reset
+                                    Origin</uicontrol>.<p>When working with multiple pipelines that
+                                    use the same application name, you can use any of the pipelines.
+                                    You only need to reset one of them.</p></li>
+                            <li>Start the pipeline with the reset origin.</li>
+                            <li>If you stopped any related pipelines, restart those pipelines.</li>
+                        </ol></dd>
+                </dlentry>
+            </dl></p>
+        <p>For example, say you have three pipelines that read from Kinesis Streams using the Sales
+            application name: NorthSales, CentralSales, and SouthSales. To reset the origin for all
+            pipelines, stop all three pipelines, reset the origin for one of the pipelines, say
+            SouthSales. Then restart the SouthSales pipeline, and then you can restart the other
+            pipelines.</p>
+    </conbody>
+</concept>
