@@ -1,5 +1,5 @@
-/**
- * Copyright 2015 StreamSets Inc.
+/*
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -32,7 +32,6 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -41,15 +40,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class TestPreconditionsPredicate {
 
-  @SuppressWarnings("unchecked")
   private Stage.Context createContext() {
     return new StageContext(
         "i",
@@ -57,9 +52,9 @@ public class TestPreconditionsPredicate {
         -1,
         true,
         null,
-        (List) Collections.emptyList(),
-        (Map) Collections.emptyMap(),
-        (Map) ImmutableMap.of("a", "A"),
+        Collections.emptyList(),
+        Collections.emptyMap(),
+        ImmutableMap.of("a", "A"),
         ExecutionMode.STANDALONE,
         DeliveryGuarantee.AT_LEAST_ONCE,
         "",
@@ -72,7 +67,7 @@ public class TestPreconditionsPredicate {
   public void testNullEmptyPreconditions() {
     FilterRecordBatch.Predicate predicate = new PreconditionsPredicate(createContext(), null);
     Assert.assertTrue(predicate.evaluate(null));
-    predicate = new PreconditionsPredicate(createContext(), Collections.<String>emptyList());
+    predicate = new PreconditionsPredicate(createContext(), Collections.emptyList());
     Assert.assertTrue(predicate.evaluate(null));
   }
 
@@ -80,13 +75,13 @@ public class TestPreconditionsPredicate {
   public void testELConstantsFunctions() throws IOException {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
-    Files.write(new File(dir, "sdc.properties").toPath(), Arrays.asList(""), StandardCharsets.UTF_8);
-    Files.write(new File(dir, "res.txt").toPath(), Arrays.asList("R"), StandardCharsets.UTF_8);
+    Files.write(new File(dir, "sdc.properties").toPath(), Collections.singletonList(""), StandardCharsets.UTF_8);
+    Files.write(new File(dir, "res.txt").toPath(), Collections.singletonList("R"), StandardCharsets.UTF_8);
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(dir.getAbsolutePath());
     Mockito.when(runtimeInfo.getResourcesDir()).thenReturn(dir.getAbsolutePath());
     RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
-    FilterRecordBatch.Predicate predicate = new PreconditionsPredicate(createContext(), Arrays.asList(
+    FilterRecordBatch.Predicate predicate = new PreconditionsPredicate(createContext(), Collections.singletonList(
       "${record:value('/') == 'Hello' && a == 'A' && str:startsWith(runtime:loadResource('res.txt', false), 'R')}"));
 
     Record record = new RecordImpl("", "", null, null);
@@ -97,7 +92,7 @@ public class TestPreconditionsPredicate {
   @Test
   public void testOnePrecondition() {
     FilterRecordBatch.Predicate predicate =
-        new PreconditionsPredicate(createContext(), Arrays.asList("${record:value('/') == 'Hello'}"));
+        new PreconditionsPredicate(createContext(), Collections.singletonList("${record:value('/') == 'Hello'}"));
 
     Record record = new RecordImpl("", "", null, null);
     record.set(Field.create("Hello"));
@@ -142,6 +137,19 @@ public class TestPreconditionsPredicate {
 
     record.set(Field.create(6));
     Assert.assertTrue(predicate.evaluate(record));
+  }
+
+  @Test
+  public void testEvalException() throws Exception {
+    FilterRecordBatch.Predicate predicate = new PreconditionsPredicate(
+        createContext(),
+        Collections.singletonList("${str:truncate(\"abcd\", -4) != \"abcd\"}")
+    );
+
+    Record record = new RecordImpl("", "", null, null);
+    record.set(Field.create("Hello"));
+    predicate.evaluate(record);
+    Assert.assertNotNull(predicate.getRejectedMessage());
   }
 
 }
