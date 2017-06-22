@@ -503,17 +503,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
         // Add custom metadata attributes if they are specified
         Map<String, String> metadataHeaderAttributeMap = new LinkedHashMap();
-        if(metadataHeadersToAddExist) {
-          for (Map.Entry<String, String> entry : metadataHeaderAttributeConfigs.entrySet()) {
-            String attributeNameExpression = entry.getKey();
-            String nameResult = HiveMetastoreUtil.resolveEL(elEvals.metadataHeaderAttributeEL, variables, attributeNameExpression);
-            if (nameResult.isEmpty()) {
-              continue;
-            }
-            String attributeValueExpression = entry.getValue();
-            String valueResult = HiveMetastoreUtil.resolveEL(elEvals.metadataHeaderAttributeEL, variables, attributeValueExpression);
-            metadataHeaderAttributeMap.put(nameResult, valueResult);
-          }
+        if (metadataHeadersToAddExist) {
+          metadataHeaderAttributeMap = generateResolvedHeaderAttributeMap(metadataHeaderAttributeConfigs, variables);
         }
 
         handleSchemaChange(dbName, tableName, recordStructure, targetPath, avroSchema, batchMaker, qualifiedName, tableCache, schemaCache, metadataHeaderAttributeMap);
@@ -540,7 +531,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
 
         // Send new partition metadata if new partition is detected.
         if (diff != null) {
-          handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff);
+          // Add custom metadata attributes if they are specified
+          Map<String, String> partitionMetadataHeaderAttributeMap = new LinkedHashMap();
+          if (metadataHeadersToAddExist) {
+            partitionMetadataHeaderAttributeMap = generateResolvedHeaderAttributeMap(metadataHeaderAttributeConfigs, variables);
+          }
+          handleNewPartition(partitionValMap, pCache, dbName, tableName, targetPath, batchMaker, qualifiedName, diff, partitionMetadataHeaderAttributeMap);
         }
       }
 
@@ -695,7 +691,8 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String database,
       String tableName,
       LinkedHashMap<String, String> partitionList,
-      String location) throws StageException {
+      String location,
+      Map<String, String> metadataHeaderAttributes) throws StageException {
 
     //creating a record with uuid as postfix so multiple SDCs won't generate the record with same id.
     Record metadataRecord = getContext().createRecord("Partition Metadata Record" + UUID.randomUUID().toString());
@@ -707,6 +704,11 @@ public class HiveMetadataProcessor extends RecordProcessor {
         dataFormat
     );
     metadataRecord.set(metadataField);
+
+    for (Map.Entry<String, String> entry : metadataHeaderAttributes.entrySet()){
+      metadataRecord.getHeader().setAttribute(entry.getKey(), entry.getValue());
+    }
+
     return metadataRecord;
   }
 
@@ -718,10 +720,11 @@ public class HiveMetadataProcessor extends RecordProcessor {
       String location,
       BatchMaker batchMaker,
       String qualifiedName,
-      Map<PartitionInfoCacheSupport.PartitionValues, String> diff
+      Map<PartitionInfoCacheSupport.PartitionValues, String> diff,
+      Map<String, String> metadataHeaderAttributes
   ) throws StageException {
 
-    Record r = generateNewPartitionRecord(database, tableName, partitionValMap, location);
+    Record r = generateNewPartitionRecord(database, tableName, partitionValMap, location, metadataHeaderAttributes);
     batchMaker.addRecord(r, hmsLane);
     if (pCache != null) {
       pCache.updateState(diff);
@@ -762,5 +765,22 @@ public class HiveMetadataProcessor extends RecordProcessor {
     record.getHeader().setAttribute(HDFS_HEADER_AVROSCHEMA, avroSchema);
     record.getHeader().setAttribute(HDFS_HEADER_TARGET_DIRECTORY, location);
     LOG.trace("Record {} will be stored in {} path: roll({}), avro schema: {}", record.getHeader().getSourceId(), location, roll, avroSchema);
+  }
+
+  private Map<String, String> generateResolvedHeaderAttributeMap(Map<String, String> metadataHeaderAttributeConfigs, ELVars variables) throws ELEvalException {
+
+    Map<String, String> resultMap = new LinkedHashMap();
+    for (Map.Entry<String, String> entry : metadataHeaderAttributeConfigs.entrySet()) {
+      String attributeNameExpression = entry.getKey();
+      String nameResult = HiveMetastoreUtil.resolveEL(elEvals.metadataHeaderAttributeEL, variables, attributeNameExpression);
+      if (nameResult.isEmpty()) {
+        continue;
+      }
+      String attributeValueExpression = entry.getValue();
+      String valueResult = HiveMetastoreUtil.resolveEL(elEvals.metadataHeaderAttributeEL, variables, attributeValueExpression);
+      resultMap.put(nameResult, valueResult);
+    }
+    return resultMap;
+
   }
 }

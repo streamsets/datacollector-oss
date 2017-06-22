@@ -413,7 +413,8 @@ public class TestHiveMetadataProcessor {
           dbName,
           tableName,
           sampleValues,
-          location
+          location,
+          SAMPLE_HEADERS
       );
     } catch (StageException e) {
       Assert.fail("Should not receive StageException");
