@@ -80,6 +80,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_54("Column: '{}' does not exist in table: '{}'. This is likely due to a DDL being performed on this table"),
   JDBC_55("The default value of '{}' must be in the format '" + JdbcLookupLoader.DATE_FORMAT + "': {}"),
   JDBC_56("The default value of '{}' must be in the format '" + JdbcLookupLoader.DATETIME_FORMAT + "': {}"),
+  JDBC_57("Unsupported Multi-Row Operation to SQL Server"),
 
   JDBC_60("Cannot Serialize Offset: {}"),
   JDBC_61("Cannot Deserialize Offset: {}"),

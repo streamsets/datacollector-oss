@@ -669,7 +669,8 @@ public class JdbcUtil {
       String tableNameTemplate,
       boolean caseSensitive,
       LoadingCache<String, JdbcRecordWriter> recordWriters,
-      ErrorRecordHandler errorRecordHandler
+      ErrorRecordHandler errorRecordHandler,
+      boolean perRecord
   ) throws StageException {
     Multimap<String, Record> partitions = ELUtils.partitionBatchByExpression(
         tableNameEval,
@@ -681,7 +682,13 @@ public class JdbcUtil {
     for (String tableName : tableNames) {
       try {
         JdbcRecordWriter jdbcRecordWriter = recordWriters.getUnchecked(tableName);
-        List<OnRecordErrorException> errors = jdbcRecordWriter.writeBatch(partitions.get(tableName));
+
+        List<OnRecordErrorException> errors;
+        if (perRecord) {
+          errors = jdbcRecordWriter.writePerRecord(partitions.get(tableName));
+        } else {
+          errors = jdbcRecordWriter.writeBatch(partitions.get(tableName));
+        }
         for (OnRecordErrorException error : errors) {
           errorRecordHandler.onError(error);
         }

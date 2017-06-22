@@ -123,11 +123,29 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     this.caseSensitive = caseSensitive;
   }
 
+  @Override
+  public List<OnRecordErrorException> writePerRecord(Collection<Record> batch) throws StageException {
+    throw new UnsupportedOperationException("Multiple Row Record Writer operation is not supported to SQL Server");
+  }
+
 
   /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<OnRecordErrorException> writeBatch(Collection<Record> batch) throws StageException {
+    final boolean perRecord = false;
+    return write(batch, perRecord);
+  }
+
+  /**
+   * write the batch of the records if it is not perRecord
+   * otherwise, execute one statement of multiple rows of the same operation in the same table
+   * @param batch
+   * @param perRecord
+   * @return List<OnRecordErrorException>
+   * @throws StageException
+   */
+  private List<OnRecordErrorException> write(Collection<Record> batch, boolean perRecord) throws StageException {
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
     Connection connection = null;
     try {
@@ -151,13 +169,13 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         // Need to consider the number of columns in query. If different, process saved records in queue.
         HashCode columnHash = getColumnHash(record, opCode);
         if (prevOpCode == opCode && (opCode == OperationType.DELETE_CODE ||
-              (opCode == OperationType.INSERT_CODE && columnHash.equals(prevColumnHash)))) {
+            (opCode == OperationType.INSERT_CODE && columnHash.equals(prevColumnHash)))) {
           queue.add(record);
           continue;
         }
         // Execute the records in queue.
         if (!queue.isEmpty()) {
-          processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode);
+          processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode, perRecord);
         }
         queue.clear();
         queue.add(record);
@@ -168,7 +186,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
 
       // Check if any records are left in queue unprocessed
       if (!queue.isEmpty()) {
-        processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode);
+        processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode, perRecord);
       }
       connection.commit();
     } catch (SQLException e) {
@@ -205,7 +223,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       List<OnRecordErrorException> errorRecords,
       Connection connection,
       int maxRowsPerBatch,
-      int opCode
+      int opCode,
+      boolean perRecord
   ) throws StageException {
     int rowCount = 0;
     PreparedStatement statement = null;
@@ -247,7 +266,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         removed.add(r);
         if (rowCount == maxRowsPerBatch) {
           // time to execute the current batch
-          processBatch(removed, errorRecords, statement, connection);
+          processBatch(removed, errorRecords, statement, connection, perRecord);
           // reset our counters
           rowCount = 0;
           paramIdx = 1;
@@ -257,7 +276,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       // Process the rest of the records that are removed from queue but haven't processed yet
       // this happens when rowCount is still less than maxRowsPerBatch.
       if (rowCount != 0) {
-        processBatch(removed, errorRecords, statement, connection);
+        processBatch(removed, errorRecords, statement, connection, perRecord);
       }
     } catch (SQLException e) {
       handleSqlException(e);
@@ -268,12 +287,18 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       LinkedList<Record> queue,
       List<OnRecordErrorException> errorRecords,
       PreparedStatement statement,
-      Connection connection) throws SQLException
+      Connection connection,
+      boolean perRecord
+      ) throws SQLException
   {
     try {
       LOG.debug("Executing query: " + statement.toString());
-      statement.addBatch();
-      statement.executeBatch();
+      if (!perRecord) {
+        statement.addBatch();
+        statement.executeBatch();
+      } else {
+        statement.executeUpdate();
+      }
     } catch (SQLException ex) {
       if (getRollbackOnError()) {
         LOG.debug("Error due to {}. Rollback the batch.", ex.getMessage());
@@ -281,6 +306,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       }
       throw ex;
     }
+
     if (getGeneratedColumnMappings() != null) {
       writeGeneratedColumns(statement, queue.iterator(), errorRecords);
     }

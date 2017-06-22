@@ -202,6 +202,8 @@ public class JdbcTarget extends BaseTarget {
       // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
       cacheCleaner.periodicCleanUp();
     }
-    JdbcUtil.write(batch, schema, tableNameEval, tableNameVars, tableNameTemplate, caseSensitive, recordWriters, errorRecordHandler);
+    // jdbc target always commit batch execution
+    final boolean perRecord = false;
+    JdbcUtil.write(batch, schema, tableNameEval, tableNameVars, tableNameTemplate, caseSensitive, recordWriters, errorRecordHandler, perRecord);
   }
 }

@@ -134,6 +134,29 @@ public class TestJdbcMultiRowRecordWriter {
     }
   }
 
+  @Test(expected = UnsupportedOperationException.class)
+  public void testThreePartitionsPerRecord() throws Exception {
+    List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();
+    boolean caseSensitive = false;
+
+    JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
+        connectionString,
+        dataSource,
+        "TEST",
+        "TEST_TABLE",
+        false,
+        mappings,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD,
+        new JdbcRecordReader(),
+        caseSensitive
+    );
+    List<Record> batch = generateRecords(10);
+
+    writer.writePerRecord(batch);
+  }
+
   @Test
   public void testParameterLimit() throws Exception {
     List<JdbcFieldColumnParamMapping> mappings = new ArrayList<>();

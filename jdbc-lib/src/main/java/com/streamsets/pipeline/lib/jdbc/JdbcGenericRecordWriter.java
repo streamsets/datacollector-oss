@@ -30,6 +30,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -106,10 +107,29 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     this.caseSensitive = caseSensitive;
   }
 
+  @Override
+  public List<OnRecordErrorException> writePerRecord(Collection<Record> batch) throws StageException {
+    final boolean perRecord = true;
+    return write(batch, perRecord);
+  }
+
   /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
   public List<OnRecordErrorException> writeBatch(Collection<Record> batch) throws StageException {
+    final boolean perRecord = false;
+    return write(batch, perRecord);
+  }
+
+  /**
+   * write the batch of the records if it is not perRecord
+   * otherwise, execute one statement per record
+   * @param batch
+   * @param perRecord
+   * @return List<OnRecordErrorException>
+   * @throws StageException
+   */
+  private List<OnRecordErrorException> write(Collection<Record> batch, boolean perRecord) throws StageException {
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
     Connection connection = null;
     PreparedStatementMap statementsForBatch = null;
@@ -141,38 +161,51 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         );
         PreparedStatement statement;
         try {
-          statement = statementsForBatch.getPreparedStatement(
-              opCode,
-              columnsToParameters
-          );
+          statement = statementsForBatch.getPreparedStatement(opCode, columnsToParameters);
 
           setParameters(opCode, columnsToParameters, record, connection, statement);
-          statement.addBatch();
-          if (!statementsToExecute.contains(statement)) {
-            statementsToExecute.add(statement);
-          }
+
           if (LOG.isDebugEnabled()) {
             LOG.debug("Bound Query: {}", statement.toString());
           }
+
+          if (!perRecord) {
+            statement.addBatch();
+
+            if (!statementsToExecute.contains(statement)) {
+              statementsToExecute.add(statement);
+            }
+          } else {
+            statement.executeUpdate();
+
+            if (getGeneratedColumnMappings() != null) {
+              writeGeneratedColumns(statement, Arrays.asList(record).iterator(), errorRecords);
+            }
+          }
         } catch (SQLException ex) { // These don't trigger a rollback
           errorRecords.add(new OnRecordErrorException(record, JDBC_14, ex));
-        } catch (OnRecordErrorException ex){
+        } catch (OnRecordErrorException ex) {
           errorRecords.add(ex);
         }
       }
-      for (PreparedStatement statement : statementsToExecute) {
-        try {
-          statement.executeBatch();
-        } catch (SQLException e) {
-          if (getRollbackOnError()) {
-            connection.rollback();
+
+      if (!perRecord) {
+        for (PreparedStatement statement : statementsToExecute) {
+          try {
+            statement.executeBatch();
+          } catch(SQLException e){
+            if (getRollbackOnError()) {
+              connection.rollback();
+            }
+            handleBatchUpdateException(batch, e, errorRecords);
           }
-          handleBatchUpdateException(batch, e, errorRecords);
-        }
-        if (getGeneratedColumnMappings() != null) {
-          writeGeneratedColumns(statement, batch.iterator(), errorRecords);
+
+          if (getGeneratedColumnMappings() != null) {
+            writeGeneratedColumns(statement, batch.iterator(), errorRecords);
+          }
         }
       }
+
       connection.commit();
     } catch (SQLException e) {
       handleSqlException(e);

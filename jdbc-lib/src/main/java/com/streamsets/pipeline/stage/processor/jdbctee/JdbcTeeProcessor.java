@@ -48,6 +48,7 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
 
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
+  private static final String MULTI_ROW_OP = "useMultiRowOp";
 
   private final boolean rollbackOnError;
   private final boolean useMultiRowOp;
@@ -153,6 +154,10 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
 
     issues = hikariConfigBean.validateConfigs(context, issues);
 
+    if (hikariConfigBean.connectionString.toLowerCase().startsWith("jdbc:sqlserver") && useMultiRowOp) {
+      issues.add(getContext().createConfigIssue(Groups.JDBC.name(), MULTI_ROW_OP, JdbcErrors.JDBC_57));
+    }
+
     tableNameVars = getContext().createELVars();
     tableNameEval = context.createELEval(JdbcUtil.TABLE_NAME);
     ELUtils.validateExpression(tableNameEval,
@@ -204,7 +209,14 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
       cacheCleaner.periodicCleanUp();
     }
 
-    JdbcUtil.write(batch, schema, tableNameEval, tableNameVars, tableNameTemplate, caseSensitive, recordWriters, errorRecordHandler);
+    boolean perRecord = false;
+    // MS SQL Server does not support returning generateKey after executeBatch
+    // Instead of executeBatch, do executeUpdate per record
+    if (hikariConfigBean.connectionString.toLowerCase().startsWith("jdbc:sqlserver")) {
+      perRecord = true;
+    }
+
+    JdbcUtil.write(batch, schema, tableNameEval, tableNameVars, tableNameTemplate, caseSensitive, recordWriters, errorRecordHandler, perRecord);
 
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {

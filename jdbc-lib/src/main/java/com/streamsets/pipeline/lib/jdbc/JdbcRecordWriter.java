@@ -38,4 +38,12 @@ public interface JdbcRecordWriter {
    * @throws StageException
    */
   List<OnRecordErrorException> writeBatch(Collection<Record> batch) throws StageException;
+  /*
+   * Accepts a batch of records to write to a JDBC destination record by record
+   * only supports Microsoft SQL Server
+   * @param batch batch of SDC records
+   * @return any records that failed to be written to the destination
+   * @throws StageException
+   */
+  List<OnRecordErrorException> writePerRecord(Collection<Record> batch) throws StageException;
 }
