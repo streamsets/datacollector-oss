@@ -34,9 +34,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -57,6 +60,7 @@ public class AvroTypeUtil {
 
   private static final String LOGICAL_TYPE = "logicalType";
   private static final String LOGICAL_TYPE_DECIMAL = "decimal";
+  private static final String SCALE = "scale";
   private static final String LOGICAL_TYPE_DATE = "date";
 
   @VisibleForTesting
@@ -83,6 +87,19 @@ public class AvroTypeUtil {
     }
 
     return parser.parse(schema);
+  }
+
+  /**
+   * Return Date in milliseconds
+   * @param days Number of days since unix epoch
+   * @return Milliseconds representation for date
+   *
+   * This function has been copied from Apache Hive project.
+   */
+  public static long daysToMillis(int days) {
+    long millisUtc = (long)days * MILLIS_PER_DAY;
+    long tmp = millisUtc - (long)(localTimeZone.getOffset(millisUtc));
+    return millisUtc - (long)(localTimeZone.getOffset(tmp));
   }
 
   /**
@@ -137,10 +154,23 @@ public class AvroTypeUtil {
           if(schema.getType() != Schema.Type.BYTES) {
             throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
           }
+          int scale = schema.getJsonProp(SCALE).asInt();
+          if (value instanceof ByteBuffer) {
+            byte[] decimalBytes = ((ByteBuffer)value).array();
+            //Unscaled value
+            BigInteger unscaledBigInteger = new BigInteger(decimalBytes);
+            //Set scale
+            value = new BigDecimal(unscaledBigInteger, scale);
+          }
           return Field.create(Field.Type.DECIMAL, value);
         case LOGICAL_TYPE_DATE:
           if(schema.getType() != Schema.Type.INT) {
             throw new IllegalStateException("Unexpected physical type for logical date type: " + schema.getType());
+          }
+          if (value instanceof Integer) {
+            //Convert days in integer since epoch to millis
+            long millis = daysToMillis((int)value);
+            value = new Date(millis);
           }
           return Field.create(Field.Type.DATE, value);
       }
@@ -191,10 +221,10 @@ public class AvroTypeUtil {
             key = (String) entry.getKey();
           } else {
             throw new IllegalStateException(Utils.format("Unrecognized type for avro value: {}", entry.getKey()
-              .getClass().getName()));
+                .getClass().getName()));
           }
           map.put(key, avroToSdcField(record, fieldPath + FORWARD_SLASH + key,
-            schema.getValueType(), entry.getValue()));
+              schema.getValueType(), entry.getValue()));
         }
         f = Field.create(map);
         break;
@@ -206,7 +236,7 @@ public class AvroTypeUtil {
         Map<String, Field> recordMap = new HashMap<>();
         for(Schema.Field field : schema.getFields()) {
           Field temp = avroToSdcField(record, fieldPath + FORWARD_SLASH + field.name(), field.schema(),
-            avroRecord.get(field.name()));
+              avroRecord.get(field.name()));
           if(temp != null) {
             recordMap.put(field.name(), temp);
           }
@@ -223,16 +253,16 @@ public class AvroTypeUtil {
   }
 
   public static Object sdcRecordToAvro(
-    Record record,
-    Schema schema,
-    Map<String, Object> defaultValueMap
+      Record record,
+      Schema schema,
+      Map<String, Object> defaultValueMap
   ) throws StageException, IOException {
     return sdcRecordToAvro(
-      record,
-      record.get(),
-      "",
-      schema,
-      defaultValueMap
+        record,
+        record.get(),
+        "",
+        schema,
+        defaultValueMap
     );
   }
 
@@ -282,7 +312,7 @@ public class AvroTypeUtil {
           if(match == null) {
             String objectType = object == null ? "null" : object.getClass().getName();
             throw new StageException(CommonError.CMN_0106, avroFieldPath, field.getType().name(), objectType, e.toString(),
-              e);
+                e);
           } else {
             schema = match;
           }
@@ -412,11 +442,11 @@ public class AvroTypeUtil {
             genericRecord.put(f.name(), v);
           } else {
             if(!defaultValueMap.containsKey(key)) {
-                throw new DataGeneratorException(
+              throw new DataGeneratorException(
                   Errors.AVRO_GENERATOR_00,
                   record.getHeader().getSourceId(),
                   key
-                );
+              );
             }
             Object v = defaultValueMap.get(key);
             genericRecord.put(f.name(), v);
@@ -554,8 +584,8 @@ public class AvroTypeUtil {
 
 
   public static Map<String, Object> getDefaultValuesFromSchema(
-    Schema schema,
-    Set<String> processedSchemaSet
+      Schema schema,
+      Set<String> processedSchemaSet
   ) throws IOException {
     if (processedSchemaSet.contains(schema.getName()) || isPrimitive(schema.getType())) {
       return Maps.newHashMap();
@@ -682,10 +712,10 @@ public class AvroTypeUtil {
       case NULL:
         if(!jsonNode.isNull()) {
           throw new IOException(
-            Utils.format(
-              Errors.AVRO_GENERATOR_02.getMessage(),
-              jsonNode.toString()
-            )
+              Utils.format(
+                  Errors.AVRO_GENERATOR_02.getMessage(),
+                  jsonNode.toString()
+              )
           );
         }
         return null;

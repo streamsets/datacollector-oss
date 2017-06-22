@@ -35,6 +35,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -215,6 +216,22 @@ public class TestAvroTypeUtil {
   }
 
   @Test
+  public void testToAndFromAvroDecimal() throws Exception {
+    String schema = "{\"name\": \"name\", \"type\": \"bytes\", \"logicalType\": \"decimal\", \"precision\": 2, \"scale\": 1}";
+
+    BigDecimal expectedValue = BigDecimal.valueOf(1.5);
+
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.DECIMAL, expectedValue));
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, Collections.emptyMap());
+
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, avroObject);
+    Assert.assertEquals(Field.Type.DECIMAL, field.getType());
+    Assert.assertEquals(expectedValue, field.getValueAsDecimal());
+  }
+
+  @Test
   public void testCreateDateField() throws Exception {
     String schema = "{\"name\": \"name\", \"type\": \"int\", \"logicalType\": \"date\"}";
     Schema avroSchema = new Schema.Parser().parse(schema);
@@ -227,6 +244,22 @@ public class TestAvroTypeUtil {
     Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof Integer);
     Assert.assertEquals(16801, (int)avroObject);
+  }
+
+  @Test
+  public void testToAndFromAvroDate() throws Exception {
+    String schema = "{\"name\": \"name\", \"type\": \"int\", \"logicalType\": \"date\"}";
+
+    Date expectedDate = new Date(116, 0, 1);
+
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.DATE, expectedDate));
+
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, Collections.emptyMap());
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, avroObject);
+    Assert.assertEquals(Field.Type.DATE, field.getType());
+    Assert.assertEquals(expectedDate, field.getValueAsDate());
   }
 
   @Test
