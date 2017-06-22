@@ -66,12 +66,8 @@ public class PreconditionsPredicate implements FilterRecordBatch.Predicate  {
         } catch (ELEvalException ex) {
           // We hit error while evaluating, store exception and the precondition that generated the error
           exception = ex;
-          preconditions.clear();
-          preconditions.add(precondition);
-
-          return false;
+          failedPreconditions.add(precondition);
         }
-
       }
     }
 
