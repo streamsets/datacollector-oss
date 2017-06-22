@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jnl_rmp_h1b">
+ <title>Single and Multi-row Operations</title>
+ <conbody>
+  <p><draft-comment author="Loretta">Make sure any changes to this topic also go into the JDBC
+                Producer version.</draft-comment><indexterm>JDBC Tee processor<indexterm>single and
+                    multi-row operations</indexterm></indexterm><indexterm>multi-row
+                    operations<indexterm>JDBC Tee</indexterm></indexterm>JDBC Tee performs
+            single-row operations by default. That is, it executes a SQL statement for each record.
+            When supported by the destination database, you can configure JDBC Tee to perform
+            multi-row operations. Depending on the sequence of the data, multi-row operations can
+            improve pipeline performance.</p>
+        <p>When performing multi-row operations, JDBC Tee creates a single SQL statement for
+            sequential insert rows and for sequential delete rows. JDBC Tee does not perform
+            multi-row update operations.</p>
+        <p>For example, say the pipeline generates three insert records, followed by two update
+            records, and two delete records. With multi-row insert enabled, the JDBC Tee generates
+            an Insert SQL statement for the three insert records, two Update statements - one for
+            each of the update records, and a single Delete statement for the two delete
+            records.</p>
+        <p>
+            <note type="important">Before enabling multi-row operations, verify that the database
+                supports the SQL statements that JDBC Tee uses.</note>
+        </p>
+        <p>When performing multi-row inserts, JDBC Tee uses the following SQL
+            statement:<codeblock>INSERT INTO &lt;table name> (&lt;col1>, &lt;col2>, &lt;col3>) 
+     VALUES (&lt;record1 field1>,&lt;record1 field2>,&lt;record1 field3>), 
+     (&lt;r2 f1>,&lt;r2 f2>,&lt;r2 f3>), (&lt;r3 f1>,&lt;r3 f2>,&lt;r3 f3>),...;</codeblock></p>
+        <p>When performing multi-row deletes, JDBC Tee uses the following SQL statement for tables
+            with a single primary key:
+            <codeblock>DELETE FROM &lt;table name> WHERE &lt;primary key> IN (&lt;key1>, &lt;key2>, &lt;key3>,...);</codeblock></p>
+        <p>JDBC Tee uses the following statement for tables with multiple primary keys:
+            <codeblock>DELETE FROM &lt;table name> WHERE (&lt;pkey1>, &lt;pkey2>, &lt;pkey3>)
+      IN ((&lt;key1-1>, &lt;key1-2>, &lt;key1-3>),(&lt;key2-1>, &lt;key2-2>, &lt;key2-2>),...);</codeblock></p>
+ </conbody>
+</concept>

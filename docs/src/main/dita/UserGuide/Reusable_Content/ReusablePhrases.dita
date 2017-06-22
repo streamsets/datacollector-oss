@@ -2884,7 +2884,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <p><ph id="Dest-CRUDoverview">can use CRUD operations defined in the sdc.operation.type
                         record header attribute to write data. You can define a default operation
                         for records without the header attribute or value. You can also configure
-                        how to handle records with unsupported operations. </ph>.</p>
+                        whether to use multi-row operations for inserts and deletes, and how to
+                        handle records with unsupported operations.</ph></p>
             <p><ph id="Dest-ChangeLog">When processing data from a CDC-enabled origin, you can
                         specify the origin change log to aid record processing. </ph></p>
             <p><ph id="CDC-xref">For information about <ph conref="#concept_vhs_5tz_xp/pName-long"/>
