@@ -763,7 +763,7 @@ public class TestRemoteDataCollector {
 
     @Override
     public PipelineInfo getInfo(String name) throws PipelineStoreException {
-      return new PipelineInfo(name, "title", null, null, null, null, null, null, null, false, null);
+      return new PipelineInfo(name, "title", null, null, null, null, null, null, null, false, null, null);
     }
 
     @Override
