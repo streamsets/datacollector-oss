@@ -35,6 +35,8 @@
                 <li>File Tail</li>
                 <li>JDBC Multitable Consumer</li>
                 <li>JDBC Query Consumer</li>
+                <li>Kinesis Consumer - For unique details about resetting this origin, see <xref
+                        href="../Origins/KinConsumer-ResetOrigin.dita#concept_dt1_4mq_h1b"/>.</li>
                 <li>MapR DB JSON</li>
                 <li>MongoDB</li>
                 <li>MongoDB Oplog</li>

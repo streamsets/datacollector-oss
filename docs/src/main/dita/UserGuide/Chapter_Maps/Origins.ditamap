@@ -214,6 +214,7 @@
    <topicref href="../Origins/KinConsumer-MultithreadProc.dita"/>
    <topicref href="../Origins/KinConsumer-AWSCredentials.dita"/>
    <topicref href="../Origins/KinConsumer-ReadInterval.dita"/>
+   <topicref href="../Origins/KinConsumer-ResetOrigin.dita"/>
    <topicref href="../Origins/KinConsumer-DataFormats.dita"/>
    <topicref href="../Origins/KinConsumer-Configuring.dita"/></topicref>
   <topicref href="../Origins/MapRDBJSON.dita" chunk="to-content">
