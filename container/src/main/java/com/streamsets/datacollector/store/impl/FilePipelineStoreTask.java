@@ -35,6 +35,8 @@ import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
@@ -90,6 +92,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   private final StageLibraryTask stageLibrary;
   private final RuntimeInfo runtimeInfo;
+  private final BuildInfo buildInfo;
   private Path storeDir;
   private final ObjectMapper json;
   private final PipelineStateStore pipelineStateStore;
@@ -106,6 +109,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     pipelineToRuleDefinitionMap = new ConcurrentHashMap<>();
     this.pipelineStateStore = pipelineStateStore;
     this.lockCache = lockCache;
+    buildInfo = new DataCollectorBuildInfo();
   }
 
   @VisibleForTesting
@@ -201,7 +205,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           REV,
           uuid,
           false,
-          null
+          null,
+          buildInfo.getVersion()
       );
 
       PipelineConfiguration pipeline = new PipelineConfiguration(
@@ -367,7 +372,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           REV,
           uuid,
           pipeline.isValid(),
-          pipeline.getMetadata()
+          pipeline.getMetadata(),
+          buildInfo.getVersion()
       );
       try (
           OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
@@ -571,7 +577,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           REV,
           savedInfo.getUuid(),
           savedInfo.isValid(),
-          metadata
+          metadata,
+          buildInfo.getVersion()
       );
       savedPipeline.setMetadata(metadata);
       savedPipeline.setPipelineInfo(updatedInfo);

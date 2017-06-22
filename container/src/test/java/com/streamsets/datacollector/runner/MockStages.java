@@ -1351,7 +1351,8 @@ public class MockStages {
             "lastModifier",
             "1", UUID.randomUUID(),
             true,
-            null
+            null,
+            "2.5"
         )
     );
 
