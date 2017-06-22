@@ -932,7 +932,8 @@
    <draft-comment author="alisontaylor"><b>table-JDBCProps</b> - JDBC Query Consumer, Multi Table
     JDBC Consumer, JDBC Lookup, JDBC Producer, and JDBC Tee use most rows in this table. Oracle CDC
     is using a couple too. JDBC Query executor also uses some. – no one uses the whole table AFAI
-    can tell.&lt;lc></draft-comment>
+    can tell.&lt;lc>  multi-row insert - only phrases are used by JDBC Tee &amp; Producer to allow
+    for the xref.</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_vwl_qcq_tw">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1004,9 +1005,13 @@
        <entry>Rolls back the entire batch when an error occurs within the batch. </entry>
       </row>
       <row id="MultiRowInsert_row">
-       <entry>Use Multi-Row Insert</entry>
-       <entry>Determines how the stage inserts records. Select to allow inserts of multiple rows at
-        a time. Clear to insert a single row at a time. </entry>
+       <entry>Use Multi-Row Operation</entry>
+       <entry><ph id="ph-MultirowDesc">Determines how the stage processes records. Select to enable
+         inserting and deleting multiple records at a time. Before enabling this option, verify that
+         the database supports the multi-row SQL statements used by the stage. </ph> For more
+        information, see &lt;&lt;local xref>>.<p><ph id="ph-Multirow-Default">By default, the stage
+          performs single-row operations.</ph>
+        </p></entry>
       </row>
       <row id="ParamLimit_row">
        <entry>Statement Parameter Limit</entry>
@@ -1970,8 +1975,7 @@
      <row id="row-MongoPassword">
       <entry>Password</entry>
       <entry>MongoDB or LDAP password.<note
-       conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
-      /></entry>
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
      </row>
     </tbody>
    </tgroup>

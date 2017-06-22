@@ -186,6 +186,7 @@
    </topicmeta>
    <topicref href="../Destinations/JDBCProducer-DriverInstall.dita"/>
    <topicref href="../Destinations/JDBCProducer-CRUDOperation.dita"/>
+   <topicref href="../Destinations/JDBCProducer-SingleMultiOperations.dita"/>
    <topicref href="../Destinations/JDBCProducer-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/KProducer.dita" chunk="to-content">

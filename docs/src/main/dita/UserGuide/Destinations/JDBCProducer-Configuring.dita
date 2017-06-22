@@ -97,9 +97,15 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/RollbackBatch_row">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MultiRowInsert_row">
-                                    <entry/>
+                                <row>
+                                    <entry>Use Multi-Row Operation</entry>
+                                    <entry><ph
+                                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ph-MultirowDesc"
+                                        /> For more information, see <xref
+                                            href="JDBCProducer-SingleMultiOperations.dita#concept_jnl_rmp_h1b"
+                                                />.<p><ph
+                                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ph-Multirow-Default"
+                                            /></p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ParamLimit_row">
