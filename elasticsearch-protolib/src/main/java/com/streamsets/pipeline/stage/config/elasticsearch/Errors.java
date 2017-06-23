@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,6 +48,10 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_24("Offset field '{}' not found in parsed record."),
   ELASTICSEARCH_25("Incremental mode requires the query to contain ${OFFSET} in at least one field"),
   ELASTICSEARCH_26("Changing the parallelism from '{}' to '{}' slices requires resetting the origin as it recomputes shards."),
+  ELASTICSEARCH_27("Could not parse the parent ID template expression: {}"),
+  ELASTICSEARCH_28("Could not evaluate the parent ID template expression: {}"),
+  ELASTICSEARCH_29("Could not parse the routing template expression: {}"),
+  ELASTICSEARCH_30("Could not evaluate the routing template expression: {}"),
   ;
   private final String msg;
 

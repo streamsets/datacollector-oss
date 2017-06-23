@@ -147,6 +147,12 @@
       <artifactId>streamsets-datacollector-commonlib</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-commonlib</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

@@ -32,6 +32,8 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
   static final String OLD_CONFIG_PREFIX = "elasticSearchConfigBean.";
   static final String OLD_SECURITY_PREFIX = "elasticSearchConfigBean.securityConfigBean.";
 
+  static final String CURRENT_CONFIG_PREFIX = "elasticSearchConfig.";
+
   @Override
   public List<Config> upgrade(
       String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
@@ -68,7 +70,14 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
         }
         // fall through
       case 6:
-        return upgradeV6ToV7(configs);
+        configs = upgradeV6ToV7(configs);
+        if (toVersion == 7) {
+          break;
+        }
+        // fall through
+      case 7:
+        upgradeV7ToV8(configs);
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -230,12 +239,12 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
       .map(config -> {
         if (config.getName().startsWith(OLD_SECURITY_PREFIX)) {
           return new Config(
-            config.getName().replace(OLD_SECURITY_PREFIX, "elasticSearchConfig.securityConfig."),
+            config.getName().replace(OLD_SECURITY_PREFIX, CURRENT_CONFIG_PREFIX + "securityConfig."),
             config.getValue()
           );
         } else if (config.getName().startsWith(OLD_CONFIG_PREFIX)) {
           return new Config(
-              config.getName().replace(OLD_CONFIG_PREFIX, "elasticSearchConfig."),
+              config.getName().replace(OLD_CONFIG_PREFIX, CURRENT_CONFIG_PREFIX),
               config.getValue()
           );
         } else {
@@ -255,6 +264,11 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
      })
      // And we're done
      .collect(Collectors.toList());
+  }
+
+  private void upgradeV7ToV8(List<Config> configs) {
+    configs.add(new Config(CURRENT_CONFIG_PREFIX + "parentIdTemplate", ""));
+    configs.add(new Config(CURRENT_CONFIG_PREFIX + "routingTemplate", ""));
   }
 
 }

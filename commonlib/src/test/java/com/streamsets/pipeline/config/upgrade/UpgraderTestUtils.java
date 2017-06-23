@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.empty;
+
 /**
  * Test utilities for {@link UpgraderUtils} functionality
  */
@@ -136,6 +138,23 @@ public class UpgraderTestUtils {
       }
     }
   }
+
+  /**
+   * Ensures that all of the passed propertyNames exist in the configs.  Causes assertion error if any do not.
+   *
+   * @param configs the list of configs
+   * @param propertyNames property names to check
+   */
+  public static void assertAllExist(List<Config> configs, String... propertyNames) {
+    Set<String> allPropertyNames = new HashSet<>(Arrays.asList(propertyNames));
+    configs.forEach(config -> allPropertyNames.remove(config.getName()));
+    Assert.assertThat(String.format(
+        "Expected all properties %s to exist in configs, but these were not present: %s",
+        StringUtils.join(propertyNames, ", "),
+        StringUtils.join(allPropertyNames, ", ")
+    ), allPropertyNames, empty());
+  }
+
 
   /**
    * <p>

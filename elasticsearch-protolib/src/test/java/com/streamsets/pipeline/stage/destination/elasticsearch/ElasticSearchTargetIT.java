@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
@@ -33,15 +34,18 @@ import com.streamsets.pipeline.stage.elasticsearch.common.ElasticsearchBaseIT;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHitField;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +73,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.indexTemplate = "${record:value('/index')x}";
     conf.typeTemplate = "${record:nonExistentFunction()}";
     conf.docIdTemplate = "";
+    conf.parentIdTemplate = "";
+    conf.routingTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity= false;
@@ -88,6 +94,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.indexTemplate = "x";
     conf.typeTemplate = "x";
     conf.docIdTemplate = "";
+    conf.parentIdTemplate = "";
+    conf.routingTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
@@ -105,6 +113,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.indexTemplate = "x";
     conf.typeTemplate = "x";
     conf.docIdTemplate = "";
+    conf.parentIdTemplate = "";
+    conf.routingTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.useSecurity = false;
@@ -115,22 +125,44 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_09.name()));
+
+    conf.httpUris = Arrays.asList("localhost:9200");
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "x";
+    conf.typeTemplate = "x";
+    conf.docIdTemplate = "";
+    conf.parentIdTemplate = "${record:value('/parent')x}";
+    conf.routingTemplate = "${record:nonExistentFunction()}";
+    conf.charset = "UTF-8";
+    conf.defaultOperation = ElasticsearchOperationType.INDEX;
+    conf.useSecurity = false;
+    conf.securityConfig= new SecurityConfig();
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(2, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_27.name()));
+    Assert.assertTrue(issues.get(1).toString().contains(Errors.ELASTICSEARCH_30.name()));
   }
 
   private Target createTarget() {
-    return createTarget("");
+    return createTarget("", "", "");
   }
 
-  private Target createTarget(String docId) {
+  private Target createTarget(String docId, String parent, String routing) {
     return createTarget(
         "${time:now()}",
         "${record:value('/index')}",
         docId,
-        ElasticsearchOperationType.INDEX
+        ElasticsearchOperationType.INDEX,
+        parent,
+        routing
     );
   }
-
-  private ElasticsearchTarget createTarget(String timeDriver, String indexEL, String docIdEL, ElasticsearchOperationType op) {
+  private ElasticsearchTarget createTarget(String timeDriver, String indexEL, String docIdEL, ElasticsearchOperationType op,
+                                           String parent, String routing) {
     ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
     conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
     conf.timeDriver = timeDriver;
@@ -138,6 +170,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.indexTemplate = indexEL;
     conf.typeTemplate = "${record:value('/type')}";
     conf.docIdTemplate = docIdEL;
+    conf.parentIdTemplate = parent;
+    conf.routingTemplate = routing;
     conf.charset = "UTF-8";
     conf.defaultOperation = op;
     conf.useSecurity = false;
@@ -289,7 +323,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
 
   @Test
   public void testJsonParseError() throws Exception {
-    Target target = createTarget("${record:value('/index')}");
+    Target target = createTarget("${record:value('/index')}", "", "");
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
@@ -357,7 +391,9 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
         "${record:value('/')}",
         "${YYYY()}",
         "",
-        ElasticsearchOperationType.INDEX
+        ElasticsearchOperationType.INDEX,
+        "",
+        ""
     );
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     runner.runInit();
@@ -365,7 +401,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
       Record record = RecordCreator.create();
       Date timeNow = target.setBatchTime();
       record.set(Field.createDatetime(timeNow));
-      Thread.sleep(10);
+      ThreadUtil.sleep(10);
       target.setBatchTime();
       Date timeGot = target.getRecordTime(record);
       Assert.assertEquals(timeNow, timeGot);
@@ -383,10 +419,12 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
   @Test
   public void testWriteRecordsNow() throws Exception {
     ElasticsearchTarget target = createTarget(
-        "${time:now()}",
-        "${YYYY()}",
-        "",
-        ElasticsearchOperationType.INDEX
+            "${time:now()}",
+            "${YYYY()}",
+            "",
+            ElasticsearchOperationType.INDEX,
+            "",
+            ""
     );
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     try {
@@ -501,7 +539,9 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
         "${time:now()}",
         "${record:value('/index')}",
         "docId",
-        ElasticsearchOperationType.INDEX
+        ElasticsearchOperationType.INDEX,
+        "",
+        ""
     );
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     try {
@@ -534,6 +574,59 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
 
       Assert.assertEquals(expected, got);
 
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testParentIDAndRouting() throws Exception {
+    Target target = createTarget("", "${record:value('/parent')}", "${record:value('/routing')}");
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+
+    // Create mappings for parent on the child type on index
+    String mapping = "{ \"mappings\": { \"parent\": {}, \"child\": { \"_parent\": { \"type\": \"parent\" }}}}";
+    esServer.client().admin().indices().prepareCreate("i").setSource(mapping).execute().actionGet();
+
+    try {
+      runner.runInit();
+      Record record1 = RecordCreator.create();
+      record1.set(Field.create(ImmutableMap.of("index", Field.create("i"),
+              "type", Field.create("child"), "parent", Field.create("parent1"), "routing", Field.create("routing1"))));
+      Record record2 = RecordCreator.create();
+      record2.set(Field.create(ImmutableMap.of("index", Field.create("i"),
+              "type", Field.create("child"), "parent", Field.create("parent2"), "routing", Field.create(""))));
+      runner.runWrite(Arrays.asList(record1, record2));
+      Assert.assertTrue(runner.getErrorRecords().isEmpty());
+      Assert.assertTrue(runner.getErrors().isEmpty());
+
+      prepareElasticSearchServerForQueries();
+
+      Set<Map> expectedSource = new HashSet<Map>(Arrays.asList(
+              ImmutableMap.of("parent", "parent1", "routing", "routing1", "index", "i", "type", "child"),
+              ImmutableMap.of("parent", "parent2", "routing", "", "index", "i", "type", "child")
+      ));
+      SearchResponse response = esServer.client().prepareSearch("i").setTypes("child")
+              .setSearchType(SearchType.DEFAULT).execute().actionGet();
+      SearchHit[] hits = response.getHits().getHits();
+      Assert.assertEquals(2, hits.length);
+
+      Set<Map> actualSource = new HashSet<Map>(Arrays.asList(hits[0].getSource(), hits[1].getSource()));
+      Assert.assertEquals(expectedSource, actualSource);
+
+      Set<Map> actualFields = new HashSet<>();
+      for (SearchHit hit : hits) {
+        Map<String, String> fieldMap = new HashMap<>();
+        for (Map.Entry<String, SearchHitField> entry : hit.getFields().entrySet()) {
+          fieldMap.put(entry.getKey().toString(), entry.getValue().getValue().toString());
+        }
+        actualFields.add(fieldMap);
+      }
+      Set<Map> expectedFields = new HashSet<Map>(Arrays.asList(
+              ImmutableMap.of("_parent", "parent1", "_routing", "routing1"),
+              ImmutableMap.of("_parent", "parent2", "_routing", "parent2")
+      ));
+      Assert.assertEquals(expectedFields, actualFields);
     } finally {
       runner.runDestroy();
     }

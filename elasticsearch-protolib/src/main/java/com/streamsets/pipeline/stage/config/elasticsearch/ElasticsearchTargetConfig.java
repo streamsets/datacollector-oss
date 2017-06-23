@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -92,6 +92,30 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String docIdTemplate;
+
+  @ConfigDef(
+          required = false,
+          type = ConfigDef.Type.STRING,
+          label = "Parent ID",
+          description = "An expression which evaluates to a document ID for the parent in a parent/child hierarchy.",
+          displayPosition = 85,
+          group = "ELASTIC_SEARCH",
+          elDefs = {RecordEL.class, DataUtilEL.class},
+          evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String parentIdTemplate;
+
+  @ConfigDef(
+          required = false,
+          type = ConfigDef.Type.STRING,
+          label = "Routing",
+          description = "An expression which evaluates to a document ID whose shard will be indexed on.",
+          displayPosition = 87,
+          group = "ELASTIC_SEARCH",
+          elDefs = {RecordEL.class, DataUtilEL.class},
+          evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String routingTemplate;
 
   @ConfigDef(
       required = true,

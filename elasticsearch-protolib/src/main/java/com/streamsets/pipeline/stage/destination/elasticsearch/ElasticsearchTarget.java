@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -74,6 +74,8 @@ public class ElasticsearchTarget extends BaseTarget {
   private ELEval indexEval;
   private ELEval typeEval;
   private ELEval docIdEval;
+  private ELEval parentIdEval;
+  private ELEval routingEval;
   private DataGeneratorFactory generatorFactory;
   private ErrorRecordHandler errorRecordHandler;
   private ElasticsearchStageDelegate delegate;
@@ -112,6 +114,8 @@ public class ElasticsearchTarget extends BaseTarget {
     indexEval = getContext().createELEval("indexTemplate");
     typeEval = getContext().createELEval("typeTemplate");
     docIdEval = getContext().createELEval("docIdTemplate");
+    parentIdEval = getContext().createELEval("parentIdTemplate");
+    routingEval = getContext().createELEval("routingTemplate");
     timeDriverEval = getContext().createELEval("timeDriver");
 
     try {
@@ -162,6 +166,26 @@ public class ElasticsearchTarget extends BaseTarget {
             )
         );
       }
+    }
+    if (!StringUtils.isEmpty(conf.parentIdTemplate)) {
+      validateEL(
+              typeEval,
+              conf.parentIdTemplate,
+              "elasticSearchConfig.parentIdTemplate",
+              Errors.ELASTICSEARCH_27,
+              Errors.ELASTICSEARCH_28,
+              issues
+      );
+    }
+    if (!StringUtils.isEmpty(conf.routingTemplate)) {
+      validateEL(
+              typeEval,
+              conf.routingTemplate,
+              "elasticSearchConfig.routingTemplate",
+              Errors.ELASTICSEARCH_29,
+              Errors.ELASTICSEARCH_30,
+              issues
+      );
     }
 
     delegate = new ElasticsearchStageDelegate(getContext(), conf);
@@ -228,6 +252,14 @@ public class ElasticsearchTarget extends BaseTarget {
         if (!StringUtils.isEmpty(conf.docIdTemplate)) {
           id = docIdEval.eval(elVars, conf.docIdTemplate, String.class);
         }
+        String parent = null;
+        if (!StringUtils.isEmpty(conf.parentIdTemplate)) {
+          parent = parentIdEval.eval(elVars, conf.parentIdTemplate, String.class);
+        }
+        String routing = null;
+        if (!StringUtils.isEmpty(conf.routingTemplate)) {
+          routing = routingEval.eval(elVars, conf.routingTemplate, String.class);
+        }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataGenerator generator = generatorFactory.getGenerator(baos);
         generator.write(record);
@@ -260,7 +292,7 @@ public class ElasticsearchTarget extends BaseTarget {
           // No header attribute set. Use default.
           opCode = conf.defaultOperation.code;
         }
-        bulkRequest.append(getOperation(index, type, id, recordJson, opCode));
+        bulkRequest.append(getOperation(index, type, id, parent, routing, recordJson, opCode));
       } catch (IOException ex) {
         errorRecordHandler.onError(
             new OnRecordErrorException(
@@ -328,33 +360,43 @@ public class ElasticsearchTarget extends BaseTarget {
     return batchTime;
   }
 
-  private String getOperation(String index, String type, String id, String record, int opCode) {
+  private String getOperation(String index, String type, String id, String parent, String routing, String record, int opCode) {
     StringBuilder op = new StringBuilder();
     switch (opCode) {
       case OperationType.UPSERT_CODE:
-        if (StringUtils.isEmpty(id)) {
-          op.append(String.format("{\"index\":{\"_index\":\"%s\",\"_type\":\"%s\"}}%n", index, type));
-        } else {
-          op.append(String.format("{\"index\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}%n", index, type, id));
-        }
+        getOperationMetadata("index", index, type, id, parent, routing, op);
         op.append(String.format("%s%n", record));
         break;
       case OperationType.INSERT_CODE:
-        op.append(String.format("{\"create\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}%n", index, type, id));
+        getOperationMetadata("create", index, type, id, parent, routing, op);
         op.append(String.format("%s%n", record));
         break;
       case OperationType.UPDATE_CODE:
-        op.append(String.format("{\"update\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}%n", index, type, id));
+        getOperationMetadata("update", index, type, id, parent, routing, op);
         op.append(String.format("{\"doc\":%s}%n", record));
         break;
       case OperationType.DELETE_CODE:
-        op.append(String.format("{\"delete\":{\"_index\":\"%s\",\"_type\":\"%s\",\"_id\":\"%s\"}}%n", index, type, id));
+        getOperationMetadata("delete", index, type, id, parent, routing, op);
         break;
       default:
         LOG.error("Operation {} not supported", opCode);
         throw new UnsupportedOperationException(String.format("Unsupported Operation: %s", opCode));
     }
     return op.toString();
+  }
+
+  private void getOperationMetadata(String operation, String index, String type, String id, String parent, String routing, StringBuilder sb) {
+    sb.append(String.format("{\"%s\":{\"_index\":\"%s\",\"_type\":\"%s\"", operation, index, type));
+    if (!StringUtils.isEmpty(id)) {
+      sb.append(String.format(",\"_id\":\"%s\"", id));
+    }
+    if (!StringUtils.isEmpty(parent)) {
+      sb.append(String.format(",\"parent\":\"%s\"", parent));
+    }
+    if (!StringUtils.isEmpty(routing)) {
+      sb.append(String.format(",\"routing\":\"%s\"", routing));
+    }
+    sb.append(String.format("}}%n"));
   }
 
   private List<ErrorItem> extractErrorItems(JsonObject json) {
