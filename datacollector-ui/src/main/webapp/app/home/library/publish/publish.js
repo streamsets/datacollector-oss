@@ -28,7 +28,8 @@ angular
       },
       commitPipelineModel : {
         name: _.isArray(pipelineInfo) ? undefined : pipelineInfo.title,
-        commitMessage: ''
+        commitMessage: '',
+        sdcVersion: pipelineInfo.sdcVersion
       },
       isList: _.isArray(pipelineInfo),
       publish : function () {
@@ -42,7 +43,8 @@ angular
               pipelineInfo[i].pipelineId,
               {
                 name:  pipelineInfo[i].title,
-                commitMessage: $scope.commitPipelineModel.commitMessage
+                commitMessage: $scope.commitPipelineModel.commitMessage,
+                sdcVersion: pipelineInfo[i].sdcVersion
               }
             ));
           }
