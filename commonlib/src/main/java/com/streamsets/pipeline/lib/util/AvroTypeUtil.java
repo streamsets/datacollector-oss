@@ -58,9 +58,11 @@ public class AvroTypeUtil {
 
   public static final String SCHEMA_PATH_SEPARATOR = ".";
 
+  static final String SCALE = "scale";
+  static final String PRECISION = "precision";
+
   private static final String LOGICAL_TYPE = "logicalType";
   private static final String LOGICAL_TYPE_DECIMAL = "decimal";
-  private static final String SCALE = "scale";
   private static final String LOGICAL_TYPE_DATE = "date";
 
   @VisibleForTesting
@@ -155,6 +157,7 @@ public class AvroTypeUtil {
             throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
           }
           int scale = schema.getJsonProp(SCALE).asInt();
+          int precision = schema.getJsonProp(PRECISION).asInt();
           if (value instanceof ByteBuffer) {
             byte[] decimalBytes = ((ByteBuffer)value).array();
             //Unscaled value
@@ -162,7 +165,10 @@ public class AvroTypeUtil {
             //Set scale
             value = new BigDecimal(unscaledBigInteger, scale);
           }
-          return Field.create(Field.Type.DECIMAL, value);
+          f = Field.create(Field.Type.DECIMAL, value);
+          f.setAttribute(SCALE, String.valueOf(scale));
+          f.setAttribute(PRECISION, String.valueOf(precision));
+          return f;
         case LOGICAL_TYPE_DATE:
           if(schema.getType() != Schema.Type.INT) {
             throw new IllegalStateException("Unexpected physical type for logical date type: " + schema.getType());

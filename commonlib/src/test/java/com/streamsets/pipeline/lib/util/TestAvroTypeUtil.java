@@ -229,6 +229,8 @@ public class TestAvroTypeUtil {
     Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, avroObject);
     Assert.assertEquals(Field.Type.DECIMAL, field.getType());
     Assert.assertEquals(expectedValue, field.getValueAsDecimal());
+    Assert.assertEquals("2", field.getAttribute(AvroTypeUtil.PRECISION));
+    Assert.assertEquals("1", field.getAttribute(AvroTypeUtil.SCALE));
   }
 
   @Test
