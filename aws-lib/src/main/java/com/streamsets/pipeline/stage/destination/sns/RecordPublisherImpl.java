@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.kinesis;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.config.DataFormat;
+package com.streamsets.pipeline.stage.destination.sns;
 
-public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+import com.amazonaws.services.sns.AmazonSNS;
 
-  public DataFormatChooserValues() {
-    super(
-        DataFormat.AVRO,
-        DataFormat.BINARY,
-        DataFormat.DELIMITED,
-        DataFormat.JSON,
-        DataFormat.PROTOBUF,
-        DataFormat.SDC_JSON,
-        DataFormat.TEXT
-    );
+public class RecordPublisherImpl implements RecordPublisher {
+  private AmazonSNS sns;
+
+  public RecordPublisherImpl(AmazonSNS sns) {
+    this.sns = sns;
+  }
+
+  @Override
+  public void publish(String topicArn, String message) {
+    sns.publish(topicArn, message);
   }
 }

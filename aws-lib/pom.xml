@@ -44,7 +44,7 @@
       <dependency>
         <groupId>com.amazonaws</groupId>
         <artifactId>aws-java-sdk-bom</artifactId>
-        <version>1.11.123</version>
+        <version>1.11.153</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -129,6 +129,10 @@
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-iam</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-kinesis</artifactId>
     </dependency>
     <dependency>
@@ -137,7 +141,7 @@
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk-iam</artifactId>
+      <artifactId>aws-java-sdk-sns</artifactId>
     </dependency>
     <dependency>
       <groupId>io.confluent</groupId>

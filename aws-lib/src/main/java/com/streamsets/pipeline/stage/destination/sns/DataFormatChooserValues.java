@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.kinesis;
+
+package com.streamsets.pipeline.stage.destination.sns;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
@@ -22,13 +23,10 @@ public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
   public DataFormatChooserValues() {
     super(
-        DataFormat.AVRO,
-        DataFormat.BINARY,
         DataFormat.DELIMITED,
         DataFormat.JSON,
-        DataFormat.PROTOBUF,
-        DataFormat.SDC_JSON,
         DataFormat.TEXT
     );
   }
+
 }
