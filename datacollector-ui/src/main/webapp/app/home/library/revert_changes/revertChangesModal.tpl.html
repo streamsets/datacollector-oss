@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="no()">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+  </button>
+  <h3 class="modal-title" translate="home.library.revertChangesConfirmationTitle">Revert Changes</h3>
+</div>
+<div class="modal-body multiple-pipelines-modal-body">
+  <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+  <p translate="home.library.revertChangesConfirmationMessage" translate-values="{version: dpmPipelineVersion}"></p>
+
+
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="no()" ng-if="!operationInProgress"
+          translate="global.form.no">No</button>
+  <button type="button" class="btn btn-primary" ng-click="yes()" ng-if="!operationInProgress"
+          translate="global.form.yes">Yes</button>
+  <button type="submit" class="btn btn-primary" ng-if="operationInProgress" disabled
+          translate="home.library.revertingChanges">Reverting Changes...</button>
+</div>

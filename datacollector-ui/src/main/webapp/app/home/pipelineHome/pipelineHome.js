@@ -130,15 +130,15 @@ angular
        * @param event
        */
       addStageInstance: function (options, event) {
-        var stage = options.stage,
-          firstOpenLane = options.firstOpenLane,
-          relativeXPos = options.relativeXPos,
-          relativeYPos = options.relativeYPos,
-          configuration = options.configuration,
-          insertBetweenEdge = options.insertBetweenEdge,
-          stageInstance,
-          edges = $scope.edges,
-          edge;
+        var stage = options.stage;
+        var firstOpenLane = options.firstOpenLane;
+        var relativeXPos = options.relativeXPos;
+        var relativeYPos = options.relativeYPos;
+        var configuration = options.configuration;
+        var insertBetweenEdge = options.insertBetweenEdge;
+        var stageInstance;
+        var edges = $scope.edges;
+        var edge;
 
         if (event) {
           event.preventDefault();

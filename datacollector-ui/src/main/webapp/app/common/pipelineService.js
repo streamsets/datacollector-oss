@@ -478,6 +478,38 @@ angular.module('dataCollectorApp.common')
       return defer.promise;
     };
 
+    /**
+     * Show Remote Pipeline Revert Changes confirmation
+     * @param pipelineInfo
+     * @param metadata
+     * @returns {*}
+     */
+    this.revertChangesCommand = function(pipelineInfo, metadata) {
+      var defer = $q.defer(),
+        modalInstance = $modal.open({
+          templateUrl: 'app/home/library/revert_changes/revertChangesModal.tpl.html',
+          controller: 'RevertChangesModalInstanceController',
+          size: 'lg',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfo: function () {
+              return pipelineInfo;
+            },
+            metadata: function() {
+              return metadata;
+            }
+          }
+        });
+
+      modalInstance.result.then(function (updatedPipelineConfig) {
+        defer.resolve(updatedPipelineConfig);
+      }, function () {
+
+      });
+
+      return defer.promise;
+    };
+
     var getXPos = function(pipelineConfig, firstOpenLane) {
       var prevStage = (firstOpenLane && firstOpenLane.stageInstance) ? firstOpenLane.stageInstance :
         ((pipelineConfig.stages && pipelineConfig.stages.length) ? pipelineConfig.stages[pipelineConfig.stages.length - 1] : undefined);
@@ -522,34 +554,34 @@ angular.module('dataCollectorApp.common')
      * @returns {{instanceName: *, library: (*|stageInstance.library|library|e.library), stageName: *, stageVersion: *, configuration: Array, uiInfo: {label: *, description: string, xPos: *, yPos: number, stageType: *}, inputLanes: Array, outputLanes: Array}}
      */
     this.getNewStageInstance = function (options) {
-      var stage = options.stage,
-        pipelineConfig = options.pipelineConfig,
-        labelSuffix = options.labelSuffix,
-        firstOpenLane = options.firstOpenLane,
-        relativeXPos = options.relativeXPos,
-        relativeYPos = options.relativeYPos,
-        configuration = options.configuration,
-        xPos = relativeXPos || getXPos(pipelineConfig, firstOpenLane),
-        yPos = relativeYPos || getYPos(pipelineConfig, firstOpenLane, xPos),
-        stageLabel = self.getStageLabel(stage, pipelineConfig, options),
-        stageInstanceName = self.getStageInstanceName(stage, pipelineConfig, options),
-        stageInstance = {
-          instanceName: stageInstanceName + (labelSuffix ? labelSuffix : ''),
-          library: stage.library,
-          stageName: stage.name,
-          stageVersion: stage.version,
-          configuration: [],
-          uiInfo: {
-            label: stageLabel,
-            description: '',
-            xPos: xPos,
-            yPos: yPos,
-            stageType: stage.type
-          },
-          inputLanes: [],
-          outputLanes: [],
-          eventLanes: []
-        };
+      var stage = options.stage;
+      var pipelineConfig = options.pipelineConfig;
+      var labelSuffix = options.labelSuffix;
+      var firstOpenLane = options.firstOpenLane;
+      var relativeXPos = options.relativeXPos;
+      var relativeYPos = options.relativeYPos;
+      var configuration = options.configuration;
+      var xPos = relativeXPos || getXPos(pipelineConfig, firstOpenLane);
+      var yPos = relativeYPos || getYPos(pipelineConfig, firstOpenLane, xPos);
+      var stageLabel = self.getStageLabel(stage, pipelineConfig, options);
+      var stageInstanceName = self.getStageInstanceName(stage, pipelineConfig, options);
+      var stageInstance = {
+        instanceName: stageInstanceName + (labelSuffix ? labelSuffix : ''),
+        library: stage.library,
+        stageName: stage.name,
+        stageVersion: stage.version,
+        configuration: [],
+        uiInfo: {
+          label: stageLabel,
+          description: '',
+          xPos: xPos,
+          yPos: yPos,
+          stageType: stage.type
+        },
+        inputLanes: [],
+        outputLanes: [],
+        eventLanes: []
+      };
 
       if (firstOpenLane && firstOpenLane.laneName) {
         stageInstance.inputLanes.push(firstOpenLane.laneName);

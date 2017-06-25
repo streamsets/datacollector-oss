@@ -430,6 +430,23 @@ angular
                 });
               }
             });
+      },
+
+      revertDPMPipelineChanges: function (pipelineInfo, metadata) {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Revert Changes', 1);
+
+        pipelineService.revertChangesCommand(pipelineInfo, metadata)
+          .then(
+            function(metadata) {
+              $scope.clearUndoRedoArchive();
+              $route.reload();
+
+              $timeout(function() {
+                $rootScope.common.successList.push({
+                  message: 'Successfully reverted pipeline changes'
+                });
+              });
+            });
       }
     });
 

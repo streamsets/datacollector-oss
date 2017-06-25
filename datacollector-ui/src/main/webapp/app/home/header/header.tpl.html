@@ -142,17 +142,22 @@
              tooltip-placement="right" tooltip="{{'home.header.remoteOptions' | translate}}"
              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
              tooltip-popup-delay="500"
-             ng-disabled="!pipelineConfig.valid"
+             ng-disabled="!pipelineConfig.valid && !isDPMPipelineDirty"
              ng-click="$event.stopPropagation();">
           <i class="fa fa-cloud fa-14x"></i>
         </span>
         <ul class="dropdown-menu pull-right" role="menu">
-          <li role="presentation">
-            <a href="#" dropdown-toggle ng-click="publishPipeline(pipelineConfig.info)"><i class="fa fa-cloud-upload"></i> {{'global.form.publish' | translate}}</a>
+          <li role="presentation" ng-class="{'disabled': !pipelineConfig.valid}">
+            <a href="#" dropdown-toggle
+               ng-click="pipelineConfig.valid && publishPipeline(pipelineConfig.info)"><i class="fa fa-cloud-upload"></i> {{'global.form.publish' | translate}}</a>
           </li>
           <li role="presentation" ng-class="{'disabled': !pipelineConfig.metadata }">
             <a href="#" dropdown-toggle
                ng-click="pipelineConfig.metadata && showCommitHistory(pipelineConfig.info, pipelineConfig.metadata)"><i class="fa fa-history"></i> {{'home.header.commitHistory' | translate}}</a>
+          </li>
+          <li role="presentation" ng-class="{'disabled': !pipelineConfig.metadata || !isDPMPipelineDirty}">
+            <a href="#" dropdown-toggle
+               ng-click="isDPMPipelineDirty && revertDPMPipelineChanges(pipelineConfig.info, pipelineConfig.metadata)"><i class="fa fa-eraser"></i> {{'home.header.revertChanges' | translate}}</a>
           </li>
         </ul>
       </div>
