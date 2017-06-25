@@ -292,7 +292,8 @@
 
     <tr ng-if="stagePreviewData.input.length === 0 &&
                 stagePreviewData.output.length === 0 &&
-                stagePreviewData.errorRecords.length === 0">
+                stagePreviewData.errorRecords.length === 0 &&
+                (!stagePreviewData.eventRecords || stagePreviewData.eventRecords.length === 0)">
       <td colspan="2" class="no-records">
         {{'home.previewPane.noRecords' | translate}}
 

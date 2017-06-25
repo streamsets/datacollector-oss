@@ -139,6 +139,7 @@ angular
           $scope.$storage.minimizeDetailPane = false;
           $scope.$storage.readNotifications = [];
           $rootScope.common.pipelineMetrics = {};
+          $rootScope.common.errors = [];
           api.pipelineAgent.startPipeline($scope.activeConfigInfo.pipelineId, 0).
             then(
             function (res) {
@@ -192,6 +193,7 @@ angular
           });
 
           modalInstance.result.then(function(res) {
+            $rootScope.common.errors = [];
             $scope.clearTabSelectionCache();
             $scope.selectPipelineConfig();
 
