@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -190,7 +190,8 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
           fieldsDontExist,
           recordHasherConfig.targetField,
           recordHasherConfig.headerAttribute,
-          recordHasherConfig.includeRecordHeaderForHashing
+          recordHasherConfig.includeRecordHeaderForHashing,
+          hasherConfig.recordHasherConfig.useSeparator
       );
     }
 
@@ -271,7 +272,9 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
           fieldsDontExist,
           targetFieldHasherConfig.targetField,
           targetFieldHasherConfig.headerAttribute,
-          false);
+          false,
+          hasherConfig.useSeparator
+          );
     } else {
       //Perform individual one to one hashing.
       for (String fieldToHashForThisConfig : fieldsToHashForThisConfig) {
@@ -279,7 +282,9 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
             record,
             fieldHasherConfig.hashType,
             ImmutableList.of(fieldToHashForThisConfig),
-            false);
+            false,
+            hasherConfig.useSeparator
+            );
         Field newField = Field.create(hashVal);
         record.set(fieldToHashForThisConfig, newField);
       }
@@ -293,14 +298,15 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       Set<String> fieldsDontExist,
       String targetField,
       String headerAttribute,
-      boolean includeRecordHeader
+      boolean includeRecordHeader,
+      boolean useSeparator
   ) throws StageException {
     // If there is nothing to hash, don't create bogus output hash
     if(fieldsToHashForThisConfig.isEmpty()) {
       return;
     }
 
-    String hashVal = generateHash(record, hashType, fieldsToHashForThisConfig, includeRecordHeader);
+    String hashVal = generateHash(record, hashType, fieldsToHashForThisConfig, includeRecordHeader, useSeparator);
     if (!targetField.isEmpty()) {
       Field newField = Field.create(hashVal);
       //Handle already existing field.
@@ -322,11 +328,16 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       Record record,
       HashType hashType,
       Collection<String> fieldsToHash,
-      boolean includeRecordHeader
+      boolean includeRecordHeader,
+      boolean useSeparator
   ) throws StageException {
     try {
       HashFunction hasher = HashingUtil.getHasher(hashType.getHashType());
-      HashingUtil.RecordFunnel recordFunnel = HashingUtil.getRecordFunnel(fieldsToHash, includeRecordHeader);
+      HashingUtil.RecordFunnel recordFunnel = HashingUtil.getRecordFunnel(
+          fieldsToHash,
+          includeRecordHeader,
+          useSeparator
+      );
       return hasher.hashObject(record, recordFunnel).toString();
     } catch (IllegalArgumentException e) {
       throw new OnRecordErrorException(Errors.HASH_00, hashType.getDigest(), e.toString(), e);

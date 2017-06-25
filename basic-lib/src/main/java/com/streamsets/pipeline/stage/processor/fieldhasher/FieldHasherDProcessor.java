@@ -27,7 +27,7 @@ import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
-    version=2,
+    version=3,
     label="Field Hasher",
     description = "Uses an algorithm to hash field values",
     icon="hash.png",

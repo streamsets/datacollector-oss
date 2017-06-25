@@ -47,6 +47,19 @@ public class RecordHasherConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use Field Separator",
+      description = "Separate fields with null before hashing",
+      displayPosition = 25,
+      dependsOn = "hashEntireRecord",
+      triggeredByValue = "true",
+      group = "RECORD_HASHING"
+  )
+  public boolean useSeparator;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue="MD5",
       label = "Hash Type",

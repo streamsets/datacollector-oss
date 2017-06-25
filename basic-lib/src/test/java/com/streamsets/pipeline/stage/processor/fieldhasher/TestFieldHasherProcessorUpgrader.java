@@ -97,9 +97,10 @@ public class TestFieldHasherProcessorUpgrader {
     configsToBePresentAfterUpgrade.add(JOINER.join(HASHER_CONFIG, INPLACE_FIELD_HASHER_CONFIGS));
     configsToBePresentAfterUpgrade.add(JOINER.join(HASHER_CONFIG, TARGET_FIELD_HASHER_CONFIGS));
 
-
-    //Assert only Two field Hasher Config
-    Assert.assertEquals("There should be 7 configs after upgrade", configs.size(), 7);
+    // previously this was 7.  now it's 9 due to adding 2 more configs
+    // for SDC-6540 which added the "useSeparator" options.
+    // the upgrader runs both V1 to V2 then the V2 to V3 upgrades.
+    Assert.assertEquals("There should be 9 configs after upgrade", configs.size(), 9);
 
     for (Config config : configs) {
 
@@ -142,5 +143,31 @@ public class TestFieldHasherProcessorUpgrader {
             getNotPresentConfigs(configsToBePresentAfterUpgrade),
         configsToBePresentAfterUpgrade.isEmpty()
     );
+  }
+
+  @Test
+  public void testUpgradeV2ToV3() throws StageException {
+    final Joiner JOINER = Joiner.on(".");
+
+    final String HASHER_CONFIGS = "hasherConfig";
+    final String RECORD_HASHER_CONFIGS = "recordHasherConfig";
+
+    // v2 to v3 added this field - must be set to true.
+    final String USE_SEPARATOR = "useSeparator";
+
+    List<Config> configs = new ArrayList<>();
+
+    FieldHasherProcessorUpgrader upgrader = new FieldHasherProcessorUpgrader();
+    upgrader.upgrade("a", "b", "c", 2, 3, configs);
+
+    Assert.assertEquals("Incorrect number of configs after upgrade", configs.size(), 2);
+
+    for (Config config : configs) {
+      if (config.getName().equals(JOINER.join(HASHER_CONFIGS, RECORD_HASHER_CONFIGS, USE_SEPARATOR))) {
+        Assert.assertTrue("UseSeparator Should be true", ((Boolean)config.getValue()).booleanValue());
+      } else if (config.getName().equals(JOINER.join(HASHER_CONFIGS, USE_SEPARATOR))) {
+        Assert.assertTrue("UseSeparator Should be true", ((Boolean)config.getValue()).booleanValue());
+      }
+    }
   }
 }

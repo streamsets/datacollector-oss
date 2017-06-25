@@ -26,6 +26,18 @@ public class HasherConfig {
   @ConfigDefBean(groups = {"RECORD_HASHING"})
   public RecordHasherConfig recordHasherConfig;
 
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use Field Separator",
+      description = "Separate fields with null before hashing",
+      displayPosition = 5,
+      group = "FIELD_HASHING"
+  )
+  public boolean useSeparator;
+
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,

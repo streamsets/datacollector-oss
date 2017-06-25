@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,6 +40,7 @@ import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,11 +71,15 @@ import java.util.regex.Pattern;
 @PrepareForTest(FieldHasherProcessor.class)
 public class TestFieldHasherProcessor {
 
+  // make switching easy.
+  private static boolean OLD_WAY = true;
+
   private String hashForRecordsWithFieldsAndHeaderAttr(
       Record record,
       Collection<String> fieldsToHash,
       HashType hashType,
-      boolean includeRecordHeaderForHashing
+      boolean includeRecordHeaderForHashing,
+      boolean useSeparator
   ) {
     HashFunction hasher = HashingUtil.getHasher(hashType.getHashType());
     Set<String> validFieldsToHash = new HashSet<>();
@@ -88,7 +93,8 @@ public class TestFieldHasherProcessor {
     HashingUtil.RecordFunnel recordFunnel =
         HashingUtil.getRecordFunnel(
             validFieldsToHash,
-            includeRecordHeaderForHashing
+            includeRecordHeaderForHashing,
+            useSeparator
         );
     return hasher.hashObject(record, recordFunnel).toString();
   }
@@ -96,13 +102,15 @@ public class TestFieldHasherProcessor {
   private String computeHashForRecordUsingFields(
       Record record,
       Collection<String> fieldsToHash,
-      HashType hashType
+      HashType hashType,
+      boolean useSeparator
   ) {
     return hashForRecordsWithFieldsAndHeaderAttr(
         record,
         fieldsToHash,
         hashType,
-        false
+        false,
+        useSeparator
     );
   }
 
@@ -157,7 +165,10 @@ public class TestFieldHasherProcessor {
       default:
         return null;
     }
+
+    // this was the problem in SDC-6540.
     sink.putByte((byte)0);
+
     return ((Hasher)sink).hash().toString();
   }
 
@@ -167,6 +178,7 @@ public class TestFieldHasherProcessor {
     hasherConfig.recordHasherConfig.headerAttribute = "";
     hasherConfig.recordHasherConfig.targetField = "";
     hasherConfig.recordHasherConfig.hashType = HashType.MD5;
+    hasherConfig.recordHasherConfig.useSeparator = true;
   }
 
   private HasherConfig createInPlaceHasherProcessor(
@@ -178,6 +190,7 @@ public class TestFieldHasherProcessor {
     fieldHasherConfig.hashType = hashType;
 
     HasherConfig hasherConfig = new HasherConfig();
+    hasherConfig.useSeparator = true;
     populateEmptyRecordHasherConfig(hasherConfig);
 
     hasherConfig.inPlaceFieldHasherConfigs = ImmutableList.of(fieldHasherConfig);
@@ -220,6 +233,9 @@ public class TestFieldHasherProcessor {
     hasherConfig.recordHasherConfig.headerAttribute = headerAttribute;
     hasherConfig.recordHasherConfig.targetField = targetField;
     hasherConfig.recordHasherConfig.hashType = hashType;
+    hasherConfig.recordHasherConfig.useSeparator = true;   //old way - pre SDC_6540.
+    hasherConfig.useSeparator = true;            //old way - pre SDC_6540.
+
 
     hasherConfig.inPlaceFieldHasherConfigs = Collections.EMPTY_LIST;
     hasherConfig.targetFieldHasherConfigs =  Collections.EMPTY_LIST;
@@ -480,6 +496,116 @@ public class TestFieldHasherProcessor {
       Assert.assertTrue(result.containsKey("age"));
       Assert.assertEquals(computeHash(Field.Type.INTEGER, "-123", HashType.SHA2),
           result.get("age").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStringForMD5NoSeparator() throws StageException {
+    final String DATA = "help";
+    HasherConfig hasherConfig = createInPlaceHasherProcessor(ImmutableList.of("/x"), HashType.MD5);
+    hasherConfig.useSeparator = false;
+
+    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("x", Field.create(Field.Type.STRING, DATA));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 1);
+      Assert.assertTrue(result.containsKey("x"));
+
+      Assert.assertEquals(DigestUtils.md5Hex(DATA), result.get("x").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStringForMD5WithSeparator() throws StageException {
+    // this is the MD5 calculation prior to applying SDC-6540
+    final String DATA = "help";
+    final String OLD_WAY_MD5 = "e5840f5df62e7dd7644fc085774cad00";
+    HasherConfig hasherConfig = createInPlaceHasherProcessor(ImmutableList.of("/x"), HashType.MD5);
+    hasherConfig.useSeparator = true;
+    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("x", Field.create(Field.Type.STRING, DATA));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 1);
+      Assert.assertTrue(result.containsKey("x"));
+
+      Assert.assertEquals(OLD_WAY_MD5, result.get("x").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testMultiStringMD5NoSeparator() throws StageException {
+    // new way - after SDC-6540.
+    final String DATA1 = "one";
+    final String DATA2 = "two";
+    final String DATA3 = "three";
+    HasherConfig hasherConfig = createTargetFieldHasherProcessor(
+        ImmutableList.of("/x", "/y", "/z"),
+        HashType.MD5,
+        "/hash",
+        ""
+    );
+    hasherConfig.useSeparator = false;
+    FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldHasherDProcessor.class, processor)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("x", Field.create(Field.Type.STRING, DATA1));
+      map.put("y", Field.create(Field.Type.STRING, DATA2));
+      map.put("z", Field.create(Field.Type.STRING, DATA3));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 4);   //field count
+      Assert.assertTrue(result.containsKey("x"));
+      Assert.assertTrue(result.containsKey("y"));
+      Assert.assertTrue(result.containsKey("z"));
+      Assert.assertTrue(result.containsKey("hash"));
+
+      Assert.assertEquals(DigestUtils.md5Hex(DATA1+DATA2+DATA3), result.get("hash").getValue());
     } finally {
       runner.runDestroy();
     }
@@ -931,6 +1057,7 @@ public class TestFieldHasherProcessor {
 
     hasherConfig.inPlaceFieldHasherConfigs = ImmutableList.of(sha1HasherConfig, sha2HasherConfig, md5HasherConfig);
     hasherConfig.targetFieldHasherConfigs =  Collections.EMPTY_LIST;
+    hasherConfig.useSeparator = true;   //old way.  pre SDC-6540.
 
     FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
 
@@ -1111,10 +1238,12 @@ public class TestFieldHasherProcessor {
             fieldsToHash,
             HashType.SHA2
         );
+    hasherConfig.useSeparator = true;
+
     Map<String, Field> expectedVals = new HashMap<String, Field>();
-    expectedVals.put(STRING_FIELD, Field.create(computeHashForRecordUsingFields(record, ImmutableList.of(ROOT_PATH + STRING_FIELD), HashType.SHA2)));
-    expectedVals.put(INT_FIELD, Field.create(computeHashForRecordUsingFields(record, ImmutableList.of(ROOT_PATH + INT_FIELD), HashType.SHA2)));
-    expectedVals.put(BOOLEAN_FIELD, Field.create(computeHashForRecordUsingFields(record, ImmutableList.of(ROOT_PATH + BOOLEAN_FIELD), HashType.SHA2)));
+    expectedVals.put(STRING_FIELD, Field.create(computeHashForRecordUsingFields(record, ImmutableList.of(ROOT_PATH + STRING_FIELD), HashType.SHA2, OLD_WAY)));
+    expectedVals.put(INT_FIELD, Field.create(computeHashForRecordUsingFields(record, ImmutableList.of(ROOT_PATH + INT_FIELD), HashType.SHA2, OLD_WAY)));
+    expectedVals.put(BOOLEAN_FIELD, Field.create(computeHashForRecordUsingFields(record, ImmutableList.of(ROOT_PATH + BOOLEAN_FIELD), HashType.SHA2, OLD_WAY)));
     expectedVals.put(NULL_FIELD, nullField);
     expectedVals.put(LIST_FIELD, listField);
     expectedVals.put(MAP_FIELD, mapField);
@@ -1135,6 +1264,7 @@ public class TestFieldHasherProcessor {
             ROOT_PATH + TARGET_FIELD,
             ""
         );
+    hasherConfig.useSeparator = true;
 
     record = RecordCreator.create("s", "s:1");
     record.set(Field.create(fieldMap));
@@ -1151,7 +1281,7 @@ public class TestFieldHasherProcessor {
     expectedVals.put(LIST_FIELD, listField);
     expectedVals.put(MAP_FIELD, mapField);
     expectedVals.put(LIST_MAP_FIELD, listMapField);
-    expectedVals.put(TARGET_FIELD, Field.create(computeHashForRecordUsingFields(record, fieldsToHash, HashType.SHA2)));
+    expectedVals.put(TARGET_FIELD, Field.create(computeHashForRecordUsingFields(record, fieldsToHash, HashType.SHA2, OLD_WAY)));
 
     checkFieldIssueContinue(record, hasherConfig, expectedValidFields, expectedVals);
 
@@ -1163,6 +1293,8 @@ public class TestFieldHasherProcessor {
             ROOT_PATH + TARGET_FIELD,
             ""
         );
+    hasherConfig.useSeparator = true;
+
     record = RecordCreator.create("s", "s:1");
     record.set(Field.create(fieldMap));
 
@@ -1208,7 +1340,7 @@ public class TestFieldHasherProcessor {
     expectedVals.put(LIST_FIELD, listField);
     expectedVals.put(MAP_FIELD, mapField);
     expectedVals.put(LIST_MAP_FIELD, listMapField);
-    expectedVals.put(TARGET_FIELD, Field.create(computeHashForRecordUsingFields(record, record.getEscapedFieldPaths(), HashType.SHA2)));
+    expectedVals.put(TARGET_FIELD, Field.create(computeHashForRecordUsingFields(record, record.getEscapedFieldPaths(), HashType.SHA2, OLD_WAY)));
 
     checkFieldIssueContinue(record, hasherConfig, expectedValidFields, expectedVals);
   }
@@ -1401,6 +1533,7 @@ public class TestFieldHasherProcessor {
     hasherConfig.inPlaceFieldHasherConfigs = ImmutableList.of(fieldHasherConfig1);
     hasherConfig.targetFieldHasherConfigs =  ImmutableList.of(tfieldHasherConfig1,
         tfieldHasherConfig2, tfieldHasherConfig3);
+    hasherConfig.useSeparator = true;   // old way - prior to SDC-6540.
 
     FieldHasherProcessor processor = new FieldHasherProcessor(hasherConfig, OnStagePreConditionFailure.CONTINUE);
 
@@ -1419,11 +1552,11 @@ public class TestFieldHasherProcessor {
 
       Assert.assertEquals(
           cVal,
-          computeHashForRecordUsingFields(record, ImmutableList.of("/a", "/b"), HashType.MD5)
+          computeHashForRecordUsingFields(record, ImmutableList.of("/a", "/b"), HashType.MD5, OLD_WAY)
       );
       Assert.assertEquals(
           rh1Val,
-          computeHashForRecordUsingFields(record, ImmutableList.of("/d", "/e"), HashType.SHA1)
+          computeHashForRecordUsingFields(record, ImmutableList.of("/d", "/e"), HashType.SHA1, OLD_WAY)
       );
       map.put("g", Field.create("g1"));
       map.put("h", Field.create("h1"));
@@ -1434,7 +1567,7 @@ public class TestFieldHasherProcessor {
 
       Assert.assertEquals(
           gVal,
-          computeHashForRecordUsingFields(newRecord, ImmutableList.of("/g"), HashType.SHA2)
+          computeHashForRecordUsingFields(newRecord, ImmutableList.of("/g"), HashType.SHA2, OLD_WAY)
       );
 
       //h is already hashed so create a new record to check the values are same.
@@ -1442,7 +1575,7 @@ public class TestFieldHasherProcessor {
       newRecord.set(Field.create(map));
       Assert.assertEquals(
           hVal,
-          computeHashForRecordUsingFields(newRecord, ImmutableList.of("/h"), HashType.SHA2)
+          computeHashForRecordUsingFields(newRecord, ImmutableList.of("/h"), HashType.SHA2, OLD_WAY)
       );
 
       //i is already hashed so create a new record to check the values are same.
@@ -1450,7 +1583,7 @@ public class TestFieldHasherProcessor {
       newRecord.set(Field.create(map));
       Assert.assertEquals(
           iVal,
-          computeHashForRecordUsingFields(newRecord, ImmutableList.of("/i"), HashType.SHA2)
+          computeHashForRecordUsingFields(newRecord, ImmutableList.of("/i"), HashType.SHA2, OLD_WAY)
       );
 
     } finally {
@@ -1478,7 +1611,7 @@ public class TestFieldHasherProcessor {
     try {
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
       Assert.assertEquals(
-          computeHashForRecordUsingFields(record, record.getEscapedFieldPaths(), HashType.MD5),
+          computeHashForRecordUsingFields(record, record.getEscapedFieldPaths(), HashType.MD5, OLD_WAY),
           output.getRecords().get("a").get(0).getHeader().getAttribute("/rf1")
       );
     } finally {
@@ -1512,7 +1645,8 @@ public class TestFieldHasherProcessor {
               record,
               record.getEscapedFieldPaths(),
               HashType.MD5,
-              true
+              true,
+              OLD_WAY
           ),
           output.getRecords().get("a").get(0).getHeader().getAttribute("/rf2")
       );

@@ -25,7 +25,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.RecordProcessor;
-import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.queue.XEvictingQueue;
@@ -93,8 +92,9 @@ public class DeDupProcessor extends RecordProcessor {
     }
     if (issues.isEmpty()) {
       hasher = HashingUtil.getHasher(HashingUtil.HashType.MURMUR3_128);
-      funnel = (compareFields == SelectFields.ALL_FIELDS) ? HashingUtil.getRecordFunnel(Collections.EMPTY_LIST) :
-          HashingUtil.getRecordFunnel(fieldsToCompare);
+
+      funnel = (compareFields == SelectFields.ALL_FIELDS) ? HashingUtil.getRecordFunnel(Collections.EMPTY_LIST, false, true) :
+          HashingUtil.getRecordFunnel(fieldsToCompare, false, true);
 
       Map<String, Object> runnerSharedMap = getContext().getStageRunnerSharedMap();
       synchronized (runnerSharedMap) {

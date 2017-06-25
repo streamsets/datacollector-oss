@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This is a refactored code for hasing using Guavas Library which is currently used by FieldHasher
+ * This is a refactored code for hashing using Guavas Library which is currently used by FieldHasher
  * and DedupProcessor.
  */
 public final class HashingUtil {
@@ -78,32 +78,28 @@ public final class HashingUtil {
     }
   }
 
-  public static RecordFunnel getRecordFunnel(Collection<String> fieldsToHash) {
-    if(fieldsToHash == null || fieldsToHash.isEmpty()) {
-      return new RecordFunnel();
-    }
-    return new RecordFunnel(fieldsToHash, false);
-  }
-
   public static RecordFunnel getRecordFunnel(
       Collection<String> fieldsToHash,
-      boolean includeRecordHeader) {
+      boolean includeRecordHeader,
+      boolean useSeparators) {
     if(fieldsToHash == null || fieldsToHash.isEmpty()) {
       return new RecordFunnel();
     }
-    return new RecordFunnel(fieldsToHash, includeRecordHeader);
+    return new RecordFunnel(fieldsToHash, includeRecordHeader, useSeparators);
   }
 
   public static class RecordFunnel implements Funnel<Record> {
     private Collection<String> fieldsToHash = null;
     private boolean includeRecordHeader = false;
+    private boolean useSeparators = false;
 
     public RecordFunnel() {
     }
 
-    public RecordFunnel(Collection<String> fieldsToHash, boolean includeRecordHeader) {
+    public RecordFunnel(Collection<String> fieldsToHash, boolean includeRecordHeader, boolean useSeparators) {
       this.fieldsToHash = fieldsToHash;
       this.includeRecordHeader = includeRecordHeader;
+      this.useSeparators = useSeparators;
     }
 
     protected List<String> getFieldsToHash(Record record) {
@@ -166,12 +162,12 @@ public final class HashingUtil {
             case DATETIME:
               sink.putLong(field.getValueAsDatetime().getTime());
               break;
+
             case DECIMAL:
-              sink.putString(field.getValueAsString(), Charset.defaultCharset());
-              break;
             case STRING:
               sink.putString(field.getValueAsString(), Charset.defaultCharset());
               break;
+
             case BYTE_ARRAY:
               sink.putBytes(field.getValueAsByteArray());
               break;
@@ -189,7 +185,9 @@ public final class HashingUtil {
         } else {
           sink.putBoolean(true);
         }
-        sink.putByte((byte)0);
+        if(useSeparators) {
+          sink.putByte((byte) 0);
+        }
       }
 
       if (this.includeRecordHeader) {
@@ -200,7 +198,9 @@ public final class HashingUtil {
           } else {
             sink.putBoolean(true);
           }
-          sink.putByte((byte)0);
+          if(useSeparators) {
+            sink.putByte((byte) 0);
+          }
         }
       }
     }

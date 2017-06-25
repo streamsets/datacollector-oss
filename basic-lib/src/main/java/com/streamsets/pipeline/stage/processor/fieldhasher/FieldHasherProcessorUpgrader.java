@@ -46,6 +46,9 @@ public class FieldHasherProcessorUpgrader implements StageUpgrader{
   private static final String TARGET_FIELD = "targetField";
   private static final String HEADER_ATTRIBUTE = "headerAttribute";
 
+  // v2 to v3 added this field - must be set to true.
+  private static final String USE_SEPARATOR = "useSeparator";
+
 
   @Override
   public List<Config> upgrade (
@@ -59,7 +62,11 @@ public class FieldHasherProcessorUpgrader implements StageUpgrader{
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        // fall through.
+      case 2:
+        upgradeV2ToV3(configs);
         break;
+
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -133,6 +140,15 @@ public class FieldHasherProcessorUpgrader implements StageUpgrader{
       }
     }
     configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+
+    List<Config> configsToAdd = new ArrayList<>();
+    // add fields - must default them to true.
+    configsToAdd.add(new Config(JOINER.join(HASHER_CONFIG, USE_SEPARATOR), true));
+    configsToAdd.add(new Config(JOINER.join(HASHER_CONFIG, RECORD_HASHER_CONFIG, USE_SEPARATOR), true));
     configs.addAll(configsToAdd);
   }
 }
