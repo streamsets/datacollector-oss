@@ -19,7 +19,6 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class TestElasticSearchDTargetUpgrader {
 
