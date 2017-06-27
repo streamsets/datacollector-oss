@@ -38,6 +38,7 @@ public class PipelineInfo implements Serializable {
   private boolean valid;
   private Map<String, Object> metadata;
   private String sdcVersion;
+  private String sdcId;
 
   @JsonCreator
   public PipelineInfo(
@@ -52,7 +53,8 @@ public class PipelineInfo implements Serializable {
       @JsonProperty("uuid") UUID uuid,
       @JsonProperty("valid") boolean valid,
       @JsonProperty("metadata") Map<String, Object> metadata,
-      @JsonProperty("sdcVersion") String sdcVersion
+      @JsonProperty("sdcVersion") String sdcVersion,
+      @JsonProperty("sdcId") String sdcId
   ) {
     this.pipelineId = pipelineId;
     this.title = title;
@@ -66,6 +68,7 @@ public class PipelineInfo implements Serializable {
     this.valid = valid;
     this.metadata = metadata;
     this.sdcVersion = sdcVersion;
+    this.sdcId = sdcId;
   }
 
   public PipelineInfo(
@@ -77,10 +80,11 @@ public class PipelineInfo implements Serializable {
       String lastRev,
       UUID uuid, boolean valid,
       Map<String, Object> metadata,
-      String sdcVersion
+      String sdcVersion,
+      String sdcId
   ) {
     this(pipelineInfo.getPipelineId(), title, description, pipelineInfo.getCreated(), lastModified,
-         pipelineInfo.getCreator(), lastModifier, lastRev, uuid, valid, metadata, sdcVersion);
+         pipelineInfo.getCreator(), lastModifier, lastRev, uuid, valid, metadata, sdcVersion, sdcId);
   }
 
   public String getPipelineId() {
@@ -129,5 +133,9 @@ public class PipelineInfo implements Serializable {
 
   public String getSdcVersion() {
     return sdcVersion;
+  }
+
+  public String getSdcId() {
+    return sdcId;
   }
 }

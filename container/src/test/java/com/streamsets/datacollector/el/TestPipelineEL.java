@@ -48,7 +48,7 @@ public class TestPipelineEL {
     UUID uuid = UUID.randomUUID();
     PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(5, 5, "pipelineId", uuid, "label", "", Collections.<Config>emptyList(), Collections.<String, Object>emptyMap(), Collections.<StageConfiguration>emptyList(), null, null);
     pipelineConfiguration.setMetadata(metadata);
-    pipelineConfiguration.setPipelineInfo(new PipelineInfo("hello" , "label", "", new Date(), new Date(), "", "", "", uuid, false, metadata, null));
+    pipelineConfiguration.setPipelineInfo(new PipelineInfo("hello" , "label", "", new Date(), new Date(), "", "", "", uuid, false, metadata, null, null));
     PipelineEL.setConstantsInContext(pipelineConfiguration, new UserContext("test-user"));
     Assert.assertEquals("hello", PipelineEL.name());
     Assert.assertEquals("3", PipelineEL.version());

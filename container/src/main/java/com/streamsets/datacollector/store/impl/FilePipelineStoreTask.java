@@ -206,7 +206,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           uuid,
           false,
           null,
-          buildInfo.getVersion()
+          buildInfo.getVersion(),
+          runtimeInfo.getId()
       );
 
       PipelineConfiguration pipeline = new PipelineConfiguration(
@@ -373,7 +374,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           uuid,
           pipeline.isValid(),
           pipeline.getMetadata(),
-          buildInfo.getVersion()
+          buildInfo.getVersion(),
+          runtimeInfo.getId()
       );
       try (
           OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
@@ -578,7 +580,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           savedInfo.getUuid(),
           savedInfo.isValid(),
           metadata,
-          buildInfo.getVersion()
+          buildInfo.getVersion(),
+          runtimeInfo.getId()
       );
       savedPipeline.setMetadata(metadata);
       savedPipeline.setPipelineInfo(updatedInfo);

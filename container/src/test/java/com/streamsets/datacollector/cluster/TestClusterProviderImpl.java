@@ -151,7 +151,7 @@ public class TestClusterProviderImpl {
         MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null,
-      "aaa", null, null, null, true, null, null));
+      "aaa", null, null, null, true, null, null, "x"));
     File sparkKafkaJar = new File(tempDir, "spark-streaming-kafka-1.2.jar");
     File avroJar = new File(tempDir, "avro-1.7.7.jar");
     File avroMapReduceJar = new File(tempDir, "avro-mapred-1.7.7.jar");
@@ -260,7 +260,7 @@ public class TestClusterProviderImpl {
         MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", "label", null, null,
-      "aaa", null, null, null, true, null, "2.6"));
+      "aaa", null, null, null, true, null, "2.6", "x"));
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
@@ -302,7 +302,7 @@ public class TestClusterProviderImpl {
         MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", "label", null, null,
-      "aaa", null, null, null, true, null, "2.6"));
+      "aaa", null, null, null, true, null, "2.6", "x"));
     ApplicationState appState = sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
@@ -341,7 +341,7 @@ public class TestClusterProviderImpl {
         MockStages.getErrorStageConfig(),
         MockStages.getStatsAggregatorStageConfig()
     );
-    pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null, "aaa", null, null, null, true, null, "2.6"));
+    pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null, "aaa", null, null, null, true, null, "2.6", null));
     Mockito.doReturn(Pattern.compile("streamsets-datacollector-mapr-cluster-bootstrap-\\d+.*")).when(sparkProvider)
         .findClusterBootstrapJar(
         Mockito.eq(ExecutionMode.CLUSTER_YARN_STREAMING),
@@ -412,7 +412,7 @@ public class TestClusterProviderImpl {
         MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null,
-      "aaa", null, null, null, true, null, "x"));
+      "aaa", null, null, null, true, null, "x", "y"));
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterBatchStageLibrary(classLoader), etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader,  60,
