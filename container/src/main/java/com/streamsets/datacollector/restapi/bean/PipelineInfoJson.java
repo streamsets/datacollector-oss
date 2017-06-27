@@ -48,13 +48,14 @@ public class PipelineInfoJson {
     @JsonProperty("valid") boolean valid,
     @JsonProperty("metadata") Map<String, Object> metadata,
     @JsonProperty("name") String name,
-    @JsonProperty("sdcVersion") String sdcVersion
+    @JsonProperty("sdcVersion") String sdcVersion,
+    @JsonProperty("sdcId") String sdcId
   ) {
     if (pipelineId == null) {
       pipelineId = name;
     }
     this.pipelineInfo = new PipelineInfo(pipelineId, title, description, created, lastModified,
-      creator, lastModifier, lastRev, uuid, valid, metadata, sdcVersion);
+      creator, lastModifier, lastRev, uuid, valid, metadata, sdcVersion, sdcId);
   }
 
   public PipelineInfoJson(PipelineInfo pipelineInfo) {
@@ -116,6 +117,10 @@ public class PipelineInfoJson {
 
   public String getSdcVersion() {
     return pipelineInfo.getSdcVersion();
+  }
+
+  public String getSdcId() {
+    return pipelineInfo.getSdcId();
   }
 
   @JsonIgnore

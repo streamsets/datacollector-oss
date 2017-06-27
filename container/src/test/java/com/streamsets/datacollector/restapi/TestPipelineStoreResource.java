@@ -520,7 +520,8 @@ public class TestPipelineStoreResource extends JerseyTest {
             "1", UUID.randomUUID(),
             true,
             metadata,
-            "x"
+            "x",
+            "y"
         );
         PipelineInfo pipeline2 = new PipelineInfo(
             "name2",
@@ -533,7 +534,8 @@ public class TestPipelineStoreResource extends JerseyTest {
             "1", UUID.randomUUID(),
             true,
             metadata,
-            "x"
+            "x",
+            "y"
         );
         PipelineInfo pipeline3 = new PipelineInfo(
             "name3",
@@ -547,7 +549,8 @@ public class TestPipelineStoreResource extends JerseyTest {
             UUID.randomUUID(),
             true,
             null,
-            "x"
+            "x",
+            "y"
         );
 
         PipelineInfo readOnly = new PipelineInfo(
@@ -562,7 +565,8 @@ public class TestPipelineStoreResource extends JerseyTest {
             UUID.randomUUID(),
             true,
             null,
-            "x"
+            "x",
+            "y"
         );
 
         PipelineInfo readWriteOnly = new PipelineInfo(
@@ -577,7 +581,8 @@ public class TestPipelineStoreResource extends JerseyTest {
             UUID.randomUUID(),
             true,
             null,
-            "x"
+            "x",
+            "y"
         );
 
         PipelineInfo readWriteExecute = new PipelineInfo(
@@ -592,7 +597,8 @@ public class TestPipelineStoreResource extends JerseyTest {
             UUID.randomUUID(),
             true,
             null,
-            "x"
+            "x",
+            "y"
         );
 
         PipelineInfo noPerm = new PipelineInfo(
@@ -607,7 +613,8 @@ public class TestPipelineStoreResource extends JerseyTest {
             UUID.randomUUID(),
             true,
             null,
-            "x"
+            "x",
+            "y"
         );
 
         Mockito.when(pipelineStore.getPipelines())
@@ -633,7 +640,8 @@ public class TestPipelineStoreResource extends JerseyTest {
                 "1", UUID.randomUUID(),
                 true,
                 null,
-                "x"
+                "x",
+                "y"
             )
         );
         Mockito.when(pipelineStore.getInfo("name1")).thenReturn(pipeline1);
@@ -647,7 +655,7 @@ public class TestPipelineStoreResource extends JerseyTest {
         Mockito.when(pipelineStore.getHistory("xyz")).thenReturn(ImmutableList.of(
           new com.streamsets.datacollector.store.PipelineRevInfo(new PipelineInfo("xyz","label",
             "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
-                "xyz lastModifier", "1", UUID.randomUUID(), true, null, "x"))));
+                "xyz lastModifier", "1", UUID.randomUUID(), true, null, "x", "y"))));
         Mockito.when(pipelineStore.load("xyz", "1")).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.when(pipelineStore.load(Matchers.matches("abc|def"), Matchers.matches("0"))).thenReturn(
