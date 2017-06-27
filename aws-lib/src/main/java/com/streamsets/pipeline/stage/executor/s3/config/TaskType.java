@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.executor.s3.config;
 import com.streamsets.pipeline.api.Label;
 
 public enum TaskType implements Label {
+  CREATE_NEW_OBJECT("Create New Object"),
   CHANGE_EXISTING_OBJECT("Change Metadata on Existing Object"),
   ;
 

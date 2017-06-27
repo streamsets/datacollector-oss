@@ -61,6 +61,7 @@ public class AmazonS3Executor extends BaseExecutor {
     // Initialize ELs
     validateEL("bucketTemplate", config.s3Config.bucketTemplate, issues);
     validateEL("objectPath", config.taskConfig.objectPath, issues);
+    validateEL("content", config.taskConfig.content, issues);
     validateEL("tags", null, issues);
 
     return issues;
@@ -82,11 +83,28 @@ public class AmazonS3Executor extends BaseExecutor {
     Iterator<Record> it = batch.getRecords();
     while(it.hasNext()) {
       Record record = it.next();
+      ELVars variables = getContext().createELVars();
+      RecordEL.setRecordInContext(variables, record);
 
       try {
+        // Calculate working file (the same for all task types)
+        String bucket = evaluate(record, "bucketTemplate", variables, config.s3Config.bucketTemplate);
+        String objectPath = evaluate(record, "objectPath", variables, config.taskConfig.objectPath);
+        if(bucket.isEmpty()) {
+          throw new OnRecordErrorException(record, Errors.S3_EXECUTOR_0003);
+        }
+        if(objectPath.isEmpty()) {
+          throw new OnRecordErrorException(record, Errors.S3_EXECUTOR_0004);
+        }
+        LOG.debug("Working on {}:{}", bucket, objectPath);
+
+        // And execute given task
         switch (config.taskConfig.taskType) {
+          case CREATE_NEW_OBJECT:
+            createNewObject(record, variables, bucket, objectPath);
+            break;
           case CHANGE_EXISTING_OBJECT:
-            changeExistingObject(record);
+            changeExistingObject(record, variables, bucket, objectPath);
             break;
           default:
             throw new StageException(Errors.S3_EXECUTOR_0000, "Unknown task type: " + config.taskConfig.taskType);
@@ -100,21 +118,24 @@ public class AmazonS3Executor extends BaseExecutor {
     }
   }
 
-  private void changeExistingObject(Record record) throws OnRecordErrorException {
-    ELVars variables = getContext().createELVars();
-    RecordEL.setRecordInContext(variables, record);
+  private void createNewObject(
+    Record record,
+    ELVars variables,
+    String bucket,
+    String objectPath
+  ) throws OnRecordErrorException {
+    // Evaluate content
+    String content = evaluate(record, "content", variables, config.taskConfig.content);
 
-    // Working file
-    String bucket = evaluate(record, "bucketTemplate", variables, config.s3Config.bucketTemplate);
-    String objectPath = evaluate(record, "objectPath", variables, config.taskConfig.objectPath);
-    if(bucket.isEmpty()) {
-      throw new OnRecordErrorException(record, Errors.S3_EXECUTOR_0003);
-    }
-    if(objectPath.isEmpty()) {
-      throw new OnRecordErrorException(record, Errors.S3_EXECUTOR_0004);
-    }
-    LOG.debug("Working on {}:{}", bucket, objectPath);
+    config.s3Config.getS3Client().putObject(bucket, objectPath, content);
+  }
 
+  private void changeExistingObject(
+    Record record,
+    ELVars variables,
+    String bucket,
+    String objectPath
+  ) throws OnRecordErrorException {
     // Tag application
     if(!config.taskConfig.tags.isEmpty()) {
       List<Tag> newTags = new ArrayList<>();

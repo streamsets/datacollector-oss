@@ -21,8 +21,11 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectTaggingRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.Tag;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
@@ -106,6 +109,35 @@ public class TestAmazonS3Executor {
   }
 
   @Test
+  public void testCreateObject() throws Exception {
+    AmazonS3ExecutorConfig config = getConfig();
+    config.taskConfig.taskType = TaskType.CREATE_NEW_OBJECT;
+    config.taskConfig.content = "${record:value('/content')}";
+
+    AmazonS3Executor executor = new AmazonS3Executor(config);
+    TargetRunner runner = new TargetRunner.Builder(AmazonS3DExecutor.class, executor)
+      .build();
+    runner.runInit();
+
+    try {
+      runner.runWrite(ImmutableList.of(getTestRecord()));
+
+      //Make sure the prefix is empty
+      ObjectListing objectListing = s3client.listObjects(BUCKET_NAME, objectName);
+      Assert.assertEquals(1, objectListing.getObjectSummaries().size());
+
+      S3Object object = s3client.getObject(BUCKET_NAME, objectName);
+      S3ObjectInputStream objectContent = object.getObjectContent();
+
+      List<String> stringList = IOUtils.readLines(objectContent);
+      Assert.assertEquals(1, stringList.size());
+      Assert.assertEquals("Secret", stringList.get(0));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testApplyTags() throws Exception {
     AmazonS3ExecutorConfig config = getConfig();
     config.taskConfig.tags = ImmutableMap.of(
@@ -132,7 +164,7 @@ public class TestAmazonS3Executor {
   }
 
   @Test
-  public void testBrokenEL() throws Exception {
+  public void testApplyTagsBrokenEL() throws Exception {
     AmazonS3ExecutorConfig config = getConfig();
     config.taskConfig.tags = ImmutableMap.of(
       "${record:value('/ke", "${record:value('/value')}"
@@ -174,7 +206,7 @@ public class TestAmazonS3Executor {
   }
 
   @Test
-  public void testEmptyObjectpath() throws Exception {
+  public void testEmptyObjectPath() throws Exception {
     AmazonS3ExecutorConfig config = getConfig();
     config.taskConfig.objectPath = "";
 
@@ -216,7 +248,8 @@ public class TestAmazonS3Executor {
     record.set(Field.create(Field.Type.MAP, ImmutableMap.of(
       "object", Field.create(objectName),
       "key", Field.create("Owner"),
-      "value", Field.create("Earth")
+      "value", Field.create("Earth"),
+      "content", Field.create("Secret")
     )));
 
     return record;
