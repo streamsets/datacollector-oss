@@ -300,6 +300,8 @@ public class DataFormatParser {
           .setConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG, dataFormatConfig.csvEnableComments)
           .setConfig(DelimitedDataConstants.COMMENT_MARKER_CONFIG, dataFormatConfig.csvCommentMarker)
           .setConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, dataFormatConfig.csvIgnoreEmptyLines)
+          .setConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, dataFormatConfig.csvAllowExtraColumns)
+          .setConfig(DelimitedDataConstants.EXTRA_COLUMN_PREFIX, dataFormatConfig.csvExtraColumnPrefix)
           ;
         break;
       case XML:

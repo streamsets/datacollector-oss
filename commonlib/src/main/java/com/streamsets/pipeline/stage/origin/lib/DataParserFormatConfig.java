@@ -286,6 +286,34 @@ public class DataParserFormatConfig implements DataFormatConfig {
   public int csvMaxObjectLen = 1024;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Allow Extra Columns",
+      description = "When false, rows with more columns than the header are sent to error.",
+      displayPosition = 395,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED"
+  )
+  public boolean csvAllowExtraColumns = false;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX,
+      label = "Extra Column Prefix",
+      description = "Each extra column is labeled with this prefix followed by an integer",
+      displayPosition = 396,
+      group = "DATA_FORMAT",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "DELIMITED"),
+          @Dependency(configName = "csvAllowExtraColumns", triggeredByValues = "true")
+      }
+  )
+  public String csvExtraColumnPrefix = DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "|",
@@ -1332,6 +1360,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
         .setConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG, csvEnableComments)
         .setConfig(DelimitedDataConstants.COMMENT_MARKER_CONFIG, csvCommentMarker)
         .setConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, csvIgnoreEmptyLines)
+        .setConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, csvAllowExtraColumns)
+        .setConfig(DelimitedDataConstants.EXTRA_COLUMN_PREFIX, csvExtraColumnPrefix)
     ;
   }
 

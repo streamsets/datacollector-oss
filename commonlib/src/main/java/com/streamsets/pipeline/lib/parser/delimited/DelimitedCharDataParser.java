@@ -27,8 +27,8 @@ import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.ParserRuntimeException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
-import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,44 +41,43 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   private final Stage.Context context;
   private final String readerId;
   private final OverrunCsvParser parser;
+  private final DelimitedDataParserSettings settings;
+
   private List<Field> headers;
   private boolean eof;
-  private CsvRecordType recordType;
-  private final String nullConstant;
 
   public DelimitedCharDataParser(
       Stage.Context context,
       String readerId,
       OverrunReader reader,
       long readerOffset,
-      int skipStartLines,
-      CSVFormat format,
-      CsvHeader header,
-      int maxObjectLen,
-      CsvRecordType recordType,
-      boolean parseNull,
-      String nullConstant)
+      DelimitedDataParserSettings settings
+  )
     throws IOException {
     this.context = context;
     this.readerId = readerId;
-    this.recordType = recordType;
-    this.nullConstant = parseNull ? nullConstant : null;
-    switch (header) {
+    this.settings = settings;
+
+    switch (settings.getHeader()) {
       case WITH_HEADER:
-        format = format.withHeader((String[])null).withSkipHeaderRecord(true);
-        break;
       case IGNORE_HEADER:
-        format = format.withHeader((String[])null).withSkipHeaderRecord(true);
+        settings.setFormat(settings.getFormat().withHeader((String[])null).withSkipHeaderRecord(true));
         break;
       case NO_HEADER:
-        format = format.withHeader((String[])null).withSkipHeaderRecord(false);
+        settings.setFormat(settings.getFormat().withHeader((String[])null).withSkipHeaderRecord(false));
         break;
       default:
-        throw new RuntimeException(Utils.format("Unknown header error: {}", header));
+        throw new ParserRuntimeException(Utils.format("Unknown header error: {}", settings.getHeader()));
     }
-    parser = new OverrunCsvParser(reader, format, readerOffset, skipStartLines, maxObjectLen);
+    parser = new OverrunCsvParser(
+        reader,
+        settings.getFormat(),
+        readerOffset,
+        settings.getSkipStartLines(),
+        settings.getMaxObjectLen()
+    );
     String[] hs = parser.getHeaders();
-    if (header != CsvHeader.IGNORE_HEADER && hs != null) {
+    if (settings.getHeader() != CsvHeader.IGNORE_HEADER && hs != null) {
       headers = new ArrayList<>();
       for (String h : hs) {
         headers.add(Field.create(h));
@@ -102,6 +101,16 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   protected Record createRecord(long offset, String[] columns) throws DataParserException {
     Record record = context.createRecord(readerId + "::" + offset);
 
+    if(headers != null && settings.allowExtraColumns()) {
+      int numColumns = columns.length;
+      int numHeaders = headers.size();
+      int n = 1;
+      while (numHeaders < numColumns) {
+        headers.add(Field.create(String.format("%s%02d", settings.getExtraColumnPrefix(), n++)));
+        ++numHeaders;
+      }
+    }
+
     // In case that the number of columns does not equal the number of expected columns from header, report the
     // parsing error as recoverable issue - it's safe to continue reading the stream.
     if(headers != null && columns.length > headers.size()) {
@@ -114,7 +123,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
       throw new RecoverableDataParserException(record, Errors.DELIMITED_PARSER_01, offset, columns.length, headers.size());
     }
 
-    if(recordType == CsvRecordType.LIST) {
+    if(settings.getRecordType() == CsvRecordType.LIST) {
       List<Field> row = new ArrayList<>();
       for (int i = 0; i < columns.length; i++) {
         Map<String, Field> cell = new HashMap<>();
@@ -135,7 +144,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
         if(header != null) {
           key = header.getValueAsString();
         } else {
-          key = i + "";
+          key = Integer.toString(i);
         }
         listMap.put(key, getField(columns[i]));
       }
@@ -145,9 +154,8 @@ public class DelimitedCharDataParser extends AbstractDataParser {
     return record;
   }
 
-  private Field getListField(String ...values) {
-    ImmutableList.Builder listBuilder = ImmutableList.builder();
-
+  private Field getListField(String... values) {
+    ImmutableList.Builder<Field> listBuilder = ImmutableList.builder();
     for(String value : values) {
       listBuilder.add(Field.create(Field.Type.STRING, value));
     }
@@ -156,7 +164,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   }
 
   private Field getField(String value) {
-    if(nullConstant != null && nullConstant.equals(value)) {
+    if(settings.getNullConstant() != null && settings.getNullConstant().equals(value)) {
       return Field.create(Field.Type.STRING, null);
     }
 
@@ -165,7 +173,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
 
   @Override
   public String getOffset() {
-    return (eof) ? String.valueOf(-1) : String.valueOf(parser.getReaderPosition());
+    return eof ? String.valueOf(-1) : String.valueOf(parser.getReaderPosition());
   }
 
   @Override

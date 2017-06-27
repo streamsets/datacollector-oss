@@ -26,6 +26,10 @@ public class DelimitedDataConstants {
   public static final String IGNORE_EMPTY_LINES_CONFIG = "ignoreEmptyLines";
   public static final String PARSE_NULL = "parseNull";
   public static final String NULL_CONSTANT = "nullConstant";
+  public static final String ALLOW_EXTRA_COLUMNS = "allowExtraColumns";
+  public static final String EXTRA_COLUMN_PREFIX = "extraColumnPrefix";
+
+  public static final String DEFAULT_EXTRA_COLUMN_PREFIX = "_extra_";
 
   private DelimitedDataConstants() {}
 }
