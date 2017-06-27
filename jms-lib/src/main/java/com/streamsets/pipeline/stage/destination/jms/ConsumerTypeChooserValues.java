@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jms;
+package com.streamsets.pipeline.stage.destination.jms;
 
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
-import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-import javax.jms.ConnectionFactory;
-import javax.naming.InitialContext;
-
-public interface JmsMessageConsumerFactory {
-
-  JmsMessageConsumer create(InitialContext initialContext, ConnectionFactory connectionFactory,
-                         BasicConfig basicConfig, CredentialsConfig credentialsConfig,
-                         JmsSourceConfig jmsConfig, JmsMessageConverter jmsMessageConverter);
+public class ConsumerTypeChooserValues extends BaseEnumChooserValues<ConsumerType> {
+  public ConsumerTypeChooserValues() {
+    super(ConsumerType.values());
+  }
 }

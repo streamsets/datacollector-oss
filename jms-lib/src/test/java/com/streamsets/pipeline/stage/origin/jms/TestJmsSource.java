@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
@@ -77,7 +78,7 @@ public class TestJmsSource {
   private CredentialsConfig credentialsConfig;
   private DataParserFormatConfig dataFormatConfig;
   private MessageConfig messageConfig;
-  private JmsConfig jmsConfig;
+  private JmsSourceConfig jmsSourceConfig;
   private DataFormat dataFormat;
 
   @Rule
@@ -107,16 +108,16 @@ public class TestJmsSource {
     credentialsConfig = new CredentialsConfig();
     dataFormatConfig = new DataParserFormatConfig();
     messageConfig = new MessageConfig();
-    jmsConfig = new JmsConfig();
+    jmsSourceConfig = new JmsSourceConfig();
     credentialsConfig.useCredentials = true;
     credentialsConfig.username = USERNAME;
     credentialsConfig.password = PASSWORD;
     dataFormat = DataFormat.JSON;
     dataFormatConfig.removeCtrlChars = true;
-    jmsConfig.initialContextFactory = INITIAL_CONTEXT_FACTORY;
-    jmsConfig.connectionFactory = CONNECTION_FACTORY;
-    jmsConfig.destinationName = JNDI_PREFIX + DESTINATION_NAME;
-    jmsConfig.providerURL = BROKER_BIND_URL;
+    jmsSourceConfig.initialContextFactory = INITIAL_CONTEXT_FACTORY;
+    jmsSourceConfig.connectionFactory = CONNECTION_FACTORY;
+    jmsSourceConfig.destinationName = JNDI_PREFIX + DESTINATION_NAME;
+    jmsSourceConfig.providerURL = BROKER_BIND_URL;
     // Create a connection and start
     ConnectionFactory factory = new ActiveMQConnectionFactory(USERNAME,
         PASSWORD, BROKER_BIND_URL);
@@ -163,7 +164,7 @@ public class TestJmsSource {
   }
 
   private SourceRunner createRunner() {
-    JmsSource origin = new JmsSource(basicConfig, credentialsConfig, jmsConfig,
+    JmsSource origin = new JmsSource(basicConfig, credentialsConfig, jmsSourceConfig,
       new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormat, dataFormatConfig, messageConfig),
       new InitialContextFactory());
     SourceRunner runner = new SourceRunner.Builder(JmsSource.class, origin)
@@ -186,19 +187,19 @@ public class TestJmsSource {
 
   @Test
   public void testInvalidInitialContext() throws Exception {
-    jmsConfig.initialContextFactory = "invalid";
+    jmsSourceConfig.initialContextFactory = "invalid";
     runInit("JMS_00");
   }
 
   @Test
   public void testInvalidConnectionFactory() throws Exception {
-    jmsConfig.connectionFactory = "invalid";
+    jmsSourceConfig.connectionFactory = "invalid";
     runInit("JMS_01");
   }
 
   @Test
   public void testInvalidDestination() throws Exception {
-    jmsConfig.destinationName = "invalid";
+    jmsSourceConfig.destinationName = "invalid";
     runInit("JMS_05");
   }
 

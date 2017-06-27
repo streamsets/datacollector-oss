@@ -13,21 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jms;
+package com.streamsets.pipeline.stage.destination.jms;
 
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
-import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import javax.jms.ConnectionFactory;
 import javax.naming.InitialContext;
 
-public class JmsMessageConsumerFactoryImpl implements JmsMessageConsumerFactory {
-
-  @Override
-  public JmsMessageConsumer create(InitialContext initialContext, ConnectionFactory connectionFactory,
-                         BasicConfig basicConfig, CredentialsConfig credentialsConfig,
-                         JmsSourceConfig jmsConfig, JmsMessageConverter jmsMessageConverter) {
-    return new JmsMessageConsumerImpl(initialContext, connectionFactory, basicConfig, credentialsConfig,
-        jmsConfig, jmsMessageConverter);
+public class JmsMessageProducerFactoryImpl implements JmsMessageProducerFactory {
+  public JmsMessageProducer create(
+      InitialContext initialContext,
+      ConnectionFactory connectionFactory,
+      DataFormat dataFormat,
+      DataGeneratorFormatConfig dataFormatConfig,
+      CredentialsConfig credentialsConfig,
+      JmsTargetConfig jmsTargetConfig
+  ) {
+    return new JmsMessageProducerImpl(
+        initialContext,
+        connectionFactory,
+        dataFormat,
+        dataFormatConfig,
+        credentialsConfig,
+        jmsTargetConfig
+    );
   }
 }

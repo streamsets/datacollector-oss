@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jms;
+package com.streamsets.pipeline.stage.destination.jms;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum JmsGroups implements Label {
-  JMS("JMS"),
-  CREDENTIALS("Credentials"),
-  DATA_FORMAT("Data Format"),
-  ;
+public enum ConsumerType implements Label {
+  UNKNOWN("Unknown"),
+  QUEUE("Queue"),
+  TOPIC("Topic");
 
   private final String label;
 
-  JmsGroups(String label) {
+  ConsumerType(String label) {
     this.label = label;
   }
 
   @Override
   public String getLabel() {
-    return this.label;
+    return label;
   }
 }

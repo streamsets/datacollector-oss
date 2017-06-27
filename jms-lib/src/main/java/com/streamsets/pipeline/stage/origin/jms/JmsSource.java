@@ -20,8 +20,11 @@ import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
+import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
+import com.streamsets.pipeline.lib.jms.config.JmsErrors;
+import com.streamsets.pipeline.lib.jms.config.JmsGroups;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
+import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +41,7 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
 
   private final BasicConfig basicConfig;
   private final CredentialsConfig credentialsConfig;
-  private final JmsConfig jmsConfig;
+  private final JmsSourceConfig jmsConfig;
   private final JmsMessageConsumerFactory jmsMessageConsumerFactory;
   private final JmsMessageConverter jmsMessageConverter;
   private final InitialContextFactory initialContextFactory;
@@ -47,7 +50,7 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
   private ConnectionFactory connectionFactory;
   private long messagesConsumed;
 
-  public JmsSource(BasicConfig basicConfig, CredentialsConfig credentialsConfig, JmsConfig jmsConfig,
+  public JmsSource(BasicConfig basicConfig, CredentialsConfig credentialsConfig, JmsSourceConfig jmsConfig,
                    JmsMessageConsumerFactory jmsMessageConsumerFactory,
                    JmsMessageConverter jmsMessageConverter, InitialContextFactory initialContextFactory) {
     this.basicConfig = basicConfig;
@@ -76,9 +79,11 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
 
       initialContext = initialContextFactory.create(contextProperties);
     } catch (NamingException ex) {
-      LOG.info(Utils.format(JmsErrors.JMS_00.getMessage(), jmsConfig.initialContextFactory,
+      LOG.info(Utils.format(
+          JmsErrors.JMS_00.getMessage(), jmsConfig.initialContextFactory,
         jmsConfig.providerURL, ex.toString()), ex);
-      issues.add(getContext().createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.initialContextFactory", JmsErrors.JMS_00,
+      issues.add(getContext().createConfigIssue(
+          JmsGroups.JMS.name(), "jmsConfig.initialContextFactory", JmsErrors.JMS_00,
         jmsConfig.initialContextFactory, jmsConfig.providerURL, ex.toString()));
     }
     if (issues.isEmpty()) {

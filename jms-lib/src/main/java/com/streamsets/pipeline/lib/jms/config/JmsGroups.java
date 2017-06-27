@@ -13,16 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jms;
+package com.streamsets.pipeline.lib.jms.config;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import java.util.Properties;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
+@GenerateResourceBundle
+public enum JmsGroups implements Label {
+  JMS("JMS"),
+  CREDENTIALS("Credentials"),
+  DATA_FORMAT("Data Format"),
+  ;
 
-public class InitialContextFactory {
+  private final String label;
 
-  public InitialContext create(Properties properties) throws NamingException {
-    return new InitialContext(properties);
+  JmsGroups(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return this.label;
   }
 }

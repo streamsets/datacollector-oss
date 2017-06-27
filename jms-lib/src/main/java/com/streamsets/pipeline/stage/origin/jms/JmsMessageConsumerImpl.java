@@ -21,8 +21,10 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
+import com.streamsets.pipeline.lib.jms.config.JmsErrors;
+import com.streamsets.pipeline.lib.jms.config.JmsGroups;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
+import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +48,7 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
   private final ConnectionFactory connectionFactory;
   private final BasicConfig basicConfig;
   private final CredentialsConfig credentialsConfig;
-  private final JmsConfig jmsConfig;
+  private final JmsSourceConfig jmsConfig;
   private final JmsMessageConverter jmsMessageConverter;
   private Connection connection;
   private Session session;
@@ -55,7 +57,7 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
 
   public JmsMessageConsumerImpl(InitialContext initialContext, ConnectionFactory connectionFactory,
                                 BasicConfig basicConfig, CredentialsConfig credentialsConfig,
-                                JmsConfig jmsConfig, JmsMessageConverter jmsMessageConverter) {
+                                JmsSourceConfig jmsConfig, JmsMessageConverter jmsMessageConverter) {
     this.initialContext = initialContext;
     this.connectionFactory = connectionFactory;
     this.basicConfig = basicConfig;
@@ -75,7 +77,8 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
       }
     } catch (JMSException ex) {
       if (credentialsConfig.useCredentials) {
-        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.connectionFactory", JmsErrors.JMS_03,
+        issues.add(context.createConfigIssue(
+            JmsGroups.JMS.name(), "jmsConfig.connectionFactory", JmsErrors.JMS_03,
           connectionFactory.getClass().getName(), credentialsConfig.username, ex.toString()));
         LOG.info(Utils.format(JmsErrors.JMS_03.getMessage(), connectionFactory.getClass().getName(),
           credentialsConfig.username, ex.toString()), ex);

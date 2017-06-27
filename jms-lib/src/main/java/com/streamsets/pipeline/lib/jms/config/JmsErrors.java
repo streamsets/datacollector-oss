@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jms;
+package com.streamsets.pipeline.lib.jms.config;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -33,6 +33,8 @@ public enum JmsErrors implements ErrorCode {
   JMS_09("Rollback threw error: {}"),
   JMS_10("Unknown message type '{}'"),
   JMS_11("Unable to create consumer: {}"),
+  JMS_12("Could not write record: {}"),
+  JMS_13("Could not produce message: {}"),
   ;
   private final String msg;
 

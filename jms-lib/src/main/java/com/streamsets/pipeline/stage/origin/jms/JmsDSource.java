@@ -27,8 +27,10 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
-import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
+import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
+import com.streamsets.pipeline.lib.jms.config.JmsGroups;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
+import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 
@@ -70,7 +72,7 @@ public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener 
   public MessageConfig messageConfig;
 
   @ConfigDefBean
-  public JmsConfig jmsConfig;
+  public JmsSourceConfig jmsConfig;
 
   @Override
   protected Source createSource() {

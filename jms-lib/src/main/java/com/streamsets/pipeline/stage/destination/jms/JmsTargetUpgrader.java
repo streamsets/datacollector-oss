@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jms;
+package com.streamsets.pipeline.stage.destination.jms;
 
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
-import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
+import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 
-import javax.jms.ConnectionFactory;
-import javax.naming.InitialContext;
+import java.util.List;
 
-public interface JmsMessageConsumerFactory {
-
-  JmsMessageConsumer create(InitialContext initialContext, ConnectionFactory connectionFactory,
-                         BasicConfig basicConfig, CredentialsConfig credentialsConfig,
-                         JmsSourceConfig jmsConfig, JmsMessageConverter jmsMessageConverter);
+public class JmsTargetUpgrader implements StageUpgrader {
+  @Override
+  public List<Config> upgrade(
+      String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
+  ) throws StageException {
+    // noop
+    return configs;
+  }
 }

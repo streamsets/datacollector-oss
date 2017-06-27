@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jms;
+package com.streamsets.pipeline.lib.jms.config;
 
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
-import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
-
-import javax.jms.ConnectionFactory;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.util.Properties;
 
-public interface JmsMessageConsumerFactory {
 
-  JmsMessageConsumer create(InitialContext initialContext, ConnectionFactory connectionFactory,
-                         BasicConfig basicConfig, CredentialsConfig credentialsConfig,
-                         JmsSourceConfig jmsConfig, JmsMessageConverter jmsMessageConverter);
+public class InitialContextFactory {
+
+  public InitialContext create(Properties properties) throws NamingException {
+    return new InitialContext(properties);
+  }
 }

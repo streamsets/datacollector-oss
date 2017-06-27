@@ -13,17 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jms;
+package com.streamsets.pipeline.stage.destination.jms;
 
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
-import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-import javax.jms.ConnectionFactory;
-import javax.naming.InitialContext;
+@GenerateResourceBundle
+public enum JmsTargetGroups implements Label {
+  JMS("JMS"),
+  CREDENTIALS("Credentials"),
+  DATA_FORMAT("Data Format"),
+  ;
 
-public interface JmsMessageConsumerFactory {
+  private final String label;
 
-  JmsMessageConsumer create(InitialContext initialContext, ConnectionFactory connectionFactory,
-                         BasicConfig basicConfig, CredentialsConfig credentialsConfig,
-                         JmsSourceConfig jmsConfig, JmsMessageConverter jmsMessageConverter);
+  JmsTargetGroups(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return this.label;
+  }
 }
