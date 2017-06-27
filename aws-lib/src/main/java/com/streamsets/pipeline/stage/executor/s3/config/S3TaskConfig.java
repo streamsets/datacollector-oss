@@ -41,13 +41,28 @@ public class S3TaskConfig {
     required = true,
     type = ConfigDef.Type.STRING,
     label = "Object",
-    description = "Path to object that should be altered.",
+    description = "Path to object that will be worked on",
     group = "#0",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
     elDefs = { RecordEL.class },
     displayPosition = 20
   )
   public String objectPath;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.TEXT,
+    label = "Content",
+    description = "Content that should be stored inside the newly created object.",
+    dependencies = {
+      @Dependency(configName = "taskType", triggeredByValues = "CREATE_NEW_OBJECT")
+    },
+    group = "#0",
+    evaluation = ConfigDef.Evaluation.EXPLICIT,
+    elDefs = { RecordEL.class },
+    displayPosition = 30
+  )
+  public String content;
 
   @ConfigDef(
     required = false,
@@ -60,7 +75,7 @@ public class S3TaskConfig {
     group = "#0",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
     elDefs = { RecordEL.class },
-    displayPosition = 30
+    displayPosition = 40
   )
   public Map<String, String> tags = Collections.emptyMap();
 }
