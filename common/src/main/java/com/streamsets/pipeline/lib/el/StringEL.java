@@ -15,8 +15,10 @@
  */
 package com.streamsets.pipeline.lib.el;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -27,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -35,6 +38,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class StringEL {
   public static final String MEMOIZED = "memoized";
@@ -314,13 +318,65 @@ public class StringEL {
     return StringEscapeUtils.unescapeJava(string);
   }
 
+
+  @ElFunction(
+      prefix = "list",
+      name = "join",
+      description = "Returns each element of a LIST field joined on the specified character sequence."
+  )
+  public static String joinList(
+      @ElParam("list") List<Field> list,
+      @ElParam("separator") String separator
+  ) {
+    List<String> listOfStrings = list.stream()
+        .map(field -> field.getValue() == null ? "null" : field.getValueAsString())
+        .collect(Collectors.toList());
+    return Joiner.on(separator).join(listOfStrings);
+  }
+
+  @ElFunction(
+      prefix = "list",
+      name = "joinSkipNulls",
+      description = "Returns each element of a LIST field joined on the specified character sequence skipping null " +
+          "values."
+  )
+  public static String joinListSkipNulls(
+      @ElParam("list") List<Field> list,
+      @ElParam("separator") String separator
+  ) {
+    List<String> listOfStrings = list.stream()
+        .map(field -> field.getValue() == null ? null : field.getValueAsString())
+        .collect(Collectors.toList());
+    return Joiner.on(separator).skipNulls().join(listOfStrings);
+  }
+
+  @ElFunction(
+      prefix = "map",
+      name = "join",
+      description = "Returns each element of a LIST field joined on the specified character sequence."
+  )
+  public static String joinMap(
+      @ElParam("map") Map<String, Field> map,
+      @ElParam("separator") String separator,
+      @ElParam("keyValueSeparator") String kvSeparator
+  ) {
+    Map<String, String> mapOfStrings = map.entrySet().stream()
+        .collect(Collectors.toMap(
+            Map.Entry::getKey,
+            e -> e.getValue().getValue() == null ? "null" : e.getValue().getValueAsString()
+        ));
+    Joiner joiner = Joiner.on(separator);
+
+    return joiner.withKeyValueSeparator(kvSeparator).join(mapOfStrings);
+  }
+
   /*
    * As generating UUID is expensive operation, we spawn a thread that will pre-generate them
    */
-  static private SecureRandom randomGenerator = new SecureRandom();
-  static private BlockingQueue<String> uuidQueue =
+  private static SecureRandom randomGenerator = new SecureRandom();
+  private static BlockingQueue<String> uuidQueue =
     new ArrayBlockingQueue<>(Integer.parseInt(System.getProperty("com.streamsets.pipeline.lib.el.StringEL.uuid_queue_max", "10000")));
-  static private ExecutorService executor = Executors.newFixedThreadPool(1);
+  private static ExecutorService executor = Executors.newFixedThreadPool(1);
   static {
     executor.submit(() -> {
       Thread.currentThread().setName("UUID Pre generation thread");

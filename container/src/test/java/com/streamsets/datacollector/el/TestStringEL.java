@@ -15,14 +15,24 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import org.junit.Assert;
 import org.junit.Test;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestStringEL {
 
@@ -356,6 +366,51 @@ public class TestStringEL {
   }
 
   @Test
+  public void testListJoiner() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testJoiner", StringEL.class, RecordEL.class);
+    ELVariables variables = new ELVariables();
+    Record record = mock(Record.class);
+    List<Field> listField = IntStream.range(1, 5).mapToObj(Field::create).collect(Collectors.toList());
+    listField.set(2, Field.create(Field.Type.INTEGER, null));
+    when(record.get("/list")).thenReturn(Field.create(listField));
+    RecordEL.setRecordInContext(variables, record);
+    Assert.assertEquals("1,2,null,4", eval.eval(variables, "${list:join(record:value('/list'), ',')}", String.class));
+  }
+
+  @Test
+  public void testListJoinerSkipNulls() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testJoiner", StringEL.class, RecordEL.class);
+    ELVariables variables = new ELVariables();
+    Record record = mock(Record.class);
+    List<Field> listField = IntStream.range(1, 5).mapToObj(Field::create).collect(Collectors.toList());
+    listField.set(2, Field.create(Field.Type.INTEGER, null));
+    when(record.get("/list")).thenReturn(Field.create(listField));
+    RecordEL.setRecordInContext(variables, record);
+    Assert.assertEquals("1,2,4", eval.eval(variables, "${list:joinSkipNulls(record:value('/list'), ',')}", String.class));
+  }
+
+  @Test
+  public void testMapJoiner() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testJoiner", StringEL.class, RecordEL.class);
+    ELVariables variables = new ELVariables();
+    Record record = mock(Record.class);
+    Map<String, Field> mapField = ImmutableMap.of(
+        "a",
+        Field.create(1),
+        "b",
+        Field.create(Field.Type.INTEGER, null),
+        "c",
+        Field.create("xyz")
+    );
+    when(record.get("/map")).thenReturn(Field.create(mapField));
+    RecordEL.setRecordInContext(variables, record);
+    Assert.assertEquals(
+        "a=1,b=null,c=xyz",
+        eval.eval(variables, "${map:join(record:value('/map'), ',', '=')}", String.class)
+    );
+  }
+
+  @Test
   public void testUuid() throws Exception {
     final String UUID_FORMAT = "^[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}$";
     ELEvaluator eval = new ELEvaluator("testUuid", StringEL.class);
@@ -371,5 +426,4 @@ public class TestStringEL {
 
     Assert.assertNotEquals(uuid, uuid2);
   }
-
 }
