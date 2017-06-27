@@ -66,8 +66,8 @@
                                     <entry><ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
                                         /> URL</entry>
-                                    <entry>Set to:
-                                        <codeph>https://cloud.streamsets.com</codeph></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry_DPMURL"/>
                                 </row>
                                 <row>
                                     <entry><ph

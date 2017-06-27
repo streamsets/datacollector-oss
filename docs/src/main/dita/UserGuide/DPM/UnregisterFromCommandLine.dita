@@ -73,8 +73,11 @@ system disableDPM</codeblock></p>
                         </row>
                         <row>
                             <entry>-D &lt;dpmURL><p>or</p><p>--dpmURL &lt;dpmURL></p></entry>
-                            <entry>Required. Set to:
-                                <codeph>https://cloud.streamsets.com</codeph>.</entry>
+                            <entry>Required. Enter the appropriate URL:<ul
+                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ul_DPMURL"
+                                id="ul_c2n_5kd_j1b">
+                                <li/>
+                            </ul></entry>
                         </row>
                         <row>
                             <entry>-u &lt;sdcUser><p>or</p><p>--user &lt;sdcUser></p></entry>

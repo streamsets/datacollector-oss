@@ -1980,5 +1980,31 @@
     </tbody>
    </tgroup>
   </table>
+  <draft-comment author="alisontaylor">Includes reusable table entry for regsitering SDCs with
+   DPM.</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_bvv_rz2_31b">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry>Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry><ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> Base URL</entry>
+      <entry id="entry_DPMURL">Enter the appropriate URL:<ul id="ul_DPMURL">
+        <li>For <ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> cloud, use
+          <codeph>https://cloud.streamsets.com</codeph>.</li>
+        <li>For <ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> on-premises, use
+         the URL provided by your system administrator. The default URL is
+          <codeph>http://&lt;system-ip>:18631</codeph>.</li>
+       </ul></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>
