@@ -26,8 +26,7 @@ import java.util.List;
 
 @LineagePublisherDef(
   label = "Navigator",
-  description = "Publishes lineage data to Cloudera Navigator.",
-  configurationPrefix = "navigator"
+  description = "Publishes lineage data to Cloudera Navigator."
 )
 public class NavigatorLineagePublisher implements LineagePublisher {
 

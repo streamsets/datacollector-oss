@@ -43,7 +43,6 @@ public abstract class LineagePublisherDefinitionExtractor {
     String name = StageDefinitionExtractor.getStageName(klass);
     String label = sDef.label();
     String description = sDef.description();
-    String prefix = sDef.configurationPrefix();
 
     return new LineagePublisherDefinition(
       libraryDef,
@@ -51,8 +50,7 @@ public abstract class LineagePublisherDefinitionExtractor {
       klass,
       name,
       label,
-      description,
-      prefix
+      description
     );
   }
 

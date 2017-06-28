@@ -35,8 +35,7 @@ public class TestLineagePublisherDefinitionExtractor {
 
   @LineagePublisherDef(
     label = "Awesome publisher",
-    description = "Solves all your problems.",
-    configurationPrefix = "universe.milky_way.solar_system"
+    description = "Solves all your problems."
   )
   public static class ExampleLineagePublisher implements LineagePublisher {
 
@@ -79,7 +78,6 @@ public class TestLineagePublisherDefinitionExtractor {
     Assert.assertEquals(ExampleLineagePublisher.class, definition.getKlass());
     Assert.assertEquals("Awesome publisher", definition.getLabel());
     Assert.assertEquals("Solves all your problems.", definition.getDescription());
-    Assert.assertEquals("universe.milky_way.solar_system", definition.getPrefix());
   }
 
 }

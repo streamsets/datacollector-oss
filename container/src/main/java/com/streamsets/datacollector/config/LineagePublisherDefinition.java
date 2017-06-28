@@ -32,7 +32,6 @@ public class LineagePublisherDefinition {
   private final String name;
   private final String label;
   private final String description;
-  private final String prefix;
 
   public String getLabel() {
     return label;
@@ -48,8 +47,7 @@ public class LineagePublisherDefinition {
     Class<? extends LineagePublisher> klass,
     String name,
     String label,
-    String description,
-    String prefix
+    String description
   ) {
     this.libraryDefinition = libraryDefinition;
     this.classLoader = classLoader;
@@ -57,7 +55,6 @@ public class LineagePublisherDefinition {
     this.name = name;
     this.label = label;
     this.description = description;
-    this.prefix = prefix;
   }
 
   public StageLibraryDefinition getLibraryDefinition() {
@@ -76,7 +73,4 @@ public class LineagePublisherDefinition {
     return name;
   }
 
-  public String getPrefix() {
-    return prefix;
-  }
 }
