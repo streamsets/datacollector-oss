@@ -378,11 +378,19 @@ public class KuduTarget extends BaseTarget {
           if (operation != null) {
             PartialRow row = operation.getRow();
             recordConverter.convert(record, row, opCode);
-            keyToRecordMap.put(operation.getRow().stringifyRowKey(), record);
-            session.apply(operation);
+            LOG.trace("Parameters in query: OpCode:{}, {}",
+                opCode,
+                operation.getRow().toString()
+            );
+            try {
+              keyToRecordMap.put(operation.getRow().stringifyRowKey(), record);
+              session.apply(operation);
+            } catch (IllegalStateException ex) {
+              // IllegalStateException is thrown when there is issue in column values
+              LOG.error(Errors.KUDU_03.getMessage(), ex.toString(), ex);
+              errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_03, ex.getMessage(), ex));
+            }
           }
-        } catch (StageException err) { // send to error and keep going in the batch
-          errorRecordHandler.onError(new OnRecordErrorException(record, err.getErrorCode(), err.getMessage()));
         } catch (KuduException ex) {
           LOG.error(Errors.KUDU_03.getMessage(), ex.toString(), ex);
           errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_03, ex.getMessage(), ex));
