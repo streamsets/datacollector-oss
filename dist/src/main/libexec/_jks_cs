@@ -1,0 +1,106 @@
+#!/bin/bash
+#
+# Copyright 2017 StreamSets Inc.
+#
+# Licensed under the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+#
+
+# resolve links - $0 may be a softlink
+PRG="${0}"
+
+while [ -h "${PRG}" ]; do
+ls=`ls -ld "${PRG}"`
+link=`expr "$ls" : '.*-> \(.*\)$'`
+if expr "$link" : '/.*' > /dev/null; then
+PRG="$link"
+else
+PRG=`dirname "${PRG}"`/"$link"
+fi
+done
+
+BASEDIR=`dirname ${PRG}`
+BASEDIR=`cd ${BASEDIR}/..;pwd`
+SDC_DIST=${BASEDIR}
+
+SDC_HOME=${SDC_HOME:=${SDC_DIST}}
+source ${SDC_HOME}/libexec/sdc-env.sh
+
+SDC_CONF=${SDC_CONF:=${SDC_HOME}/etc}
+SDC_DATA=${SDC_DATA:=${SDC_HOME}/data}
+SDC_LOG=${SDC_LOG:=${SDC_HOME}/log}
+SDC_RESOURCES=${SDC_RESOURCES:=${SDC_HOME}/resources}
+
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.dist.dir=${SDC_DIST}"
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.resources.dir=${SDC_RESOURCES}"
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.conf.dir=${SDC_CONF}"
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.data.dir=${SDC_DATA}"
+SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.log.dir=${SDC_LOG}"
+
+JKS_CS_DIR="${SDC_DIST}/streamsets-libs/streamsets-datacollector-jks-credentialstore"
+
+if [ ! -d "${JKS_CS_DIR}" ]
+then
+  echo
+  echo "Java Credential Store stage library not installed"
+  echo
+  exit 1
+fi
+
+API_CLASSPATH="${SDC_DIST}/api-lib/"'*'
+JKS_CS_LIB="${JKS_CS_DIR}/lib/"'*'
+JARS=${API_CLASSPATH}:${JKS_CS_LIB}
+
+if [ -z "$JAVA_HOME" ]
+then
+  JAVA=`which java`
+else
+  JAVA="$JAVA_HOME/bin/java"
+fi
+
+JAVA_VERSION=`$JAVA -version 2>&1 | grep -e '^java version' | sed -e 's/.*"\([0-9]*\)\.\([0-9]*\)\.\([\_0-9]*\)"/\1\.\2/'`
+if [[ "$JAVA_VERSION" = '1.7' ]];
+then
+  echo "ERROR: Detected JDK7 that is no longer supported. Please upgrade to JDK8."
+  exit
+elif [[ "$JAVA_VERSION" = '1.8' ]];
+then
+  echo ""
+else
+  echo "WARN: could not determine Java environment version; expected 1.8, which are the supported versions" >&2
+fi
+
+# Verify correct JVM vendor
+JAVA_VENDOR=`$JAVA -XshowSettings:properties -version 2>&1 | grep -e 'java.vm.name' | sed -e 's/\(.*\)= \(.*\)/\2/'`
+if [[ ! "$JAVA_VENDOR" =~ "Java HotSpot(TM)" ]]
+then
+  echo "WARN: Detected non-Oracle JDK: $JAVA_VENDOR"
+
+  # And unless unsupported JDK is explicitly enabled, die
+  if [[ "${SDC_ALLOW_UNSUPPORTED_JDK}" != "true" ]]
+  then
+  echo "ERROR: Please install Oracle JDK or explicitly allow unsupported JDKs via SDC_ALLOW_UNSUPPORTED_JDK=true"
+    exit 1
+  fi
+fi
+
+exec ${JAVA} -classpath ${JARS} ${SDC_JAVA_OPTS} \
+com.streamsets.datacollector.credential.javakeystore.cli.JavaKeystoreCredentialStoreCli "$@"
+
+status=$?
+exit $status
