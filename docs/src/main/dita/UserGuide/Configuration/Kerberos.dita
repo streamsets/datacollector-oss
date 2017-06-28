@@ -18,7 +18,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hnm_n4l_xs">
- <title>Enabling Kerberos Authentication</title>
+ <title>Kerberos Authentication</title>
  <shortdesc>You can use Kerberos authentication to connect to external systems as well as YARN
     clusters. </shortdesc>
  <conbody>
@@ -51,24 +51,8 @@
         <li>MapReduce executor</li>
                 <li>Spark executor</li>
       </ul></p>
-  <p>To enable Kerberos authentication, perform the following steps:<ol id="ol_rnb_rtl_xs">
-        <li>Configure <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> to use Kerberos. <p>In the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, configure
-                        the following Kerberos properties to enable Kerberos and define the
-                        principal and keytab:<ul
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-KERBprops"
-                            id="ul_w1d_hpf_55">
-                            <li/>
-                        </ul></p><note
-                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Cluster-KerbNote"
-                    /></li>
-        <li>Configure the stage to use Kerberos. </li>
-      </ol><note>Cluster pipelines automatically use Kerberos authentication if the YARN cluster
-        requires it and if <ph
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has
-        Kerberos enabled. </note></p>
+  <p>To enable <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            to use Kerberos authentication, use the required procedure for your installation
+            type.</p>
  </conbody>
 </concept>

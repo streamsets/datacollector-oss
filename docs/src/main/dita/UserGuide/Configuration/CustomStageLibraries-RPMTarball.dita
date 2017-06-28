@@ -18,11 +18,11 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_hyk_sk1_1x">
-    <title>Storing Custom Libraries in an External Directory</title>
+    <title>Storing Custom Libraries for RPM and Tarball</title>
     <taskbody>
         <context>
-            <p>To store custom stage libraries in a local directory external to the Data Collector
-                installation directory, perform the following steps:</p>
+            <p>To store custom stage libraries for an RPM or tarball installation, perform the
+                following steps:</p>
         </context>
         <steps>
             <step>

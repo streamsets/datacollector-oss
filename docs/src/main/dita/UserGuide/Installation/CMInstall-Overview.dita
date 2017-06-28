@@ -36,10 +36,10 @@
                 <li>Configure the StreamSets service.</li>
             </ol></p>
         <p>Afterwards, you can configure the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
-            enable Kerberos, and store custom stage libraries, if necessary. </p>
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> if
+            necessary. </p>
         <p>
-            <note>When you use Cloudera Manager to install <ph
+            <note type="important">When you use Cloudera Manager to install <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />, you must use Cloudera Manager to configure <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

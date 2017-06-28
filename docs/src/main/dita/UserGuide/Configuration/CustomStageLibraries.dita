@@ -22,9 +22,13 @@
  <conbody>
   <p><indexterm>custom stages<indexterm>libraries</indexterm></indexterm><indexterm>user
                     libraries<indexterm>storing</indexterm></indexterm>If you develop custom stages,
-            store the stage libraries in a local directory external to the Data Collector
+            store the stage libraries in a local directory external to the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             installation directory. Use an external directory to enable use of the custom stage
-            libraries after Data Collector upgrades.</p>
+            libraries after <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            upgrades.</p>
+        <p>Use the required procedure for your installation type.</p>
         <p>We have tutorials for creating a custom origin, processor, and destination on our
             StreamSets tutorials page. To check them out, go to: <xref
                 href="https://github.com/streamsets/tutorials" format="html" scope="external"/>. </p>

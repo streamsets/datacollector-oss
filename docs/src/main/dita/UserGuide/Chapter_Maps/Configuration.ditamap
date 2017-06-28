@@ -53,7 +53,10 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Configuration/Kerberos.dita"/>
+   <topicref href="../Configuration/Kerberos.dita">
+    <topicref href="../Configuration/EnableKerberos-RPMTarball.dita"/>
+    <topicref href="../Configuration/EnableKerberos-CM.dita"/>
+   </topicref>
    <topicref href="../Configuration/SendingEmail.dita"/>
    <topicref href="../Configuration/StoringLoadingSensitiveInformation.dita"/>
    <topicref href="../Configuration/ReferencingEnvVariables.dita"/>
@@ -101,7 +104,8 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Configuration/CustomStageLibraries-Storing.dita"/>
+   <topicref href="../Configuration/CustomStageLibraries-RPMTarball.dita"/>
+   <topicref href="../Configuration/CustomStageLibraries-CM.dita"/>
   </topicref>
   <topicref href="../Configuration/Vault-Overview.dita" chunk="to-content">
    <topicmeta>

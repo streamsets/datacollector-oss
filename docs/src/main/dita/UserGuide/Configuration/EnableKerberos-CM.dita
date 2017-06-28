@@ -19,17 +19,15 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_azc_wgy_w5">
     <title>Enabling Kerberos with Cloudera Manager</title>
-    <shortdesc>To enable <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
-        Kerberos, use Cloudera Manager.</shortdesc>
+    <shortdesc>To enable Kerberos authentication for a Cloudera Manager installation, use Cloudera
+        Manager.</shortdesc>
     <taskbody>
         <context>
             <p><indexterm>Cloudera Manager<indexterm>enabling
                         Kerberos</indexterm></indexterm><indexterm>Kerberos<indexterm>enabling
                         through Cloudera Manager</indexterm></indexterm>When you enable Kerberos
                 through Cloudera Manager, Cloudera Manager creates the required Kerberos principal
-                and keytab. </p>
-            <p>The <ph
+                and keytab. The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration properties include Kerberos properties that you can ignore. </p>
         </context>

@@ -30,6 +30,15 @@
     <p>You can define runtime properties in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       configuration file or in a separate file. For more information, see <xref
-        href="../Pipeline_Configuration/RuntimeProperties.dita#concept_fjx_g31_1s"/>. </p>
+        href="../Pipeline_Configuration/RuntimeProperties.dita#concept_fjx_g31_1s"/>. <note
+        type="important">When you use Cloudera Manager to install <ph
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
+        must use Cloudera Manager to configure <ph
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        properties and environment. Manual changes to the <ph
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        properties or environment files are not recognized by Cloudera Manager. For more
+        information, see <xref
+          href="../Installation/ClouderaManager-SDCConfigs.dita#task_zn4_qrn_25"/>.</note></p>
   </conbody>
 </concept>

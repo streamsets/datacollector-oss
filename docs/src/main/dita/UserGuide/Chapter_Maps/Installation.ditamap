@@ -71,8 +71,6 @@
    <topicref href="../Installation/CM-Step3-DistActSDCParcel.dita"/>
    <topicref href="../Installation/CM-Step4-StreamSetsService.dita"/>
    <topicref href="../Installation/ClouderaManager-SDCConfigs.dita"/>
-   <topicref href="../Installation/CM-EnableKerberos.dita"/>
-   <topicref href="../Installation/CustomStageLibraries-Storing-CM.dita"/>
   </topicref>
   <topicref href="../Installation/MapR-Prerequisites.dita" chunk="to-content">
    <topicmeta>

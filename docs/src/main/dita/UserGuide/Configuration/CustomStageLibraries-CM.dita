@@ -18,28 +18,16 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_qvz_xdb_1x">
-    <title>Storing Custom Stage Libraries with Cloudera Manager (Optional)</title>
+    <title>Storing Custom Libraries for Cloudera Manager</title>
     <taskbody>
         <context>
-            <p><indexterm>custom stages<indexterm>storing through Cloudera
-                    Manager</indexterm></indexterm><indexterm>user libraries<indexterm>storing
-                        through Cloudera Manager</indexterm></indexterm>If you develop custom
-                stages, store the stage libraries in a local directory external to the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> runtime directory. Use an external directory to enable use of the custom stage
-                libraries after <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> upgrades.</p>
-            <p>For more information about developing your own custom stages, see the following
-                StreamSets tutorial: <xref
-                    href="https://github.com/streamsets/tutorials/blob/master/tutorial-destination/readme.md"
-                    format="html" scope="external">Creating a Custom StreamSets
-                Destination</xref>.</p>
+            <p>To store custom stage libraries for a Cloudera Manager installation, perform the
+                following steps:</p>
         </context>
         <steps>
             <step>
                 <cmd>In Cloudera Manager, select the <uicontrol>StreamSets</uicontrol> service and
-                    then click <uicontrol>Configuration</uicontrol>. </cmd>
+                    then click <uicontrol>Configuration</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>On the <wintitle>Configuration</wintitle> page, in the <uicontrol>Data
@@ -47,9 +35,9 @@
                         sdc-env.sh</uicontrol> field, add the USER_LIBRARIES_DIR environment
                     variable and point it to the custom stage library directory, as follows:</cmd>
                 <info>
-                    <codeblock>export USER_LIBRARIES_DIR="&lt;custom stage library directory>"</codeblock>
+                    <codeblock>USER_LIBRARIES_DIR="&lt;custom stage library directory>"</codeblock>
                     <p>For
-                        example:<codeblock>export USER_LIBRARIES_DIR="/opt/sdc-user-libs/"</codeblock></p>
+                        example:<codeblock>USER_LIBRARIES_DIR="/opt/sdc-user-libs/"</codeblock></p>
                 </info>
             </step>
             <step>
