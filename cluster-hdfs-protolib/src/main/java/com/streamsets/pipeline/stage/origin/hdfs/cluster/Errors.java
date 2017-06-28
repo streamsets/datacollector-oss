@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_08("Cannot parse record '{}': {}"),
   HADOOPFS_09("Cannot obtain splits for '{}': {}"),
   HADOOPFS_10("Hadoop FS location doesn't exist: '{}'"),
-  HADOOPFS_11("Cannot connect to the filesytem. Check if the Hadoop FS location: '{}' is valid or not: '{}'"),
+  HADOOPFS_11("Cannot connect to the filesystem. Check if the Hadoop FS location: '{}' is valid or not: '{}'"),
   HADOOPFS_19("Hadoop FS URI is not set and is also not available through the cluster configs"),
   HADOOPFS_13("Authority of URI cannot be null"),
   HADOOPFS_15("Hadoop FS location is not a directory: '{}'"),

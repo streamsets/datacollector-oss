@@ -26,7 +26,7 @@ public class ClusterMapRFSSource extends ClusterHdfsSource {
   }
 
   @Override
-  protected boolean shouldHadoopConfigsExists() {
+  protected boolean shouldHadoopConfigsExist() {
     return false;
   }
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -77,47 +79,50 @@ import java.io.IOException;
 import java.net.URI;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedList;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static com.streamsets.pipeline.Utils.CLUSTER_HDFS_CONFIG_BEAN_PREFIX;
 
 public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, ErrorListener, ClusterSource {
-
-  public static final String DATA_FROMAT_CONFIG_BEAN_PREFIX = "clusterHDFSConfigBean.dataFormatConfig.";
-  public static final String TEXTINPUTFORMAT_RECORD_DELIMITER = "textinputformat.record.delimiter";
+  static final String TEXTINPUTFORMAT_RECORD_DELIMITER = "textinputformat.record.delimiter";
 
   private static final Logger LOG = LoggerFactory.getLogger(ClusterHdfsSource.class);
+  private static final String DATA_FORMAT_CONFIG_BEAN_PREFIX = "clusterHDFSConfigBean.dataFormatConfig.";
   private static final int PREVIEW_SIZE = 100;
-
-  private Configuration hadoopConf;
-  private final ControlChannel controlChannel;
-  private final DataChannel dataChannel;
-  private final Producer producer;
-  private final Consumer consumer;
-  private ErrorRecordHandler errorRecordHandler;
-  private DataParserFactory parserFactory;
-  private UserGroupInformation loginUgi;
-  private UserGroupInformation userUgi;
-  private long recordsProduced;
-  private final Map<String, Object> previewBuffer;
-  private final CountDownLatch countDownLatch;
-  private final ClusterHdfsConfigBean conf;
+  private static final String HDFS_DIR_LOCATIONS = "hdfsDirLocations";
+  private static final String HADOOP_CONF_DIR = "hdfsConfDir";
+  private static final String HDFS_URI = "hdfsUri";
   private static final String CORE_SITE_XML = "core-site.xml";
   private static final String YARN_SITE_XML = "yarn-site.xml";
   private static final String HDFS_SITE_XML = "hdfs-site.xml";
   private static final String MAPRED_SITE_XML = "mapred-site.xml";
 
+  private final Producer producer;
+  private final Consumer consumer;
+  private final Map<String, Object> previewBuffer;
+  private final CountDownLatch countDownLatch;
+  private final ClusterHdfsConfigBean conf;
+
+  private Configuration hadoopConf;
+  private ErrorRecordHandler errorRecordHandler;
+  private DataParserFactory parserFactory;
+  private UserGroupInformation userUgi;
+  private long recordsProduced;
+  private boolean hasHeader;
+
 
   public ClusterHdfsSource(ClusterHdfsConfigBean conf) {
-    controlChannel = new ControlChannel();
-    dataChannel = new DataChannel();
+    ControlChannel controlChannel = new ControlChannel();
+    DataChannel dataChannel = new DataChannel();
     producer = new Producer(controlChannel, dataChannel);
     consumer = new Consumer(controlChannel, dataChannel);
     this.recordsProduced = 0;
@@ -139,7 +144,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
-    hadoopConf = getHadoopConfiguration(issues);
+    getHadoopConfiguration(issues);
 
     validateHadoopFS(issues);
 
@@ -169,115 +174,110 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     conf.dataFormatConfig.init(
         getContext(),
         conf.dataFormat,
-        Groups.HADOOP_FS.name(),
-        DATA_FROMAT_CONFIG_BEAN_PREFIX,
+        Groups.HADOOP_FS.name(), DATA_FORMAT_CONFIG_BEAN_PREFIX,
         issues
     );
     conf.dataFormatConfig.csvHeader = originalCsvHeader;
 
     parserFactory = conf.dataFormatConfig.getParserFactory();
 
-    LOG.info("Issues: " + issues);
+    hasHeader = conf.dataFormat == DataFormat.DELIMITED && CsvHeader.NO_HEADER != conf.dataFormatConfig.csvHeader;
+
+    LOG.error("Issues: {}", issues.toArray());
     return issues;
   }
 
   @VisibleForTesting
   List<Path> validateAndGetHdfsDirPaths(List<ConfigIssue> issues) {
     List<Path> hdfsDirPaths = new ArrayList<>();
+
+    // Don't proceed if there are already configuration issues.
+    if (!issues.isEmpty()) {
+      return hdfsDirPaths;
+    }
+
     if (conf.hdfsDirLocations == null || conf.hdfsDirLocations.isEmpty()) {
       issues.add(
           getContext().createConfigIssue(
               Groups.HADOOP_FS.name(),
-              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
+              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_DIR_LOCATIONS,
               Errors.HADOOPFS_18
           )
       );
-    } else if (issues.isEmpty()) {
-      for (String hdfsDirLocation : conf.hdfsDirLocations) {
-        FileSystem fs = null;
-        try {
-          fs = getFileSystemForInitDestroy();
-          Path ph = fs.makeQualified(new Path(hdfsDirLocation));
-          hdfsDirPaths.add(ph);
-          if (!fs.exists(ph)) {
-            issues.add(
-                getContext().createConfigIssue(
-                    Groups.HADOOP_FS.name(),
-                    CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
-                    Errors.HADOOPFS_10,
-                    hdfsDirLocation
-                )
-            );
-          } else if (!fs.getFileStatus(ph).isDirectory()) {
-            issues.add(
-                getContext().createConfigIssue(
-                    Groups.HADOOP_FS.name(),
-                    CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
-                    Errors.HADOOPFS_15,
-                    hdfsDirLocation
-                )
-            );
-          } else {
-            try {
-              FileStatus[] files = fs.listStatus(ph);
-              if (files == null || files.length == 0) {
-                issues.add(
-                    getContext().createConfigIssue(
-                        Groups.HADOOP_FS.name(),
-                        CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
-                        Errors.HADOOPFS_17,
-                        hdfsDirLocation
-                    )
-                );
-              } else if (getContext().isPreview()) {
-                readInPreview(fs, files, issues);
-              }
-            } catch (IOException | InterruptedException ex) {
-              issues.add(
-                  getContext().createConfigIssue(
-                      Groups.HADOOP_FS.name(),
-                      CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
-                      Errors.HADOOPFS_09,
-                      hdfsDirLocation,
-                      ex.toString(),
-                      ex
-                  )
-              );
-            }
-          }
-        } catch (IOException ioe) {
-          LOG.warn("Error connecting to HDFS filesystem: " + ioe, ioe);
-          issues.add(
-              getContext().createConfigIssue(
-                  Groups.HADOOP_FS.name(),
-                  CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
-                  Errors.HADOOPFS_11,
-                  hdfsDirLocation,
-                  ioe.toString(),
-                  ioe
-              )
-          );
-        } finally {
-          if (fs != null) {
-            try {
-              fs.close();
-            } catch (IOException e) {
-              LOG.info("Error closing FileSystem: ", e);
-            }
-          }
+      return hdfsDirPaths;
+    }
+
+    for (String hdfsDirLocation : conf.hdfsDirLocations) {
+      try (FileSystem fs = getFileSystemForInitDestroy()) {
+        Path ph = fs.makeQualified(new Path(hdfsDirLocation));
+        hdfsDirPaths.add(ph);
+        if (!fs.exists(ph)) {
+          issues.add(getContext().createConfigIssue(
+              Groups.HADOOP_FS.name(),
+              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_DIR_LOCATIONS,
+              Errors.HADOOPFS_10,
+              hdfsDirLocation
+          ));
+          return hdfsDirPaths;
         }
+
+        if (!fs.getFileStatus(ph).isDirectory()) {
+          issues.add(getContext().createConfigIssue(
+              Groups.HADOOP_FS.name(),
+              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_DIR_LOCATIONS,
+              Errors.HADOOPFS_15,
+              hdfsDirLocation
+          ));
+          return hdfsDirPaths;
+        }
+
+        checkForFiles(issues, hdfsDirLocation, fs, ph);
+      } catch (IOException ioe) {
+        LOG.warn("Error connecting to HDFS filesystem: " + ioe, ioe);
+        issues.add(getContext().createConfigIssue(
+            Groups.HADOOP_FS.name(),
+            CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_DIR_LOCATIONS,
+            Errors.HADOOPFS_11,
+            hdfsDirLocation,
+            ioe.toString(),
+            ioe
+        ));
       }
     }
     return hdfsDirPaths;
   }
 
+  private void checkForFiles(List<ConfigIssue> issues, String hdfsDirLocation, FileSystem fs, Path ph) {
+    try {
+      FileStatus[] files = fs.listStatus(ph);
+      if (files == null || files.length == 0) {
+        issues.add(getContext().createConfigIssue(
+            Groups.HADOOP_FS.name(),
+            CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_DIR_LOCATIONS,
+            Errors.HADOOPFS_17,
+            hdfsDirLocation
+        ));
+      } else if (getContext().isPreview()) {
+        readInPreview(fs, files, issues);
+      }
+    } catch (IOException | InterruptedException ex) {
+      issues.add(getContext().createConfigIssue(
+          Groups.HADOOP_FS.name(),
+          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_DIR_LOCATIONS,
+          Errors.HADOOPFS_09,
+          hdfsDirLocation,
+          ex.toString(),
+          ex
+      ));
+    }
+  }
+
   @VisibleForTesting
-  void readInPreview(final FileSystem fs, final FileStatus[] files, final List<ConfigIssue> issues) throws IOException,InterruptedException {
+  void readInPreview(final FileSystem fs, final FileStatus[] files, final List<ConfigIssue> issues) throws
+      IOException,InterruptedException {
     // Setup for recursive visits to files in subdirectories
     List<FileStatus> queue = new LinkedList<>();
-    for(FileStatus f: files){
-      queue.add(f);
-    }
+    Collections.addAll(queue, files);
     getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
       while(previewBuffer.size() < PREVIEW_SIZE && !queue.isEmpty()){
         FileStatus fileStatus = queue.remove(0);
@@ -286,9 +286,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         } else if (fileStatus.isDirectory()){
           Path ph = fs.makeQualified(new Path(fileStatus.getPath().toString()));
           FileStatus[] subs = fs.listStatus(ph);
-          for(FileStatus f: subs){
-            queue.add(f);
-          }
+          Collections.addAll(queue, subs);
         }
       }
       return null;
@@ -314,7 +312,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       issues.add(
           getContext().createConfigIssue(
               Groups.HADOOP_FS.name(),
-              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsDirLocations",
+              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_DIR_LOCATIONS,
               Errors.HADOOPFS_16,
               path,
               ex.toString()
@@ -333,7 +331,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     Path filePath = fileStatus.getPath();
     // MR allows file length to be 0 for text data (not for avro)
     if (fileLength == 0) {
-      LOG.info("File length is 0 for " + filePath);
+      LOG.info("File length is 0 for {}", filePath);
       return batch;
     }
     // Hadoop does unsafe casting from long to int, so split length should not be greater than int
@@ -357,14 +355,13 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     return batch;
   }
 
-  private List<Map.Entry> previewAvroBatch(FileStatus fileStatus, int batchSize) throws IOException, InterruptedException {
+  private List<Map.Entry> previewAvroBatch(FileStatus fileStatus, int batchSize) throws IOException {
     int previewCount = previewBuffer.size();
     Path filePath = fileStatus.getPath();
     SeekableInput input = new FsInput(filePath, hadoopConf);
     DatumReader<GenericRecord> reader = new GenericDatumReader<>();
     List<Map.Entry> batch = new ArrayList<>();
-    FileReader<GenericRecord> fileReader = DataFileReader.openReader(input, reader);
-    try {
+    try (FileReader<GenericRecord> fileReader = DataFileReader.openReader(input, reader)) {
       int count = 0;
       while (fileReader.hasNext() && batch.size() < batchSize && previewCount < batchSize) {
         GenericRecord datum = fileReader.next();
@@ -382,8 +379,6 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         count++;
         previewCount++;
       }
-    } finally {
-      fileReader.close();
     }
     return batch;
   }
@@ -394,120 +389,67 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   @VisibleForTesting
-  protected void validateHadoopConfigFiles(Configuration hadoopConf, File hadoopConfigDir, List<ConfigIssue> issues) {
-    boolean coreSiteExists = false;
-    boolean hdfsSiteExists = false;
-    boolean mapredSiteExists = false;
-    boolean yarnSiteExists = false;
-    File coreSite = new File(hadoopConfigDir, CORE_SITE_XML);
-    if (coreSite.exists()) {
-      coreSiteExists = true;
-      if (!coreSite.isFile()) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-            CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
-            Errors.HADOOPFS_27,
-            coreSite.getPath()
-        ));
-      }
-      hadoopConf.addResource(new Path(coreSite.getAbsolutePath()));
-    }
-    File hdfsSite = new File(hadoopConfigDir, HDFS_SITE_XML);
-    if (hdfsSite.exists()) {
-      hdfsSiteExists = true;
-      if (!hdfsSite.isFile()) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-            CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
-            Errors.HADOOPFS_27,
-            hdfsSite.getPath()
-        ));
-      }
-      hadoopConf.addResource(new Path(hdfsSite.getAbsolutePath()));
-    }
-    File yarnSite = new File(hadoopConfigDir, YARN_SITE_XML);
-    if (yarnSite.exists()) {
-      yarnSiteExists = true;
-      if (!yarnSite.isFile()) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-            CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
-            Errors.HADOOPFS_27,
-            yarnSite.getPath()
-        ));
-      }
-      hadoopConf.addResource(new Path(yarnSite.getAbsolutePath()));
-    }
-    File mapredSite = new File(hadoopConfigDir, MAPRED_SITE_XML);
-    if (mapredSite.exists()) {
-      mapredSiteExists = true;
-      if (!mapredSite.isFile()) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-            CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
-            Errors.HADOOPFS_27,
-            mapredSite.getPath()
-        ));
-      }
-      hadoopConf.addResource(new Path(mapredSite.getAbsolutePath()));
-    }
-    if (!coreSiteExists && shouldHadoopConfigsExists()) {
-      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
-          Errors.HADOOPFS_30,
-          CORE_SITE_XML
-      ));
-    }
-    if (!hdfsSiteExists && shouldHadoopConfigsExists()) {
-      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
-          Errors.HADOOPFS_30,
-          HDFS_SITE_XML
-      ));
-    }
-    if (!yarnSiteExists && shouldHadoopConfigsExists()) {
-      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
-          Errors.HADOOPFS_30,
-          YARN_SITE_XML
-      ));
-    }
-    if (!mapredSiteExists && shouldHadoopConfigsExists()) {
-      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
-          Errors.HADOOPFS_30,
-          MAPRED_SITE_XML
-      ));
-    }
+  protected void validateHadoopConfigFiles(File hadoopConfigDir, List<ConfigIssue> issues) {
+    List<File> hadoopConfigFiles = ImmutableList.<File>builder()
+        .add(new File(hadoopConfigDir, CORE_SITE_XML))
+        .add(new File(hadoopConfigDir, HDFS_SITE_XML))
+        .add(new File(hadoopConfigDir, YARN_SITE_XML))
+        .add(new File(hadoopConfigDir, MAPRED_SITE_XML))
+        .build();
+
+    hadoopConfigFiles.forEach(file -> addHadoopConfigFile(file).ifPresent(issues::add));
   }
 
-  protected boolean shouldHadoopConfigsExists() {
+  private Optional<ConfigIssue> addHadoopConfigFile(File file) {
+    if (file.isFile()) {
+      hadoopConf.addResource(new Path(file.getAbsolutePath()));
+    } else if (file.exists()) {
+      return Optional.of(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
+          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
+          Errors.HADOOPFS_27,
+          file.getAbsolutePath()));
+    } else if (shouldHadoopConfigsExist()) {
+      return Optional.of(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
+          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
+          Errors.HADOOPFS_30,
+          file.getName()
+      ));
+    }
+    return Optional.empty();
+  }
+
+  protected boolean shouldHadoopConfigsExist() {
     return true;
   }
 
-  protected Configuration getHadoopConfiguration(List<ConfigIssue> issues) {
-    Configuration hadoopConf = new Configuration();
+  protected void getHadoopConfiguration(List<ConfigIssue> issues) {
+    hadoopConf = new Configuration();
 
-    //We will handle the file system close ourselves in destroy
-    //See https://issues.streamsets.com/browse/SDC-4057
+    // We will handle the file system close ourselves in destroy
+    // See https://issues.streamsets.com/browse/SDC-4057
     hadoopConf.setBoolean("fs.automatic.close", false);
 
     if (conf.hdfsKerberos) {
       hadoopConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
         UserGroupInformation.AuthenticationMethod.KERBEROS.name());
       try {
-        hadoopConf.set(DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY, "hdfs/_HOST@" + HadoopSecurityUtil.getDefaultRealm());
+        hadoopConf.set(DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY, "hdfs/_HOST@" + HadoopSecurityUtil.getDefaultRealm());
       } catch (Exception ex) {
-        if (!conf.hdfsConfigs.containsKey(DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY)) {
+        LOG.error(ex.toString(), ex);
+        if (!conf.hdfsConfigs.containsKey(DFSConfigKeys.DFS_NAMENODE_KERBEROS_PRINCIPAL_KEY)) {
           issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_28,
             ex.getMessage()));
         }
       }
     }
-    if (conf.hdfsConfDir != null && !conf.hdfsConfDir.isEmpty()) {
+    if (!Strings.isNullOrEmpty(conf.hdfsConfDir)) {
       File hadoopConfigDir = new File(conf.hdfsConfDir);
       if (hadoopConfigDir.isAbsolute()) {
         // Do not allow absolute hadoop config directory in cluster mode
         issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
                 Errors.HADOOPFS_29,
                 conf.hdfsConfDir,
                 conf.hdfsConfDir,
@@ -524,7 +466,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             issues.add(
               getContext().createConfigIssue(
                   Groups.HADOOP_FS.name(),
-                  CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
+                  CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
                   Errors.HADOOPFS_29,
                   conf.hdfsConfDir,
                   hadoopConfigDir.getAbsolutePath(),
@@ -537,7 +479,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hadoopConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
                 Errors.HADOOPFS_26,
                 conf.hdfsConfDir
             )
@@ -549,7 +491,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
                 Errors.HADOOPFS_25,
                 hadoopConfigDir.getPath()
             )
@@ -558,31 +500,30 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
                 Errors.HADOOPFS_26,
                 hadoopConfigDir.getPath()
             )
         );
       } else {
-        validateHadoopConfigFiles(hadoopConf, hadoopConfigDir, issues);
+        validateHadoopConfigFiles(hadoopConfigDir, issues);
       }
-    } else if (shouldHadoopConfigsExists()) {
+    } else if (shouldHadoopConfigsExist()) {
       issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HADOOP_CONF_DIR,
           Errors.HADOOPFS_31
       ));
     }
     for (Map.Entry<String, String> config : conf.hdfsConfigs.entrySet()) {
       hadoopConf.set(config.getKey(), config.getValue());
     }
-    return hadoopConf;
   }
 
   @VisibleForTesting
   void validateHadoopFS(List<ConfigIssue> issues) {
-    boolean validHapoopFsUri;
+    boolean validHadoopFsUri;
     String hdfsUriInConf;
-    if (conf.hdfsUri != null && !conf.hdfsUri.isEmpty()) {
+    if (!Strings.isNullOrEmpty(conf.hdfsUri)) {
       hadoopConf.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, conf.hdfsUri);
     } else {
       hdfsUriInConf = hadoopConf.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
@@ -590,7 +531,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         issues.add(
             getContext().createConfigIssue(
                 Groups.HADOOP_FS.name(),
-                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
+                CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_URI,
                 Errors.HADOOPFS_19
             )
         );
@@ -599,14 +540,13 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         conf.hdfsUri = hdfsUriInConf;
       }
     }
-    validHapoopFsUri = validateHadoopFsURI(issues);
+    validHadoopFsUri = validateHadoopFsURI(issues);
     StringBuilder logMessage = new StringBuilder();
     try {
-      loginUgi = HadoopSecurityUtil.getLoginUser(hadoopConf);
+      UserGroupInformation loginUgi = HadoopSecurityUtil.getLoginUser(hadoopConf);
       userUgi = HadoopSecurityUtil.getProxyUser(
         conf.hdfsUser,
-        getContext(),
-        loginUgi,
+        getContext(), loginUgi,
         issues,
         Groups.HADOOP_FS.name(),
         CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUser"
@@ -629,14 +569,12 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         hadoopConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
           UserGroupInformation.AuthenticationMethod.SIMPLE.name());
       }
-      if (validHapoopFsUri) {
-        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() throws Exception {
-            try (FileSystem fs = getFileSystemForInitDestroy()) { //to trigger the close
-            }
-            return null;
+      if (validHadoopFsUri) {
+        getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
+          try (FileSystem fs = getFileSystemForInitDestroy()) { // NOSONAR
+            // to trigger fs close
           }
+          return null;
         });
       }
     } catch (Exception ex) {
@@ -652,42 +590,42 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           )
       );
     }
-    LOG.info("Authentication Config: " + logMessage);
+    LOG.info("Authentication Config: {}", logMessage);
   }
 
   @VisibleForTesting
   protected boolean validateHadoopFsURI(List<ConfigIssue> issues) {
-    boolean validHapoopFsUri = true;
+    boolean validHadoopFsUri = true;
     if (conf.hdfsUri.contains("://")) {
       try {
         URI uri = new URI(conf.hdfsUri);
         if (isURIAuthorityRequired() && uri.getAuthority() == null) {
           issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
+              CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_URI,
               Errors.HADOOPFS_13,
               conf.hdfsUri
           ));
-          validHapoopFsUri = false;
+          validHadoopFsUri = false;
         }
       } catch (Exception ex) {
         issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-            CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
+            CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_URI,
             Errors.HADOOPFS_22,
             conf.hdfsUri,
             ex.getMessage(),
             ex
         ));
-        validHapoopFsUri = false;
+        validHadoopFsUri = false;
       }
     } else {
       issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(),
-          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsUri",
+          CLUSTER_HDFS_CONFIG_BEAN_PREFIX + HDFS_URI,
           Errors.HADOOPFS_02,
           conf.hdfsUri
       ));
-      validHapoopFsUri = false;
+      validHadoopFsUri = false;
     }
-    return validHapoopFsUri;
+    return validHadoopFsUri;
   }
 
   protected boolean isURIAuthorityRequired() {
@@ -701,7 +639,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     } catch (IOException ex) {
       throw ex;
     } catch (Exception ex) {
-      throw new RuntimeException(ex);
+      throw new RuntimeException(ex); // NOSONAR
     }
   }
 
@@ -721,9 +659,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       while (count < maxBatchSize && count < previewBuffer.size() && keys.hasNext()) {
         Map.Entry<String, Object> entry =  keys.next();
         String[] keyParts = entry.getKey().split("::");
-        if (count == 0 && DataFormat.DELIMITED == conf.dataFormat &&
-            CsvHeader.NO_HEADER != conf.dataFormatConfig.csvHeader &&
-            keyParts.length > 1 && keyParts[1].equals("0")) {
+        boolean isFirst = keyParts.length > 1 && "0".equals(keyParts[1]);
+        if (hasHeader && count == 0 && isFirst) {
           // add header
           if (CsvHeader.WITH_HEADER == conf.dataFormatConfig.csvHeader) {
             records.add(new Pair(entry.getValue(), null));
@@ -748,7 +685,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     for (Map.Entry message : offsetAndResult.getResult()) {
       count++;
       messageId = String.valueOf(message.getKey());
-      List<Record> listRecords = null;
+      List<Record> listRecords = Collections.emptyList();
       if (conf.dataFormat == DataFormat.TEXT || conf.dataFormat == DataFormat.AVRO) {
         listRecords = processMessage(messageId, message.getValue());
       } else if (conf.dataFormat == DataFormat.DELIMITED) {
@@ -757,10 +694,11 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             // ignore header by skipping this header string
             // [1] - startOffset - [2] - contextKey
             String[] offsetContextSplit = messageId.split("::");
-            if (offsetContextSplit.length > 1 && offsetContextSplit[1].equals("0")) {
+            if (offsetContextSplit.length > 1 && "0".equals(offsetContextSplit[1])) {
               break;
             }
-            // fall through
+            listRecords = processMessage(messageId, message.getValue());
+            break;
           case NO_HEADER:
             listRecords = processMessage(messageId, message.getValue());
             break;
@@ -781,11 +719,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       } else {
         throw new IllegalStateException(Utils.format("Unrecognized data format: '{}'", conf.dataFormat));
       }
-      if (listRecords != null) {
-        for (Record record : listRecords) {
-          batchMaker.addRecord(record);
-        }
-      }
+      listRecords.forEach(batchMaker::addRecord);
     }
     if (count == 0) {
       LOG.info("Received no records, returning null");
@@ -794,7 +728,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     return Utils.checkNotNull(messageId, "Log error, message ID cannot be null at this point.");
   }
 
-  protected List<Record> processMessage(String messageId, Object message) throws StageException {
+  private List<Record> processMessage(String messageId, Object message) throws StageException {
     List<Record> records = new ArrayList<>();
     if (conf.dataFormat == DataFormat.AVRO) {
       try (DataParser parser = parserFactory.getParser(messageId, (byte[]) message)) {
@@ -810,16 +744,17 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       try (DataParser parser = parserFactory.getParser(messageId, String.valueOf(message))) {
         Record record = null;
         do {
-          try {
+          try { // NOSONAR
             record = parser.parse();
           } catch (RecoverableDataParserException e) {
+            LOG.warn(e.toString(), e);
             errorRecordHandler.onError(
                 new OnRecordErrorException(
                     e.getUnparsedRecord(),
                     e.getErrorCode(),
                     e.getParams())
             );
-            //Go to next record
+            // Go to next record
             continue;
           }
           if (record != null) {
@@ -831,11 +766,10 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         errorRecordHandler.onError(Errors.HADOOPFS_08, messageId, ex.toString(), ex);
       }
     }
+
     if (conf.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
-      for (Record record : records) {
-        list.add(record.get());
-      }
+      records.forEach(record -> list.add(record.get()));
       Record record = records.get(0);
       record.set(Field.create(list));
       records.clear();
@@ -894,6 +828,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       }
     } catch (InterruptedException e) {
       LOG.warn("Thread interrupted while waiting on receiving the done flag" + e, e);
+      Thread.currentThread().interrupt();
     }
   }
 
@@ -915,7 +850,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   @Override
   public Map<String, String> getConfigsToShip() {
-    Map<String, String> configsToShip = new HashMap<String, String>();
+    Map<String, String> configsToShip = new HashMap<>();
     for (Map.Entry<String, String> entry : hadoopConf) {
       // hadoopConf.get() is required since entry.getValue()
       // does not have variables expanded

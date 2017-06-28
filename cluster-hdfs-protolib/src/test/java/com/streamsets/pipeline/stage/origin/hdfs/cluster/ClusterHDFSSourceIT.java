@@ -31,7 +31,6 @@ import com.streamsets.pipeline.impl.Pair;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.generic.GenericData;
@@ -90,8 +89,7 @@ public class ClusterHDFSSourceIT {
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     minidfsDir = new File("target/minidfs-" + UUID.randomUUID()).getAbsoluteFile();
-    minidfsDir.mkdirs();
-    Assert.assertTrue(minidfsDir.exists());
+    assertTrue(minidfsDir.mkdirs());
     System.setProperty(MiniDFSCluster.PROP_TEST_BUILD_DATA, minidfsDir.getPath());
     Configuration conf = new HdfsConfiguration();
     conf.set("dfs.namenode.fs-limits.min-block-size", String.valueOf(32));
@@ -102,8 +100,7 @@ public class ClusterHDFSSourceIT {
     fs.mkdirs(dir);
     writeFile(fs, new Path(dir + "/forAllTests/" + "path"), 1000);
     dummyEtc = new File(minidfsDir, "dummy-etc");
-    dummyEtc.mkdirs();
-    Assert.assertTrue(dummyEtc.exists());
+    assertTrue(dummyEtc.mkdirs());
     Configuration dummyConf = new Configuration(false);
     for (String file : new String[]{"core", "hdfs", "mapred", "yarn"}) {
       File siteXml = new File(dummyEtc, file + "-site.xml");

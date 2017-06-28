@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,7 +47,8 @@ public class ClusterHdfsConfigBean {
       description = "Include the Hadoop FS scheme and authority: <scheme>://<authority> (for example" +
           " hdfs://nameservice).",
       displayPosition = 10,
-      group = "HADOOP_FS")
+      group = "HADOOP_FS"
+  )
   public String hdfsUri;
 
   @ConfigDef(
@@ -79,7 +80,8 @@ public class ClusterHdfsConfigBean {
       label = "Produce Single Record",
       description = "Generates a single record for multiple objects within a message",
       displayPosition = 40,
-      group = "HADOOP_FS")
+      group = "HADOOP_FS"
+  )
   public boolean produceSingleRecordPerMessage;
 
   @ConfigDef(

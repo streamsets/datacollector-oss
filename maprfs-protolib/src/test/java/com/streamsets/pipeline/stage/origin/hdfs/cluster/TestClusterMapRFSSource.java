@@ -22,14 +22,13 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.stage.origin.maprfs.ClusterMapRFSDSource;
 import com.streamsets.pipeline.stage.origin.maprfs.ClusterMapRFSSource;
-import org.apache.hadoop.conf.Configuration;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class TestClusterMapRFSSource {
   private ClusterHdfsConfigBean createClusterHdfsConfigBean() {
     ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
     conf.hdfsUri = "maprfs:///";
-    conf.hdfsDirLocations = Arrays.asList("");
+    conf.hdfsDirLocations = Collections.singletonList("");
     conf.hdfsConfigs = new HashMap<>();
     conf.dataFormat = DataFormat.TEXT;
     conf.dataFormatConfig.textMaxLineLen = 1024;
@@ -77,7 +76,7 @@ public class TestClusterMapRFSSource {
         sourceRunner.getInfo(),
         (Source.Context) sourceRunner.getContext()
     );
-    mockClusterMaprFsSource.validateHadoopConfigFiles(new Configuration(), new File(""), configIssueList);
+    mockClusterMaprFsSource.validateHadoopConfigFiles(new File(""), configIssueList);
     Assert.assertEquals("Didn't expect validation to fail when hadoop config files are missing " + configIssueList,
         0, configIssueList.size());
   }

@@ -19,7 +19,6 @@ import com.streamsets.pipeline.BootstrapCluster;
 import com.streamsets.pipeline.Utils;
 import com.streamsets.pipeline.impl.ClusterFunction;
 import com.streamsets.pipeline.impl.Pair;
-
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
@@ -83,8 +82,8 @@ public class PipelineMapper extends Mapper {
     }
 
     InputSplit inputSplit = context.getInputSplit();
-    FileSplit fileSplit = null;
-    String file = "unknown::";
+    FileSplit fileSplit;
+    String file;
     if (inputSplit instanceof FileSplit) {
       fileSplit = (FileSplit)inputSplit;
     } else {
@@ -95,25 +94,23 @@ public class PipelineMapper extends Mapper {
       LOG.info("Not processing as length of split is 0");
       return;
     } else {
-      LOG.debug("Length of split is " + splitLength);
+      LOG.debug("Length of split is {}", splitLength);
     }
     String header = null;
-    if (fileSplit != null) {
-      file = fileSplit.getPath() + "::" + fileSplit.getStart();
-      if (Utils.getHdfsDataFormat(properties).equals("DELIMITED")
-          && Utils.getHdfsCsvHeader(properties).equals("WITH_HEADER")) {
-        if (fileSplit.getStart() == 0) {
-          boolean hasNext = context.nextKeyValue();
-          if (hasNext) {
-            header = String.valueOf(context.getCurrentValue());
-          }
-        } else {
-          header = PipelineMapper.getHeaderFromFile(context.getConfiguration(), fileSplit.getPath());
+    file = fileSplit.getPath() + "::" + fileSplit.getStart();
+    if ("DELIMITED".equals(Utils.getHdfsDataFormat(properties))
+        && "WITH_HEADER".equals(Utils.getHdfsCsvHeader(properties))) {
+      if (fileSplit.getStart() == 0) {
+        boolean hasNext = context.nextKeyValue();
+        if (hasNext) {
+          header = String.valueOf(context.getCurrentValue());
         }
-        LOG.info("Header in file " + fileSplit.getPath() + " for start offset " + fileSplit.getStart() + ": " + header);
+      } else {
+        header = PipelineMapper.getHeaderFromFile(context.getConfiguration(), fileSplit.getPath());
       }
+      LOG.info("Header in file {} for start offset {}:{}", fileSplit.getPath(), fileSplit.getStart(), header);
     }
-    boolean isAvro = Utils.getHdfsDataFormat(properties).equalsIgnoreCase("AVRO");
+    boolean isAvro = "AVRO".equalsIgnoreCase(Utils.getHdfsDataFormat(properties));
     int batchSize = Utils.getHdfsMaxBatchSize(properties);
     boolean errorOccurred = true;
     try {
@@ -165,31 +162,19 @@ public class PipelineMapper extends Mapper {
 
   private static byte[] getBytesFromAvroRecord(GenericRecord genericRecord) throws IOException {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    DataFileWriter<GenericRecord> dataFileWriter =
-      new DataFileWriter<GenericRecord>(new GenericDatumWriter<GenericRecord>());
-    dataFileWriter.create(genericRecord.getSchema(), out);
-    dataFileWriter.append(genericRecord);
-    dataFileWriter.close();
+    try (DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(new GenericDatumWriter<>())) {
+      dataFileWriter.create(genericRecord.getSchema(), out);
+      dataFileWriter.append(genericRecord);
+    }
     return out.toByteArray();
   }
 
   private static String getHeaderFromFile(Configuration hadoopConf, Path path) throws IOException {
     String header;
-    BufferedReader br = null;
-    try {
-      FileSystem fs = FileSystem.get(hadoopConf);
-      br = new BufferedReader(new InputStreamReader(fs.open(path), StandardCharsets.UTF_8));
+    try (FileSystem fs = FileSystem.get(hadoopConf);
+         BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(path), StandardCharsets.UTF_8))) {
       // read one line - the header
       header = br.readLine();
-    } finally {
-      if (br != null) {
-        try {
-          br.close();
-        } catch (IOException e) {
-          LOG.warn("Error while closing file: '{}', exception string is: '{}'", path, e, e);
-          br = null;
-        }
-      }
     }
     return header;
   }
