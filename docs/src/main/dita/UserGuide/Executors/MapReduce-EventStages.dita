@@ -20,9 +20,10 @@
 <concept id="concept_gdt_v5d_nx">
  <title>Related Event Generating Stages</title>
  <conbody>
-        <p><indexterm>MapReduce executor<indexterm>event source stages</indexterm></indexterm>Use
-            the MapReduce executor in the event stream of a pipeline. The MapReduce executor is
-            meant to start MapReduce jobs after output files are written. </p>
+        <p><indexterm>MapReduce executor<indexterm>related event generating
+                stages</indexterm></indexterm>Use the MapReduce executor in the event stream of a
+            pipeline. The MapReduce executor is meant to start MapReduce jobs after output files are
+            written. </p>
         <p>Use the MapReduce executor to perform post-processing for files written by the following
                 destinations:<ul id="ul_l51_mvd_nx">
                 <li>Hadoop FS destination</li>

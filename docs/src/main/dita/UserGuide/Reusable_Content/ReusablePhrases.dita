@@ -1053,7 +1053,7 @@ web-0011.log</codeblock></dd>
             </p>
             <p><ph id="PipeFinish-Use">You can use the Pipeline Finisher in any logical way, such as
                         stopping a pipeline upon receiving a no-more-data event from the JDBC Query
-                        Consumer, JDBC Multitable Consumer, or Salesforce origins.</ph>
+                        Consumer origin.</ph>
             </p>
             <p><ph id="Spark-Use">You can use the executor in any logical way, such as running Spark
                         applications after the Hadoop FS, MapR FS, or Amazon S3 destination closes

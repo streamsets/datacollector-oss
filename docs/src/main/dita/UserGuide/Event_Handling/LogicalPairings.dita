@@ -44,6 +44,8 @@
                                 <ul id="ul_wvy_h4p_1y">
                                     <li>Email executor to send email each time the origin starts or
                                         completes processing a file. </li>
+                                    <li>Pipeline Finisher executor to stop the pipeline after
+                                        processing all available files.</li>
                                     <li>Any destination for event storage.</li>
                                 </ul>
                             </entry>
@@ -62,9 +64,8 @@
                             <entry>JDBC Multitable Consumer</entry>
                             <entry>
                                 <ul id="ul_a1m_jx5_lz">
-                                    <li>Pipeline Finisher executor to stop and transition the
-                                        pipeline to a Finished state after processing queried data
-                                        from all tables.</li>
+                                    <li>Pipeline Finisher executor to stop the pipeline after
+                                        processing queried data from all tables.</li>
                                     <li>Email executor to send email when the origin completes
                                         processing all data returned by queries.</li>
                                     <li>Any destination for event storage.</li>
@@ -76,8 +77,8 @@
                             <entry>
                                 <ul id="ul_pn2_csc_yz">
                                     <li>Route the no-more-data event to the Pipeline Finisher
-                                        executor to stop and transition the pipeline to a Finished
-                                        state after processing queried data.</li>
+                                        executor to stop the pipeline after processing queried
+                                        data.</li>
                                     <li>Email executor to send email each time the origin
                                         successfully completes a query, fails to complete a query,
                                         or completes processing all available data.</li>
@@ -99,9 +100,8 @@
                             <entry>Salesforce</entry>
                             <entry>
                                 <ul>
-                                    <li>Pipeline Finisher executor to stop and transition the
-                                        pipeline to a Finished state after processing queried
-                                        data.</li>
+                                    <li>Pipeline Finisher executor to stop the pipeline after
+                                        processing queried data.</li>
                                     <li>Email executor to send email when the origin completes
                                         processing all data returned by a query.</li>
                                     <li>Any destination for event storage.</li>

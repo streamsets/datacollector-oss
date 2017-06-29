@@ -37,8 +37,8 @@
                         origin saves the offset when the executor stops the pipeline. When it
                         restarts, the origin continues processing from the last-saved offset. In
                         contrast, if you configure the origin to run in full mode, when you restart
-                        the pipeline, the origin uses the initial offset.</p><p>For an example, see
-                            <xref
+                        the pipeline, the origin uses the initial offset, if specified.</p><p>For an
+                        example, see <xref
                             href="../Event_Handling/CaseStudy-StopPipeline.dita#concept_kff_ykv_lz"
                         />.</p></li>
                 <li

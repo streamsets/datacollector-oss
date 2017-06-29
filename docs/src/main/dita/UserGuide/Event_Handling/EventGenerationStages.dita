@@ -43,6 +43,8 @@
                                 <ul id="ul_opf_5ck_px">
                                     <li>Starts processing a file.</li>
                                     <li>Completes processing a file. </li>
+                                    <li>Completes processing all available files and the configured
+                                        batch wait time has elapsed.</li>
                                 </ul>
                             </entry>
                         </row>

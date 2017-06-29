@@ -20,11 +20,11 @@
 <concept id="concept_zld_35h_vx">
  <title>Related Event Generating Stages</title>
  <conbody>
-        <p><indexterm>Hive Query executor<indexterm>event generating
-            stages</indexterm></indexterm>Use the Hive Query executor in an event stream. The Hive
-            Query executor is designed to run a set of Hive or Impala queries after receiving an
-            event record. You can use the Hive Query executor with any event-generating stage where
-            the logic suits your needs. </p>
+        <p><indexterm>Hive Query executor<indexterm>related event generating
+                stages</indexterm></indexterm>Use the Hive Query executor in an event stream. The
+            Hive Query executor is designed to run a set of Hive or Impala queries after receiving
+            an event record. You can use the Hive Query executor with any event-generating stage
+            where the logic suits your needs. </p>
         <p>When implementing the Drift Synchronization Solution for Hive with Impala, use the
             executor to run the Invalidate Metadata query after the Hive Metastore destination
             changes table structures and after the Hadoop FS destination writes files to Hive. </p>

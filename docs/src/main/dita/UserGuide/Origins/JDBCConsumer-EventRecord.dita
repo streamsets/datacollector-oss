@@ -59,10 +59,10 @@
                     </tbody>
                 </tgroup>
             </table></p>
-        <p>The destination can generate the following types of event records:<dl>
+        <p>The origin can generate the following types of event records:<dl>
                 <dlentry>
                     <dt>No-more-data</dt>
-                    <dd>The destination generates a no-more-data event record when it completes
+                    <dd>The origin generates a no-more-data event record when it completes
                         processing all data returned by a query. </dd>
                     <dd>The no-more-data event records have the <codeph>sdc.event.type</codeph>
                         record header attribute set to <codeph>no-more-data</codeph> and include no
@@ -70,7 +70,7 @@
                 </dlentry>
                 <dlentry>
                     <dt>Query success</dt>
-                    <dd>The destination generates a query success event record when it completes
+                    <dd>The origin generates a query success event record when it completes
                         processing the data returned from a query. </dd>
                     <dd>The query success event records have the <codeph>sdc.event.type</codeph>
                         record header attribute set to <codeph>jdbc-query-success</codeph> and
@@ -108,8 +108,8 @@
                 </dlentry>
                 <dlentry>
                     <dt>Query failure</dt>
-                    <dd>The destination generates a query failure event record when it fails to
-                        complete processing the data returned from a query. </dd>
+                    <dd>The origin generates a query failure event record when it fails to complete
+                        processing the data returned from a query. </dd>
                     <dd>The query failure event records have the <codeph>sdc.event.type</codeph>
                         record header attribute set to <codeph>jdbc-query-failure</codeph> and
                         include the following fields:</dd>

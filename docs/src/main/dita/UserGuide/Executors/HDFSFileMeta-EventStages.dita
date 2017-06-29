@@ -20,7 +20,7 @@
 <concept id="concept_ggb_d1l_rx">
  <title>Related Event Generating Stages</title>
  <conbody>
-  <p><indexterm>HDFS File Metadata executor<indexterm>event generating
+  <p><indexterm>HDFS File Metadata executor<indexterm>related event generating
                 stages</indexterm></indexterm>Use the HDFS File Metadata executor in the event
             stream in a pipeline. Though you can use the executor in any logical way, the HDFS File
             Metadata executor is optimized to update file metadata for output files or whole files

@@ -34,11 +34,12 @@
             processing - to process data, then stop when all data is processed rather than waiting
             indefinitely for more data. </p>
         <p>When you restart a pipeline that was stopped by the Pipeline Finisher, the restart
-            behavior depends on how you configure the origin. If the origin is configured to use an
-            offset, when you restart the pipeline the origin begins at the last-saved offset. If you
-            configure the origin to process all data from an initial offset, when you restart the
-            pipeline, it does so. For more information, see "Event Record" in the origin
-            documentation.</p>
+            behavior depends on the origin. For example, if the origin stores an offset, when you
+            restart the pipeline the origin begins at the last-saved offset by default. That is, if
+            you run JDBC Query Consumer in incremental mode, the pipeline continues where it left
+            off when you restart the pipeline. However, if you configure the JDBC Query Consumer to
+            perform a full query, when you restart the pipeline, the origin performs the full query
+            again. For more information, see "Event Generation" in the origin documentation.</p>
         <p>The Pipeline Finisher executor has no stage-specific properties, but you might use a
             precondition to limit the records that enter the stage. You might also set up
             notification to be informed when the Pipeline Finisher stops the pipeline. </p>

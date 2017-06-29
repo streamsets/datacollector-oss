@@ -76,6 +76,7 @@
         <topicref href="../Executors/PipelineFinisher.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Executors/PipelineFinisher-Implementation.dita"/>
+            <topicref href="../Executors/PipelineFinisher-EventStages.dita"/>
             <topicref href="../Executors/PipelineFinisher-Notification.dita"/>
             <topicref href="../Executors/PipelineFinisher-Configuring.dita"/>
         </topicref>

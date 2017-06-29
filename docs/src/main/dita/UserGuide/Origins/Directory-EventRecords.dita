@@ -45,6 +45,9 @@
                                         file. </li>
                                     <li>finished-file - Generated when the origin completes
                                         processing a file.</li>
+                                    <li>no-more-data - Generated after the origin completes
+                                        processing all available files and the number of seconds
+                                        configured for Batch Wait Time has elapsed.</li>
                                 </ul></entry>
                         </row>
                         <row
@@ -57,25 +60,106 @@
                         </row>
                     </tbody>
                 </tgroup>
-            </table>Both types of Directory event records include the following field:<table
-                frame="all" rowsep="1" colsep="1" id="table_vmc_l42_px">
-                <tgroup cols="2">
-                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                    <thead>
-                        <row>
-                            <entry>Event Record Field</entry>
-                            <entry>Description</entry>
-                        </row>
-                    </thead>
-                    <tbody>
-                        <row>
-                            <entry>filepath</entry>
-                            <entry>Path and name of the file that the origin started or finished
-                                processing.</entry>
-                        </row>
-                    </tbody>
-                </tgroup>
             </table></p>
+        <p>The Directory origin can generate the following types of event records: </p>
+        <dl>
+            <dlentry>
+                <dt>new file</dt>
+                <dd>The Directory origin generates a new file event record when it starts processing
+                    a new file. </dd>
+                <dd>New file event records have the sdc.event.type set to new-file and include the
+                    following field:<table frame="all" rowsep="1" colsep="1" id="table_vmc_l42_px">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Event Record Field</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>filepath</entry>
+                                    <entry>Path and name of the file that the origin started or
+                                        finished processing.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></dd>
+            </dlentry>
+            <dlentry>
+                <dt>finished file</dt>
+                <dd>The Directory origin generates a finished file event record when it finishes
+                    processing a file.</dd>
+                <dd>Finished file event records have the sdc.event.type set to finished-file and
+                    include the following fields:<table frame="all" rowsep="1" colsep="1"
+                        id="table_msq_qzn_j1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Event Record Field</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>filepath</entry>
+                                    <entry>Path and name of the file that the origin started or
+                                        finished processing.</entry>
+                                </row>
+                                <row>
+                                    <entry>record-count</entry>
+                                    <entry>Number of records successfully generated from the
+                                        file.</entry>
+                                </row>
+                                <row>
+                                    <entry>error-count</entry>
+                                    <entry>Number of error records generated from the file. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></dd>
+            </dlentry>
+            <dlentry>
+                <dt>no-more-data</dt>
+                <dd>The Directory origin generates a no-more-data event record when the origin
+                    completes processing all available records and the number of seconds configured
+                    for Batch Wait Time elapses without any new files appearing to be processed. </dd>
+                <dd>No-more-data event records generated by the Directory origin have the
+                    sdc.event.type set to no-more-data and include the following fields:<table
+                        frame="all" rowsep="1" colsep="1" id="table_fcv_xx4_j1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Event Record Field</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>record-count</entry>
+                                    <entry>Number of records successfully generated from the
+                                        file.</entry>
+                                </row>
+                                <row>
+                                    <entry>error-count</entry>
+                                    <entry>Number of error records generated from the file. </entry>
+                                </row>
+                                <row>
+                                    <entry>file-count</entry>
+                                    <entry>Number of files the origin attempted to process. Can
+                                        include files that were unable to be processed or were not
+                                        fully processed.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></dd>
+            </dlentry>
+        </dl>
     </conbody>
 </concept>
