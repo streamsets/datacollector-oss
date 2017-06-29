@@ -28,7 +28,13 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
                               int fromVersion, int toVersion, List<Config> configs) throws StageException {
     switch (fromVersion) {
       case 1:
-        return upgradeV1ToV2(configs);
+        configs = upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          return configs;
+        }
+        // fall through
+      case 2:
+        return upgradeV2ToV3(configs);
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -37,6 +43,12 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
   private static List<Config> upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("oracleCDCConfigBean.txnWindow", "${1 * HOURS}"));
     configs.add(new Config("oracleCDCConfigBean.logminerWindow", "${2 * HOURS}"));
+    return configs;
+  }
+
+  private static List<Config> upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("oracleCDCConfigBean.bufferLocally", false));
+    configs.add(new Config("oracleCDCConfigBean.discardExpired", false));
     return configs;
   }
 }

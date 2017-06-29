@@ -100,10 +100,37 @@ public class OracleCDCConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Buffer Changes in SDC Memory",
+      description = "Buffer changes in SDC memory. Use this to reduce PGA memory usage on the DB, " +
+          "but higher heap size is required for the SDC",
+      displayPosition = 80,
+      group = "CDC",
+      defaultValue = "false"
+  )
+  public boolean bufferLocally;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Discard old uncommitted transactions",
+      description = "If uncommitted transactions have gone past the transaction window, discard them. If unchecked, such" +
+          " transactions are sent to error",
+      displayPosition = 80,
+      group = "CDC",
+      dependsOn = "bufferLocally",
+      triggeredByValue = "true",
+      defaultValue = "false"
+  )
+  public boolean discardExpired;
+
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "Dictionary Source",
       description = "Location of the LogMiner dictionary",
-      displayPosition = 80,
+      displayPosition = 90,
       group = "CDC"
   )
   @ValueChooserModel(DictionaryChooserValues.class)

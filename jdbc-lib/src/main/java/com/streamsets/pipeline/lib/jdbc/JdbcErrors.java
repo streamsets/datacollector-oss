@@ -102,6 +102,10 @@ public enum JdbcErrors implements ErrorCode {
 
   JDBC_80("Invalid transaction window. Must be a valid long or EL"),
   JDBC_81("LogMiner Session Window must be longer than Maximum Transaction Length"),
+  JDBC_82("Cannot buffer data in memory for a pipeline previously started without buffering"),
+  JDBC_83("Cannot switch from in-memory buffering to reading committed data only"),
+  JDBC_84("Transaction Id: '{}' started at: '{}' which is before the current transaction window being processed. " +
+      "The transaction was longer than transaction window"),
 
   ;
 
