@@ -102,26 +102,26 @@ public class PushWebSocketReceiver implements WebSocketReceiver {
   }
 
   @Override
-  public void process(byte[] payload, int offset, int len) throws IOException {
+  public boolean process(byte[] payload, int offset, int len) throws IOException {
     String requestId = System.currentTimeMillis() + "." + counter.getAndIncrement();
     try (DataParser parser = parserFactory.getParser(requestId, payload, offset, len)) {
-      process(parser);
+      return process(parser);
     } catch (DataParserException ex) {
       throw new IOException(ex);
     }
   }
 
   @Override
-  public void process(String message) throws IOException {
+  public boolean process(String message) throws IOException {
     String requestId = System.currentTimeMillis() + "." + counter.getAndIncrement();
     try (DataParser parser = parserFactory.getParser(requestId, message)) {
-      process(parser);
+      return process(parser);
     } catch (DataParserException ex) {
       throw new IOException(ex);
     }
   }
 
-  private void process(DataParser parser) throws IOException, DataParserException {
+  private boolean process(DataParser parser) throws IOException, DataParserException {
     BatchContext batchContext = getContext().startBatch();
     List<Record> records = new ArrayList<>();
     Record parsedRecord = parser.parse();
@@ -135,6 +135,6 @@ public class PushWebSocketReceiver implements WebSocketReceiver {
       batchContext.getBatchMaker().addRecord(record);
     }
 
-    getContext().processBatch(batchContext);
+    return getContext().processBatch(batchContext);
   }
 }

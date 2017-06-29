@@ -144,9 +144,13 @@ public class HttpReceiverServlet extends HttpServlet {
             }
           }
           LOG.debug("Processing request from '{}'", requestor);
-          getReceiver().process(req, is);
-          resp.setStatus(HttpServletResponse.SC_OK);
-          requestMeter.mark();
+          if (getReceiver().process(req, is)) {
+            resp.setStatus(HttpServletResponse.SC_OK);
+            requestMeter.mark();
+          } else {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Record(s) didn't reach all destinations");
+            errorRequestMeter.mark();
+          }
         } catch (Exception ex) {
           errorQueue.offer(ex);
           errorRequestMeter.mark();

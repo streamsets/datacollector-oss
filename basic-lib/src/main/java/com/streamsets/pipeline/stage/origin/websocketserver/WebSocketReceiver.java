@@ -38,7 +38,7 @@ public interface WebSocketReceiver {
 
   boolean validate(ServletUpgradeRequest req, ServletUpgradeResponse res) throws IOException;
 
-  void process(byte[] payload, int offset, int len) throws IOException;
+  boolean process(byte[] payload, int offset, int len) throws IOException;
 
-  void process(String message) throws IOException;
+  boolean process(String message) throws IOException;
 }

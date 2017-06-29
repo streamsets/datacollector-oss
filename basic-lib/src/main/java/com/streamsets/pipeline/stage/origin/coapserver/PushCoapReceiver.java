@@ -66,16 +66,16 @@ public class PushCoapReceiver implements CoapReceiver {
   }
 
   @Override
-  public void process(byte[] payload) throws IOException {
+  public boolean process(byte[] payload) throws IOException {
     String requestId = System.currentTimeMillis() + "." + counter.getAndIncrement();
     try (DataParser parser = parserFactory.getParser(requestId, payload)) {
-      process(parser);
+      return process(parser);
     } catch (DataParserException ex) {
       throw new IOException(ex);
     }
   }
 
-  private void process(DataParser parser) throws IOException, DataParserException {
+  private boolean process(DataParser parser) throws IOException, DataParserException {
     BatchContext batchContext = getContext().startBatch();
     List<Record> records = new ArrayList<>();
     Record parsedRecord = parser.parse();
@@ -89,6 +89,6 @@ public class PushCoapReceiver implements CoapReceiver {
       batchContext.getBatchMaker().addRecord(record);
     }
 
-    getContext().processBatch(batchContext);
+    return getContext().processBatch(batchContext);
   }
 }

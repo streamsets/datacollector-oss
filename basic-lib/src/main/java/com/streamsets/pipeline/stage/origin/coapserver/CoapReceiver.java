@@ -26,5 +26,5 @@ public interface CoapReceiver {
 
   String getResourceName();
 
-  void process(byte[] payload) throws IOException;
+  boolean process(byte[] payload) throws IOException;
 }

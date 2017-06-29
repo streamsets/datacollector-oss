@@ -63,8 +63,11 @@ public class WebSocketReceiverSocket extends WebSocketAdapter {
     long start = System.currentTimeMillis();
     try {
       LOG.debug("Processing request from '{}'", requester);
-      getReceiver().process(payload, offset, len);
-      requestMeter.mark();
+      if (getReceiver().process(payload, offset, len)) {
+        requestMeter.mark();
+      } else {
+        errorRequestMeter.mark();
+      }
     } catch (IOException ex) {
       errorQueue.offer(ex);
       errorRequestMeter.mark();

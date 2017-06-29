@@ -74,10 +74,15 @@ public class CoapReceiverResource extends CoapResource {
       long start = System.currentTimeMillis();
       LOG.debug("Request accepted from '{}'", exchange.getSourceAddress());
       try {
-        receiver.process(exchange.getRequestPayload());
-        exchange.respond(CoAP.ResponseCode.VALID);
-        exchange.accept();
-        requestMeter.mark();
+        if (receiver.process(exchange.getRequestPayload())) {
+          exchange.respond(CoAP.ResponseCode.VALID);
+          exchange.accept();
+          requestMeter.mark();
+        } else {
+          exchange.respond(CoAP.ResponseCode.INTERNAL_SERVER_ERROR);
+          exchange.accept();
+          errorRequestMeter.mark();
+        }
       } catch (IOException ex) {
         exchange.reject();
         errorQueue.offer(ex);

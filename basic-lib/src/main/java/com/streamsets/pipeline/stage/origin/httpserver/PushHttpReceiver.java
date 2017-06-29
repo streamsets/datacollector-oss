@@ -115,7 +115,7 @@ public class PushHttpReceiver implements HttpReceiver {
     return new OverrunInputStream(is, getMaxRequestSize(), true);
   }
   @Override
-  public void process(HttpServletRequest req, InputStream is) throws IOException {
+  public boolean process(HttpServletRequest req, InputStream is) throws IOException {
     // Capping the size of the request based on configuration to avoid OOME
     is = createBoundInputStream(is);
 
@@ -141,8 +141,7 @@ public class PushHttpReceiver implements HttpReceiver {
     }
 
     // Send batch to the rest of the pipeline for further processing
-    // TODO after SDC-4895 we should return a status code OK/error to the caller
-    getContext().processBatch(batchContext);
+    return getContext().processBatch(batchContext);
   }
 
 }

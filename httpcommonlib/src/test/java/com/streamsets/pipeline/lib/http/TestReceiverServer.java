@@ -129,6 +129,7 @@ public class TestReceiverServer {
       Mockito.when(receiver.getAppId()).thenReturn("id");
       Mockito.when(receiver.validate(Mockito.any(HttpServletRequest.class), Mockito.any(HttpServletResponse.class)))
           .thenReturn(true);
+      Mockito.when(receiver.process(Mockito.any(), Mockito.any())).thenReturn(true);
       conn = (HttpURLConnection) new URL("http://localhost:" + port + "/path").openConnection();
       conn.setRequestProperty(HttpConstants.X_SDC_APPLICATION_ID_HEADER, "id");
       conn.setDoOutput(true);
