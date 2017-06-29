@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.stage.processor.parser;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
 public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
   public DataFormatChooserValues() {
-    super(DataFormat.class);
+    super(
+        DataFormat.SYSLOG,
+        DataFormat.NETFLOW
+    );
   }
 
 }

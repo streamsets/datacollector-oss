@@ -1051,6 +1051,9 @@ public class DataParserFormatConfig implements DataFormatConfig {
       case SDC_JSON:
       case BINARY:
       case AVRO:
+      case SYSLOG:
+      case NETFLOW:
+        // nothing to validate for these formats
         break;
       default:
         issues.add(context.createConfigIssue(
@@ -1228,7 +1231,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     logDataFormatValidator.validateLogFormatConfig(context, configPrefix, issues);
   }
 
-  private void checkCollectdParserConfigs(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
+  void checkCollectdParserConfigs(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
     if (null != typesDbPath && !typesDbPath.isEmpty()) {
       File typesDbFile = new File(typesDbPath);
       if (!typesDbFile.canRead() || !typesDbFile.isFile()) {
@@ -1327,6 +1330,12 @@ public class DataParserFormatConfig implements DataFormatConfig {
         builder.setCompression(Compression.NONE);
         builder.setMaxDataLen(wholeFileMaxObjectLen);
         break;
+      case SYSLOG:
+        buildSyslogParser(builder);
+        break;
+      case NETFLOW:
+        // nothing to configure for Netflow parser as it's a completely fixed format
+        break;
       default:
         throw new IllegalStateException("Unexpected data format" + dataFormat);
     }
@@ -1382,7 +1391,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
         .setMaxDataLen(-1);
   }
 
-  private void buildDatagramParser(DataParserFactoryBuilder builder) {
+  void buildDatagramParser(DataParserFactoryBuilder builder) {
     builder
       .setConfig(DatagramParserFactory.CONVERT_TIME_KEY, convertTime)
       .setConfig(DatagramParserFactory.EXCLUDE_INTERVAL_KEY, excludeInterval)
@@ -1407,6 +1416,12 @@ public class DataParserFormatConfig implements DataFormatConfig {
       .setStringBuilderPoolSize(stringBuilderPoolSize)
       .setConfig(LogDataParserFactory.MULTI_LINES_KEY, multiLines);
     logDataFormatValidator.populateBuilder(builder);
+  }
+
+  private void buildSyslogParser(DataParserFactoryBuilder builder) {
+    builder
+      .setMaxDataLen(-1)
+      .setCharset(Charset.forName(charset));
   }
 
   /**

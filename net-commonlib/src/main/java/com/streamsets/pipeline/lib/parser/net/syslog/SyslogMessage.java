@@ -23,18 +23,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SyslogMessage implements MessageToRecord {
-  static final String FIELD_SYSLOG_FACILITY = "facility";
-  static final String FIELD_SYSLOG_SEVERITY = "severity";
-  static final String FIELD_SYSLOG_PRIORITY = "priority";
-  static final String FIELD_SYSLOG_VERSION = "version";
-  static final String FIELD_TIMESTAMP = "timestamp";
-  static final String FIELD_HOST = "host";
-  static final String FIELD_REMAINING = "remaining";
-  static final String FIELD_RAW = "raw";
-  static final String FIELD_RECEIVER_PORT = "receiverPort";
-  static final String FIELD_RECEIVER_ADDR = "receiverAddr";
-  static final String FIELD_SENDER_PORT = "senderPort";
-  static final String FIELD_SENDER_ADDR = "senderAddr";
+  public static final String FIELD_SYSLOG_FACILITY = "facility";
+  public static final String FIELD_SYSLOG_SEVERITY = "severity";
+  public static final String FIELD_SYSLOG_PRIORITY = "priority";
+  public static final String FIELD_SYSLOG_VERSION = "version";
+  public static final String FIELD_TIMESTAMP = "timestamp";
+  public static final String FIELD_HOST = "host";
+  public static final String FIELD_REMAINING = "remaining";
+  public static final String FIELD_RAW = "raw";
+  public static final String FIELD_RECEIVER_PORT = "receiverPort";
+  public static final String FIELD_RECEIVER_ADDR = "receiverAddr";
+  public static final String FIELD_SENDER_PORT = "senderPort";
+  public static final String FIELD_SENDER_ADDR = "senderAddr";
 
   private String senderHost;
   private String senderAddress;

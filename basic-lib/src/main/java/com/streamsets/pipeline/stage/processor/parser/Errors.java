@@ -13,27 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser.net.syslog;
+package com.streamsets.pipeline.stage.processor.parser;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  SYSLOG_00("Corrupt message: '{}'"),
-  SYSLOG_01("Corrupt message: invalid priority: {}: '{}'"),
-  SYSLOG_02("Corrupt message: no data except priority: '{}'"),
-  SYSLOG_03("Corrupt message: missing hostname: '{}'"),
-  SYSLOG_04("Corrupt message: bad timestamp format: '{}'"),
-  SYSLOG_05("Corrupt message: bad timestamp format: {}: '{}'"),
-  SYSLOG_06("Corrupt message: bad timestamp format, no timezone: '{}'"),
-  SYSLOG_07("Corrupt message: bad timestamp format, fractional portion: '{}'"),
-  SYSLOG_08("Corrupt message: bad timestamp format, invalid timezone: '{}'"),
-  SYSLOG_09("Not a valid RFC5424 timestamp: '{}'"),
-  SYSLOG_10("Not a valid RFC3164 timestamp: '{}'"),
-  SYSLOG_20("Error parsing Syslog message: '{}'"),
+  DATAPARSER_01("Cannot parse the field '{}' as type {} for record '{}': {}"),
+  DATAPARSER_02("Cannot parse the field '{}' as type {} for record '{}' since its type is {}.  Supported types are STRING" +
+      " and BYTE_ARRAY."),
+  DATAPARSER_03("{} parsing the field '{}' as type {} for record '{}': {}"),
+  DATAPARSER_04("IOException attempting to parse whole file field '{}' for record '{}': {}"),
   ;
+
 
   private final String msg;
   Errors(String msg) {
