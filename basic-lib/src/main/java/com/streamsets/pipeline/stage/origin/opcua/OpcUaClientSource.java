@@ -606,10 +606,12 @@ public class OpcUaClientSource implements PushSource {
 
   @Override
   public void destroy() {
-    try {
-      opcUaClient.disconnect().get();
-    } catch (InterruptedException | ExecutionException e) {
-      e.printStackTrace();
+    if (opcUaClient != null) {
+      try {
+        opcUaClient.disconnect().get();
+      } catch (InterruptedException | ExecutionException ex) {
+        LOG.error("Failed during OPC UA Client disconnect call: {}", ex.getMessage());
+      }
     }
   }
 
