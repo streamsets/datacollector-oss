@@ -198,7 +198,7 @@
     </div>
   </li>
 
-  <li class="record-list-item" ng-if="showHeader && recordValue.attributes && (isOpen || (isRoot && record.expand))" ng-init="fieldHeaderExpand=false">
+  <li class="record-list-item" ng-if="showHeader && recordValue.attributes && (isOpen || record.expand)" ng-init="fieldHeaderExpand=false">
     <label>
       <span class="pointer toggler {{fieldHeaderExpand ? 'open' : ''}}"
             ng-click="fieldHeaderExpand = !fieldHeaderExpand"></span>
