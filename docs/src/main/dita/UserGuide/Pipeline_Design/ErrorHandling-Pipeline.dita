@@ -71,6 +71,13 @@
           <dd>You define the configuration properties for the Kafka cluster to use. </dd>
         </dlentry>
         <dlentry>
+          <dt>Write to Kinesis</dt>
+          <dd>The pipeline writes error records and related details to Amazon Kinesis Streams. <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            includes the records in error record counts and metrics.</dd>
+          <dd>You define the configuration properties for the Kinesis stream to use. </dd>
+        </dlentry>
+        <dlentry>
           <dt>Write to MapR Streams</dt>
           <dd>The pipeline writes error records and related details to MapR Streams. <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

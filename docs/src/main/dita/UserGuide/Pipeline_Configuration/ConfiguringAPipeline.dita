@@ -322,6 +322,8 @@
                                                 the specified directory. </li>
                                             <li>Write to Kafka - Writes error records to the
                                                 specified Kafka cluster.</li>
+                                            <li>Write to Kinesis - Writes error records to the
+                                                specified Kinesis stream.</li>
                                             <li>Write to MapR Streams - Writes error records to the
                                                 specified MapR cluster.</li>
                                         </ul><p>For cluster mode, Write to File is not supported at
@@ -553,6 +555,75 @@
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPKConfigs">
                                     <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>When writing to Kinesis, click the <wintitle>Error Records - Write to
+                        Kinesis</wintitle> tab and configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_cgq_yn4_yr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Kinesis Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Access Key ID <xref
+                                            href="../Destinations/KinProducer-AWSCredentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v86_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_AccessKeyID"
+                                    />
+                                </row>
+                                <row>
+                                    <entry>Secret Access Key <xref
+                                        href="../Destinations/KinProducer-AWSCredentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_v74_wcr_yv"/>
+                                        </xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSDest_SecretAccessKey"
+                                    />
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisRegion">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisEndpoint">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisStreamName">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisPartitionStrategy">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisPartitionExp">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/rowKinesisConfig">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Preserve Record Order</entry>
+                                    <entry>Select to preserve the order of records. Enabling this
+                                        option can reduce pipeline performance.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
