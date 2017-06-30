@@ -30,10 +30,12 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.lib.util.JsonUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -158,32 +160,46 @@ public class ForceUtils {
     if (userSpecifiedType != DataType.USE_SALESFORCE_TYPE) {
       return Field.create(Field.Type.valueOf(userSpecifiedType.getLabel()), val);
     } else {
-      if (val != null && !(val instanceof String)) {
-        throw new StageException(
-            Errors.FORCE_04,
-            "Unexpected type: " + val.getClass().getName()
-        );
-      }
-      String strVal = (String)val;
-      if (BOOLEAN_TYPES.contains(sfdcType)) {
-        return Field.create(Field.Type.BOOLEAN, (strVal != null) ? Boolean.valueOf(strVal) : null);
+      if(val instanceof Map) {
+        // Fields like Fiscal on Opportunity show up as Maps from Streaming API
+        try {
+          return JsonUtil.jsonToField(val);
+        } catch (IOException e) {
+          throw new StageException(Errors.FORCE_04, "Error parsing data", e);
+        }
+      } else if (BOOLEAN_TYPES.contains(sfdcType)) {
+        return Field.create(Field.Type.BOOLEAN, val);
       } else if (BYTE_TYPES.contains(sfdcType)) {
-        return  Field.create(Field.Type.BYTE, (strVal != null) ? Byte.valueOf(strVal) : null);
+        return  Field.create(Field.Type.BYTE, val);
       } else if (INT_TYPES.contains(sfdcType)) {
-        return  Field.create(Field.Type.INTEGER, (strVal != null) ? Integer.valueOf(strVal) : null);
+        return  Field.create(Field.Type.INTEGER, val);
       } else if (DECIMAL_TYPES.contains(sfdcType)) {
-        return  Field.create(Field.Type.DECIMAL, (strVal != null) ? new BigDecimal(strVal) : null);
+        return  Field.create(Field.Type.DECIMAL, val);
       } else if (STRING_TYPES.contains(sfdcType)) {
-        return  Field.create(Field.Type.STRING, strVal);
+        return  Field.create(Field.Type.STRING, val);
       } else if (BINARY_TYPES.contains(sfdcType)) {
-        return  Field.create(Field.Type.BYTE_ARRAY, (strVal != null) ? Base64.decodeBase64(strVal) : null);
+        return  Field.create(Field.Type.BYTE_ARRAY, val);
       } else if (DATETIME_TYPES.contains(sfdcType)) {
+        if (val != null && !(val instanceof String)) {
+          throw new StageException(
+              Errors.FORCE_04,
+              "Unexpected type: " + val.getClass().getName()
+          );
+        }
+        String strVal = (String)val;
         try {
           return Field.createDatetime((strVal != null) ? DATETIME_FORMAT.parse(strVal) : null);
         } catch (ParseException e) {
           throw new StageException(Errors.FORCE_04, "Error parsing date", e);
         }
       } else if (DATE_TYPES.contains(sfdcType)) {
+        if (val != null && !(val instanceof String)) {
+          throw new StageException(
+              Errors.FORCE_04,
+              "Unexpected type: " + val.getClass().getName()
+          );
+        }
+        String strVal = (String)val;
         try {
           return Field.createDatetime((strVal != null) ? DATE_FORMAT.parse(strVal) : null);
         } catch (ParseException e) {
