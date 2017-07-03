@@ -50,10 +50,10 @@ public final class Constants {
   // Log Generator
 
   /**
-   * 1GB of raw logs is equal to roughly ~80MB after zip compression (depending on the type of logs)
+   * 2GB of raw logs is equal to roughly ~70MB after zip compression (on real life logs)
    */
   public static final String LOG_MAX_SIZE = "bundle.log.max_size";
-  public static final long DEFAULT_LOG_MAX_SIZE = (1024 * 1024 * 1024);
+  public static final long DEFAULT_LOG_MAX_SIZE = 2L * (1024 * 1024 * 1024);
 
   /**
    * For GC, we want last ~50 MBs (random constant at this point).
