@@ -15,30 +15,21 @@
  */
 package com.streamsets.datacollector.lineage;
 
-import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
-import com.streamsets.datacollector.util.Configuration;
-import dagger.Module;
-import dagger.Provides;
+public class LineagePublisherConstants {
 
-import javax.inject.Singleton;
+  /**
+   * Configuration property in sdc.properties with the declared publisher plugins ids.
+   */
+  public static final String CONFIG_LINEAGE_PUBLISHERS = "lineage.publishers";
 
-@Module(
-  injects = LineagePublisherTask.class,
-  library = true,
-  complete = false
-)
-public class LineageModule {
+  /**
+   * Prefix for all specific lineage publisher properties.
+   */
+  public static final String CONFIG_LINEAGE_PUBLISHER_PREFIX = "lineage.publisher.";
+  // Definition of the plugin (stage library name and publisher name)
+  public static final String CONFIG_LINEAGE_PUBSLIHER_DEF = ".def";
 
-  @Provides
-  @Singleton
-  public LineagePublisherTask provideLineagePublisher(
-    Configuration configuration,
-    StageLibraryTask stageLibraryTask
-  ) {
-    return new LineagePublisherTaskImpl(
-      configuration,
-      stageLibraryTask
-    );
+  private LineagePublisherConstants() {
+    // Instantiation is prohibited
   }
-
 }
