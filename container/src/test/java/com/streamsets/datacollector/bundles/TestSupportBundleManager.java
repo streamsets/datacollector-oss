@@ -69,6 +69,9 @@ public class TestSupportBundleManager {
       runtimeInfo,
       buildInfo
     );
+
+    // Initialize manager to load all content generators
+    manager.init();
   }
 
   @Test

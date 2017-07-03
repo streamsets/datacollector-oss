@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.main;
 
+import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.http.SlaveWebServerTask;
@@ -33,7 +34,8 @@ public class SlavePipelineTask extends PipelineTask {
     Manager manager,
     SlaveWebServerTask slaveWebServerTask,
     EventHandlerTask eventHandlerTask,
-    LineagePublisherTask lineagePublisherTask
+    LineagePublisherTask lineagePublisherTask,
+    SupportBundleManager supportBundleManager
   ) {
     super(
       library,
@@ -41,7 +43,8 @@ public class SlavePipelineTask extends PipelineTask {
       manager,
       slaveWebServerTask,
       eventHandlerTask,
-      lineagePublisherTask
+      lineagePublisherTask,
+      supportBundleManager
     );
   }
 }

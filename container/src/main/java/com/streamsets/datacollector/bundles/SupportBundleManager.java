@@ -39,6 +39,7 @@ import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -78,7 +79,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * Main manager that is taking care of bundle creation.
  */
-public class SupportBundleManager implements BundleContext {
+public class SupportBundleManager extends AbstractTask implements BundleContext {
 
   private static final Logger LOG = LoggerFactory.getLogger(SupportBundleManager.class);
 
@@ -116,6 +117,7 @@ public class SupportBundleManager implements BundleContext {
     RuntimeInfo runtimeInfo,
     BuildInfo buildInfo
   ) {
+    super("Support Bundle Manager");
     this.executor = executor;
     this.configuration = configuration;
     this.pipelineStore = pipelineStore;
@@ -123,7 +125,10 @@ public class SupportBundleManager implements BundleContext {
     this.snapshotStore = snapshotStore;
     this.runtimeInfo = runtimeInfo;
     this.buildInfo = buildInfo;
+  }
 
+  @Override
+  protected void initTask() {
     Set<String> ids = new HashSet<>();
 
     ImmutableList.Builder builder = new ImmutableList.Builder();

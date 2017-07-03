@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.main;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.http.DataCollectorWebServerTask;
@@ -34,6 +35,7 @@ public class PipelineTask extends CompositeTask {
   private final StageLibraryTask stageLibraryTask;
   private final WebServerTask webServerTask;
   private final LineagePublisherTask lineagePublisherTask;
+  private final SupportBundleManager supportBundleManager;
 
   @Inject
   public PipelineTask(
@@ -42,17 +44,19 @@ public class PipelineTask extends CompositeTask {
     Manager manager,
     DataCollectorWebServerTask webServerTask,
     EventHandlerTask eventHandlerTask,
-    LineagePublisherTask lineagePublisherTask
+    LineagePublisherTask lineagePublisherTask,
+    SupportBundleManager supportBundleManager
   ) {
     super(
       "pipelineNode",
-      ImmutableList.of(library, lineagePublisherTask, store, webServerTask , manager, eventHandlerTask),
+      ImmutableList.of(library, lineagePublisherTask, store, webServerTask , manager, eventHandlerTask, supportBundleManager),
       true);
     this.webServerTask = webServerTask;
     this.stageLibraryTask = library;
     this.pipelineStoreTask = store;
     this.manager = manager;
     this.lineagePublisherTask = lineagePublisherTask;
+    this.supportBundleManager = supportBundleManager;
   }
 
   public Manager getManager() {
@@ -69,5 +73,8 @@ public class PipelineTask extends CompositeTask {
   }
   public LineagePublisherTask getLineagePublisherTask() {
     return lineagePublisherTask;
+  }
+  public SupportBundleManager getSupportBundleManager() {
+    return supportBundleManager;
   }
 }
