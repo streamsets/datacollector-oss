@@ -669,6 +669,11 @@ public class MockStages {
     }
 
     @Override
+    public LineagePublisherDefinition getLineagePublisherDefinition(String library, String name) {
+      return null;
+    }
+
+    @Override
     public StageDefinition getStage(String library, String name, boolean forExecution) {
       for (StageDefinition def : stages) {
         if (def.getLibrary().equals(library) && def.getName().equals(name)) {

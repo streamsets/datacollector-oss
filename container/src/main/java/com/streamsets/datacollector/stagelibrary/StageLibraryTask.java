@@ -41,6 +41,8 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   public List<LineagePublisherDefinition> getLineagePublisherDefinitions();
 
+  public LineagePublisherDefinition getLineagePublisherDefinition(String library, String name);
+
   public StageDefinition getStage(String library, String name, boolean forExecution);
 
   public Map<String, String> getLibraryNameAliases();

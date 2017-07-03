@@ -74,6 +74,11 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   }
 
   @Override
+  public LineagePublisherDefinition getLineagePublisherDefinition(String library, String name) {
+    return null;
+  }
+
+  @Override
   public StageDefinition getStage(String library, String name, boolean forExecution) {
     StageDefinition def;
     if (LIBRARY.equals(library) && NAME.equals(name)) {

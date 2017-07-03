@@ -94,6 +94,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private Map<String, StageDefinition> stageMap;
   private List<StageDefinition> stageList;
   private List<LineagePublisherDefinition> lineagePublisherDefinitions;
+  private Map<String, LineagePublisherDefinition> lineagePublisherDefinitionMap;
   private LoadingCache<Locale, List<StageDefinition>> localizedStageList;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
@@ -192,10 +193,12 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     stageList = new ArrayList<>();
     stageMap = new HashMap<>();
     lineagePublisherDefinitions = new ArrayList<>();
+    lineagePublisherDefinitionMap = new HashMap<>();
     loadStages();
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
     lineagePublisherDefinitions = ImmutableList.copyOf(lineagePublisherDefinitions);
+    lineagePublisherDefinitionMap = ImmutableMap.copyOf(lineagePublisherDefinitionMap);
 
     // localization cache for definitions
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
@@ -337,6 +340,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             String key = createKey(libDef.getName(), lineage.getName());
             LOG.debug("Loaded lineage plugin '{}'", key);
             lineagePublisherDefinitions.add(lineage);
+            lineagePublisherDefinitionMap.put(key, lineage);
           }
         } catch (IOException | ClassNotFoundException ex) {
           throw new RuntimeException(
@@ -441,6 +445,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @Override
   public List<LineagePublisherDefinition> getLineagePublisherDefinitions() {
     return lineagePublisherDefinitions;
+  }
+
+  @Override
+  public LineagePublisherDefinition getLineagePublisherDefinition(String library, String name) {
+    return lineagePublisherDefinitionMap.get(createKey(library, name));
   }
 
   @Override
