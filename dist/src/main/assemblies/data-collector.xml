@@ -247,6 +247,10 @@
       <directory>${basedir}/../${cdh_5_11-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_12-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
 
     <!-- CDH Spark Kafka lib -->
     <fileSet>
@@ -283,6 +287,10 @@
     </fileSet>
     <fileSet>
       <directory>${basedir}/../${cdh_5_11-cluster-cdh_kafka_2_1-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${cdh_5_12-cluster-cdh_kafka_2_1-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
