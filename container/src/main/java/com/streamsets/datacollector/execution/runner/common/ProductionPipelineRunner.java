@@ -608,7 +608,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
         }
       });
 
-      badRecordsHandler.handle(null, null, getBadRecords(pipeBatch.getErrorSink()));
+      badRecordsHandler.handle(null, null, pipeBatch.getErrorSink());
 
       // Next iteration should have new and empty PipeBatch
       pipeBatch = new FullPipeBatch(null,null, batchSize, false);
@@ -709,7 +709,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       });
 
       enforceMemoryLimit(memoryConsumedByStage);
-      badRecordsHandler.handle(entityName, newOffset, getBadRecords(pipeBatch.getErrorSink()));
+      badRecordsHandler.handle(entityName, newOffset, pipeBatch.getErrorSink());
       if (deliveryGuarantee == DeliveryGuarantee.AT_LEAST_ONCE) {
         // When AT_LEAST_ONCE commit only if
         // 1. There is no offset commit trigger for this pipeline or
@@ -801,16 +801,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     }
   }
 
-  private RecordImpl getSourceRecord(Record record) {
-    return (RecordImpl) ((RecordImpl)record).getHeader().getSourceRecord();
-  }
-
-  private void injectErrorInfo(RecordImpl sourceRecord, Record record) {
-    HeaderImpl header = sourceRecord.getHeader();
-    header.copyErrorFrom(record);
-    header.setErrorContext(runtimeInfo.getId(), pipelineName);
-  }
-
   private void enforceMemoryLimit(Map<String, Long> memoryConsumedByStage) throws PipelineRuntimeException {
     long totalMemoryConsumed = 0;
     for(Map.Entry<String, Long> entry : memoryConsumedByStage.entrySet()) {
@@ -861,17 +851,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     if(!offered) {
       LOG.error("Could not submit alert request for pipeline ending error: " + throwable, throwable);
     }
-  }
-  private List<Record> getBadRecords(ErrorSink errorSink) throws PipelineRuntimeException {
-    List<Record> badRecords = new ArrayList<>();
-    for (Map.Entry<String, List<Record>> entry : errorSink.getErrorRecords().entrySet()) {
-      for (Record record : entry.getValue()) {
-        RecordImpl sourceRecord = getSourceRecord(record);
-        injectErrorInfo(sourceRecord, record);
-        badRecords.add(sourceRecord);
-      }
-    }
-    return badRecords;
   }
 
   public SourceOffsetTracker getOffSetTracker() {

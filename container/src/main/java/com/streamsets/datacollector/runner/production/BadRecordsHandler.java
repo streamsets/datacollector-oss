@@ -15,7 +15,13 @@
  */
 package com.streamsets.datacollector.runner.production;
 
+import com.streamsets.datacollector.config.ErrorRecordPolicy;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.record.HeaderImpl;
+import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.BatchImpl;
+import com.streamsets.datacollector.runner.ErrorSink;
+import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.datacollector.validation.Issue;
@@ -23,13 +29,26 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BadRecordsHandler {
+  private final ErrorRecordPolicy errorRecordPolicy;
+  private final RuntimeInfo runtimeInfo;
+  private final String pipelineName;
   private final StageRuntime errorStage;
 
-  public BadRecordsHandler(StageRuntime errorStage) {
+  public BadRecordsHandler(
+    ErrorRecordPolicy errorRecordPolicy,
+    RuntimeInfo runtimeInfo,
+    StageRuntime errorStage,
+    String pipelineName
+  ) {
+    this.errorRecordPolicy = errorRecordPolicy;
+    this.runtimeInfo = runtimeInfo;
     this.errorStage = errorStage;
+    this.pipelineName = pipelineName;
   }
 
   public String getInstanceName() {
@@ -40,7 +59,10 @@ public class BadRecordsHandler {
     return  errorStage.init();
   }
 
-  public void handle(String sourceEntity, String sourceOffset, List<Record> badRecords) throws StageException {
+  public void handle(String sourceEntity, String sourceOffset, ErrorSink errorSink) throws StageException {
+    // Get error records from the error sink
+    List<Record> badRecords = getBadRecords(errorSink);
+
     // Shortcut to avoid synchronization if there are no error records
     if(badRecords.isEmpty()) {
       return;
@@ -60,6 +82,39 @@ public class BadRecordsHandler {
 
   public void destroy() {
     errorStage.getStage().destroy();
+  }
+
+  /**
+   * Generate list of error records from the error sink. What precise records will be returned depends on the error
+   * record policy configuration.
+   *
+   * @param errorSink Error sink with the error records
+   * @return List with records that should be sent to error stream
+   */
+  private List<Record> getBadRecords(ErrorSink errorSink) {
+    List<Record> badRecords = new ArrayList<>();
+
+    for (Map.Entry<String, List<Record>> entry : errorSink.getErrorRecords().entrySet()) {
+      for (Record record : entry.getValue()) {
+        RecordImpl errorRecord;
+
+        switch (errorRecordPolicy) {
+          case ORIGINAL_RECORD:
+            errorRecord = (RecordImpl) ((RecordImpl)record).getHeader().getSourceRecord();
+            errorRecord.getHeader().copyErrorFrom(record);
+            break;
+          case STAGE_RECORD:
+            errorRecord = (RecordImpl) record;
+            break;
+          default:
+           throw new IllegalArgumentException("Uknown error record policy: " + errorRecordPolicy);
+        }
+
+        errorRecord.getHeader().setErrorContext(runtimeInfo.getId(), pipelineName);
+        badRecords.add(errorRecord);
+      }
+    }
+    return badRecords;
   }
 
 }

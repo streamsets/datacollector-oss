@@ -495,7 +495,12 @@ public class Pipeline {
           new ConcurrentHashMap<>(),
           lineagePublisherTask
         );
-        BadRecordsHandler badRecordsHandler = new BadRecordsHandler(errorStage);
+        BadRecordsHandler badRecordsHandler = new BadRecordsHandler(
+          pipelineBean.getConfig().errorRecordPolicy,
+          runner.getRuntimeInfo(),
+          errorStage,
+          pipelineName
+        );
 
         // And finally Stats aggregation
         StatsAggregationHandler statsAggregationHandler = null;

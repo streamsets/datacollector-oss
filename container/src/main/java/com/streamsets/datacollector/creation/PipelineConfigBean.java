@@ -17,6 +17,8 @@ package com.streamsets.datacollector.creation;
 
 import com.streamsets.datacollector.config.DeliveryGuaranteeChooserValues;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
+import com.streamsets.datacollector.config.ErrorRecordPolicy;
+import com.streamsets.datacollector.config.ErrorRecordPolicyChooserValues;
 import com.streamsets.datacollector.config.ExecutionModeChooserValues;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.MemoryLimitExceededChooserValues;
@@ -276,12 +278,23 @@ public class PipelineConfigBean implements Stage {
   )
   public int maxRunners = 0;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="ORIGINAL_RECORD",
+      label = "Error record policy",
+      description = "Configures what variant of a record is sent to error stream.",
+      displayPosition = 200
+  )
+  @ValueChooserModel(ErrorRecordPolicyChooserValues.class)
+  public ErrorRecordPolicy errorRecordPolicy = ErrorRecordPolicy.ORIGINAL_RECORD;
+
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "[]",
       label = "Webhooks",
       description = "Webhooks",
-      displayPosition = 200,
+      displayPosition = 210,
       group = "NOTIFICATIONS"
   )
   @ListBeanModel

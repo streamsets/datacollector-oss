@@ -27,6 +27,7 @@ import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.record.RecordImpl;
+import com.streamsets.datacollector.runner.ErrorSink;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
@@ -60,6 +61,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
@@ -224,14 +226,15 @@ public class TestErrorRecord {
     );
 
     PowerMockito.replace(
-        MemberMatcher.method(BadRecordsHandler.class, "handle", String.class, String.class, List.class)
-    ).with(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        List<Record> records = (List<Record>)args[2];
-        badHandlerErrorRecords.addAll(records);
-        return null;
+        MemberMatcher.method(BadRecordsHandler.class, "handle", String.class, String.class, ErrorSink.class)
+    ).with((proxy, method, args) -> {
+      ErrorSink errorSink = (ErrorSink) args[2];
+      for (Map.Entry<String, List<Record>> entry : errorSink.getErrorRecords().entrySet()) {
+        for (Record record : entry.getValue()) {
+          badHandlerErrorRecords.add(record);
+        }
       }
+      return null;
     });
 
     captureMockStages(errorStage, new AtomicBoolean(false));
