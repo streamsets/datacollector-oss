@@ -95,7 +95,7 @@ public class LineagePublisherTaskImpl extends AbstractTask implements LineagePub
    * This method will throw exceptions on all error paths.
    */
   private LineagePublisherDefinition getDefinition(String name) {
-    String defConfig = LineagePublisherConstants.CONFIG_LINEAGE_PUBLISHER_PREFIX + name + LineagePublisherConstants.CONFIG_LINEAGE_PUBSLIHER_DEF;
+    String defConfig = LineagePublisherConstants.configDef(name);
     String publisherDefinition = configuration.get(defConfig, null);
     if(StringUtils.isEmpty(publisherDefinition)) {
       throw new IllegalArgumentException(Utils.format("Missing definition '{}'", defConfig));

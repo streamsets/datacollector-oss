@@ -37,7 +37,7 @@ public class TestLineagePublisherContext {
 
   private Configuration getConfiguration() {
     Configuration configuration = new Configuration();
-    configuration.set("lineage_publisher.random-id.company", "StreamSets");
+    configuration.set("lineage.publisher.random-id.config.company", "StreamSets");
     return configuration;
   }
 }

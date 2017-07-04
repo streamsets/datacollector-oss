@@ -22,8 +22,6 @@ import com.streamsets.pipeline.api.lineage.LineagePublisher;
 
 public class LineagePublisherContext implements LineagePublisher.Context {
 
-  private static final String CONF_PREFIX = "lineage_publisher.";
-
   private final String id;
   private final Configuration configuration;
   private final String confPrefix;
@@ -34,7 +32,7 @@ public class LineagePublisherContext implements LineagePublisher.Context {
   ) {
     this.id = id;
     this.configuration = configuration;
-    this.confPrefix = CONF_PREFIX + id + ".";
+    this.confPrefix = LineagePublisherConstants.configConfig(id);
   }
 
   @Override
