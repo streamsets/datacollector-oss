@@ -25,6 +25,12 @@ public class LineagePublisherConstants {
   public static final String CONFIG_LINEAGE_PUBLISHERS = "lineage.publishers";
 
   /**
+   * Maximal number of lineage events that will be cached in memory (and thus lost on crash).
+   */
+  public static final String CONFIG_LINEAGE_QUEUE_SIZE = "lineage.queue.size";
+  public static final int DEFAULT_LINEAGE_QUEUE_SIZE = 100;
+
+  /**
    * Each publisher have it's own configuration space, so the prefixes/postfixes are private and one should use
    * the access methods that will resolve the property for given publisher name.
    */

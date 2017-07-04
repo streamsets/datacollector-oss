@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.lineage;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineagePublisher;
@@ -37,7 +38,8 @@ public class LineagePublisherRuntime {
    *
    * The class will be loaded inside the definition.getClassLoader() class loader.
    */
-  private LineagePublisher publisher;
+  @VisibleForTesting
+  LineagePublisher publisher;
 
   public LineagePublisherRuntime(
     LineagePublisherDefinition definition,

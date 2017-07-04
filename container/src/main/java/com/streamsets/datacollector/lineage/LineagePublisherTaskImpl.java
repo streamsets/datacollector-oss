@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.lineage;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.AbstractTask;
@@ -31,15 +32,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class LineagePublisherTaskImpl extends AbstractTask implements LineagePublisherTask {
   private static final Logger LOG = LoggerFactory.getLogger(LineagePublisherTaskImpl.class);
 
+  // Other Data Collector tasks and injected objects
   private final Configuration configuration;
   private final StageLibraryTask stageLibraryTask;
 
-  private LineagePublisherRuntime publisherRuntime;
+  @VisibleForTesting
+  LineagePublisherRuntime publisherRuntime;
+  private ArrayBlockingQueue<LineageEvent> eventQueue;
+
+  private ExecutorService executorService;
+  private EventQueueConsumer consumerRunnable;
+  private Future consumerFuture;
+
 
   @Inject
   public LineagePublisherTaskImpl(
@@ -53,7 +69,10 @@ public class LineagePublisherTaskImpl extends AbstractTask implements LineagePub
 
   @Override
   public void publishEvent(LineageEvent event) {
-    // TBD
+    // Will be null if no publisher is configured
+    if(eventQueue != null) {
+      eventQueue.add(event);
+    }
   }
 
   @Override
@@ -75,15 +94,45 @@ public class LineagePublisherTaskImpl extends AbstractTask implements LineagePub
 
     // Instantiate and initialize the publisher
     createAndInitializeRuntime(def, publisherName);
+
+    // Initialize blocking queue that will buffer data before sending them to lineage publisher
+    int size = configuration.get(LineagePublisherConstants.CONFIG_LINEAGE_QUEUE_SIZE, LineagePublisherConstants.DEFAULT_LINEAGE_QUEUE_SIZE);
+    eventQueue = new ArrayBlockingQueue<>(size);
+
+    // And run the separate thread
+    executorService = Executors.newSingleThreadExecutor();
+    consumerRunnable = new EventQueueConsumer();
   }
 
   @Override
   protected void runTask() {
-    LOG.info("Lineage Publisher Task is starting");
+    // Will be null if no publisher is configured
+    if(executorService != null) {
+      consumerFuture = executorService.submit(consumerRunnable);
+    }
   }
 
   @Override
   protected void stopTask() {
+    if(consumerFuture != null) {
+      consumerRunnable.continueRunning = false;
+      try {
+        consumerFuture.get();
+      } catch (InterruptedException|ExecutionException e) {
+        LOG.error("Exception while stopping consumer thread", e);
+      }
+    }
+
+    if(executorService != null) {
+      executorService.shutdown();
+    }
+
+    if(eventQueue != null) {
+      List<LineageEvent> drainedEvents = new ArrayList<>();
+      eventQueue.drainTo(drainedEvents);
+      publisherRuntime.publishEvents(drainedEvents);
+    }
+
     if(publisherRuntime != null) {
       publisherRuntime.destroy();
     }
@@ -146,6 +195,39 @@ public class LineagePublisherTaskImpl extends AbstractTask implements LineagePub
       throw new RuntimeException("Can't instantiate publisher", e);
     } finally {
       Thread.currentThread().setContextClassLoader(previousClassLoader);
+    }
+  }
+
+  private class EventQueueConsumer implements Runnable {
+
+    boolean continueRunning = true;
+
+    @Override
+    public void run() {
+      LOG.info("Starting lineage event consumer");
+      while(continueRunning) {
+        List<LineageEvent> drainedEvents = new ArrayList<>();
+
+        // Try to get first event in blocking fashion with limited wait
+        LineageEvent event;
+        try {
+          event = eventQueue.poll(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+          LOG.info("Consumer thread interrupted while waiting for events to show up");
+          continue;
+        }
+
+        // If the event is not null, there is something to process
+        if(event != null) {
+          drainedEvents.add(event);
+          eventQueue.drainTo(drainedEvents);
+
+          LOG.debug("Consuming {} lineage events", drainedEvents.size());
+          publisherRuntime.publishEvents(drainedEvents);
+        }
+      }
+
+      LOG.info("Lineage event consumer finished");
     }
   }
 
