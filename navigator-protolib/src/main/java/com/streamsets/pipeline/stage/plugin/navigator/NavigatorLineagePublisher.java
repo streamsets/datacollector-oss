@@ -39,9 +39,10 @@ public class NavigatorLineagePublisher implements LineagePublisher {
   }
 
   @Override
-  public void run(List<LineageEvent> events) {
-
+  public boolean publishEvents(List<LineageEvent> events) {
+    return true;
   }
+
 
   @Override
   public void destroy() {

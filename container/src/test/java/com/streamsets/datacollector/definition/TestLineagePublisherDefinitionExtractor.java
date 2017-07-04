@@ -45,8 +45,8 @@ public class TestLineagePublisherDefinitionExtractor {
     }
 
     @Override
-    public void run(List<LineageEvent> list) {
-
+    public boolean publishEvents(List<LineageEvent> events) {
+      return false;
     }
 
     @Override
