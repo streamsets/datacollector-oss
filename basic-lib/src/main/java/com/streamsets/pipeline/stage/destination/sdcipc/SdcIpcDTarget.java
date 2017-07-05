@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
+  // We're reusing upgrader for both ToErrorSdcIpcDTarget and SdcIpcDTarget, make sure that you
+  // upgrade both versions at the same time when changing.
     version = 2,
     label = "SDC RPC",
     description = "Sends records via SDC RPC to a Data Collector pipeline that uses an SDC RPC origin",
