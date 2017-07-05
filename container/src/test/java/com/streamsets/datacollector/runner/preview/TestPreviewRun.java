@@ -22,6 +22,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.StageOutputJson;
+import com.streamsets.datacollector.runner.MockPipelineBuilder;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
@@ -82,16 +83,9 @@ public class TestPreviewRun {
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipelineRunner runner = new PreviewPipelineRunner( "name", "0", runtimeInfo, tracker, -1, 1, true);
-    Pipeline pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      configuration,
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      MockStages.createPipelineConfigurationSourceProcessorTarget(),
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(runner);
+    Pipeline pipeline = new MockPipelineBuilder()
+      .withPipelineConf(MockStages.createPipelineConfigurationSourceProcessorTarget())
+      .build(runner);
     pipeline.init();
     pipeline.run();
     pipeline.destroy();
@@ -355,16 +349,10 @@ public class TestPreviewRun {
     PipelineConfiguration pipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipelineRunner runner = new PreviewPipelineRunner("name", "0", runtimeInfo, tracker, -1, 1, true);
-    Pipeline pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      configuration,
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      pipelineConf,
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(runner);
+    Pipeline pipeline = new MockPipelineBuilder()
+      .withConfiguration(configuration)
+      .withPipelineConf(pipelineConf)
+      .build(runner);
     pipeline.init();
     pipeline.run();
     pipeline.destroy();
@@ -381,16 +369,10 @@ public class TestPreviewRun {
     sourceOutput.getOutput().get(pipelineConf.getStages().get(0).getOutputLanes().get(0)).set(0, modRecord);
 
     runner = new PreviewPipelineRunner("name", "0",runtimeInfo, tracker, -1, 1, true);
-    pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      configuration,
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      MockStages.createPipelineConfigurationSourceProcessorTarget(),
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(runner);
+    pipeline = new MockPipelineBuilder()
+      .withConfiguration(configuration)
+      .withPipelineConf(pipelineConf)
+      .build(runner);
 
     pipeline.init();
     pipeline.run(Arrays.asList(sourceOutput));

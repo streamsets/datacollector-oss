@@ -15,15 +15,8 @@
  */
 package com.streamsets.datacollector.runner;
 
-import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.runner.CombinerPipe;
-import com.streamsets.datacollector.runner.FullPipeBatch;
-import com.streamsets.datacollector.runner.PipeBatch;
-import com.streamsets.datacollector.runner.Pipeline;
-import com.streamsets.datacollector.runner.PipelineRunner;
 
-import com.streamsets.datacollector.util.Configuration;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -34,16 +27,7 @@ public class TestCombinerPipe {
   public void testCombinerPipe() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
-    Pipeline pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      new Configuration(),
-      "name",
-      "myPipeline",
-      "0",
-      MockStages.userContext(),
-      MockStages.createPipelineConfigurationSourceTarget(),
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(pipelineRunner);
+    Pipeline pipeline = new MockPipelineBuilder().build(pipelineRunner);
     CombinerPipe pipe = (CombinerPipe) pipeline.getRunners().get(0).get(2);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);

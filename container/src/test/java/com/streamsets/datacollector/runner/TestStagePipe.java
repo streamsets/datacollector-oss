@@ -72,16 +72,9 @@ public class TestStagePipe {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
-    Pipeline pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      MockStages.createPipelineConfigurationSourceProcessorTarget(),
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(pipelineRunner);
+     Pipeline pipeline = new MockPipelineBuilder()
+      .withPipelineConf(MockStages.createPipelineConfigurationSourceProcessorTarget())
+      .build(pipelineRunner);
     StagePipe pipe = (StagePipe) pipeline.getSourcePipe();
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
     Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("s"));
@@ -136,16 +129,9 @@ public class TestStagePipe {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
-    Pipeline pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      MockStages.createPipelineConfigurationSourceProcessorTarget(),
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(pipelineRunner);
+    Pipeline pipeline = new MockPipelineBuilder()
+      .withPipelineConf(MockStages.createPipelineConfigurationSourceProcessorTarget())
+      .build(pipelineRunner);
     StagePipe pipe = (StagePipe) pipeline.getRunners().get(0).get(3);
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
     Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("p"));
@@ -200,16 +186,9 @@ public class TestStagePipe {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
-    Pipeline pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      MockStages.createPipelineConfigurationSourceProcessorTarget(),
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(pipelineRunner);
+    Pipeline pipeline = new MockPipelineBuilder()
+      .withPipelineConf(MockStages.createPipelineConfigurationSourceProcessorTarget())
+      .build(pipelineRunner);
     StagePipe pipe = (StagePipe) pipeline.getRunners().get(0).get(7);
     BatchMakerImpl batchMaker = Mockito.mock(BatchMakerImpl.class);
     Mockito.when(batchMaker.getLanes()).thenReturn(ImmutableList.of("t"));
@@ -264,16 +243,9 @@ public class TestStagePipe {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
-    Pipeline pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed(),
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(pipelineRunner);
+    Pipeline pipeline = new MockPipelineBuilder()
+      .withPipelineConf(MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed())
+      .build(pipelineRunner);
     final int index = 3;
     Assert.assertEquals("executorName", pipeline.getRunners().get(0).get(index).getStage().getDefinition().getName());
     Assert.assertTrue(pipeline.getRunners().get(0).get(index) instanceof StagePipe);

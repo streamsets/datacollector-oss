@@ -78,16 +78,10 @@ public class TestPipeline {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
       PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
         "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
-    Pipeline.Builder builder = new Pipeline.Builder(
-      lib,
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      pipelineConf,
-      Mockito.mock(LineagePublisherTask.class)
-    );
+    Pipeline.Builder builder = new MockPipelineBuilder()
+      .withStageLib(lib)
+      .withPipelineConf(pipelineConf)
+      .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
@@ -180,16 +174,10 @@ public class TestPipeline {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
       PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),"label",
         null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
-    Pipeline.Builder builder = new Pipeline.Builder(
-      lib,
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      pipelineConf,
-      Mockito.mock(LineagePublisherTask.class)
-    );
+    Pipeline.Builder builder = new MockPipelineBuilder()
+      .withStageLib(lib)
+      .withPipelineConf(pipelineConf)
+      .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
@@ -238,16 +226,10 @@ public class TestPipeline {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
        PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
         "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
-    Pipeline.Builder builder = new Pipeline.Builder(
-      lib,
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      pipelineConf,
-      Mockito.mock(LineagePublisherTask.class)
-    );
+    Pipeline.Builder builder = new MockPipelineBuilder()
+      .withStageLib(lib)
+      .withPipelineConf(pipelineConf)
+      .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
@@ -310,16 +292,10 @@ public class TestPipeline {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
        PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
         "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
-    Pipeline.Builder builder = new Pipeline.Builder(
-      lib,
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      pipelineConf,
-      Mockito.mock(LineagePublisherTask.class)
-    );
+    Pipeline.Builder builder = new MockPipelineBuilder()
+      .withStageLib(lib)
+      .withPipelineConf(pipelineConf)
+      .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
@@ -381,16 +357,10 @@ public class TestPipeline {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
        PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
         "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
-    Pipeline.Builder builder = new Pipeline.Builder(
-      lib,
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      pipelineConf,
-      Mockito.mock(LineagePublisherTask.class)
-    );
+    Pipeline.Builder builder = new MockPipelineBuilder()
+      .withStageLib(lib)
+      .withPipelineConf(pipelineConf)
+      .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
@@ -487,16 +457,10 @@ public class TestPipeline {
       MockStages.getErrorStageConfig(),
       MockStages.getStatsAggregatorStageConfig()
     );
-    Pipeline.Builder builder = new Pipeline.Builder(
-      lib,
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      pipelineConf,
-      Mockito.mock(LineagePublisherTask.class)
-    );
+    Pipeline.Builder builder = new MockPipelineBuilder()
+      .withStageLib(lib)
+      .withPipelineConf(pipelineConf)
+      .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
@@ -549,16 +513,10 @@ public class TestPipeline {
       MockStages.getErrorStageConfig(),
       MockStages.getStatsAggregatorStageConfig()
     );
-    Pipeline.Builder builder = new Pipeline.Builder(
-      lib,
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      pipelineConf,
-      Mockito.mock(LineagePublisherTask.class)
-    );
+    Pipeline.Builder builder = new MockPipelineBuilder()
+      .withStageLib(lib)
+      .withPipelineConf(pipelineConf)
+      .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);

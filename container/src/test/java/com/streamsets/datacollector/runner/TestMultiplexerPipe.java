@@ -15,10 +15,8 @@
  */
 package com.streamsets.datacollector.runner;
 
-import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 
-import com.streamsets.datacollector.util.Configuration;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -36,17 +34,9 @@ public class TestMultiplexerPipe {
   public void testMultiplexerPipeOneLaneWithEvents() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
-
-    Pipeline pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed(),
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(pipelineRunner);
+    Pipeline pipeline = new MockPipelineBuilder()
+      .withPipelineConf(MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed())
+      .build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getRunners().get(0).get(1);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
@@ -60,15 +50,9 @@ public class TestMultiplexerPipe {
   public void testMultiplexerPipeTwoLane() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
-    Pipeline pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      new Configuration(), "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      MockStages.createPipelineConfigurationSourceTwoTargets(),
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(pipelineRunner);
+    Pipeline pipeline = new MockPipelineBuilder()
+      .withPipelineConf(MockStages.createPipelineConfigurationSourceTwoTargets())
+      .build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getRunners().get(0).get(1);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
@@ -81,16 +65,10 @@ public class TestMultiplexerPipe {
   public void testMultiplexerPipeTwoLaneWithTwoEventLanes() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
-    Pipeline pipeline = new Pipeline.Builder(
-      MockStages.createStageLibrary(),
-      new Configuration(),
-      "name",
-      "name",
-      "0",
-      MockStages.userContext(),
-      MockStages.createPipelineConfigurationSourceTwoTargetsTwoEvents(),
-      Mockito.mock(LineagePublisherTask.class)
-    ).build(pipelineRunner);
+        Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
+    Pipeline pipeline = new MockPipelineBuilder()
+      .withPipelineConf(MockStages.createPipelineConfigurationSourceTwoTargetsTwoEvents())
+      .build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getRunners().get(0).get(1);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);

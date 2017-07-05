@@ -1,0 +1,113 @@
+/**
+ * Copyright 2017 StreamSets Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.datacollector.runner;
+
+import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
+import org.mockito.Mockito;
+
+/**
+ * Pipeline.Builder test specific builder (yes builder of a builder) that will provide mock defaults and allow user to
+ * override them if/when needed.
+ */
+public class MockPipelineBuilder {
+  private StageLibraryTask stageLib;
+  private Configuration configuration;
+  private String name;
+  private String pipelineName;
+  private String rev;
+  private UserContext userContext;
+  private PipelineConfiguration pipelineConf;
+  private LineagePublisherTask lineagePublisherTask;
+  private Observer observer;
+
+  public MockPipelineBuilder() {
+    this.stageLib = MockStages.createStageLibrary();
+    this.configuration = new Configuration();
+    this.name = "name";
+    this.pipelineName = "myPipeline";
+    this.rev = "0";
+    this.userContext = MockStages.userContext();
+    this.pipelineConf = MockStages.createPipelineConfigurationSourceTarget();
+    this.lineagePublisherTask = Mockito.mock(LineagePublisherTask.class);
+    this.observer = null;
+  }
+
+  public MockPipelineBuilder withStageLib(StageLibraryTask stageLib) {
+    this.stageLib = stageLib;
+    return this;
+  }
+
+  public MockPipelineBuilder withConfiguration(Configuration configuration) {
+    this.configuration = configuration;
+    return this;
+  }
+
+  public MockPipelineBuilder withName(String name) {
+    this.name = name;
+    return this;
+  }
+
+  public MockPipelineBuilder withPipelineName(String name) {
+    this.pipelineName = name;
+    return this;
+  }
+
+  public MockPipelineBuilder withRev(String rev) {
+    this.rev = rev;
+    return this;
+  }
+
+  public MockPipelineBuilder withUserContext(UserContext userContext) {
+    this.userContext = userContext;
+    return this;
+  }
+
+  public MockPipelineBuilder withPipelineConf(PipelineConfiguration conf) {
+    this.pipelineConf = conf;
+    return this;
+  }
+
+  public MockPipelineBuilder withLineagePublisherTask(LineagePublisherTask lineagePublisherTask) {
+    this.lineagePublisherTask = lineagePublisherTask;
+    return this;
+  }
+
+  public MockPipelineBuilder withObserver(Observer observer) {
+    this.observer = observer;
+    return this;
+  }
+
+  public Pipeline.Builder build() {
+    return new Pipeline.Builder(
+      stageLib,
+      configuration,
+      name,
+      pipelineName,
+      rev,
+      userContext,
+      pipelineConf,
+      lineagePublisherTask
+    ).setObserver(observer);
+  }
+
+  public Pipeline build(PipelineRunner runner) throws PipelineRuntimeException {
+    return build()      // Build pipeline builder
+      .build(runner);   // And build final pipeline
+  }
+}
