@@ -49,6 +49,7 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
   private static List<Config> upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("oracleCDCConfigBean.bufferLocally", false));
     configs.add(new Config("oracleCDCConfigBean.discardExpired", false));
+    configs.add(new Config("oracleCDCConfigBean.unsupportedFieldOp", UnsupportedFieldTypeValues.TO_ERROR));
     return configs;
   }
 }

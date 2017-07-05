@@ -124,7 +124,6 @@ public class OracleCDCConfigBean {
   )
   public boolean discardExpired;
 
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -136,4 +135,16 @@ public class OracleCDCConfigBean {
   @ValueChooserModel(DictionaryChooserValues.class)
   public DictionaryValues dictionary;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Unsupported Field Type",
+      description = "Action to take if an unsupported field type is encountered. When buffering locally," +
+          " the action is triggered immediately when the record is read without waiting for the commit",
+      displayPosition = 100,
+      group = "CDC",
+      defaultValue = "TO_ERROR"
+  )
+  @ValueChooserModel(UnsupportedFieldTypeChooserValues.class)
+  public UnsupportedFieldTypeValues unsupportedFieldOp;
 }

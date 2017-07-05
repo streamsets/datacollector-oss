@@ -45,9 +45,11 @@ import org.slf4j.LoggerFactory;
 import plsql.plsqlLexer;
 import plsql.plsqlParser;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -61,6 +63,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -82,6 +85,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_16;
@@ -101,6 +105,7 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_81;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_82;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_83;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_84;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_85;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.COMMIT_CODE;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.DDL_CODE;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.DELETE_CODE;
@@ -154,10 +159,17 @@ public class OracleCDCSource extends BaseSource {
   private static final String COUNT_FOR_BATCH_AND_BATCH_SIZE = "Count for batch = {} and batch size = {}";
   private static final String START_TIME_END_TIME = "Start time = {}, End time = {}";
   private static final String STARTING_COMMIT_SCN_ROWS_SKIPPED = "Starting Commit SCN = {}, Rows skipped = {}";
-  public static final String XID = PREFIX + "xid";
-  public static final String SEQ = "SEQ";
+  private static final String XID = PREFIX + "xid";
+  private static final String SEQ = "SEQ";
   private static final HashQueue<RecordSequence> EMPTY_LINKED_HASHSET = new HashQueue<>(0);
-  public static final String ROWID = "ROWID";
+  private static final String ROWID = "ROWID";
+  private static final String SENDING_TO_ERROR_AS_CONFIGURED = ". Sending to error as configured";
+  private static final String UNSUPPORTED_TO_ERR = JDBC_85.getMessage() + SENDING_TO_ERROR_AS_CONFIGURED;
+  private static final String DISCARDING_RECORD_AS_CONFIGURED = ". Discarding record as configured";
+  private static final String UNSUPPORTED_DISCARD = JDBC_85.getMessage() + DISCARDING_RECORD_AS_CONFIGURED;
+  private static final String UNSUPPORTED_SEND_TO_PIPELINE = JDBC_85.getMessage() + ". Sending to pipeline as configured";
+  private static final String QUEUEING = "Queueing {}";
+  private static final String GENERATED_RECORD = "Generated Record: '{}'";
 
   private boolean sentInitialSchemaEvent = false;
   private Optional<ResultSet> currentResultSet = Optional.empty(); //NOSONAR
@@ -523,13 +535,14 @@ public class OracleCDCSource extends BaseSource {
           String table = resultSet.getString(6);
           BigDecimal commitSCN = resultSet.getBigDecimal(7);
           String queryString = query.toString();
+          query.setLength(0);
           int seq = resultSet.getInt(8);
-          String xidUsn = String.valueOf(resultSet.getLong(9));
-          String xidSlt = String.valueOf(resultSet.getString(10));
-          String xidSqn = String.valueOf(resultSet.getString(11));
+          String xidUsn = String.valueOf(resultSet.getLong(10));
+          String xidSlt = String.valueOf(resultSet.getString(11));
+          String xidSqn = String.valueOf(resultSet.getString(12));
           lastSCN = scnDecimal;
-          String rsId = resultSet.getString(12);
-          Object ssn = resultSet.getObject(13);
+          String rsId = resultSet.getString(13);
+          Object ssn = resultSet.getObject(14);
           String xid = xidUsn + "." + xidSlt + "." + xidSqn;
           TransactionIdKey key = new TransactionIdKey(xid);
           bufferedRecordsLock.lock();
@@ -544,7 +557,7 @@ public class OracleCDCSource extends BaseSource {
           }
           Offset offset;
           if (LOG.isDebugEnabled()) {
-            LOG.debug("Commit SCN = " + commitSCN + ", SCN = " + scn + ", Redo SQL = " + queryString);
+            LOG.debug("Commit SCN = " + commitSCN + ", SCN = " + scn + ", Operation = " + op + ", Redo SQL = " + queryString);
           }
           sqlListener.reset();
           plsqlLexer lexer = new plsqlLexer(new ANTLRInputStream(queryString));
@@ -593,20 +606,26 @@ public class OracleCDCSource extends BaseSource {
             Record record = getContext().createRecord(id);
             Record.Header recordHeader = record.getHeader();
 
-            for (Map.Entry<String, String> column : columns.entrySet()) {
-              String columnName = column.getKey();
-              try {
-                fields.put(columnName, objectToField(table, columnName, column.getValue()));
-              } catch (RowIdException ignored) {
-                advanceResultSet(resultSet);
-                continue;
+
+            List<UnsupportedFieldTypeException> fieldTypeExceptions = new ArrayList<>();
+            try {
+              for (Map.Entry<String, String> column : columns.entrySet()) {
+                String columnName = column.getKey();
+                try {
+                  fields.put(columnName, objectToField(table, columnName, column.getValue()));
+                } catch (UnsupportedFieldTypeException ex) {
+                  fieldTypeExceptions.add(ex);
+                }
+                if (decimalColumns.containsKey(table) && decimalColumns.get(table).containsKey(columnName)) {
+                  int precision = decimalColumns.get(table).get(columnName).precision;
+                  int scale = decimalColumns.get(table).get(columnName).scale;
+                  recordHeader.setAttribute("jdbc." + columnName + ".precision", String.valueOf(precision));
+                  recordHeader.setAttribute("jdbc." + columnName + ".scale", String.valueOf(scale));
+                }
               }
-              if (decimalColumns.containsKey(table) && decimalColumns.get(table).containsKey(columnName)) {
-                int precision = decimalColumns.get(table).get(columnName).precision;
-                int scale = decimalColumns.get(table).get(columnName).scale;
-                recordHeader.setAttribute("jdbc." + columnName + ".precision", String.valueOf(precision));
-                recordHeader.setAttribute("jdbc." + columnName + ".scale", String.valueOf(scale));
-              }
+            } catch (RowIdException ignored) {
+              advanceResultSet(resultSet);
+              continue;
             }
             recordHeader.setAttribute(SCN, scn);
             recordHeader.setAttribute(USER, username);
@@ -618,9 +637,20 @@ public class OracleCDCSource extends BaseSource {
             recordHeader.setAttribute(XID, xid);
             record.set(Field.create(fields));
             if (LOG.isDebugEnabled()) {
-              LOG.debug(Utils.format("Adding {} to batchmaker: {}", record, batchMaker.toString()));
+              if (configBean.bufferLocally) {
+                LOG.debug(Utils.format(QUEUEING, record, batchMaker.toString()));
+              } else {
+                LOG.debug(Utils.format(GENERATED_RECORD, record));
+              }
             }
             if (record.getEscapedFieldPaths().size() > 0) {
+              Joiner errorStringJoiner = Joiner.on(",");
+              List<String> errorColumns = Collections.emptyList();
+              if (!fieldTypeExceptions.isEmpty()) {
+                errorColumns = fieldTypeExceptions.stream().map(ex ->
+                    "Column = " + ex.column + ", Type = " + JDBCType.valueOf(ex.fieldType) + ", Value = " + ex.columnVal
+                ).collect(Collectors.toList());
+              }
               if (configBean.bufferLocally) {
                 bufferedRecordsLock.lock();
                 try {
@@ -631,12 +661,23 @@ public class OracleCDCSource extends BaseSource {
                           }
                       );
                   int nextSeq = records.isEmpty() ? 1 : records.tail().seq + 1;
-                  records.add(new RecordSequence(record, nextSeq, rsId, ssn));
+                  RecordSequence node = new RecordSequence(record, nextSeq, rsId, ssn);
+                  if (!fieldTypeExceptions.isEmpty()) {
+                    node.setJdbc85String(errorStringJoiner.join(errorColumns));
+                  }
+                  records.add(node);
                 } finally {
                   bufferedRecordsLock.unlock();
                 }
               } else {
-                batchMaker.addRecord(record);
+                if (!fieldTypeExceptions.isEmpty()) {
+                  boolean add = handleUnsupportedFieldTypes(record, errorStringJoiner.join(errorColumns));
+                  if (add) {
+                    batchMaker.addRecord(record);
+                  }
+                } else {
+                  batchMaker.addRecord(record);
+                }
               }
             }
           } else if (configBean.bufferLocally && (op == COMMIT_CODE || op == ROLLBACK_CODE)) {
@@ -672,7 +713,6 @@ public class OracleCDCSource extends BaseSource {
 
                   lastSeq = addRecordsToBatch(batchSize, batchMaker, xid);
                   if (equal) {
-                    // TODO: Bug in this one. If equal and lastSeq returned 0, then use 0.
                     lastSeq = Math.max(resumeSeq, lastSeq);
                     if (lastSeq > resumeSeq) {
                       recordsSent += (lastSeq - resumeSeq);
@@ -733,6 +773,23 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
+  private boolean handleUnsupportedFieldTypes(Record r, String error) {
+    switch (configBean.unsupportedFieldOp) {
+      case SEND_TO_PIPELINE:
+        LOG.warn(Utils.format(UNSUPPORTED_SEND_TO_PIPELINE, error, r.getHeader().getAttribute(TABLE)));
+        return true;
+      case TO_ERROR:
+        LOG.warn(Utils.format(UNSUPPORTED_TO_ERR, error, r.getHeader().getAttribute(TABLE)));
+        getContext().toError(r, JDBC_85, error, r.getHeader().getAttribute(TABLE));
+        return false;
+      case DISCARD:
+        LOG.warn(Utils.format(UNSUPPORTED_DISCARD, error, r.getHeader().getAttribute(TABLE)));
+        return false;
+      default:
+        throw new IllegalStateException("Unknown Record Handling option");
+    }
+  }
+
   private void advanceResultSet(ResultSet resultSet) throws SQLException {
     if (resultSet!= null && !resultSet.isClosed()) {
       incompleteBatch = !resultSet.next();
@@ -756,7 +813,14 @@ public class OracleCDCSource extends BaseSource {
       int lastSeq = 0; //implies nothing read.
       for (int i = 0; i < batchSize && !records.isEmpty(); i++) {
         RecordSequence r = records.remove();
-        batchMaker.addRecord(r.record);
+        if (r.jdbc85String == null) {
+          batchMaker.addRecord(r.record);
+        } else {
+          boolean add = handleUnsupportedFieldTypes(r.record, r.jdbc85String);
+          if (add) {
+            batchMaker.addRecord(r.record);
+          }
+        }
         lastSeq = r.seq;
       }
       if (records.isEmpty()) {
@@ -1296,7 +1360,11 @@ public class OracleCDCSource extends BaseSource {
     }
 
     // Close all statements
-    closeStatements(dateStatement, startLogMnrForCommitSCN, startLogMnrForData, getLatestSCN, getOldestSCN, endLogMnr);
+    try {
+      closeAllStatements();
+    } catch (Exception ex) {
+      LOG.error("Error while attempting to close statements", ex);
+    }
 
     // Connection if it exists
     try {
@@ -1317,6 +1385,22 @@ public class OracleCDCSource extends BaseSource {
     }
     resultSetExecutor.shutdown();
     discardExecutor.shutdown();
+  }
+
+  private void closeAllStatements() throws Exception {
+    java.lang.reflect.Field[] fields = this.getClass().getFields();
+    Method m = Statement.class.getMethod("close");
+    for (java.lang.reflect.Field field : fields) {
+      if (Statement.class.isAssignableFrom(field.getClass())) {
+        field.setAccessible(true);
+        try {
+          m.invoke(field.get(this));
+        } catch (Exception ex) {
+          LOG.error("Error while closing statement!", ex);
+        }
+      }
+    }
+
   }
 
   private void closeStatements(Statement... statements) {
@@ -1415,7 +1499,7 @@ public class OracleCDCSource extends BaseSource {
         //case Types.TIME_WITH_TIMEZONE: // JDK8 only
         //case Types.TIMESTAMP_WITH_TIMEZONE: // JDK8 only
       default:
-        throw new StageException(JDBC_37, columnType, column);
+        throw new UnsupportedFieldTypeException(column, columnValue, columnType);
     }
 
     return field;
@@ -1540,6 +1624,7 @@ public class OracleCDCSource extends BaseSource {
     final int seq;
     final String rsId;
     final Object ssn;
+    String jdbc85String = null;
 
     RecordSequence(Record record, int seq, String rsId, Object ssn) {
       this.record = record;
@@ -1559,6 +1644,10 @@ public class OracleCDCSource extends BaseSource {
     @Override
     public int hashCode() {
       return rsId.hashCode() + ssn.hashCode();
+    }
+
+    public void setJdbc85String(String jdbc85String) {
+      this.jdbc85String = jdbc85String;
     }
   }
 
@@ -1623,6 +1712,19 @@ public class OracleCDCSource extends BaseSource {
 
   private class RowIdException extends RuntimeException {
 
+  }
+
+  private class UnsupportedFieldTypeException extends RuntimeException {
+
+    final String column;
+    final String columnVal;
+    final int fieldType;
+
+    UnsupportedFieldTypeException(String column, String columnVal, int fieldType) {
+      this.column = column;
+      this.columnVal = columnVal;
+      this.fieldType = fieldType;
+    }
   }
 
 }

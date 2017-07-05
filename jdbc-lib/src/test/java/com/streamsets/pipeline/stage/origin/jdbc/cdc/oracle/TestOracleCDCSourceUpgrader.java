@@ -40,11 +40,13 @@ public class TestOracleCDCSourceUpgrader {
     List<Config> configs = new ArrayList<>(1);
 
     configs = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 2, 3, configs);
-    Assert.assertTrue(configs.size() == 2);
+    Assert.assertTrue(configs.size() == 3);
     Assert.assertEquals(configs.get(0).getName(), "oracleCDCConfigBean.bufferLocally");
     Assert.assertEquals(configs.get(0).getValue(), false);
     Assert.assertEquals(configs.get(1).getName(), "oracleCDCConfigBean.discardExpired");
     Assert.assertEquals(configs.get(1).getValue(), false);
+    Assert.assertEquals(configs.get(2).getName(), "oracleCDCConfigBean.unsupportedFieldOp");
+    Assert.assertEquals(configs.get(2).getValue(), UnsupportedFieldTypeValues.TO_ERROR);
   }
 
 }
