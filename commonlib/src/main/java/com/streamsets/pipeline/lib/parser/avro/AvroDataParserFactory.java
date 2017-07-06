@@ -78,6 +78,7 @@ public class AvroDataParserFactory extends DataParserFactory {
   private final OriginAvroSchemaSource schemaSource;
   private final AvroSchemaHelper schemaHelper;
   private Schema schema;
+  private int schemaId = -1;
 
   public AvroDataParserFactory(Settings settings) throws SchemaRegistryException {
     super(settings);
@@ -133,16 +134,14 @@ public class AvroDataParserFactory extends DataParserFactory {
   @Override
   public DataParser getParser(String id, byte[] data) throws DataParserException {
     if (schemaSource == OriginAvroSchemaSource.REGISTRY) {
-      Optional<Integer> schemaId = schemaHelper.detectSchemaId(data);
+      Optional<Integer> detectedSchemaId = schemaHelper.detectSchemaId(data);
       byte[] remaining;
       try {
-        if (schemaId.isPresent()) {
-          // If schema is not null, then the user already specified
-          // a subject or schemaId and it's been loaded.
-          // If the user chose Embedded Schema ID, then this is null and
-          // we should load it from the registry via the ID detected above.
-          if (schema == null) { // NOSONAR
-            schema = schemaHelper.loadFromRegistry(schemaId.get());
+        if (detectedSchemaId.isPresent()) {
+          // Load the schema if it doesn't match the schema ID we have
+          if (detectedSchemaId.get() != schemaId) { // NOSONAR
+            schemaId = detectedSchemaId.get();
+            schema = schemaHelper.loadFromRegistry(schemaId);
           }
           // Strip the embedded ID
           remaining = Arrays.copyOfRange(data, MAGIC_BYTE_SIZE + ID_SIZE, data.length);
