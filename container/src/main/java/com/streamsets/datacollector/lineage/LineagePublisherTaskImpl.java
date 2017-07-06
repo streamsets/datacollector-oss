@@ -225,7 +225,11 @@ public class LineagePublisherTaskImpl extends AbstractTask implements LineagePub
           eventQueue.drainTo(drainedEvents);
 
           LOG.debug("Consuming {} lineage events", drainedEvents.size());
-          publisherRuntime.publishEvents(drainedEvents);
+          try {
+            publisherRuntime.publishEvents(drainedEvents);
+          } catch (Throwable e) {
+            LOG.error("Failed to publish events", e);
+          }
         }
       }
 
