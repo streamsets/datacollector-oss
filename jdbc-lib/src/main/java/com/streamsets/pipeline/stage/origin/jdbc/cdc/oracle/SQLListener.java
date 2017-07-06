@@ -23,7 +23,7 @@ import plsql.plsqlParser;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 
 /**
  * Listener for use with {@linkplain org.antlr.v4.runtime.tree.ParseTreeWalker}.
@@ -33,6 +33,8 @@ public class SQLListener extends plsqlBaseListener {
   private final HashMap<String, String> columns = new HashMap<>();
   private boolean insideStatement = false;
   private boolean caseSensitive = false;
+  private boolean allowNulls = false;
+  private Set<String> columnsExpected;
   private String table;
 
   private List<plsqlParser.Column_nameContext> columnNames;
@@ -90,7 +92,9 @@ public class SQLListener extends plsqlBaseListener {
           }
         }
       }
-      if (key != null && val != null && !columns.containsKey(key)) {
+      // Why check the table's column names? Because stuff like TO_DATE(<something>) will also come in here
+      // with each token as a key with null value.
+      if (key != null && (val != null || (allowNulls && columnsExpected.contains(key))) && !columns.containsKey(key)) {
         columns.put(key, formatValue(val));
       }
     }
@@ -111,6 +115,9 @@ public class SQLListener extends plsqlBaseListener {
    * Unescapes strings and returns them.
    */
   private String formatValue(String value) {
+    if (value == null) {
+      return null;
+    }
     String returnValue = format(value);
     return returnValue.replaceAll("''", "'");
   }
@@ -149,5 +156,13 @@ public class SQLListener extends plsqlBaseListener {
 
   void setCaseSensitive() {
     this.caseSensitive = true;
+  }
+
+  void allowNulls() {
+    this.allowNulls = true;
+  }
+
+  void setColumns(Set<String> columns) {
+    this.columnsExpected = columns;
   }
 }

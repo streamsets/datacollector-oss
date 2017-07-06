@@ -560,6 +560,9 @@ public class OracleCDCSource extends BaseSource {
             LOG.debug("Commit SCN = " + commitSCN + ", SCN = " + scn + ", Operation = " + op + ", Redo SQL = " + queryString);
           }
           sqlListener.reset();
+          if (configBean.allowNulls && !StringUtils.isEmpty(table)) {
+            sqlListener.setColumns(tableSchemas.get(table).keySet());
+          }
           plsqlLexer lexer = new plsqlLexer(new ANTLRInputStream(queryString));
           CommonTokenStream tokenStream = new CommonTokenStream(lexer);
           plsqlParser parser = new plsqlParser(tokenStream);
@@ -1207,6 +1210,10 @@ public class OracleCDCSource extends BaseSource {
 
     if (configBean.baseConfigBean.caseSensitive) {
       sqlListener.setCaseSensitive();
+    }
+
+    if (configBean.allowNulls) {
+      sqlListener.allowNulls();
     }
 
     if (configBean.txnWindow >= configBean.logminerWindow) {

@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -29,6 +29,8 @@ import plsql.plsqlParser;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 @RunWith(Parameterized.class)
@@ -44,59 +46,73 @@ public class TestSQLListener {
                     "values ('1','sdc', TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS')," +
                     "'1332.332',TO_TIMESTAMP('2016-11-21 11:34:09.982753'))"
                 ,
-                ImmutableMap.builder().put("ID", "1")
-                    .put("NAME", "sdc")
-                    .put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')")
-                    .put("SALARY", "1332.332")
-                    .put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')")
-                    .build()
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("NAME", "sdc");
+                    put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')");
+                    put("SALARY", "1332.332");
+                    put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')");
+                  }
+                }
+
             },
             {
                 "insert into \"SYS\".\"MANYCOLS\"(\"ID\",\"NAME\",\"HIREDATE\",\"SALARY\",\"LASTLOGIN\") " +
                     "values ('10','stream',TO_DATE('19-11-2016 11:35:16', 'DD-MM-YYYY HH24:MI:SS'),'10000.1',NULL)",
-                ImmutableMap.builder()
-                    .put("ID", "10")
-                    .put("NAME", "stream")
-                    .put("HIREDATE", "TO_DATE('19-11-2016 11:35:16','DD-MM-YYYY HH24:MI:SS')")
-                    .put("SALARY", "10000.1")
-                    .put("LASTLOGIN", "NULL")
-                    .build()
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "10");
+                    put("NAME", "stream");
+                    put("HIREDATE", "TO_DATE('19-11-2016 11:35:16','DD-MM-YYYY HH24:MI:SS')");
+                    put("SALARY", "10000.1");
+                    put("LASTLOGIN", "NULL"); //inserts just return string "NULL" which we handle in the origin itself.
+                  }
+                }
             },
             {
                 " update \"SYS\".\"MANYCOLS\" set \"SALARY\" = '1998.483' " +
-                    "where \"ID\" = '1' and \"NAME\" = 'sdc' and" +
+                    "where \"ID\" = '1' and \"NAME\" IS NULL and" +
                     " \"HIREDATE\" = TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS') and " +
                     "\"SALARY\" = '1332.322' and \"LASTLOGIN\" = TO_TIMESTAMP('2016-11-21 11:34:09.982753')",
-                ImmutableMap.builder()
-                    .put("ID", "1")
-                    .put("SALARY", "1998.483")
-                    .put("NAME", "sdc")
-                    .put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')")
-                    .put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')")
-                    .build()
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("SALARY", "1998.483");
+                    put("NAME", null);
+                    put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')");
+                    put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')");
+                  }
+                }
             },
             {" update \"SYS\".\"MANYCOLS\" set \"SALARY=\" = '1998.483' " +
                 "where \"ID\" = '1' and \"NAME\" = '=sdc' and" +
                 " \"HIREDATE\" = TO_DATE('21-11-2016 11:34:09', 'DD-MM-YYYY HH24:MI:SS') and " +
                 "\"SALARY=\" = '1332.322' and \"LASTLOGIN\" = TO_TIMESTAMP('2016-11-21 11:34:09.982753')",
-                ImmutableMap.builder()
-                    .put("ID", "1")
-                    .put("SALARY=", "1998.483")
-                    .put("NAME", "=sdc")
-                    .put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')")
-                    .put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')")
-                    .build()
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "1");
+                    put("SALARY=", "1998.483");
+                    put("NAME", "=sdc");
+                    put("HIREDATE", "TO_DATE('21-11-2016 11:34:09','DD-MM-YYYY HH24:MI:SS')");
+                    put("LASTLOGIN", "TO_TIMESTAMP('2016-11-21 11:34:09.982753')");
+
+                  }
+                }
             },
             {
               "delete from \"SYS\".\"MANYCOLS\" where \"ID\" = '10' and \"NAME\" = 'stream' and " +
                   "\"HIREDATE\" = TO_DATE('19-11-2016 11:35:16', 'DD-MM-YYYY HH24:MI:SS') and " +
                   "\"SALARY\" = '10000.1' and \"LASTLOGIN\" IS NULL\n",
-                ImmutableMap.builder()
-                    .put("ID", "10")
-                    .put("NAME", "stream")
-                    .put("HIREDATE", "TO_DATE('19-11-2016 11:35:16','DD-MM-YYYY HH24:MI:SS')")
-                    .put("SALARY", "10000.1")
-                    .build()
+                new HashMap<String, String>() {
+                  {
+                    put("ID", "10");
+                    put("NAME", "stream");
+                    put("HIREDATE", "TO_DATE('19-11-2016 11:35:16','DD-MM-YYYY HH24:MI:SS')");
+                    put("SALARY", "10000.1");
+                    put("LASTLOGIN", null);
+                  }
+                }
             }
         }
     );
@@ -124,6 +140,8 @@ public class TestSQLListener {
       c = parser.update_statement();
     }
     SQLListener sqlListener = new SQLListener();
+    sqlListener.allowNulls();
+    sqlListener.setColumns(new HashSet<>(Lists.newArrayList("ID", "NAME", "HIREDATE", "SALARY", "LASTLOGIN")));
     ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
     // Walk it and attach our sqlListener
     parseTreeWalker.walk(sqlListener, c);
