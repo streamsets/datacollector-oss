@@ -132,6 +132,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String GET_OLDEST_SCN =
       "SELECT FIRST_CHANGE#, STATUS from V$ARCHIVED_LOG WHERE STATUS = 'A' ORDER BY FIRST_CHANGE#";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
+  private static final String ROWID = "ROWID";
   private static final String PREFIX = "oracle.cdc.";
   private static final String SCN = PREFIX + "scn";
   private static final String USER = PREFIX + "user";
@@ -141,6 +142,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String TIMESTAMP = "TIMESTAMP";
   private static final String TIMESTAMP_HEADER = PREFIX + TIMESTAMP.toLowerCase();
   private static final String TABLE = PREFIX + "table";
+  private static final String ROWID_KEY = PREFIX + "rowId";
   private static final String NULL = "NULL";
   private static final String VERSION_STR = "v2";
   private static final String VERSION_UNCOMMITTED = "v3";
@@ -162,7 +164,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String XID = PREFIX + "xid";
   private static final String SEQ = "SEQ";
   private static final HashQueue<RecordSequence> EMPTY_LINKED_HASHSET = new HashQueue<>(0);
-  private static final String ROWID = "ROWID";
+
   private static final String SENDING_TO_ERROR_AS_CONFIGURED = ". Sending to error as configured";
   private static final String UNSUPPORTED_TO_ERR = JDBC_85.getMessage() + SENDING_TO_ERROR_AS_CONFIGURED;
   private static final String DISCARDING_RECORD_AS_CONFIGURED = ". Discarding record as configured";
@@ -433,18 +435,20 @@ public class OracleCDCSource extends BaseSource {
 
         final PreparedStatement select = selectChanges;
         final boolean closeRS = closeResultSet;
-        resultSetClosingFuture = resultSetExecutor.submit(() -> {
-          generationStarted.set(true);
-          try {
-            generateRecords(batchSize, select, batchMaker, closeRS);
-          } catch (Exception ex) {
-            LOG.error("Error while generating records", ex);
-            Throwables.propagate(ex);
-          } finally {
-            generationSema.release();
-          }
-        });
-        resultSetClosingFuture.get(1, TimeUnit.MINUTES);
+        if (!resultSetExecutor.isShutdown()) {
+          resultSetClosingFuture = resultSetExecutor.submit(() -> {
+            generationStarted.set(true);
+            try {
+              generateRecords(batchSize, select, batchMaker, closeRS);
+            } catch (Exception ex) {
+              LOG.error("Error while generating records", ex);
+              Throwables.propagate(ex);
+            } finally {
+              generationSema.release();
+            }
+          });
+          resultSetClosingFuture.get(1, TimeUnit.MINUTES);
+        }
       } catch (TimeoutException timeout) { // NOSONAR - not logging
         LOG.info("Batch has timed out. Adding all records received and completing batch. This may take a while");
         if (resultSetClosingFuture != null && !resultSetClosingFuture.isDone()) {
@@ -603,12 +607,13 @@ public class OracleCDCSource extends BaseSource {
             // Walk it and attach our sqlListener
             parseTreeWalker.walk(sqlListener, ruleContext);
             Map<String, String> columns = sqlListener.getColumns();
+            String rowId = columns.get(ROWID);
+            columns.remove(ROWID);
             Map<String, Field> fields = new HashMap<>();
             String id = configBean.bufferLocally ?
                 rsId + OFFSET_DELIM + ssn : offset.scn + OFFSET_DELIM + offset.sequence;
             Record record = getContext().createRecord(id);
             Record.Header recordHeader = record.getHeader();
-
 
             List<UnsupportedFieldTypeException> fieldTypeExceptions = new ArrayList<>();
             try {
@@ -638,6 +643,9 @@ public class OracleCDCSource extends BaseSource {
             recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationCode));
             recordHeader.setAttribute(SEQ, String.valueOf(seq));
             recordHeader.setAttribute(XID, xid);
+            if (rowId != null) {
+              recordHeader.setAttribute(ROWID_KEY, rowId);
+            }
             record.set(Field.create(fields));
             if (LOG.isDebugEnabled()) {
               if (configBean.bufferLocally) {
@@ -1139,7 +1147,6 @@ public class OracleCDCSource extends BaseSource {
         + " OPTIONS => DBMS_LOGMNR." + configBean.dictionary.name()
         + "          + DBMS_LOGMNR.CONTINUOUS_MINE"
         + readCommitted
-        + "          + DBMS_LOGMNR.NO_ROWID_IN_STMT"
         + "          + DBMS_LOGMNR.NO_SQL_DELIMITER"
         + ddlTracking
         + ");"
