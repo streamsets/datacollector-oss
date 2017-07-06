@@ -21,10 +21,11 @@
  <title>Record Header Attributes</title>
  <conbody>
         <p><draft-comment author="Loretta">This topic is conrefed by paragraphs by Directory, File
-                Tail. All but the bullets are also used by Kafka Consumer. The ph-def is used in
-                Attribute-Generating Stages</draft-comment>The File Tail origin <ph id="1st-ph"
-                >creates record header attributes that include <ph id="ph-def">information about the
-                    origins of the record</ph>.</ph>
+                Tail. All but the bullets are also used by Kafka Consumer. SFTP/FTP uses the
+                overview and some bullets. The ph-def is used in Attribute-Generating
+                Stages</draft-comment>The File Tail origin <ph id="1st-ph">creates record header
+                attributes that include <ph id="ph-def">information about the originating file for
+                    the record</ph>.</ph>
             <ph id="functions-ph">You can use record:attribute functions to use the attribute
                 information in pipeline processing.</ph>
             <ph id="Crossref-ph">For more information about record header attributes, see <xref
@@ -32,8 +33,11 @@
                 />.</ph></p>
         <p>The File Tail origin <ph id="leadin-ph">creates the following record header
                 attributes:</ph><ul id="ul-DirFileTail-list">
-                <li>filename - Provides the name of the file where the record originated.</li>
-                <li>file - Provides the file path and file name where the record originated.</li>
+                <li id="li-filename">filename - Provides the name of the file where the record
+                    originated.</li>
+                <li id="li-file">file - Provides the file path and file name where the record
+                    originated.</li>
+                <li id="li-mtime">mtime - Provides the last-modified time for the file.</li>
                 <li>offset - Provides the file offset in bytes. The file offset is the location in
                     the file where the record originated.</li>
             </ul></p>

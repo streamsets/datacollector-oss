@@ -359,6 +359,7 @@
    <topicref href="../Origins/SFTP-ReadOrder.dita"/>
    <topicref href="../Origins/SFTP-FirstFile.dita"/>
    <topicref href="../Origins/SFTP-Credentials.dita"/>
+   <topicref href="../Origins/SFTP-RecordHeaderAtts.dita"/>
    <topicref href="../Origins/SFTPClient-DataFormats.dita"/>
    <topicref href="../Origins/SFTP-Configuring.dita"/>
   </topicref>

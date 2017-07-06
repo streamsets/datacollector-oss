@@ -18,24 +18,27 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tlj_3g1_2z">
- <title>Record Header Attributes</title>
- <conbody>
-        <p><indexterm>Directory origin<indexterm>record header attributes</indexterm></indexterm>The
-            Directory origin <ph
+    <title>Record Header Attributes</title>
+    <conbody>
+        <p><indexterm>SFTP/FTP Client origin<indexterm>record header
+                attributes</indexterm></indexterm>The SFTP/FTP Client origin <ph
                 conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/1st-ph"/>
             <ph
                 conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/functions-ph"/>
             <ph
                 conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/Crossref-ph"
             /></p>
-        <p>The Directory origin <ph
+        <p>The SFTP/FTP Client origin <ph
                 conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/leadin-ph"
-                /><ul id="ul_nsd_xfb_j1b">
-                <li>baseDir - Base directory containing the file where the record originated.</li>
-            </ul><ul
-                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/ul-DirFileTail-list"
-                id="ul_wqg_nk1_2z">
-                <li/>
+                /><ul id="ul_dxf_jz1_j1b">
+                <li
+                    conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/li-filename"/>
+                <li
+                    conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/li-file"/>
+                <li
+                    conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/li-mtime"
+                />
+                <li>remoteUri - Provides the resource URL used by the stage.</li>
             </ul></p>
- </conbody>
+    </conbody>
 </concept>
