@@ -40,6 +40,8 @@ import java.util.Set;
 
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.ID_SIZE;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.MAGIC_BYTE_SIZE;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.REGISTER_SCHEMA_DEFAULT;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.REGISTER_SCHEMA_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_DEFAULT;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_DEFAULT;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_KEY;
@@ -62,6 +64,7 @@ public class AvroDataParserFactory extends DataParserFactory {
     configs.put(SCHEMA_ID_KEY, SCHEMA_ID_DEFAULT);
     configs.put(SUBJECT_KEY, SUBJECT_DEFAULT);
     configs.put(SCHEMA_REPO_URLS_KEY, new ArrayList<>());
+    configs.put(REGISTER_SCHEMA_KEY, REGISTER_SCHEMA_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 
