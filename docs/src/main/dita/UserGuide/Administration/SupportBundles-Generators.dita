@@ -70,8 +70,8 @@
                     </row>
                     <row>
                         <entry>Logs</entry>
-                        <entry>Includes 1 GB of the most recent content of the following log
-                                files:<ul id="ul_zg4_zby_xz">
+                        <entry>Includes the most recent content of the following log files:<ul
+                                id="ul_zg4_zby_xz">
                                 <li>Garbage collector log - <codeph>gc.log</codeph></li>
                                 <li><ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
