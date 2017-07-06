@@ -261,6 +261,7 @@
             <exclude>**/*.svg</exclude>
             <exclude>**/MANIFEST.MF</exclude>
             <exclude>**/service.sdl</exclude>
+            <exclude>**/*.avro</exclude>
             <exclude>**/*.db</exclude>
             <exclude>**/*.csv</exclude>
             <exclude>**/*.txt</exclude>
