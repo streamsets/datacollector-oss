@@ -22,6 +22,8 @@ package com.streamsets.pipeline.lib.util;
 import com.google.common.base.Charsets;
 import com.google.common.base.Optional;
 import com.google.common.io.Resources;
+import com.streamsets.pipeline.config.DestinationAvroSchemaSource;
+import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import org.apache.avro.Schema;
 import org.junit.Rule;
@@ -61,9 +63,9 @@ public class AvroSchemaHelperIT {
 
     @Test
     public void hasRegistryClient() throws Exception {
-      assertFalse(new AvroSchemaHelper(getSettings(null)).hasRegistryClient());
-      assertTrue(new AvroSchemaHelper(getSettings(address)).hasRegistryClient());
-
+      assertFalse(new AvroSchemaHelper(getSettings(null, DestinationAvroSchemaSource.INLINE, false)).hasRegistryClient());
+      assertTrue(new AvroSchemaHelper(getSettings(address, DestinationAvroSchemaSource.REGISTRY, false)).hasRegistryClient());
+      assertTrue(new AvroSchemaHelper(getSettings(address, DestinationAvroSchemaSource.INLINE, true)).hasRegistryClient());
     }
 
     @Test
@@ -82,7 +84,7 @@ public class AvroSchemaHelperIT {
                   .withBody(getBody("schema-registry/schema_1_resp.json"))
         );
 
-      AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(address));
+      AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(address, OriginAvroSchemaSource.REGISTRY, false));
 
       Schema schema = new Schema.Parser()
           .setValidate(true)
@@ -101,7 +103,7 @@ public class AvroSchemaHelperIT {
 
   @Test
   public void loadFromString() throws Exception {
-    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null));
+    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null, OriginAvroSchemaSource.INLINE, false));
 
     final String schemaString = getBody("schema-registry/schema_1.json");
 
@@ -130,7 +132,7 @@ public class AvroSchemaHelperIT {
                 .withBody("{\"id\":1}")
         );
 
-    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(address));
+    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(address, DestinationAvroSchemaSource.INLINE, true));
 
     final String schemaString = getBody("schema-registry/schema_1.json");
 
@@ -159,7 +161,7 @@ public class AvroSchemaHelperIT {
                 .withBody(getBody("schema-registry/schema_1_resp.json"))
         );
 
-    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(address));
+    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(address, OriginAvroSchemaSource.REGISTRY, false));
 
     final String schemaString = getBody("schema-registry/schema_1.json");
 
@@ -203,7 +205,7 @@ public class AvroSchemaHelperIT {
                 .withBody(getBody("schema-registry/schema_1_subject_resp.json"))
         );
 
-    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(address));
+    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(address, OriginAvroSchemaSource.REGISTRY, false));
 
     final String schemaString = getBody("schema-registry/schema_1.json");
 
@@ -219,7 +221,7 @@ public class AvroSchemaHelperIT {
   public void writeSchemaId() throws Exception {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null));
+    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null, DestinationAvroSchemaSource.INLINE, false));
     helper.writeSchemaId(out, 5000);
 
     ByteBuffer buf = ByteBuffer.wrap(out.toByteArray());
@@ -233,7 +235,7 @@ public class AvroSchemaHelperIT {
     out.write(AvroSchemaHelper.MAGIC_BYTE);
     out.write(ByteBuffer.allocate(ID_SIZE).putInt(12345).array());
 
-    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null));
+    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null, OriginAvroSchemaSource.SOURCE, false));
     Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
     assertTrue(schemaId.isPresent());
     assertEquals(12345, (int) schemaId.get());
@@ -245,7 +247,7 @@ public class AvroSchemaHelperIT {
     out.write(0x01);
     out.write(ByteBuffer.allocate(ID_SIZE).putInt(12345).array());
 
-    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null));
+    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null, OriginAvroSchemaSource.SOURCE, false));
     Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
     assertFalse(schemaId.isPresent());
   }
@@ -255,7 +257,7 @@ public class AvroSchemaHelperIT {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     out.write(AvroSchemaHelper.MAGIC_BYTE);
 
-    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null));
+    AvroSchemaHelper helper = new AvroSchemaHelper(getSettings(null, OriginAvroSchemaSource.SOURCE, false));
     Optional<Integer> schemaId = helper.detectSchemaId(out.toByteArray());
     assertEquals(Optional.absent(), schemaId);
   }
@@ -264,13 +266,15 @@ public class AvroSchemaHelperIT {
     return Resources.toString(Resources.getResource(path), Charsets.UTF_8);
   }
 
-  private DataFactory.Settings getSettings(String repoUrl) {
+  private DataFactory.Settings getSettings(String repoUrl, Object schemaSource, boolean registerSchema) {
     List<String> urls = new ArrayList<>();
     if (repoUrl != null) {
       urls.add(repoUrl);
     }
     DataFactory.Settings settings = mock(DataFactory.Settings.class);
     when(settings.getConfig(AvroSchemaHelper.SCHEMA_REPO_URLS_KEY)).thenReturn(urls);
+    when(settings.getConfig(AvroSchemaHelper.SCHEMA_SOURCE_KEY)).thenReturn(schemaSource);
+    when(settings.getConfig(AvroSchemaHelper.REGISTER_SCHEMA_KEY)).thenReturn(registerSchema);
 
     return settings;
   }

@@ -42,6 +42,8 @@ import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.COMPRESSION_CODE
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.DEFAULT_VALUES_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.INCLUDE_SCHEMA_DEFAULT;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.INCLUDE_SCHEMA_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.REGISTER_SCHEMA_DEFAULT;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.REGISTER_SCHEMA_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_DEFAULT;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_DEFAULT;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_KEY;
@@ -65,6 +67,7 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
     configs.put(INCLUDE_SCHEMA_KEY, INCLUDE_SCHEMA_DEFAULT);
     configs.put(DEFAULT_VALUES_KEY, new HashMap<>());
     configs.put(COMPRESSION_CODEC_KEY, COMPRESSION_CODEC_DEFAULT);
+    configs.put(REGISTER_SCHEMA_KEY, REGISTER_SCHEMA_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 

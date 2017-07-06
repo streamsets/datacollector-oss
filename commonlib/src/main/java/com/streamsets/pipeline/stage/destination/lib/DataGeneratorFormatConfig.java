@@ -77,6 +77,7 @@ import static com.streamsets.pipeline.config.DestinationAvroSchemaSource.INLINE;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.COMPRESSION_CODEC_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.DEFAULT_VALUES_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.INCLUDE_SCHEMA_KEY;
+import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.REGISTER_SCHEMA_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_ID_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_KEY;
 import static com.streamsets.pipeline.lib.util.AvroSchemaHelper.SCHEMA_REPO_URLS_KEY;
@@ -713,6 +714,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       builder.setConfig(SCHEMA_ID_KEY, schemaId);
     }
     builder.setConfig(INCLUDE_SCHEMA_KEY, includeSchema);
+    builder.setConfig(REGISTER_SCHEMA_KEY, registerSchema);
     builder.setConfig(COMPRESSION_CODEC_KEY, avroCompression.getCodecName());
 
     return valid;

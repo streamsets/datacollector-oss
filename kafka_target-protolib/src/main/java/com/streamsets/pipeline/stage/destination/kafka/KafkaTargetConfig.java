@@ -273,9 +273,11 @@ public class KafkaTargetConfig {
     kafkaProducerConfigs.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer.getValueClass());
 
     List<String> schemaRegistryUrls = new ArrayList<>();
-    if (!dataGeneratorFormatConfig.schemaRegistryUrls.isEmpty()) {
+    if (dataGeneratorFormatConfig.avroSchemaSource == REGISTRY &&
+        !dataGeneratorFormatConfig.schemaRegistryUrls.isEmpty()) {
       schemaRegistryUrls = dataGeneratorFormatConfig.schemaRegistryUrls;
-    } else if (!dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration.isEmpty()) {
+    } else if (dataGeneratorFormatConfig.registerSchema &&
+        !dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration.isEmpty()) {
       schemaRegistryUrls = dataGeneratorFormatConfig.schemaRegistryUrlsForRegistration;
     }
 
