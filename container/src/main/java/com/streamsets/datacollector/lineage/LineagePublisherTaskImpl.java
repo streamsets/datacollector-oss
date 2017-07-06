@@ -205,6 +205,8 @@ public class LineagePublisherTaskImpl extends AbstractTask implements LineagePub
     @Override
     public void run() {
       LOG.info("Starting lineage event consumer");
+      Thread.currentThread().setName("Lineage Publisher Consumer");
+
       while(continueRunning) {
         List<LineageEvent> drainedEvents = new ArrayList<>();
 
