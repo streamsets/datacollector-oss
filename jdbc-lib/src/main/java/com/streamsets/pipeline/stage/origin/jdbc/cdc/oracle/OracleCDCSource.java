@@ -130,7 +130,7 @@ public class OracleCDCSource extends BaseSource {
   // (which means we are executing for the first time), or it is no longer valid, so select
   // only the ones that are > than the cachedSCN.
   private static final String GET_OLDEST_SCN =
-      "SELECT FIRST_CHANGE#, STATUS from V$ARCHIVED_LOG WHERE STATUS = 'A' AND FIRST_CHANGE# > ? ORDER BY FIRST_CHANGE#";
+      "SELECT FIRST_CHANGE#, STATUS from V$ARCHIVED_LOG WHERE STATUS = 'A' ORDER BY FIRST_CHANGE#";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
   private static final String PREFIX = "oracle.cdc.";
   private static final String SCN = PREFIX + "scn";
@@ -1196,6 +1196,15 @@ public class OracleCDCSource extends BaseSource {
           Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
     }
 
+    if (configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS) {
+      try {
+        startLogMnrForRedoDict();
+      } catch (Exception ex) {
+        LOG.warn("Error while attempting to start LogMiner to load dictionary", ex);
+        issues.add(getContext().createConfigIssue(Groups.CDC.name(), "oracleCDCConfigBean.dictionary", JDBC_44, ex));
+      }
+    }
+
     if (configBean.baseConfigBean.caseSensitive) {
       sqlListener.setCaseSensitive();
     }
@@ -1209,6 +1218,34 @@ public class OracleCDCSource extends BaseSource {
     }
 
     return issues;
+  }
+
+  private void startLogMnrForRedoDict() throws SQLException, StageException {
+    BigDecimal endSCN = getEndingSCN();
+
+    SQLException lastException = null;
+    boolean startedLogMiner = false;
+
+    try (ResultSet rs = getOldestSCN.executeQuery()) {
+      while (rs.next()) {
+        BigDecimal oldestSCN = rs.getBigDecimal(1);
+        try {
+          startLogMinerUsingGivenSCNs(oldestSCN, endSCN);
+          startedLogMiner = true;
+          break;
+        } catch (SQLException ex) {
+          lastException = ex;
+        }
+      }
+    }
+    connection.commit();
+    if (!startedLogMiner) {
+      if (lastException != null) {
+        throw new StageException(JDBC_52, lastException);
+      } else {
+        throw new StageException(JDBC_52);
+      }
+    }
   }
 
   private void initializeStatements() throws SQLException {
