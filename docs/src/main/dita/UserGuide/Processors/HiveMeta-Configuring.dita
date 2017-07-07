@@ -216,6 +216,17 @@
                                     <entry>Time zone to use with Time Basis to evaluate
                                         datetime-based partition value expressions.</entry>
                                 </row>
+                                <row>
+                                    <entry>Header Attribute Expressions <xref
+                                            href="HiveMeta-CustomAtts.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_zxv_2nn_l1b"
+                                        /></xref></entry>
+                                    <entry>Use to define custom record header attributes for the
+                                        metadata record. <p>Click the <uicontrol>Add</uicontrol>
+                                            icon to configure custom record header
+                                        attributes.</p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

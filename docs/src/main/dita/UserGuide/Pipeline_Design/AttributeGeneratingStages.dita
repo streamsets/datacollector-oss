@@ -180,13 +180,17 @@
                         </row>
                         <row>
                             <entry>Hive Metadata processor</entry>
-                            <entry>Generates record header attributes for record-based writes as
-                                part of the <xref
+                            <entry>Generates record header attributes for the data record. These
+                                attributes can be used for record-based writes as part of the <xref
                                     href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w"
                                     >Drift Synchronization Solution for Hive</xref>. <xref
                                     href="../Processors/HiveMeta-MRecordStageAtts.dita#concept_g3p_sss_dw">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                        id="image_u1j_m2v_2z"/></xref></entry>
+                                        id="image_u1j_m2v_2z"/></xref><p>Can be configured to add
+                                    custom header attributes to the metadata record. <xref
+                                        href="../Processors/HiveMeta-CustomAtts.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_nmz_qjn_l1b"/></xref></p></entry>
                         </row>
                         <row>
                             <entry>HTTP Client processor</entry>

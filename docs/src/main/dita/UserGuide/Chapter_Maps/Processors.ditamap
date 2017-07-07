@@ -144,7 +144,9 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Processors/HiveMeta-OutputStreams.dita"/>
-   <topicref href="../Processors/HiveMeta-MRecordStageAtts.dita"/>
+   <topicref href="../Processors/HiveMeta-MRecordStageAtts.dita">
+    <topicref href="../Processors/HiveMeta-CustomAtts.dita"/>
+   </topicref>
    <topicref href="../Processors/HiveMeta-DBtablePartition.dita">
     <topicref href="../Processors/HiveMeta-HiveNames.dita"/>
    </topicref>

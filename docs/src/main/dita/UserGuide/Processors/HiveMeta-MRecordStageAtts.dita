@@ -34,15 +34,17 @@
                                     record.<p
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/P-HM-CompatChanges"
                                 /></li>
+                            <li>Any user-defined record header attributes configured in the
+                                stage.</li>
                         </ul></dd>
                     <dd>When the Hive Metastore destination receives the metadata record, the
                         destination performs a final check against Hive metadata and creates or
                         alters tables as needed.</dd>
                 </dlentry>
                 <dlentry>
-                    <dt>record header attributes</dt>
-                    <dd>The Hive Metadata processor adds the following attributes to each record
-                            header:<ul id="ul_oj1_1ws_dw">
+                    <dt>data record header attributes</dt>
+                    <dd>The Hive Metadata processor adds the following attributes to the record
+                        header for data records:<ul id="ul_oj1_1ws_dw">
                             <li>targetDirectory - The location where each record should be
                                     written.<p>The processor generates the directory based on the
                                     database, table, and partition information for each record and
