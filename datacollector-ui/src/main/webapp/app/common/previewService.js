@@ -403,16 +403,17 @@ angular.module('dataCollectorApp.common')
       previewStatusTimer.then(
         function() {
           api.pipelineAgent.getPreviewStatus(previewerId)
-            .success(function(data) {
+            .then(function(response) {
+              var data = response.data;
               if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'FINISHED'], data.status)) {
                 fetchPreviewData(previewerId, defer);
               } else {
                 checkForPreviewStatus(previewerId, defer);
               }
             })
-            .error(function(data, status, headers, config) {
+            .catch(function(response) {
               defer.reject();
-              $scope.common.errors = [data];
+              $scope.common.errors = [response.data];
             });
         },
         function() {
@@ -424,7 +425,8 @@ angular.module('dataCollectorApp.common')
 
     var fetchPreviewData = function(previewerId, defer) {
       api.pipelineAgent.getPreviewData(previewerId)
-        .success(function(previewData) {
+        .then(function(response) {
+          var previewData = response.data;
           if(previewData.status !== 'FINISHED') {
             //Ignore
             defer.reject();
@@ -432,9 +434,9 @@ angular.module('dataCollectorApp.common')
             defer.resolve(previewData);
           }
         })
-        .error(function(data, status, headers, config) {
+        .catch(function(response) {
           defer.reject();
-          $scope.common.errors = [data];
+          $scope.common.errors = [response.data];
         });
     };
 

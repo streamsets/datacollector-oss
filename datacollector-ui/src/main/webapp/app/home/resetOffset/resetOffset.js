@@ -37,27 +37,27 @@ angular
         if ($scope.isList) {
           $scope.showLoading = true;
           api.pipelineAgent.resetOffsets(_.pluck(pipelineInfo, 'pipelineId'))
-            .success(function() {
+            .then(function() {
               $scope.showLoading = false;
               $scope.isOffsetResetSucceed = true;
             })
-            .error(function(res) {
+            .catch(function(res) {
               $scope.showLoading = false;
-              $scope.common.errors = [res];
+              $scope.common.errors = [res.data];
             });
 
         } else {
           if(originStageDef.resetOffset) {
             $scope.showLoading = true;
-            api.pipelineAgent.resetOffset(pipelineInfo.pipelineId).
-            success(function() {
-              $scope.showLoading = false;
-              $scope.isOffsetResetSucceed = true;
-            }).
-            error(function(data) {
-              $scope.showLoading = false;
-              $scope.common.errors = [data];
-            });
+            api.pipelineAgent.resetOffset(pipelineInfo.pipelineId)
+              .then(function() {
+                $scope.showLoading = false;
+                $scope.isOffsetResetSucceed = true;
+              })
+              .catch(function(res) {
+                $scope.showLoading = false;
+                $scope.common.errors = [res.data];
+              });
           } else {
             $translate('home.resetOffset.noSupport', { label: originStageDef.label })
                 .then(function(translation) {
@@ -65,7 +65,6 @@ angular
                 });
           }
         }
-
       },
 
       /**

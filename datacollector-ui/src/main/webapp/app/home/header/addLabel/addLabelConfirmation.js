@@ -31,16 +31,18 @@ angular
 
         save: function() {
           var pipelineNames = _.pluck(pipelineInfoList, 'name');
-          api.pipelineAgent.addLabelsToPipelines($scope.data.labels, pipelineNames).success(function(res) {
-            if (res.errorMessages.length === 0) {
-              $modalInstance.close(_.extend(res, {labels: $scope.data.labels}));
-            } else {
-              $scope.common.errors = res.errorMessages;
-            }
-          }).error(function(data) {
-            $scope.common.errors = [data];
-          });
-
+          api.pipelineAgent.addLabelsToPipelines($scope.data.labels, pipelineNames)
+            .then(function(response) {
+              var res = response.data;
+              if (res.errorMessages.length === 0) {
+                $modalInstance.close(_.extend(res, {labels: $scope.data.labels}));
+              } else {
+                $scope.common.errors = res.errorMessages;
+              }
+            })
+            .catch(function(res) {
+              $scope.common.errors = [res.data];
+            });
         },
         cancel: function() {
           $modalInstance.dismiss('cancel');

@@ -53,13 +53,13 @@ angular
         $scope.dpmInfoModel.dpmGroupList = $scope.dpmGroupList;
 
         api.admin.createDPMGroupsAndUsers($scope.dpmInfoModel)
-          .success(function(res) {
+          .then(function(res) {
             $scope.isCreateInProgress = false;
-            $scope.createResponse = res;
+            $scope.createResponse = res.data;
           })
-          .error(function(res) {
+          .catch(function(res) {
             $scope.isCreateInProgress = false;
-            $scope.common.errors = [res];
+            $scope.common.errors = [res.data];
           });
       },
 

@@ -108,14 +108,8 @@ angular
           data: values.body,
           params: query
         },
-        callback = function(data, status, headers, config) {
+        callback = function(response) {
           // execute modules
-          var response = {
-            data: data,
-            status: status,
-            headers: headers,
-            config: config
-          };
           swaggerModules
             .execute(swaggerModules.AFTER_EXPLORER_LOAD, response)
             .then(function() {
@@ -129,8 +123,8 @@ angular
         .then(function() {
           // send request
           $http(options)
-            .success(callback)
-            .error(callback);
+            .then(callback)
+            .catch(callback);
         });
 
       return deferred.promise;

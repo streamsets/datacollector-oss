@@ -155,8 +155,9 @@ angular
         $scope.showLoading = true;
 
         api.pipelineAgent.createPreview($scope.activeConfigInfo.pipelineId, $scope.previewSourceOffset,
-          previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs, null, previewConfig.timeout).
-          success(function (res) {
+          previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs, null, previewConfig.timeout)
+          .then(function (response) {
+            var res = response.data;
             var defer = $q.defer();
             currentPreviewerId = res.previewerId;
             checkForPreviewStatus(res.previewerId, defer);
@@ -194,9 +195,9 @@ angular
               $rootScope.common.errors = [];
             });
 
-          }).
-          error(function(data) {
-            $rootScope.common.errors = [data];
+          })
+          .catch(function(res) {
+            $rootScope.common.errors = [res.data];
             $scope.showLoading = false;
           });
       },
@@ -390,8 +391,9 @@ angular
           var getSnapshotDefer = $q.defer();
 
           if(previewConfig.snapshotInfo) {
-            api.pipelineAgent.getSnapshot(previewConfig.snapshotInfo.name, 0, previewConfig.snapshotInfo.id).
-              success(function(res) {
+            api.pipelineAgent.getSnapshot(previewConfig.snapshotInfo.name, 0, previewConfig.snapshotInfo.id)
+              .then(function(response) {
+                var res = response.data;
                 if(res && res.snapshotBatches && res.snapshotBatches[0] && res.snapshotBatches[0].length) {
                   var snapshotSourceOutputs = res.snapshotBatches[0][0].output;
 
@@ -409,9 +411,9 @@ angular
                   getSnapshotDefer.reject('No Snapshot data available');
                 }
 
-              }).
-              error(function(data) {
-                getSnapshotDefer.reject(data);
+              })
+              .catch(function(res) {
+                getSnapshotDefer.reject(res.data);
 
               });
           } else {
@@ -427,8 +429,9 @@ angular
 
       $q.all(deferList).then(function() {
         api.pipelineAgent.createPreview($scope.activeConfigInfo.pipelineId, $scope.previewSourceOffset,
-          previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs, null, previewConfig.timeout).
-          success(function (res) {
+          previewConfig.batchSize, 0, !previewConfig.writeToDestinations, stageOutputs, null, previewConfig.timeout)
+          .then(function (response) {
+            var res = response.data;
             var defer = $q.defer();
             currentPreviewerId = res.previewerId;
             checkForPreviewStatus(res.previewerId, defer);
@@ -459,9 +462,9 @@ angular
               $scope.showLoading = false;
             });
 
-          }).
-          error(function(data) {
-            $rootScope.common.errors = [data];
+          })
+          .catch(function(res) {
+            $rootScope.common.errors = [res.data];
             $scope.closePreview();
             $scope.showLoading = false;
           });
@@ -564,7 +567,8 @@ angular
       previewStatusTimer.then(
         function() {
           api.pipelineAgent.getPreviewStatus(previewerId)
-            .success(function(data) {
+            .then(function(res) {
+              var data = res.data;
               if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'FINISHED'], data.status)) {
                 fetchPreviewData(previewerId, defer);
                 currentPreviewerId = null;
@@ -572,8 +576,8 @@ angular
                 checkForPreviewStatus(previewerId, defer);
               }
             })
-            .error(function(data, status, headers, config) {
-              $scope.common.errors = [data];
+            .catch(function(res) {
+              $scope.common.errors = [res.data];
             });
         },
         function() {
@@ -584,9 +588,9 @@ angular
 
     var fetchPreviewData = function(previewerId, defer) {
       api.pipelineAgent.getPreviewData(previewerId)
-        .success(function(previewData) {
+        .then(function(res) {
+          var previewData = res.data;
           if(previewData.status !== 'FINISHED') {
-
             if(previewData.issues) {
               $rootScope.common.errors = [previewData.issues];
             } else if(previewData.message) {
@@ -600,8 +604,8 @@ angular
             defer.resolve(previewData);
           }
         })
-        .error(function(data, status, headers, config) {
-          $scope.common.errors = [data];
+        .catch(function(res) {
+          $scope.common.errors = [res.data];
           $scope.closePreview();
           $scope.showLoading = false;
           defer.reject();

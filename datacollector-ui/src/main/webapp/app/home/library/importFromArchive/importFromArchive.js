@@ -40,14 +40,15 @@ angular
         var formData = new FormData();
         formData.append('file', $scope.uploadFile);
         api.pipelineAgent.importPipelines(formData)
-          .success(function(res) {
+          .then(function(response) {
+            var res = response.data;
             $scope.common.errors = res.errorMessages;
             $scope.successEntities = res.successEntities;
             $scope.operationDone = true;
             $scope.operationInProgress = false;
           })
-          .error(function(res) {
-            $scope.common.errors = [res];
+          .catch(function(res) {
+            $scope.common.errors = [res.data];
             $scope.operationDone = true;
             $scope.operationInProgress = false;
           });

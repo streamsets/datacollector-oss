@@ -157,7 +157,8 @@ angular
     var updateBadRecordsData = function(currentSelection) {
       $scope.showBadRecordsLoading = true;
       api.pipelineAgent.getErrorRecords($scope.pipelineConfig.info.pipelineId, 0, currentSelection.instanceName)
-        .success(function(res) {
+        .then(function(response) {
+          var res = response.data;
           $scope.showBadRecordsLoading = false;
           if(res && res.length) {
             $scope.stageBadRecords = res.reverse();
@@ -165,16 +166,17 @@ angular
             $scope.showBadRecordsLoading = [];
           }
         })
-        .error(function(data) {
+        .catch(function(res) {
           $scope.showBadRecordsLoading = false;
-          $rootScope.common.errors = [data];
+          $rootScope.common.errors = [res.data];
         });
     };
 
     var updateErrorMessagesData = function(currentSelection) {
       $scope.showErrorMessagesLoading = true;
       api.pipelineAgent.getErrorMessages($scope.pipelineConfig.info.pipelineId, 0, currentSelection.instanceName)
-        .success(function(res) {
+        .then(function(response) {
+          var res = response.data;
           $scope.showErrorMessagesLoading = false;
           if(res && res.length) {
             $scope.errorMessages = res.reverse();
@@ -182,9 +184,9 @@ angular
             $scope.errorMessages = [];
           }
         })
-        .error(function(data) {
+        .catch(function(res) {
           $scope.showErrorMessagesLoading = false;
-          $rootScope.common.errors = [data];
+          $rootScope.common.errors = [res.data];
         });
     };
 

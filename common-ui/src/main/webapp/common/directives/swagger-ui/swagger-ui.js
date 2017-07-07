@@ -88,11 +88,11 @@ angular
           .execute(swaggerModules.BEFORE_LOAD, options)
           .then(function() {
             $http(options)
-              .success(callback)
-              .error(function(data, status) {
+              .then(callback)
+              .catch(function(res) {
                 onError({
-                  code: status,
-                  message: data
+                  code: res.status,
+                  message: res.data
                 });
               });
           })
@@ -157,7 +157,9 @@ angular
             //TODO cancel current loading swagger
           }
           // load Swagger descriptor
-          loadSwagger(url, function(data, status, headers) {
+          loadSwagger(url, function(res) {
+            var data = res.data;
+            var headers = res.headers;
             swagger = data;
             // execute modules
             swaggerModules

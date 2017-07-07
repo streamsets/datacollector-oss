@@ -113,9 +113,9 @@ angular
     };
 
     var viewSnapshot = function(snapshotName) {
-      api.pipelineAgent.getSnapshot($scope.activeConfigInfo.pipelineId, 0, snapshotName).
-        success(function(res) {
-          $scope.previewData = res;
+      api.pipelineAgent.getSnapshot($scope.activeConfigInfo.pipelineId, 0, snapshotName)
+        .then(function(res) {
+          $scope.previewData = res.data;
 
           var firstStageInstance = $scope.pipelineConfig.stages[0];
           $scope.changeStageSelection({
@@ -126,12 +126,11 @@ angular
           $rootScope.$broadcast('updateErrorCount',
             previewService.getPreviewStageErrorCounts($scope.previewData.snapshotBatches[0]));
           $scope.showLoading = false;
-        }).
-        error(function(data) {
-          $rootScope.common.errors = [data];
+        })
+        .catch(function(res) {
+          $rootScope.common.errors = [res.data];
           $scope.showLoading = false;
         });
-
     };
 
     $scope.$on('snapshotPipeline', function(event, snapshotName) {

@@ -468,12 +468,12 @@ angular
       jvmMetricsTimer.then(
         function() {
           api.admin.getJMX()
-            .success(function(data) {
-              updateGraphData(data);
+            .then(function(res) {
+              updateGraphData(res.data);
               refreshPipelineJMX();
             })
-            .error(function(data, status, headers, config) {
-              $rootScope.common.errors = [data];
+            .catch(function(res) {
+              $rootScope.common.errors = [res.data];
             });
         },
         function() {
@@ -534,12 +534,12 @@ angular
     };
 
     api.admin.getJMX()
-      .success(function(data) {
-        updateGraphData(data);
+      .then(function(res) {
+        updateGraphData(res.data);
         refreshPipelineJMX();
       })
-      .error(function(data, status, headers, config) {
-        $rootScope.common.errors = [data];
+      .catch(function(res) {
+        $rootScope.common.errors = [res.data];
       });
 
 

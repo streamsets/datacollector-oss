@@ -197,7 +197,8 @@ angular
       $scope.showRecordsLoading = true;
       api.pipelineAgent.getSampledRecords($scope.pipelineConfig.info.pipelineId, $scope.dataRuleDefn.id,
         $scope.dataRuleDefn.samplingRecordsToRetain)
-        .success(function(res) {
+        .then(function(response) {
+          var res = response.data;
           $scope.showRecordsLoading = false;
           if(res && res.length) {
             $scope.samplingRecords = res;
@@ -206,9 +207,9 @@ angular
             $scope.samplingRecords = [];
           }
         })
-        .error(function(data) {
+        .catch(function(res) {
           $scope.showRecordsLoading = false;
-          $rootScope.common.errors = [data];
+          $rootScope.common.errors = [res.data];
         });
     }
 

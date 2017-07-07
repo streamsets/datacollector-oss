@@ -43,13 +43,13 @@ angular
         $scope.isEnableInProgress = true;
         $scope.dpmInfoModel.organization = $scope.dpmInfoModel.userID.split('@')[1];
         api.admin.enableDPM($scope.dpmInfoModel)
-          .success(function(res) {
+          .then(function() {
             $scope.isEnableInProgress = false;
             $scope.dpmEnabled = true;
           })
-          .error(function(res) {
+          .catch(function(res) {
             $scope.isEnableInProgress = false;
-            $scope.common.errors = [res];
+            $scope.common.errors = [res.data];
           });
       },
 

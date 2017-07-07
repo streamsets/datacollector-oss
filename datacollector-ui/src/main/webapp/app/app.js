@@ -15,7 +15,7 @@
  */
 angular.module('dataCollectorApp')
   .config(function($routeProvider, $locationProvider, $translateProvider, $provide,
-                   tmhDynamicLocaleProvider, uiSelectConfig, $httpProvider, AnalyticsProvider) {
+                   tmhDynamicLocaleProvider, uiSelectConfig, $httpProvider, AnalyticsProvider, $qProvider) {
 
     $locationProvider.html5Mode({enabled: true, requireBase: false});
     $routeProvider.otherwise({
@@ -53,9 +53,12 @@ angular.module('dataCollectorApp')
     $translateProvider.preferredLanguage('en');
 
     $translateProvider.useCookieStorage();
+    $translateProvider.useSanitizeValueStrategy('sanitize');
 
     tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
     tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');
+
+    $qProvider.errorOnUnhandledRejections(false);
 
     uiSelectConfig.theme = 'bootstrap';
 
@@ -285,11 +288,8 @@ angular.module('dataCollectorApp')
          */
         logout: function() {
           api.admin.logout($rootScope.common.authenticationType, $rootScope.common.isDPMEnabled)
-            .success(function() {
+            .then(function() {
               location.reload();
-            })
-            .error(function() {
-
             });
         },
 
@@ -430,11 +430,11 @@ angular.module('dataCollectorApp')
 
 
           api.pipelineAgent.deleteAlert(triggeredAlert.pipelineName, triggeredAlert.ruleDefinition.id)
-            .success(function() {
+            .then(function() {
 
             })
-            .error(function(data, status, headers, config) {
-              $rootScope.common.errors = [data];
+            .catch(function(response) {
+              $rootScope.common.errors = [response.data];
             });
         },
 
@@ -641,7 +641,8 @@ angular.module('dataCollectorApp')
         pipelineStatusTimer.then(
           function() {
             api.pipelineAgent.getAllPipelineStatus()
-              .success(function(data) {
+              .then(function(response) {
+                var data = response.data;
                 if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
                   //Session invalidated
                   window.location.reload();
@@ -652,8 +653,8 @@ angular.module('dataCollectorApp')
 
                 refreshPipelineStatus();
               })
-              .error(function(data, status, headers, config) {
-                $rootScope.common.errors = [data];
+              .catch(function(response) {
+                $rootScope.common.errors = [response.data];
               });
           },
           function() {
@@ -730,7 +731,8 @@ angular.module('dataCollectorApp')
         alertsTimer.then(
           function() {
             api.pipelineAgent.getAllAlerts()
-              .success(function(data) {
+              .then(function(response) {
+                var data = response.data;
                 if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
                   //Session invalidated
                   window.location.reload();
@@ -751,8 +753,8 @@ angular.module('dataCollectorApp')
 
                 refreshAlerts();
               })
-              .error(function(data, status, headers, config) {
-                $rootScope.common.errors = [data];
+              .catch(function(response) {
+                $rootScope.common.errors = [response.data];
               });
           },
           function() {

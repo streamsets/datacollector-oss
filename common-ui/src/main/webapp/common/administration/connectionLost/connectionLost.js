@@ -76,11 +76,11 @@ angular
 
       $scope.isRetryingInProgress = true;
       api.admin.getUserInfo()
-        .success(function(res) {
+        .then(function(res) {
           window.location.reload();
         })
-        .error(function(res, status) {
-          if (status === 403 || status === 401) {
+        .catch(function(res) {
+          if (res.status === 403 || res.status === 401) {
             window.location.reload();
           } else {
             $scope.isRetryingInProgress = false;

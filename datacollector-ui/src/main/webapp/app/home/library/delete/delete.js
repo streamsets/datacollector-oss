@@ -31,22 +31,22 @@ angular
         $scope.operationInProgress = true;
         if ($scope.isList) {
           api.pipelineAgent.deletePipelines(_.pluck(pipelineInfo, 'pipelineId'))
-            .success(function() {
+            .then(function() {
               $modalInstance.close(pipelineInfo);
             })
-            .error(function(res) {
+            .catch(function(res) {
               $scope.operationInProgress = false;
-              $scope.common.errors = [res];
+              $scope.common.errors = [res.data];
             });
 
         } else {
           api.pipelineAgent.deletePipelineConfig(pipelineInfo.pipelineId)
-            .success(function() {
+            .then(function() {
               $modalInstance.close(pipelineInfo);
             })
-            .error(function(res) {
+            .catch(function(res) {
               $scope.operationInProgress = false;
-              $scope.common.errors = [res];
+              $scope.common.errors = [res.data];
             });
         }
       },

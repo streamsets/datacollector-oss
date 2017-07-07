@@ -36,7 +36,8 @@ angular
        */
       rawSourcePreview: function() {
         api.pipelineAgent.rawSourcePreview($scope.activeConfigInfo.pipelineId, 0, $scope.detailPaneConfig.uiInfo.rawSource.configuration)
-          .success(function(data) {
+          .then(function(res) {
+            var data = res.data;
             $rootScope.common.errors = [];
             $scope.rawSourcePreviewData = data ? data.previewData : '';
 
@@ -45,8 +46,8 @@ angular
               $scope.refreshCodemirror = false;
             }, 100);
           })
-          .error(function(data, status, headers, config) {
-            $rootScope.common.errors = [data];
+          .catch(function(res) {
+            $rootScope.common.errors = [res.data];
           });
       }
     });

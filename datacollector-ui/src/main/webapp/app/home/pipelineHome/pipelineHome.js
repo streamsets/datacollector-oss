@@ -994,8 +994,9 @@ angular
 
 
       if (!$scope.isPipelineRunning) {
-        api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.pipelineId, config).
-          success(function (res) {
+        api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.pipelineId, config)
+          .then(function (response) {
+            var res = response.data;
 
             //Clear Previous errors
             $rootScope.common.errors = [];
@@ -1017,11 +1018,11 @@ angular
             }
 
             updateGraph(res, $scope.pipelineRules);
-          }).
-          error(function(data, status, headers, config) {
+          })
+          .catch(function(res) {
             configSaveInProgress = false;
             $rootScope.common.saveOperationInProgress--;
-            $rootScope.common.errors = [data];
+            $rootScope.common.errors = [res.data];
           });
       } else {
 
@@ -1035,8 +1036,8 @@ angular
           uiInfoMap[stageInstance.instanceName] = stageInstance.uiInfo;
         });
 
-        api.pipelineAgent.savePipelineUIInfo($scope.activeConfigInfo.pipelineId, uiInfoMap).
-          success(function (res) {
+        api.pipelineAgent.savePipelineUIInfo($scope.activeConfigInfo.pipelineId, uiInfoMap)
+          .then(function (res) {
 
             //Clear Previous errors
             $rootScope.common.errors = [];
@@ -1050,15 +1051,13 @@ angular
             $rootScope.common.saveOperationInProgress--;
 
             //updateGraph(res, $scope.pipelineRules);
-          }).
-          error(function(data, status, headers, config) {
+          })
+          .catch(function(res) {
             configSaveInProgress = false;
             $rootScope.common.saveOperationInProgress--;
-            $rootScope.common.errors = [data];
+            $rootScope.common.errors = [res.data];
           });
       }
-
-
     };
 
     /**
@@ -1456,7 +1455,8 @@ angular
         pipelineMetricsTimer.then(
           function() {
             api.pipelineAgent.getPipelineMetrics($scope.activeConfigInfo.pipelineId, 0)
-              .success(function(data) {
+              .then(function(res) {
+                var data = res.data;
                 if (!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
                   //Session invalidated
                   window.location.reload();
@@ -1468,8 +1468,8 @@ angular
                 }
                 refreshPipelineMetrics();
               })
-              .error(function(data, status, headers, config) {
-                $rootScope.common.errors = [data];
+              .catch(function(res) {
+                $rootScope.common.errors = [res.data];
               });
           },
           function() {
@@ -1585,8 +1585,9 @@ angular
       rulesSaveInProgress = true;
       $rootScope.common.saveOperationInProgress++;
 
-      api.pipelineAgent.savePipelineRules($scope.activeConfigInfo.pipelineId, rules).
-        success(function (res) {
+      api.pipelineAgent.savePipelineRules($scope.activeConfigInfo.pipelineId, rules)
+        .then(function (response) {
+          var res = response.data;
           rulesSaveInProgress = false;
           $rootScope.common.saveOperationInProgress--;
           ignoreUpdate = true;
@@ -1630,10 +1631,10 @@ angular
 
           addToArchive($scope.pipelineConfig, $scope.pipelineRules);
           $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, []);
-        }).
-        error(function(data, status, headers, config) {
+        })
+        .catch(function(res) {
           $rootScope.common.saveOperationInProgress--;
-          $rootScope.common.errors = [data];
+          $rootScope.common.errors = [res.data];
         });
     };
 

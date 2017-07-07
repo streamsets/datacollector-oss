@@ -101,18 +101,18 @@ angular
 
     var updateHistory = function(pipelineName) {
       $scope.showLoading = true;
-      api.pipelineAgent.getHistory(pipelineName).
-        success(function(res) {
-          if(res && res.length) {
-            $scope.runHistory = res;
+      api.pipelineAgent.getHistory(pipelineName)
+        .then(function(res) {
+          if(res.data && res.data.length) {
+            $scope.runHistory = res.data;
           } else {
             $scope.runHistory = [];
           }
           $scope.showLoading = false;
-        }).
-        error(function(data) {
+        })
+        .catch(function(res) {
           $scope.showLoading = false;
-          $rootScope.common.errors = [data];
+          $rootScope.common.errors = [res.data];
         });
     };
 

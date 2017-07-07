@@ -28,12 +28,12 @@ angular
       shutdown: function() {
         $scope.isShuttingDown = true;
         api.admin.shutdownCollector()
-          .success(function() {
+          .then(function() {
             $scope.isShutdownSucceed = true;
             $scope.isShuttingDown = false;
           })
-          .error(function(data) {
-            $scope.issues = [data];
+          .catch(function(res) {
+            $scope.issues = [res.data];
             $scope.isShuttingDown = false;
           });
       },

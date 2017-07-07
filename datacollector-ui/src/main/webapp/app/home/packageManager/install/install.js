@@ -41,8 +41,7 @@ angular
 
         $scope.operationStatusMap[library.id] = 'installing';
         api.pipelineAgent.installLibraries(customRepoUrl, _.pluck(librariesToInstall, 'id'))
-            .success(function () {
-
+            .then(function () {
               library.installed = true;
               $scope.operationStatusMap[library.id] = 'installed';
               $rootScope.common.trackEvent(
@@ -58,11 +57,10 @@ angular
                 $scope.operationStatus = 'complete';
               }
             })
-
-            .error(function (res) {
+            .catch(function (res) {
               $scope.failedLibraries.push(library);
               $scope.operationStatusMap[library.id] = 'failed';
-              $scope.errorMap[library.id] = res;
+              $scope.errorMap[library.id] = res.data;
 
               if (libraries.length > 0) {
                 $scope.install(libraries);

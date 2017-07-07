@@ -28,11 +28,11 @@ angular
       restart: function() {
         $scope.isRestarting = true;
         api.admin.restartDataCollector()
-          .success(function() {
+          .then(function() {
             $scope.isRestartSucceed = true;
           })
-          .error(function(data) {
-            $scope.issues = [data];
+          .catch(function(res) {
+            $scope.issues = [res.data];
             $scope.isRestarting = false;
           });
       },

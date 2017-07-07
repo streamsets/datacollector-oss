@@ -468,16 +468,17 @@ angular
       validateConfigStatusTimer.then(
         function() {
           api.pipelineAgent.getPreviewStatus(previewerId)
-            .success(function(data) {
+            .then(function(res) {
+              var data = res.data;
               if (data && _.contains(['INVALID', 'VALIDATION_ERROR', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'VALID'], data.status)) {
                 fetchValidateConfigData(previewerId, defer);
               } else {
                 checkForValidateConfigStatus(previewerId, defer);
               }
             })
-            .error(function(data, status, headers, config) {
+            .catch(function(res) {
               $rootScope.common.infoList = [];
-              $scope.common.errors = [data];
+              $scope.common.errors = [res.data];
             });
         },
         function() {
@@ -488,12 +489,12 @@ angular
 
     var fetchValidateConfigData = function(previewerId, defer) {
       api.pipelineAgent.getPreviewData(previewerId)
-        .success(function(validateConfigData) {
-          defer.resolve(validateConfigData);
+        .then(function(res) {
+          defer.resolve(res.data);
         })
-        .error(function(data, status, headers, config) {
+        .catch(function(res) {
           $rootScope.common.infoList = [];
-          $scope.common.errors = [data];
+          $scope.common.errors = [res.data];
         });
     };
 

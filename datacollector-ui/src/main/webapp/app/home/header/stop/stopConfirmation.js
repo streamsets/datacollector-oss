@@ -34,26 +34,29 @@ angular
         if ($scope.isList) {
 
           var pipelineNames = _.pluck(pipelineInfo, 'pipelineId');
-          api.pipelineAgent.stopPipelines(pipelineNames, forceStop).success(function(res) {
-            if (res.errorMessages.length === 0) {
-              $modalInstance.close(res);
-            } else {
+          api.pipelineAgent.stopPipelines(pipelineNames, forceStop)
+            .then(function(response) {
+              var res = response.data;
+              if (res.errorMessages.length === 0) {
+                $modalInstance.close(res);
+              } else {
+                $scope.stopping = false;
+                $scope.common.errors = res.errorMessages;
+              }
+            })
+            .catch(function(res) {
               $scope.stopping = false;
-              $scope.common.errors = res.errorMessages;
-            }
-          }).error(function(data) {
-            $scope.stopping = false;
-            $scope.common.errors = [data];
-          });
+              $scope.common.errors = [res.data];
+            });
 
         } else {
           api.pipelineAgent.stopPipeline(pipelineInfo.pipelineId, 0, forceStop)
-            .success(function(res) {
-              $modalInstance.close(res);
+            .then(function(res) {
+              $modalInstance.close(res.data);
             })
-            .error(function(data) {
+            .catch(function(res) {
               $scope.stopping = false;
-              $scope.common.errors = [data];
+              $scope.common.errors = [res.data];
             });
         }
       },

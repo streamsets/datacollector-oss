@@ -220,15 +220,14 @@ angular
        */
       rawSourcePreview: function() {
         api.pipelineAgent.rawSourcePreview($scope.activeConfigInfo.name, 0, $scope.detailPaneConfig.uiInfo.rawSource.configuration)
-          .success(function(data) {
+          .then(function(res) {
             $rootScope.common.errors = [];
-            $scope.rawSourcePreviewData = data ? data.previewString : '';
+            $scope.rawSourcePreviewData = res.data ? res.data.previewString : '';
           })
-          .error(function(data, status, headers, config) {
-            $rootScope.common.errors = [data];
+          .catch(function(res) {
+            $rootScope.common.errors = [res.data];
           });
       },
-
 
       /**
        * On focus callback for field selector configuration.

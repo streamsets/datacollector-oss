@@ -191,7 +191,8 @@ angular
       captureSnapshotStatusTimer.then(
         function() {
           api.pipelineAgent.getSnapshotStatus(pipelineConfig.info.pipelineId, 0, snapshotName)
-            .success(function(data) {
+            .then(function(res) {
+              var data = res.data;
               if(data && data.inProgress === false) {
                 $scope.snapshotInProgress = false;
                 refreshSnapshotsInfo();
@@ -199,8 +200,8 @@ angular
                 checkForCaptureSnapshotStatus(snapshotName);
               }
             })
-            .error(function(data, status, headers, config) {
-              $scope.common.errors = [data];
+            .catch(function(res) {
+              $scope.common.errors = [res.data];
             });
         },
         function() {

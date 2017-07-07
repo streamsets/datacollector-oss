@@ -25,12 +25,12 @@ angular
       pipelineInfo: pipelineInfo,
 
       yes: function() {
-        api.pipelineAgent.clearHistory(pipelineInfo.pipelineId).
-          success(function() {
+        api.pipelineAgent.clearHistory(pipelineInfo.pipelineId)
+          .then(function() {
             $modalInstance.close(pipelineInfo);
-          }).
-          error(function(data) {
-            $scope.issues = [data];
+          })
+          .catch(function(res) {
+            $scope.issues = [res.data];
           });
       },
       no: function() {

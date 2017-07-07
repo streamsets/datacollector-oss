@@ -465,7 +465,8 @@ angular
         var selectedPipelineList = $scope.selectedPipelineList;
         $rootScope.common.errors = [];
 
-        api.pipelineAgent.startPipelines(selectedPipelineList).success(function(res) {
+        api.pipelineAgent.startPipelines(selectedPipelineList).then(function(response) {
+          var res = response.data;
           angular.forEach(res.successEntities, function(pipelineState) {
             var currentStatus = $rootScope.common.pipelineStatusMap[pipelineState.pipelineId];
             if (!currentStatus || currentStatus.timeStamp < pipelineState.timeStamp) {
@@ -474,8 +475,8 @@ angular
           });
 
           $rootScope.common.errors = res.errorMessages;
-        }).error(function(data) {
-          $rootScope.common.errors = [data];
+        }).catch(function(res) {
+          $rootScope.common.errors = [res.data];
         });
       },
 

@@ -38,23 +38,23 @@ angular
           authService.getRemoteBaseUrl(),
           authService.getSSOToken(),
           authService.getRemoteOrgId()
-        )
-          .success(function(res) {
-            var authToken = res[0].fullAuthToken;
-            api.admin.updateApplicationToken(authToken)
-              .success(function(res) {
-                $scope.isGeneratingTokenSucceed = true;
-                $scope.isGeneratingToken = false;
-              })
-              .error(function(data) {
-                $scope.issues = [data];
-                $scope.isGeneratingToken = false;
-              });
-          })
-          .error(function(data) {
-            $scope.issues = [data];
-            $scope.isGeneratingToken = false;
-          });
+        ).then(function(response) {
+          var res = response.data;
+          var authToken = res[0].fullAuthToken;
+          api.admin.updateApplicationToken(authToken)
+            .then(function() {
+              $scope.isGeneratingTokenSucceed = true;
+              $scope.isGeneratingToken = false;
+            })
+            .catch(function(res) {
+              $scope.issues = [res.data];
+              $scope.isGeneratingToken = false;
+            });
+        }).catch(function(res) {
+          $scope.issues = [res.data];
+          $scope.isGeneratingToken = false;
+        });
+
       },
 
       cancel: function() {

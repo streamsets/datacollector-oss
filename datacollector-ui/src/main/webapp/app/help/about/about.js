@@ -28,10 +28,9 @@ angular
     });
 
     api.admin.getBuildInfo()
-      .success(function(res) {
-        $scope.buildInfo = res;
-      })
-      .error(function(data) {
-        $scope.issues = [data];
+      .then(function(res) {
+        $scope.buildInfo = res.data;
+      }, function(res) {
+        $scope.issues = [res.data];
       });
   });

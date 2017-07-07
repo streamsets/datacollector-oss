@@ -71,11 +71,11 @@ angular
         .execute(swaggerModules.BEFORE_LOAD, options)
         .then(function() {
           $http(options)
-            .success(callback)
-            .error(function(data, status) {
+            .then(callback)
+            .catch(function(res) {
               onError({
-                message: data,
-                code: status
+                message: res.data,
+                code: res.status
               });
             });
         })

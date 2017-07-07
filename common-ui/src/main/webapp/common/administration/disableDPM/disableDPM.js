@@ -33,13 +33,13 @@ angular
         $scope.common.errors = [];
         $scope.isDisableInProgress = true;
         api.admin.disableDPM()
-          .success(function(res) {
+          .then(function() {
             $scope.isDisableInProgress = false;
             $scope.dpmDisabled = true;
           })
-          .error(function(res) {
+          .catch(function(res) {
             $scope.isDisableInProgress = false;
-            $scope.common.errors = [res];
+            $scope.common.errors = [res.data];
           });
       },
 
