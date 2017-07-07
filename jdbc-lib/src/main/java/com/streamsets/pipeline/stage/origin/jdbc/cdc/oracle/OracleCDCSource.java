@@ -294,6 +294,8 @@ public class OracleCDCSource extends BaseSource {
           int newSeq = addRecordsToBatch(batchSize, batchMaker, currentCommitTxn.get());
           recordsProduced = newSeq > 0;
           resumeSeq = Math.max(os.sequence, newSeq);
+          lastSCN = new BigDecimal(os.scn);
+          lastSCNTimestamp = os.timestamp;
         } finally {
           bufferedRecordsLock.unlock();
         }
@@ -355,26 +357,28 @@ public class OracleCDCSource extends BaseSource {
             startDate = offset.timestamp;
             resumeCommitSCN = new BigDecimal(offset.scn);
             resumeSeq = offset.sequence;
+
             if (lastSCN != null) {
               // The lastSCN is actually SCN for the last statement, not necessarily a commit, so use that one
               // if it exists. On restart use the one from the offset.
-              if (LOG.isDebugEnabled()) {
-                LOG.debug(Utils.format(
-                    "Starting Logminer from SCN: {} and end date: {}", lastSCN.toPlainString(), lastSCNTimestamp));
+              String endTime = getEndTimeForStartTime(lastSCNTimestamp).format(dtFormatter);
+              if (LOG.isInfoEnabled()) {
+                LOG.info(Utils.format(
+                    "Starting Logminer from SCN: {} and end date: {}", lastSCN.toPlainString(), endTime));
               }
+              startDate = lastSCNTimestamp;
               startLogMnrForResume.setBigDecimal(1, lastSCN);
-              startLogMnrForResume.setString(2,
-                  getEndTimeForStartTime(lastSCNTimestamp).format(dtFormatter));
-            }
-            // If lastEndTime is not null, we have read records before and are buffered in memory, just read
-            // from beginning of next window
-            if (lastEndTime != null) {
-              startDate = refreshStartDate(BigDecimal.ZERO);
+              startLogMnrForResume.setString(2, endTime);
             } else {
-              // So this is starting from shutdown/failure, which means the start date is derived from the offset
-              // Since that is the timestamp of the last commit we saw, we must look at the txn_window before that
-              // to see any buffered records at time of failure
-              startDate = startDate.minusSeconds(configBean.txnWindow);
+              if (lastEndTime != null) {
+                startDate = refreshStartDate(BigDecimal.ZERO);
+                refreshed = false;
+              } else {
+                // So this is starting from shutdown/failure, which means the start date is derived from the offset
+                // Since that is the timestamp of the last commit we saw, we must look at the txn_window before that
+                // to see any buffered records at time of failure
+                startDate = startDate.minusSeconds(configBean.txnWindow);
+              }
             }
           } else {
             if (configBean.bufferLocally) {
@@ -477,6 +481,7 @@ public class OracleCDCSource extends BaseSource {
     if (offsetReference.get() != null) {
       String offset = offsetReference.get().toString();
       LOG.debug("Returning offset: " + offset);
+      offsetReference.set(null);
       return offset;
     } else {
       if (configBean.bufferLocally) {
@@ -776,6 +781,9 @@ public class OracleCDCSource extends BaseSource {
       }
       currentResultSet = Optional.empty();
     } finally {
+      if (configBean.bufferLocally) {
+        closeResultSet(resultSet);
+      }
       LOG.debug(COUNT_FOR_BATCH_AND_BATCH_SIZE, countToCheck, batchSize);
       if (forceNewResultSet || incompleteBatch) {
         closeResultSet(resultSet);
@@ -979,7 +987,7 @@ public class OracleCDCSource extends BaseSource {
 
   private void startLogMinerUsingGivenDates(String startDate, String endDate) throws SQLException {
     try {
-      LOG.debug(TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE, startDate, endDate);
+      LOG.info(TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE, startDate, endDate);
       startLogMnrForData.setString(1, startDate);
       startLogMnrForData.setString(2, endDate);
       startLogMnrForData.execute();
