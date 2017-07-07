@@ -40,7 +40,6 @@ import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
     "configs.hdfsKerberos",
     "configs.hdfsConfDir",
     "configs.hdfsConfigs",
-    "configs.fileType",
     "configs.seqFileCompressionType",
     "configs.dataGeneratorFormatConfig.includeSchema",
 })
