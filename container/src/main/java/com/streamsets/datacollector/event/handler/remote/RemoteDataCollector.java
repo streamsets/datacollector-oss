@@ -267,7 +267,6 @@ public class RemoteDataCollector implements DataCollector {
       Map<String, String> offset = pipelineStateAndOffset.getRight();
       String name = pipelineState.getPipelineId();
       String rev = pipelineState.getRev();
-      PipelineState latestState;
       boolean isClusterMode = (pipelineState.getExecutionMode() != ExecutionMode.STANDALONE) ? true : false;
       List<WorkerInfo> workerInfos = new ArrayList<>();
       String title;
@@ -275,22 +274,21 @@ public class RemoteDataCollector implements DataCollector {
       if (pipelineStore.hasPipeline(name)) {
         title = pipelineStore.getInfo(name).getTitle();
         Runner runner = manager.getRunner(name, rev);
-        latestState = runner.getState();
         if (isClusterMode) {
           workerInfos = getWorkers(runner.getSlaveCallbackList(CallbackObjectType.METRICS));
         }
         runnerCount = runner.getRunnerCount();
       } else {
         title = null;
-        latestState = pipelineState;
       }
       pipelineAndValidationStatuses.add(new PipelineAndValidationStatus(
           name,
           title,
           rev,
+          pipelineState.getTimeStamp(),
           true,
-          latestState.getStatus(),
-          latestState.getMessage(),
+          pipelineState.getStatus(),
+          pipelineState.getMessage(),
           workerInfos,
           isClusterMode,
           getSourceOffset(offset),
@@ -332,8 +330,6 @@ public class RemoteDataCollector implements DataCollector {
   @Override
   public Collection<PipelineAndValidationStatus> getPipelines() throws IOException, PipelineException {
     List<PipelineState> pipelineStates = manager.getPipelines();
-    //clear the queue as we will fetch all events
-    stateEventListener.clear();
     Map<String, PipelineAndValidationStatus> pipelineStatusMap = new HashMap<>();
     Set<String> localPipelineIds = new HashSet<>();
     for (PipelineState pipelineState : pipelineStates) {
@@ -367,6 +363,7 @@ public class RemoteDataCollector implements DataCollector {
             name,
             title,
             rev,
+            pipelineState.getTimeStamp(),
             isRemote,
             pipelineState.getStatus(),
             pipelineState.getMessage(),

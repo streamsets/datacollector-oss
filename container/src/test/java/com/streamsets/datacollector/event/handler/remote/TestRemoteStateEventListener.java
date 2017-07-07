@@ -32,6 +32,7 @@ import org.junit.Test;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class TestRemoteStateEventListener {
@@ -56,9 +57,12 @@ public class TestRemoteStateEventListener {
     remoteStateEventListener.onStateChange(null, pipelineState, null, null, Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:old"));
     remoteStateEventListener.onStateChange(null, pipelineStateDeleted, null, null, Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:new"));
     pipelineStateAndOffset = remoteStateEventListener.getPipelineStateEvents();
-    Assert.assertEquals(1, pipelineStateAndOffset.size());
-    Assert.assertEquals(PipelineStatus.DELETED, pipelineStateAndOffset.iterator().next().getLeft().getStatus());
-    Assert.assertEquals("offset:new", pipelineStateAndOffset.iterator().next().getRight().get(Source.POLL_SOURCE_OFFSET_KEY));
+    Assert.assertEquals(2, pipelineStateAndOffset.size());
+    Iterator<Pair<PipelineState, Map<String, String>>> iterator = pipelineStateAndOffset.iterator();
+    iterator.next();
+    Pair<PipelineState, Map<String, String>> pair = iterator.next();
+    Assert.assertEquals(PipelineStatus.DELETED, pair.getLeft().getStatus());
+    Assert.assertEquals("offset:new", pair.getRight().get(Source.POLL_SOURCE_OFFSET_KEY));
     Assert.assertEquals(0, remoteStateEventListener.getPipelineStateEvents().size());
   }
 
