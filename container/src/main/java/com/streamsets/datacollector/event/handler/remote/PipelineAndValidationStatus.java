@@ -27,6 +27,7 @@ public class PipelineAndValidationStatus {
   private final String name;
   private final String title;
   private final String rev;
+  private final long timeStamp;
   private final PipelineStatus pipelineStatus;
   private final boolean isRemote;
   private ValidationStatus validationStatus;
@@ -42,6 +43,7 @@ public class PipelineAndValidationStatus {
       String name,
       String title,
       String rev,
+      long timeStamp,
       boolean isRemote,
       PipelineStatus pipelineStatus,
       String message,
@@ -62,6 +64,7 @@ public class PipelineAndValidationStatus {
     this.offset = offset;
     this.acl = acl;
     this.runnerCount = runnerCount;
+    this.timeStamp = timeStamp;
   }
 
   public void setValidationStatus(ValidationStatus validationStatus) {
@@ -126,6 +129,10 @@ public class PipelineAndValidationStatus {
 
   public int getRunnerCount() {
     return runnerCount;
+  }
+
+  public long getTimeStamp() {
+    return timeStamp;
   }
 }
 

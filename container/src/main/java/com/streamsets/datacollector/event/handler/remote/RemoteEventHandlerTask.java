@@ -64,7 +64,6 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.http.AbstractSSOService;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
@@ -297,6 +296,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           pipelineAndValidationStatus.getName(),
           pipelineAndValidationStatus.getTitle(),
           pipelineAndValidationStatus.getRev(),
+          pipelineAndValidationStatus.getTimeStamp(),
           pipelineAndValidationStatus.isRemote(),
           pipelineAndValidationStatus.getPipelineStatus(),
           pipelineAndValidationStatus.getMessage(),

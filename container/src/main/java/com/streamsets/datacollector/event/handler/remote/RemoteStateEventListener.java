@@ -77,12 +77,7 @@ public class RemoteStateEventListener implements StateEventListener {
   public Collection<Pair<PipelineState, Map<String, String>>> getPipelineStateEvents() {
     List<Pair<PipelineState, Map<String, String>>> pipelineStates = new ArrayList<>();
     pipelineStateQueue.drainTo(pipelineStates);
-    // Keep last state for a given pipeline
-    Map<String, Pair<PipelineState, Map<String, String>>> map = new HashMap<>();
-    for (Pair<PipelineState, Map<String, String>> pipelineStateAndOffset: pipelineStates) {
-      map.put(pipelineStateAndOffset.getLeft().getPipelineId(), pipelineStateAndOffset);
-    }
-    return map.values();
+    return pipelineStates;
   }
 
   public void clear() {

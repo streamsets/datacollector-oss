@@ -25,6 +25,7 @@ public class PipelineStatusEvent implements Event {
   private String name;
   private String title;
   private String rev;
+  private long timeStamp;
   private PipelineStatus pipelineStatus;
   private String message;
   private ValidationStatus validationStatus;
@@ -44,6 +45,7 @@ public class PipelineStatusEvent implements Event {
       String name,
       String title,
       String rev,
+      long timeStamp,
       boolean isRemote,
       PipelineStatus pipelineStatus,
       String message,
@@ -59,6 +61,7 @@ public class PipelineStatusEvent implements Event {
     this.name = name;
     this.title = title;
     this.rev = rev;
+    this.timeStamp = timeStamp;
     this.pipelineStatus = pipelineStatus;
     this.message = message;
     this.validationStatus = validationStatus;
@@ -183,5 +186,13 @@ public class PipelineStatusEvent implements Event {
 
   public void setRunnerCount(int runnerCount) {
     this.runnerCount = runnerCount;
+  }
+
+  public long getTimeStamp() {
+    return timeStamp;
+  }
+
+  public void setTimeStamp(long timeStamp) {
+    this.timeStamp = timeStamp;
   }
 }

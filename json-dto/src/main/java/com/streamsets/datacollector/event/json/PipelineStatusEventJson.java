@@ -26,6 +26,7 @@ public class PipelineStatusEventJson implements EventJson {
   private String name;
   private String title;
   private String rev;
+  private long timeStamp;
   private PipelineStatusJson pipelineStatus;
   private String message;
   private ValidationStatusJson validationStatus;
@@ -148,5 +149,13 @@ public class PipelineStatusEventJson implements EventJson {
 
   public void setRunnerCount(int runnerCount) {
     this.runnerCount = runnerCount;
+  }
+
+  public long getTimeStamp() {
+    return timeStamp;
+  }
+
+  public void setTimeStamp(long timeStamp) {
+    this.timeStamp = timeStamp;
   }
 }

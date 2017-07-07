@@ -109,6 +109,7 @@ public class TestDtoJsonMapper {
     PipelineStatusEvent pipelineStatusEvent = new PipelineStatusEvent("name",
         "title",
         "rev",
+        -1,
         true,
         PipelineStatus.RUNNING,
         "message",
@@ -128,6 +129,7 @@ public class TestDtoJsonMapper {
     assertEquals("name", pipelineStatusEventJson.getName());
     assertEquals("rev", pipelineStatusEventJson.getRev());
     assertEquals("offset", pipelineStatusEventJson.getOffset());
+    assertEquals(-1, pipelineStatusEventJson.getTimeStamp());
     assertEquals(acl.getResourceId(), pipelineStatusEventJson.getAcl().getResourceId());
     assertTrue(pipelineStatusEventJson.isClusterMode());
     assertEquals(10, pipelineStatusEventJson.getRunnerCount());
@@ -140,6 +142,7 @@ public class TestDtoJsonMapper {
     pipelineStatusEvent = pipelineStatusEvents.getPipelineStatusEventList().get(0);
     assertEquals("name", pipelineStatusEvent.getName());
     assertEquals("rev", pipelineStatusEvent.getRev());
+    assertEquals(-1, pipelineStatusEvent.getTimeStamp());
     workerInfo = pipelineStatusEvent.getWorkerInfos().iterator().next();
     assertEquals("workerURL", workerInfo.getWorkerURL());
     assertEquals("slaveId", workerInfo.getWorkerId());
