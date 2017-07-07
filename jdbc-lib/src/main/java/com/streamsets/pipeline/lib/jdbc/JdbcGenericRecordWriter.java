@@ -137,7 +137,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
             record,
             opCode,
             getColumnsToParameters(),
-            getColumnsToFields()
+            opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields()
         );
         PreparedStatement statement;
         try {

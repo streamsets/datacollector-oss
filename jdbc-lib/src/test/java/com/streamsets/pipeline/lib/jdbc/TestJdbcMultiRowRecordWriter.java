@@ -49,6 +49,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.SortedMap;
 import java.util.LinkedList;
+import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -228,13 +229,13 @@ public class TestJdbcMultiRowRecordWriter {
 
   @Test
   public void testGenerateQueryForMultiRow() throws StageException {
-    SortedMap<String, String> columns = ImmutableSortedMap.of(
-        "P_ID", "?",
-        "F1", "?",
-        "F2", "?",
-        "F3", "?",
-        "F4", "?"
-    );
+    SortedMap<String, String> columns = new TreeMap<>();
+    columns.put("P_ID", "?");
+    columns.put("F1", "?");
+    columns.put("F2", "?");
+    columns.put("F3", "?");
+    columns.put("F4", "?");
+
     List<String> primaryKeys = ImmutableList.of("P_ID");
     List<Record> records = generateRecords(3);
     boolean caseSensitive = false;
@@ -263,23 +264,24 @@ public class TestJdbcMultiRowRecordWriter {
       Assert.fail("Error while generating a query:" + ex.getMessage());
     }
 
-    // Test Update query
-    try {
-      Assert.assertEquals(
-          "Generated a wrong query",
-          "UPDATE TEST.TEST_TABLE SET F1 = ?, F2 = ?, F3 = ?, F4 = ?, P_ID = ? WHERE P_ID = ?",
-          writer.generateQueryForMultiRow(OperationType.UPDATE_CODE, columns, primaryKeys, records.size())
-      );
-    } catch (SQLException ex) {
-      Assert.fail("Error while generating a query:" + ex.getMessage());
-    }
-
     // Test Delete query
     try {
       Assert.assertEquals(
           "Generated a wrong query",
           "DELETE FROM TEST.TEST_TABLE WHERE (P_ID) IN ((?), (?), (?))",
           writer.generateQueryForMultiRow(OperationType.DELETE_CODE, columns, primaryKeys, records.size())
+      );
+    } catch (SQLException ex) {
+      Assert.fail("Error while generating a query:" + ex.getMessage());
+    }
+
+    // Test Update query
+    columns.remove("P_ID");
+    try {
+      Assert.assertEquals(
+          "Generated a wrong query",
+          "UPDATE TEST.TEST_TABLE SET F1 = ?, F2 = ?, F3 = ?, F4 = ? WHERE P_ID = ?",
+          writer.generateQueryForMultiRow(OperationType.UPDATE_CODE, columns, primaryKeys, records.size())
       );
     } catch (SQLException ex) {
       Assert.fail("Error while generating a query:" + ex.getMessage());
@@ -343,6 +345,59 @@ public class TestJdbcMultiRowRecordWriter {
       );
     } catch (SQLException ex) {
       Assert.fail("Error while generating a query:" + ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testUpdatePrimaryKey() throws Exception {
+    /* Test to generate and run UPDATE query.
+     * Send a sample insert record and then update record,
+     * then check if the column is indeed updated.
+     */
+    Record insertRecord = RecordCreator.create();
+    Map<String, Field> insert = new HashMap<>();
+    insert.put("P_ID", Field.create(200));
+    insert.put("F1", Field.create(1000));
+    insertRecord.getHeader().setAttribute(
+        OperationType.SDC_OPERATION_TYPE,
+        String.valueOf(OperationType.INSERT_CODE)
+    );
+    insertRecord.set(Field.create(insert));
+
+    Record updateRecord = RecordCreator.create();
+    Map<String, Field> update = new HashMap<>();
+    update.put("P_ID", Field.create(200));
+    update.put("F1", Field.create(2000));
+    updateRecord.getHeader().setAttribute(
+        OperationType.SDC_OPERATION_TYPE,
+        String.valueOf(OperationType.UPDATE_CODE)
+    );
+    updateRecord.set(Field.create(update));
+
+    boolean caseSensitive = false;
+
+    JdbcMultiRowRecordWriter writer = new JdbcMultiRowRecordWriter(
+        connectionString,
+        dataSource,
+        "TEST",
+        "TEST_TABLE",
+        false, //rollback
+        new LinkedList<JdbcFieldColumnParamMapping>(),
+        PreparedStatementCache.UNLIMITED_CACHE,
+        JDBCOperationType.INSERT,
+        UnsupportedOperationAction.USE_DEFAULT,
+        new JdbcRecordReader(),
+        caseSensitive
+    );
+    List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
+    writer.writeBatch(batch);
+
+    connection = DriverManager.getConnection(connectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT P_ID, F1 FROM TEST.TEST_TABLE WHERE P_ID = 200");
+      rs.next();
+      assertEquals(200, rs.getInt(1));
+      assertEquals(2000, rs.getInt(2));
     }
   }
 

@@ -185,7 +185,7 @@ public class TestJDBCBaseRecordWriter {
         "MSG", "?"
     );
 
-    String query = "UPDATE TEST.TEST_TABLE SET  MSG = ?, P_ID = ? WHERE P_ID = ?";
+    String query = "UPDATE TEST.TEST_TABLE SET  MSG = ? WHERE P_ID = ?";
 
     try {
       PreparedStatement stmt = connection.prepareStatement(query);

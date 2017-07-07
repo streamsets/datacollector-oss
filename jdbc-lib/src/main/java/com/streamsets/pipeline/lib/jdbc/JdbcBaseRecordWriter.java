@@ -56,6 +56,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private final List<JdbcFieldColumnMapping> generatedColumnMappings;
   private Map<String, Integer> columnType = new HashMap<>();
   private List<String> primaryKeyColumns;
+  private Map<String, String> columnsWithoutPrimaryKeys;
   JdbcRecordReader recordReader;
 
   // Index of columns returned by DatabaseMetaData.getColumns. Defined in DatabaseMetaData class.
@@ -125,8 +126,10 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
     createCustomFieldMappings();
     lookupPrimaryKeys();
     primaryKeyParams = new LinkedList<>();
+    columnsWithoutPrimaryKeys = new HashMap<>(columnsToFields);
     for (String key: primaryKeyColumns) {
       primaryKeyParams.add(getColumnsToParameters().get(key));
+      columnsWithoutPrimaryKeys.remove(key);
     }
   }
 
@@ -315,6 +318,14 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    */
   List<String> getPrimaryKeyParams() {
     return primaryKeyParams;
+  }
+
+  /**
+   * A list of table columns that don't include primary key columns
+   * @return List of table columns without primary keys
+   */
+  Map<String, String> getColumnsToFieldNoPK() {
+    return columnsWithoutPrimaryKeys;
   }
 
   /**

@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -363,20 +364,20 @@ public class TestGenericRecordWriter {
     fields.put("field2", Field.create("StreamSets"));
     record.set(Field.create(fields));
 
-    SortedMap<String, String> columnsToParameters = ImmutableSortedMap.of(
-        "P_ID", "?",
-        "MSG", "?"
-    );
+    SortedMap<String, String> columnsToParameters = new TreeMap<>();
+    columnsToParameters.put("P_ID", "?");
+    columnsToParameters.put("MSG", "?");
 
     String query = "INSERT INTO TEST.TEST_TABLE (MSG, P_ID) VALUES (?, ?)";
     executeSetParameters(OperationType.INSERT_CODE, query, writer, columnsToParameters, record);
 
-    query = "UPDATE TEST.TEST_TABLE SET  MSG = ?, P_ID = ? WHERE P_ID = ?";
-    fields.put("field2", Field.create("This is an updated message"));
-    executeSetParameters(OperationType.UPDATE_CODE, query, writer, columnsToParameters, record);
-
     query = "DELETE FROM TEST.TEST_TABLE  WHERE P_ID = ?";
     executeSetParameters(OperationType.DELETE_CODE, query, writer, columnsToParameters, record);
+
+    query = "UPDATE TEST.TEST_TABLE SET  MSG = ? WHERE P_ID = ?";
+    fields.put("field2", Field.create("This is an updated message"));
+    columnsToParameters.remove("P_ID");
+    executeSetParameters(OperationType.UPDATE_CODE, query, writer, columnsToParameters, record);
   }
 
   private void executeSetParameters(

@@ -216,8 +216,9 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         queue.getFirst(),
         opCode,
         getColumnsToParameters(),
-        getColumnsToFields()
+        opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields()
     );
+
     try {
       int paramIdx = 1;
       // Need to store removed records from queue, because we might need to add newly generated columns
