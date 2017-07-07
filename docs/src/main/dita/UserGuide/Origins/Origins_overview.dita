@@ -71,6 +71,8 @@
           MySQL binary logs to generate change data capture records. </li>
         <li><xref href="Omniture.dita#concept_dsr_xmw_1s">Omniture</xref> - Reads web usage reports
           from the Omniture reporting API.</li>
+        <li><xref href="OPCUAClient.dita#concept_nmf_1ly_f1b">OPC UA Client</xref> - Reads data from
+          a OPC UA server.</li>
         <li><xref href="OracleCDC.dita#concept_rs5_hjj_tw">Oracle CDC Client</xref> - Reads LogMiner
           redo logs to generate change data capture records.</li>
         <li><xref href="RabbitMQ.dita#concept_dyg_lq1_h5">RabbitMQ Consumer</xref> - Reads messages
