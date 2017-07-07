@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.stage.origin.rabbitmq;
 
+import com.rabbitmq.client.BasicProperties;
+import com.rabbitmq.client.Envelope;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
@@ -35,7 +37,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -51,7 +55,7 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
   private RabbitCxnManager rabbitCxnManager = new RabbitCxnManager();
   private StreamSetsMessageConsumer consumer;
   private DataParserFactory parserFactory;
-  private String lastSourceOffset;
+  private String lastSourceOffset = "";
 
   public RabbitSource(RabbitSourceConfigBean conf) {
     this.conf = conf;
@@ -60,8 +64,6 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-
-    this.lastSourceOffset = "";
 
     RabbitUtil.initRabbitStage(
         getContext(),
@@ -108,7 +110,6 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
     int maxRecords = Math.min(maxBatchSize, conf.basicConfig.maxBatchSize);
     int numRecords = 0;
     String nextSourceOffset = lastSourceOffset;
-
     while (System.currentTimeMillis() < maxTime && numRecords < maxRecords) {
       try {
         RabbitMessage message = messages.poll(conf.basicConfig.maxWaitTime, TimeUnit.MILLISECONDS);
@@ -118,9 +119,38 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
         String recordId = message.getEnvelope().toString();
         List<Record> records = parseRabbitMessage(recordId, message.getBody());
         for (Record record : records){
-          record.getHeader().setAttribute("deliveryTag", Long.toString(message.getEnvelope().getDeliveryTag()));
+          Envelope envelope = message.getEnvelope();
+          BasicProperties properties = message.getProperties();
+          Record.Header outHeader = record.getHeader();
+          if (envelope != null) {
+            setHeaderIfNotNull(outHeader, "deliveryTag", envelope.getDeliveryTag());
+            setHeaderIfNotNull(outHeader, "exchange", envelope.getExchange());
+            setHeaderIfNotNull(outHeader, "routingKey", envelope.getRoutingKey());
+            setHeaderIfNotNull(outHeader, "redelivered", envelope.isRedeliver());
+          }
+          setHeaderIfNotNull(outHeader, "contentType", properties.getContentType());
+          setHeaderIfNotNull(outHeader, "contentEncoding", properties.getContentEncoding());
+          setHeaderIfNotNull(outHeader, "deliveryMode", properties.getDeliveryMode());
+          setHeaderIfNotNull(outHeader, "priority", properties.getPriority());
+          setHeaderIfNotNull(outHeader, "correlationId", properties.getCorrelationId());
+          setHeaderIfNotNull(outHeader, "replyTo", properties.getReplyTo());
+          setHeaderIfNotNull(outHeader, "expiration", properties.getExpiration());
+          setHeaderIfNotNull(outHeader, "messageId", properties.getMessageId());
+          setHeaderIfNotNull(outHeader, "timestamp", properties.getTimestamp());
+          setHeaderIfNotNull(outHeader, "messageType", properties.getType());
+          setHeaderIfNotNull(outHeader, "userId", properties.getUserId());
+          setHeaderIfNotNull(outHeader, "appId", properties.getAppId());
+          Map<String, Object> inHeaders = properties.getHeaders();
+          if (inHeaders != null) {
+            for (Map.Entry<String, Object> pair : inHeaders.entrySet()) {
+              // I am concerned about overlapping with the above headers but it seems somewhat unlikely
+              // in addition the behavior of copying these attributes in with no custom prefix is
+              // how the jms origin behaves
+              setHeaderIfNotNull(outHeader, pair.getKey(), pair.getValue());
+            }
+          }
           batchMaker.addRecord(record);
-          nextSourceOffset = record.getHeader().getAttribute("deliveryTag");
+          nextSourceOffset = outHeader.getAttribute("deliveryTag");
           numRecords++;
         }
       } catch (InterruptedException e) {
@@ -128,6 +158,19 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
       }
     }
     return nextSourceOffset;
+  }
+
+  private void setHeaderIfNotNull(Record.Header header, String key, Object val) {
+    if (val != null) {
+      header.setAttribute(key, convToString(val));
+    }
+  }
+
+  private static String convToString(Object o) {
+    if (o instanceof Date) {
+      o = ((Date)o).getTime();
+    }
+    return String.valueOf(o);
   }
 
   @Override
@@ -193,5 +236,17 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
 
   private boolean isConnected() {
     return this.rabbitCxnManager.checkConnected();
+  }
+
+  TransferQueue<RabbitMessage> getMessageQueue() {
+    return messages;
+  }
+
+  void setDataParserFactory(DataParserFactory dataParserFactory) {
+    this.parserFactory = dataParserFactory;
+  }
+
+  void setStreamSetsMessageConsumer(StreamSetsMessageConsumer consumer) {
+    this.consumer = consumer;
   }
 }

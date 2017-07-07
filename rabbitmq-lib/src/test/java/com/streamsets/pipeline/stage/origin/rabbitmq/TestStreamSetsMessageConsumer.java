@@ -69,12 +69,6 @@ public class TestStreamSetsMessageConsumer {
   public void testConsumerSingleMessage() throws Exception {
     TransferQueue<RabbitMessage> messages = new LinkedTransferQueue<>();
 
-    DataParserFactory parserFactory = new DataParserFactoryBuilder(context, DataParserFormat.JSON)
-        .setCharset(StandardCharsets.UTF_8)
-        .setMode(JsonMode.MULTIPLE_OBJECTS)
-        .setMaxDataLen(-1)
-        .build();
-
     Channel channel = mock(Channel.class);
 
     final Consumer consumer = new StreamSetsMessageConsumer(channel, messages);
