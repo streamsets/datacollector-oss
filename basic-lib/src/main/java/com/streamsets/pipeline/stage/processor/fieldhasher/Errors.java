@@ -25,7 +25,8 @@ public enum Errors implements ErrorCode {
     "fields '{}' are of type Map or List"),
   HASH_02("Error processing does not support wild cards."),
   HASH_03("Atleast one of Target Field or Record Header should be specified."),
-  HASH_04("No Hashing Configuration Specified");
+  HASH_04("No Hashing Configuration Specified"),
+  HASH_05("Field with datatype {} cannot be converted to a Map."),
   ;
 
   private final String msg;

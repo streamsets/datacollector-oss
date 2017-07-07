@@ -313,7 +313,13 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       if (record.has(targetField)) {
         record.set(targetField, newField);
       } else {
-        record.set(targetField, newField);
+        try {
+          record.set(targetField, newField);
+
+        } catch(IllegalArgumentException ex) {
+          throw new OnRecordErrorException(Errors.HASH_05, newField.getType().name(), ex);
+        }
+
         if (!record.has(targetField)) {
           fieldsDontExist.add(targetField);
         }
