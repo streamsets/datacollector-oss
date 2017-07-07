@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.lib;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.FieldSelectorModel;
@@ -47,6 +48,7 @@ import com.streamsets.pipeline.lib.generator.binary.BinaryDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.wholefile.WholeFileDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.xml.XmlDataGeneratorFactory;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
@@ -517,7 +519,50 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   @ValueChooserModel(ChecksumAlgorithmChooserValues.class)
   public ChecksumAlgorithm checksumAlgorithm = ChecksumAlgorithm.MD5;
 
-/** End Config Defs **/
+  /** For XML Content **/
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Pretty Format",
+      description = "Format XML with human readable indentation (requires more bytes on output).",
+      displayPosition = 500,
+      group = "DATA_FORMAT",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "XML")
+      }
+  )
+  public boolean xmlPrettyPrint = true;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Validate Schema",
+      description = "Validate that resulting record corresponds to given schema(s).",
+      displayPosition = 510,
+      group = "DATA_FORMAT",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "XML")
+      }
+  )
+  public boolean xmlValidateSchema = false;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      label = "XML Schema",
+      description = "XML schema that should be used to validate serialized record.",
+      displayPosition = 520,
+      group = "DATA_FORMAT",
+      dependencies = {
+          @Dependency(configName = "xmlValidateSchema", triggeredByValues = "true")
+    }
+  )
+  public String xmlSchema = "";
+
+  /** End Config Defs **/
 
   private DataGeneratorFactory dataGeneratorFactory;
 
@@ -545,6 +590,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       case DELIMITED:
       case SDC_JSON:
       case AVRO:
+      case XML:
         // no-op
         break;
       case PROTOBUF:
@@ -621,6 +667,11 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
       case WHOLE_FILE:
         builder.setConfig(WholeFileDataGeneratorFactory.INCLUDE_CHECKSUM_IN_THE_EVENTS_KEY, includeChecksumInTheEvents);
         builder.setConfig(WholeFileDataGeneratorFactory.CHECKSUM_ALGO_KEY, checksumAlgorithm);
+        break;
+      case XML:
+        builder.setConfig(XmlDataGeneratorFactory.PRETTY_FORMAT, xmlPrettyPrint);
+        builder.setConfig(XmlDataGeneratorFactory.SCHEMA_VALIDATION, xmlValidateSchema);
+        builder.setConfig(XmlDataGeneratorFactory.SCHEMAS, ImmutableList.of(xmlSchema));
         break;
       case SDC_JSON:
       default:

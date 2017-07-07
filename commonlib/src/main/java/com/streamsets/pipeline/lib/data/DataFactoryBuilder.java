@@ -22,6 +22,7 @@ import com.streamsets.pipeline.config.Compression;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,9 +65,19 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
     Utils.checkNotNull(key, "key");
     Utils.checkArgument(configs.containsKey(key),
                         Utils.formatL("Format '{}', unsupported configuration '{}'", format, key));
-    Utils.checkArgument(value == null || configs.get(key).getClass().isAssignableFrom(value.getClass()),
-                        Utils.formatL("Format '{}', configuration '{}' must be of type '{}'", format, key,
-                                      configs.get(key).getClass().getSimpleName()));
+    if(value != null) {
+      if (List.class.isAssignableFrom(value.getClass())) {
+        Utils.checkArgument(
+          List.class.isAssignableFrom(configs.get(key).getClass()),
+          Utils.format("Supplied list for config {} when {} expected", key, configs.get(key).getClass().getSimpleName())
+        );
+      } else {
+        Utils.checkArgument(configs.get(key).getClass().isAssignableFrom(value.getClass()),
+          Utils.formatL("Format '{}', configuration '{}' must be of type '{}'", format, key,
+            configs.get(key).getClass().getSimpleName()));
+      }
+    }
+
     if (value == null) {
       value = configs.get(key);
     }

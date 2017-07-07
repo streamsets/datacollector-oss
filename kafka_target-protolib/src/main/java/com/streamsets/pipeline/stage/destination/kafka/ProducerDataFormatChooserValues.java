@@ -28,7 +28,8 @@ public class ProducerDataFormatChooserValues extends BaseEnumChooserValues<DataF
       DataFormat.JSON,
       DataFormat.PROTOBUF,
       DataFormat.SDC_JSON,
-      DataFormat.TEXT
+      DataFormat.TEXT,
+      DataFormat.XML
     );
   }
 

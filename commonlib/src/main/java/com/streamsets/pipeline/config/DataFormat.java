@@ -25,7 +25,7 @@ public enum DataFormat implements Label {
   TEXT("Text", DataParserFormat.TEXT, DataGeneratorFormat.TEXT),
   JSON("JSON", DataParserFormat.JSON, DataGeneratorFormat.JSON),
   DELIMITED("Delimited", DataParserFormat.DELIMITED, DataGeneratorFormat.DELIMITED),
-  XML("XML", DataParserFormat.XML, null),
+  XML("XML", DataParserFormat.XML, DataGeneratorFormat.XML),
   SDC_JSON("SDC Record", DataParserFormat.SDC_RECORD, DataGeneratorFormat.SDC_RECORD),
   LOG("Log", DataParserFormat.LOG, null),
   AVRO("Avro", DataParserFormat.AVRO, DataGeneratorFormat.AVRO),
