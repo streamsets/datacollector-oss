@@ -24,7 +24,6 @@ import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.PipelineException;
@@ -60,6 +59,9 @@ public interface Runner {
   // pipeline revision
   public String getRev();
 
+  // pipeline title
+  public String getPipelineTitle() throws PipelineException;
+
   // resets the pipeline offset, only if the pipeline is not running
   // it must assert the current status
   public void resetOffset(String user) throws PipelineException;
@@ -72,7 +74,7 @@ public interface Runner {
   public PipelineState getState() throws PipelineStoreException;
 
   // called on startup, moves runner to disconnected state if necessary
-  void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException;
+  void prepareForDataCollectorStart(String user) throws PipelineException;
 
   // called for all existing pipelines when the data collector starts
   // it should reconnect/reset-status of all pipelines
@@ -81,7 +83,7 @@ public interface Runner {
 
   // called for all existing pipelines when the data collector is shutting down
   // it should disconnect/reset-status of all pipelines
-  public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException;
+  public void onDataCollectorStop(String user) throws PipelineException;
 
   // stops the pipeline
   public void stop(String user) throws PipelineException;
@@ -90,10 +92,10 @@ public interface Runner {
   public void forceQuit(String user) throws PipelineException;
 
   // Sets the state to STARTING. Should be called before doing a start on async runners.
-  public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException;
+  public void prepareForStart(String user) throws PipelineException;
 
   // Sets the state to STOPPING. Should be called before doing a stop on async runners.
-  public void prepareForStop(String user) throws PipelineStoreException, PipelineRunnerException;
+  public void prepareForStop(String user) throws PipelineException;
 
   // starts the pipeline
   public void start(String user) throws PipelineException, StageException;

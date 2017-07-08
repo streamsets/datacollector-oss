@@ -25,7 +25,6 @@ import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.restapi.bean.UserJson;
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -60,6 +59,11 @@ public class AclRunner implements Runner {
   }
 
   @Override
+  public String getPipelineTitle() throws PipelineException {
+    return runner.getPipelineTitle();
+  }
+
+  @Override
   public void resetOffset(String user) throws PipelineException {
     aclStore.validateExecutePermission(this.getName(), currentUser);
     runner.resetOffset(user);
@@ -83,7 +87,7 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForDataCollectorStart(String user) throws PipelineException {
     runner.prepareForDataCollectorStart(user);
   }
 
@@ -93,7 +97,7 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
+  public void onDataCollectorStop(String user) throws PipelineException {
     runner.onDataCollectorStop(user);
   }
 
@@ -110,12 +114,12 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStart(String user) throws PipelineException {
     runner.prepareForStart(user);
   }
 
   @Override
-  public void prepareForStop(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStop(String user) throws PipelineException {
     runner.prepareForStop(user);
   }
 

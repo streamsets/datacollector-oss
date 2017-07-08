@@ -20,11 +20,13 @@
 package com.streamsets.datacollector.util;
 
 import com.streamsets.datacollector.execution.runner.common.Constants;
+import com.streamsets.pipeline.lib.log.LogConstants;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.io.IOException;
 
@@ -94,5 +96,9 @@ public class LogUtil {
     appender.setName(loggerName);
 
     return appender;
+  }
+
+  public static void injectPipelineInMDC(String pipelineTitle, String pipelineId) {
+    MDC.put(LogConstants.ENTITY, pipelineTitle + "/" + pipelineId);
   }
 }

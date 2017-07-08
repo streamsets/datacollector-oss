@@ -75,10 +75,12 @@ import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.datacollector.runner.production.RulesConfigLoaderRunnable;
 import com.streamsets.datacollector.runner.production.SourceOffset;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.updatechecker.UpdateChecker;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.ValidationError;
@@ -137,6 +139,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   private final ObjectGraph objectGraph;
   private final String name;
+  private String pipelineTitle = null;
   private final String rev;
   // User context for the user who started the pipeline
   private String token;
@@ -188,11 +191,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForDataCollectorStart(String user) throws PipelineException {
     PipelineStatus status = getState().getStatus();
     try {
       MDC.put(LogConstants.USER, user);
-      MDC.put(LogConstants.ENTITY, name);
+      LogUtil.injectPipelineInMDC(getPipelineTitle(), getName());
       LOG.info("Pipeline " + name + " with rev " + rev + " is in state: " + status);
       String msg = null;
       List<PipelineStatus> transitions = new ArrayList<>();
@@ -262,7 +265,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   public void onDataCollectorStart(String user) throws PipelineException, StageException {
     try {
       MDC.put(LogConstants.USER, user);
-      MDC.put(LogConstants.ENTITY, name);
+      LogUtil.injectPipelineInMDC(getPipelineTitle(), getName());
       PipelineState pipelineState = getState();
       PipelineStatus status = pipelineState.getStatus();
       Map<String, Object> attributes = pipelineState.getAttributes();
@@ -305,10 +308,10 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void onDataCollectorStop(String user) throws PipelineException {
     try {
       MDC.put(LogConstants.USER, user);
-      MDC.put(LogConstants.ENTITY, name);
+      LogUtil.injectPipelineInMDC(getPipelineTitle(), getName());
       if (getState().getStatus() == PipelineStatus.RETRY) {
         LOG.info("Pipeline '{}'::'{}' is in retry", name, rev);
         retryFuture.cancel(true);
@@ -346,6 +349,15 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public String getRev() {
     return rev;
+  }
+
+  @Override
+  public String getPipelineTitle() throws PipelineException {
+    if (pipelineTitle == null) {
+      PipelineInfo pipelineInfo = pipelineStoreTask.getInfo(name);
+      pipelineTitle = pipelineInfo.getTitle();
+    }
+    return pipelineTitle;
   }
 
   @Override
