@@ -50,6 +50,8 @@ public enum Errors implements ErrorCode {
   FORCE_22("Can't find offset column {} in the returned data. Ensure it is present in the query."),
   FORCE_23("Unsupported operation in record header: {}"),
   FORCE_24("Invalid External ID Field expression '{}': {}"),
+  FORCE_25("Preview timed out before the origin retrieved data. Try increasing the timeout."),
+  FORCE_26("Pipeline was stopped as the origin was retrieving data."),
   ;
   private final String msg;
 

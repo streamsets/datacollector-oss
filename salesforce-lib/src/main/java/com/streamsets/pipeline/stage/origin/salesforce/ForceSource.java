@@ -66,6 +66,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,6 +119,7 @@ public class ForceSource extends BaseSource {
 
   private Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap;
   private boolean shouldSendNoMoreDataEvent = false;
+  private AtomicBoolean destroyed = new AtomicBoolean(false);
 
   private class FieldTree {
     String offset;
@@ -262,6 +264,10 @@ public class ForceSource extends BaseSource {
   /** {@inheritDoc} */
   @Override
   public void destroy() {
+    // SDC-6258 - destroy() is called from a different thread, so we
+    // need to signal produce() to terminate early
+    destroyed.set(true);
+
     if (job != null) {
       try {
         bulkConnection.abortJob(job.getId());
@@ -372,11 +378,19 @@ public class ForceSource extends BaseSource {
     if (job == null) {
       // No job in progress - start from scratch
       try {
-        job = createJob(sobjectType, bulkConnection);
-        LOG.info("Created Bulk API job {}", job.getId());
         String id = (lastSourceOffset == null) ? null : lastSourceOffset.substring(lastSourceOffset.indexOf(':') + 1);
         final String preparedQuery = prepareQuery(conf.soqlQuery, id);
         LOG.info("SOQL Query is: {}", preparedQuery);
+
+        if (destroyed.get()) {
+          throw new StageException(getContext().isPreview() ? Errors.FORCE_25 : Errors.FORCE_26);
+        }
+        job = createJob(sobjectType, bulkConnection);
+        LOG.info("Created Bulk API job {}", job.getId());
+
+        if (destroyed.get()) {
+          throw new StageException(getContext().isPreview() ? Errors.FORCE_25 : Errors.FORCE_26);
+        }
         batch = bulkConnection.createBatchFromStream(job,
                 new ByteArrayInputStream(preparedQuery.getBytes(StandardCharsets.UTF_8)));
         LOG.info("Created Bulk API batch {}", batch.getId());
@@ -389,6 +403,10 @@ public class ForceSource extends BaseSource {
     // Loop here so that we can wait for results in preview mode and not return an empty batch
     // Preview will cut us off anyway if we wait too long
     while (queryResultList == null && job != null) {
+      if (destroyed.get()) {
+        throw new StageException(getContext().isPreview() ? Errors.FORCE_25 : Errors.FORCE_26);
+      }
+
       // Poll for results
       try {
         LOG.info("Waiting {} milliseconds for batch {}", conf.basicConfig.maxWaitTime, batch.getId());
