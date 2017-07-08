@@ -41,15 +41,18 @@ import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.log.LogConstants;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -116,6 +119,9 @@ public class RemoteDataCollector implements DataCollector {
       LOG.warn("Pipeline {}:{} is already in active state {}", pipelineState.getPipelineId(), pipelineState.getRev(),
           pipelineState.getStatus());
     } else {
+      MDC.put(LogConstants.USER, user);
+      PipelineInfo pipelineInfo = pipelineStore.getInfo(name);
+      LogUtil.injectPipelineInMDC(pipelineInfo.getTitle(), name);
       manager.getRunner(name, rev).start(user);
     }
   }

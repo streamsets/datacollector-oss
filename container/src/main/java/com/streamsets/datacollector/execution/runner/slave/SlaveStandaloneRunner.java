@@ -32,10 +32,10 @@ import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Pipeline;
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -44,7 +44,6 @@ import com.streamsets.pipeline.lib.log.LogConstants;
 import org.slf4j.MDC;
 
 import javax.inject.Inject;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +76,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
+  public String getPipelineTitle() throws PipelineException {
+    return standaloneRunner.getPipelineTitle();
+  }
+
+  @Override
   public void resetOffset(String user) {
     throw new UnsupportedOperationException();
   }
@@ -103,14 +107,13 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public void onDataCollectorStart(String user) throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
-    StageException {
+  public void onDataCollectorStart(String user) throws PipelineException, StageException {
     throw new UnsupportedOperationException();
 
   }
 
   @Override
-  public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void onDataCollectorStop(String user) throws PipelineException {
     standaloneRunner.onDataCollectorStop(user);
   }
 
@@ -126,10 +129,10 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
 
 
   @Override
-  public void prepareForStart(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStart(String user) throws PipelineException {
     // no need for clear since slaves never run more than one pipeline
     MDC.put(LogConstants.USER, user);
-    MDC.put(LogConstants.ENTITY, getName());
+    LogUtil.injectPipelineInMDC(getPipelineTitle(), getName());
     standaloneRunner.prepareForStart(user);
   }
 
@@ -269,10 +272,10 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public void prepareForStop(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForStop(String user) throws PipelineException {
     // no need for clear since slaves never run more than one pipeline
     MDC.put(LogConstants.USER, user);
-    MDC.put(LogConstants.ENTITY, getName());
+    LogUtil.injectPipelineInMDC(getPipelineTitle(), getName());
     standaloneRunner.prepareForStop(user);
   }
 

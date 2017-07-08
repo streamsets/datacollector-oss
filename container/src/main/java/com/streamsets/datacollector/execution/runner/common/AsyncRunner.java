@@ -20,13 +20,12 @@ import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.PipelineInfo;
 import com.streamsets.datacollector.execution.PipelineState;
+import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
-import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.runner.Pipeline;
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.ContainerError;
@@ -66,6 +65,11 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
+  public String getPipelineTitle() throws PipelineException {
+    return runner.getPipelineTitle();
+  }
+
+  @Override
   public void resetOffset(String user) throws PipelineException {
     runner.resetOffset(user);
   }
@@ -86,7 +90,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void prepareForDataCollectorStart(String user) throws PipelineStoreException, PipelineRunnerException {
+  public void prepareForDataCollectorStart(String user) throws PipelineException {
     runner.prepareForDataCollectorStart(user);
   }
 
@@ -100,7 +104,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void onDataCollectorStop(String user) throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
+  public void onDataCollectorStop(String user) throws PipelineException {
     runner.onDataCollectorStop(user);
   }
 
@@ -133,13 +137,15 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void start(String user) throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
+  public void start(String user) throws PipelineException, StageException {
     start(user, null);
   }
 
   @Override
-  public synchronized void start(String user, Map<String, Object> runtimeParameters)
-      throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
+  public synchronized void start(
+      String user,
+      Map<String, Object> runtimeParameters
+  ) throws PipelineException, StageException {
     runner.prepareForStart(user);
     Callable<Object> callable = () -> {
        runner.start(user, runtimeParameters);

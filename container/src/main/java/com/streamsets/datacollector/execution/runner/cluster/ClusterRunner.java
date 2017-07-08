@@ -61,6 +61,7 @@ import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.updatechecker.UpdateChecker;
@@ -122,6 +123,7 @@ public class ClusterRunner extends AbstractRunner {
 
   private final String name;
   private final String rev;
+  private String pipelineTitle = null;
   private ObjectGraph objectGraph;
   private ClusterHelper clusterHelper;
   private final File tempDir;
@@ -297,6 +299,15 @@ public class ClusterRunner extends AbstractRunner {
   @Override
   public String getRev() {
     return rev;
+  }
+
+  @Override
+  public String getPipelineTitle() throws PipelineException {
+    if (pipelineTitle == null) {
+      PipelineInfo pipelineInfo = pipelineStore.getInfo(name);
+      pipelineTitle = pipelineInfo.getTitle();
+    }
+    return pipelineTitle;
   }
 
   @Override
