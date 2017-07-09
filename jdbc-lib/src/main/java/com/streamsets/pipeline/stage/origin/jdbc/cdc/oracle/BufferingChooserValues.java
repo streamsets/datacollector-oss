@@ -15,9 +15,12 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
-import java.util.Queue;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public interface HashQueue<E> extends Queue<E> {
-  E tail();
-  void close();
+public class BufferingChooserValues extends BaseEnumChooserValues {
+
+  public BufferingChooserValues() {
+    super(BufferingValues.class);
+  }
+
 }

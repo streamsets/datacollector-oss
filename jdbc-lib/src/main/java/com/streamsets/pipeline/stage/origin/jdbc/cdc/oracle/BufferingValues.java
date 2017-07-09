@@ -15,9 +15,21 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
-import java.util.Queue;
+import com.streamsets.pipeline.api.Label;
 
-public interface HashQueue<E> extends Queue<E> {
-  E tail();
-  void close();
+public enum  BufferingValues implements Label {
+
+  IN_MEMORY("In Memory"),
+  ON_DISK("On Disk");
+
+  private final String label;
+
+  BufferingValues(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
+  }
 }

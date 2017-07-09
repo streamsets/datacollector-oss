@@ -15,9 +15,25 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
-import java.util.Queue;
+import java.io.Serializable;
 
-public interface HashQueue<E> extends Queue<E> {
-  E tail();
-  void close();
+class RsIdSsn implements Serializable {
+  String rsId;
+  String ssn;
+
+  RsIdSsn(String rsId, String ssn) {
+    this.ssn = ssn;
+    this.rsId = rsId;
+  }
+
+  @SuppressWarnings("unchecked")
+  public boolean equals(Object o) {
+    return o != null &&
+        o instanceof RsIdSsn
+        && rsId.equals(((RsIdSsn) o).rsId) && ssn.equals(((RsIdSsn) o).ssn);
+  }
+
+  public int hashCode() {
+    return rsId.hashCode() + ssn.hashCode();
+  }
 }
