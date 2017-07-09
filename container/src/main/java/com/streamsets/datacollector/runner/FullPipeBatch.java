@@ -131,7 +131,8 @@ public class FullPipeBatch implements PipeBatch {
   public void completeStage(BatchMakerImpl batchMaker) {
     StagePipe pipe = batchMaker.getStagePipe();
     if (pipe.getStage().getDefinition().getType() == StageType.SOURCE) {
-      inputRecords += batchMaker.getSize();
+      inputRecords += batchMaker.getSize() +
+          errorSink.getErrorRecords(pipe.getStage().getInfo().getInstanceName()).size();
     }
     Map<String, List<Record>> stageOutput = batchMaker.getStageOutput();
     // convert lane names from stage naming to pipe naming when adding to the payload
