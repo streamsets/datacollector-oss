@@ -23,6 +23,7 @@ public enum Groups implements Label {
   UDP("UDP"),
   SYSLOG("syslog"),
   COLLECTD("collectd"),
+  RAW_DATA("Raw/Separated data"),
   ;
 
   private final String label;

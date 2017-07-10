@@ -22,15 +22,18 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.parser.net.raw.RawDataMode;
 import com.streamsets.pipeline.lib.parser.udp.AbstractParser;
 import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
 import com.streamsets.pipeline.lib.parser.udp.collectd.CollectdParser;
 import com.streamsets.pipeline.lib.parser.udp.netflow.NetflowParser;
+import com.streamsets.pipeline.lib.parser.udp.separated.SeparatedDataParser;
 import com.streamsets.pipeline.lib.parser.udp.syslog.SyslogParser;
 import com.streamsets.pipeline.lib.udp.UDPConsumingServer;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.config.DatagramMode;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import io.netty.channel.epoll.Epoll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +57,10 @@ import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.AUTH_FILE_P
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CONVERT_TIME;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.EXCLUDE_INTERVAL;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MODE;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MULTIPLE_VALUES_BEHAVIOR;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_OUTPUT_FIELD_PATH;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_SEPARATOR_BYTES;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.TYPES_DB_PATH;
 
 
@@ -152,6 +159,17 @@ public class UDPSource extends BaseSource {
               charset
           );
         }
+        break;
+      case RAW_DATA:
+        charset = validateCharset(Groups.RAW_DATA.name(), issues);
+        parser = new SeparatedDataParser(
+            getContext(),
+            (RawDataMode) parserConfig.get(RAW_DATA_MODE),
+            charset,
+            parserConfig.getString(RAW_DATA_OUTPUT_FIELD_PATH),
+            (MultipleValuesBehavior) parserConfig.get(RAW_DATA_MULTIPLE_VALUES_BEHAVIOR),
+            (byte[]) parserConfig.get(RAW_DATA_SEPARATOR_BYTES)
+        );
         break;
       default:
         issues.add(getContext().createConfigIssue(Groups.UDP.name(), "dataFormat",

@@ -13,31 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.lib.parser.net.raw;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 
-/**
- * This is just a dummy enum until the udp source supports
- * other data formats.
- */
-@GenerateResourceBundle
-public enum DatagramMode implements Label {
-  NETFLOW("NetFlow"),
-  SYSLOG("syslog"),
-  COLLECTD("collectd"),
-  RAW_DATA("Raw/Separated data")
-  ;
-
-  private final String label;
-
-  DatagramMode(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+public class RawDataModeChooserValues extends BaseEnumChooserValues<RawDataMode> {
+  public RawDataModeChooserValues() {
+    super(RawDataMode.class);
   }
 }

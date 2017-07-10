@@ -21,10 +21,13 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DatagramMode;
+import com.streamsets.pipeline.lib.parser.net.raw.RawDataMode;
 import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
+import com.streamsets.pipeline.lib.parser.udp.ParserConfigKey;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.testing.NetworkUtils;
 import io.netty.channel.epoll.Epoll;
 import org.apache.commons.io.IOUtils;
@@ -44,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MODE;
 import static org.junit.Assume.assumeTrue;
 
 public class TestUDPSource {
@@ -81,6 +85,7 @@ public class TestUDPSource {
       try {
         doBasicTest(DatagramMode.NETFLOW, false, 1);
         doBasicTest(DatagramMode.SYSLOG, false, 1);
+        doBasicTest(DatagramMode.RAW_DATA, false, 1);
       } catch (Exception ex) {
         // we don't expect exceptions to be thrown,
         // even when udp messages are lost
@@ -141,9 +146,7 @@ public class TestUDPSource {
     List<String> ports = NetworkUtils.getRandomPorts(2);
     ParserConfig parserConfig = new ParserConfig();
     parserConfig.put(CHARSET, "UTF-8");
-    TUDPSource source = new TUDPSource(ports, enableEpoll, numThreads, parserConfig, dataFormat, 20, 100L);
-    SourceRunner runner = new SourceRunner.Builder(TUDPSource.class, source).addOutputLane("lane").build();
-    runner.runInit();
+    SourceRunner runner = null;
     try {
       byte[] bytes = null;
       switch (dataFormat) {
@@ -159,9 +162,24 @@ public class TestUDPSource {
           bytes = "<34>1 2003-10-11T22:14:15.003Z mymachine.example.com some syslog data".
             getBytes(StandardCharsets.UTF_8);
           break;
+        case RAW_DATA:
+          bytes = "some,separated,data".getBytes(StandardCharsets.UTF_8);
+          parserConfig.put(ParserConfigKey.RAW_DATA_MODE, RawDataMode.CHARACTER);
+          parserConfig.put(
+              ParserConfigKey.RAW_DATA_MULTIPLE_VALUES_BEHAVIOR,
+              MultipleValuesBehavior.SPLIT_INTO_MULTIPLE_RECORDS
+          );
+          parserConfig.put(ParserConfigKey.RAW_DATA_SEPARATOR_BYTES, ",".getBytes(StandardCharsets.UTF_8));
+          parserConfig.put(ParserConfigKey.RAW_DATA_OUTPUT_FIELD_PATH, "/data");
+
+          break;
         default:
           Assert.fail("Unknown data format: " + dataFormat);
       }
+      TUDPSource source = new TUDPSource(ports, enableEpoll, numThreads, parserConfig, dataFormat, 20, 100L);
+      runner = new SourceRunner.Builder(TUDPSource.class, source).addOutputLane("lane").build();
+      runner.runInit();
+
       for (String port : ports) {
         DatagramSocket clientSocket = new DatagramSocket();
         InetAddress address = InetAddress.getLoopbackAddress();
@@ -169,6 +187,7 @@ public class TestUDPSource {
         clientSocket.send(sendPacket);
         clientSocket.close();
       }
+
       StageRunner.Output output = runner.runProduce(null, 6);
       Assert.assertTrue(source.produceCalled);
       List<Record> records = output.getRecords().get("lane");
@@ -178,6 +197,9 @@ public class TestUDPSource {
           break;
         case SYSLOG:
           Assert.assertEquals(String.valueOf(records), ports.size(), records.size());
+          break;
+        case RAW_DATA:
+          Assert.assertEquals(String.valueOf(records), 3 * ports.size(), records.size());
           break;
         default:
           Assert.fail("Unknown data format: " + dataFormat);
@@ -192,6 +214,9 @@ public class TestUDPSource {
         case SYSLOG:
           Assert.assertEquals(String.valueOf(records), 0, records.size());
           break;
+        case RAW_DATA:
+          Assert.assertEquals(String.valueOf(records), 0, records.size());
+          break;
         default:
           Assert.fail("Unknown data format: " + dataFormat);
       }
@@ -200,7 +225,9 @@ public class TestUDPSource {
       records = output.getRecords().get("lane");
       Assert.assertEquals(String.valueOf(records), 0, records.size());
     } finally {
-      runner.runDestroy();
+      if (runner != null) {
+        runner.runDestroy();
+      }
     }
   }
 }

@@ -47,6 +47,10 @@ public class ParserConfig {
     return (Boolean)configs.get(key);
   }
 
+  public Object get(ParserConfigKey key) {
+    return configs.get(key);
+  }
+
   public void putConfigs(Map<ParserConfigKey, String> other) {
     configs.putAll(other);
   }

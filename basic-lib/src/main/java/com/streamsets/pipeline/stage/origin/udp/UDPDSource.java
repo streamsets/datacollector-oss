@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.udp;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
@@ -25,9 +26,14 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
+import com.streamsets.pipeline.lib.parser.net.raw.RawDataMode;
+import com.streamsets.pipeline.lib.parser.net.raw.RawDataModeChooserValues;
 import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
 import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.pipeline.config.DatagramModeChooserValues;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehaviorChooserValues;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.List;
 
@@ -35,6 +41,10 @@ import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.AUTH_FILE_P
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CONVERT_TIME;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.EXCLUDE_INTERVAL;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MODE;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MULTIPLE_VALUES_BEHAVIOR;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_OUTPUT_FIELD_PATH;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_SEPARATOR_BYTES;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.TYPES_DB_PATH;
 
 @StageDef(
@@ -200,6 +210,78 @@ public class UDPDSource extends DSource {
   @ValueChooserModel(CharsetChooserValues.class)
   public String collectdCharset;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "CHARACTER",
+      label = "Raw Data Mode",
+      description = "The mode that controls how the raw packet data should be treated (character-based or binary). This" +
+          " selection determines what type of field will be created.",
+      displayPosition = 110,
+      group = "RAW_DATA",
+      dependsOn = "dataFormat",
+      triggeredByValue = "RAW_DATA"
+  )
+  @ValueChooserModel(RawDataModeChooserValues.class)
+  public RawDataMode rawDataMode = RawDataMode.CHARACTER;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTF-8",
+      label = "Charset",
+      description = "The character set used to interpret character-based separated data.",
+      displayPosition = 120,
+      group = "RAW_DATA",
+      dependsOn = "rawDataMode",
+      triggeredByValue = "CHARACTER"
+  )
+  @ValueChooserModel(CharsetChooserValues.class)
+  public String rawDataCharset;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "/data",
+      label = "Output field path",
+      description = "The output field path to place the separated data values into.",
+      displayPosition = 150,
+      group = "RAW_DATA",
+      dependsOn = "dataFormat",
+      triggeredByValue = "RAW_DATA"
+  )
+  @FieldSelectorModel(singleValued = true)
+  public String rawDataOutputField;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Multiple Values Behavior",
+      description = "How to handle multiple values produced by the parser after applying the separator.",
+      defaultValue = "FIRST_ONLY",
+      displayPosition = 160,
+      group = "RAW_DATA",
+      dependsOn = "dataFormat",
+      triggeredByValue = "RAW_DATA"
+  )
+  @ValueChooserModel(MultipleValuesBehaviorChooserValues.class)
+  public MultipleValuesBehavior rawDataMultipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Data Separator",
+      description = "The bytes to use to separate data in the UDP packet.  If multiple values are found in a packet" +
+          " after applying this separator, then the Multiple Values Behavior setting comes into play..  Specify byte" +
+          " literals using using Java Unicode syntax (\"\\uxxxx\").  To capture the entire UDP packet (i.e. do not split" +
+          " using any delimiter), leave this blank.  Defaults to line feed (000A).",
+      defaultValue = "\\u000A",
+      group = "RAW_DATA",
+      dependsOn = "dataFormat",
+      triggeredByValue = "RAW_DATA"
+  )
+  public String rawDataSeparatorBytes;
+
   @Override
   protected Source createSource() {
     Utils.checkNotNull(dataFormat, "Data format cannot be null");
@@ -211,6 +293,16 @@ public class UDPDSource extends DSource {
         break;
       case COLLECTD:
         parserConfig.put(CHARSET, collectdCharset);
+        break;
+      case RAW_DATA:
+        parserConfig.put(CHARSET, rawDataCharset);
+        parserConfig.put(RAW_DATA_MODE, rawDataMode);
+        parserConfig.put(RAW_DATA_MULTIPLE_VALUES_BEHAVIOR, rawDataMultipleValuesBehavior);
+        parserConfig.put(RAW_DATA_OUTPUT_FIELD_PATH, rawDataOutputField);
+        parserConfig.put(
+            RAW_DATA_SEPARATOR_BYTES,
+            StringEscapeUtils.unescapeJava(rawDataSeparatorBytes).getBytes()
+        );
         break;
       default:
         // NOOP

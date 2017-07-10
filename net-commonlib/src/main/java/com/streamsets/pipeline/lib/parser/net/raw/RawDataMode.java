@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,26 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.lib.parser.net.raw;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-/**
- * This is just a dummy enum until the udp source supports
- * other data formats.
- */
 @GenerateResourceBundle
-public enum DatagramMode implements Label {
-  NETFLOW("NetFlow"),
-  SYSLOG("syslog"),
-  COLLECTD("collectd"),
-  RAW_DATA("Raw/Separated data")
+public enum RawDataMode implements Label {
+  CHARACTER("Character Based (String)"),
+  BINARY("Binary (Byte Array)"),
   ;
 
   private final String label;
 
-  DatagramMode(String label) {
+  RawDataMode(String label) {
     this.label = label;
   }
 
