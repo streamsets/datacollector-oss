@@ -861,7 +861,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       pipelineRunnable = null;
     }
     if (metricsEventRunnable != null) {
-      metricsEventRunnable.setThreadHealthReporter(null);
+      metricsEventRunnable.onStopPipeline();
       metricsEventRunnable = null;
     }
     if (threadHealthReporter != null) {

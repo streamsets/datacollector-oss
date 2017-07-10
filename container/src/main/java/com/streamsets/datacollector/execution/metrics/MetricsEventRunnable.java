@@ -134,8 +134,13 @@ public class MetricsEventRunnable implements Runnable {
     this.runtimeInfo = runtimeInfo;
   }
 
-  public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
-    this.threadHealthReporter = threadHealthReporter;
+  public void onStopPipeline() {
+    this.threadHealthReporter = null;
+    if (isDPMPipeline) {
+      // Send final metrics to DPM on stop
+      this.stopwatch = null;
+      this.run();
+    }
   }
 
   public void setStatsQueue(BlockingQueue<Record> statsQueue) {
