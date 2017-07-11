@@ -34,6 +34,19 @@
                 </thead>
                 <tbody>
                     <row>
+                        <entry>Origins that process Avro data</entry>
+                        <entry>Include "precision" and "scale" field attributes for every Decimal
+                            field.</entry>
+                    </row>
+                    <row>
+                        <entry>Origins that process XML data</entry>
+                        <entry>Can include field XPath information, XML attribute, and namespace
+                            declarations in field attributes. <xref
+                                href="../Pipeline_Design/XMLDF-FieldXPathExp.dita">
+                                <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                    id="image_w5x_42x_j1b"/></xref></entry>
+                    </row>
+                    <row>
                         <entry>Salesforce origin</entry>
                         <entry>Includes data type information in field attributes. <xref
                                 href="../Origins/Salesforce-FieldAttributes.dita">
@@ -46,14 +59,6 @@
                                 href="../Processors/SalesforceLookup-Attributes.dita">
                                 <image href="../Graphics/icon_moreInfo.png" scale="10"
                                     id="image_jvj_5t7_vz"/></xref></entry>
-                    </row>
-                    <row>
-                        <entry>Any origin that processes XML data</entry>
-                        <entry>Can include field XPath information, XML attribute, and namespace
-                            declarations in field attributes. <xref
-                                href="../Pipeline_Design/XMLDF-FieldXPathExp.dita">
-                                <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                    id="image_uph_jf3_qz"/></xref></entry>
                     </row>
                     <row>
                         <entry>XML Parser</entry>

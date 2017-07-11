@@ -26,7 +26,7 @@
             specified in a record header attribute. If the origin providing the data does not
             generate that information automatically, you can use the Expression Evaluator or
             scripting processor to set the attribute value.</p>
-        <p>You can also use <xref
+        <p>Record header attributes are string values. You can use <xref
                 href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"
                 >record:attribute functions</xref> in any expression to include attribute values in
             calculations. </p>

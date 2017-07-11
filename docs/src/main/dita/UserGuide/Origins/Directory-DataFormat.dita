@@ -25,7 +25,9 @@
       differently based on the data format. Directory processes the following types of data:<dl>
         <dlentry>
           <dt>Avro</dt>
-          <dd>Generates a record for every Avro record. </dd>
+          <dd>Generates a record for every Avro record. Includes a "precision" and "scale" field
+            attribute for each Decimal field. For more information about field attributes, see <xref
+              href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"/>.</dd>
           <dd>The origin expects each file to contain the Avro schema and uses the schema to process
             the Avro data.</dd>
           <dd>The origin reads files compressed by Avro-supported compression codecs without

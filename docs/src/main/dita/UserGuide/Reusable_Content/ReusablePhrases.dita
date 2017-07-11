@@ -360,7 +360,11 @@
                   <dl>
                         <dlentry id="OriginDF-AVRO-Kafka">
                               <dt>Avro</dt>
-                              <dd>Generates a record for every message.</dd>
+                              <dd>Generates a record for every message. Includes a "precision" and
+                                    "scale" field attribute for each Decimal field. For more
+                                    information about field attributes, see <xref
+                                          href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
+                                    />.</dd>
                               <dd>You can use one of the following methods to specify the location
                                     of the Avro schema definition:<ul id="ul_npz_4lz_gx">
                                           <li><uicontrol>Message/Data Includes Schema</uicontrol> -
@@ -395,7 +399,11 @@
                   <dl>
                         <dlentry id="OriginDF-AVRO">
                               <dt>Avro</dt>
-                              <dd>Generates a record for every message.</dd>
+                              <dd>Generates a record for every message. Includes a "precision" and
+                                    "scale" field attribute for each Decimal field. For more
+                                    information about field attributes, see <xref
+                                          href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
+                                    />.</dd>
                               <dd>You can use one of the following methods to specify the location
                                     of the Avro schema definition:<ul id="ul_npz_1lz_kx">
                                           <li><uicontrol>Message/Data Includes Schema</uicontrol> -
@@ -427,7 +435,11 @@
                   <dl>
                         <dlentry id="OriginDF-AVROfiles">
                               <dt>Avro</dt>
-                              <dd>Generates a record for every Avro record.</dd>
+                              <dd>Generates a record for every Avro record. Includes a "precision"
+                                    and "scale" field attribute for each Decimal field. For more
+                                    information about field attributes, see <xref
+                                          href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
+                                    />.</dd>
                               <dd>You can use one of the following methods to specify the location
                                     of the Avro schema definition:<ul id="ul_ykg_g5z_kx">
                                           <li><uicontrol>Message/Data Includes Schema</uicontrol> -
@@ -461,7 +473,11 @@
                   <dl>
                         <dlentry id="AVRO-HadoopFS">
                               <dt>Avro</dt>
-                              <dd>Generates a record for every Avro record. </dd>
+                              <dd>Generates a record for every Avro record. Includes a "precision"
+                                    and "scale" field attribute for each Decimal field. For more
+                                    information about field attributes, see <xref
+                                          href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
+                                    />.</dd>
                               <dd>You can use one of the following methods to specify the location
                                     of the Avro schema definition:<ul id="ul_v5j_gvz_kx">
                                           <li><uicontrol>Message/Data Includes Schema</uicontrol> -

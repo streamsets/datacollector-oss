@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_fpr_1lx_j1b">
+ <title>Viewing Field Attributes in Data Preview</title>
+ <conbody>
+  <p><indexterm>field attributes<indexterm>viewing in data
+                preview</indexterm></indexterm><indexterm>data preview<indexterm>viewing field
+                    attributes</indexterm></indexterm>As with record header attributes, you can use
+            data preview to view field attributes at any point in the pipeline. To view field
+            attributes, enable the Show Record/Field Header data preview property.</p>
+ </conbody>
+</concept>

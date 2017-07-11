@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hh4_sgx_j1b">
+ <title>Working with Field Attributes</title>
+ <conbody>
+  <p><indexterm>field attributes<indexterm>working with</indexterm></indexterm>Like record header
+            attributes, you can use the Expression Evaluator or any scripting processor to create or
+            update field attributes. For example, when processing Avro data, origins place the
+            precision and scale information for Decimal data into field attributes. If you want to
+            increase those values before writing them to the destination system, you can use the
+            Expression Evaluator or any scripting processor to set the attribute value.</p>
+        <p>Field attributes are string values. You can also use
+                <codeph>record:fieldAttribute</codeph> functions in any expression to include
+            attribute values in calculations. </p>
+        <p>
+            <note type="important">Field attributes do not have field paths. When using an attribute
+                in an expression, use just the attribute name surrounded by quotation marks after
+                specifying the path to the associated field, as
+                follows:<codeblock> ${record:fieldAttribute(&lt;path to the field>,'&lt;attribute name>')}</codeblock></note>
+        </p>
+        <p>For example, say you are processing Avro data as part of the <xref
+                href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w">Drift
+                Synchronization Solution for Hive</xref>. All Decimal fields include automatically
+            generated precision and scale field attributes. Before passing the data to the Hive
+            Metadata processor, you want to create a new Price Decimal field based on the existing
+            cost data. </p>
+        <p>The following Expression Evaluator creates the Price field and defines the precision and
+            scale field attributes based on the existing Cost precision and scale. </p>
+        <p><image href="../Graphics/FieldAtts-ExpressionEval.png" id="image_mxb_wkx_j1b" scale="60"
+            /></p>
+ </conbody>
+</concept>

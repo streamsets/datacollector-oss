@@ -51,17 +51,16 @@
    <topicref href="../Pipeline_Design/RecordHeaderAttributes-WorkingWith.dita">
     <topicref href="../Pipeline_Design/InternalAttributes.dita"/>
    </topicref>
-   <topicref href="../Pipeline_Design/Attributes-ViewinginDPreview.dita"/>
    <topicref href="../Pipeline_Design/AttributeGeneratingStages.dita"/>
    <topicref href="../Pipeline_Design/RecordBasedWrites-overview.dita">
     <topicref href="../Pipeline_Design/RecordbasedWrites-GeneratingAtts.dita"/>
    </topicref>
+   <topicref href="../Pipeline_Design/Attributes-ViewinginDPreview.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Design/FieldAttributes.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
+  <topicref href="../Pipeline_Design/FieldAttributes.dita">
+   <topicref href="../Pipeline_Design/FieldAtts-Working.dita"/>
    <topicref href="../Pipeline_Design/FieldAttributeGeneratingStages.dita"/>
+   <topicref href="../Pipeline_Design/FieldAtts-DataPreview.dita"/>
   </topicref>
   <topicref href="../Pipeline_Design/CDC-Overview.dita" chunk="to-content">
    <topicmeta>
