@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.stagelibrary;
 
+import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
@@ -33,6 +34,8 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   public static final String LINEAGE_PUBLISHERS_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.LINEAGE_PUBLISHERS_FILE;
 
+  public static final String CREDENTIAL_STORE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.CREDENTIAL_STORE_FILE;
+
   public PipelineDefinition getPipeline();
 
   public PipelineRulesDefinition getPipelineRules();
@@ -42,6 +45,8 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   public List<LineagePublisherDefinition> getLineagePublisherDefinitions();
 
   public LineagePublisherDefinition getLineagePublisherDefinition(String library, String name);
+
+  public List<CredentialStoreDefinition> getCredentialStoreDefinitions();
 
   public StageDefinition getStage(String library, String name, boolean forExecution);
 

@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.main;
 
 import com.streamsets.datacollector.bundles.SupportBundleManager;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.http.SlaveWebServerTask;
@@ -35,7 +36,8 @@ public class SlavePipelineTask extends PipelineTask {
     SlaveWebServerTask slaveWebServerTask,
     EventHandlerTask eventHandlerTask,
     LineagePublisherTask lineagePublisherTask,
-    SupportBundleManager supportBundleManager
+    SupportBundleManager supportBundleManager,
+    CredentialStoresTask credentialStoresTask
   ) {
     super(
       library,
@@ -44,7 +46,8 @@ public class SlavePipelineTask extends PipelineTask {
       slaveWebServerTask,
       eventHandlerTask,
       lineagePublisherTask,
-      supportBundleManager
+      supportBundleManager,
+      credentialStoresTask
     );
   }
 }

@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner.preview;
 
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
@@ -102,6 +103,11 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   @Override
   public LineagePublisherDefinition getLineagePublisherDefinition(String library, String name) {
     return null;
+  }
+
+  @Override
+  public List<CredentialStoreDefinition> getCredentialStoreDefinitions() {
+    return Collections.emptyList();
   }
 
   @Override

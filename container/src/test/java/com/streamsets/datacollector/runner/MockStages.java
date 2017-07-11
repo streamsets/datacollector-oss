@@ -18,6 +18,7 @@ package com.streamsets.datacollector.runner;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
@@ -671,6 +672,11 @@ public class MockStages {
     @Override
     public LineagePublisherDefinition getLineagePublisherDefinition(String library, String name) {
       return null;
+    }
+
+    @Override
+    public List<CredentialStoreDefinition> getCredentialStoreDefinitions() {
+      return Collections.emptyList();
     }
 
     @Override

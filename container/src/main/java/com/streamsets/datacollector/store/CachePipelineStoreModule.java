@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.store;
 
+import com.streamsets.datacollector.credential.CredentialStoresModule;
 import com.streamsets.datacollector.execution.store.CachePipelineStateStoreModule;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.stagelibrary.StageLibraryModule;
@@ -29,7 +30,7 @@ import dagger.Provides;
 import javax.inject.Singleton;
 
 @Module(injects = PipelineStoreTask.class, library = true, includes = {RuntimeModule.class, StageLibraryModule.class,
-  CachePipelineStateStoreModule.class, LockCacheModule.class})
+  CachePipelineStateStoreModule.class, LockCacheModule.class, CredentialStoresModule.class})
 public class CachePipelineStoreModule {
 
   @Provides

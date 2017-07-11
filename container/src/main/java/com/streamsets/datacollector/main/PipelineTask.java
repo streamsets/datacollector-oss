@@ -17,6 +17,7 @@ package com.streamsets.datacollector.main;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.http.DataCollectorWebServerTask;
@@ -36,6 +37,7 @@ public class PipelineTask extends CompositeTask {
   private final WebServerTask webServerTask;
   private final LineagePublisherTask lineagePublisherTask;
   private final SupportBundleManager supportBundleManager;
+  private final CredentialStoresTask credentialStoresTask;
 
   @Inject
   public PipelineTask(
@@ -45,11 +47,21 @@ public class PipelineTask extends CompositeTask {
     DataCollectorWebServerTask webServerTask,
     EventHandlerTask eventHandlerTask,
     LineagePublisherTask lineagePublisherTask,
-    SupportBundleManager supportBundleManager
+    SupportBundleManager supportBundleManager,
+    CredentialStoresTask credentialStoresTask
   ) {
     super(
       "pipelineNode",
-      ImmutableList.of(library, lineagePublisherTask, store, webServerTask , manager, eventHandlerTask, supportBundleManager),
+        ImmutableList.of(
+            library,
+            lineagePublisherTask,
+            credentialStoresTask,
+            store,
+            webServerTask,
+            manager,
+            eventHandlerTask,
+            supportBundleManager
+        ),
       true);
     this.webServerTask = webServerTask;
     this.stageLibraryTask = library;
@@ -57,6 +69,7 @@ public class PipelineTask extends CompositeTask {
     this.manager = manager;
     this.lineagePublisherTask = lineagePublisherTask;
     this.supportBundleManager = supportBundleManager;
+    this.credentialStoresTask = credentialStoresTask;
   }
 
   public Manager getManager() {
@@ -77,4 +90,9 @@ public class PipelineTask extends CompositeTask {
   public SupportBundleManager getSupportBundleManager() {
     return supportBundleManager;
   }
+
+  public CredentialStoresTask getCredentialStoresTask() {
+    return credentialStoresTask;
+  }
+
 }

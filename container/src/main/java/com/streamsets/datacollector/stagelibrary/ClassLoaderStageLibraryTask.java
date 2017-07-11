@@ -23,6 +23,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
@@ -30,6 +31,7 @@ import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
+import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtractor;
 import com.streamsets.datacollector.definition.LineagePublisherDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
@@ -40,12 +42,10 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.vault.Vault;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.lineage.LineagePublisher;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.KeyedObjectPool;
@@ -95,6 +95,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private List<StageDefinition> stageList;
   private List<LineagePublisherDefinition> lineagePublisherDefinitions;
   private Map<String, LineagePublisherDefinition> lineagePublisherDefinitionMap;
+  private List<CredentialStoreDefinition> credentialStoreDefinitions;
   private LoadingCache<Locale, List<StageDefinition>> localizedStageList;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
@@ -194,11 +195,13 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     stageMap = new HashMap<>();
     lineagePublisherDefinitions = new ArrayList<>();
     lineagePublisherDefinitionMap = new HashMap<>();
+    credentialStoreDefinitions = new ArrayList<>();
     loadStages();
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
     lineagePublisherDefinitions = ImmutableList.copyOf(lineagePublisherDefinitions);
     lineagePublisherDefinitionMap = ImmutableMap.copyOf(lineagePublisherDefinitionMap);
+    credentialStoreDefinitions = ImmutableList.copyOf(credentialStoreDefinitions);
 
     // localization cache for definitions
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
@@ -303,6 +306,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       int libs = 0;
       int stages = 0;
       int lineagePublishers = 0;
+      int credentialStores = 0;
       long start = System.currentTimeMillis();
       LocaleInContext.set(Locale.getDefault());
       for (ClassLoader cl : stageClassLoaders) {
@@ -342,16 +346,27 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             lineagePublisherDefinitions.add(lineage);
             lineagePublisherDefinitionMap.put(key, lineage);
           }
+
+          // Load Credential stores
+          for(Class klass : loadClassesFromResource(libDef, cl, CREDENTIAL_STORE_DEFINITION_RESOURCE)) {
+            credentialStores++;
+            CredentialStoreDefinition def = CredentialStoreDefinitionExtractor.get().extract(libDef, klass);
+            String key = createKey(libDef.getName(), def.getName());
+            LOG.debug("Loaded credential store '{}'", key);
+            credentialStoreDefinitions.add(def);
+          }
+
         } catch (IOException | ClassNotFoundException ex) {
           throw new RuntimeException(
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.toString()), ex);
         }
       }
       LOG.debug(
-        "Loaded '{}' libraries with a total of '{}' stages and '{}' lineage publishers in '{}ms'",
+        "Loaded '{}' libraries with a total of '{}' stages, '{}' lineage publishers and '{}' credentialStores in '{}ms'",
         libs,
         stages,
         lineagePublishers,
+        credentialStores,
         System.currentTimeMillis() - start
       );
     } finally {
@@ -450,6 +465,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @Override
   public LineagePublisherDefinition getLineagePublisherDefinition(String library, String name) {
     return lineagePublisherDefinitionMap.get(createKey(library, name));
+  }
+
+  @Override
+  public List<CredentialStoreDefinition> getCredentialStoreDefinitions() {
+    return credentialStoreDefinitions;
   }
 
   @Override
