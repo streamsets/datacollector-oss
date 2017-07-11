@@ -174,8 +174,9 @@ public abstract class ELDefinitionExtractor {
                                                               pTypes[i].getSimpleName()));
               }
               fDef = new ElFunctionDefinition(Integer.toString(indexCounter.incrementAndGet()), fAnnotation.prefix(),
-                                              fName, fAnnotation.description(), fArgDefs,
-                                              method.getReturnType().getSimpleName(), method);
+                                              fName, fAnnotation.description(), fAnnotation.implicitOnly(), fArgDefs,
+                                              method.getReturnType().getSimpleName(), method
+              );
               elFunctionsIdx.put(fDef.getIndex(), fDef);
               elFunctions.put(method, fDef);
             }

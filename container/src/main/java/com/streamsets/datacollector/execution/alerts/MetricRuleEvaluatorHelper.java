@@ -38,7 +38,7 @@ public class MetricRuleEvaluatorHelper {
   private static final String VAL = "value()";
   private static final String TIME_NOW = "time:now()";
   private static final ELEvaluator EL_EVALUATOR =  new ELEvaluator(
-    "condition",
+    "condition", false,
     RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL)
   );
 

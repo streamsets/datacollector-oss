@@ -71,6 +71,7 @@ public enum DefinitionError implements ErrorCode {
   DEF_163("{} group ordinal '{}' out of range, valid range '0..{}'"),
   DEF_164("{} invalid group ordinal value: {}"),
   DEF_165("{} group '{}' not in parent groups '{}'"),
+  DEF_166("{} field has explicit evaluation but defines the EL function '{}' which is implicitOnly"),
 
   //ModelDefinitionExtractor
   DEF_200("{}, Model annotation missing'"),

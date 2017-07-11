@@ -34,7 +34,7 @@ public class TestELDefinitionExtractor {
 
   public static class Ok {
 
-    @ElFunction(prefix = "p", name = "f", description = "ff")
+    @ElFunction(prefix = "p", name = "f", description = "ff", implicitOnly = true)
     public static String f(@ElParam("x") int x) {
       return null;
     }
@@ -116,6 +116,7 @@ public class TestELDefinitionExtractor {
     Assert.assertEquals("p:f", functions.get(0).getName());
     Assert.assertEquals("p", functions.get(0).getGroup());
     Assert.assertEquals("ff", functions.get(0).getDescription());
+    Assert.assertTrue(functions.get(0).isImplicitOnly());
     Assert.assertEquals(String.class.getSimpleName(), functions.get(0).getReturnType());
     Assert.assertEquals(1, functions.get(0).getElFunctionArgumentDefinition().size());
     Assert.assertEquals("x", functions.get(0).getElFunctionArgumentDefinition().get(0).getName());

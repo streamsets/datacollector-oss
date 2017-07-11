@@ -559,6 +559,14 @@ public abstract class ConfigDefinitionExtractor {
     if (TYPES_SUPPORTING_ELS.contains(annotation.type()) ||
         (annotation.type() == ConfigDef.Type.MODEL && MODELS_SUPPORTING_ELS.contains(model.getModelType()))) {
       errors = ELDefinitionExtractor.get().validateFunctions(annotation.elDefs(), contextMsg);
+      if (errors.isEmpty() && annotation.evaluation() == ConfigDef.Evaluation.EXPLICIT) {
+        List<ElFunctionDefinition> elFunctionDefinitions = getELFunctions(annotation, model, contextMsg);
+        for (ElFunctionDefinition def : elFunctionDefinitions) {
+          if (def.isImplicitOnly()) {
+            errors.add(new ErrorMessage(DefinitionError.DEF_166, contextMsg, def.getName()));
+          }
+        }
+      }
     } else {
       errors = new ArrayList<>();
     }

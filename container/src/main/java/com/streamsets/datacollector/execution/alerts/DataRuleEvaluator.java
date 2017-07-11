@@ -306,7 +306,7 @@ public class DataRuleEvaluator {
         record,
         el,
         elVars,
-        new ELEvaluator("el", RuleELRegistry.getRuleELs(dataRuleDefinition.getFamily()))
+        new ELEvaluator("el",false, RuleELRegistry.getRuleELs(dataRuleDefinition.getFamily()))
       );
     } catch (ObserverException e) {
       //A faulty condition should not take down rest of the alerts with it.
@@ -328,7 +328,7 @@ public class DataRuleEvaluator {
         alertText = "";
       }
 
-      ELEvaluator elEval = new ELEvaluator("alertInfo", RuleELRegistry.getRuleELs(RuleELRegistry.ALERT));
+      ELEvaluator elEval = new ELEvaluator("alertInfo",false, RuleELRegistry.getRuleELs(RuleELRegistry.ALERT));
       RecordEL.setRecordInContext(elVars, record);
 
       return elEval.eval(elVars, alertText, String.class);

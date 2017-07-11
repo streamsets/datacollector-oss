@@ -46,29 +46,35 @@ public class ELEvaluator extends ELEval {
   // ExpressionEvaluatorImpl can be used as a singleton
   private static final LruExpressionEvaluatorImpl EVALUATOR = new LruExpressionEvaluatorImpl();
 
-  public ELEvaluator(String configName, Map<String, Object> constants, List<Class> elFuncConstDefClasses) {
-    this(configName, constants, elFuncConstDefClasses.toArray(new Class[elFuncConstDefClasses.size()]));
+  public ELEvaluator(String configName, boolean explicit, Map<String, Object> constants, List<Class> elFuncConstDefClasses) {
+    this(configName, explicit, constants, elFuncConstDefClasses.toArray(new Class[elFuncConstDefClasses.size()]));
   }
 
-  public ELEvaluator(String configName, Map<String, Object> constants, Class<?>... elFuncConstDefClasses) {
+  public ELEvaluator(String configName, boolean explicit, Map<String, Object> constants, Class<?>... elFuncConstDefClasses) {
     this.configName = configName;
     this.constants = new HashMap<>(constants);
     functionsByNamespace = new HashMap<>();
     elFunctionDefinitions = new ArrayList<>();
     elConstantDefinitions = new ArrayList<>();
-    populateConstantsAndFunctions(elFuncConstDefClasses);
+    populateConstantsAndFunctions(explicit, elFuncConstDefClasses);
     this.functionMapper = new FunctionMapperImpl();
   }
 
   public ELEvaluator(String configName, Class<?>... elFuncConstDefClasses) {
-    this(configName, new HashMap<String, Object>(), elFuncConstDefClasses);
+    this(configName, true, elFuncConstDefClasses);
   }
 
-  private void populateConstantsAndFunctions(Class<?>... elFuncConstDefClasses) {
+  public ELEvaluator(String configName, boolean explicit, Class<?>... elFuncConstDefClasses) {
+    this(configName, explicit, new HashMap<String, Object>(), elFuncConstDefClasses);
+  }
+
+  private void populateConstantsAndFunctions(boolean explicit, Class<?>... elFuncConstDefClasses) {
     if(elFuncConstDefClasses != null) {
       for (ElFunctionDefinition function : ELDefinitionExtractor.get().extractFunctions(elFuncConstDefClasses, "")) {
-        elFunctionDefinitions.add(function);
-        registerFunction(function);
+        if (!(function.isImplicitOnly() && explicit)) {
+          elFunctionDefinitions.add(function);
+          registerFunction(function);
+        }
       }
       for (ElConstantDefinition constant : ELDefinitionExtractor.get().extractConstants(elFuncConstDefClasses, "")) {
         elConstantDefinitions.add(constant);

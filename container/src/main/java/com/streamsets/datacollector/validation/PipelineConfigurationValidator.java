@@ -810,7 +810,7 @@ public class PipelineConfigurationValidator {
           ELVariables elVars = new ELVariables();
           RecordEL.setRecordInContext(elVars, PRECONDITION_RECORD);
           try {
-            ELEval elEval = new ELEvaluator(StageConfigBean.STAGE_PRECONDITIONS_CONFIG, constants, confDef.getElDefs());
+            ELEval elEval = new ELEvaluator(StageConfigBean.STAGE_PRECONDITIONS_CONFIG, false, constants, confDef.getElDefs());
             elEval.eval(elVars, precondition, Boolean.class);
           } catch (ELEvalException ex) {
             issues.add(

@@ -58,7 +58,7 @@ public class RuleDefinitionValidator {
 
   public RuleDefinitionValidator() {
     variables = new ELVariables();
-    elEvaluator = new ELEvaluator("RuleDefinitionValidator", RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL));
+    elEvaluator = new ELEvaluator("RuleDefinitionValidator", false, RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL));
   }
 
   public boolean validateRuleDefinition(RuleDefinitions ruleDefinitions) {

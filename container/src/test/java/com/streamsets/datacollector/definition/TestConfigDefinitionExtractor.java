@@ -57,6 +57,13 @@ public class TestConfigDefinitionExtractor {
 
   }
 
+  public static class ImplicitOnlyEls {
+    @ElFunction(prefix = "p", name = "fi", description = "ff", implicitOnly = true)
+    public static String fi() {
+      return null;
+    }
+  }
+
   public static class Ok1 {
 
     @ConfigDef(
@@ -72,7 +79,7 @@ public class TestConfigDefinitionExtractor {
         max = 4,
         evaluation = ConfigDef.Evaluation.EXPLICIT,
         mode = ConfigDef.Mode.JAVA,
-        elDefs = ELs.class
+        elDefs = {ELs.class }
     )
     public int config;
   }
@@ -101,7 +108,7 @@ public class TestConfigDefinitionExtractor {
         description = "D",
         type = ConfigDef.Type.MODEL,
         required = true,
-        elDefs = ELs.class
+        elDefs = {ELs.class, ImplicitOnlyEls.class }
     )
     @PredicateModel
     public List<String> predicates;
@@ -269,6 +276,24 @@ public class TestConfigDefinitionExtractor {
         required = true
     )
     public String b;
+  }
+
+  public static class Fail4 {
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.STRING,
+        required = false,
+        min = 0,
+        evaluation = ConfigDef.Evaluation.EXPLICIT,
+        elDefs = ImplicitOnlyEls.class
+    )
+    public static String config;
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testStringConfigFail4() {
+    ConfigDefinitionExtractor.get().extract(Fail4.class, Collections.<String>emptyList(), "x");
   }
 
   @Test

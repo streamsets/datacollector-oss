@@ -96,7 +96,7 @@ public class ElUtil {
   }
 
   public static ELEvaluator createElEval(String name, Map<String, Object> constants, Class<?>... elDefs) {
-    return new ELEvaluator(name, constants, elDefs);
+    return new ELEvaluator(name, false, constants, elDefs);
   }
 
   public static Map<String, Object> getConstants(PipelineConfiguration pipelineConf) {

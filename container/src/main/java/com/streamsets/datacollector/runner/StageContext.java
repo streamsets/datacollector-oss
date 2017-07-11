@@ -711,7 +711,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public ELEval createELEval(String configName) {
-    return new ELEvaluator(configName, constants, configToElDefMap.get(configName));
+    return createELEval(configName, configToElDefMap.get(configName));
   }
 
   @Override
@@ -724,7 +724,8 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     if (elDefClasses != null) {
       Collections.addAll(classes, elDefClasses);
     }
-    return new ELEvaluator(configName, constants, classes.toArray(new Class[classes.size()]));
+    // assert non of the EL functions is implicit only
+    return new ELEvaluator(configName, true, constants, classes.toArray(new Class[classes.size()]));
   }
 
 }

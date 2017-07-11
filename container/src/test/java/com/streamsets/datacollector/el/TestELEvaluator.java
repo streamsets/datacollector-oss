@@ -30,7 +30,7 @@ public class TestELEvaluator {
 
   @Test
   public void testNULL() throws ELEvalException {
-    ELEval elEval = new ELEvaluator(null);
+    ELEval elEval = new ELEvaluator(null, false);
     ELVars variables = elEval.createVariables();
     Object result = elEval.eval(variables, "${NULL}", Object.class);
     Assert.assertNull(result);
@@ -38,7 +38,7 @@ public class TestELEvaluator {
 
   @Test
   public void testElFunction() throws ELEvalException {
-    ELEval elEval = new ELEvaluator("testElFunction", ValidTestEl.class);
+    ELEval elEval = new ELEvaluator("testElFunction",false, ValidTestEl.class);
     ELVars variables = elEval.createVariables();
     Boolean result = elEval.eval(variables, "${location:city() eq CITY}", Boolean.class);
     Assert.assertTrue(result);
@@ -46,7 +46,7 @@ public class TestELEvaluator {
 
   @Test
   public void testElFunctionMetadata() {
-    ELEval elEval = new ELEvaluator("testElFunctionMetadata", ValidTestEl.class);
+    ELEval elEval = new ELEvaluator("testElFunctionMetadata",false, ValidTestEl.class);
 
     Assert.assertEquals(elEval.getConfigName(), "testElFunctionMetadata");
 
@@ -67,17 +67,17 @@ public class TestELEvaluator {
 
   @Test(expected = RuntimeException.class)
   public void testNonStaticFunctionEl() {
-    new ELEvaluator("testNonStaticFunctionEl", NonStaticFunctionEl.class);
+    new ELEvaluator("testNonStaticFunctionEl",false, NonStaticFunctionEl.class);
   }
 
   @Test(expected = RuntimeException.class)
   public void testEmptyNameFunctionEl() {
-    new ELEvaluator("testEmptyNameFunctionEl", EmptyNameFunctionEl.class);
+    new ELEvaluator("testEmptyNameFunctionEl",false, EmptyNameFunctionEl.class);
   }
 
   @Test
   public void testElConstant() throws ELEvalException {
-    ELEval elEval = new ELEvaluator("testElConstant", ValidTestEl.class);
+    ELEval elEval = new ELEvaluator("testElConstant",false, ValidTestEl.class);
     ELVars variables = elEval.createVariables();
     Boolean result = elEval.eval(variables, "${CITY eq \"San Francisco\"}", Boolean.class);
     Assert.assertTrue(result);
@@ -85,7 +85,7 @@ public class TestELEvaluator {
 
   @Test
   public void testElConstantMetadata() {
-    ELEval elEval = new ELEvaluator("testElConstantMetadata", ValidTestEl.class);
+    ELEval elEval = new ELEvaluator("testElConstantMetadata",false, ValidTestEl.class);
     List<ElConstantDefinition> elConstantDefinitions = ((ELEvaluator) elEval).getElConstantDefinitions();
 
     ElConstantDefinition constDef = null;
@@ -103,12 +103,12 @@ public class TestELEvaluator {
 
   @Test(expected = RuntimeException.class)
   public void testNonStaticConstEl() {
-    new ELEvaluator("testNonStaticConstEl", NonStaticConstEl.class);
+    new ELEvaluator("testNonStaticConstEl",false, NonStaticConstEl.class);
   }
 
   @Test(expected = RuntimeException.class)
   public void testEmptyNameConstEl() {
-    new ELEvaluator("testEmptyNameConstEl", EmptyNameConstEl.class);
+    new ELEvaluator("testEmptyNameConstEl",false, EmptyNameConstEl.class);
   }
 
   @Test
@@ -172,4 +172,30 @@ public class TestELEvaluator {
       return "San Francisco";
     }
   }
+
+  public static class ImplicitOnlyEl {
+    @ElFunction(prefix = "implicitOnly", name = "f", implicitOnly = true)
+    public static String f() {
+      return "implicit";
+    }
+  }
+
+  @Test
+  public void testExplicitModeWithNonImplicitOnly() throws ELEvalException {
+    ELEval elEval = new ELEvaluator("implicit",true, ValidTestEl.class);
+    elEval.eval(elEval.createVariables(), "${location:city()}", String.class);
+  }
+
+  @Test(expected = ELEvalException.class)
+  public void testExplicitModeWithImplicitOnly() throws Exception {
+    ELEval elEval = new ELEvaluator("implicit",true, ImplicitOnlyEl.class);
+    elEval.eval(elEval.createVariables(), "${implicitOnly:f()}", String.class);
+  }
+
+  @Test
+  public void testImplicitModeWithImplicitOnly() throws Exception {
+    ELEval elEval = new ELEvaluator("implicit",false, ImplicitOnlyEl.class);
+    elEval.eval(elEval.createVariables(), "${implicitOnly:f()}", String.class);
+  }
+
 }

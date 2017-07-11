@@ -28,9 +28,18 @@ public class ElFunctionDefinition {
   private final String returnType;
   private final List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition;
   public final Method method;
+  public boolean implicitOnly;
 
-  public ElFunctionDefinition(String index, String group, String name, String description,
-      List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition, String returnType, Method method) {
+  public ElFunctionDefinition(
+      String index,
+      String group,
+      String name,
+      String description,
+      boolean implicitOnly,
+      List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition,
+      String returnType,
+      Method method
+  ) {
     this.index = index;
     this.name = name;
     this.description = description;
@@ -38,6 +47,7 @@ public class ElFunctionDefinition {
     this.returnType = returnType;
     this.elFunctionArgumentDefinition = elFunctionArgumentDefinition;
     this.method = method;
+    this.implicitOnly = implicitOnly;
   }
 
   public String getIndex() {
@@ -66,6 +76,10 @@ public class ElFunctionDefinition {
 
   public Method getMethod() {
     return method;
+  }
+
+  public boolean isImplicitOnly() {
+    return implicitOnly;
   }
 
   @Override
