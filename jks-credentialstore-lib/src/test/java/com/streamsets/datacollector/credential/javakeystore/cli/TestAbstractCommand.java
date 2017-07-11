@@ -53,6 +53,7 @@ public class TestAbstractCommand {
   @After
   public void cleanup() {
     System.getProperties().remove("sdc.conf.dir");
+    Configuration.setFileRefsBaseDir(null);
   }
 
   @Test

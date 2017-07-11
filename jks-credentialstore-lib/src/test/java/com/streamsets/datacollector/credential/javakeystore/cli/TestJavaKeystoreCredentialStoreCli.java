@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.credential.javakeystore.cli;
 
+import com.streamsets.datacollector.util.Configuration;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,6 +46,7 @@ public class TestJavaKeystoreCredentialStoreCli {
   @After
   public void cleanup() {
     System.getProperties().remove("sdc.conf.dir");
+    Configuration.setFileRefsBaseDir(null);
   }
 
   @Test
