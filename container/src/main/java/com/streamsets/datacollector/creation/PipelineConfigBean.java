@@ -169,6 +169,18 @@ public class PipelineConfigBean implements Stage {
   public String badRecordsHandling;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="ORIGINAL_RECORD",
+      label = "Error Record Policy",
+      description = "Determines which variation of the record is sent to error.",
+      displayPosition = 93,
+      group = "BAD_RECORDS"
+  )
+  @ValueChooserModel(ErrorRecordPolicyChooserValues.class)
+  public ErrorRecordPolicy errorRecordPolicy = ErrorRecordPolicy.ORIGINAL_RECORD;
+
+  @ConfigDef(
     required = false,
     type = ConfigDef.Type.MODEL,
     label = "Statistics Aggregator",
@@ -277,17 +289,6 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 190
   )
   public int maxRunners = 0;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue="ORIGINAL_RECORD",
-      label = "Error record policy",
-      description = "Configures what variant of a record is sent to error stream.",
-      displayPosition = 200
-  )
-  @ValueChooserModel(ErrorRecordPolicyChooserValues.class)
-  public ErrorRecordPolicy errorRecordPolicy = ErrorRecordPolicy.ORIGINAL_RECORD;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
