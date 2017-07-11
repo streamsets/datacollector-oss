@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.destination.s3;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.amazonaws.util.StringUtils;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -62,12 +63,12 @@ final class DefaultFileHelper extends FileHelper {
   }
 
   @Override
-  public List<Upload> handle(Iterator<Record> recordIterator, String bucket, String keyPrefix) throws IOException, StageException {
+  public List<UploadMetadata> handle(Iterator<Record> recordIterator, String bucket, String keyPrefix) throws IOException, StageException {
     //For uniqueness
     keyPrefix += System.currentTimeMillis() + "-";
 
-    int writtenRecordCount = 0;
-    List<Upload> uploads = new ArrayList<>();
+    List<UploadMetadata> uploads = new ArrayList<>();
+    List<Record> records = new ArrayList<>();
 
     ByRefByteArrayOutputStream bOut = new ByRefByteArrayOutputStream();
     // wrap with gzip compression output stream if required
@@ -80,7 +81,7 @@ final class DefaultFileHelper extends FileHelper {
       currentRecord = recordIterator.next();
       try {
         generator.write(currentRecord);
-        writtenRecordCount++;
+        records.add(currentRecord);
       } catch (StageException e) {
         errorRecordHandler.onError(
             new OnRecordErrorException(
@@ -104,7 +105,7 @@ final class DefaultFileHelper extends FileHelper {
     generator.close();
 
     // upload file on Amazon S3 only if at least one record was successfully written to the stream
-    if (writtenRecordCount > 0) {
+    if (records.size() > 0) {
       String fileName = getUniqueDateWithIncrementalFileName(keyPrefix);
 
       //Create and issue file close event record, but the events are thrown after the batch completion.
@@ -112,16 +113,19 @@ final class DefaultFileHelper extends FileHelper {
           .create(context)
           .with(BUCKET, bucket)
           .with(OBJECT_KEY, fileName)
-          .with(RECORD_COUNT, writtenRecordCount)
+          .with(RECORD_COUNT, records.size())
           .create();
 
       // Avoid making a copy of the internal buffer maintained by the ByteArrayOutputStream by using
       // ByRefByteArrayOutputStream
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bOut.getInternalBuffer(), 0, bOut.size());
       Upload upload = doUpload(bucket, fileName, byteArrayInputStream, getObjectMetadata());
-      uploads.add(upload);
-
-      cachedEventRecords.add(eventRecord);
+      uploads.add(new UploadMetadata(
+        upload,
+        bucket,
+        records,
+        ImmutableList.of(eventRecord)
+      ));
     }
 
     return uploads;
