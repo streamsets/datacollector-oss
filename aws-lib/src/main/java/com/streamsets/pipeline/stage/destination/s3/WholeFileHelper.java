@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.s3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.FileRef;
@@ -115,12 +116,12 @@ final class WholeFileHelper extends FileHelper {
   }
 
   @Override
-  public List<Upload> handle(
+  public List<UploadMetadata> handle(
       Iterator<Record> recordIterator,
       String bucket,
       String keyPrefix
   ) throws IOException, StageException {
-    List<Upload> uploads = new ArrayList<Upload>();
+    List<UploadMetadata> uploads = new ArrayList<>();
     //Only one record per batch if whole file
     if (recordIterator.hasNext()) {
       Record record = recordIterator.next();
@@ -158,10 +159,14 @@ final class WholeFileHelper extends FileHelper {
         );
         //We are bypassing the generator because S3 has a convenient notion of taking input stream as a parameter.
         Upload upload = doUpload(bucket, fileName, is, metadata);
-        uploads.add(upload);
+        uploads.add(new UploadMetadata(
+          upload,
+          bucket,
+          ImmutableList.of(record),
+          ImmutableList.of(eventRecord)
+        ));
 
         //Add event to event lane.
-        cachedEventRecords.add(eventRecord);
       } catch (OnRecordErrorException e) {
         LOGGER.error("Error on record: {}", e);
         errorRecordHandler.onError(

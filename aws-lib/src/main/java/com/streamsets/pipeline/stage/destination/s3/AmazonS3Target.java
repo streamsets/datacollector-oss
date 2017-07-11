@@ -64,6 +64,7 @@ public class AmazonS3Target extends BaseTarget {
   private static final String BUCKET_TEMPLATE = "bucketTemplate";
   private static final String PARTITION_TEMPLATE = "partitionTemplate";
   private static final String TIME_DRIVER_TEMPLATE = "timeDriverTemplate";
+  private static final String BUCKET_DOES_NOT_EXIST = "The specified bucket does not exist";
 
   private final S3TargetConfigBean s3TargetConfigBean;
   private final String bucketTemplate;
@@ -161,28 +162,41 @@ public class AmazonS3Target extends BaseTarget {
     Multimap<Partition, Record> partitions = partitionBatch(batch);
 
     try {
-      List<Upload> uploads = new ArrayList<>();
+      List<UploadMetadata> uploads = new ArrayList<>();
       for (Partition partition : partitions.keySet()) {
-        List<Upload> partitionUploads = fileHelper.handle(
+        List<UploadMetadata> partitionUploads = fileHelper.handle(
           partitions.get(partition).iterator(),
           partition.bucket,
           getKeyPrefix(partition.path)
         );
         uploads.addAll(partitionUploads);
       }
-      // Wait for all the uploads to complete before moving on to the next batch
-      for (Upload upload : uploads) {
-        upload.waitForCompletion();
-      }
-      List<EventRecord> eventRecords = fileHelper.getEventRecordsForTheBatch();
 
-      for (EventRecord eventRecord : eventRecords) {
-        getContext().toEvent(eventRecord);
-      }
-      //Clear the batch events.
-      fileHelper.clearEventRecordsForTheBatch();
+      for (UploadMetadata upload : uploads) {
+        try {
+          // Wait for given object to fully upload
+          upload.getUpload().waitForCompletion();
 
-    } catch (AmazonClientException | IOException | InterruptedException e) {
+          // Propagate events associated with this upload
+          for(EventRecord event : upload.getEvents()) {
+            getContext().toEvent(event);
+          }
+        } catch (AmazonClientException | InterruptedException e) {
+          LOG.error(Errors.S3_21.getMessage(), e.toString(), e);
+
+          // Sadly Amazon does not provide a better way how to determine what has happened
+          if(e instanceof AmazonClientException && e.toString().contains(BUCKET_DOES_NOT_EXIST)) {
+            // In case of incorrect bucket, we simply move all records to error stream
+            errorRecordHandler.onError(upload.getRecords(), new StageException(Errors.S3_21, e.toString()));
+          } else {
+            // In default case we stop pipeline execution (incorrect credentials, network split, ...)
+            throw new StageException(Errors.S3_21, e.toString(), e);
+          }
+        }
+      }
+
+    } catch (IOException e) {
+      // IOException is hard exception on which we will stop pipeline
       LOG.error(Errors.S3_21.getMessage(), e.toString(), e);
       throw new StageException(Errors.S3_21, e.toString(), e);
     }

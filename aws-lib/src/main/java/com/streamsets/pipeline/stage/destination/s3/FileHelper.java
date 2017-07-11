@@ -55,25 +55,14 @@ abstract class FileHelper {
   protected final S3TargetConfigBean s3TargetConfigBean;
   protected final ErrorRecordHandler errorRecordHandler;
 
-  protected List<EventRecord> cachedEventRecords;
-
   FileHelper(Target.Context context, S3TargetConfigBean s3TargetConfigBean, TransferManager transferManager) {
     this.context = context;
     this.s3TargetConfigBean = s3TargetConfigBean;
     this.transferManager = transferManager;
     this.errorRecordHandler = new DefaultErrorRecordHandler(context);
-    this.cachedEventRecords = new ArrayList<>();
   }
 
-  public List<EventRecord> getEventRecordsForTheBatch() {
-    return cachedEventRecords;
-  }
-
-  public void clearEventRecordsForTheBatch() {
-    cachedEventRecords.clear();
-  }
-
-  abstract List<Upload> handle(Iterator<Record> recordIterator, String bucket, String keyPrefix) throws IOException, StageException;
+  abstract List<UploadMetadata> handle(Iterator<Record> recordIterator, String bucket, String keyPrefix) throws IOException, StageException;
 
   protected ObjectMetadata getObjectMetadata() {
     ObjectMetadata metadata = null;
