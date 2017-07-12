@@ -20,9 +20,11 @@
 package com.streamsets.datacollector.credential;
 
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
+import com.streamsets.datacollector.util.LamdaUtil;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.ExceptionUtils;
 
 import java.util.List;
 
@@ -43,35 +45,24 @@ public class ClassloaderInContextCredentialStore implements CredentialStore {
 
   @Override
   public List<ConfigIssue> init(Context context) {
-    ClassLoader currentClassloader = Thread.currentThread().getContextClassLoader();
-    try {
-      Thread.currentThread().setContextClassLoader(storeClassLoader);
-      return store.init(context);
-    } finally {
-      Thread.currentThread().setContextClassLoader(currentClassloader);
-    }
+    return LamdaUtil.withClassLoader(storeClassLoader,() -> store.init(context));
   }
 
   @Override
   public String get(String group, String name, String credentialStoreOptions) throws StageException {
-    ClassLoader currentClassloader = Thread.currentThread().getContextClassLoader();
-    try {
-      Thread.currentThread().setContextClassLoader(storeClassLoader);
-      return store.get(group, name, credentialStoreOptions);
-    } finally {
-      Thread.currentThread().setContextClassLoader(currentClassloader);
-    }
+    return LamdaUtil.withClassLoader(storeClassLoader,() -> {
+      try {
+        return store.get(group, name, credentialStoreOptions);
+      } catch (Exception ex) {
+        ExceptionUtils.throwUndeclared(ex);
+        return null;
+      }
+    });
   }
 
   @Override
   public void destroy() {
-    ClassLoader currentClassloader = Thread.currentThread().getContextClassLoader();
-    try {
-      Thread.currentThread().setContextClassLoader(storeClassLoader);
-      store.destroy();
-    } finally {
-      Thread.currentThread().setContextClassLoader(currentClassloader);
-    }
+    LamdaUtil.withClassLoader(storeClassLoader, () -> {store.destroy();return null;});
   }
 
 }

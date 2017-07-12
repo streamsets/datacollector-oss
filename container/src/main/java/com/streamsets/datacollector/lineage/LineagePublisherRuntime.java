@@ -17,11 +17,11 @@ package com.streamsets.datacollector.lineage;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
+import com.streamsets.datacollector.util.LamdaUtil;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineagePublisher;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Wrapper on top of LinagePublisher to execute it's methods in the proper class loader.
@@ -50,30 +50,15 @@ public class LineagePublisherRuntime {
   }
 
   public List<LineagePublisher.ConfigIssue> init(LineagePublisherContext context) {
-    return withClassLoader(() -> publisher.init(context));
+    return LamdaUtil.withClassLoader(definition.getClassLoader(),() -> publisher.init(context));
   }
 
   public boolean publishEvents(List<LineageEvent> events) {
-    return withClassLoader(() -> publisher.publishEvents(events));
+    return LamdaUtil.withClassLoader(definition.getClassLoader(),() -> publisher.publishEvents(events));
   }
 
   public void destroy() {
-    withClassLoader(() -> { publisher.destroy(); return null; });
-  }
-
-  /**
-   * Run given consumer inside publisher's class loader.
-   *
-   * @param supplier Lambda function that needs to be executed inside the class loader.
-   */
-  private<T> T withClassLoader(Supplier<T> supplier) {
-    ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
-    try {
-      Thread.currentThread().setContextClassLoader(definition.getClassLoader());
-      return supplier.get();
-    } finally {
-      Thread.currentThread().setContextClassLoader(previousClassLoader);
-    }
+    LamdaUtil.withClassLoader(definition.getClassLoader(),() -> { publisher.destroy(); return null; });
   }
 
 }
