@@ -21,10 +21,8 @@ import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.StageType;
@@ -71,9 +69,11 @@ import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.lib.sampling.RecordSampler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -593,6 +593,11 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public EventRecord createEventRecord(String type, int version, String recordSourceId) {
     return new EventRecordImpl(type, version, stageInfo.getInstanceName(), recordSourceId, null, null);
+  }
+
+  public LineageEvent createLineageEvent(LineageEventType type) {
+    LOG.error("got here - createLineageEvent() is a placeholder.");
+    throw new NotImplementedException();
   }
 
   @Override
