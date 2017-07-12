@@ -42,6 +42,7 @@ public class JsonRecordWriterImpl implements JsonRecordWriter {
 
   static {
     OBJECT_MAPPER.disable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+    JSON_FACTORY.setRootValueSeparator(EOL);
   }
 
   private final JsonGenerator generator;
@@ -63,9 +64,6 @@ public class JsonRecordWriterImpl implements JsonRecordWriter {
       throw new IOException("generator has been closed");
     }
     generator.writeObject(fieldToJsonObject(record, record.get()));
-    if (!isArray) {
-      generator.writeRaw(EOL);
-    }
   }
 
   @Override
