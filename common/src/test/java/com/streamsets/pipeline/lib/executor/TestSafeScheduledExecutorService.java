@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.security.auth.Subject;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -48,8 +52,7 @@ public class TestSafeScheduledExecutorService {
     future2.get();
     long elapsed = System.currentTimeMillis() - start;
     // the important aspect of this test is that the time is over 200
-    Assert.assertTrue("Elapsed was "  + elapsed + " expected between 200 and 30000",
-      elapsed > 200 && elapsed < 30000);
+    Assert.assertTrue("Elapsed was " + elapsed + " expected between 200 and 30000", elapsed > 200 && elapsed < 30000);
   }
 
   static class RunnableWhichThrows implements Runnable {
@@ -61,14 +64,17 @@ public class TestSafeScheduledExecutorService {
 
   static class ExecutorSupportForTests extends ExecutorSupport {
     private AtomicInteger uncaughtThrowableInRunnableCount = new AtomicInteger(0);
+
     public ExecutorSupportForTests(Logger logger) {
       super(logger);
     }
+
     public void uncaughtThrowableInRunnable(Throwable throwable, Runnable delegate, String delegateName) {
       uncaughtThrowableInRunnableCount.incrementAndGet();
       super.uncaughtThrowableInRunnable(throwable, delegate, delegateName);
     }
   }
+
   static class SafeScheduledExecutorServiceRethrowsException extends RuntimeException {
 
   }
@@ -87,8 +93,7 @@ public class TestSafeScheduledExecutorService {
   @Test(expected = SafeScheduledExecutorServiceRethrowsException.class)
   public void testScheduleAtFixedRateReturnFutureThrowsException() throws Throwable {
     ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
-    Future<?> future = executorService.scheduleAtFixedRate(new RunnableWhichThrows(), 0, 10,
-      TimeUnit.DAYS);
+    Future<?> future = executorService.scheduleAtFixedRate(new RunnableWhichThrows(), 0, 10, TimeUnit.DAYS);
     try {
       future.get();
     } catch (ExecutionException e) {
@@ -100,8 +105,7 @@ public class TestSafeScheduledExecutorService {
   @Test(expected = SafeScheduledExecutorServiceRethrowsException.class)
   public void testScheduleWithFixedDelayReturnFutureThrowsException() throws Throwable {
     ScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
-    Future<?> future = executorService.scheduleWithFixedDelay(new RunnableWhichThrows(), 0, 10,
-      TimeUnit.DAYS);
+    Future<?> future = executorService.scheduleWithFixedDelay(new RunnableWhichThrows(), 0, 10, TimeUnit.DAYS);
     try {
       future.get();
     } catch (ExecutionException e) {
@@ -131,7 +135,68 @@ public class TestSafeScheduledExecutorService {
     executorService.scheduleAtFixedRateAndForget(new RunnableWhichThrows(), 0, 10, TimeUnit.MILLISECONDS);
     TimeUnit.MILLISECONDS.sleep(25);
     int executionCount = executorSupport.uncaughtThrowableInRunnableCount.get();
-    Assert.assertTrue("executionCount is " + executionCount + " which should be >= 2 and <= 5",
-      executionCount >= 2 && executionCount <= 5);
+    Assert.assertTrue(
+        "executionCount is " + executionCount + " which should be >= 2 and <= 5",
+        executionCount >= 2 && executionCount <= 5
+    );
   }
+
+  @Test
+  public void testSubjectInContextRunnable() throws Exception {
+    SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
+
+    // doing this invocation to force the initialization of thread outside of the doAs
+    Future future = executorService.submit(() -> {
+    });
+    future.get();
+
+    final Subject subject = new Subject();
+
+
+    Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> {
+      Future future1 =
+          executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+              Assert.assertEquals(subject, Subject.getSubject(AccessController.getContext()));
+            }
+          });
+      future1.get();
+      return null;
+    });
+
+    executorService.shutdown();
+  }
+
+  @Test
+  public void testSubjectInContextCallable() throws Exception {
+    SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
+
+    // doing this invocation to force the initialization of thread outside of the doAs
+    Future future = executorService.submit(new Callable<Object>() {
+      @Override
+      public Object call() throws Exception {
+        return null;
+      }
+    });
+    future.get();
+
+    final Subject subject = new Subject();
+
+
+    Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> {
+      Future future1 = executorService.submit(new Callable<Void>() {
+        @Override
+        public Void call() throws Exception {
+          Assert.assertEquals(subject, Subject.getSubject(AccessController.getContext()));
+          return null;
+        }
+      });
+      future1.get();
+      return null;
+    });
+
+    executorService.shutdown();
+  }
+
 }

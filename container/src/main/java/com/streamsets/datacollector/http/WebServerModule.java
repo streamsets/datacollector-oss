@@ -351,4 +351,15 @@ public class WebServerModule {
     };
   }
 
+  @Provides(type = Type.SET)
+  ContextConfigurator provideSubjectInContext(final UserGroupManager userGroupManager) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        FilterHolder filter = new FilterHolder(new SubjectInContextFilter());
+        context.addFilter(filter, "/*", EnumSet.of(DispatcherType.REQUEST));
+      }
+    };
+  }
+
 }

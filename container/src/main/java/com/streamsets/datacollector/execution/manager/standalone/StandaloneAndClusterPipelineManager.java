@@ -45,11 +45,14 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.ValidationError;
+import com.streamsets.lib.security.SubjectUtils;
+import com.streamsets.lib.security.http.HeadlessSSOPrincipal;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
+import com.streamsets.pipeline.lib.util.ExceptionUtils;
 import dagger.ObjectGraph;
 
 import org.slf4j.Logger;
@@ -57,7 +60,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.security.auth.Subject;
 
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -237,7 +242,17 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
           runner.prepareForDataCollectorStart(pipelineState.getUser());
           if (runner.getState().getStatus() == PipelineStatus.DISCONNECTED) {
             runnerCache.put(getNameAndRevString(name, rev), new RunnerInfo(runner, executionMode));
-            runner.onDataCollectorStart(pipelineState.getUser());
+            try {
+              // restarting running pipelines on last SDC run, we are in recovery mode
+              String user = pipelineState.getUser();
+              Subject subject = SubjectUtils.createSubject(HeadlessSSOPrincipal.createRecoveryPrincipal(user));
+              Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> {
+                runner.onDataCollectorStart(user);
+                return null;
+              });
+            } catch (Exception ex) {
+              ExceptionUtils.throwUndeclared(ex.getCause());
+            }
           }
         }
       } catch (Exception ex) {

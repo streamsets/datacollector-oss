@@ -110,6 +110,7 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
 
       try {
         CredentialStore store = storeDef.getStoreClass().newInstance();
+        store = new GroupEnforcerCredentialStore(store);
         store = new ClassloaderInContextCredentialStore(storeDef, store);
         issues.addAll(store.init(context));
         getStores().put(storeId, store);

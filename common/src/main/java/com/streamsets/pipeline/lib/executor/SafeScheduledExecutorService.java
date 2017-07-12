@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import javax.security.auth.Subject;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -196,49 +199,41 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
   }
 
   private class SafeRunnable implements Runnable {
-    private final String user;
-    private final String entity;
-    private final Runnable delegate;
-    private final String delegateName;
-    private final boolean propagateErrors;
+    private final Callable<Object> callable;
+
+
     public SafeRunnable(String user, String entity, Runnable delegate, boolean propagateErrors) {
-      this.user = user;
-      this.entity = entity;
-      this.delegate = delegate;
-      this.delegateName = delegate.toString(); // call toString() in caller thread in case of error
-      this.propagateErrors = propagateErrors;
+      callable = new SafeCallable<>(user, entity, Executors.callable(delegate), propagateErrors);
     }
+
     @Override
     public void run() {
-      MDC.put(LogConstants.USER, getAsyncUserName(user));
-      MDC.put(LogConstants.ENTITY, getEntity(entity));
       try {
-        delegate.run();
+        callable.call();
       } catch (Throwable throwable) {
-        executorSupport.uncaughtThrowableInRunnable(throwable, delegate, delegateName);
-        if (propagateErrors) {
-          if (throwable instanceof RuntimeException) {
-            throw (RuntimeException)throwable;
-          } else if (throwable instanceof Error) {
-            throw (Error)throwable;
-          } else {
-            throw new RuntimeException(throwable);
-          }
+        if (throwable instanceof RuntimeException) {
+          throw (RuntimeException)throwable;
+        } else if (throwable instanceof Error) {
+          throw (Error)throwable;
+        } else {
+          throw new RuntimeException(throwable);
         }
-      } finally {
-        MDC.clear();
       }
     }
   }
 
   private class SafeCallable<T> implements Callable<T> {
+    private final Subject subject;
     private final String user;
     private final String entity;
     private final Callable<T> delegate;
     private final String delegateName;
     private final boolean propagateErrors;
 
-    public SafeCallable(String user, String entity, Callable<T> delegate, boolean propagateErrors) {
+    public SafeCallable(
+        String user, String entity, Callable<T> delegate, boolean propagateErrors
+    ) {
+      this.subject = Subject.getSubject(AccessController.getContext());
       this.user = user;
       this.entity = entity;
       this.delegate = delegate;
@@ -248,21 +243,23 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
 
     @Override
     public T call() throws Exception {
-      MDC.put(LogConstants.USER, getAsyncUserName(user));
-      MDC.put(LogConstants.ENTITY, getEntity(entity));
-      try {
-        return delegate.call();
-      } catch (Throwable throwable) {
-        executorSupport.uncaughtThrowableInCallable(throwable, delegate, delegateName);
-        if (propagateErrors) {
-          //Not wrapping in Runtime Exception as it could be StageException when preview validation fails or
-          //PipelineRuntimeException when running preview fails.
-          throw throwable;
+      return Subject.doAs(subject, (PrivilegedExceptionAction<T>) () -> {
+        MDC.put(LogConstants.USER, getAsyncUserName(user));
+        MDC.put(LogConstants.ENTITY, getEntity(entity));
+        try {
+          return delegate.call();
+        } catch (Throwable throwable) {
+          executorSupport.uncaughtThrowableInCallable(throwable, delegate, delegateName);
+          if (propagateErrors) {
+            //Not wrapping in Runtime Exception as it could be StageException when preview validation fails or
+            //PipelineRuntimeException when running preview fails.
+            throw throwable;
+          }
+          return null;
+        } finally {
+          MDC.clear();
         }
-        return null;
-      } finally {
-        MDC.clear();
-      }
+      });
     }
   }
 

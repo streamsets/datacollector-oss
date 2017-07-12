@@ -20,11 +20,15 @@
  */
 package com.streamsets.datacollector.credential;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtractor;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.HeadlessSSOPrincipal;
+import com.streamsets.lib.security.http.SSOPrincipal;
+import com.streamsets.lib.security.http.SSOPrincipalJson;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialStoreDef;
@@ -34,6 +38,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
+import javax.security.auth.Subject;
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,8 +47,8 @@ import java.util.Map;
 
 public class TestCredentialStoresTaskImpl {
 
-  @CredentialStoreDef(label = "label", description = "desc")
-  public static class MyCredentialStore implements CredentialStore {
+  @CredentialStoreDef(label = "label", description = "desc") public static class MyCredentialStore
+      implements CredentialStore {
     @Override
     public List<ConfigIssue> init(Context context) {
       List<ConfigIssue> issues = new ArrayList<>();
@@ -92,7 +98,7 @@ public class TestCredentialStoresTaskImpl {
   }
 
   @Test
-  public void TestLoadAndInitStore() throws StageException {
+  public void TestLoadAndInitStoreGetDestroy() throws Exception {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getName()).thenReturn("lib");
     CredentialStoreDefinition storeDef =
@@ -111,7 +117,46 @@ public class TestCredentialStoresTaskImpl {
 
     CredentialStore store = storeTask.getStores().get("id");
     Assert.assertTrue(store instanceof ClassloaderInContextCredentialStore);
-    Assert.assertEquals("g:n:o", store.get("g", "n", "o"));
+
+    SSOPrincipal principal = new SSOPrincipalJson();
+    principal.getGroups().add("g");
+    Subject subject = new Subject();
+    subject.getPrincipals().add(principal);
+
+    // enforcing OK
+    Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> store.get("g", "n", "o"));
+
+    // enforcing Fail
+    try {
+      Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> store.get("h", "n", "o"));
+      Assert.fail();
+    } catch (Exception ex) {
+      Assert.assertTrue(ex.getCause() instanceof StageException);
+    }
+
+    // headless enforcing OK
+    principal = new HeadlessSSOPrincipal("uid", ImmutableSet.of("g"));
+    subject = new Subject();
+    subject.getPrincipals().add(principal);
+    Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> store.get("g", "n", "o"));
+
+    // headless enforcing Fail
+    try {
+      principal = new HeadlessSSOPrincipal("uid", ImmutableSet.of("g"));
+      subject = new Subject();
+      subject.getPrincipals().add(principal);
+      Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> store.get("h", "n", "o"));
+      Assert.fail();
+    } catch (Exception ex) {
+      Assert.assertTrue(ex.getCause() instanceof StageException);
+    }
+
+    // headless not enforcing
+    principal = HeadlessSSOPrincipal.createRecoveryPrincipal("uid");
+    subject = new Subject();
+    subject.getPrincipals().add(principal);
+    Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> store.get("g", "n", "o"));
+
     storeTask.stopTask();
   }
 

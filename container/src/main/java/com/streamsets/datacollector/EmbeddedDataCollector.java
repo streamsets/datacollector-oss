@@ -36,6 +36,8 @@ import com.streamsets.datacollector.security.SecurityContext;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.SubjectUtils;
+import com.streamsets.lib.security.http.HeadlessSSOPrincipal;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.impl.DataCollector;
 
@@ -97,8 +99,15 @@ public class EmbeddedDataCollector implements DataCollector {
         String pipelineName = Utils.checkNotNull(properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_NAME), "Pipeline name");
         String pipelineUser = Utils.checkNotNull(properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_USER), "Pipeline user");
         String pipelineRev = Utils.checkNotNull(properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_REV), "Pipeline revision");
-        runner = pipelineManager.getRunner(pipelineName, pipelineRev);
-        runner.start(pipelineUser);
+
+        // we need to start the pipeline within the context of a Subject with a headless recovery principal for the user
+        Subject subject = SubjectUtils.createSubject(HeadlessSSOPrincipal.createRecoveryPrincipal(pipelineUser));
+        Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> {
+          runner = pipelineManager.getRunner(pipelineName, pipelineRev);
+          runner.start(pipelineUser);
+          return null;
+        });
+
         return null;
       }
     });

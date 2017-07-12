@@ -18,7 +18,8 @@ package com.streamsets.datacollector.credential;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  CREDENTIAL_STORE_000("Could not initialize: {}")
+  CREDENTIAL_STORE_000("Could not initialize: {}"),
+  CREDENTIAL_STORE_001("Store ID '{}', user does not belong to group '{}', cannot access credential '{}'")
   ;
 
   private final String message;
