@@ -2730,6 +2730,21 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   <draft-comment author="Loretta">EXECUTORS</draft-comment>
             </p>
             <p>
+                  <draft-comment author="Loretta">The following is used by the S3 executor overview
+                        and the Dataflow Triggers > Executors topic.</draft-comment>
+            </p>
+            <p><ph id="ph-S3usage">You can use the executor in any logical way, such as writing
+                        information from an event record to an S3 object or tagging objects after
+                        they are written by the Amazon S3 destination.</ph>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">The following is used by the S3 executor Tags and
+                        Configuring topics. </draft-comment>
+            </p>
+            <p><ph id="ph-S3keyvalues">You can configure multiple tags. When you configure a tag,
+                        you can define a tag with just the key or specify a key and value. You can
+                        also use expressions to define tag values.</ph></p>
+            <p>
                   <draft-comment author="Loretta">The following is used a few places in HDFS File
                         Metadata Executor topics:</draft-comment>
             </p>

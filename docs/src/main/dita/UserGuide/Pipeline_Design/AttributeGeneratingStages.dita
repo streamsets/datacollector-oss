@@ -80,14 +80,6 @@
                                         id="image_wsz_k2v_2z"/></xref></entry>
                         </row>
                         <row>
-                            <entry>JDBC Multitable Consumer origin</entry>
-                            <entry>Includes table and data type information in record header
-                                attributes. <xref
-                                    href="../Origins/MultiTableJDBCConsumer-HeaderAtts.dita#concept_xrx_11y_4y">
-                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                        id="image_ezd_l2v_2z"/></xref></entry>
-                        </row>
-                        <row>
                             <entry>JDBC Query Consumer origin</entry>
                             <entry>Can be configured to include table and data type information in
                                 record header attributes. <xref
@@ -98,7 +90,23 @@
                                     reading change capture data from Microsoft SQL Server. <xref
                                         href="../Origins/JDBCConsumer-CRUDRecordHeader.dita#concept_bnh_hry_ty">
                                         <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            id="image_nnl_l2v_2z"/></xref></p></entry>
+                                            id="image_nnl_l2v_2z"/></xref></p><p>Includes event
+                                    header attributes when generating events. <xref
+                                        href="../Origins/JDBCConsumer-EventRecord.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_wl5_tq1_j1b"/></xref></p></entry>
+                        </row>
+                        <row>
+                            <entry>JDBC Multitable Consumer origin</entry>
+                            <entry>Includes table and data type information in record header
+                                attributes. <xref
+                                    href="../Origins/MultiTableJDBCConsumer-HeaderAtts.dita#concept_xrx_11y_4y">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_ezd_l2v_2z"/></xref><p>Includes event header
+                                    attributes when generating events. <xref
+                                        href="../Origins/MultitableJDBCConsumer-EventRecord.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_x43_5q1_j1b"/></xref></p></entry>
                         </row>
                         <row>
                             <entry>Kafka Consumer origin</entry>
@@ -154,7 +162,11 @@
                                     type in the sdc.operation.type header attribute. <xref
                                         href="../Origins/Salesforce-CRUDHeaderAttribute.dita#concept_yns_y2m_5y">
                                         <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            id="image_z4s_wcv_2z"/></xref></p></entry>
+                                            id="image_z4s_wcv_2z"/></xref></p><p>Includes event
+                                    header attributes when generating events. <xref
+                                        href="../Origins/Salesforce-EventRecord.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_pw4_vq1_j1b"/></xref></p></entry>
                         </row>
                         <row>
                             <entry>Expression Evaluator processor</entry>
@@ -226,6 +238,24 @@
                                         /></xref></p></entry>
                         </row>
                         <row>
+                            <entry>Amazon S3 destination</entry>
+                            <entry>
+                                <p>Includes event header attributes when generating events. <xref
+                                        href="../Destinations/AmazonS3-EventRecords.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_xcf_xq1_j1b"/></xref></p>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Azure Data Lake Store destination</entry>
+                            <entry>
+                                <p>Includes event header attributes when generating events. <xref
+                                    href="../Destinations/DataLakeStore-EventRecords.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_xgz_xq1_j1b"/></xref></p>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>Hadoop FS destination</entry>
                             <entry>Includes event header attributes when generating events.
                                 <xref
@@ -287,6 +317,13 @@
                                     >
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                       /></xref></entry>
+                        </row>
+                        <row>
+                            <entry>Spark executor</entry>
+                            <entry>Includes event header attributes when generating events. <xref
+                                    href="../Executors/Spark-EventRecords.dita">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_mgh_5r1_j1b"/></xref></entry>
                         </row>
                     </tbody>
                 </tgroup>

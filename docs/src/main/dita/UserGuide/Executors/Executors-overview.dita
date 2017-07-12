@@ -28,6 +28,9 @@
         <p>For more information about the event framework, see <xref
                 href="../Event_Handling/EventFramework-Overview.dita#concept_cph_5h4_lx"/>.</p>
         <p>You can use the following executors in a pipeline:<ul id="ul_htl_4dr_mx">
+                <li><xref href="AmazonS3.dita#concept_mvh_bnm_f1b">Amazon S3</xref> - Creates new
+                    Amazon S3 objects for the specified content or adds tags to existing Amazon S3
+                    objects.</li>
                 <li><xref href="Email.dita#concept_sjs_sfp_qz">Email</xref> - Sends custom email to
                     the configured recipients upon receiving an event.</li>
                 <li><xref href="HDFSMetadata.dita#concept_wgj_slk_fx">HDFS File Metadata</xref> -

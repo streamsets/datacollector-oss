@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_mtm_dqx_m1b">
+ <title>Create New Objects</title>
+ <conbody>
+  <p><indexterm>Amazon S3 executor<indexterm>create new objects</indexterm></indexterm>You can use
+            the Amazon S3 executor to create new objects and write the specified content to the
+            object when it receives an event record. </p>
+        <p>When you create an object, you specify where to create the object and the content to
+            write to the object. You can use an expression to represent both the location for the
+            object and the content to use. </p>
+        <p>For example, say you want the executor to create a new Amazon S3 object for each object
+            that the Amazon S3 destination writes, and to use the new object to store the record
+            count information for each written object. Since the object-written event record
+            includes the record count, you can enable the destination to generate records and route
+            the event to the Amazon S3 executor. </p>
+        <p>The object-written event record includes the bucket and object key of the written object.
+            So, to create a new record-count object in the same bucket as the written object, you
+            can use the following
+            expression:<codeblock>${record:value('/bucket')}/${record:value('/objectKey')}.recordcount</codeblock></p>
+        <p>The event record also includes the number of records written to the object. So, to write
+            this information to the new object, you can use the following
+            expression:<codeblock>${record:value('/recordCount')}</codeblock></p>
+        <p>
+            <note type="tip"><ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-ERecord-Fields"
+                /></note>
+        </p>
+ </conbody>
+</concept>

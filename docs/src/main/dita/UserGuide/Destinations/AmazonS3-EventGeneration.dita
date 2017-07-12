@@ -27,10 +27,11 @@
             generation, Amazon S3 generates event records each time the destination completes
             writing to an object or completes streaming a whole file. </p>
         <p> Amazon S3 events can be used in any logical way. For example: <ul id="ul_dzf_tpg_zx">
-                <li>With the HDFS File Metadata executor to move or change permissions on
-                    fully-written objects or whole files. <p>For an example, see <xref
-                            href="../Event_Handling/CaseStudy-FileManagement.dita#concept_d1q_xl4_lx"
-                        />.</p></li>
+                <li>With the <xref href="../Executors/AmazonS3.dita#concept_mvh_bnm_f1b">Amazon S3
+                        executor</xref> to add metadata to closed objects or whole files after
+                    receiving an event. </li>
+                <li>With the <xref href="../Executors/Shell.dita#concept_jsr_zpw_tz">Spark
+                        executor</xref> to run a Spark application after receiving an event. </li>
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"/>
                 <li

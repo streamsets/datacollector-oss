@@ -165,10 +165,12 @@
                             <entry>Amazon S3 </entry>
                             <entry>
                                 <ul id="ul_tyv_24p_1y">
-                                    <li>Spark executor to run a Spark application after closing a
-                                        file. </li>
-                                    <li>Email executor to send email each time the destination
-                                        completes writing to an object or streams a whole file. </li>
+                                    <li>Amazon S3 executor to add tags to closed objects or whole
+                                        files.</li>
+                                    <li>Spark executor to run a Spark application after closing an
+                                        object or whole file. </li>
+                                    <li>Email executor to send email after closing an object or
+                                        whole file. </li>
                                     <li>Any destination for event storage.</li>
                                 </ul>
                             </entry>

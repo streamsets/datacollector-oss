@@ -25,6 +25,14 @@
             tasks when they receive event records. You can use the following executor stages for
             event handling:<dl>
                 <dlentry>
+                    <dt>Amazon S3 executor</dt>
+                    <dd>Creates new Amazon S3 objects for the specified content or adds tags to
+                        existing Amazon S3 objects upon receiving an event. </dd>
+                    <dd><ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-S3usage"
+                        /></dd>
+                </dlentry>
+                <dlentry>
                     <dt>Email executor</dt>
                     <dd>Sends a custom email to the configured recipients upon receiving an event.
                         You can optionally configure a condition that determines when to send the
