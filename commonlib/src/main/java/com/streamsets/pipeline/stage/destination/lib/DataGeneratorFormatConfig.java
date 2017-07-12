@@ -37,6 +37,8 @@ import com.streamsets.pipeline.config.DestinationAvroSchemaSource;
 import com.streamsets.pipeline.config.DestinationAvroSchemaSourceChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
+import com.streamsets.pipeline.config.TextFieldMissingAction;
+import com.streamsets.pipeline.config.TextFieldMissingActionChooserValues;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.config.WholeFileExistsActionChooserValues;
 import com.streamsets.pipeline.lib.el.MathEL;
@@ -241,14 +243,28 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
 
   @ConfigDef(
     required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "ERROR",
+    label = "On Missing Field",
+    displayPosition = 387,
+    group = "DATA_FORMAT",
+    dependsOn = "dataFormat^",
+    triggeredByValue = "TEXT"
+  )
+  @ValueChooserModel(TextFieldMissingActionChooserValues.class)
+  public TextFieldMissingAction textFieldMissingAction;
+
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
     label = "Insert Record Separator If No Text",
     description = "Specifies whether a record separator should be inserted in output even after an empty value (no text in field)",
     displayPosition = 390,
     group = "DATA_FORMAT",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "TEXT"
+    dependencies = {
+      @Dependency(configName = "textFieldMissingAction", triggeredByValues = "IGNORE")
+    }
   )
   public boolean textEmptyLineIfNull;
 
@@ -650,6 +666,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
         builder.setConfig(TextDataGeneratorFactory.FIELD_PATH_KEY, textFieldPath);
         builder.setConfig(TextDataGeneratorFactory.RECORD_SEPARATOR_IF_NULL_KEY, textEmptyLineIfNull);
         builder.setConfig(TextDataGeneratorFactory.RECORD_SEPARATOR_KEY, textRecordSeparator);
+        builder.setConfig(TextDataGeneratorFactory.MISSING_FIELD_ACTION_KEY, textFieldMissingAction);
         break;
       case JSON:
         builder.setMode(jsonMode.getFormat());

@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.generator.text;
 
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.config.TextFieldMissingAction;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -31,6 +32,8 @@ public class TextDataGeneratorFactory extends DataGeneratorFactory {
   static final String KEY_PREFIX = "text.";
   public static final String FIELD_PATH_KEY = KEY_PREFIX + "fieldPath";
   static final String FIELD_PATH_DEFAULT = "";
+  public static final String MISSING_FIELD_ACTION_KEY = "missingField";
+  public static final TextFieldMissingAction MISSING_FIELD_ACTION_DEFAULT = TextFieldMissingAction.ERROR;
   public static final String RECORD_SEPARATOR_IF_NULL_KEY = KEY_PREFIX + "recordSeparatorIfNull";
   static final boolean RECORD_SEPARATOR_IF_NULL_DEFAULT = false;
   public static final String RECORD_SEPARATOR_KEY = KEY_PREFIX + "recordSeparator";
@@ -43,6 +46,7 @@ public class TextDataGeneratorFactory extends DataGeneratorFactory {
     configs.put(FIELD_PATH_KEY, FIELD_PATH_DEFAULT);
     configs.put(RECORD_SEPARATOR_IF_NULL_KEY, RECORD_SEPARATOR_IF_NULL_DEFAULT);
     configs.put(RECORD_SEPARATOR_KEY, RECORD_SEPARATOR_DEFAULT);
+    configs.put(MISSING_FIELD_ACTION_KEY, MISSING_FIELD_ACTION_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 
@@ -53,17 +57,25 @@ public class TextDataGeneratorFactory extends DataGeneratorFactory {
   private final String fieldPath;
   private final boolean recordSeparatorIfNullDefault;
   private final String recordSeparator;
+  private final TextFieldMissingAction missingAction;
 
   public TextDataGeneratorFactory(Settings settings) {
     super(settings);
     fieldPath = settings.getConfig(FIELD_PATH_KEY);
     recordSeparatorIfNullDefault = settings.getConfig(RECORD_SEPARATOR_IF_NULL_KEY);
     recordSeparator = StringEscapeUtils.unescapeJava(settings.<String>getConfig(RECORD_SEPARATOR_KEY));
+    missingAction = settings.getConfig(MISSING_FIELD_ACTION_KEY);
   }
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException {
-    return new TextCharDataGenerator(createWriter(os), fieldPath, recordSeparatorIfNullDefault, recordSeparator);
+    return new TextCharDataGenerator(
+      createWriter(os),
+      fieldPath,
+      recordSeparatorIfNullDefault,
+      recordSeparator,
+      missingAction
+    );
   }
 
 }

@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.generator.text;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.TextFieldMissingAction;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 
@@ -29,13 +30,20 @@ public class TextCharDataGenerator implements DataGenerator {
   private final Writer writer;
   private boolean closed;
   private final String recordSeparator;
+  private final TextFieldMissingAction missingAction;
 
-  public TextCharDataGenerator(Writer writer, String fieldPath, boolean recordSeparatorIfNull, String recordSeparator)
-      throws IOException {
+  public TextCharDataGenerator(
+    Writer writer,
+    String fieldPath,
+    boolean recordSeparatorIfNull,
+    String recordSeparator,
+    TextFieldMissingAction missingAction
+  ) throws IOException {
     this.writer = writer;
     this.fieldPath = fieldPath;
     this.recordSeparatorIfNull = recordSeparatorIfNull;
     this.recordSeparator = recordSeparator;
+    this.missingAction = missingAction;
   }
 
   //VisibleForTesting
@@ -64,6 +72,16 @@ public class TextCharDataGenerator implements DataGenerator {
       }
       writer.write(value);
       fieldWritten = true;
+    } else {
+      switch(missingAction) {
+        case IGNORE:
+          // Do nothing
+          break;
+        case ERROR:
+          throw new DataGeneratorException(Errors.TEXT_GENERATOR_01, record.getHeader().getSourceId(), fieldPath);
+        default:
+          throw new IllegalStateException("Unknown missing action: " + missingAction);
+      }
     }
 
     if ((fieldWritten || recordSeparatorIfNull) && recordSeparator != null) {

@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.generator.text;
+package com.streamsets.pipeline.config;
 
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  TEXT_GENERATOR_00("Record '{}' cannot convert field path '{}' value to string"),
-  TEXT_GENERATOR_01("Record '{}' is missing field {}"),
+public enum TextFieldMissingAction implements Label {
+  IGNORE("Ignore the error"),
+  ERROR("Report error"),
   ;
 
-  private final String msg;
-
-  Errors(String msg) {
-    this.msg = msg;
+  private String label;
+  TextFieldMissingAction(String label) {
+    this.label = label;
   }
 
   @Override
-  public String getCode() {
-    return name();
+  public String getLabel() {
+    return label;
   }
 
-  @Override
-  public String getMessage() {
-    return msg;
-  }
 }

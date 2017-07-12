@@ -19,8 +19,10 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.TextFieldMissingAction;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -70,7 +72,7 @@ public class TestTextDataGenerator {
   @Test
   public void testGeneratorNoEmptyLines() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextCharDataGenerator(writer, "", false, NEWLINE);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", false, NEWLINE, TextFieldMissingAction.IGNORE);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -85,7 +87,7 @@ public class TestTextDataGenerator {
   @Test
   public void testGeneratorEmptyLines() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextCharDataGenerator(writer, "", true, NEWLINE);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", true, NEWLINE, TextFieldMissingAction.IGNORE);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -98,10 +100,25 @@ public class TestTextDataGenerator {
                         writer.toString());
   }
 
+  @Test(expected = DataGeneratorException.class)
+  public void testGeneratorReportErrorOnMissingField() throws Exception {
+    StringWriter writer = new StringWriter();
+    DataGenerator gen = new TextCharDataGenerator(writer, "/not-there", true, NEWLINE, TextFieldMissingAction.ERROR);
+
+    Record record = RecordCreator.create();
+    record.set(Field.create("Hello"));
+
+    try {
+      gen.write(record);
+    } finally {
+      gen.close();
+    }
+  }
+
   @Test
   public void testFlush() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextCharDataGenerator(writer, "", true, NEWLINE);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", true, NEWLINE, TextFieldMissingAction.IGNORE);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -113,7 +130,7 @@ public class TestTextDataGenerator {
   @Test
   public void testClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextCharDataGenerator(writer, "", true, NEWLINE);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", true, NEWLINE, TextFieldMissingAction.IGNORE);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.write(record);
@@ -124,7 +141,7 @@ public class TestTextDataGenerator {
   @Test(expected = IOException.class)
   public void testWriteAfterClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextCharDataGenerator(writer, "", true, NEWLINE);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", true, NEWLINE, TextFieldMissingAction.IGNORE);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();
@@ -134,7 +151,7 @@ public class TestTextDataGenerator {
   @Test(expected = IOException.class)
   public void testFlushAfterClose() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextCharDataGenerator(writer, "", true, NEWLINE);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", true, NEWLINE, TextFieldMissingAction.IGNORE);
     Record record = RecordCreator.create();
     record.set(Field.create("Hello"));
     gen.close();
@@ -145,7 +162,7 @@ public class TestTextDataGenerator {
   public void testGeneratorDifferentSeparator() throws Exception {
     StringWriter writer = new StringWriter();
     String separator = NEWLINE + "^_^" + NEWLINE;
-    DataGenerator gen = new TextCharDataGenerator(writer, "", false, separator);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", false, separator, TextFieldMissingAction.IGNORE);
     Record record = RecordCreator.create();
     record.set(Field.create("First"));
     gen.write(record);
@@ -160,7 +177,7 @@ public class TestTextDataGenerator {
   @Test
   public void testGeneratorEmptySeparator() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextCharDataGenerator(writer, "", false, "");
+    DataGenerator gen = new TextCharDataGenerator(writer, "", false, "", TextFieldMissingAction.IGNORE);
     Record record = RecordCreator.create();
     record.set(Field.create("First"));
     gen.write(record);
@@ -173,7 +190,7 @@ public class TestTextDataGenerator {
   @Test
   public void testGeneratorNullSeparator() throws Exception {
     StringWriter writer = new StringWriter();
-    DataGenerator gen = new TextCharDataGenerator(writer, "", false, null);
+    DataGenerator gen = new TextCharDataGenerator(writer, "", false, null, TextFieldMissingAction.IGNORE);
     Record record = RecordCreator.create();
     record.set(Field.create("First"));
     gen.write(record);
