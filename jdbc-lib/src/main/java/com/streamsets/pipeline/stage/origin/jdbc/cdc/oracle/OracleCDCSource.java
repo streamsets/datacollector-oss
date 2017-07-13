@@ -547,10 +547,6 @@ public class OracleCDCSource extends BaseSource {
           if (LOG.isDebugEnabled()) {
             LOG.debug("Commit SCN = " + commitSCN + ", SCN = " + scn + ", Operation = " + op + ", Redo SQL = " + queryString);
           }
-          sqlListener.reset();
-          if (configBean.allowNulls && !StringUtils.isEmpty(table)) {
-            sqlListener.setColumns(tableSchemas.get(table).keySet());
-          }
 
           RuleContextAndOpCode ctxOp = null;
           try {
@@ -702,7 +698,13 @@ public class OracleCDCSource extends BaseSource {
     attributes.put(OperationType.SDC_OPERATION_TYPE, String.valueOf(operationCode));
     attributes.put(OPERATION, operation);
     // Walk it and attach our sqlListener
+    sqlListener.reset();
+    if (configBean.allowNulls && !StringUtils.isEmpty(table)) {
+      sqlListener.setColumns(tableSchemas.get(table).keySet());
+    }
+
     parseTreeWalker.walk(sqlListener, ruleContext);
+
     Map<String, String> columns = sqlListener.getColumns();
     String rowId = columns.get(ROWID);
     columns.remove(ROWID);

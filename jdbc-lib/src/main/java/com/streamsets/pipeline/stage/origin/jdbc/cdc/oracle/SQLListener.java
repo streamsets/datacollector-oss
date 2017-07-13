@@ -141,6 +141,7 @@ public class SQLListener extends plsqlBaseListener {
    */
   public void reset(){
     columns.clear();
+    this.columnsExpected = null;
     columnNames = null;
     table = null;
     insideStatement = false;
