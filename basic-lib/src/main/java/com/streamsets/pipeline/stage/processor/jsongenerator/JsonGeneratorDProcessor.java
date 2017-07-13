@@ -38,9 +38,8 @@ public class JsonGeneratorDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "",
-      label = "Field to Parse",
-      description = "String field that contains a JSON object",
+      label = "Field to Serialize",
+      description = "Map or List field to serialize to JSON",
       displayPosition = 10,
       group = "JSON"
   )
@@ -50,9 +49,8 @@ public class JsonGeneratorDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "",
       label = "Target Field",
-      description="Name of the field to set the parsed JSON data to",
+      description="Name of the field in which to place the serialized JSON string",
       displayPosition = 30,
       group = "JSON"
   )
