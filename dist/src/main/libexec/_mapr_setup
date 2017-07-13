@@ -96,7 +96,7 @@ if [ ! -d "$SDC_HOME/streamsets-libs/$MAPR_LIB" ]; then
   exit 0
 fi
 # Obtain the version of MapR Spark Data Collector supports
-SDC_MAPR_SPARK_LIB=`ls streamsets-libs | grep streamsets-datacollector-mapr_spark_*`
+SDC_MAPR_SPARK_LIB=`ls $SDC_HOME/streamsets-libs | grep streamsets-datacollector-mapr_spark_*`
 SDC_SPARK_VERSION=`echo $SDC_MAPR_SPARK_LIB | cut -d'_' -f 3,4 | sed 's/_/./g'`
 
 # Obtain MapR home
@@ -162,6 +162,15 @@ if [ -d ${MAPR_HOME}/hbase ];then
   ln -s ${MAPR_HOME}/hbase/hbase-*/lib/*.jar  ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 fi
 printf "Done.\n"
+
+# SDC-6449: Remove the symlink to metrics-core jar if MapR Hive ships same version as SDC.
+SDC_METRICS_CORE_VERSION=`ls ${SDC_HOME}/api-lib | grep "metrics-core" | cut -d'-' -f3 | cut -d'.' -f1`
+MAPR_METRICS_CORE_JAR=`ls ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib | grep "metrics-core-${SDC_METRICS_CORE_VERSION}\.[0-9]*\.[0-9]*\.jar"`
+if [ ! -z ${MAPR_METRICS_CORE_JAR} ];then
+  printf "Removing symlink to ${MAPR_METRICS_CORE_JAR} ..."
+  rm ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/${MAPR_METRICS_CORE_JAR}
+  printf "Done.\n"
+fi
 
 printf "Removing old Hadoop 0.20 jars ...."
 rm -rf ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/hadoop-0.20*.jar
