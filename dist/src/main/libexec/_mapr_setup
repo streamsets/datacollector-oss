@@ -153,10 +153,14 @@ ln -s ${MAPR_HOME}/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev
 ln -s ${MAPR_HOME}/hadoop/hadoop-*/share/hadoop/common/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/hadoop/hadoop-*/share/hadoop/mapreduce/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/hadoop/hadoop-*/share/hadoop/mapreduce/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
-ln -s ${MAPR_HOME}/hbase/hbase-*/lib/*.jar  ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
-ln -s ${MAPR_HOME}/hive/hive-*/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
-ln -s ${MAPR_HOME}/hive/hive-*/hcatalog/share/hcatalog/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
 ln -s ${MAPR_HOME}/lib/maprfs-${MAPR_VERSION}*.jar  ${SDC_HOME}/root-lib/ 2>/dev/null
+if [ -d ${MAPR_HOME}/hive ];then
+  ln -s ${MAPR_HOME}/hive/hive-*/lib/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
+  ln -s ${MAPR_HOME}/hive/hive-*/hcatalog/share/hcatalog/*.jar ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
+fi
+if [ -d ${MAPR_HOME}/hbase ];then
+  ln -s ${MAPR_HOME}/hbase/hbase-*/lib/*.jar  ${SDC_HOME}/streamsets-libs/${MAPR_LIB}/lib/ 2>/dev/null
+fi
 printf "Done.\n"
 
 printf "Removing old Hadoop 0.20 jars ...."
