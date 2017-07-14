@@ -290,7 +290,7 @@
             </step>
             <step>
                 <cmd>Click the <wintitle>Error Records</wintitle> tab and configure the following
-                    error handling option:</cmd>
+                    error handling options:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ghf_x22_br">
                         <tgroup cols="2">
@@ -328,6 +328,13 @@
                                                 specified MapR cluster.</li>
                                         </ul><p>For cluster mode, Write to File is not supported at
                                             this time. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Error Record Policy</entry>
+                                    <entry>Determines the version of the record to use as a basis
+                                        for an error record. For more information, see <xref
+                                            href="../Pipeline_Design/ErrorRecords.dita#concept_itr_mzw_j1b"
+                                        />.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

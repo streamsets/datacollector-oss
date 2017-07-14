@@ -19,13 +19,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kgc_l4y_5r">
  <title>Pipeline Error Record Handling</title>
- <shortdesc>Pipeline error record handling determines how <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
-    error records that stages send to the pipeline for error handling. It also handles records
-    deliberately dropped from the pipeline such as records without required fields.</shortdesc>
  <conbody>
-  <p><indexterm>pipelines<indexterm>error record handling</indexterm></indexterm>The pipeline
-      provides the following error record handling options:<dl>
+  <p><indexterm>pipelines<indexterm>error record handling</indexterm></indexterm>Pipeline error
+      record handling determines how <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
+      error records that stages send to the pipeline for error handling. It also handles records
+      deliberately dropped from the pipeline such as records without required fields.</p>
+    <p>The pipeline handles error records based on the Error Records property on the Error Records
+      tab. The pipeline provides the following error record handling options:<dl>
         <dlentry>
           <dt>Discard</dt>
           <dd>The pipeline discards the record. <ph

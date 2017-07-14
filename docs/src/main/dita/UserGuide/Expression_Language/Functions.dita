@@ -85,6 +85,7 @@
          <li>record:errorMessage()</li>
          <li>record:errorPipeline()</li>
          <li>record:errorStage()</li>
+         <li>record:errorStageLabel()</li>
          <li>record:errorTime()</li>
         </ul>
        </entry>

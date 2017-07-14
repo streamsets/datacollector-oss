@@ -1919,13 +1919,6 @@ input_stream.read()</codeblock></p>
                         <li>Runtime properties</li>
                         <li>Runtime resources</li>
                   </ul></p>
-            <draft-comment author="Loretta">The following bullets are used in Troubleshooting >
-                  Accessing Error Message and Tutorial > Run the Extended Pipeline</draft-comment>
-            <ul id="ul_ErrorInformation">
-                  <li>errorStage - The stage in the pipeline that generated the error.</li>
-                  <li>errorCode - The error code associated with the error message.</li>
-                  <li>errorMessage - The text of the error message. </li>
-            </ul>
             <p>
                   <draft-comment author="Loretta">The following is used in the Tutorial chapter, in
                         tables in the Creating a Pipeline... topic and the Write to the Destination

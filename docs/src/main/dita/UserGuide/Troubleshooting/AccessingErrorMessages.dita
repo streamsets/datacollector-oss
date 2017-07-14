@@ -52,12 +52,10 @@
     <dlentry>
      <dt>Error record information</dt>
      <dd>You can use the Error Records pipeline properties to write error records and related
-      details to a file or Kafka. The information in the following fields can help you determine the
-      problem that occurred:<ul
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_ErrorInformation"
-       id="ul_ez4_t54_rs">
-       <li/>
-      </ul></dd>
+      details to<xref href="../Pipeline_Design/ErrorHandling-Pipeline.dita#concept_kgc_l4y_5r">
+       another system for review</xref>. The information in the following record header attributes
+      can help you determine the problem that occurred. For more information, see <xref
+       href="../Pipeline_Design/InternalAttributes.dita#concept_itf_55z_dz"/>.</dd>
     </dlentry>
     <dlentry>
      <dt><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

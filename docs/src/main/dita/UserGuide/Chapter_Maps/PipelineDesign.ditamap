@@ -43,6 +43,7 @@
    <topicref href="../Pipeline_Design/ErrorHandling-Pipeline.dita"/>
    <topicref href="../Pipeline_Design/ErrorHandling-Stage.dita"/>
    <topicref href="../Pipeline_Design/ErrorHandling-Example.dita"/>
+   <topicref href="../Pipeline_Design/ErrorRecords.dita"/>
   </topicref>
   <topicref href="../Pipeline_Design/RecordHeaderAttributes.dita" chunk="to-content">
    <topicmeta>

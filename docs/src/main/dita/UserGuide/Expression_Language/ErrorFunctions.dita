@@ -62,6 +62,11 @@
      <dd>Return type: String.</dd>
     </dlentry>
     <dlentry>
+     <dt>record:errorStageLabel()</dt>
+     <dd>Returns the user-defined label for the stage that sent the record to error.</dd>
+     <dd>Return type: String.</dd>
+    </dlentry>
+    <dlentry>
      <dt>record:errorTime()</dt>
      <dd>The time the record was sent to error.</dd>
      <dd>Return type: Long.</dd>

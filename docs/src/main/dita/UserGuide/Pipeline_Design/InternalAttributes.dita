@@ -66,26 +66,32 @@
                         </row>
                         <row>
                             <entry>previousTrackingId</entry>
-                            <entry>The tracking Id of the record before it entered the current
+                            <entry>The tracking ID of the record before it entered the current
                                 stage.</entry>
                             <entry>n/a</entry>
                         </row>
                         <row>
                             <entry>errorStage</entry>
-                            <entry>The stage that generated the error. <p>In error records
-                                only.</p></entry>
+                            <entry>The stage that generated the error. <p>In error records only.
+                                </p></entry>
                             <entry>
                                 <p>record:errorStage() </p>
                             </entry>
                         </row>
                         <row>
+                            <entry>errorStageLabel</entry>
+                            <entry>The user-defined name for a stage.<p>In error records only.
+                                </p></entry>
+                            <entry>record:errorStageLabel()</entry>
+                        </row>
+                        <row>
                             <entry>errorCode</entry>
-                            <entry>The error code.<p>In error records only.</p></entry>
+                            <entry>The error code.<p>In error records only. </p></entry>
                             <entry>record:errorCode()</entry>
                         </row>
                         <row>
                             <entry>errorMessage</entry>
-                            <entry>The error message. <p>In error records only.</p></entry>
+                            <entry>The error message. <p>In error records only. </p></entry>
                             <entry>
                                 <p>record:errorMessage() </p>
                             </entry>
