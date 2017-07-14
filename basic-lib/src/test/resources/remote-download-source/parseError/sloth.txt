@@ -1,0 +1,5 @@
+{
+  "name": "sloth",
+  "age":,
+  "characterisitics": [, "slooooow", "sloooooow", "sloooooooow"]
+}

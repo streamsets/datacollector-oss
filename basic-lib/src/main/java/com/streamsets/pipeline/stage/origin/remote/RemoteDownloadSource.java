@@ -373,6 +373,8 @@ public class RemoteDownloadSource extends BaseSource {
       }
       offset = addRecordsToBatch(batchSize, batchMaker, next);
     } catch (IOException | DataParserException ex) {
+      // Don't retry reading this file since there can be no records produced.
+      offset = MINUS_ONE;
       handleFatalException(ex, next);
     } finally {
       if (!NOTHING_READ.equals(offset) && currentOffset != null) {

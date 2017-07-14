@@ -903,6 +903,73 @@ public class TestRemoteDownloadSource {
     destroyAndValidate(runner);
   }
 
+  @Test
+  public void testParseError() throws Exception {
+    path = "remote-download-source/parseError";
+    File dir =
+        new File(currentThread().getContextClassLoader().
+            getResource("remote-download-source/parseError").getPath());
+    File[] files = dir.listFiles();
+    Assert.assertEquals(2, files.length);
+    for (File f : files) {
+      if (f.getName().equals("polarbear.txt")) {
+        f.setLastModified(15000000L);
+      } else if (f.getName().equals("sloth.txt")) {
+        f.setLastModified(17000000L);
+      }
+    }
+    setupSSHD(path, false);
+    RemoteDownloadSource origin =
+        new RemoteDownloadSource(getBean(
+            "sftp://localhost:" + String.valueOf(port) + "/",
+            true,
+            "testuser",
+            "pass",
+            null,
+            null,
+            null,
+            true,
+            DataFormat.JSON,
+            null,
+            false,
+            "*"
+        ));
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadSource.class, origin)
+        .addOutputLane("lane")
+        .setOnRecordError(OnRecordError.DISCARD)
+        .build();
+    runner.runInit();
+    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
+    List<Record> expected = new ArrayList<>();
+    Record record = RecordCreator.create();
+    record.set(Field.create(new HashMap<String, Field>()));
+    record.set("/name", Field.create("polarbear"));
+    record.set("/age", Field.create("6"));
+    record.set("/characterisitics", Field.create(Arrays.asList(
+        Field.create("cool"),
+        Field.create("cute"),
+        Field.create("huge"),
+        Field.create("round"),
+        Field.create("playful")
+    )));
+    expected.add(record);
+    List<Record> actual = op.getRecords().get("lane");
+    Assert.assertEquals(1, actual.size());
+    Assert.assertEquals(expected.get(0).get(), actual.get(0).get());
+    String offset = op.getNewOffset();
+    op = runner.runProduce(offset, 1000);
+    Assert.assertEquals("/sloth.txt::17000000::-1", op.getNewOffset());
+    actual = op.getRecords().get("lane");
+    Assert.assertEquals(0, actual.size());
+
+    op = runner.runProduce(offset, 1000);
+    Assert.assertEquals("/sloth.txt::17000000::-1", op.getNewOffset());
+    actual = op.getRecords().get("lane");
+    Assert.assertEquals(0, actual.size());
+
+    destroyAndValidate(runner);
+  }
+
   private List<Record> getExpectedRecords() {
     List<Record> records = new ArrayList<>(2);
     Record record = RecordCreator.create();

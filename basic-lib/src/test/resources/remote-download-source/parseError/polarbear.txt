@@ -1,0 +1,5 @@
+{
+  "name": "polarbear",
+  "age": "6",
+  "characterisitics": ["cool", "cute", "huge", "round", "playful"]
+}
