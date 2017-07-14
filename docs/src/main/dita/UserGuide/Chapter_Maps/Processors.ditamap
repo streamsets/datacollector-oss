@@ -202,6 +202,9 @@
    <topicref href="../Processors/JDBCTee-SingleMultiOperations.dita"/>
    <topicref href="../Processors/JDBCTee-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/JSONGenerator.dita">
+   <topicref href="../Processors/JSONGenerator-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/JSONParser.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JSONParser-Configuring.dita"/>

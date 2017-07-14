@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jmg_hw1_h1b">
+ <title>JSON Generator</title>
+ <conbody>
+  <p><indexterm>JSON Generator
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JSON
+                    Generator</indexterm></indexterm>The JSON Generator serializes data in a field
+            to a JSON-encoded string. You can serialize data from List, Map, or List-Map fields. </p>
+        <p>When you configure the processor, you select the field that you want to convert and the
+            field to write the JSON string data to. </p>
+        <p>If the target field exists, the JSON Generator overwrites the data in the field. If the
+            data does not exist, the JSON Generator creates the field.</p>
+ </conbody>
+</concept>

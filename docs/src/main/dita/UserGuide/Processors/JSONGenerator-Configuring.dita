@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_kgk_3w1_h1b">
+    <title>Configuring a JSON Generator</title>
+    <shortdesc/>
+    <taskbody>
+        <context>Configure a JSON Generator to serialize data in a field to JSON data in a string
+            field.</context>
+        <steps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Parse</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ajh_nht_n1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>JSON Generator Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Field to Serialize</entry>
+                                    <entry>The field that contains the data to process. Select a
+                                        List, Map, or List-Map field.</entry>
+                                </row>
+                                <row>
+                                    <entry>Target Field</entry>
+                                    <entry>The field to write the resulting JSON data to. <p>If you
+                                            specify an existing field, the existing data is
+                                            overwritten. If you specify a new field, the processor
+                                            creates the field. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

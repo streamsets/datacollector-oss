@@ -71,6 +71,8 @@
         <li><xref href="JDBCTee.dita#concept_qbx_lcy_hw">JDBC Tee</xref> - Writes data to a database
           table through a JDBC connection, and enriches records with data from generated database
           columns.</li>
+        <li><xref href="JSONGenerator.dita#concept_jmg_hw1_h1b">JSON Generator</xref> - Serializes
+          data from a field to a JSON-encoded string. </li>
         <li><xref href="JSONParser.dita#concept_bs1_4t3_yq">JSON Parser</xref> - Parses a JSON
           object embedded in a string field.</li>
         <li><xref href="Jython.dita#concept_a1h_lkf_lr">Jython Evaluator</xref> - Processes records
