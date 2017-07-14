@@ -183,11 +183,11 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
     try {
       switch (this.dataFormat) {
         case DELIMITED:
-        case LOG:
         case DATAGRAM:
         case JSON:
         case SDC_JSON:
         case TEXT:
+        case XML:
           message = session.createTextMessage(new String(payload, this.dataFormatConfig.charset));
           break;
         case PROTOBUF:

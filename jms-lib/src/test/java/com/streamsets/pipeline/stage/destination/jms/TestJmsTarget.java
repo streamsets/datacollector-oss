@@ -351,6 +351,68 @@ public class TestJmsTarget {
   }
 
   @Test
+  public void testXmlSuccess() throws Exception {
+    dataFormat = DataFormat.XML;
+    dataFormatConfig.xmlPrettyPrint = false;
+    dataFormatConfig.xmlValidateSchema = true;
+    dataFormatConfig.xmlSchema =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<xs:schema id=\"testdataset\" xmlns=\"\"\n" +
+            "  xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n" +
+            "  xmlns:msdata=\"urn:schemas-microsoft-com:xml-msdata\">\n" +
+            "  <xs:element name=\"person\">\n" +
+            "    <xs:complexType>\n" +
+            "      <xs:all>\n" +
+            "        <xs:element name=\"name\" type=\"xs:string\" minOccurs=\"0\" maxOccurs=\"1\"/>\n" +
+            "        <xs:element name=\"age\" type=\"xs:string\" minOccurs=\"0\" maxOccurs=\"1\"/>\n" +
+            "        <xs:element name=\"address\" minOccurs=\"0\" maxOccurs=\"1\">\n" +
+            "          <xs:complexType>\n" +
+            "            <xs:all>\n" +
+            "              <xs:element name=\"street\" type=\"xs:string\" minOccurs=\"0\" maxOccurs=\"1\"/>\n" +
+            "              <xs:element name=\"state\" type=\"xs:string\" minOccurs=\"0\" maxOccurs=\"1\"/>\n" +
+            "            </xs:all>\n" +
+            "          </xs:complexType>\n" +
+            "        </xs:element>\n" +
+            "      </xs:all>\n" +
+            "    </xs:complexType>\n" +
+            "  </xs:element>\n" +
+            "  <xs:element name=\"testdataset\" msdata:IsDataSet=\"true\" msdata:UseCurrentLocale=\"true\">\n" +
+            "    <xs:complexType>\n" +
+            "      <xs:choice minOccurs=\"0\" maxOccurs=\"1\">\n" +
+            "        <xs:element ref=\"person\"/>\n" +
+            "      </xs:choice>\n" +
+            "    </xs:complexType>\n" +
+            "  </xs:element>\n" +
+            "</xs:schema>";
+
+    Map<String, Field> root = new HashMap<>();
+    Map<String, Field> person = new HashMap<>();
+    Map<String, Field> address = new HashMap<>();
+    address.put("street", Field.create("123 blueberry ln"));
+    address.put("state", Field.create("aruba"));
+    person.put("address", Field.create(address));
+    person.put("name", Field.create("joe schmoe"));
+    person.put("age", Field.create(32));
+    root.put("person", Field.create(person));
+
+    Record r1 = RecordCreator.create("s", "s:1");
+    r1.set(Field.create(root));
+
+    List<String> rows;
+    TargetRunner runner = createRunner();
+    runner.runInit();
+    try {
+      runner.runWrite(Arrays.asList(r1));
+      rows = getQueue();
+    } finally {
+      runner.runDestroy();
+    }
+
+    Assert.assertNotNull(rows);
+    Assert.assertEquals(1, rows.size());
+  }
+
+  @Test
   public void testAllDestinationTypes() throws Exception {
     dataFormat = DataFormat.BINARY;
 
