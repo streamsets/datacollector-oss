@@ -22,7 +22,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
   TCP_00("Cannot bind to port {}: {}"),
-  TCP_01("Unknown data format: {}"),
+  TCP_01("Unknown TCP mode: {}"),
   TCP_02("No ports specified"),
   TCP_03("Port '{}' is invalid"),
   TCP_04("Insufficient permissions to listen on privileged port {}"),
@@ -31,9 +31,13 @@ public enum Errors implements ErrorCode {
   TCP_07("{} thrown in Netty channel pipeline: {}"),
   TCP_08("DataParserException thrown in Netty channel pipeline from DataFormatParserDecoder: {}"),
   TCP_09("No addresses available for TCP server to listen on"),
+  TCP_10("Unrecognized charset: {}"),
+  TCP_20("Unknown Syslog message framing mode: {}"),
   TCP_30("Invalid expression \"{}\" for record processed ack message: {}"),
   TCP_31("Invalid expression \"{}\" for batch completed ack message: {}"),
   TCP_35("Error evaluating {} expression: {}"),
+  TCP_40("Empty result (i.e. length of bytes was zero) after interpreting separator"),
+  TCP_41("Separator string expression was not specified"),
   ;
 
   private final String msg;

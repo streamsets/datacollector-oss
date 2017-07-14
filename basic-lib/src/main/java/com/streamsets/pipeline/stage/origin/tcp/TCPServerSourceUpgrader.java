@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.tcp;
 
+import com.google.common.base.Charsets;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -32,7 +33,19 @@ public class TCPServerSourceUpgrader implements StageUpgrader {
       int toVersion,
       List<Config> configs
   ) throws StageException {
-    throw new IllegalStateException(Utils.format("Should not upgrade (only one version)"));
+    switch (fromVersion) {
+      case 1:
+        upgradeV1ToV2(configs);
+        break;
+      default:
+        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
+    }
+
+    return configs;
+  }
+
+  private void upgradeV1ToV2(List<Config> configs) {
+    configs.add(new Config("conf.lengthFieldCharset", Charsets.UTF_8.name()));
   }
 
 }

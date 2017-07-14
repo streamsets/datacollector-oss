@@ -1012,6 +1012,15 @@ public class DataParserFormatConfig implements DataFormatConfig {
       List<Stage.ConfigIssue> issues
   ) {
     boolean valid = true;
+    if (dataFormat == null) {
+      issues.add(context.createConfigIssue(
+          stageGroup,
+          configPrefix + "dataFormat",
+          DataFormatErrors.DATA_FORMAT_12,
+          dataFormat
+      ));
+      return false;
+    }
     switch (dataFormat) {
       case JSON:
         valid = validateJson(context, configPrefix, issues);

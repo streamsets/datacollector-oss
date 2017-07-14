@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.tcp;
 
 import com.google.common.primitives.Bytes;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -26,6 +27,7 @@ import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogMessage;
 import com.streamsets.pipeline.lib.tls.TlsConfigErrors;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
+import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.util.tls.TLSTestUtils;
 import com.streamsets.testing.NetworkUtils;
 import io.netty.bootstrap.Bootstrap;
@@ -56,7 +58,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -117,41 +118,31 @@ public class TestTCPServerSource {
 
     final TCPServerSourceConfig configBean = createConfigBean(Charsets.ISO_8859_1);
 
-    List<Stage.ConfigIssue> issues1 = initSourceAndGetIssues(configBean);
-    assertThat(issues1, hasSize(0));
+    initSourceAndValidateIssues(configBean);
 
     // empty ports
     configBean.ports = new LinkedList<>();
-    List<Stage.ConfigIssue> issues2 = initSourceAndGetIssues(configBean);
-    assertThat(issues2, hasSize(1));
-    assertThat(issues2.get(0).toString(), containsString(Errors.TCP_02.getCode()));
+    initSourceAndValidateIssues(configBean, Errors.TCP_02);
 
     // invalid ports
     // too large
     configBean.ports = Arrays.asList("123456789");
-    List<Stage.ConfigIssue> issues3 = initSourceAndGetIssues(configBean);
-    assertThat(issues3, hasSize(1));
-    assertThat(issues3.get(0).toString(), containsString(Errors.TCP_03.getCode()));
+    initSourceAndValidateIssues(configBean, Errors.TCP_03);
+
     // not a number
     configBean.ports = Arrays.asList("abcd");
-    List<Stage.ConfigIssue> issues4 = initSourceAndGetIssues(configBean);
-    assertThat(issues4, hasSize(1));
-    assertThat(issues4.get(0).toString(), containsString(Errors.TCP_03.getCode()));
+    initSourceAndValidateIssues(configBean, Errors.TCP_03);
 
     // start TLS config tests
     configBean.ports = Arrays.asList("9876");
     configBean.tlsConfigBean.tlsEnabled = true;
     configBean.tlsConfigBean.keyStoreFilePath = "non-existent-file-path";
-    List<Stage.ConfigIssue> issues6 = initSourceAndGetIssues(configBean);
-    assertThat(issues6, hasSize(1));
-    assertThat(issues6.get(0).toString(), containsString(TlsConfigErrors.TLS_01.getCode()));
+    initSourceAndValidateIssues(configBean, TlsConfigErrors.TLS_01);
 
     File blankTempFile = File.createTempFile("blank", "txt");
     blankTempFile.deleteOnExit();
     configBean.tlsConfigBean.keyStoreFilePath = blankTempFile.getAbsolutePath();
-    List<Stage.ConfigIssue> issues7 = initSourceAndGetIssues(configBean);
-    assertThat(issues7, hasSize(1));
-    assertThat(issues7.get(0).toString(), containsString(TlsConfigErrors.TLS_21.getCode()));
+    initSourceAndValidateIssues(configBean, TlsConfigErrors.TLS_21);
 
     // now, try with real keystore
     String hostname = TLSTestUtils.getHostname();
@@ -168,14 +159,39 @@ public class TestTCPServerSource {
     configBean.tlsConfigBean.keyStoreFilePath = keyStore.getAbsolutePath();
     configBean.tlsConfigBean.keyStorePassword = "invalid-password";
 
-    List<Stage.ConfigIssue> issues9 = initSourceAndGetIssues(configBean);
-    assertThat(issues9, hasSize(1));
-    assertThat(issues9.get(0).toString(), containsString(TlsConfigErrors.TLS_21.getCode()));
+    initSourceAndValidateIssues(configBean, TlsConfigErrors.TLS_21);
 
     // finally, a valid certificate/config
     configBean.tlsConfigBean.keyStorePassword = keyStorePassword;
-    List<Stage.ConfigIssue> issues10 = initSourceAndGetIssues(configBean);
-    assertThat(issues10, hasSize(0));
+    initSourceAndValidateIssues(configBean);
+
+    // ack ELs
+    configBean.recordProcessedAckMessage = "${invalid EL)";
+    initSourceAndValidateIssues(configBean, Errors.TCP_30);
+    configBean.recordProcessedAckMessage = "${time:now()}";
+    configBean.batchCompletedAckMessage = "${another invalid EL]";
+    initSourceAndValidateIssues(configBean, Errors.TCP_31);
+    configBean.batchCompletedAckMessage = "${record:value('/first')}";
+
+    // syslog mode
+    configBean.tcpMode = TCPMode.SYSLOG;
+    configBean.syslogFramingMode = SyslogFramingMode.NON_TRANSPARENT_FRAMING;
+    configBean.nonTransparentFramingSeparatorCharStr = "";
+    initSourceAndValidateIssues(configBean, Errors.TCP_40);
+    configBean.syslogFramingMode = SyslogFramingMode.OCTET_COUNTING;
+    initSourceAndValidateIssues(configBean);
+
+    // separated records
+    configBean.tcpMode = TCPMode.DELIMITED_RECORDS;
+    configBean.dataFormatConfig.charset = Charsets.UTF_8.name();
+    initSourceAndValidateIssues(configBean, Errors.TCP_41);
+    configBean.recordSeparatorStr = "";
+    initSourceAndValidateIssues(configBean, Errors.TCP_40);
+    configBean.recordSeparatorStr = "x";
+    initSourceAndValidateIssues(configBean, DataFormatErrors.DATA_FORMAT_12);
+    configBean.dataFormat = DataFormat.TEXT;
+    initSourceAndValidateIssues(configBean);
+
   }
 
   @Test
@@ -436,6 +452,16 @@ public class TestTCPServerSource {
 
     private String getResponse() throws InterruptedException {
       return responses.take();
+    }
+  }
+
+  private static void initSourceAndValidateIssues(TCPServerSourceConfig configBean, ErrorCode... errorCodes) throws
+      StageException {
+
+    List<Stage.ConfigIssue> issues = initSourceAndGetIssues(configBean);
+    assertThat(issues, hasSize(errorCodes.length));
+    for (int i = 0; i < errorCodes.length; i++) {
+      assertThat(issues.get(i).toString(), containsString(errorCodes[i].getCode()));
     }
   }
 

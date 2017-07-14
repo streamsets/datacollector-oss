@@ -23,6 +23,7 @@ public enum TCPMode implements Label {
   NETFLOW("NetFlow"),
   SYSLOG("syslog"),
   DELIMITED_RECORDS("Separated records"),
+  CHARACTER_BASED_LENGTH_FIELD("Character based with length field"),
   ;
 
   private final String label;

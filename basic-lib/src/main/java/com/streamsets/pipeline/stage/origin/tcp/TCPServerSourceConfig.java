@@ -41,7 +41,7 @@ public class TCPServerSourceConfig {
       displayPosition = 1,
       group = "DATA_FORMAT",
       dependsOn = "tcpMode",
-      triggeredByValue = "DELIMITED_RECORDS"
+      triggeredByValue = {"DELIMITED_RECORDS", "CHARACTER_BASED_LENGTH_FIELD"}
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
@@ -158,11 +158,25 @@ public class TCPServerSourceConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTF-8",
+      label = "Charset",
+      description = "The character encoding that the character-based length field messages use.",
+      displayPosition = 80,
+      group = "TCP",
+      dependsOn = "tcpMode",
+      triggeredByValue = "CHARACTER_BASED_LENGTH_FIELD"
+  )
+  @ValueChooserModel(CharsetChooserValues.class)
+  public String lengthFieldCharset;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Max Batch Size (messages)",
       group = "TCP",
-      displayPosition = 70,
+      displayPosition = 100,
       min = 0,
       max = Integer.MAX_VALUE
   )
@@ -174,7 +188,7 @@ public class TCPServerSourceConfig {
       defaultValue = "1000",
       label = "Batch Wait Time (ms)",
       description = "Max time to wait for data before sending a batch",
-      displayPosition = 80,
+      displayPosition = 110,
       group = "TCP",
       min = 1,
       max = Integer.MAX_VALUE

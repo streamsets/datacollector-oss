@@ -20,7 +20,6 @@ import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
-import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
@@ -47,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -61,8 +61,10 @@ public class TCPServerSource extends BasePushSource {
   public static final String RECORD_PROCESSED_EL_NAME = "recordProcessedAckMessage";
   public static final String BATCH_COMPLETED_EL_NAME = "batchCompletedAckMessage";
 
+  private static final String CONF_PREFIX = "conf.";
+
   private final List<InetSocketAddress> addresses = new LinkedList<>();
-  private final String recordSeparatorStr;
+
   private TCPConsumingServer tcpServer;
   private boolean privilegedPortUsage;
   private DataParserFactory parserFactory;
@@ -75,11 +77,6 @@ public class TCPServerSource extends BasePushSource {
 
   public TCPServerSource(TCPServerSourceConfig config) {
     this.config = config;
-
-    this.recordSeparatorStr = config.tcpMode == TCPMode.SYSLOG
-        ? config.nonTransparentFramingSeparatorCharStr
-        : config.recordSeparatorStr;
-
   }
 
   @Override
@@ -87,7 +84,7 @@ public class TCPServerSource extends BasePushSource {
     List<ConfigIssue> issues = new ArrayList<>();
 
     if (config.enableEpoll && !Epoll.isAvailable()) {
-      issues.add(getContext().createConfigIssue(Groups.TCP.name(), "enableEpoll", Errors.TCP_05));
+      issues.add(getContext().createConfigIssue(Groups.TCP.name(), CONF_PREFIX + "enableEpoll", Errors.TCP_05));
     }
     final String portsField = "ports";
     if (config.ports.isEmpty()) {
@@ -115,7 +112,12 @@ public class TCPServerSource extends BasePushSource {
         issues.add(getContext().createConfigIssue(Groups.TCP.name(), portsField, Errors.TCP_09));
       } else {
         if (config.tlsConfigBean.isEnabled()) {
-          boolean tlsValid = config.tlsConfigBean.init(getContext(), Groups.TLS.name(), "conf.tlsConfigBean.", issues);
+          boolean tlsValid = config.tlsConfigBean.init(
+              getContext(),
+              Groups.TLS.name(),
+              CONF_PREFIX + "tlsConfigBean.",
+              issues
+          );
           if (!tlsValid) {
             return issues;
           }
@@ -123,6 +125,11 @@ public class TCPServerSource extends BasePushSource {
 
         final boolean elValid = validateEls(issues);
         if (!elValid) {
+          return issues;
+        }
+
+        validateTcpConfigs(issues);
+        if (issues.size() > 0) {
           return issues;
         }
 
@@ -216,7 +223,7 @@ public class TCPServerSource extends BasePushSource {
           config.recordProcessedAckMessage,
           getContext(),
           Groups.TCP.name(),
-          "conf.recordProcessedAckMessage",
+          CONF_PREFIX + "recordProcessedAckMessage",
           Errors.TCP_30,
           String.class,
           issues
@@ -239,7 +246,7 @@ public class TCPServerSource extends BasePushSource {
           config.batchCompletedAckMessage,
           getContext(),
           Groups.TCP.name(),
-          "conf.batchCompletedAckMessage",
+          CONF_PREFIX + "batchCompletedAckMessage",
           Errors.TCP_31,
           String.class,
           issues
@@ -250,66 +257,197 @@ public class TCPServerSource extends BasePushSource {
   }
 
   @VisibleForTesting
-  List<ChannelHandler> buildByteBufToMessageDecoderChain(List<ConfigIssue> issues) {
-    List<ChannelHandler> decoderChain = new LinkedList<>();
+  void validateTcpConfigs(List<ConfigIssue> issues) {
 
-    final Charset charsetObj = Charset.forName(config.syslogCharset);
     switch (config.tcpMode) {
       case NETFLOW:
-        decoderChain.add(new NetflowDecoder());
+        // nothing to validate (fixed format)
         break;
       case SYSLOG:
+        try {
+          Charset.forName(config.syslogCharset);
+        } catch (UnsupportedCharsetException e) {
+          issues.add(getContext().createConfigIssue(
+              Groups.TCP.name(),
+              CONF_PREFIX + "syslogCharset",
+              Errors.TCP_10,
+              config.syslogCharset
+          ));
+        }
         if (config.syslogFramingMode == SyslogFramingMode.OCTET_COUNTING) {
-          // first, a DelimitedLengthFieldBasedFrameDecoder to ensure we can capture a full message
-          decoderChain.add(new DelimitedLengthFieldBasedFrameDecoder(config.maxMessageSize,
-              0,
-              false,
-              Unpooled.copiedBuffer(" ", charsetObj),
-              charsetObj,
-              true
-          ));
-          // next, decode the syslog message itself
-          decoderChain.add(new SyslogDecoder(charsetObj));
+          // nothing to validate
         } else if (config.syslogFramingMode == SyslogFramingMode.NON_TRANSPARENT_FRAMING) {
-          // first, a DelimiterBasedFrameDecoder to ensure we can capture a full message
-          decoderChain.add(new DelimiterBasedFrameDecoder(
-              config.maxMessageSize,
-              true,
-              Unpooled.copiedBuffer(StringEscapeUtils.unescapeJava(recordSeparatorStr).getBytes())
-          ));
-          // next, decode the syslog message itself
-          decoderChain.add(new SyslogDecoder(charsetObj));
+          validateDelimiterBasedFrameDecoder(
+              issues,
+              config.nonTransparentFramingSeparatorCharStr,
+              "nonTransparentFramingSeparatorCharStr"
+          );
         } else {
-          throw new IllegalStateException("Unrecognized SyslogFramingMode: " + config.syslogFramingMode.name());
+          issues.add(getContext().createConfigIssue(
+              Groups.TCP.name(),
+              CONF_PREFIX + "syslogFramingMode",
+              Errors.TCP_20,
+              config.syslogFramingMode.name()
+          ));
         }
         break;
       case DELIMITED_RECORDS:
+        validateDelimiterBasedFrameDecoder(
+            issues,
+            config.recordSeparatorStr,
+            "recordSeparatorStr"
+        );
+        // SDC data format (text, json, etc.) separated by some configured sequence of bytes
         if (issues.isEmpty()) {
           config.dataFormatConfig.init(
               getContext(),
               config.dataFormat,
               Groups.TCP.name(),
-              "dataFormatConfig",
+              CONF_PREFIX + "dataFormatConfig",
               config.maxMessageSize,
               issues
           );
-          parserFactory = config.dataFormatConfig.getParserFactory();
-
-          // first, a DelimiterBasedFrameDecoder to ensure we can capture a full message
-          decoderChain.add(new DelimiterBasedFrameDecoder(
+        }
+        break;
+      case CHARACTER_BASED_LENGTH_FIELD:
+        try {
+          Charset.forName(config.lengthFieldCharset);
+        } catch (UnsupportedCharsetException e) {
+          issues.add(getContext().createConfigIssue(
+              Groups.TCP.name(),
+              CONF_PREFIX + "lengthFieldCharset",
+              Errors.TCP_10,
+              config.lengthFieldCharset
+          ));
+        }
+        // SDC data format (text, json, etc.) separated by some configured sequence of bytes
+        if (issues.isEmpty()) {
+          config.dataFormatConfig.init(
+              getContext(),
+              config.dataFormat,
+              Groups.TCP.name(),
+              CONF_PREFIX + "dataFormatConfig",
               config.maxMessageSize,
-              true,
-              Unpooled.copiedBuffer(StringEscapeUtils.unescapeJava(recordSeparatorStr).getBytes()
-          )));
-          // next, decode the delimited message itself
-          decoderChain.add(new DataFormatParserDecoder(parserFactory, getContext()));
+              issues
+          );
         }
         break;
       default:
-        issues.add(getContext().createConfigIssue(Groups.TCP.name(), "tcpMode", Errors.TCP_01, config.tcpMode));
+        issues.add(getContext().createConfigIssue(
+            Groups.TCP.name(),
+            CONF_PREFIX + "tcpMode",
+            Errors.TCP_01,
+            config.tcpMode
+        ));
+        break;
+    }
+  }
+
+  @VisibleForTesting
+  List<ChannelHandler> buildByteBufToMessageDecoderChain(List<ConfigIssue> issues) {
+    List<ChannelHandler> decoderChain = new LinkedList<>();
+
+    switch (config.tcpMode) {
+      case NETFLOW:
+        decoderChain.add(new NetflowDecoder());
+        break;
+      case SYSLOG:
+        final Charset syslogCharset = Charset.forName(config.syslogCharset);
+        if (config.syslogFramingMode == SyslogFramingMode.OCTET_COUNTING) {
+          // first, a DelimitedLengthFieldBasedFrameDecoder to ensure we can capture a full message
+          decoderChain.add(buildDelimitedLengthFieldBasedFrameDecoder(syslogCharset));
+          // next, decode the syslog message itself
+          decoderChain.add(new SyslogDecoder(syslogCharset));
+        } else if (config.syslogFramingMode == SyslogFramingMode.NON_TRANSPARENT_FRAMING) {
+          // first, a DelimiterBasedFrameDecoder to ensure we can capture a full message
+          decoderChain.add(buildDelimiterBasedFrameDecoder(config.nonTransparentFramingSeparatorCharStr));
+          // next, decode the syslog message itself
+          decoderChain.add(new SyslogDecoder(syslogCharset));
+        } else {
+          throw new IllegalStateException("Unrecognized SyslogFramingMode: " + config.syslogFramingMode.name());
+        }
+        break;
+      case DELIMITED_RECORDS:
+        // SDC data format (text, json, etc.) separated by some configured sequence of bytes
+        config.dataFormatConfig.init(
+            getContext(),
+            config.dataFormat,
+            Groups.TCP.name(),
+            CONF_PREFIX + "dataFormatConfig",
+            config.maxMessageSize,
+            issues
+        );
+        parserFactory = config.dataFormatConfig.getParserFactory();
+
+        // first, a DelimiterBasedFrameDecoder to ensure we can capture a full message
+        decoderChain.add(buildDelimiterBasedFrameDecoder(config.recordSeparatorStr));
+        // next, decode the delimited message itself
+        decoderChain.add(new DataFormatParserDecoder(parserFactory, getContext()));
+        break;
+      case CHARACTER_BASED_LENGTH_FIELD:
+        final Charset lengthFieldCharset = Charset.forName(config.lengthFieldCharset);
+        // first, a DelimitedLengthFieldBasedFrameDecoder to ensure we can capture a full message
+        decoderChain.add(buildDelimitedLengthFieldBasedFrameDecoder(lengthFieldCharset));
+        // next, decode the length field framed message itself
+        config.dataFormatConfig.init(
+            getContext(),
+            config.dataFormat,
+            Groups.TCP.name(),
+            CONF_PREFIX + "dataFormatConfig",
+            config.maxMessageSize,
+            issues
+        );
+        parserFactory = config.dataFormatConfig.getParserFactory();
+        decoderChain.add(new DataFormatParserDecoder(parserFactory, getContext()));
+        break;
+      default:
+        issues.add(getContext().createConfigIssue(Groups.TCP.name(), "conf.tcpMode", Errors.TCP_01, config.tcpMode));
         break;
     }
     return decoderChain;
+  }
+
+  private void validateDelimiterBasedFrameDecoder(
+      List<ConfigIssue> issues,
+      String recordSeparatorStr,
+      String recordSeparatorStrField
+  ) {
+    if (recordSeparatorStr == null) {
+      issues.add(getContext().createConfigIssue(
+          Groups.TCP.name(),
+          CONF_PREFIX + recordSeparatorStrField,
+          Errors.TCP_41
+      ));
+      return;
+    }
+    final byte[] delimiterBytes = StringEscapeUtils.unescapeJava(recordSeparatorStr).getBytes();
+    if (delimiterBytes.length == 0) {
+      issues.add(getContext().createConfigIssue(
+          Groups.TCP.name(),
+          CONF_PREFIX + recordSeparatorStrField,
+          Errors.TCP_40
+      ));
+    }
+  }
+
+  private DelimiterBasedFrameDecoder buildDelimiterBasedFrameDecoder(String recordSeparatorStr) {
+    final byte[] delimiterBytes = StringEscapeUtils.unescapeJava(recordSeparatorStr).getBytes();
+    return new DelimiterBasedFrameDecoder(
+        config.maxMessageSize,
+        true,
+        Unpooled.copiedBuffer(delimiterBytes)
+    );
+  }
+
+  private DelimitedLengthFieldBasedFrameDecoder buildDelimitedLengthFieldBasedFrameDecoder(Charset charset) {
+    return new DelimitedLengthFieldBasedFrameDecoder(config.maxMessageSize,
+        0,
+        false,
+        // length field characters are separated from the rest of the data by a space
+        Unpooled.copiedBuffer(" ", charset),
+        charset,
+        true
+    );
   }
 
   @Override
