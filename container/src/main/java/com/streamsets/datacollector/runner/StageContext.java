@@ -116,7 +116,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final DeliveryGuarantee deliveryGuarantee;
   private final String resourcesDir;
   private final String sdcId;
-  private final String pipelineName;
+  private final String pipelineId;
   private final String rev;
   private volatile boolean stop;
   private final EmailSender emailSender;
@@ -143,7 +143,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       Configuration configuration,
       LineagePublisherDelegator lineagePublisherDelegator
   ) {
-    this.pipelineName = "myPipeline";
+    this.pipelineId = "myPipeline";
     this.sdcId = "mySDC";
     this.rev = "0";
     // create dummy info for Stage Runners. This is required for stages that expose custom metrics
@@ -196,7 +196,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   }
 
   public StageContext(
-      String pipelineName,
+      String pipelineId,
       String rev,
       List<Stage.Info> pipelineInfo,
       Stage.UserContext userContext,
@@ -215,7 +215,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       long startTime,
       LineagePublisherDelegator lineagePublisherDelegator
   ) {
-    this.pipelineName = pipelineName;
+    this.pipelineId = pipelineId;
     this.rev = rev;
     this.pipelineInfo = pipelineInfo;
     this.userContext = userContext;
@@ -420,7 +420,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public Timer createTimer(String name) {
-    return MetricsConfigurator.createStageTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name, pipelineName,
+    return MetricsConfigurator.createStageTimer(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name, pipelineId,
       rev);
   }
 
@@ -430,7 +430,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public Meter createMeter(String name) {
-    return MetricsConfigurator.createStageMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name, pipelineName,
+    return MetricsConfigurator.createStageMeter(getMetrics(), CUSTOM_METRICS_PREFIX + stageInfo.getInstanceName() + "." + name, pipelineId,
       rev);
   }
 
@@ -440,7 +440,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public Counter createCounter(String name) {
-    return MetricsConfigurator.createStageCounter(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, pipelineName,
+    return MetricsConfigurator.createStageCounter(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, pipelineId,
       rev);
   }
 
@@ -450,7 +450,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public Histogram createHistogram(String name) {
-    return MetricsConfigurator.createStageHistogram5Min(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, pipelineName, rev);
+    return MetricsConfigurator.createStageHistogram5Min(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, pipelineId, rev);
   }
 
   @Override
@@ -460,12 +460,12 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public Gauge<Map<String, Object>> createGauge(String name) {
-    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, null, pipelineName, rev);
+    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, null, pipelineId, rev);
   }
 
   @Override
   public Gauge<Map<String, Object>> createGauge(String name, Comparator<String> comparator) {
-    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, comparator, pipelineName, rev);
+    return MetricsConfigurator.createStageGauge(getMetrics(), CUSTOM_METRICS_PREFIX +stageInfo.getInstanceName() + "." + name, comparator, pipelineId, rev);
   }
 
   @Override
@@ -616,7 +616,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   @Override
   public String getPipelineId() {
-    return pipelineName;
+    return pipelineId;
   }
 
   @Override
