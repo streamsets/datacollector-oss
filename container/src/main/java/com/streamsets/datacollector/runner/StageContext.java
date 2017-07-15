@@ -122,6 +122,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final EmailSender emailSender;
   private final Sampler sampler;
   private final Map<String, Object> sharedRunnerMap;
+  private final long startTime;
   private final LineagePublisherDelegator lineagePublisherDelegator;
   private PipelineFinisherDelegate pipelineFinisherDelegate;
 
@@ -190,6 +191,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     // sample all records while testing
     this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX);
     this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, 0, 0);
+    this.startTime = System.currentTimeMillis();
     this.lineagePublisherDelegator = lineagePublisherDelegator;
   }
 
@@ -210,6 +212,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       EmailSender emailSender,
       Configuration configuration,
       Map<String, Object> sharedRunnerMap,
+      long startTime,
       LineagePublisherDelegator lineagePublisherDelegator
   ) {
     this.pipelineName = pipelineName;
@@ -236,6 +239,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     int populationSize = configuration.get(SDC_RECORD_SAMPLING_POPULATION_SIZE, 10000);
     this.sampler = new RecordSampler(this, stageType == StageType.SOURCE, sampleSize, populationSize);
     this.sharedRunnerMap = sharedRunnerMap;
+    this.startTime = startTime;
     this.lineagePublisherDelegator = lineagePublisherDelegator;
   }
 

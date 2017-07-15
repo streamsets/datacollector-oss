@@ -184,7 +184,11 @@ public class TestProdPipelineRunnable {
       runner,
       null,
       Mockito.mock(LineagePublisherTask.class)
-    ).build(MockStages.userContext(), MockStages.createPipelineConfigurationSourceProcessorTarget());
+    ).build(
+      MockStages.userContext(),
+      MockStages.createPipelineConfigurationSourceProcessorTarget(),
+      System.currentTimeMillis()
+    );
 
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null, null, null, 0, 0);
 

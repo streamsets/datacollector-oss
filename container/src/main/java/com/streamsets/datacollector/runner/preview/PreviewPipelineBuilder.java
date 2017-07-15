@@ -140,6 +140,7 @@ public class PreviewPipelineBuilder {
        rev,
        userContext,
        pipelineConf,
+       System.currentTimeMillis(),
        lineagePublisherTask
      );
      Pipeline pipeline = builder.build(runner);

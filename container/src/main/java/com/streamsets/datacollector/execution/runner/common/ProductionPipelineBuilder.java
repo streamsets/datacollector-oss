@@ -76,13 +76,14 @@ public class ProductionPipelineBuilder {
     this.lineagePublisherTask = lineagePublisherTask;
   }
 
-  public ProductionPipeline build(UserContext userContext, PipelineConfiguration pipelineConf) throws PipelineRuntimeException, StageException {
-    return build(userContext, pipelineConf, null);
+  public ProductionPipeline build(UserContext userContext, PipelineConfiguration pipelineConf, long startTime) throws PipelineRuntimeException, StageException {
+    return build(userContext, pipelineConf, startTime, null);
   }
 
   public ProductionPipeline build(
       UserContext userContext,
       PipelineConfiguration pipelineConf,
+      long startTime,
       Map<String, Object> runtimeParameters
   ) throws PipelineRuntimeException, StageException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
@@ -99,6 +100,7 @@ public class ProductionPipelineBuilder {
         rev,
         userContext,
         pipelineConf,
+        startTime,
         lineagePublisherTask
     ).setObserver(observer).build(runner, runtimeParameters);
 

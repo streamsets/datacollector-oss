@@ -429,7 +429,11 @@ public class TestProductionPipeline {
       runner,
       null,
       Mockito.mock(LineagePublisherTask.class)
-    ).build(MockStages.userContext(), pConf);
+    ).build(
+      MockStages.userContext(),
+      pConf,
+      System.currentTimeMillis()
+    );
     runner.setOffsetTracker(tracker);
 
     if (captureNextBatch) {

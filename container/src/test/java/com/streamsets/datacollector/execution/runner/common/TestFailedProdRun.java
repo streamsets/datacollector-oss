@@ -92,7 +92,11 @@ public class TestFailedProdRun {
       runner,
       null,
       Mockito.mock(LineagePublisherTask.class)
-    ).build(MockStages.userContext(), pipelineConfiguration);
+    ).build(
+      MockStages.userContext(),
+      pipelineConfiguration,
+      System.currentTimeMillis()
+    );
 
 
   }
@@ -148,7 +152,11 @@ public class TestFailedProdRun {
       runner,
       null,
       Mockito.mock(LineagePublisherTask.class)
-    ).build(MockStages.userContext(), pipelineConfiguration);
+    ).build(
+      MockStages.userContext(),
+      pipelineConfiguration,
+      System.currentTimeMillis()
+    );
     try {
       pipeline.registerStatusListener(new TestProductionPipeline.MyStateListener());
       pipeline.run();

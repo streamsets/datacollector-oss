@@ -773,7 +773,12 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
         PipelineEL.setConstantsInContext(pipelineConfiguration, runningUser);
-        prodPipeline = builder.build(runningUser, pipelineConfiguration, runtimeParameters);
+        prodPipeline = builder.build(
+          runningUser,
+          pipelineConfiguration,
+          getState().getTimeStamp(),
+          runtimeParameters
+        );
         prodPipeline.registerStatusListener(this);
 
         ScheduledFuture<?> metricsFuture = null;

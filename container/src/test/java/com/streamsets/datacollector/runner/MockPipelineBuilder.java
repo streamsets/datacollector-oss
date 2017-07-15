@@ -33,6 +33,7 @@ public class MockPipelineBuilder {
   private String rev;
   private UserContext userContext;
   private PipelineConfiguration pipelineConf;
+  private long startTime;
   private LineagePublisherTask lineagePublisherTask;
   private Observer observer;
 
@@ -44,6 +45,7 @@ public class MockPipelineBuilder {
     this.rev = "0";
     this.userContext = MockStages.userContext();
     this.pipelineConf = MockStages.createPipelineConfigurationSourceTarget();
+    this.startTime = System.currentTimeMillis();
     this.lineagePublisherTask = Mockito.mock(LineagePublisherTask.class);
     this.observer = null;
   }
@@ -83,6 +85,11 @@ public class MockPipelineBuilder {
     return this;
   }
 
+  public MockPipelineBuilder withStartTime(long startTime) {
+    this.startTime = startTime;
+    return this;
+  }
+
   public MockPipelineBuilder withLineagePublisherTask(LineagePublisherTask lineagePublisherTask) {
     this.lineagePublisherTask = lineagePublisherTask;
     return this;
@@ -102,6 +109,7 @@ public class MockPipelineBuilder {
       rev,
       userContext,
       pipelineConf,
+      startTime,
       lineagePublisherTask
     ).setObserver(observer);
   }

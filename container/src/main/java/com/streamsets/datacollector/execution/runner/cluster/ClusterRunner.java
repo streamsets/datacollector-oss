@@ -722,7 +722,12 @@ public class ClusterRunner extends AbstractRunner {
       null,
       lineagePublisherTask
     );
-    return builder.build(new UserContext(user), pipelineConfiguration, null);
+    return builder.build(
+      new UserContext(user),
+      pipelineConfiguration,
+      getState().getTimeStamp(),
+      null
+    );
   }
 
   static class ManagerRunnable implements Runnable {

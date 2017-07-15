@@ -83,6 +83,7 @@ public class Pipeline {
   private final UserContext userContext;
   private final List<Map<String, Object>> runnerSharedMaps;
   private final Map<String, Object> runtimeParameters;
+  private final long startTime;
   private final LineagePublisherTask lineagePublisherTask;
 
   private Pipeline(
@@ -104,6 +105,7 @@ public class Pipeline {
       UserContext userContext,
       List<Map<String, Object>> runnerSharedMaps,
       Map<String, Object> runtimeParameters,
+      long startTime,
       LineagePublisherTask lineagePublisherTask
   ) {
     this.pipelineBean = pipelineBean;
@@ -126,6 +128,7 @@ public class Pipeline {
     this.runnerSharedMaps = runnerSharedMaps;
     this.userContext = userContext;
     this.runtimeParameters = runtimeParameters;
+    this.startTime = startTime;
     this.lineagePublisherTask = lineagePublisherTask;
   }
 
@@ -274,6 +277,7 @@ public class Pipeline {
               memoryUsageCollectorResourceBundle,
               scheduledExecutor,
               runnerSharedMaps,
+              startTime,
               lineagePublisherTask
             ));
           }
@@ -381,6 +385,7 @@ public class Pipeline {
     private final String rev;
     private final UserContext userContext;
     private final PipelineConfiguration pipelineConf;
+    private final long startTime;
     private final LineagePublisherTask lineagePublisherTask;
     private Observer observer;
     private final ResourceControlledScheduledExecutor scheduledExecutor =
@@ -397,6 +402,7 @@ public class Pipeline {
         String rev,
         UserContext userContext,
         PipelineConfiguration pipelineConf,
+        long startTime,
         LineagePublisherTask lineagePublisherTask
     ) {
       this.stageLib = stageLib;
@@ -407,6 +413,7 @@ public class Pipeline {
       this.configuration = configuration;
       this.pipelineConf = pipelineConf;
       this.errors = Collections.emptyList();
+      this.startTime = startTime;
       this.lineagePublisherTask = lineagePublisherTask;
     }
 
@@ -449,6 +456,7 @@ public class Pipeline {
           configuration,
           0,
           new ConcurrentHashMap<>(),
+          startTime,
           lineagePublisherTask
         );
 
@@ -476,6 +484,7 @@ public class Pipeline {
           memoryUsageCollectorResourceBundle,
           scheduledExecutor,
           runnerSharedMaps,
+          startTime,
           lineagePublisherTask
         ));
 
@@ -493,6 +502,7 @@ public class Pipeline {
           configuration,
           0,
           new ConcurrentHashMap<>(),
+          startTime,
           lineagePublisherTask
         );
         BadRecordsHandler badRecordsHandler = new BadRecordsHandler(
@@ -518,6 +528,7 @@ public class Pipeline {
             configuration,
             0,
             new ConcurrentHashMap<>(),
+            startTime,
             lineagePublisherTask
           );
 
@@ -544,6 +555,7 @@ public class Pipeline {
             userContext,
             runnerSharedMaps,
             runtimeParameters,
+            startTime,
             lineagePublisherTask
           );
         } catch (Exception e) {
@@ -593,6 +605,7 @@ public class Pipeline {
     MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle,
     ResourceControlledScheduledExecutor scheduledExecutor,
     List<Map<String, Object>> sharedRunnerMaps,
+    long startTime,
     LineagePublisherTask lineagePublisherTask
   ) throws PipelineRuntimeException {
     Preconditions.checkArgument(beans.size() == sharedRunnerMaps.size(),
@@ -618,6 +631,7 @@ public class Pipeline {
         configuration,
         runnerId,
         sharedRunnerMap,
+        startTime,
         lineagePublisherTask
       ));
     }
@@ -729,6 +743,7 @@ public class Pipeline {
     Configuration configuration,
     int runnerId,
     Map<String, Object> runnerSharedMap,
+    long startTime,
     LineagePublisherTask lineagePublisherTask
   ) {
     // Create StageRuntime itself
@@ -758,6 +773,7 @@ public class Pipeline {
         new EmailSender(configuration),
         configuration,
         runnerSharedMap,
+        startTime,
         new LineagePublisherDelegator.TaskDelegator(lineagePublisherTask)
       )
     );

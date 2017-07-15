@@ -208,7 +208,8 @@ public class TestErrorRecord {
         Mockito.mock(LineagePublisherTask.class)
     ).build(
         MockStages.userContext(),
-        MockStages.createPipelineConfigurationSourceProcessorTarget()
+        MockStages.createPipelineConfigurationSourceProcessorTarget(),
+        System.currentTimeMillis()
     );
     pipeline.registerStatusListener(new TestProductionPipeline.MyStateListener());
 
