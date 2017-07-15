@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.jms;
+package com.streamsets.pipeline.lib.jms.config;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum ConsumerType implements Label {
+public enum DestinationType implements Label {
   UNKNOWN("Unknown"),
   QUEUE("Queue"),
   TOPIC("Topic");
 
   private final String label;
 
-  ConsumerType(String label) {
+  DestinationType(String label) {
     this.label = label;
   }
 

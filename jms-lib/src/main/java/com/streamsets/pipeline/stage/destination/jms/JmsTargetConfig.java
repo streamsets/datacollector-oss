@@ -15,30 +15,8 @@
  */
 package com.streamsets.pipeline.stage.destination.jms;
 
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.jms.config.BaseJmsConfig;
 
 public class JmsTargetConfig extends BaseJmsConfig {
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "JMS Consumer Name",
-      description = "Queue or topic name",
-      displayPosition = 50,
-      group = "JMS"
-  )
-  public String consumerName;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "UNKNOWN",
-      label = "JMS Consumer Type",
-      description = "Specify the JMS consumer type when validation fails with NamingException, consumer not found",
-      displayPosition = 60,
-      group = "JMS"
-  )
-  @ValueChooserModel(ConsumerTypeChooserValues.class)
-  public ConsumerType consumerType = ConsumerType.UNKNOWN;
+  //empty for now
 }

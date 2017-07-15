@@ -123,23 +123,23 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
     }
     if(issues.isEmpty()) {
       try {
-        switch (jmsTargetConfig.consumerType) {
+        switch (jmsTargetConfig.destinationType) {
           case UNKNOWN:
-            destination = (Destination) initialContext.lookup(jmsTargetConfig.consumerName);
+            destination = (Destination) initialContext.lookup(jmsTargetConfig.destinationName);
             break;
           case QUEUE:
-            destination = session.createQueue(jmsTargetConfig.consumerName);
+            destination = session.createQueue(jmsTargetConfig.destinationName);
             break;
           case TOPIC:
-            destination = session.createTopic(jmsTargetConfig.consumerName);
+            destination = session.createTopic(jmsTargetConfig.destinationName);
             break;
           default:
-            throw new IllegalArgumentException(Utils.format("Unknown destination type: {}", jmsTargetConfig.consumerName));
+            throw new IllegalArgumentException(Utils.format("Unknown destination type: {}", jmsTargetConfig.destinationName));
         }
       } catch (JMSException | NamingException ex) {
         issues.add(context.createConfigIssue(JmsGroups.JMS.name(), DEST_NAME_CONFIG_NAME, JmsErrors.JMS_05,
-            jmsTargetConfig.consumerName, String.valueOf(ex)));
-        LOG.info(Utils.format(JmsErrors.JMS_05.getMessage(), jmsTargetConfig.consumerName,
+            jmsTargetConfig.destinationName, String.valueOf(ex)));
+        LOG.info(Utils.format(JmsErrors.JMS_05.getMessage(), jmsTargetConfig.destinationName,
             String.valueOf(ex)), ex);
       }
     }

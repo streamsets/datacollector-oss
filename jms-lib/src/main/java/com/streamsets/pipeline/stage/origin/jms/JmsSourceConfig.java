@@ -21,16 +21,6 @@ import com.streamsets.pipeline.lib.jms.config.BaseJmsConfig;
 
 public class JmsSourceConfig extends BaseJmsConfig {
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "JMS Destination Name",
-      description = "Queue or topic name",
-      displayPosition = 50,
-      group = "JMS"
-  )
-  public String destinationName;
-
-  @ConfigDef(
     required = false,
     type = ConfigDef.Type.STRING,
     label = "JMS Message Selector",
@@ -38,16 +28,4 @@ public class JmsSourceConfig extends BaseJmsConfig {
     group = "JMS"
   )
   public String messageSelector;
-
-  @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "UNKNOWN",
-    label = "JMS Destination Type",
-    description = "Specify the JMS destination type when validation fails with NamingException, destination not found",
-    displayPosition = 70,
-    group = "JMS"
-  )
-  @ValueChooserModel(DestinationTypeChooserValues.class)
-  public DestinationType destinationType = DestinationType.UNKNOWN; // NOTE: same as above
 }

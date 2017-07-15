@@ -27,6 +27,7 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DestinationAvroSchemaSource;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.jms.config.DestinationType;
 import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -37,17 +38,6 @@ import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.security.AuthenticationUser;
 import org.apache.activemq.security.SimpleAuthenticationPlugin;
-import org.apache.avro.Schema;
-import org.apache.avro.TestAnnotation;
-import org.apache.avro.file.DataFileReader;
-import org.apache.avro.file.SeekableByteArrayInput;
-import org.apache.avro.file.SeekableFileInput;
-import org.apache.avro.file.SeekableInput;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.GenericDatumReader;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.io.DatumReader;
-import org.apache.avro.mapred.FsInput;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Assert;
@@ -66,9 +56,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -131,7 +119,7 @@ public class TestJmsTarget {
     credentialsConfig.useCredentials = true;
     credentialsConfig.username = USERNAME;
     credentialsConfig.password = PASSWORD;
-    jmsTargetConfig.consumerName = JNDI_PREFIX + DESTINATION_NAME;
+    jmsTargetConfig.destinationName = JNDI_PREFIX + DESTINATION_NAME;
     jmsTargetConfig.initialContextFactory = INITIAL_CONTEXT_FACTORY;
     jmsTargetConfig.connectionFactory = CONNECTION_FACTORY;
     jmsTargetConfig.providerURL = BROKER_BIND_URL;
@@ -215,7 +203,7 @@ public class TestJmsTarget {
 
   @Test
   public void testInvalidDestination() throws Exception {
-    jmsTargetConfig.consumerName = "invalid";
+    jmsTargetConfig.destinationName = "invalid";
     runInit("JMS_05");
   }
 
@@ -366,17 +354,17 @@ public class TestJmsTarget {
   public void testAllDestinationTypes() throws Exception {
     dataFormat = DataFormat.BINARY;
 
-    jmsTargetConfig.consumerType = ConsumerType.QUEUE;
+    jmsTargetConfig.destinationType = DestinationType.QUEUE;
     TargetRunner runner = createRunner();
     runner.runInit();
     runner.runDestroy();
 
-    jmsTargetConfig.consumerType = ConsumerType.TOPIC;
+    jmsTargetConfig.destinationType = DestinationType.TOPIC;
     runner = createRunner();
     runner.runInit();
     runner.runDestroy();
 
-    jmsTargetConfig.consumerType = ConsumerType.UNKNOWN;
+    jmsTargetConfig.destinationType = DestinationType.UNKNOWN;
     runner = createRunner();
     runner.runInit();
     runner.runDestroy();

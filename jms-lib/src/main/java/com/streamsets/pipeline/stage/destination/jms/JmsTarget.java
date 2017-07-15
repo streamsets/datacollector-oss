@@ -142,7 +142,7 @@ public class JmsTarget extends BaseTarget {
   public void write(Batch batch) throws StageException {
     messagesSent += this.jmsMessageProducer.put(batch, generatorFactory);
     jmsMessageProducer.commit();
-    LOG.debug("{}::{}", this.jmsTargetConfig.consumerName, messagesSent);
+    LOG.debug("{}::{}", this.jmsTargetConfig.destinationName, messagesSent);
   }
 
   @Override
