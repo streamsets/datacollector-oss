@@ -230,7 +230,6 @@ public class PipelineConfigBean implements Stage {
   )
   public String clusterSlaveJavaOpts;
 
-
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.MAP,
@@ -300,6 +299,19 @@ public class PipelineConfigBean implements Stage {
   )
   @ListBeanModel
   public List<PipelineWebhookConfig> webhookConfigs = Collections.emptyList();
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      defaultValue = "{}",
+      label = "Extra Spark Configuration",
+      description = "Additional Spark Configuration to pass to the spark-submit script, the parameters will be passed " +
+          "as --conf <key>=<value>",
+      displayPosition = 220,
+      group = "CLUSTER",
+      dependsOn = "executionMode",
+      triggeredByValue = {"CLUSTER_YARN_STREAMING"})
+  public Map<String, String> sparkConfigs;
 
   @Override
   public List<ConfigIssue> init(Info info, Context context) {

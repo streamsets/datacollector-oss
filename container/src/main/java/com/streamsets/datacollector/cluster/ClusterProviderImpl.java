@@ -825,6 +825,7 @@ public class ClusterProviderImpl implements ClusterProvider {
           clusterManager.getAbsolutePath(),
           String.valueOf(config.clusterSlaveMemory),
           config.clusterSlaveJavaOpts,
+          config.sparkConfigs,
           numExecutors,
           libsTarGz.getAbsolutePath(),
           etcTarGz.getAbsolutePath(),
@@ -1080,6 +1081,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       String clusterManager,
       String slaveMemory,
       String javaOpts,
+      Map<String, String> extraSparkConfigs,
       String numExecutors,
       String libsTarGz,
       String etcTarGz,
@@ -1126,6 +1128,10 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("spark.executor.extraJavaOptions=" +
         Joiner.on(" ").join("-javaagent:./" + (new File(bootstrapJar)).getName(), javaOpts)
     );
+    extraSparkConfigs.forEach((k, v) -> {
+      args.add("--conf");
+      args.add(k + "=" + v);
+    });
     // Job name in Resource Manager UI
     args.add("--name");
     args.add("StreamSets Data Collector: " + pipelineTitle);

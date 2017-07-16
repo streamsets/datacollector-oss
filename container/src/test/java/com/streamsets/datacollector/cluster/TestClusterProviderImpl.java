@@ -130,13 +130,17 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(new File(bootstrapClusterLibDir,
         "streamsets-datacollector-mapr-cluster-bootstrap-1.7.0.0.jar"
     ).createNewFile());
-    List<Config> configs = new ArrayList<Config>();
+    List<Config> configs = new ArrayList<>();
     configs.add(new Config("clusterSlaveMemory", 512));
     configs.add(new Config("clusterSlaveJavaOpts", ""));
     configs.add(new Config("clusterKerberos", false));
     configs.add(new Config("kerberosPrincipal", ""));
     configs.add(new Config("kerberosKeytab", ""));
     configs.add(new Config("executionMode", ExecutionMode.CLUSTER_YARN_STREAMING));
+    configs.add(new Config("sparkConfigs", Arrays.asList(new HashMap<String, String>() {{
+      put("key", "a");
+      put("value", "b");
+    }})));
     pipelineConf = new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
@@ -486,6 +490,7 @@ public class TestClusterProviderImpl {
                 "<masked>/bootstrap-lib/cluster/streamsets-datacollector-cluster-bootstrap-api-1.7.0.0-SNAPSHOT.jar",
             "--conf", "spark" +
             ".executor.extraJavaOptions=-javaagent:./streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar ",
+            "--conf", "a=b",
             "--name", "StreamSets Data Collector: label",
             "--class", "com" +
             ".streamsets.pipeline.BootstrapClusterStreaming",
