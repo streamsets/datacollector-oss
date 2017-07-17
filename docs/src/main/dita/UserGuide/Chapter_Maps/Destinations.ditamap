@@ -189,6 +189,14 @@
    <topicref href="../Destinations/JDBCProducer-SingleMultiOperations.dita"/>
    <topicref href="../Destinations/JDBCProducer-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/JMSProducer.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/JMSProducer-InstallDrivers.dita"/>
+   <topicref href="../Destinations/JMSProducer-DataFormats.dita"/>
+   <topicref href="../Destinations/JMSProducer-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/KProducer.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

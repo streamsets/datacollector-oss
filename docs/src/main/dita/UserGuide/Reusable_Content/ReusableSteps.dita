@@ -1899,6 +1899,136 @@
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta">The following step is for JMS origin and rows
+                        are used by the JMS Producer.</draft-comment>
+                </cmd>
+            </step>
+            <step id="step-JMSProps">
+                <cmd>On the <wintitle>JMS</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_qzr_nfk_dt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>JMS Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-JMSInitialContextFactory">
+                                    <entry>JMS Initial Context Factory</entry>
+                                    <entry>JMS initial context factory. <p>For example, for Apache
+                                            ActiveMQ you might use:
+                                                <codeph>org.apache.activemq.jndi.ActiveMQInitialContextFactory</codeph>.
+                                            </p><p>Or for Oracle Weblogic, you might use:
+                                                <codeph>weblogic.jndi.WLInitialContextFactory</codeph>.</p></entry>
+                                </row>
+                                <row id="row-JNDIConnectionFactory">
+                                    <entry>JNDI Connection Factory</entry>
+                                    <entry>JNDI connection factory.<p>For example, for ActiveMQ, you
+                                            might use: <codeph>ConnectionFactory</codeph>.</p><p>For
+                                            Weblogic, you might use:
+                                                <codeph>jms/ConnectionFactory</codeph>.</p></entry>
+                                </row>
+                                <row id="row-JMSProviderURL">
+                                    <entry>JMS Provider URL</entry>
+                                    <entry>URL for the JMS provider.<p>For example, for ActiveMQ,
+                                            you might use:
+                                                <codeph>tcp://localhost:&lt;portno></codeph>.</p><p>For
+                                            Weblogic, you might use:
+                                                <codeph>t3/localhost:&lt;portno></codeph>.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>JMS Destination Name</entry>
+                                    <entry>JMS queue or topic name. <p>For example, for ActiveMQ,
+                                            you might use:<codeph>&lt;queue
+                                            name></codeph>.</p><p>For Weblogic, you might use:
+                                                <codeph>jms/Queue</codeph>.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>JMS Message Selector</entry>
+                                    <entry>Optional message selector to limit the messages read by
+                                        the origin. By default, reads all messages. </entry>
+                                </row>
+                                <row>
+                                    <entry>JMS Destination Type</entry>
+                                    <entry>Optional destination type. </entry>
+                                </row>
+                                <row id="row-AdditionaProps">
+                                    <entry>Additional JMS Configuration Properties</entry>
+                                    <entry>
+                                        <p>Additional JMS or JNDI configuration properties to use.
+                                            To add properties, click <uicontrol>Add</uicontrol> and
+                                            define the JMS or JNDI property name and value. </p>
+                                        <p>When you add a configuration property, enter the exact
+                                            property name and value. The stage does not validate the
+                                            property names or values. </p>
+                                    </entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/BatchWaitTime">
+                                    <entry/>
+                                </row>
+                                <row id="row-UseJMSCredentials">
+                                    <entry>Use Credentials</entry>
+                                    <entry>Enables using JMS credentials.</entry>
+                                </row>
+                                <row>
+                                    <entry>Produce Single Record</entry>
+                                    <entry>Generates a single record for records that include
+                                        multiple objects. <p>When not selected, the origin generates
+                                            multiple records when a record includes multiple
+                                            objects.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The following step is for JMS Consumer origin
+                        and JMS Producer.</draft-comment>
+                </cmd>
+            </step>
+            <step id="step-JMSCredentials">
+                <cmd>When using JMS credentials, on the <wintitle>Credentials</wintitle> tab,
+                    configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_gqq_3vy_dt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>JMS user name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>JMS password.<note
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                        /></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta">Rows in this table are used by Kafka Consumer
                         and SDC RPC to Kafka origins, also UDP to Kafka.</draft-comment>
                 </cmd>

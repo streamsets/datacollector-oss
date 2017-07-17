@@ -52,6 +52,8 @@
           InfluxDB.</li>
         <li><xref href="JDBCProducer.dita#concept_kvs_3hh_ht">JDBC Producer</xref> - Writes data to
           JDBC.</li>
+        <li><xref href="JMSProducer.dita#concept_sfz_ww5_n1b">JMS Producer</xref> - Writes data to
+          JMS.</li>
         <li><xref href="KProducer.dita#concept_oq2_5jl_zq">Kafka Producer</xref> - Writes data to a
           Kafka cluster.</li>
         <li><xref href="KinFirehose.dita#concept_bjv_dpk_kv">Kinesis Firehose</xref> - Writes data

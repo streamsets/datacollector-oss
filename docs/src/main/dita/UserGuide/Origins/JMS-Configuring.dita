@@ -21,127 +21,21 @@
     <title>Configuring a JMS Consumer Origin</title>
     <shortdesc>Configure a JMS Consumer origin to read JMS messages.</shortdesc>
     <taskbody>
-        <context/>
+        <context>
+            <p><indexterm>JMS Consumer origin<indexterm>configuring</indexterm></indexterm>Configure
+                a JMS Consumer origin to read JMS messages.</p>
+        </context>
         <steps id="steps_lsl_yck_dt">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
                 <cmd/>
             </step>
-            <step>
-                <cmd>On the <wintitle>JMS</wintitle> tab, configure the following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_qzr_nfk_dt">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>JMS Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>JMS Initial Context Factory</entry>
-                                    <entry>JMS initial context factory. <p>For example, for Apache
-                                            ActiveMQ you might use:
-                                                <codeph>org.apache.activemq.jndi.ActiveMQInitialContextFactory</codeph>.
-                                            </p><p>Or for Oracle Weblogic, you might use:
-                                                <codeph>weblogic.jndi.WLInitialContextFactory</codeph>.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>JNDI Connection Factory</entry>
-                                    <entry>JNDI connection factory.<p>For example, for ActiveMQ, you
-                                            might use: <codeph>ConnectionFactory</codeph>.</p><p>For
-                                            Weblogic, you might use:
-                                                <codeph>jms/ConnectionFactory</codeph>.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>JMS Provider URL</entry>
-                                    <entry>URL for the JMS provider.<p>For example, for ActiveMQ,
-                                            you might use:
-                                                <codeph>tcp://localhost:&lt;portno></codeph>.</p><p>For
-                                            Weblogic, you might use:
-                                                <codeph>t3/localhost:&lt;portno></codeph>.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>JMS Destination Name</entry>
-                                    <entry>JMS queue or topic name. <p>For example, for ActiveMQ,
-                                            you might use:<codeph>&lt;queue
-                                            name></codeph>.</p><p>For Weblogic, you might use:
-                                                <codeph>jms/Queue</codeph>.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>JMS Message Selector</entry>
-                                    <entry>Optional message selector to limit the messages read by
-                                        the origin. By default, reads all messages. </entry>
-                                </row>
-                                <row>
-                                    <entry>JMS Destination Type</entry>
-                                    <entry>Optional destination type. </entry>
-                                </row>
-                                <row>
-                                    <entry>Additional JMS Configuration Properties</entry>
-                                    <entry><p>Additional JMS or JNDI configuration properties to use. To add properties, click
-                                                <uicontrol>Add</uicontrol> and define the JMS or
-                                            JNDI property name and value. </p>
-                                        <p>When you add a configuration property, enter the exact
-                                            property name and value. JMS Consumer does not validate
-                                            the property names or values. </p></entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/BatchWaitTime">
-                                    <entry/>
-                                </row>
-                                <row>
-                                    <entry>Use Credentials</entry>
-                                    <entry>Uses JMS credentials.</entry>
-                                </row>
-                                <row>
-                                    <entry>Produce Single Record</entry>
-                                    <entry>Generates a single record for records that include
-                                        multiple objects. <p>When not selected, the origin generates
-                                            multiple records when a record includes multiple
-                                            objects.</p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-JMSProps">
+                <cmd/>
             </step>
-            <step>
-                <cmd>When using JMS credentials, on the <wintitle>Credentials</wintitle> tab,
-                    configure the following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_gqq_3vy_dt">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Credentials Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Username</entry>
-                                    <entry>JMS user name.</entry>
-                                </row>
-                                <row>
-                                    <entry>Password</entry>
-                                    <entry>JMS password.<note
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
-                                        /></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-JMSCredentials">
+                <cmd/>
             </step>
             <step>
                 <cmd>On the <wintitle>Data Format</wintitle> tab, configure the following

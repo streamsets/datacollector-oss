@@ -606,7 +606,7 @@
                         <row>
                             <entry>streamsets-datacollector-jms-lib </entry>
                             <entry>For Java Messaging Services (JMS).<p>Includes the JMS Consumer
-                                    origin.</p></entry>
+                                    origin and JMS Producer destination.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jython_2_7-lib</entry>
