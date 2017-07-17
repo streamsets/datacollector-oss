@@ -20,4 +20,5 @@ import java.util.Queue;
 public interface HashQueue<E> extends Queue<E> {
   E tail();
   void close();
+  void completeInserts();
 }

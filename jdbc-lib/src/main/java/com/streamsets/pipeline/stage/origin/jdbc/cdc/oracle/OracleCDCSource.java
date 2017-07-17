@@ -175,6 +175,13 @@ public class OracleCDCSource extends BaseSource {
   private static final String UNSUPPORTED_SEND_TO_PIPELINE = JDBC_85.getMessage() + ". Sending to pipeline as configured";
   private static final String QUEUEING = "Queueing {}";
   private static final String GENERATED_RECORD = "Generated Record: '{}'";
+  public static final String FOUND_RECORDS_IN_TRANSACTION = "Found {} records in transaction";
+  public static final String RETURNING_OFFSET = "Returning offset: {}";
+  public static final String RETURNING_EMPTY_OFFSET = "Returning empty offset";
+  public static final String STARTED_LOG_MINER_WITH_START_SCN_AND_END_SCN = "Started LogMiner with start SCN: {} and end SCN: {}";
+  public static final String REDO_SELECT_QUERY_FOR_START = "Redo select query for start = {}";
+  public static final String REDO_SELECT_QUERY_FOR_RESUME = "Redo select query for resume = {}";
+  public static final String CURRENT_LATEST_SCN_IS = "Current latest SCN is: {}";
 
   private boolean sentInitialSchemaEvent = false;
   private Optional<ResultSet> currentResultSet = Optional.empty(); //NOSONAR
@@ -460,7 +467,7 @@ public class OracleCDCSource extends BaseSource {
     }
     if (offsetReference.get() != null) {
       String offset = offsetReference.get().toString();
-      LOG.debug("Returning offset: " + offset);
+      LOG.debug("Returning offset: {}", offset);
       offsetReference.set(null);
       return offset;
     } else {
@@ -474,10 +481,10 @@ public class OracleCDCSource extends BaseSource {
         }
         Offset newOffset = new Offset(VERSION_UNCOMMITTED, startDate, lastCommit, lastSeq);
         String offset = newOffset.toString();
-        LOG.debug("Returning offset: " + offset);
+        LOG.debug(RETURNING_OFFSET, offset);
         return offset;
       }
-      LOG.debug("Returning empty offset");
+      LOG.debug(RETURNING_EMPTY_OFFSET);
       return lastSourceOffset == null ? "" : lastSourceOffset;
     }
   }
@@ -588,6 +595,7 @@ public class OracleCDCSource extends BaseSource {
                           return createTransactionBuffer(key.txnId);
                         }
                     );
+
                 int nextSeq = records.isEmpty() ? 1 : records.tail().seq + 1;
                 RecordSequence node = new RecordSequence(attributes, queryString, nextSeq, ctxOp.operationCode, rsId, ssn);
                 records.add(node);
@@ -613,17 +621,20 @@ public class OracleCDCSource extends BaseSource {
               boolean equal = false;
               bufferedRecordsLock.lock();
               try {
-              // so this is the commit which we were processing when we died, so resume from where we left off.
-              if (scnDecimal.compareTo(resumeCommitSCN) == 0 && bufferedRecords.containsKey(key)) {
-                equal = true;
-                Iterator<RecordSequence> txn = bufferedRecords.get(key).iterator();
-                while (txn.hasNext() && txn.next().seq <= resumeSeq) {
-                  txn.remove();
+                // so this is the commit which we were processing when we died, so resume from where we left off.
+                if (scnDecimal.compareTo(resumeCommitSCN) == 0 && bufferedRecords.containsKey(key)) {
+                  equal = true;
+                  HashQueue<RecordSequence> records = bufferedRecords.get(key);
+                  records.completeInserts();
+                  Iterator<RecordSequence> txn = records.iterator();
+                  while (txn.hasNext() && txn.next().seq <= resumeSeq) {
+                    txn.remove();
+                  }
                 }
-              }
-              resumeCommitSCN = new BigDecimal(scn);
-              int lastSeq = 0;
-              int bufferedRecordsToBeRemoved = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET).size();
+                resumeCommitSCN = new BigDecimal(scn);
+                int lastSeq = 0;
+                int bufferedRecordsToBeRemoved = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET).size();
+                LOG.debug(FOUND_RECORDS_IN_TRANSACTION, bufferedRecordsToBeRemoved);
                 if (bufferedRecordsToBeRemoved > 0) {
                   lastSeq = addRecordsToBatch(batchSize, batchMaker, xid);
                   if (equal) {
@@ -733,9 +744,7 @@ public class OracleCDCSource extends BaseSource {
     }
     attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
     record.set(Field.create(fields));
-    if (LOG.isDebugEnabled()) {
-      LOG.debug(Utils.format(GENERATED_RECORD, record));
-    }
+    LOG.debug(GENERATED_RECORD, record);
     Joiner errorStringJoiner = Joiner.on(",");
     List<String> errorColumns = Collections.emptyList();
     if (!fieldTypeExceptions.isEmpty()) {
@@ -792,7 +801,8 @@ public class OracleCDCSource extends BaseSource {
     TransactionIdKey key = new TransactionIdKey(xid);
     bufferedRecordsLock.lock();
     try {
-    HashQueue<RecordSequence> records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
+      HashQueue<RecordSequence> records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
+      records.completeInserts();
       int lastSeq = 0; //implies nothing read.
       for (int i = 0; i < batchSize && !records.isEmpty(); i++) {
         RecordSequence r = records.remove();
@@ -943,7 +953,7 @@ public class OracleCDCSource extends BaseSource {
       startLogMnrForCommitSCN.setBigDecimal(2, endSCN);
       startLogMnrForCommitSCN.execute();
       if (LOG.isDebugEnabled()) {
-        LOG.debug("Started LogMiner with start SCN: {} and end SCN: {}",
+        LOG.debug(STARTED_LOG_MINER_WITH_START_SCN_AND_END_SCN,
             oldestSCN.toPlainString(), endSCN.toPlainString());
       }
     } catch (SQLException ex) {
@@ -1200,8 +1210,10 @@ public class OracleCDCSource extends BaseSource {
       try {
         if (txnBufferLocation.exists()) {
           FileUtils.deleteDirectory(txnBufferLocation);
+          LOG.info("Deleted " + txnBufferLocation.toString());
         }
         Files.createDirectories(txnBufferLocation.toPath());
+        LOG.info("Created " + txnBufferLocation.toString());
       } catch (IOException ex) {
         Throwables.propagate(ex);
       }
@@ -1274,8 +1286,8 @@ public class OracleCDCSource extends BaseSource {
         Utils.format(logMinerProcedure, "STARTSCN => ?", "ENDTIME => ?"));
     endLogMnr = connection.prepareCall("BEGIN DBMS_LOGMNR.END_LOGMNR; END;");
     getCommitTimestamp = connection.prepareStatement(GET_COMMIT_TS);
-    LOG.debug("Redo select query for start = " + startString);
-    LOG.debug("Redo select query for resume = " + resumeString);
+    LOG.debug(REDO_SELECT_QUERY_FOR_START, startString);
+    LOG.debug(REDO_SELECT_QUERY_FOR_RESUME, resumeString);
   }
 
   private PreparedStatement getSelectChangesStatement() throws SQLException {
@@ -1324,7 +1336,9 @@ public class OracleCDCSource extends BaseSource {
         throw new SQLException("Missing SCN");
       }
       BigDecimal scn = rs.getBigDecimal(1);
-      LOG.debug("Current latest SCN is: " + scn.toPlainString());
+      if (LOG.isDebugEnabled()) {
+        LOG.debug(CURRENT_LATEST_SCN_IS, scn.toPlainString());
+      }
       return scn;
     }
   }
@@ -1671,8 +1685,13 @@ public class OracleCDCSource extends BaseSource {
     return contextAndOpCode;
   }
   private HashQueue<RecordSequence> createTransactionBuffer(String txnId) {
-    return configBean.bufferLocation == BufferingValues.IN_MEMORY ? new InMemoryHashQueue<>() :
-        new FileBackedHashQueue<>(new File(txnBufferLocation, txnId));
+    try {
+      return configBean.bufferLocation == BufferingValues.IN_MEMORY ? new InMemoryHashQueue<>() :
+          new FileBackedHashQueue<>(new File(txnBufferLocation, txnId));
+    } catch (IOException ex) {
+      LOG.error("Error while creating transaction buffer", ex);
+      throw new RuntimeException(ex);
+    }
   }
 
   private class PrecisionAndScale {

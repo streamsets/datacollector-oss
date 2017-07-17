@@ -15,31 +15,33 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.LinkedHashSet;
 
 public class FileBackedHashQueue<E> implements HashQueue<E> {
 
   public static final int MB_100 = 100 * 1024 * 1024;
   private HTreeMap underlying;
   private final DB db;
-  private final ScheduledExecutorService executorService =
-      Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("Queue Clean up").build());
+  private boolean committed = false;
+  private E tail;
 
-  private InMemoryHashQueue<RsIdSsn> keys = new InMemoryHashQueue<>();
+  private LinkedHashSet<RsIdSsn> keys = new LinkedHashSet<>();
 
-  public FileBackedHashQueue(File file) {
-    db = DBMaker.fileDB(file)
+  public FileBackedHashQueue(File file) throws IOException {
+    Files.createDirectories(file.toPath());
+    Path f = Files.createTempDirectory(file.toPath(), "db-");
+    db = DBMaker.fileDB(new File(f.toFile(), "dbFile"))
         .allocateStartSize(MB_100)
         .allocateIncrement(MB_100)
         .closeOnJvmShutdown()
@@ -47,19 +49,16 @@ public class FileBackedHashQueue<E> implements HashQueue<E> {
         .fileDeleteAfterClose()
         .fileMmapEnable()
         .fileLockDisable()
-        .concurrencyDisable()
+        .transactionEnable()
         .make();
 
     underlying = db.hashMap("t").create();
-    executorService.scheduleWithFixedDelay(() -> db.getStore().compact(), 10, 10, TimeUnit.MINUTES);
-
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public E tail() {
-    RsIdSsn key = keys.tail();
-    return (E) underlying.get(key);
+    return tail;
   }
 
   @Override
@@ -74,7 +73,9 @@ public class FileBackedHashQueue<E> implements HashQueue<E> {
 
   @Override
   public boolean contains(Object o) {
-    return keys.contains(o);
+    RecordSequence incoming = (RecordSequence) o;
+    RsIdSsn key = new RsIdSsn(incoming.rsId, incoming.ssn.toString());
+    return keys.contains(key);
   }
 
   @NotNull
@@ -99,8 +100,10 @@ public class FileBackedHashQueue<E> implements HashQueue<E> {
   @Override
   @SuppressWarnings("unchecked")
   public boolean add(E e) {
-    RsIdSsn key = new RsIdSsn(((RecordSequence)e).rsId, ((RecordSequence)e).ssn.toString());
+    RecordSequence incoming = (RecordSequence)e;
+    RsIdSsn key = new RsIdSsn(incoming.rsId, incoming.ssn.toString());
     keys.add(key);
+    tail = e;
     underlying.put(key, e);
     return true;
   }
@@ -144,7 +147,12 @@ public class FileBackedHashQueue<E> implements HashQueue<E> {
   @Override
   @SuppressWarnings("unchecked")
   public E remove() {
-    RsIdSsn key = keys.remove();
+    Iterator<RsIdSsn> it = keys.iterator();
+    RsIdSsn key = it.next();
+    it.remove();
+    if (keys.isEmpty()) {
+      tail = null;
+    }
     return (E) underlying.get(key);
   }
 
@@ -165,8 +173,15 @@ public class FileBackedHashQueue<E> implements HashQueue<E> {
   }
 
   public void close() {
-    executorService.shutdown();
     this.db.close();
+  }
+
+  @Override
+  public void completeInserts() {
+    if (!committed) {
+      db.commit();
+      committed = true;
+    }
   }
 
   private class FileBackedHashQueueIterator implements Iterator<E> {

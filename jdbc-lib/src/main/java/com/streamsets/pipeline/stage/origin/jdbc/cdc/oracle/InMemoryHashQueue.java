@@ -164,6 +164,11 @@ public class InMemoryHashQueue<E> implements HashQueue<E> {
   }
 
   @Override
+  public void completeInserts() {
+    // no op
+  }
+
+  @Override
   public int hashCode() {
     return underlying.hashCode();
   }
