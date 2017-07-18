@@ -99,7 +99,7 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-aws-lib </entry>
-                            <entry>For Amazon Web Services 1.10.<p>Includes:<ul id="ul_lvd_frq_rw">
+                            <entry>For Amazon Web Services 1.11.<p>Includes:<ul id="ul_lvd_frq_rw">
                                         <li>Amazon S3 origin</li>
                                         <li>Amazon S3 destination</li>
                                         <li>Kinesis Consumer origin</li>
