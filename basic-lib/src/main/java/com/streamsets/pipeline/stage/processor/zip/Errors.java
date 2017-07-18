@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  ZIP_00("Field '{}' is not a LIST or LIST_MAP"),
+  ZIP_00("Fields '{}' are not a LIST or LIST_MAP"),
   ZIP_01("Fields to zip do not exist: {}")
   ;
 
