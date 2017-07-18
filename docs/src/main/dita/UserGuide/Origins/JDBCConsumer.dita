@@ -36,9 +36,12 @@
             to the database. You configure the query mode and SQL query to define the data returned
             by the database. You can also call stored procedures from the SQL query.</p>
         <p>You can configure the JDBC Query Consumer to perform change data capture for databases
-            that store the information in a table. You can also configure custom properties that
-            your driver requires. </p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/JDBC-legacyInfo"/>
+            that store the information in a table. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-unsupportedType"
+            /></p>
+        <p>You can also configure custom properties that your driver requires. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-JDBC-legacyInfo"
+            /></p>
         <p>By default, the origin creates JDBC header attributes to provide information about source
             data in record headers. </p>
         <p>When reading changed data from Microsoft SQL Server, the origin <ph

@@ -1228,6 +1228,13 @@ web-0011.log</codeblock></dd>
                         4.0, you can specify the driver class name and define a health check
                         query.</ph></p>
             <p>
+                  <draft-comment author="Loretta">JDBC Query Consumer and Multitable Consumer both
+                        use this in the overviews.</draft-comment>
+            </p>
+            <p><ph id="ph-unsupportedType">And you can specify what the origin does when
+                        encountering an unsupported data type: convert the data to string or stop
+                        the pipeline.</ph></p>
+            <p>
                   <draft-comment author="Loretta">JDBC Consumer, Producer, and Query executor use
                         the following <uicontrol>ph-JDBCdriver</uicontrol> and
                               <uicontrol>p-JDBCdriver-link</uicontrol> in Installing the

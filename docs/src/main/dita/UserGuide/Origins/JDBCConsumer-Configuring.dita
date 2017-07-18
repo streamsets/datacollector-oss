@@ -55,8 +55,7 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_plp_tp2_px"/></xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"
-                                    />
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Error">
@@ -285,6 +284,10 @@
                                                 pipeline with invalid queries. Use this option with
                                                 care. </note>
                                         </p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCunknownType">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -389,6 +389,10 @@
                                                 the dependencies between the tables.</li>
                                         </ul></entry>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCunknownType">
+                                    <entry/>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table></info>

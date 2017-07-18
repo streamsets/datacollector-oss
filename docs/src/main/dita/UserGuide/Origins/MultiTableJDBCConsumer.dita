@@ -37,7 +37,9 @@
             origin.</note>
         <p>When you configure JDBC Multitable Consumer, you specify connection information, a query
             interval, and custom JDBC configuration properties to determine how the origin connects
-            to the database. </p>
+            to the database. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-unsupportedType"
+            /></p>
         <p>You define a table configuration for each group of tables that you want to read. You
             define the number of threads that the origin uses to read from the tables and the
             strategy that the origin uses to create each batch of data. You also define the initial
@@ -45,8 +47,9 @@
         <p>When the pipeline stops, JDBC Multitable Consumer notes where it stops reading. When the
             pipeline starts again, JDBC Multitable Consumer continues processing from where it
             stopped by default. You can reset the origin to process all available data.</p>
-        <p>To use a JDBC version older than 4.0, you can specify the driver class name and define a
-            health check query.</p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-JDBC-legacyInfo"
+            /></p>
         <p
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventHandling-overview"/>
  </conbody>

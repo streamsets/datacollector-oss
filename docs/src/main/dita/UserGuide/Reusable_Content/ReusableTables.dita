@@ -1055,9 +1055,10 @@
      </tbody>
     </tgroup>
    </table>
-   <draft-comment author="Loretta"><b>table-JDBCAdvProps</b> - JDBC Lookup uses the whole table.
-    JDBC Consumer uses rows but has its own. JDBC Tee uses some rows. Producer uses a bunch of rows.
-    Oracle CDC uses all rows but Auto Commit. – note updated LC 2/9/17</draft-comment>
+   <draft-comment author="Loretta"><b>table-JDBCAdvProps</b> - JDBC Lookup uses rows in the whole
+    table. JDBC Consumer uses rows but has its own. JDBC Tee uses some rows. Producer uses a bunch
+    of rows. Oracle CDC uses most rows but Auto Commit. – note updated LC 2/9/17  – LC adding On
+    Unknown Type - so far just used by JDBC origins.</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table-JDBCAdvProps">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1118,10 +1119,20 @@
          <li>Serializable</li>
         </ul></entry>
       </row>
+      <row id="row-JDBCunknownType">
+       <entry>On Unknown Type</entry>
+       <entry>Action to take when the origin encounters a record with an unsupported data type:<ul
+         id="ul_jcm_gdc_41b">
+         <li>Stop Pipeline - Stops the pipeline after completing processing the previous
+          records.</li>
+         <li>Convert to String - Converts the data to string and continues processing. </li>
+        </ul></entry>
+      </row>
      </tbody>
     </tgroup>
    </table>
   </p>
+  <p/>
   <draft-comment author="alisontaylor"><b>table-S3AdvProps</b> Amazon S3 destination uses the whole
    table, S3 and Kinesis Consumer use certain rows.</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table-S3AdvProps">
