@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -89,24 +90,48 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
 
   @Override
   public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
-    return scheduledExecutorService.invokeAll(tasks);
+    String user = MDC.get(LogConstants.USER);
+    String entity = MDC.get(LogConstants.ENTITY);
+    List<SafeCallable<T>> wrappedTasks = new ArrayList<>(tasks.size());
+    for (Callable<T> task : tasks) {
+      wrappedTasks.add(new SafeCallable<T>(user, entity, task, true));
+    }
+    return scheduledExecutorService.invokeAll(wrappedTasks);
   }
 
   @Override
   public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
     throws InterruptedException {
-    return scheduledExecutorService.invokeAll(tasks, timeout, unit);
+    String user = MDC.get(LogConstants.USER);
+    String entity = MDC.get(LogConstants.ENTITY);
+    List<SafeCallable<T>> wrappedTasks = new ArrayList<>(tasks.size());
+    for (Callable<T> task : tasks) {
+      wrappedTasks.add(new SafeCallable<T>(user, entity, task, true));
+    }
+    return scheduledExecutorService.invokeAll(wrappedTasks, timeout, unit);
   }
 
   @Override
   public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
-    return scheduledExecutorService.invokeAny(tasks);
+    String user = MDC.get(LogConstants.USER);
+    String entity = MDC.get(LogConstants.ENTITY);
+    List<SafeCallable<T>> wrappedTasks = new ArrayList<>(tasks.size());
+    for (Callable<T> task : tasks) {
+      wrappedTasks.add(new SafeCallable<T>(user, entity, task, true));
+    }
+    return scheduledExecutorService.invokeAny(wrappedTasks);
   }
 
   @Override
   public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
     throws InterruptedException, ExecutionException, TimeoutException {
-    return scheduledExecutorService.invokeAny(tasks, timeout, unit);
+    String user = MDC.get(LogConstants.USER);
+    String entity = MDC.get(LogConstants.ENTITY);
+    List<SafeCallable<T>> wrappedTasks = new ArrayList<>(tasks.size());
+    for (Callable<T> task : tasks) {
+      wrappedTasks.add(new SafeCallable<T>(user, entity, task, true));
+    }
+    return scheduledExecutorService.invokeAny(wrappedTasks, timeout, unit);
   }
 
   @Override
