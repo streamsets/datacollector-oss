@@ -23,7 +23,7 @@ public enum Errors implements ErrorCode {
   KUDU_00("Error connecting to kudu master '{}': {}"),
   KUDU_01("Table '{}' does not exist"),
   KUDU_02("Parameter is not valid"),
-  KUDU_03("Errors while writing to Kudu: {}"),
+  KUDU_03("Errors while interacting with Kudu: {}"),
   KUDU_04("Column or field '{}' is not type '{}'"),
   KUDU_05("Column '{}' does not exist"),
   KUDU_06("Column '{}' mapped from field '{}' is not nullable"),
@@ -34,7 +34,12 @@ public enum Errors implements ErrorCode {
   KUDU_12("Invalid table name template expression '{}': {}"),
   KUDU_13("Operation not supported: {}"),
   KUDU_14("Unknown action for unsupported operation: {}"),
-  KUDU_15("Row key {} not found")
+  KUDU_15("Row key {} not found"),
+
+  KUDU_30("Column mappings must be specified for lookup processor"),
+  KUDU_31("No rows found"),
+  KUDU_32("Primary key field '{}' not found in record"),
+  KUDU_33("Unsupported primary key type: {}")
   ;
   private final String msg;
 
