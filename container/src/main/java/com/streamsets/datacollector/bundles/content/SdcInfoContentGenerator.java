@@ -21,23 +21,19 @@ import com.streamsets.datacollector.bundles.BundleContentGeneratorDef;
 import com.streamsets.datacollector.bundles.BundleContext;
 import com.streamsets.datacollector.bundles.BundleWriter;
 import com.streamsets.datacollector.http.GaugeValue;
-import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.management.InstanceNotFoundException;
-import javax.management.IntrospectionException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.management.ReflectionException;
 import javax.management.RuntimeMBeanException;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeType;
 import javax.management.openmbean.TabularData;
-import java.io.File;
 import java.io.IOException;
-import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
@@ -48,7 +44,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Properties;
 import java.util.Set;
 
 @BundleContentGeneratorDef(
@@ -58,6 +53,8 @@ import java.util.Set;
   enabledByDefault = true
 )
 public class SdcInfoContentGenerator implements BundleContentGenerator {
+  private static final Logger LOG = LoggerFactory.getLogger(BundleContentGenerator.class);
+
   private static final String FILE = "F";
   private static final String DIR = "D";
 
@@ -110,29 +107,33 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
     writer.markStartOfFile("dir_listing/" + name);
     Path prefix = Paths.get(configDir);
 
-    Files.walkFileTree(Paths.get(configDir), new FileVisitor<Path>() {
-      @Override
-      public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-        printFile(dir, prefix, DIR, writer);
-        return FileVisitResult.CONTINUE;
-      }
+    try {
+      Files.walkFileTree(Paths.get(configDir), new FileVisitor<Path>() {
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+          printFile(dir, prefix, DIR, writer);
+          return FileVisitResult.CONTINUE;
+        }
 
-      @Override
-      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-        printFile(file, prefix, FILE, writer);
-        return FileVisitResult.CONTINUE;
-      }
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+          printFile(file, prefix, FILE, writer);
+          return FileVisitResult.CONTINUE;
+        }
 
-      @Override
-      public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-        return FileVisitResult.CONTINUE;
-      }
+        @Override
+        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+          return FileVisitResult.CONTINUE;
+        }
 
-      @Override
-      public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-        return FileVisitResult.CONTINUE;
-      }
-    });
+        @Override
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+          return FileVisitResult.CONTINUE;
+        }
+      });
+    } catch (Exception e) {
+      LOG.error("Can't generate listing of {} directory: {}", configDir, e.toString(), e);
+    }
     writer.markEndOfFile();
   }
 
