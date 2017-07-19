@@ -26,7 +26,7 @@ import java.util.Map;
 
 public interface PipelineStoreTask extends Task {
   // Provide upgrade path in PipelineConfigurationUpgrader when increasing
-  public static final int SCHEMA_VERSION = 3;
+  public static final int SCHEMA_VERSION = 4;
   public static final int RULE_DEFINITIONS_SCHEMA_VERSION = 2;
 
   public PipelineConfiguration create(

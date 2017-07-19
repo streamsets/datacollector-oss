@@ -320,39 +320,6 @@ public class TestPipelineConfigurationUpgrader {
     Assert.assertEquals(1, UPGRADE_CALLED);
   }
 
-  private PipelineConfiguration getPipelineUpToDate() {
-    StageConfiguration stageConf1 = new StageConfigurationBuilder("i1", SOURCE2_V1_DEF.getName())
-      .withLibrary(SOURCE2_V1_DEF.getLibrary())
-      .withStageVersion(SOURCE2_V2_DEF.getVersion())
-      .build();
-
-    StageConfiguration stageConf2 = new StageConfigurationBuilder("i2", SOURCE2_V1_DEF.getName())
-      .withLibrary(SOURCE2_V1_DEF.getLibrary())
-      .withStageVersion(SOURCE2_V2_DEF.getVersion())
-      .build();
-
-    StageConfiguration errorConf = new StageConfigurationBuilder("e", SOURCE2_V1_DEF.getName())
-      .withLibrary(SOURCE2_V1_DEF.getLibrary())
-      .withStageVersion(SOURCE2_V2_DEF.getVersion())
-      .build();
-
-    return new PipelineConfiguration(
-      1,
-      PipelineConfigBean.VERSION,
-      "pipelineId",
-      UUID.randomUUID(),
-      "label",
-      null,
-      Collections.emptyList(),
-      null,
-      ImmutableList.of(stageConf1, stageConf2),
-      errorConf,
-      null,
-      Collections.emptyList(),
-      Collections.emptyList()
-    );
-  }
-
   private PipelineConfiguration getPipelineToUpgrade() {
     StageConfiguration stageConf1 = new StageConfigurationBuilder("i1", SOURCE2_V1_DEF.getName())
       .withLibrary(SOURCE2_V1_DEF.getLibrary())
@@ -461,6 +428,32 @@ public class TestPipelineConfigurationUpgrader {
 
     Assert.assertNotNull(pipelineConf.getErrorStage().getEventLanes());
     Assert.assertEquals(0, pipelineConf.getErrorStage().getEventLanes().size());
+  }
+
+  /**
+   * Nulls for new startEventStages and stopEventStages should be replaced with empty lists
+   */
+  @Test
+  public void testUpgradeSchemaVersion3to4() throws Exception {
+    PipelineConfiguration pipelineConf = getPipelineToUpgrade();
+    PipelineConfigurationUpgrader up = getPipelineV2Upgrader();
+
+    List<Issue> issues = new ArrayList<>();
+
+    Assert.assertNull(pipelineConf.getStartEventStages());
+    Assert.assertNull(pipelineConf.getStopEventStages());
+
+    pipelineConf = up.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF), pipelineConf, issues);
+
+    Assert.assertNotNull(pipelineConf);
+    Assert.assertTrue(issues.isEmpty());
+    Assert.assertEquals(PipelineStoreTask.SCHEMA_VERSION, pipelineConf.getSchemaVersion());
+
+    Assert.assertNotNull(pipelineConf.getStartEventStages());
+    Assert.assertTrue(pipelineConf.getStartEventStages().isEmpty());
+
+    Assert.assertNotNull(pipelineConf.getStopEventStages());
+    Assert.assertTrue(pipelineConf.getStopEventStages().isEmpty());
   }
 
 }

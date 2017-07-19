@@ -82,8 +82,8 @@ public class PipelineConfiguration implements Serializable {
     this.statsAggregatorStage = statsAggregatorStage;
     issues = new Issues();
     memoryLimitConfiguration = new MemoryLimitConfiguration();
-    this.startEventStages = Optional.ofNullable(startEventStages).orElse(Collections.emptyList());
-    this.stopEventStages = Optional.ofNullable(stopEventStages).orElse(Collections.emptyList());
+    this.startEventStages = startEventStages;
+    this.stopEventStages = stopEventStages;
   }
 
   public void setInfo(PipelineInfo info) {
@@ -247,8 +247,16 @@ public class PipelineConfiguration implements Serializable {
     return startEventStages;
   }
 
+  public void setStartEventStages(List<StageConfiguration> startEventStages) {
+    this.startEventStages = startEventStages;
+  }
+
   public List<StageConfiguration> getStopEventStages() {
     return stopEventStages;
+  }
+
+  public void setStopEventStages(List<StageConfiguration> stopEventStages) {
+    this.stopEventStages = stopEventStages;
   }
 
   @Override
