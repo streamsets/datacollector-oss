@@ -42,6 +42,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+@Ignore
 public class MysqlGtidOnSourceIT extends AbstractMysqlSource {
   @ClassRule
   public static GenericContainer gtid_on = new MySQLContainer("mysql:5.6")
