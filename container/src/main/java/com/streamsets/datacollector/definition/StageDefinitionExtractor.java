@@ -28,6 +28,7 @@ import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.OffsetCommitter;
+import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
@@ -199,6 +200,7 @@ public abstract class StageDefinitionExtractor {
         StageType type = extractStageType(klass);
         boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
         boolean statsAggregatorStage = klass.getAnnotation(StatsAggregatorStage.class) != null;
+        boolean pipelineLifecycleStage = klass.getAnnotation(PipelineLifecycleStage.class) != null;
         HideConfigs hideConfigs = klass.getAnnotation(HideConfigs.class);
         boolean preconditions = !errorStage && type != StageType.SOURCE &&
             ((hideConfigs == null) || !hideConfigs.preconditions());
@@ -296,6 +298,7 @@ public abstract class StageDefinitionExtractor {
             resetOffset,
             onlineHelpRefUrl,
             statsAggregatorStage,
+            pipelineLifecycleStage,
             offsetCommitController,
             producesEvents
         );

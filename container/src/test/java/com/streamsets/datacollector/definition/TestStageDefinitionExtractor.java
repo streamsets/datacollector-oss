@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.OffsetCommitTrigger;
 import com.streamsets.pipeline.api.OffsetCommitter;
+import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageDef;
@@ -216,6 +217,15 @@ public class TestStageDefinitionExtractor {
   @StageDef(version = 1, label = "", icon="missing.svg", onlineHelpRefUrl = "")
   @ErrorStage
   public static class MissingIcon extends BaseTarget {
+    @Override
+    public void write(Batch batch) throws StageException {
+
+    }
+  }
+
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
+  @PipelineLifecycleStage
+  public static class PipelineLifecycleTarget extends Target1 {
     @Override
     public void write(Batch batch) throws StageException {
 
@@ -419,6 +429,13 @@ public class TestStageDefinitionExtractor {
   @Test(expected = IllegalArgumentException.class)
   public void testNonTargetOffsetCommit() {
     StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, OffsetCommitSource.class, "x");
+  }
+
+  @Test
+  public void testExtractPipelineLifecycleStage() {
+    StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, PipelineLifecycleTarget.class, "x");
+    Assert.assertEquals(StageType.TARGET, def.getType());
+    Assert.assertTrue(def.isPipelineLifecycleStage());
   }
 
   @Test

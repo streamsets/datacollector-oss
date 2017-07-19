@@ -48,6 +48,7 @@ public class StageDefinition {
   private final StageType type;
   private final boolean errorStage;
   private final boolean statsAggregatorStage;
+  private final boolean pipelineLifecycleStage;
   private final boolean preconditions;
   private final boolean onRecordError;
   private final RawSourceDefinition rawSourceDefinition;
@@ -96,6 +97,7 @@ public class StageDefinition {
       boolean resetOffset,
       String onlineHelpRefUrl,
       boolean statsAggregatorStage,
+      boolean pipelineLifecycleStage,
       boolean offsetCommitTrigger,
       boolean producesEvents
   ) {
@@ -115,6 +117,7 @@ public class StageDefinition {
     this.rawSourceDefinition = rawSourceDefinition;
     this.onlineHelpRefUrl = onlineHelpRefUrl;
     this.statsAggregatorStage = statsAggregatorStage;
+    this.pipelineLifecycleStage = pipelineLifecycleStage;
     configDefinitionsMap = new HashMap<>();
     for (ConfigDefinition conf : configDefinitions) {
       configDefinitionsMap.put(conf.getName(), conf);
@@ -179,6 +182,7 @@ public class StageDefinition {
     statsAggregatorStage = def.statsAggregatorStage;
     offsetCommitTrigger = def.offsetCommitTrigger;
     producesEvents = def.producesEvents;
+    pipelineLifecycleStage = def.pipelineLifecycleStage;
   }
 
   public StageDefinition(
@@ -207,6 +211,7 @@ public class StageDefinition {
       boolean resetOffset,
       String onlineHelpRefUrl,
       boolean statsAggregatorStage,
+      boolean pipelineLifecycleStage,
       boolean offsetCommitTrigger,
       boolean producesEvents
   ) {
@@ -249,6 +254,7 @@ public class StageDefinition {
     this.libJarsRegex = libJarsRegex;
     this.resetOffset = resetOffset;
     this.statsAggregatorStage = statsAggregatorStage;
+    this.pipelineLifecycleStage = pipelineLifecycleStage;
     this.offsetCommitTrigger = offsetCommitTrigger;
     this.producesEvents = producesEvents;
   }
@@ -323,6 +329,10 @@ public class StageDefinition {
 
   public boolean isStatsAggregatorStage() {
     return statsAggregatorStage;
+  }
+
+  public boolean isPipelineLifecycleStage() {
+    return pipelineLifecycleStage;
   }
 
   public void addConfiguration(ConfigDefinition confDef) {
@@ -522,6 +532,7 @@ public class StageDefinition {
         resetOffset,
         onlineHelpRefUrl,
         statsAggregatorStage,
+        pipelineLifecycleStage,
         offsetCommitTrigger,
         producesEvents
     );

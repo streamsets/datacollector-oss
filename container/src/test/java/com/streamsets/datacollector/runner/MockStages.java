@@ -913,14 +913,36 @@ public class MockStages {
       public Builder overrideClass(String name, Class<? extends Stage> klass) {
         if (stages.containsKey(name)) {
           StageDefinition oldDef = stages.get(name);
-          StageDefinition newDef = new StageDefinition(StageDefinitionBuilder.createLibraryDef(klass.getClassLoader()),
-                                                       false, klass, oldDef.getName(), oldDef.getVersion(), oldDef.getLabel(),
-            oldDef.getDescription(), oldDef.getType(), oldDef.isErrorStage(), oldDef.hasPreconditions(),
-            oldDef.hasOnRecordError(), oldDef.getConfigDefinitions(),
-            oldDef.getRawSourceDefinition(), oldDef.getIcon(), oldDef.getConfigGroupDefinition(),
-            oldDef.isVariableOutputStreams(), oldDef.getOutputStreams(), oldDef.getOutputStreamLabelProviderClass(),
-            Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE), false, new StageUpgrader.Default(),
-            Collections.<String>emptyList(), false, "", false, false, false);
+          StageDefinition newDef = new StageDefinition(
+              StageDefinitionBuilder.createLibraryDef(klass.getClassLoader()),
+              false,
+              klass,
+              oldDef.getName(),
+              oldDef.getVersion(),
+              oldDef.getLabel(),
+              oldDef.getDescription(),
+              oldDef.getType(),
+              oldDef.isErrorStage(),
+              oldDef.hasPreconditions(),
+              oldDef.hasOnRecordError(),
+              oldDef.getConfigDefinitions(),
+              oldDef.getRawSourceDefinition(),
+              oldDef.getIcon(),
+              oldDef.getConfigGroupDefinition(),
+              oldDef.isVariableOutputStreams(),
+              oldDef.getOutputStreams(),
+              oldDef.getOutputStreamLabelProviderClass(),
+              Arrays.asList(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE),
+              false,
+              new StageUpgrader.Default(),
+              Collections.<String>emptyList(),
+              false,
+              "",
+              false,
+              false,
+              false,
+              false
+          );
           stages.put(name, newDef);
         } else {
           throw new IllegalStateException("Expected stage at " + name);

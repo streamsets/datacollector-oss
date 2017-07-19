@@ -63,6 +63,7 @@ public class StageDefinitionBuilder {
   boolean resetOffset = false;
   String onlineHelpRefUrl = "";
   boolean statsAggregatorStage = false;
+  boolean pipelineLifecycleStage = false;
   boolean offsetCommitTrigger = false;
   boolean producesEvents = false;
 
@@ -141,6 +142,11 @@ public class StageDefinitionBuilder {
     return this;
   }
 
+  public StageDefinitionBuilder withPipelineLifecycleStage(boolean pipelineLifecycleStage) {
+    this.pipelineLifecycleStage = pipelineLifecycleStage;
+    return this;
+  }
+
   public StageDefinitionBuilder withOffsetCommitTrigger(boolean offsetCommitTrigger) {
     this.offsetCommitTrigger = offsetCommitTrigger;
     return this;
@@ -178,6 +184,7 @@ public class StageDefinitionBuilder {
       resetOffset,
       onlineHelpRefUrl,
       statsAggregatorStage,
+      pipelineLifecycleStage,
       offsetCommitTrigger,
       producesEvents
     );

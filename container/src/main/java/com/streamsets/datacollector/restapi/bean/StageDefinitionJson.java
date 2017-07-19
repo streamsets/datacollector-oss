@@ -78,6 +78,10 @@ public class StageDefinitionJson {
     return stageDefinition.isStatsAggregatorStage();
   }
 
+  public boolean isPipelineLifecycleStage() {
+    return stageDefinition.isPipelineLifecycleStage();
+  }
+
   public boolean isOffsetCommitTrigger() {
     return stageDefinition.isOffsetCommitTrigger();
   }
