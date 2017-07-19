@@ -71,6 +71,7 @@ public enum ValidationError implements ErrorCode {
 
   VALIDATION_0034("Value for configuration '{}' cannot be greater then '{}'"),
   VALIDATION_0035("Value for configuration '{}' cannot be less then '{}'"),
+  VALIDATION_0036("{} cannot have event streams '{}'"),
 
   //Rule Validation Errors
   VALIDATION_0040("The data rule property '{}' must be defined"),
@@ -110,6 +111,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0102("Stage have configured event lane even though that it doesn't produce events."),
   VALIDATION_0103("Stage '{}' have merged input from both data and event part of the pipeline."),
   VALIDATION_0104("Stage has open event streams"),
+  VALIDATION_0105("Invalid pipeline lifecycle specification: {}"),
   ;
 
   private final String msg;

@@ -357,4 +357,33 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(1, issues.size());
     Assert.assertEquals(ValidationError.VALIDATION_0103.name(), issues.get(0).getErrorCode());
   }
+
+  // Proper pipeline lifecycle event configuration
+  @Test
+  public void testPipelineLifecycleEvents() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationLifecycleEvents();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    validator.validate();
+
+    Assert.assertFalse(validator.getIssues().hasIssues());
+    Assert.assertTrue(validator.canPreview());
+  }
+
+  // Incorrect configuration - input and event lanes
+  @Test
+  public void testPipelineLifecycleEventsIncorrect() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationLifecycleEventsIncorrect();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    validator.validate();
+
+    Assert.assertTrue(validator.getIssues().hasIssues());
+    Assert.assertFalse(validator.canPreview());
+
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(2, issues.size());
+    Assert.assertEquals(ValidationError.VALIDATION_0036.name(), issues.get(0).getErrorCode());
+    Assert.assertEquals(ValidationError.VALIDATION_0012.name(), issues.get(1).getErrorCode());
+  }
 }

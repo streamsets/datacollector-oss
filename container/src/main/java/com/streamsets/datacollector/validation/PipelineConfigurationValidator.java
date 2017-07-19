@@ -139,6 +139,8 @@ public class PipelineConfigurationValidator {
     canPreview &= validateEventAndDataLanesDoNotCross();
     canPreview &= validateErrorStage();
     canPreview &= validateStatsAggregatorStage();
+    canPreview &= validatePipelineLifecycleEventStages(pipelineConfiguration.getStartEventStages());
+    canPreview &= validatePipelineLifecycleEventStages(pipelineConfiguration.getStopEventStages());
     canPreview &= validateStagesExecutionMode(pipelineConfiguration);
     canPreview &= validateCommitTriggerStage(pipelineConfiguration);
 
@@ -420,8 +422,7 @@ public class PipelineConfigurationValidator {
   private boolean validateStageConfiguration(
       boolean shouldBeSource,
       StageConfiguration stageConf,
-      boolean errorStage,
-      boolean statsAggregatorStage,
+      boolean noInputAndEventLanes,
       IssueCreator issueCreator
   ) {
     boolean preview = true;
@@ -573,13 +574,25 @@ public class PipelineConfigurationValidator {
           break;
         case EXECUTOR:
         case TARGET:
-          if (!errorStage && !statsAggregatorStage && stageConf.getInputLanes().isEmpty()) {
-            // target stage must have at least one input lane
+          // Normal target stage must have at least one input lane
+          if (!noInputAndEventLanes && stageConf.getInputLanes().isEmpty()) {
             issues.add(
                 issueCreator.create(
                     stageConf.getInstanceName(),
                     ValidationError.VALIDATION_0014,
                     "Target"
+                )
+            );
+            preview = false;
+          }
+          // Error/Stats/Pipeline lifecycle must not have an input lane
+          if (noInputAndEventLanes && !stageConf.getInputLanes().isEmpty()) {
+            issues.add(
+                issueCreator.create(
+                    stageConf.getInstanceName(),
+                    ValidationError.VALIDATION_0012,
+                    "Error/Stats/Lifecycle",
+                    stageConf.getInputLanes()
                 )
             );
             preview = false;
@@ -592,6 +605,17 @@ public class PipelineConfigurationValidator {
                     ValidationError.VALIDATION_0013,
                     stageDef.getType(),
                     stageConf.getOutputLanes()
+                )
+            );
+            preview = false;
+          }
+          if (noInputAndEventLanes && !stageConf.getEventLanes().isEmpty()) {
+            issues.add(
+                issueCreator.create(
+                    stageConf.getInstanceName(),
+                    ValidationError.VALIDATION_0036,
+                    stageDef.getType(),
+                    stageConf.getEventLanes()
                 )
             );
             preview = false;
@@ -875,7 +899,6 @@ public class PipelineConfigurationValidator {
       preview &= validateStageConfiguration(
           shouldBeSource,
           stageConf,
-          false,
           false,
           IssueCreator.getStage(stageConf.getInstanceName())
       );
@@ -1268,7 +1291,7 @@ public class PipelineConfigurationValidator {
     StageConfiguration errorStage = pipelineConfiguration.getErrorStage();
     if (errorStage != null) {
       IssueCreator errorStageCreator = IssueCreator.getStage(errorStage.getInstanceName());
-      preview = validateStageConfiguration(false, errorStage, true, false, errorStageCreator);
+      preview = validateStageConfiguration(false, errorStage, true, errorStageCreator);
     }
     return preview;
   }
@@ -1279,9 +1302,34 @@ public class PipelineConfigurationValidator {
     StageConfiguration statsAggregatorStage = pipelineConfiguration.getStatsAggregatorStage();
     if (statsAggregatorStage != null) {
       IssueCreator errorStageCreator = IssueCreator.getStage(statsAggregatorStage.getInstanceName());
-      preview = validateStageConfiguration(false, statsAggregatorStage, false, true, errorStageCreator);
+      preview = validateStageConfiguration(false, statsAggregatorStage, true, errorStageCreator);
     }
     return preview;
+  }
+
+  boolean validatePipelineLifecycleEventStages(List<StageConfiguration> eventStages) {
+    if(eventStages == null) {
+      issues.add(IssueCreator.getPipeline().create(
+        ValidationError.VALIDATION_0105,
+        "Definition can't be null"
+      ));
+       return false;
+    }
+
+    if(eventStages.size() > 1) {
+      issues.add(IssueCreator.getPipeline().create(
+        ValidationError.VALIDATION_0105,
+        "Only one event stage is allowed"
+      ));
+       return false;
+    }
+
+    if(eventStages.size() == 1) {
+      IssueCreator errorStageCreator = IssueCreator.getStage(eventStages.get(0).getInstanceName());
+      return validateStageConfiguration(false, eventStages.get(0), true, errorStageCreator);
+    }
+
+    return true;
   }
 
   private boolean validateCommitTriggerStage(PipelineConfiguration pipelineConfiguration) {
