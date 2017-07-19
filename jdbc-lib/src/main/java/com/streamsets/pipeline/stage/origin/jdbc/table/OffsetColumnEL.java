@@ -20,6 +20,8 @@ import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -16,13 +16,12 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.google.common.base.Throwables;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.event.CommonEvents;
+import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;

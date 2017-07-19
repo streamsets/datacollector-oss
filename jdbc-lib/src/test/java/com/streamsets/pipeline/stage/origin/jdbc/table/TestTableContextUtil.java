@@ -16,6 +16,7 @@
 
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
+import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import org.junit.Test;
 
 import java.sql.Types;

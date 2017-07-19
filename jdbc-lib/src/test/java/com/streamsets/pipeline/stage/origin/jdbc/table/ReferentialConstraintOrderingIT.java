@@ -19,6 +19,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.commons.lang3.tuple.Pair;

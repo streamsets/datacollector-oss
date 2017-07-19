@@ -65,7 +65,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_41("Error while getting DB version"),
   JDBC_42("Error while getting initial SCN. Please verify the privileges for the user"),
   JDBC_43("Could not parse redo log statement: {}"),
-  JDBC_44("Error while getting changes from Oracle due to error: {}"),
+  JDBC_44("Error while getting changes due to error: {}"),
   JDBC_45("Redo logs are not available for the specified start date. " +
       "Provide a more recent start date"),
   JDBC_46("Redo logs are not available for the specified initial SCN. " +
@@ -111,6 +111,10 @@ public enum JdbcErrors implements ErrorCode {
 
   JDBC_100("Could not enable partitioning for table {}: {}"),
   JDBC_101("Invalid partition size for table {}: {}"),
+
+  JDBC_200("Tables are not change tracking enabled: {}"),
+  JDBC_201("Invalid Change Tracking Current Version: {}"),
+  JDBC_202("Error while getting min valid version: {}"),
 
   ;
 

@@ -34,7 +34,7 @@ import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
-import com.streamsets.pipeline.stage.origin.jdbc.table.TableContextUtil;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang.StringUtils;
@@ -540,16 +540,55 @@ public class JdbcUtil {
       ResultSet rs,
       int maxClobSize,
       int maxBlobSize,
+      Map<String, DataType> columnsToTypes,
       ErrorRecordHandler errorRecordHandler,
       UnknownTypeAction unknownTypeAction
   ) throws SQLException, StageException {
     return resultSetToFields(
-      rs,
-      maxClobSize,
-      maxBlobSize,
-      Collections.emptyMap(),
-      errorRecordHandler,
-      unknownTypeAction
+        rs,
+        maxClobSize,
+        maxBlobSize,
+        columnsToTypes,
+        errorRecordHandler,
+        unknownTypeAction,
+        null
+    );
+  }
+
+  public static LinkedHashMap<String, Field> resultSetToFields(
+      ResultSet rs,
+      int maxClobSize,
+      int maxBlobSize,
+      ErrorRecordHandler errorRecordHandler,
+      UnknownTypeAction unknownTypeAction
+  ) throws SQLException, StageException {
+    return resultSetToFields(
+        rs,
+        maxClobSize,
+        maxBlobSize,
+        Collections.emptyMap(),
+        errorRecordHandler,
+        unknownTypeAction,
+        null
+    );
+  }
+
+  public static LinkedHashMap<String, Field> resultSetToFields(
+      ResultSet rs,
+      int maxClobSize,
+      int maxBlobSize,
+      ErrorRecordHandler errorRecordHandler,
+      UnknownTypeAction unknownTypeAction,
+      Set<String> recordHeader
+  ) throws SQLException, StageException {
+    return resultSetToFields(
+        rs,
+        maxClobSize,
+        maxBlobSize,
+        Collections.emptyMap(),
+        errorRecordHandler,
+        unknownTypeAction,
+        recordHeader
     );
   }
 
@@ -559,24 +598,27 @@ public class JdbcUtil {
       int maxBlobSize,
       Map<String, DataType> columnsToTypes,
       ErrorRecordHandler errorRecordHandler,
-      UnknownTypeAction unknownTypeAction
+      UnknownTypeAction unknownTypeAction,
+      Set<String> recordHeader
   ) throws SQLException, StageException {
     ResultSetMetaData md = rs.getMetaData();
     LinkedHashMap<String, Field> fields = new LinkedHashMap<>(md.getColumnCount());
 
     for (int i = 1; i <= md.getColumnCount(); i++) {
       try {
-        DataType dataType = columnsToTypes.get(md.getColumnName(i));
-        Field field = resultToField(
-          md,
-          rs,
-          i,
-          maxClobSize,
-          maxBlobSize,
-          dataType == null ? DataType.USE_COLUMN_TYPE : dataType,
-          unknownTypeAction
-        );
-        fields.put(md.getColumnLabel(i), field);
+        if (recordHeader == null || !recordHeader.contains(md.getColumnName(i))) {
+          DataType dataType = columnsToTypes.get(md.getColumnName(i));
+          Field field = resultToField(
+              md,
+              rs,
+              i,
+              maxClobSize,
+              maxBlobSize,
+              dataType == null ? DataType.USE_COLUMN_TYPE : dataType,
+              unknownTypeAction
+          );
+          fields.put(md.getColumnLabel(i), field);
+        }
       } catch (SQLException e) {
         errorRecordHandler.onError(JdbcErrors.JDBC_13, e.getMessage(), e);
       } catch (IOException e) {
@@ -891,5 +933,16 @@ public class JdbcUtil {
       statement = connection.prepareStatement(query);
     }
     return statement;
+  }
+
+  public static String logError(SQLException e) {
+    String formattedError = JdbcUtil.formatSqlException(e);
+    LOG.error(formattedError, e);
+    return formattedError;
+  }
+
+  public static String getCTOffset(ResultSet rs, String version, String operation, List<String> primaryKeys) throws SQLException {
+    final String delimitor = "::";
+    return version + "=" + rs.getString(version) + delimitor + operation + "=" + rs.getString(operation) + delimitor + Joiner.on(delimitor).join(primaryKeys);
   }
 }

@@ -31,8 +31,20 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
+import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
+import com.streamsets.pipeline.lib.jdbc.multithread.JdbcBaseRunnable;
+import com.streamsets.pipeline.lib.jdbc.multithread.JdbcRunnableBuilder;
+import com.streamsets.pipeline.lib.jdbc.multithread.MultithreadedTableProvider;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableJdbcRunnable;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProvider;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProviderFactory;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -98,12 +110,6 @@ public class TableJdbcSource extends BasePushSource {
     toBeInvalidatedThreadCaches = new ArrayList<>();
   }
 
-  private static String logError(SQLException e) {
-    String formattedError = JdbcUtil.formatSqlException(e);
-    LOG.error(formattedError, e);
-    return formattedError;
-  }
-
   @VisibleForTesting
   void checkConnectionAndBootstrap(Stage.Context context, List<ConfigIssue> issues) {
     try {
@@ -166,7 +172,7 @@ public class TableJdbcSource extends BasePushSource {
           offsets = new ConcurrentHashMap<>();
         }
       } catch (SQLException e) {
-        logError(e);
+        JdbcUtil.logError(e);
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       } catch (StageException e) {
         LOG.debug("Error when finding tables:", e);
@@ -311,7 +317,7 @@ public class TableJdbcSource extends BasePushSource {
       ExecutorCompletionService<Future> completionService = new ExecutorCompletionService<>(executorService);
 
       IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
-        TableJdbcRunnable runnable = new TableJdbcRunnable.Builder()
+        JdbcBaseRunnable runnable = new JdbcRunnableBuilder()
             .context(getContext())
             .threadNumber(threadNumber)
             .batchSize(batchSize)

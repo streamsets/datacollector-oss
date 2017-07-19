@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -472,7 +472,8 @@ public class JdbcSource extends BaseSource {
         commonSourceConfigBean.maxClobSize,
         commonSourceConfigBean.maxBlobSize,
         errorRecordHandler,
-        unknownTypeAction
+        unknownTypeAction,
+        null
     );
 
     if (fields.size() != numColumns) {

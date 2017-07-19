@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.testing.RandomTestUtils;
-import org.apache.commons.collections.ComparatorUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

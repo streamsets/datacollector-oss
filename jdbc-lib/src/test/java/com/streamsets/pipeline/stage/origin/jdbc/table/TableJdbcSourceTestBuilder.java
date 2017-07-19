@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 import java.util.ArrayList;

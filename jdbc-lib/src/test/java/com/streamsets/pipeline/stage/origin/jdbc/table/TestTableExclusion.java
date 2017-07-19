@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.AfterClass;
 import org.junit.Assert;

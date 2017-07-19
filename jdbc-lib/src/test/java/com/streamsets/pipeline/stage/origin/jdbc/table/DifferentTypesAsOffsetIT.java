@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import com.streamsets.pipeline.stage.origin.jdbc.table.util.OffsetQueryUtil;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
