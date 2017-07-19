@@ -29,6 +29,9 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * Test utilities for {@link UpgraderUtils} functionality
@@ -148,13 +151,22 @@ public class UpgraderTestUtils {
   public static void assertAllExist(List<Config> configs, String... propertyNames) {
     Set<String> allPropertyNames = new HashSet<>(Arrays.asList(propertyNames));
     configs.forEach(config -> allPropertyNames.remove(config.getName()));
-    Assert.assertThat(String.format(
+    assertThat(String.format(
         "Expected all properties %s to exist in configs, but these were not present: %s",
         StringUtils.join(propertyNames, ", "),
         StringUtils.join(allPropertyNames, ", ")
     ), allPropertyNames, empty());
   }
 
+  public static void assertExists(List<Config> configs, String propertyName, Object propertyValue) {
+    for (Config config : configs) {
+      if (config.getName().equals(propertyName)) {
+        assertThat(config.getValue(), equalTo(propertyValue));
+        return;
+      }
+    }
+    fail(String.format("configs did not contain property %s", propertyName));
+  }
 
   /**
    * <p>

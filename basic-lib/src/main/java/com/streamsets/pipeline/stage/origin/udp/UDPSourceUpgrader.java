@@ -35,6 +35,12 @@ public class UDPSourceUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -45,5 +51,13 @@ public class UDPSourceUpgrader implements StageUpgrader {
   private static void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("enableEpoll", false));
     configs.add(new Config("numThreads", 1));
+  }
+
+  private static void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("rawDataMode", UDPDSource.DEFAULT_RAW_DATA_MODE));
+    configs.add(new Config("rawDataCharset", UDPDSource.DEFAULT_RAW_DATA_CHARSET));
+    configs.add(new Config("rawDataOutputField", UDPDSource.DEFAULT_RAW_DATA_OUTPUT_FIELD));
+    configs.add(new Config("rawDataMultipleValuesBehavior", UDPDSource.DEFAULT_RAW_DATA_MULTI_VALUES_BEHAVIOR));
+    configs.add(new Config("rawDataSeparatorBytes", UDPDSource.DEFAULT_RAW_DATA_SEPARATOR_BYTES));
   }
 }

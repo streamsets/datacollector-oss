@@ -27,7 +27,7 @@ import java.util.List;
 public class TestTCPServerSourceUpgrader {
 
   @Test
-  public void testV1ToV12() throws Exception {
+  public void testV1ToV2() throws Exception {
     List<Config> configs = new LinkedList<>();
     TCPServerSourceUpgrader upgrader = new TCPServerSourceUpgrader();
     upgrader.upgrade("lib", "stage", "stageInst", 1, 2, configs);

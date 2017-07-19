@@ -48,7 +48,7 @@ import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_SE
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.TYPES_DB_PATH;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "UDP Source",
     description = "Listens for UDP messages on a single port",
     icon = "udp.png",
@@ -61,6 +61,16 @@ import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.TYPES_DB_PA
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class UDPDSource extends DSource {
+  public static final String DEFAULT_RAW_DATA_MODE_STR = "CHARACTER";
+  public static final RawDataMode DEFAULT_RAW_DATA_MODE = RawDataMode.valueOf(DEFAULT_RAW_DATA_MODE_STR);
+  public static final String DEFAULT_RAW_DATA_CHARSET = "UTF-8";
+  public static final String DEFAULT_RAW_DATA_OUTPUT_FIELD = "/data";
+  public static final String DEFAULT_RAW_DATA_MULTI_VALUES_BEHAVIOR_STR = "FIRST_ONLY";
+  public static final MultipleValuesBehavior DEFAULT_RAW_DATA_MULTI_VALUES_BEHAVIOR = MultipleValuesBehavior.valueOf(
+      DEFAULT_RAW_DATA_MULTI_VALUES_BEHAVIOR_STR
+  );
+  public static final String DEFAULT_RAW_DATA_SEPARATOR_BYTES = "\\u000A";
+
   private ParserConfig parserConfig = new ParserConfig();
 
   @ConfigDef(
@@ -213,22 +223,22 @@ public class UDPDSource extends DSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "CHARACTER",
+      defaultValue = DEFAULT_RAW_DATA_MODE_STR,
       label = "Raw Data Mode",
-      description = "The mode that controls how the raw packet data should be treated (character-based or binary). This" +
-          " selection determines what type of field will be created.",
+      description = "The mode that controls how the raw packet data should be treated (character-based or binary)." +
+          " This selection determines what type of field will be created.",
       displayPosition = 110,
       group = "RAW_DATA",
       dependsOn = "dataFormat",
       triggeredByValue = "RAW_DATA"
   )
   @ValueChooserModel(RawDataModeChooserValues.class)
-  public RawDataMode rawDataMode = RawDataMode.CHARACTER;
+  public RawDataMode rawDataMode = DEFAULT_RAW_DATA_MODE;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "UTF-8",
+      defaultValue = DEFAULT_RAW_DATA_CHARSET,
       label = "Charset",
       description = "The character set used to interpret character-based separated data.",
       displayPosition = 120,
@@ -237,12 +247,12 @@ public class UDPDSource extends DSource {
       triggeredByValue = "CHARACTER"
   )
   @ValueChooserModel(CharsetChooserValues.class)
-  public String rawDataCharset;
+  public String rawDataCharset = DEFAULT_RAW_DATA_CHARSET;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "/data",
+      defaultValue = DEFAULT_RAW_DATA_OUTPUT_FIELD,
       label = "Output field path",
       description = "The output field path to place the separated data values into.",
       displayPosition = 150,
@@ -251,21 +261,21 @@ public class UDPDSource extends DSource {
       triggeredByValue = "RAW_DATA"
   )
   @FieldSelectorModel(singleValued = true)
-  public String rawDataOutputField;
+  public String rawDataOutputField = DEFAULT_RAW_DATA_OUTPUT_FIELD;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Multiple Values Behavior",
       description = "How to handle multiple values produced by the parser after applying the separator.",
-      defaultValue = "FIRST_ONLY",
+      defaultValue = DEFAULT_RAW_DATA_MULTI_VALUES_BEHAVIOR_STR,
       displayPosition = 160,
       group = "RAW_DATA",
       dependsOn = "dataFormat",
       triggeredByValue = "RAW_DATA"
   )
   @ValueChooserModel(MultipleValuesBehaviorChooserValues.class)
-  public MultipleValuesBehavior rawDataMultipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
+  public MultipleValuesBehavior rawDataMultipleValuesBehavior = DEFAULT_RAW_DATA_MULTI_VALUES_BEHAVIOR;
 
   @ConfigDef(
       required = false,
@@ -275,12 +285,12 @@ public class UDPDSource extends DSource {
           " after applying this separator, then the Multiple Values Behavior setting comes into play..  Specify byte" +
           " literals using using Java Unicode syntax (\"\\uxxxx\").  To capture the entire UDP packet (i.e. do not split" +
           " using any delimiter), leave this blank.  Defaults to line feed (000A).",
-      defaultValue = "\\u000A",
+      defaultValue = DEFAULT_RAW_DATA_SEPARATOR_BYTES,
       group = "RAW_DATA",
       dependsOn = "dataFormat",
       triggeredByValue = "RAW_DATA"
   )
-  public String rawDataSeparatorBytes;
+  public String rawDataSeparatorBytes = DEFAULT_RAW_DATA_SEPARATOR_BYTES;
 
   @Override
   protected Source createSource() {
