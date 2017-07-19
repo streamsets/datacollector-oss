@@ -221,7 +221,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           Collections.<String, Object>emptyMap(),
           Collections.<StageConfiguration>emptyList(),
           null,
-          null
+          null,
+          Collections.emptyList(),
+          Collections.emptyList()
       );
 
       try (

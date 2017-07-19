@@ -150,9 +150,21 @@ public class TestPipelineConfigurationUpgrader {
   public void testNeedsUpgradePipelineConfs() throws Exception {
     PipelineConfigurationUpgrader up = PipelineConfigurationUpgrader.get();
 
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(1, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
-        "label", null, Collections.<Config>emptyList(), null,
-        Collections.<StageConfiguration>emptyList(), null, null);
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        Collections.emptyList(),
+        null,
+        Collections.emptyList(),
+        null,
+        null,
+        Collections.emptyList(),
+        Collections.emptyList()
+    );
     // no upgrade
     List<Issue> issues = new ArrayList<>();
     Assert.assertFalse(up.needsUpgrade(getLibrary(SOURCE1_DEF), pipelineConf, issues));
@@ -181,9 +193,21 @@ public class TestPipelineConfigurationUpgrader {
       .withStageVersion(SOURCE2_V1_DEF.getVersion())
       .build();
 
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(1, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
-        "label", null, Collections.<Config>emptyList(), null,
-        Collections.<StageConfiguration>emptyList(), stageConf, null);
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        Collections.emptyList(),
+        null,
+        Collections.emptyList(),
+        stageConf,
+        null,
+        Collections.emptyList(),
+        Collections.emptyList()
+    );
     // no upgrade
     List<Issue> issues = new ArrayList<>();
     Assert.assertFalse(up.needsUpgrade(getLibrary(SOURCE2_V1_DEF), pipelineConf, issues));
@@ -198,9 +222,21 @@ public class TestPipelineConfigurationUpgrader {
       .withLibrary(SOURCE2_V1_DEF.getLibrary())
       .withStageVersion(SOURCE2_V2_DEF.getVersion())
       .build();
-    pipelineConf = new PipelineConfiguration(1, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
-        "label", null, Collections.<Config>emptyList(), null,
-        Collections.<StageConfiguration>emptyList(), stageConf, null);
+    pipelineConf = new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        Collections.emptyList(),
+        null,
+        Collections.emptyList(),
+        stageConf,
+        null,
+        Collections.emptyList(),
+        Collections.emptyList()
+    );
     Assert.assertFalse(up.needsUpgrade(getLibrary(SOURCE2_V1_DEF), pipelineConf, issues));
     Assert.assertFalse(issues.isEmpty());
   }
@@ -214,9 +250,21 @@ public class TestPipelineConfigurationUpgrader {
       .withStageVersion(SOURCE2_V1_DEF.getVersion())
       .build();
 
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(1, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
-        "label", null, Collections.<Config>emptyList(), null,
-        ImmutableList.of(stageConf), null, null);
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        Collections.emptyList(),
+        null,
+        ImmutableList.of(stageConf),
+        null,
+        null,
+        Collections.emptyList(),
+        Collections.emptyList()
+    );
     // no upgrade
     List<Issue> issues = new ArrayList<>();
     Assert.assertFalse(up.needsUpgrade(getLibrary(SOURCE2_V1_DEF), pipelineConf, issues));
@@ -231,9 +279,21 @@ public class TestPipelineConfigurationUpgrader {
       .withLibrary(SOURCE2_V1_DEF.getLibrary())
       .withStageVersion(SOURCE2_V2_DEF.getVersion())
       .build();
-    pipelineConf = new PipelineConfiguration(1, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
-        "label", null, Collections.<Config>emptyList(), null,
-        ImmutableList.of(stageConf), null, null);
+    pipelineConf = new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        Collections.emptyList(),
+        null,
+        ImmutableList.of(stageConf),
+        null,
+        null,
+        Collections.emptyList(),
+        Collections.emptyList()
+    );
     Assert.assertFalse(up.needsUpgrade(getLibrary(SOURCE2_V1_DEF), pipelineConf, issues));
     Assert.assertFalse(issues.isEmpty());
 
@@ -276,8 +336,21 @@ public class TestPipelineConfigurationUpgrader {
       .withStageVersion(SOURCE2_V2_DEF.getVersion())
       .build();
 
-    return new PipelineConfiguration(1, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(), "label", null, Collections.<Config>emptyList(),
-                                     null, ImmutableList.of(stageConf1, stageConf2), errorConf, null);
+    return new PipelineConfiguration(
+      1,
+      PipelineConfigBean.VERSION,
+      "pipelineId",
+      UUID.randomUUID(),
+      "label",
+      null,
+      Collections.emptyList(),
+      null,
+      ImmutableList.of(stageConf1, stageConf2),
+      errorConf,
+      null,
+      Collections.emptyList(),
+      Collections.emptyList()
+    );
   }
 
   private PipelineConfiguration getPipelineToUpgrade() {
@@ -296,8 +369,21 @@ public class TestPipelineConfigurationUpgrader {
       .withStageVersion(SOURCE2_V1_DEF.getVersion())
       .build();
 
-    return new PipelineConfiguration(1, PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(), "label", null, Collections.<Config>emptyList(),
-                                     null, ImmutableList.of(stageConf1, stageConf2), errorConf, null);
+    return new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        Collections.emptyList(),
+        null,
+        ImmutableList.of(stageConf1, stageConf2),
+        errorConf,
+        null,
+        null,
+        null
+    );
   }
 
   @Test

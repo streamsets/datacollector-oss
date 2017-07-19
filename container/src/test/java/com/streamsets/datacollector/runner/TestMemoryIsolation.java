@@ -42,6 +42,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -74,9 +75,21 @@ public class TestMemoryIsolation {
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
 
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-      PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),"label",
-        null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        pipelineConfigs,
+        null,
+        stageDefs,
+        MockStages.getErrorStageConfig(),
+        MockStages.getStatsAggregatorStageConfig(),
+        Collections.emptyList(),
+        Collections.emptyList()
+    );
     Pipeline.Builder builder = new MockPipelineBuilder()
       .withStageLib(lib)
       .withPipelineConf(pipelineConf)

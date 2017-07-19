@@ -742,7 +742,9 @@ public class TestRemoteDataCollector {
           null,
           null,
           null,
-          null
+          null,
+          Collections.emptyList(),
+          Collections.emptyList()
       );
     }
 

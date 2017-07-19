@@ -75,9 +75,21 @@ public class TestPipeline {
     pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-      PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
-        "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+      PipelineStoreTask.SCHEMA_VERSION,
+      PipelineConfigBean.VERSION,
+      "pipelineId",
+      UUID.randomUUID(),
+      "label",
+      null,
+      pipelineConfigs,
+      null,
+      stageDefs,
+      MockStages.getErrorStageConfig(),
+      MockStages.getStatsAggregatorStageConfig(),
+      Collections.emptyList(),
+      Collections.emptyList()
+    );
     Pipeline.Builder builder = new MockPipelineBuilder()
       .withStageLib(lib)
       .withPipelineConf(pipelineConf)
@@ -171,9 +183,21 @@ public class TestPipeline {
     pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-      PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),"label",
-        null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+      PipelineStoreTask.SCHEMA_VERSION,
+      PipelineConfigBean.VERSION,
+      "pipelineId",
+      UUID.randomUUID(),
+      "label",
+      null,
+      pipelineConfigs,
+      null,
+      stageDefs,
+      MockStages.getErrorStageConfig(),
+      MockStages.getStatsAggregatorStageConfig(),
+      Collections.emptyList(),
+      Collections.emptyList()
+    );
     Pipeline.Builder builder = new MockPipelineBuilder()
       .withStageLib(lib)
       .withPipelineConf(pipelineConf)
@@ -223,9 +247,21 @@ public class TestPipeline {
     pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-       PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
-        "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+      PipelineStoreTask.SCHEMA_VERSION,
+      PipelineConfigBean.VERSION,
+      "pipelineId",
+      UUID.randomUUID(),
+      "label",
+      null,
+      pipelineConfigs,
+      null,
+      stageDefs,
+      MockStages.getErrorStageConfig(),
+      MockStages.getStatsAggregatorStageConfig(),
+      Collections.emptyList(),
+      Collections.emptyList()
+    );
     Pipeline.Builder builder = new MockPipelineBuilder()
       .withStageLib(lib)
       .withPipelineConf(pipelineConf)
@@ -289,9 +325,21 @@ public class TestPipeline {
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
 
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-       PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
-        "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+      PipelineStoreTask.SCHEMA_VERSION,
+      PipelineConfigBean.VERSION,
+      "pipelineId",
+      UUID.randomUUID(),
+      "label",
+      null,
+      pipelineConfigs,
+      null,
+      stageDefs,
+      MockStages.getErrorStageConfig(),
+      MockStages.getStatsAggregatorStageConfig(),
+      Collections.emptyList(),
+      Collections.emptyList()
+    );
     Pipeline.Builder builder = new MockPipelineBuilder()
       .withStageLib(lib)
       .withPipelineConf(pipelineConf)
@@ -354,9 +402,21 @@ public class TestPipeline {
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
 
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
-       PipelineConfigBean.VERSION, "pipelineId", UUID.randomUUID(),
-        "label", null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+      PipelineStoreTask.SCHEMA_VERSION,
+      PipelineConfigBean.VERSION,
+      "pipelineId",
+      UUID.randomUUID(),
+      "label",
+      null,
+      pipelineConfigs,
+      null,
+      stageDefs,
+      MockStages.getErrorStageConfig(),
+      MockStages.getStatsAggregatorStageConfig(),
+      Collections.emptyList(),
+      Collections.emptyList()
+    );
     Pipeline.Builder builder = new MockPipelineBuilder()
       .withStageLib(lib)
       .withPipelineConf(pipelineConf)
@@ -455,7 +515,9 @@ public class TestPipeline {
       null,
       stageDefs,
       MockStages.getErrorStageConfig(),
-      MockStages.getStatsAggregatorStageConfig()
+      MockStages.getStatsAggregatorStageConfig(),
+      Collections.emptyList(),
+      Collections.emptyList()
     );
     Pipeline.Builder builder = new MockPipelineBuilder()
       .withStageLib(lib)
@@ -511,7 +573,9 @@ public class TestPipeline {
       null,
       stageDefs,
       MockStages.getErrorStageConfig(),
-      MockStages.getStatsAggregatorStageConfig()
+      MockStages.getStatsAggregatorStageConfig(),
+      Collections.emptyList(),
+      Collections.emptyList()
     );
     Pipeline.Builder builder = new MockPipelineBuilder()
       .withStageLib(lib)

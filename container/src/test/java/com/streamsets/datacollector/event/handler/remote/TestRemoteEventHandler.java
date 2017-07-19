@@ -291,7 +291,9 @@ public class TestRemoteEventHandler {
             uiInfo,
             MockStages.getSourceStageConfig(),
             MockStages.getErrorStageConfig(),
-            null
+            null,
+            Collections.emptyList(),
+            Collections.emptyList()
         );
         PipelineConfigurationJson pipelineConfigJson = BeanHelper.wrapPipelineConfiguration(pipelineConf);
         PipelineConfigAndRulesJson configRulesJson = new PipelineConfigAndRulesJson();

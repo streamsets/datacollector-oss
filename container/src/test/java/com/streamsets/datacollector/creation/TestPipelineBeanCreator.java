@@ -582,7 +582,9 @@ public class TestPipelineBeanCreator {
         Collections.EMPTY_MAP,
         ImmutableList.of(sourceConf, targetConf),
         errorStageConf,
-        aggStageConf
+        aggStageConf,
+        Collections.emptyList(),
+        Collections.emptyList()
     );
 
     List<Issue> issues = new ArrayList<>();
@@ -662,7 +664,9 @@ public class TestPipelineBeanCreator {
         Collections.EMPTY_MAP,
         ImmutableList.of(sourceConf, targetConf),
         errorStageConf,
-        aggStageConf
+        aggStageConf,
+        Collections.emptyList(),
+        Collections.emptyList()
     );
 
     List<Issue> issues = new ArrayList<>();
@@ -755,7 +759,9 @@ public class TestPipelineBeanCreator {
         Collections.EMPTY_MAP,
         ImmutableList.of(stageConf),
         errorStageConf,
-        aggStageConf
+        aggStageConf,
+        Collections.emptyList(),
+        Collections.emptyList()
     );
 
     List<Issue> issues = new ArrayList<>();

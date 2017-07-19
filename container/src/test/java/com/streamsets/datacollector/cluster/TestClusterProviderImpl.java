@@ -152,7 +152,9 @@ public class TestClusterProviderImpl {
         null,
         ImmutableList.of(MockStages.createSource("s", ImmutableList.of("S"))),
         MockStages.getErrorStageConfig(),
-        MockStages.getStatsAggregatorStageConfig()
+        MockStages.getStatsAggregatorStageConfig(),
+        Collections.emptyList(),
+        Collections.emptyList()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null,
       "aaa", null, null, null, true, null, null, "x"));
@@ -261,7 +263,9 @@ public class TestClusterProviderImpl {
         null,
         MockStages.getSourceStageConfig(),
         MockStages.getErrorStageConfig(),
-        MockStages.getStatsAggregatorStageConfig()
+        MockStages.getStatsAggregatorStageConfig(),
+        Collections.emptyList(),
+        Collections.emptyList()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", "label", null, null,
       "aaa", null, null, null, true, null, "2.6", "x"));
@@ -303,7 +307,9 @@ public class TestClusterProviderImpl {
         null,
         MockStages.getSourceStageConfig(),
         MockStages.getErrorStageConfig(),
-        MockStages.getStatsAggregatorStageConfig()
+        MockStages.getStatsAggregatorStageConfig(),
+        Collections.emptyList(),
+        Collections.emptyList()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", "label", null, null,
       "aaa", null, null, null, true, null, "2.6", "x"));
@@ -343,7 +349,9 @@ public class TestClusterProviderImpl {
         null,
         MockStages.getSourceStageConfig(),
         MockStages.getErrorStageConfig(),
-        MockStages.getStatsAggregatorStageConfig()
+        MockStages.getStatsAggregatorStageConfig(),
+        Collections.emptyList(),
+        Collections.emptyList()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null, "aaa", null, null, null, true, null, "2.6", null));
     Mockito.doReturn(Pattern.compile("streamsets-datacollector-mapr-cluster-bootstrap-\\d+.*")).when(sparkProvider)
@@ -413,7 +421,9 @@ public class TestClusterProviderImpl {
         null,
         MockStages.getSourceStageConfig(),
         MockStages.getErrorStageConfig(),
-        MockStages.getStatsAggregatorStageConfig()
+        MockStages.getStatsAggregatorStageConfig(),
+        Collections.emptyList(),
+        Collections.emptyList()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "label", "desc", null, null,
       "aaa", null, null, null, true, null, "x", "y"));

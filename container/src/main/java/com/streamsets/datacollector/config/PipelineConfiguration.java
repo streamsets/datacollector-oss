@@ -30,9 +30,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
-public class PipelineConfiguration implements Serializable{
+public class PipelineConfiguration implements Serializable {
   private int schemaVersion;
   private int version;
   private String pipelineId;
@@ -49,6 +50,8 @@ public class PipelineConfiguration implements Serializable{
   private boolean previewable;
   private MemoryLimitConfiguration memoryLimitConfiguration;
   private Map<String, Object> metadata;
+  private List<StageConfiguration> startEventStages;
+  private List<StageConfiguration> stopEventStages;
 
   @SuppressWarnings("unchecked")
   public PipelineConfiguration(
@@ -62,7 +65,9 @@ public class PipelineConfiguration implements Serializable{
       Map<String, Object> uiInfo,
       List<StageConfiguration> stages,
       StageConfiguration errorStage,
-      StageConfiguration statsAggregatorStage
+      StageConfiguration statsAggregatorStage,
+      List<StageConfiguration> startEventStages,
+      List<StageConfiguration> stopEventStages
   ) {
     this.schemaVersion = schemaVersion;
     this.version = version;
@@ -71,12 +76,14 @@ public class PipelineConfiguration implements Serializable{
     this.title = title;
     this.description = description;
     this.configuration = new ArrayList<>(configuration);
-    this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<String, Object>();
-    this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
+    this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<>();
+    this.stages = (stages != null) ? stages : Collections.emptyList();
     this.errorStage = errorStage;
     this.statsAggregatorStage = statsAggregatorStage;
     issues = new Issues();
     memoryLimitConfiguration = new MemoryLimitConfiguration();
+    this.startEventStages = Optional.ofNullable(startEventStages).orElse(Collections.emptyList());
+    this.stopEventStages = Optional.ofNullable(stopEventStages).orElse(Collections.emptyList());
   }
 
   public void setInfo(PipelineInfo info) {
@@ -236,6 +243,14 @@ public class PipelineConfiguration implements Serializable{
     this.memoryLimitConfiguration = memoryLimitConfiguration;
   }
 
+  public List<StageConfiguration> getStartEventStages() {
+    return startEventStages;
+  }
+
+  public List<StageConfiguration> getStopEventStages() {
+    return stopEventStages;
+  }
+
   @Override
   public String toString() {
     return Utils.format("PipelineConfiguration[version='{}' uuid='{}' valid='{}' previewable='{}' configuration='{}']",
@@ -265,7 +280,9 @@ public class PipelineConfiguration implements Serializable{
         uiInfo,
         stages,
         errorStage,
-        statsAggregatorStage
+        statsAggregatorStage,
+        startEventStages,
+        stopEventStages
     );
   }
 
