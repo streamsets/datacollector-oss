@@ -2038,8 +2038,8 @@
         <li>For <ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> cloud, use
           <codeph>https://cloud.streamsets.com</codeph>.</li>
         <li>For <ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> on-premises, use
-         the URL provided by your system administrator. The default URL is
-          <codeph>http://&lt;system-ip>:18631</codeph>.</li>
+         the URL provided by your system administrator. For example,
+          <codeph>https://&lt;hostname>:18631</codeph>.</li>
        </ul></entry>
      </row>
     </tbody>

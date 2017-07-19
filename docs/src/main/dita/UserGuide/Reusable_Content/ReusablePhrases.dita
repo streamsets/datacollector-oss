@@ -48,6 +48,9 @@
                         origins > Max Record Size.</draft-comment>
             </p>
             <p><ph id="ph-DefaultMaxRecordSize">1048576 bytes</ph></p>
+            <draft-comment author="alisontaylor">The following codeblock is used in all launching
+                  SDC topics</draft-comment>
+            <codeblock id="SDCBaseURL">http://&lt;hostname>:18630/</codeblock>
             <p><draft-comment author="alisontaylor">The following p is used in the registering and
                   unregistering from DPM topics.</draft-comment></p>
             <p id="p-DPMUserNameFormat">

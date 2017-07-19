@@ -38,12 +38,13 @@
                 <cmd id="AccessDC">To access the <ph>Data Collector</ph> console, enter the
                     following URL in the address bar of your browser: </cmd>
                 <info>
-                    <codeblock>http://&lt;system-ip>:18630/</codeblock>
+                    <codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCBaseURL"/>
                     <p>If you changed the default <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> port number in the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, use that number instead. </p>
+                        /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, use that
+                        number instead. </p>
                 </info>
             </step>
             <step id="LoginDC">

@@ -29,11 +29,12 @@
         <steps id="steps_g53_l3p_kq">
             <step>
                 <cmd><indexterm>installation<indexterm>manual
-                    start</indexterm></indexterm><indexterm>launch Data
-                        Collector<indexterm>manual start</indexterm></indexterm>Use the following URL to download the full StreamSets <ph
+                        start</indexterm></indexterm><indexterm>launch Data
+                            Collector<indexterm>manual start</indexterm></indexterm>Use the
+                    following URL to download the full StreamSets <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> tarball  from the StreamSets website: <xref
-                    href="https://streamsets.com/opensource" format="html" scope="external"
+                    /> tarball from the StreamSets website: <xref
+                        href="https://streamsets.com/opensource" format="html" scope="external"
                     />.</cmd>
             </step>
             <step>
@@ -102,7 +103,7 @@
                 <cmd id="AccessDC">To access the <ph>Data Collector</ph> console, enter the
                     following URL in the address bar of your browser: </cmd>
                 <info>
-                    <codeblock>http://&lt;system-ip>:18630/</codeblock>
+                    <codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCBaseURL"/>
                 </info>
             </step>
         </steps>

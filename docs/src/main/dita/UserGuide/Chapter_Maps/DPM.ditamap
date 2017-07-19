@@ -69,7 +69,9 @@
             <topicref href="../DPM/PipelineTypes.dita">
                 <topicref href="../DPM/PipelineTypesViewing.dita"/>
             </topicref>
-            <topicref href="../DPM/PublishPipelines.dita"/>
+            <topicref href="../DPM/PublishPipelines.dita">
+                <topicref href="../DPM/RevertPublishedPipelines.dita"/>
+            </topicref>
             <topicref href="../DPM/PipelineCommitHistory.dita"/>
             <topicref href="../DPM/DownloadPublishedPipelines.dita"/>
             <topicref href="../DPM/ExportPipelinesForDPM.dita"/>
