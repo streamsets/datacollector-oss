@@ -758,6 +758,7 @@ public class Pipeline {
     stageRuntime.setContext(
       new StageContext(
         pipelineName,
+        pipelineConfiguration.getTitle(),
         pipelineRev,
         Collections.unmodifiableList(stageInfos),
         userContext,

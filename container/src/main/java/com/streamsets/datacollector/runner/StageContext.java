@@ -117,6 +117,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final String resourcesDir;
   private final String sdcId;
   private final String pipelineId;
+  private final String pipelineTitle;
   private final String rev;
   private volatile boolean stop;
   private final EmailSender emailSender;
@@ -144,6 +145,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       LineagePublisherDelegator lineagePublisherDelegator
   ) {
     this.pipelineId = "myPipeline";
+    this.pipelineTitle = "My Pipeline";
     this.sdcId = "mySDC";
     this.rev = "0";
     // create dummy info for Stage Runners. This is required for stages that expose custom metrics
@@ -197,6 +199,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   public StageContext(
       String pipelineId,
+      String pipelineTitle,
       String rev,
       List<Stage.Info> pipelineInfo,
       Stage.UserContext userContext,
@@ -216,6 +219,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       LineagePublisherDelegator lineagePublisherDelegator
   ) {
     this.pipelineId = pipelineId;
+    this.pipelineTitle = pipelineTitle;
     this.rev = rev;
     this.pipelineInfo = pipelineInfo;
     this.userContext = userContext;
