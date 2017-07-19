@@ -216,6 +216,18 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   protected List<Record> processKafkaMessageDefault(String partition, long offset, String messageId, byte[] payload)
     throws StageException {
     List<Record> records = new ArrayList<>();
+    if (payload == null) {
+      Record record = getContext().createRecord(messageId);
+      record.set(Field.create(payload));
+      errorRecordHandler.onError(
+          new OnRecordErrorException(
+              record,
+              KafkaErrors.KAFKA_74,
+              messageId
+          )
+      );
+      return records;
+    }
     try (DataParser parser = Utils.checkNotNull(parserFactory, "Initialization failed").getParser(messageId, payload)) {
       Record record = parser.parse();
       while (record != null) {
