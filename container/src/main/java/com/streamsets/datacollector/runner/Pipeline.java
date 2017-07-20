@@ -29,6 +29,7 @@ import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
+import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -87,6 +88,7 @@ public class Pipeline {
   private final LineagePublisherTask lineagePublisherTask;
   private final StageRuntime startEventStage;
   private final StageRuntime stopEventStage;
+  private boolean stopEventStageInitialized;
 
   private Pipeline(
       String name,
@@ -229,6 +231,50 @@ public class Pipeline {
       }
     }
 
+    // Pipeline lifecycle start event
+    if(startEventStage != null) {
+      IssueCreator issueCreator = IssueCreator.getStage(startEventStage.getInfo().getInstanceName());
+      boolean validationSuccessful = false;
+
+      // Initialize
+      try {
+        List<Issue> startIssues = startEventStage.init();
+        validationSuccessful = startIssues.isEmpty();
+        issues.addAll(startIssues);
+      } catch (Exception ex) {
+        LOG.warn(ContainerError.CONTAINER_0790.getMessage(), ex.toString(), ex);
+        issues.add(issueCreator.create(ContainerError.CONTAINER_0790, ex.toString()));
+      }
+
+      // Run if in production mode
+      try {
+        if(productionExecution && validationSuccessful) {
+          // Temporary record for now, SDC-6820
+          LOG.info("Processing lifecycle start event with stage");
+          runner.runLifecycleEvent(
+            new RecordImpl(startEventStage.getInfo().getInstanceName(), "", null, null),
+            startEventStage
+          );
+        }
+      } catch (Exception ex) {
+        LOG.warn(ContainerError.CONTAINER_0791.getMessage(), ex.toString(), ex);
+        issues.add(issueCreator.create(ContainerError.CONTAINER_0791, ex.toString()));
+      }
+    }
+
+    if(stopEventStage != null) {
+      IssueCreator issueCreator = IssueCreator.getStage(stopEventStage.getInfo().getInstanceName());
+
+      // Initialize
+      try {
+        issues.addAll(stopEventStage.init());
+        stopEventStageInitialized = issues.isEmpty();
+      } catch (Exception ex) {
+        LOG.warn(ContainerError.CONTAINER_0790.getMessage(), ex.toString(), ex);
+        issues.add(issueCreator.create(ContainerError.CONTAINER_0790, ex.toString()));
+      }
+    }
+
     // Initialize origin
     issues.addAll(initPipe(originPipe, pipeContext));
 
@@ -335,12 +381,51 @@ public class Pipeline {
   }
 
   public void destroy(boolean productionExecution) {
+    // TODO: Would it make sense to create a new state STOP_FAILURE or something?
+    RuntimeException exception = null;
+
     try {
       runner.destroy(originPipe, pipes, badRecordsHandler, statsAggregationHandler);
     } catch (StageException|PipelineRuntimeException ex) {
       String msg = Utils.format("Exception thrown in destroy phase: {}", ex.getMessage());
       LOG.warn(msg, ex);
     }
+
+    // Lifecycle event handling
+    if(startEventStage != null) {
+      try {
+        startEventStage.destroy(null, null);
+      } catch (Exception ex) {
+        String msg = Utils.format("Exception thrown during pipeline start event handler destroy: {}", ex);
+        LOG.warn(msg, ex);
+      }
+    }
+
+    if(stopEventStage != null) {
+      try {
+        if(productionExecution && stopEventStageInitialized) {
+          // Temporary record for now, SDC-6821
+          LOG.info("Processing lifecycle stop event");
+          runner.runLifecycleEvent(
+            new RecordImpl(stopEventStage.getInfo().getInstanceName(), "", null, null),
+            stopEventStage
+          );
+        }
+      } catch (Exception ex) {
+        String msg = Utils.format("Can't execute pipeline stop stage: {}", ex);
+        LOG.error(msg, ex);
+        exception = new RuntimeException(msg, ex);
+      }
+
+      // Destroy
+      try {
+        stopEventStage.destroy(null, null);
+      } catch (Exception ex) {
+        String msg = Utils.format("Exception thrown during pipeline stop event handler destroy: {}", ex);
+        LOG.warn(msg, ex);
+      }
+    }
+
     try {
       badRecordsHandler.destroy();
     } catch (Exception ex) {
@@ -357,6 +442,11 @@ public class Pipeline {
     }
     if (scheduledExecutorService != null) {
       scheduledExecutorService.shutdown();
+    }
+
+    // Propagate exception if it was thrown
+    if(exception != null) {
+      throw exception;
     }
   }
 

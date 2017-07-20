@@ -130,6 +130,10 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0704("Can't create additional pipeline runners: {}"),
   CONTAINER_0705("Requested number of runners {} is higher than allowed maximum of {}"),
 
+  //Pipeline Lifecycle events
+  CONTAINER_0790("Pipeline lifecycle event stage initialization error: {}"),
+  CONTAINER_0791("Pipeline lifecycle event stage run error: {}"),
+
   //Runner
   CONTAINER_0800("Pipeline '{}' validation error : {}"),
   CONTAINER_0801("Thread unexpectedly interrupted"),

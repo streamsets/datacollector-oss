@@ -27,8 +27,10 @@ import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
+import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
@@ -341,8 +343,8 @@ public class TestPipeline {
       stageDefs,
       MockStages.getErrorStageConfig(),
       MockStages.getStatsAggregatorStageConfig(),
-      Collections.emptyList(),
-      Collections.emptyList()
+      ImmutableList.of(MockStages.getLifecycleExecutorConfig()),
+      ImmutableList.of(MockStages.getLifecycleExecutorConfig())
     );
     Pipeline.Builder builder = new MockPipelineBuilder()
       .withStageLib(lib)
@@ -357,9 +359,11 @@ public class TestPipeline {
     Source source = Mockito.mock(Source.class);
     Processor processor = Mockito.mock(Processor.class);
     Target target = Mockito.mock(Target.class);
+    Executor executor = Mockito.mock(Executor.class);
     MockStages.setSourceCapture(source);
     MockStages.setProcessorCapture(processor);
     MockStages.setTargetCapture(target);
+    MockStages.setExecutorCapture(executor);
 
     Observer observer = Mockito.mock(Observer.class);
     builder.setObserver(observer);
@@ -369,28 +373,39 @@ public class TestPipeline {
     Mockito.verifyZeroInteractions(source);
     Mockito.verifyZeroInteractions(processor);
     Mockito.verifyZeroInteractions(target);
-    pipeline.init(false);
-    Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
-                                                  Mockito.any(Source.Context.class));
-    Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
-                                                     Mockito.any(Processor.Context.class));
-    Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
-                                                  Mockito.any(Target.Context.class));
+    Mockito.verifyZeroInteractions(executor);
+    pipeline.init(true);
+    Mockito.verify(source, Mockito.times(1))
+      .init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
+    Mockito.verify(processor, Mockito.times(1))
+      .init(Mockito.any(Stage.Info.class), Mockito.any(Processor.Context.class));
+    Mockito.verify(target, Mockito.times(1))
+      .init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
+    // We're using the same handler for both start/stop events, hence the init should have been called twice
+    Mockito.verify(executor, Mockito.times(2))
+      .init(Mockito.any(Stage.Info.class), Mockito.any(Executor.Context.class));
+    Mockito.verify(runner, Mockito.times(1))
+      .runLifecycleEvent(Mockito.any(Record.class), Mockito.any(StageRuntime.class));
+
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
+    Mockito.verifyNoMoreInteractions(executor);
 
     Mockito.reset(runner);
     pipeline.run();
-    //FIXME<Hari> investigate
-    // Mockito.verifyNoMoreInteractions(runner);
 
-    pipeline.destroy(false);
+    pipeline.destroy(true);
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
+    // We're using the same handler for both start/stop events, hence the destroy should have been called twice
+    Mockito.verify(executor, Mockito.times(2)).destroy();
+    Mockito.verify(runner, Mockito.times(1))
+      .runLifecycleEvent(Mockito.any(Record.class), Mockito.any(StageRuntime.class));
+
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
-
+    Mockito.verifyNoMoreInteractions(executor);
   }
 
   @Test
