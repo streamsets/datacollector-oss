@@ -452,15 +452,14 @@ public class TestStandaloneRunner {
   @Test (timeout = 60000)
   public void testStartAndCaptureSnapshot() throws Exception {
     Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
-    String snapshotId = UUID.randomUUID().toString();
+    final String snapshotId = UUID.randomUUID().toString();
     runner.startAndCaptureSnapshot("admin", null, snapshotId, "snapshot label", 1, 10);
     waitForState(runner, PipelineStatus.RUNNING);
 
+    await().until(() -> !runner.getSnapshot(snapshotId).getInfo().isInProgress());
     Snapshot snapshot = runner.getSnapshot(snapshotId);
-    assertNotNull(snapshot);
-
     SnapshotInfo info = snapshot.getInfo();
-    assertNotNull(info);
+
     assertNotNull(snapshot.getOutput());
     assertFalse(info.isInProgress());
     assertEquals(snapshotId, info.getId());
@@ -473,9 +472,9 @@ public class TestStandaloneRunner {
     waitForState(runner, PipelineStatus.STOPPED);
 
     // try with batch size less than 0
-    snapshotId = UUID.randomUUID().toString();
+    String snapshotId1 = UUID.randomUUID().toString();
     try {
-      runner.startAndCaptureSnapshot("admin",null, snapshotId, "snapshot label", 1, 0);
+      runner.startAndCaptureSnapshot("admin",null, snapshotId1, "snapshot label", 1, 0);
       Assert.fail("Expected PipelineRunnerException");
     } catch (PipelineRunnerException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0107, e.getErrorCode());
