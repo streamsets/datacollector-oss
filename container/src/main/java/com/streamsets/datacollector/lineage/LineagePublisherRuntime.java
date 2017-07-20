@@ -17,7 +17,7 @@ package com.streamsets.datacollector.lineage;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
-import com.streamsets.datacollector.util.LamdaUtil;
+import com.streamsets.datacollector.util.LambdaUtil;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineagePublisher;
 
@@ -50,15 +50,15 @@ public class LineagePublisherRuntime {
   }
 
   public List<LineagePublisher.ConfigIssue> init(LineagePublisherContext context) {
-    return LamdaUtil.withClassLoader(definition.getClassLoader(),() -> publisher.init(context));
+    return LambdaUtil.withClassLoader(definition.getClassLoader(),() -> publisher.init(context));
   }
 
   public boolean publishEvents(List<LineageEvent> events) {
-    return LamdaUtil.withClassLoader(definition.getClassLoader(),() -> publisher.publishEvents(events));
+    return LambdaUtil.withClassLoader(definition.getClassLoader(),() -> publisher.publishEvents(events));
   }
 
   public void destroy() {
-    LamdaUtil.withClassLoader(definition.getClassLoader(),() -> { publisher.destroy(); return null; });
+    LambdaUtil.withClassLoader(definition.getClassLoader(),() -> { publisher.destroy(); return null; });
   }
 
 }
