@@ -46,6 +46,7 @@ public class VaultIT {
       .withExposedPorts(VAULT_PORT)
       .withEnv("VAULT_DEV_ROOT_TOKEN_ID", VAULT_DEV_ROOT_TOKEN_ID)
       .withEnv("VAULT_DEV_LISTEN_ADDRESS", VAULT_DEV_LISTEN_ADDRESS)
+      .withEnv("SKIP_SETCAP", "true")
       .withCommand("server", "-dev", "-log-level=debug");
 
   @BeforeClass
