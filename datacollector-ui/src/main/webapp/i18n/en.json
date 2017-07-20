@@ -613,7 +613,7 @@
       "nameValidation": "Enter alphanumeric characters, spaces and underscores.",
       "processorPlaceholder": "Select Processor...",
       "revertChangesConfirmationTitle": "Revert Changes Confirmation",
-      "revertChangesConfirmationMessage": "Are you sure you want to revert changes to Pipeline Configuration done on top of published version 'v{{version}}'?",
+      "revertChangesConfirmationMessage": "Are you sure you want to revert the changes made to the pipeline configuration for the published version 'v{{version}}'?",
       "revertingChanges": "Reverting Changes...",
       "sharingSettings": "Sharing Settings",
       "selectUsersAndGroupsPlaceholder": "Select users and groups...",
