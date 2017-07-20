@@ -140,16 +140,29 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
   private void printFile(Path path, Path prefix, String type, BundleWriter writer) throws IOException {
     writer.write(type);
     writer.write(";");
-    writer.write(prefix.relativize(path).toString());
+    writer.write(getOrWriteError(() ->prefix.relativize(path).toString()));
     writer.write(";");
-    writer.write(Files.getOwner(path).getName());
+    writer.write(getOrWriteError(() -> Files.getOwner(path).getName()));
     writer.write(";");
     if("F".equals(type)) {
-      writer.write(String.valueOf(Files.size(path)));
+      writer.write(getOrWriteError(() -> String.valueOf(Files.size(path))));
     }
     writer.write(";");
-    writer.write(StringUtils.join(Files.getPosixFilePermissions(path), ","));
+    writer.write(getOrWriteError(() -> StringUtils.join(Files.getPosixFilePermissions(path), ",")));
     writer.write("\n");
+  }
+
+  private interface GetOrWriteError {
+    String call() throws IOException;
+  }
+
+  private String getOrWriteError(GetOrWriteError getMethod) {
+    try {
+      return getMethod.call();
+    } catch (IOException e) {
+      LOG.error("Error while getting metadata: ", e);
+      return "ERROR";
+    }
   }
 
   private void writeJmx(BundleWriter writer) throws IOException {
