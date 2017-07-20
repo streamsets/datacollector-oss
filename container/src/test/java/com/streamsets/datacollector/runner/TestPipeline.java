@@ -87,8 +87,8 @@ public class TestPipeline {
       stageDefs,
       MockStages.getErrorStageConfig(),
       MockStages.getStatsAggregatorStageConfig(),
-      Collections.emptyList(),
-      Collections.emptyList()
+      ImmutableList.of(MockStages.getLifecycleExecutorConfig()),
+      ImmutableList.of(MockStages.getLifecycleExecutorConfig())
     );
     Pipeline.Builder builder = new MockPipelineBuilder()
       .withStageLib(lib)
@@ -168,6 +168,10 @@ public class TestPipeline {
         Assert.assertEquals(ImmutableList.of("p"), (((Processor.Context)stage.getContext()).getOutputLanes()));
       }
     }
+
+    // Lifecycle stages
+    Assert.assertNotNull(pipeline.getStartEventStage());
+    Assert.assertNotNull(pipeline.getStopEventStage());
   }
 
   @Test

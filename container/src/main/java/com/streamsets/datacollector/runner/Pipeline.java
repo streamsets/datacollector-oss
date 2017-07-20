@@ -85,6 +85,8 @@ public class Pipeline {
   private final Map<String, Object> runtimeParameters;
   private final long startTime;
   private final LineagePublisherTask lineagePublisherTask;
+  private final StageRuntime startEventStage;
+  private final StageRuntime stopEventStage;
 
   private Pipeline(
       String name,
@@ -106,7 +108,9 @@ public class Pipeline {
       List<Map<String, Object>> runnerSharedMaps,
       Map<String, Object> runtimeParameters,
       long startTime,
-      LineagePublisherTask lineagePublisherTask
+      LineagePublisherTask lineagePublisherTask,
+      StageRuntime startEventStage,
+      StageRuntime stopEventStage
   ) {
     this.pipelineBean = pipelineBean;
     this.name = name;
@@ -130,6 +134,8 @@ public class Pipeline {
     this.runtimeParameters = runtimeParameters;
     this.startTime = startTime;
     this.lineagePublisherTask = lineagePublisherTask;
+    this.startEventStage = startEventStage;
+    this.stopEventStage = stopEventStage;
   }
 
   public PipelineConfigBean getPipelineConfig() {
@@ -146,6 +152,15 @@ public class Pipeline {
     return pipes;
   }
 
+  @VisibleForTesting
+  StageRuntime getStartEventStage() {
+    return startEventStage;
+  }
+
+  @VisibleForTesting
+  StageRuntime getStopEventStage() {
+    return stopEventStage;
+  }
   public int getNumOfRunners() {
     return pipes.size();
   }
@@ -535,6 +550,54 @@ public class Pipeline {
           statsAggregationHandler = new StatsAggregationHandler(statsAggregator);
         }
 
+        // Event stages - we currently support either no or one event stage (which is enforced by various validations)
+        Preconditions.checkArgument(
+          pipelineBean.getStartEventStages().size() < 2,
+          "Unsupported number of start event stages: " + pipelineBean.getStartEventStages().size()
+        );
+        Preconditions.checkArgument(
+          pipelineBean.getStopEventStages().size() < 2,
+          "Unsupported number of stop event stages: " + pipelineBean.getStopEventStages().size()
+        );
+        StageRuntime startEventStageRuntime = null;
+        StageRuntime stopEventStageRuntime = null;
+        if(pipelineBean.getStartEventStages().size() == 1) {
+          startEventStageRuntime = createAndInitializeStageRuntime(
+            pipelineConf,
+            pipelineBean,
+            pipelineBean.getStartEventStages().get(0),
+            runner,
+            stageInfos,
+            false,
+            pipelineName,
+            rev,
+            userContext,
+            configuration,
+            0,
+            new ConcurrentHashMap<>(),
+            startTime,
+            lineagePublisherTask
+          );
+        }
+        if(pipelineBean.getStopEventStages().size() == 1) {
+          stopEventStageRuntime = createAndInitializeStageRuntime(
+            pipelineConf,
+            pipelineBean,
+            pipelineBean.getStopEventStages().get(0),
+            runner,
+            stageInfos,
+            false,
+            pipelineName,
+            rev,
+            userContext,
+            configuration,
+            0,
+            new ConcurrentHashMap<>(),
+            startTime,
+            lineagePublisherTask
+          );
+        }
+
         try {
           pipeline = new Pipeline(
             name,
@@ -556,7 +619,9 @@ public class Pipeline {
             runnerSharedMaps,
             runtimeParameters,
             startTime,
-            lineagePublisherTask
+            lineagePublisherTask,
+            startEventStageRuntime,
+            stopEventStageRuntime
           );
         } catch (Exception e) {
           String msg = "Can't instantiate pipeline: " + e;

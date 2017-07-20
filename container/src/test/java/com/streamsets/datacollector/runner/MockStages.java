@@ -1124,6 +1124,11 @@ public class MockStages {
     return new StageConfigurationBuilder("statsAggregator", "statsAggregator").build();
   }
 
+  public static StageConfiguration getLifecycleExecutorConfig() {
+    return new StageConfigurationBuilder("eventStage", "executorName")
+      .build();
+  }
+
   private static List<Config> createPipelineConfigs() {
     List<Config> pipelineConfig = new ArrayList<>();
     pipelineConfig.add(new Config("executionMode", ExecutionMode.STANDALONE.name()));
