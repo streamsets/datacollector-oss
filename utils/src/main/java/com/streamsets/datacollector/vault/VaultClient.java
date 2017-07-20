@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ package com.streamsets.datacollector.vault;
 
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.common.base.Strings;
 import com.streamsets.datacollector.vault.api.Authenticate;
 import com.streamsets.datacollector.vault.api.Logical;
 import com.streamsets.datacollector.vault.api.VaultException;
@@ -75,7 +76,11 @@ public class VaultClient {
       final KeyStore trustStore = KeyStore.getInstance("jks");
 
       SSLContext sslContext = SSLContext.getInstance(TLS);
-      sslContext.init(getKeyManagers(trustStore, sslOptions), getTrustManagers(trustStore), null);
+
+      TrustManager[] trustManagers = getTrustManagers(
+          Strings.isNullOrEmpty(sslOptions.getTrustStoreFile()) ? null : trustStore
+      );
+      sslContext.init(getKeyManagers(trustStore, sslOptions), trustManagers, null);
       sslContext.getDefaultSSLParameters().setProtocols(sslOptions.getEnabledProtocols().split(","));
 
       return sslContext.getSocketFactory();
