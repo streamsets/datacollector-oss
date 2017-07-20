@@ -48,6 +48,8 @@ public class PipelineConfigurationJson   {
   private Boolean previewable = null;
   private StageConfigurationJson statsAggregatorStage = null;
   private Map<String, Object> metadata = new HashMap<String, Object>();
+  private List<StageConfigurationJson> startEventStages;
+  private List<StageConfigurationJson> stopEventStages;
 
   /**
    **/
@@ -212,6 +214,28 @@ public class PipelineConfigurationJson   {
   }
   public void setStatsAggregatorStage(StageConfigurationJson statsAggregatorStage) {
     this.statsAggregatorStage = statsAggregatorStage;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("startEventStages")
+  public List<StageConfigurationJson> getStartEventStages() {
+    return startEventStages;
+  }
+  public void setStartEventStages(List<StageConfigurationJson> startEventStages) {
+    this.startEventStages = startEventStages;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("stopEventStages")
+  public List<StageConfigurationJson> getStopEventStages() {
+    return stopEventStages;
+  }
+  public void setStopEventStages(List<StageConfigurationJson> stopEventStages) {
+    this.stopEventStages = stopEventStages;
   }
 
   /**

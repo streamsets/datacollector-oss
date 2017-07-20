@@ -45,6 +45,7 @@ public enum CreationError implements ErrorCode {
   CREATION_015("Configuration value '{}' cannot be converted to '{}': {}"),
 
   CREATION_016("Could not obtain Java default value: {}"),
+  CREATION_017("Stage definition Library '{}' Stage '{}' Version '{}' can not be used for pipeline lifecycle event handling"),
 
   CREATION_020("Configuration value is not a LIST"),
   CREATION_021("LIST configuration has a NULL value"),

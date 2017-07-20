@@ -755,6 +755,8 @@ public class MockStages {
 
         StageDefinition tEventDef = new StageDefinitionBuilder(cl, MExecutor.class, "executorName")
           .withConfig(stageReqField)
+          .withProducingEvents(true)
+          .withPipelineLifecycleStage(true)
           .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
           .build();
 
@@ -1497,10 +1499,10 @@ public class MockStages {
       .withInputLanes("t")
       .build();
 
-    StageConfiguration startEvent = new StageConfigurationBuilder("start", "targetNameEvent")
+    StageConfiguration startEvent = new StageConfigurationBuilder("start", "executorName")
       .build();
 
-    StageConfiguration stopEvent = new StageConfigurationBuilder("stop", "targetNameEvent")
+    StageConfiguration stopEvent = new StageConfigurationBuilder("stop", "executorName")
       .build();
 
     PipelineConfiguration pipelineConfiguration = pipeline(
@@ -1520,11 +1522,11 @@ public class MockStages {
       .withInputLanes("t")
       .build();
 
-    StageConfiguration startEvent = new StageConfigurationBuilder("start", "targetNameEvent")
+    StageConfiguration startEvent = new StageConfigurationBuilder("start", "executorName")
       .withInputLanes("startInput")
       .build();
 
-    StageConfiguration stopEvent = new StageConfigurationBuilder("stop", "targetNameEvent")
+    StageConfiguration stopEvent = new StageConfigurationBuilder("stop", "executorName")
       .withEventLanes("stopEvent")
       .build();
 

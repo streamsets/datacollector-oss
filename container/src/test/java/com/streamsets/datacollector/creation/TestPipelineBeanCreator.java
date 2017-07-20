@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.MultiValueChooserModel;
+import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
@@ -336,6 +337,11 @@ public class TestPipelineBeanCreator {
     }
   }
 
+  @StageDef(version = 1, label = "Lifecycle", onlineHelpRefUrl = "")
+  @PipelineLifecycleStage
+  public static class LifecycleEventMyTarget extends MyTarget {
+  }
+
 
   @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   @ErrorStage
@@ -535,17 +541,20 @@ public class TestPipelineBeanCreator {
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition sourceDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
     StageDefinition targetDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+    StageDefinition lifecycleTargetDef = StageDefinitionExtractor.get().extract(libraryDef, LifecycleEventMyTarget.class, "");
     StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
     StageDefinition aggStageDef = StageDefinitionExtractor.get().extract(libraryDef, AggregatingMyTarget.class, "");
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
     Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("s"), Mockito.eq(false)))
-           .thenReturn(sourceDef);
+         .thenReturn(sourceDef);
     Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("t"), Mockito.eq(false)))
-           .thenReturn(targetDef);
+         .thenReturn(targetDef);
     Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("e"), Mockito.eq(false)))
-           .thenReturn(errorStageDef);
+         .thenReturn(errorStageDef);
     Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("a"), Mockito.eq(false)))
-      .thenReturn(aggStageDef);
+        .thenReturn(aggStageDef);
+    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("lifecycle"), Mockito.eq(false)))
+      .thenReturn(lifecycleTargetDef);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
 
     List<Map<String, Object>> constants = new ArrayList<>();
@@ -571,6 +580,13 @@ public class TestPipelineBeanCreator {
     StageConfiguration aggStageConf = new StageConfigurationBuilder("ai", "a")
       .withConfig(new Config("list", ImmutableList.of("A")))
       .build();
+    StageConfiguration startConf = new StageConfigurationBuilder("start", "lifecycle")
+      .withConfig(new Config("list", ImmutableList.of("start-list")))
+      .build();
+    StageConfiguration stopConf = new StageConfigurationBuilder("stop", "lifecycle")
+      .withConfig(new Config("list", ImmutableList.of("stop-list")))
+      .build();
+
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
         1,
         PipelineConfigBean.VERSION,
@@ -583,8 +599,8 @@ public class TestPipelineBeanCreator {
         ImmutableList.of(sourceConf, targetConf),
         errorStageConf,
         aggStageConf,
-        Collections.emptyList(),
-        Collections.emptyList()
+        ImmutableList.of(startConf),
+        ImmutableList.of(stopConf)
     );
 
     List<Issue> issues = new ArrayList<>();
@@ -615,6 +631,14 @@ public class TestPipelineBeanCreator {
     // error stage
     ErrorMyTarget errorStage = (ErrorMyTarget) bean.getErrorStage().getStage();
     Assert.assertEquals(ImmutableList.of("E"), errorStage.list);
+
+    // Lifecycle events
+    Assert.assertEquals(1, bean.getStartEventStages().size());
+    LifecycleEventMyTarget startStage = (LifecycleEventMyTarget)bean.getStartEventStages().get(0).getStage();
+    Assert.assertEquals(ImmutableList.of("start-list"), startStage.list);
+    Assert.assertEquals(1, bean.getStopEventStages().size());
+    LifecycleEventMyTarget stopStage = (LifecycleEventMyTarget)bean.getStopEventStages().get(0).getStage();
+    Assert.assertEquals(ImmutableList.of("stop-list"), stopStage.list);
   }
 
   @Test

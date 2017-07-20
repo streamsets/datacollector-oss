@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.creation;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ModelType;
@@ -53,6 +54,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 public abstract class PipelineBeanCreator {
@@ -157,6 +159,8 @@ public abstract class PipelineBeanCreator {
     StageBean statsStageBean = null;
     StageBean origin = null;
     PipelineStageBeans stages = null;
+    PipelineStageBeans startEventBeans = null;
+    PipelineStageBeans stopEventBeans = null;
     if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
 
       // Merge constant and runtime Constants
@@ -175,6 +179,7 @@ public abstract class PipelineBeanCreator {
             forExecution,
             library,
             pipelineConf.getStages().get(0),
+            false,
             false,
             resolvedConstants,
             errors
@@ -197,6 +202,7 @@ public abstract class PipelineBeanCreator {
             library,
             statsStageConf,
             false,
+            false,
             resolvedConstants,
             errors
         );
@@ -210,6 +216,7 @@ public abstract class PipelineBeanCreator {
             library,
             errorStageConf,
             true,
+            false,
             resolvedConstants,
             errors
         );
@@ -220,6 +227,34 @@ public abstract class PipelineBeanCreator {
             CreationError.CREATION_009
         ));
       }
+
+      // Pipeline Lifecycle event handlers
+      StageBean startBean = null;
+      if(!pipelineConf.getStartEventStages().isEmpty()) {
+         startBean = createStageBean(
+            forExecution,
+            library,
+            pipelineConf.getStartEventStages().get(0),
+            false,
+            true,
+            resolvedConstants,
+            errors
+        );
+      }
+      startEventBeans = new PipelineStageBeans(startBean == null ? Collections.emptyList() : ImmutableList.of(startBean));
+      StageBean stopBean = null;
+      if(!pipelineConf.getStopEventStages().isEmpty()) {
+         stopBean = createStageBean(
+            forExecution,
+            library,
+            pipelineConf.getStopEventStages().get(0),
+            false,
+            true,
+            resolvedConstants,
+            errors
+        );
+      }
+      stopEventBeans = new PipelineStageBeans(stopBean == null ? Collections.emptyList() : ImmutableList.of(stopBean));
 
       // Validate Webhook Configs
       if (pipelineConfigBean.webhookConfigs != null && !pipelineConfigBean.webhookConfigs.isEmpty()) {
@@ -245,7 +280,15 @@ public abstract class PipelineBeanCreator {
       return  null;
     }
 
-    return new PipelineBean(pipelineConfigBean, origin, stages, errorStageBean, statsStageBean);
+    return new PipelineBean(
+        pipelineConfigBean,
+        origin,
+        stages,
+        errorStageBean,
+        statsStageBean,
+        startEventBeans,
+        stopEventBeans
+    );
   }
 
   private PipelineStageBeans createPipelineStageBeans(
@@ -258,7 +301,15 @@ public abstract class PipelineBeanCreator {
     List<StageBean> stageBeans = new ArrayList<>(stageConfigurations.size());
 
     for (StageConfiguration stageConf : stageConfigurations) {
-      StageBean stageBean = createStageBean(forExecution, library, stageConf, false, constants, errors);
+      StageBean stageBean = createStageBean(
+          forExecution,
+          library,
+          stageConf,
+          false,
+          false,
+          constants,
+          errors
+      );
 
       if (stageBean != null) {
         stageBeans.add(stageBean);
@@ -332,14 +383,32 @@ public abstract class PipelineBeanCreator {
     return value;
   }
 
-  private StageBean createStageBean(boolean forExecution, StageLibraryTask library, StageConfiguration stageConf,
-      boolean errorStage, Map<String, Object> constants, List<Issue> errors) {
+  private StageBean createStageBean(
+      boolean forExecution,
+      StageLibraryTask library,
+      StageConfiguration stageConf,
+      boolean errorStage,
+      boolean pipelineLifecycleStage,
+      Map<String, Object> constants,
+      List<Issue> errors
+  ) {
     IssueCreator issueCreator = IssueCreator.getStage(stageConf.getInstanceName());
     StageBean bean = null;
     StageDefinition stageDef = library.getStage(stageConf.getLibrary(), stageConf.getStageName(),
                                                 forExecution);
     if (stageDef != null) {
-      if (stageDef.isErrorStage() != errorStage) {
+      // Pipeline lifecycle events validation must match, whether it's also marked as error stage does not matter
+      if(pipelineLifecycleStage) {
+        if(!stageDef.isPipelineLifecycleStage()) {
+          errors.add(issueCreator.create(
+              CreationError.CREATION_017,
+              stageDef.getLibraryLabel(),
+              stageDef.getLabel(),
+              stageConf.getStageVersion())
+          );
+        }
+      // For non pipeline lifecycle stages, the error stage annotation must match
+      } else if (stageDef.isErrorStage() != errorStage) {
         if (stageDef.isErrorStage()) {
           errors.add(issueCreator.create(CreationError.CREATION_007, stageDef.getLibraryLabel(), stageDef.getLabel(),
                                          stageConf.getStageVersion()));
@@ -348,6 +417,7 @@ public abstract class PipelineBeanCreator {
                                          stageConf.getStageVersion()));
         }
       }
+
       bean = createStage(stageDef, library, stageConf, constants, errors);
     } else {
       errors.add(issueCreator.create(CreationError.CREATION_006, stageConf.getLibrary(), stageConf.getStageName(),
