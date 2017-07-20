@@ -100,6 +100,7 @@ public class Vault {
       for (String lease : failedRenewalLeases) {
         LOG.debug("Removing lease '{}' as expired.", lease);
         leases.remove(lease);
+        secrets.remove(getPath(lease));
       }
     }
 
@@ -162,7 +163,7 @@ public class Vault {
      * @return path portion of leaseId
      */
     private String getPath(String leaseId) {
-      return leaseId.substring(0, leaseId.lastIndexOf('/') - 1);
+      return leaseId.substring(0, leaseId.lastIndexOf('/'));
     }
   }
 
@@ -257,7 +258,7 @@ public class Vault {
         // Only renewable secrets seem to have a leaseId
         leaseId = secret.getLeaseId();
       } else {
-        // So for non-renewable secret's we'll store the path with an extra / so that we can purge them correctly.
+        // So for non-renewable secrets we'll store the path with an extra / so that we can purge them correctly.
         leaseId = path + "/";
       }
       LEASES.put(leaseId, System.currentTimeMillis() + (secret.getLeaseDuration() * 1000));
