@@ -16,21 +16,28 @@
 package com.streamsets.datacollector.vault;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.util.Configuration;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 
 import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(Parameterized.class)
 public class VaultIT {
   private static final Logger LOG = LoggerFactory.getLogger(VaultIT.class);
 
@@ -40,6 +47,17 @@ public class VaultIT {
   private static final String VAULT_DEV_LISTEN_ADDRESS = "0.0.0.0:" + VAULT_PORT;
 
   private static Vault vault;
+  private static VaultConfiguration conf;
+  private static String roleId;
+  private static String secretId;
+
+  @Parameterized.Parameters
+  public static Collection<Object> authBackends() {
+    return ImmutableList.of(Vault.AuthBackend.APP_ID, Vault.AuthBackend.APP_ROLE);
+  }
+
+  @Parameterized.Parameter
+  public static Vault.AuthBackend authBackend;
 
   @ClassRule
   public static GenericContainer vaultContainer = new GenericContainer("vault:" + VAULT_VERSION)
@@ -54,7 +72,7 @@ public class VaultIT {
     URL url = Resources.getResource("all_policy.json");
     String allPolicy = Resources.toString(url, Charsets.UTF_8);
 
-    VaultConfiguration conf = VaultConfigurationBuilder.newVaultConfiguration()
+    conf = VaultConfigurationBuilder.newVaultConfiguration()
         .withAddress(
             "http://" + vaultContainer.getContainerIpAddress() + ":" + vaultContainer.getMappedPort(VAULT_PORT)
         )
@@ -62,22 +80,47 @@ public class VaultIT {
         .build();
 
     VaultClient client = new VaultClient(conf);
+    // Mount legacy app id back end
     boolean enabled = client.sys().auth().enable("app-id", "app-id");
     LOG.info("Enabled app-id: {}", enabled);
+    // Mount AppRole back end
+    enabled = client.sys().auth().enable("approle", "approle");
+    LOG.info("Enabled approle: {}", enabled);
     // Mount transit back end for testing nested maps
     client.sys().mounts().mount("transit", "transit");
     LOG.info("Mounted back-end 'transit' to 'transit'");
     client.sys().policy().create("all", allPolicy);
+
+    // Setup AppID
     client.logical().write("auth/app-id/map/app-id/foo", ImmutableMap.of("value", "all"));
     client.logical()
         .write("auth/app-id/map/user-id/" + Vault.calculateUserId(), ImmutableMap.of("value", "foo"));
 
+    // Setup AppRole
+    client.logical().write("auth/approle/role/foo", ImmutableMap.of("policies", "all"));
+    Secret roleIdSecret = client.logical().read("auth/approle/role/foo/role-id");
+    roleId = (String) roleIdSecret.getData().get("role_id");
+    Secret secretIdSecret = client.logical().write("auth/approle/role/foo/secret-id", Collections.emptyMap());
+    secretId = (String) secretIdSecret.getData().get("secret_id");
+
+    LOG.info("Using Role & Secret: '{}':'{}'", roleId, secretId);
+
     client.logical().write("secret/hello", ImmutableMap.of("value", "world!"));
     client.logical().write("transit/keys/sdc", ImmutableMap.of("exportable", true));
     Secret key = client.logical().read("transit/keys/sdc");
+  }
+
+  @Before
+  public void setUp() {
     Configuration sdcProperties = new Configuration();
     sdcProperties.set("vault.addr", conf.getAddress());
-    sdcProperties.set("vault.app.id", "foo");
+
+    if (authBackend == Vault.AuthBackend.APP_ID) {
+      sdcProperties.set("vault.app.id", "foo");
+    } else {
+      sdcProperties.set("vault.role.id", roleId);
+      sdcProperties.set("vault.secret.id", secretId);
+    }
     vault = new Vault(sdcProperties);
   }
 

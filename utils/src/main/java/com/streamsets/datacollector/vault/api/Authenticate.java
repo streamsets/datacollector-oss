@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,8 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.vault.Secret;
 import com.streamsets.datacollector.vault.VaultConfiguration;
 
+import java.util.Collections;
+
 public class Authenticate extends VaultEndpoint {
 
   public Authenticate(VaultConfiguration conf, HttpTransport transport) throws VaultException {
@@ -34,5 +36,18 @@ public class Authenticate extends VaultEndpoint {
         ImmutableMap.of("app_id", appId, "user_id", userId)
     );
     return getSecret("/v1/auth/app-id/login", "POST", content);
+  }
+
+  public Secret appRole(String roleId, String secretId) throws VaultException {
+    HttpContent content = new JsonHttpContent(
+        getJsonFactory(),
+        ImmutableMap.of("role_id", roleId, "secret_id", secretId)
+    );
+    return getSecret("/v1/auth/approle/login", "POST", content);
+  }
+
+  public Secret renewSelf() throws VaultException {
+    HttpContent content = new JsonHttpContent(getJsonFactory(), Collections.emptyMap());
+    return getSecret("/v1/auth/token/renew-self", "POST", content);
   }
 }

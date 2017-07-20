@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,11 +48,19 @@ public class Vault {
   private static final String VAULT_ADDR = "vault.addr";
   private static final Splitter mapSplitter = Splitter.on('/').trimResults().omitEmptyStrings();
 
-  private String appId;
+  private String roleId;
+  private AuthBackend authBackend;
+
   private VaultConfiguration config;
   private long leaseExpirationBuffer;
-  private long authExpirationTime;
   private long renewalInterval;
+  private volatile long authExpirationTime;
+  private Configuration sdcProperties;
+
+  enum AuthBackend {
+    APP_ROLE,
+    APP_ID
+  }
 
   public Vault(Configuration sdcProperties) {
     if (!sdcProperties.hasName(VAULT_ADDR) || sdcProperties.get(VAULT_ADDR, "").isEmpty()) {
@@ -82,6 +90,9 @@ public class Vault {
     @Override
     public void run() {
       try {
+        // Renew auth token if needed.
+        renewAuthToken();
+
         // Remove any expired leases (non-renewable)
         purgeExpiredLeases();
 
@@ -93,6 +104,30 @@ public class Vault {
       }
 
       LOG.debug("Completed lease renewal.");
+    }
+
+    private void renewAuthToken() {
+      if (authExpirationTime == Long.MAX_VALUE ||
+          authExpirationTime - System.currentTimeMillis() > leaseExpirationBuffer) {
+        // no op
+        return;
+      }
+
+      VaultClient vault = new VaultClient(config);
+      try {
+        Secret token = vault.authenticate().renewSelf();
+        long leaseDuration = token.getAuth().getLeaseDuration();
+        LOG.debug("Successfully renewed auth token by '{}'", leaseDuration);
+        if (leaseDuration > 0) {
+          authExpirationTime = System.currentTimeMillis() + (leaseDuration * 1000);
+        } else {
+          authExpirationTime = Long.MAX_VALUE;
+        }
+      } catch (VaultException e) {
+        LOG.error("Failed to renew auth token", e);
+      } finally {
+        authExpirationTime = 0; // force a new login next request.
+      }
     }
 
     private void purgeFailedRenewals(List<String> failedRenewalLeases) {
@@ -300,16 +335,25 @@ public class Vault {
       throw new VaultRuntimeException("Vault has not been configured for this Data Collector.");
     }
 
-    if (authExpirationTime - System.currentTimeMillis() <= 1000) {
+    if (authExpirationTime != Long.MAX_VALUE && authExpirationTime - System.currentTimeMillis() <= 1000) {
       VaultClient vault = new VaultClient(config);
       Secret auth;
       try {
-        auth = vault.authenticate().appId(appId, calculateUserId());
+        if (authBackend == AuthBackend.APP_ID) {
+          auth = vault.authenticate().appId(roleId, calculateUserId());
+        } else {
+          auth = vault.authenticate().appRole(roleId, getSecretId());
+        }
       } catch (VaultException e) {
         LOG.error(e.toString(), e);
         throw new VaultRuntimeException(e.toString());
       }
-      authExpirationTime = System.currentTimeMillis() + (auth.getAuth().getLeaseDuration() * 1000);
+      long leaseDuration = auth.getAuth().getLeaseDuration();
+      if (leaseDuration > 0) {
+        authExpirationTime = System.currentTimeMillis() + (leaseDuration * 1000);
+      } else {
+        authExpirationTime = Long.MAX_VALUE;
+      }
 
       config = VaultConfigurationBuilder.newVaultConfiguration()
           .fromVaultConfiguration(config)
@@ -319,13 +363,31 @@ public class Vault {
     return config;
   }
 
+  private String getSecretId() {
+    // Using a file ref in the config will ensure changes are picked up
+    return sdcProperties.get("vault.secret.id", "");
+  }
+
   private VaultConfiguration parseVaultConfigs(Configuration sdcProperties) {
+    this.sdcProperties = sdcProperties;
     leaseExpirationBuffer = Long.parseLong(sdcProperties.get("vault.lease.expiration.buffer.sec", "120"));
     renewalInterval = Long.parseLong(sdcProperties.get("vault.lease.renewal.interval.sec", "60"));
-    appId = sdcProperties.get("vault.app.id", "");
 
-    if (appId.isEmpty()) {
-      throw new VaultRuntimeException("vault.app.id must be specified in sdc.properties");
+    if (sdcProperties.hasName("vault.role.id")) {
+      authBackend = AuthBackend.APP_ROLE;
+      roleId = sdcProperties.get("vault.role.id", "");
+
+      if (sdcProperties.get("vault.secret.id", "").isEmpty()) {
+        throw new VaultRuntimeException("vault.secret.id must be specified when using AppRole auth.");
+      }
+    } else {
+      authBackend = AuthBackend.APP_ID;
+      roleId = sdcProperties.get("vault.app.id", "");
+      LOG.warn("The App ID authentication mode is deprecated, please migrate to AppRole");
+    }
+
+    if (roleId.isEmpty()) {
+      throw new VaultRuntimeException("vault.role.id OR vault.app.id must be specified in vault.properties");
     }
 
     config = VaultConfigurationBuilder.newVaultConfiguration()
