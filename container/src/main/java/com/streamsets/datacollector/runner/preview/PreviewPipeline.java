@@ -45,7 +45,7 @@ public class PreviewPipeline {
 
   public PreviewPipelineOutput run(List<StageOutput> stageOutputsToOverride)
       throws StageException, PipelineRuntimeException{
-    List<Issue> initIssues = pipeline.init();
+    List<Issue> initIssues = pipeline.init(true);
     if (initIssues.isEmpty()) {
       pipeline.run(stageOutputsToOverride);
     } else {
@@ -60,7 +60,7 @@ public class PreviewPipeline {
   }
 
   public void destroy() {
-    pipeline.destroy();
+    pipeline.destroy(true);
   }
 
 }

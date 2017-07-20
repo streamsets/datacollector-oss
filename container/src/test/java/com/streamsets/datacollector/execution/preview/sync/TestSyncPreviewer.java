@@ -40,9 +40,9 @@ public class TestSyncPreviewer extends TestPreviewer {
     SyncPreviewer previewer = (SyncPreviewer)createPreviewer();
     SyncPreviewer spyPreviewer = Mockito.spy(previewer);
     Pipeline pipeline = Mockito.mock(Pipeline.class);
-    Mockito.doReturn(Collections.emptyList()).when(pipeline).init();
+    Mockito.doReturn(Collections.emptyList()).when(pipeline).init(true);
     Mockito.doNothing().when(pipeline).run(Mockito.anyList());
-    Mockito.doNothing().when(pipeline).destroy();
+    Mockito.doNothing().when(pipeline).destroy(true);
     PreviewPipelineRunner previewPipelineRunner = Mockito.mock(PreviewPipelineRunner.class);
     Mockito.doReturn(null).when(previewPipelineRunner).getMetrics();
     Mockito.doReturn(null).when(previewPipelineRunner).getBatchesOutput();
@@ -51,15 +51,15 @@ public class TestSyncPreviewer extends TestPreviewer {
     Mockito.doReturn(previewPipeline).when(spyPreviewer).buildPreviewPipeline(Mockito.anyInt(), Mockito.anyInt(),
         Mockito.anyString(), Mockito.anyBoolean());
     spyPreviewer.start(1, 1, true, "", null, -1);
-    Mockito.verify(pipeline, Mockito.times(1)).destroy();
+    Mockito.verify(pipeline, Mockito.times(1)).destroy(true);
     // Check if preview returns non empty issue list
-    Mockito.doReturn(Arrays.asList(Mockito.mock(Issue.class))).when(pipeline).init();
+    Mockito.doReturn(Arrays.asList(Mockito.mock(Issue.class))).when(pipeline).init(true);
     try {
       spyPreviewer.start(1, 1, true, "", null, -1);
     } catch (Exception e) {
       // expected as issues is non empty
     }
     // check that destroy is still called, total times its called should be 2
-    Mockito.verify(pipeline, Mockito.times(2)).destroy();
+    Mockito.verify(pipeline, Mockito.times(2)).destroy(true);
   }
 }

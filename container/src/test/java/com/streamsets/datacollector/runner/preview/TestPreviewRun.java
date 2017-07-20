@@ -86,9 +86,9 @@ public class TestPreviewRun {
     Pipeline pipeline = new MockPipelineBuilder()
       .withPipelineConf(MockStages.createPipelineConfigurationSourceProcessorTarget())
       .build(runner);
-    pipeline.init();
+    pipeline.init(false);
     pipeline.run();
-    pipeline.destroy();
+    pipeline.destroy(false);
     List<StageOutput> output = runner.getBatchesOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
@@ -353,9 +353,9 @@ public class TestPreviewRun {
       .withConfiguration(configuration)
       .withPipelineConf(pipelineConf)
       .build(runner);
-    pipeline.init();
+    pipeline.init(false);
     pipeline.run();
-    pipeline.destroy();
+    pipeline.destroy(false);
     List<StageOutput> output = runner.getBatchesOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
@@ -374,9 +374,9 @@ public class TestPreviewRun {
       .withPipelineConf(pipelineConf)
       .build(runner);
 
-    pipeline.init();
+    pipeline.init(false);
     pipeline.run(Arrays.asList(sourceOutput));
-    pipeline.destroy();
+    pipeline.destroy(false);
     output = runner.getBatchesOutput().get(0);
     Assert.assertEquals(10, output.get(0).getOutput().get("s").get(0).get().getValue());
     Assert.assertEquals(20, output.get(1).getOutput().get("p").get(0).get().getValue());

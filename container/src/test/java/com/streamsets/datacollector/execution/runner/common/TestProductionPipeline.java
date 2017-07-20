@@ -368,7 +368,7 @@ public class TestProductionPipeline {
     Pipeline actual = prodPipeline.getPipeline();
     Pipeline pipeline = Mockito.spy(actual);
     Issue issue = Mockito.mock(Issue.class);
-    Mockito.doReturn(Arrays.asList(issue)).when(pipeline).init();
+    Mockito.doReturn(Arrays.asList(issue)).when(pipeline).init(true);
     ProductionPipeline mockProdPipeline = Mockito.spy(prodPipeline);
     Mockito.doReturn(pipeline).when(mockProdPipeline).getPipeline();
     try {

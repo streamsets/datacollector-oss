@@ -651,7 +651,7 @@ public class ClusterRunner extends AbstractRunner {
     ProductionPipeline p = createProductionPipeline(user, name, rev, configuration, pipelineConf);
     Pipeline pipeline = p.getPipeline();
     try {
-      List<Issue> issues = pipeline.init();
+      List<Issue> issues = pipeline.init(false);
       if (!issues.isEmpty()) {
         PipelineRuntimeException e =
           new PipelineRuntimeException(ContainerError.CONTAINER_0800, name, issues.get(0).getMessage());
@@ -662,7 +662,7 @@ public class ClusterRunner extends AbstractRunner {
         throw e;
       }
     } finally {
-      pipeline.destroy();
+      pipeline.destroy(false);
     }
     ProtoSource source = p.getPipeline().getSource();
     ClusterSource clusterSource;

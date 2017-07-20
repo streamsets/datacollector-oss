@@ -89,7 +89,7 @@ public class ProductionPipeline {
         LOG.debug("Initializing");
         List<Issue> issues = null;
         try {
-          issues = getPipeline().init();
+          issues = getPipeline().init(true);
         } catch (Throwable e) {
           if (!wasStopped()) {
             LOG.warn("Error while starting: {}", e.toString(), e);
@@ -133,7 +133,7 @@ public class ProductionPipeline {
         LOG.debug("Destroying");
 
         try {
-          pipeline.destroy();
+          pipeline.destroy(true);
         } catch (Throwable e) {
           LOG.warn("Error while calling destroy: " + e, e);
           throw e;

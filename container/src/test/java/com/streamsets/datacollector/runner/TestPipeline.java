@@ -369,7 +369,7 @@ public class TestPipeline {
     Mockito.verifyZeroInteractions(source);
     Mockito.verifyZeroInteractions(processor);
     Mockito.verifyZeroInteractions(target);
-    pipeline.init();
+    pipeline.init(false);
     Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                   Mockito.any(Source.Context.class));
     Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
@@ -385,7 +385,7 @@ public class TestPipeline {
     //FIXME<Hari> investigate
     // Mockito.verifyNoMoreInteractions(runner);
 
-    pipeline.destroy();
+    pipeline.destroy(false);
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
@@ -445,14 +445,14 @@ public class TestPipeline {
 
     Pipeline pipeline = builder.build(runner);
 
-    Assert.assertFalse(pipeline.init().isEmpty());
+    Assert.assertFalse(pipeline.init(false).isEmpty());
     Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                   Mockito.any(Source.Context.class));
     Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                      Mockito.any(Processor.Context.class));
     Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                   Mockito.any(Target.Context.class));
-    pipeline.destroy();
+    pipeline.destroy(false);
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
 
     // test runtime exception on init
@@ -468,7 +468,7 @@ public class TestPipeline {
 
     pipeline = builder.build(runner);
 
-    Assert.assertFalse(pipeline.init().isEmpty());
+    Assert.assertFalse(pipeline.init(false).isEmpty());
     Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                   Mockito.any(Source.Context.class));
     Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
@@ -476,7 +476,7 @@ public class TestPipeline {
     Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                   Mockito.any(Target.Context.class));
 
-    pipeline.destroy();
+    pipeline.destroy(false);
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
 
     // test exception on destroy
@@ -491,8 +491,8 @@ public class TestPipeline {
 
     pipeline = builder.build(runner);
 
-    pipeline.init();
-    pipeline.destroy();
+    pipeline.init(false);
+    pipeline.destroy(false);
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
   }
 
@@ -543,7 +543,7 @@ public class TestPipeline {
 
     Pipeline pipeline = builder.build(runner);
 
-    Assert.assertTrue(pipeline.init().isEmpty());
+    Assert.assertTrue(pipeline.init(false).isEmpty());
 
     // Origin is initialized only once
     Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(PushSource.Context.class));
@@ -601,7 +601,7 @@ public class TestPipeline {
 
     Pipeline pipeline = builder.build(runner);
 
-    Assert.assertTrue(pipeline.init().isEmpty());
+    Assert.assertTrue(pipeline.init(false).isEmpty());
 
     // Origin is initialized only once
     Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(PushSource.Context.class));

@@ -190,12 +190,12 @@ public class Pipeline {
 
   public List<Issue> validateConfigs() throws StageException {
     try {
-      return init();
+      return init(false);
     } catch (Throwable throwable) {
       LOG.error("Uncaught error in init: " + throwable, throwable);
       throw Throwables.propagate(throwable);
     } finally {
-      destroy();
+      destroy(false);
     }
   }
 
@@ -204,7 +204,7 @@ public class Pipeline {
   }
 
   @SuppressWarnings("unchecked")
-  public List<Issue> init() {
+  public List<Issue> init(boolean productionExecution) {
     PipeContext pipeContext = new PipeContext();
     this.runner.setPipelineConfiguration(pipelineConf);
     this.runner.setPipeContext(pipeContext);
@@ -334,7 +334,7 @@ public class Pipeline {
     runner.errorNotification(originPipe, pipes, throwable);
   }
 
-  public void destroy() {
+  public void destroy(boolean productionExecution) {
     try {
       runner.destroy(originPipe, pipes, badRecordsHandler, statsAggregationHandler);
     } catch (StageException|PipelineRuntimeException ex) {
