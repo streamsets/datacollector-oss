@@ -68,7 +68,7 @@
     <jackson.version>2.4.3</jackson.version>
     <!-- Sets the VM argument line used when unit and integration tests are run. -->
     <argLine>-Xmx2g</argLine>
-    <testcontainers.version>1.1.8</testcontainers.version>
+    <testcontainers.version>1.4.1</testcontainers.version>
     <netty.version>4.0.41.Final</netty.version>
 
     <!-- Platform encoding override -->
