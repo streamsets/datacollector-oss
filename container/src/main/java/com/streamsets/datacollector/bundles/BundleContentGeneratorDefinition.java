@@ -25,6 +25,7 @@ public class BundleContentGeneratorDefinition {
   private String description;
   private int version;
   private boolean enabledByDefault;
+  private int order;
 
   public BundleContentGeneratorDefinition(
     Class<? extends BundleContentGenerator> klass,
@@ -32,7 +33,8 @@ public class BundleContentGeneratorDefinition {
     String id,
     String description,
     int version,
-    boolean enabledByDefault
+    boolean enabledByDefault,
+    int order
   ) {
     this.klass = klass;
     this.name = name;
@@ -40,6 +42,7 @@ public class BundleContentGeneratorDefinition {
     this.description = description;
     this.version = version;
     this.enabledByDefault = enabledByDefault;
+    this.order = order;
   }
 
   public Class<? extends BundleContentGenerator> getKlass() {
@@ -64,5 +67,9 @@ public class BundleContentGeneratorDefinition {
 
   public boolean isEnabledByDefault() {
     return enabledByDefault;
+  }
+
+  public int getOrder() {
+    return order;
   }
 }

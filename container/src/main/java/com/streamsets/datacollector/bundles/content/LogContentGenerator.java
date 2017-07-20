@@ -35,7 +35,9 @@ import java.util.stream.Collectors;
   name = "Logs",
   description = "Most recent logs.",
   version = 1,
-  enabledByDefault = true
+  enabledByDefault = true,
+  // We want logs generator to run last, so that logs contains any possible exceptions about generating this bundle
+  order = Integer.MAX_VALUE
 )
 public class LogContentGenerator implements BundleContentGenerator {
   @Override

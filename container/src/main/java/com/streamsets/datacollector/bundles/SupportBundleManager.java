@@ -64,6 +64,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -162,7 +163,8 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
           id,
           def.description(),
           def.version(),
-          def.enabledByDefault()
+          def.enabledByDefault(),
+          def.order()
         ));
       }
     } catch (Exception e) {
@@ -349,7 +351,9 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     } else {
       stream = stream.filter(def -> generators.contains(def.getId()));
     }
-    return stream.collect(Collectors.toList());
+    return stream
+      .sorted(Comparator.comparingInt(BundleContentGeneratorDefinition::getOrder))
+      .collect(Collectors.toList());
   }
 
   private void generateNewBundleInternal(List<BundleContentGeneratorDefinition> defs, ZipOutputStream zipStream) {
@@ -366,6 +370,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
         );
 
         try {
+          LOG.debug("Generating content with {} generator", definition.getKlass().getName());
           BundleContentGenerator contentGenerator = definition.getKlass().newInstance();
           contentGenerator.generateContent(this, writer);
           generators.put(definition.getKlass().getName(), String.valueOf(definition.getVersion()));

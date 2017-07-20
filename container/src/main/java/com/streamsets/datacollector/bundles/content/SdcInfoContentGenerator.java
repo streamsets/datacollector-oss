@@ -50,7 +50,9 @@ import java.util.Set;
   name = "SDC Info",
   description = "Information about Data Collector itself (precise build information, configuration and thread dump, ...).",
   version = 1,
-  enabledByDefault = true
+  enabledByDefault = true,
+  // Run Info always first to get all metrics and such before rest of the generators might mess with them (memory, ...).
+  order = Integer.MIN_VALUE
 )
 public class SdcInfoContentGenerator implements BundleContentGenerator {
   private static final Logger LOG = LoggerFactory.getLogger(BundleContentGenerator.class);

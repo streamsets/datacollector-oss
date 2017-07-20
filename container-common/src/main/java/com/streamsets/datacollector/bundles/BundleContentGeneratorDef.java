@@ -54,4 +54,11 @@ public @interface BundleContentGeneratorDef {
    */
   boolean enabledByDefault() default false;
 
+  /**
+   * Suggested order in which the generators should be used.
+   *
+   * If two generators share the same number, they will run in non-deterministic order. Otherwise generator with smaller
+   * number will always run first.
+   */
+  int order() default 0;
 }
