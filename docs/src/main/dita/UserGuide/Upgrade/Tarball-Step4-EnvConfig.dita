@@ -118,7 +118,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> configuration directory that you just created:</cmd>
                 <info>
-                    <codeblock>cp -R etc/ /etc/sdc</codeblock>
+                    <codeblock>cp -R etc/* /etc/sdc</codeblock>
                 </info>
             </step>
             <step>
