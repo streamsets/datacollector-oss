@@ -44,11 +44,13 @@ import com.streamsets.datacollector.runner.SourcePipe;
 import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
+import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -126,6 +128,14 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   @Override
   public MetricRegistry getMetrics() {
     return metrics;
+  }
+
+  @Override
+  public void runLifecycleEvent(
+    Record eventRecord,
+    StageRuntime stageRuntime
+  ) throws StageException, PipelineRuntimeException {
+    // We're currently not running pipeline lifecycle events in preview, tracked by SDC-6800
   }
 
   @Override

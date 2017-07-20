@@ -21,10 +21,17 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 
 import java.util.List;
 
+/**
+ * Implementation of this runner are responsible for running the pipeline - via pipes concept.
+ *
+ * We currently have two main implementation - one for preview and one for production run (that is shared for both
+ * standalone and cluster modes).
+ */
 public interface PipelineRunner extends PipelineFinisherDelegate {
 
   public RuntimeInfo getRuntimeInfo();
@@ -33,6 +40,17 @@ public interface PipelineRunner extends PipelineFinisherDelegate {
 
   public MetricRegistry getMetrics();
 
+  /**
+   * Run given event record (pipeline lifecycle event) on given stage (handler).
+   */
+  public void runLifecycleEvent(
+    Record eventRecord,
+    StageRuntime stageRuntime
+  ) throws StageException, PipelineRuntimeException;
+
+  /**
+   * Run the pipeline's pipe.
+   */
   public void run(
     SourcePipe originPipe,
     List<PipeRunner> pipes,
@@ -40,6 +58,11 @@ public interface PipelineRunner extends PipelineFinisherDelegate {
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException;
 
+  /**
+   * Run the pipeline with overriding some stage outputs.
+   *
+   * This is specifically for preview and will throw exception if used on non-preview runner.
+   */
   public void run(
     SourcePipe originPipe,
     List<PipeRunner> pipes,
@@ -48,6 +71,12 @@ public interface PipelineRunner extends PipelineFinisherDelegate {
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException;
 
+  /**
+   * Destroy the pipeline.
+   *
+   * Since stages are allowed to generate events during destroy phase, the destroy() is delegated to runner and it means
+   * that we will run one final batch to make sure that all events are properly propagated and processed.
+   */
   public void destroy(
     SourcePipe originPipe,
     List<PipeRunner> pipes,

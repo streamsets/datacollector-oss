@@ -43,6 +43,7 @@ import com.streamsets.datacollector.restapi.bean.HistogramJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.BatchContextImpl;
+import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.datacollector.runner.BatchListener;
 import com.streamsets.datacollector.runner.ErrorSink;
 import com.streamsets.datacollector.runner.FullPipeBatch;
@@ -60,6 +61,7 @@ import com.streamsets.datacollector.runner.SourcePipe;
 import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
+import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
@@ -68,6 +70,7 @@ import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -300,6 +303,34 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   @Override
   public MetricRegistry getMetrics() {
     return metrics;
+  }
+
+  @Override
+  public void runLifecycleEvent(
+    Record eventRecord,
+    StageRuntime stageRuntime
+  ) throws StageException, PipelineRuntimeException {
+    // One record batch with empty offsets
+    Batch batch = new BatchImpl(
+      stageRuntime.getConfiguration().getInstanceName(),
+      "",
+      "",
+      ImmutableList.of(eventRecord)
+    );
+
+    // We're only supporting Executor and Target types
+    Preconditions.checkArgument(
+      stageRuntime.getDefinition().getType().isOneOf(StageType.EXECUTOR, StageType.TARGET),
+      "Invalid lifecycle event stage type: " + stageRuntime.getDefinition().getType()
+    );
+    stageRuntime.execute(
+      null,
+      1000,
+      batch,
+      null,
+      null,
+      null
+    );
   }
 
   @Override
