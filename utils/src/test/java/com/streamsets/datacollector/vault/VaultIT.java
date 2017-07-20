@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,7 +42,7 @@ public class VaultIT {
   private static Vault vault;
 
   @ClassRule
-  public static GenericContainer vaultContainer = new GenericContainer("kunickiaj/vault:" + VAULT_VERSION)
+  public static GenericContainer vaultContainer = new GenericContainer("vault:" + VAULT_VERSION)
       .withExposedPorts(VAULT_PORT)
       .withEnv("VAULT_DEV_ROOT_TOKEN_ID", VAULT_DEV_ROOT_TOKEN_ID)
       .withEnv("VAULT_DEV_LISTEN_ADDRESS", VAULT_DEV_LISTEN_ADDRESS)
