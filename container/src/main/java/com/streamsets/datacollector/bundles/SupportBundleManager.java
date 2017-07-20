@@ -355,23 +355,35 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   private void generateNewBundleInternal(List<BundleContentGeneratorDefinition> defs, ZipOutputStream zipStream) {
     try {
       Properties generators = new Properties();
+      Properties failedGenerators = new Properties();
 
       // Let each individual content generator run to generate it's content
       for(BundleContentGeneratorDefinition definition : defs) {
-        BundleWriter writer = new BundleWriterImpl(
+        BundleWriterImpl writer = new BundleWriterImpl(
           definition.getKlass().getName(),
           redactor,
           zipStream
         );
-        BundleContentGenerator contentGenerator = definition.getKlass().newInstance();
 
-        contentGenerator.generateContent(this, writer);
-        generators.put(definition.getKlass().getName(), String.valueOf(definition.getVersion()));
+        try {
+          BundleContentGenerator contentGenerator = definition.getKlass().newInstance();
+          contentGenerator.generateContent(this, writer);
+          generators.put(definition.getKlass().getName(), String.valueOf(definition.getVersion()));
+        } catch (Throwable t) {
+          LOG.error("Generator {} failed", definition.getName(), t);
+          failedGenerators.put(definition.getKlass().getName(), String.valueOf(definition.getVersion()));
+          writer.ensureEndOfFile();
+        }
       }
 
       // generators.properties
       zipStream.putNextEntry(new ZipEntry("generators.properties"));
       generators.store(zipStream, "");
+      zipStream.closeEntry();
+
+      // failed_generators.properties
+      zipStream.putNextEntry(new ZipEntry("failed_generators.properties"));
+      failedGenerators.store(zipStream, "");
       zipStream.closeEntry();
 
       // metadata.properties
@@ -434,6 +446,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
 
   private static class BundleWriterImpl implements BundleWriter {
 
+    private boolean insideFile;
     private final String prefix;
     private final StringRedactor redactor;
     private final ZipOutputStream zipOutputStream;
@@ -446,16 +459,25 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
       this.prefix = prefix + File.separator;
       this.redactor = redactor;
       this.zipOutputStream = outputStream;
+      this.insideFile = false;
     }
 
     @Override
     public void markStartOfFile(String name) throws IOException {
       zipOutputStream.putNextEntry(new ZipEntry(prefix + name));
+      insideFile = true;
     }
 
     @Override
     public void markEndOfFile() throws IOException {
       zipOutputStream.closeEntry();
+      insideFile = false;
+    }
+
+    public void ensureEndOfFile() throws IOException {
+      if(insideFile) {
+        markEndOfFile();
+      }
     }
 
     public void writeInternal(String string, boolean ln) throws IOException {
