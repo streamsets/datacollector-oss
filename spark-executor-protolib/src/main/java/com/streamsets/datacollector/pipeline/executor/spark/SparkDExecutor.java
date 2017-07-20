@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DExecutor;
 
@@ -34,6 +35,7 @@ import com.streamsets.pipeline.configurablestage.DExecutor;
 @ConfigGroups(Groups.class)
 @HideConfigs("conf.yarnConfigBean.waitForCompletion")
 @GenerateResourceBundle
+@PipelineLifecycleStage
 public class SparkDExecutor extends DExecutor {
 
   @ConfigDefBean

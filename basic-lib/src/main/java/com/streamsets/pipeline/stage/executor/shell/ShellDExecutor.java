@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DExecutor;
 import com.streamsets.pipeline.stage.executor.shell.config.ShellConfig;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.stage.executor.shell.config.ShellConfig;
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
+@PipelineLifecycleStage
 public class ShellDExecutor extends DExecutor {
 
   @ConfigDefBean

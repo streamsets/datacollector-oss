@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DExecutor;
 
@@ -34,6 +35,7 @@ import java.util.List;
 )
 
 @ConfigGroups(Groups.class)
+@PipelineLifecycleStage
 @GenerateResourceBundle
 public class EmailDExecutor extends DExecutor {
   @ConfigDef(
