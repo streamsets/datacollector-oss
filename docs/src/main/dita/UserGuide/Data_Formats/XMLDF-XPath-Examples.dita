@@ -20,7 +20,8 @@
 <concept id="concept_prt_sst_gy">
  <title>Sample XPath Expressions</title>
  <conbody>
-  <p>Here are some examples of valid and invalid XPath expressions:</p>
+  <p><indexterm>XML data<indexterm>sample XPath expressions</indexterm></indexterm>Here are some
+            examples of valid and invalid XPath expressions:</p>
         <dl>
             <dlentry>
                 <dt>Valid expressions</dt>

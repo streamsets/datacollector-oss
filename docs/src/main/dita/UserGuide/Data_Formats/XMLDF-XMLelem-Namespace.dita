@@ -20,7 +20,7 @@
 <concept id="concept_ilc_r3g_2y">
  <title>Using XML Elements with Namespaces</title>
  <conbody>
-  <p><indexterm>delimiter element<indexterm>using with
+  <p><indexterm>delimiter element<indexterm>using with XML
                     namespaces</indexterm></indexterm><indexterm>namespaces<indexterm>using with
                     delimiter elements</indexterm></indexterm>When you use an XML element as a
             delimiter, <ph

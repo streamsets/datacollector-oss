@@ -316,10 +316,10 @@
                     <dt>Data Formats</dt>
                     <dd>
                         <ul id="ul_r3d_dkk_fy">
-                            <li><xref href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"
+                            <li><xref href="../Data_Formats/XMLDFormat.dita#concept_lty_42b_dy"
                                     >XML processing</xref> enhancement - You can now generate
                                 records from XML documents using <xref
-                                    href="../Pipeline_Design/XMLDF-Xpath.dita#concept_zw2_mfk_dy"
+                                    href="../Data_Formats/XMLDF-Xpath.dita#concept_zw2_mfk_dy"
                                     >simplified XPath expressions</xref> with origins that process
                                 XML data and the XML Parser processor. This enables reading records
                                 from deeper within XML documents. </li>
@@ -330,7 +330,7 @@
                                     Format, and Ignore Control Characters now appear on the Data
                                     Format tab as well. </p></li>
                             <li><xref
-                                    href="../Pipeline_Design/WholeFile-IncludingChecksumEvent.dita#concept_ojv_sr4_vx"
+                                    href="../Data_Formats/WholeFile-IncludingChecksumEvent.dita#concept_ojv_sr4_vx"
                                     >Checksum generation for whole files</xref> - Destinations that
                                 stream whole files can now generate checksums for the files so you
                                 can confirm the accurate transmission of the file.</li>

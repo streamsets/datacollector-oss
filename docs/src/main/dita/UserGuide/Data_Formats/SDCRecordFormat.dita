@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qkk_mwk_br">
+    <title>SDC Record Data Format</title>
+    <shortdesc>SDC Record is a proprietary data format that <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
+        to generate error records. <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
+        also use the data format to read and write data. </shortdesc>
+    <conbody>
+        <p><indexterm>SDC Records<indexterm>data format</indexterm></indexterm><indexterm>pipeline
+                    design<indexterm>SDC Record data format</indexterm></indexterm>Use the SDC
+            Record data format to process data from another pipeline or to generate data to be
+            processed by another pipeline.</p>
+        <p>For a list of origins and destinations that process SDC Record data, see <xref
+                href="../Apx-DataFormats/DataFormat_Overview.dita#concept_bcw_qzb_kv"/>.</p>
+    </conbody>
+</concept>

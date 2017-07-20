@@ -20,10 +20,12 @@
 <concept id="concept_bnl_4fh_2y">
     <title>Predicates in XPath Expressions</title>
     <conbody>
-        <p><indexterm>XPath syntax<indexterm>using node predicates</indexterm></indexterm>You can
-            use predicates in XPath expressions to process a subset of element instances. You can
-            use a position predicate or attribute values predicate with an element, but not both.
-            You can also use a wildcard to define the attribute value.<dl>
+        <p><indexterm>XPath syntax<indexterm>using node
+                predicates</indexterm></indexterm><indexterm>XML data<indexterm>predicates in XPath
+                    expressions</indexterm></indexterm>You can use predicates in XPath expressions
+            to process a subset of element instances. You can use a position predicate or attribute
+            values predicate with an element, but not both. You can also use a wildcard to define
+            the attribute value.<dl>
                 <dlentry>
                     <dt>Position predicate</dt>
                     <dd><ph

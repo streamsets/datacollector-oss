@@ -30,6 +30,6 @@
         <note><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-FieldAtts-SDCRecord"
             /> For more information about working with field attributes, see <xref
-                href="FieldAttributes.dita#concept_xfm_wtp_1z"/>.</note>
+                href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"/>.</note>
  </conbody>
 </concept>

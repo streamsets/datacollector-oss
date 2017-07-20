@@ -47,6 +47,6 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/warn_FieldRecHeaderAtts"
                 /></note></p>
         <p>For more information about how XML Parser processes XML data, see <xref
-                href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"/>.</p>
+                href="../Data_Formats/XMLDFormat.dita#concept_lty_42b_dy"/>.</p>
  </conbody>
 </concept>

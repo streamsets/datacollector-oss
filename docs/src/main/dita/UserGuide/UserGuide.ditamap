@@ -53,6 +53,7 @@
     <chapter href="Chapter_Maps/PipelineDesign.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/PipelineConfiguration.ditamap" format="ditamap"
         processing-role="normal"/>
+    <chapter href="Chapter_Maps/DataFormats.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Origins.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Processors.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Destinations.ditamap" format="ditamap"/>

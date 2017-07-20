@@ -20,8 +20,9 @@
 <concept id="concept_cgw_sc4_2y">
  <title>Predicate Examples</title>
  <conbody>
-  <p><indexterm>predicate<indexterm>examples</indexterm></indexterm>To process all data in a
-                <codeph>collections</codeph> element under the <codeph>apps</codeph> second-level
+  <p><indexterm>predicate<indexterm>examples</indexterm></indexterm><indexterm>XML
+                    data<indexterm>predicate examples</indexterm></indexterm>To process all data in
+            a <codeph>collections</codeph> element under the <codeph>apps</codeph> second-level
             element, you would use the following simplified XPath
             expression:<codeblock>/*/apps/collections</codeblock></p>
         <p>If you only wanted the data under the first instance of <codeph>apps</codeph> in the XML

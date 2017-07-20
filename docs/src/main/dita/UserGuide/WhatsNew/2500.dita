@@ -407,9 +407,9 @@
                             upgrading.</li>
                         <li>XML parsing enhancements - You can include field XPath expressions and
                             namespaces in the record with the <xref
-                                href="../Pipeline_Design/XMLDF-FieldXPathExp.dita#concept_w3k_1ch_qz"
+                                href="../Data_Formats/XMLDF-FieldXPathExp.dita#concept_w3k_1ch_qz"
                                 >Include Field XPaths property</xref>. And use the new <xref
-                                href="../Pipeline_Design/XMLDF-OutputFAttributes.dita#concept_jll_4wh_qz"
+                                href="../Data_Formats/XMLDF-OutputFAttributes.dita#concept_jll_4wh_qz"
                                 >Output Field Attributes property</xref> to write XML attributes and
                             namespace declarations to field attributes rather than including them in
                             the record as fields. </li>

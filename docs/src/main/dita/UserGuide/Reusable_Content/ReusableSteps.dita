@@ -791,7 +791,7 @@
                                 </row>
                                 <row id="O-row-Del-RootField">
                                     <entry>Root Field Type <xref
-                                            href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita">
+                                            href="../Data_Formats/DelimitedDataRootFieldTypes.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_exx_41q_ft"/></xref></entry>
                                     <entry>Root field type to use:<ul id="ul_izr_p1q_ft">
@@ -1070,7 +1070,7 @@
                                         /> resources directory,
                                             <codeph>$SDC_RESOURCES</codeph>.<p>For information about
                                             generating the descriptor file, see <xref
-                                                href="../Pipeline_Design/Protobuf-Prerequisites.dita"
+                                                href="../Data_Formats/Protobuf-Prerequisites.dita"
                                             />. For more information about environment variables,
                                             see <xref
                                                 href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
@@ -1136,7 +1136,7 @@
                                                 href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />. For information about generating the descriptor
                                             file, see <xref
-                                                href="../Pipeline_Design/Protobuf-Prerequisites.dita"
+                                                href="../Data_Formats/Protobuf-Prerequisites.dita"
                                             />.</p></entry>
                                 </row>
                                 <row>
@@ -1224,7 +1224,7 @@
                                 </row>
                                 <row>
                                     <entry>Use Custom Delimiter <xref
-                                            href="../Pipeline_Design/TextCDelim.dita">
+                                            href="../Data_Formats/TextCDelim.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_f8g_d37_xv"
                                         /></xref></entry>
@@ -1289,7 +1289,7 @@
                                 </row>
                                 <row id="O-row-UseCDelim">
                                     <entry>Use Custom Delimiter <xref
-                                            href="../Pipeline_Design/TextCDelim.dita">
+                                            href="../Data_Formats/TextCDelim.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_f2g_d54_xv"
                                         /></xref></entry>
@@ -1344,7 +1344,7 @@
                                 </row>
                                 <row>
                                     <entry>Rate per Second <xref
-                                            href="../Pipeline_Design/WholeFile-TransferRate.dita">
+                                            href="../Data_Formats/WholeFile-TransferRate.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline"/></xref></entry>
                                     <entry>Transfer rate to use. <p>Enter a number to specify a rate
@@ -1386,7 +1386,7 @@
                                 </row>
                                 <row>
                                     <entry>Rate per Second <xref
-                                            href="../Pipeline_Design/WholeFile-TransferRate.dita">
+                                            href="../Data_Formats/WholeFile-TransferRate.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_ljp_wy2_py"
                                         /></xref></entry>
@@ -1436,7 +1436,7 @@
                                 </row>
                                 <row id="O-row-XMLDelimElement">
                                     <entry>Delimiter Element <xref
-                                            href="../Pipeline_Design/XMLDF-XPath-Syntax.dita#concept_tmc_4bc_dy">
+                                            href="../Data_Formats/XMLDF-XPath-Syntax.dita#concept_tmc_4bc_dy">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_xwx_xrm_js"
                                         /></xref></entry>
@@ -1454,14 +1454,14 @@
                                                   that requires a more complex access
                                                   method.</p><p>For more information about valid
                                                   syntax, see <xref
-                                                  href="../Pipeline_Design/XMLDF-XPath-Syntax.dita#concept_tmc_4bc_dy"
+                                                  href="../Data_Formats/XMLDF-XPath-Syntax.dita#concept_tmc_4bc_dy"
                                                   />.</p></li>
                                             </ul></p>
                                     </entry>
                                 </row>
                                 <row id="O-row-XMLFieldXpath">
                                     <entry>Include Field XPaths <xref
-                                            href="../Pipeline_Design/XMLDF-FieldXPathExp.dita">
+                                            href="../Data_Formats/XMLDF-FieldXPathExp.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline"
                                         /></xref></entry>
@@ -1482,10 +1482,10 @@
                                         includes a namespace prefix or when the XPath expression
                                         includes namespaces.<p>For information about using
                                             namespaces with an XML element, see <xref
-                                                href="../Pipeline_Design/XMLDF-XMLelem-Namespace.dita#concept_ilc_r3g_2y"
+                                                href="../Data_Formats/XMLDF-XMLelem-Namespace.dita#concept_ilc_r3g_2y"
                                             />.</p><p>For information about using namespaces with
                                             XPath expressions, see <xref
-                                                href="../Pipeline_Design/XMLDF-XPath-Namespaces.dita#concept_mkk_3zj_dy"
+                                                href="../Data_Formats/XMLDF-XPath-Namespaces.dita#concept_mkk_3zj_dy"
                                             />.</p><p>Use the <uicontrol>Add</uicontrol> icon to add
                                             additional namespaces.</p></entry>
                                 </row>
@@ -3639,7 +3639,7 @@
                                                 href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />. For information about generating the descriptor
                                             file, see <xref
-                                                href="../Pipeline_Design/Protobuf-Prerequisites.dita"
+                                                href="../Data_Formats/Protobuf-Prerequisites.dita"
                                             />.</p></entry>
                                 </row>
                                 <row>
@@ -3765,13 +3765,13 @@
                                         <p>Expression to use for the file names. </p>
                                         <p>For tips on how to name files based on input file names,
                                             see <xref
-                                                href="../Pipeline_Design/WholeFile-Writing.dita#concept_a2s_4jw_1x"
+                                                href="../Data_Formats/WholeFile-Writing.dita#concept_a2s_4jw_1x"
                                             />.</p>
                                     </entry>
                                 </row>
                                 <row id="row-PermExp">
                                     <entry>Permissions Expression <xref
-                                            href="../Pipeline_Design/WholeFile-AccessPermissions.dita">
+                                            href="../Data_Formats/WholeFile-AccessPermissions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_zwb_ccw_1x"/></xref></entry>
                                     <entry>Expression that defines the access permissions for output
@@ -3795,7 +3795,7 @@
                                 </row>
                                 <row id="row-IncludeChecksum">
                                     <entry>Include Checksum in Events <xref
-                                            href="../Pipeline_Design/WholeFile-IncludingChecksumEvent.dita">
+                                            href="../Data_Formats/WholeFile-IncludingChecksumEvent.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_fyz_ywp_vx"/></xref></entry>
                                     <entry>Includes checksum information in whole file event
@@ -3874,7 +3874,7 @@
                                             <li>Protobuf</li>
                                             <li>Text</li>
                                             <li>Whole File <xref
-                                                  href="../Pipeline_Design/WholeFile.dita">
+                                                  href="../Data_Formats/WholeFile.dita">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" placement="inline"
                                                   id="image_ylz_vsm_zw"/></xref></li>

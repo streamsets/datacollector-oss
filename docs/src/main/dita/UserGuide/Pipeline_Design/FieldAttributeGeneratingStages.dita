@@ -42,7 +42,7 @@
                         <entry>Origins that process XML data</entry>
                         <entry>Can include field XPath information, XML attribute, and namespace
                             declarations in field attributes. <xref
-                                href="../Pipeline_Design/XMLDF-FieldXPathExp.dita">
+                                href="../Data_Formats/XMLDF-FieldXPathExp.dita">
                                 <image href="../Graphics/icon_moreInfo.png" scale="10"
                                     id="image_w5x_42x_j1b"/></xref></entry>
                     </row>

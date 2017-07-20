@@ -473,7 +473,7 @@
            <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wjh_ycl_br"
             placement="inline"/></xref></li>
          <li>Text</li>
-         <li>Whole File <xref href="../Pipeline_Design/WholeFile.dita">
+         <li>Whole File <xref href="../Data_Formats/WholeFile.dita">
            <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
             id="image_igx_zzm_zw"/></xref></li>
          <li>XML</li>

@@ -20,10 +20,11 @@
 <concept id="concept_tmc_4bc_dy">
  <title>Simplified XPath Syntax</title>
  <conbody>
-  <p><indexterm>XML data<indexterm>simplified XPath syntax</indexterm></indexterm><indexterm>XPath
-                    syntax<indexterm>for processing XML data</indexterm></indexterm>When using an
-            XPath expression to generate records from an XML document, use a simplified version of
-            the <xref href="https://en.wikipedia.org/wiki/XPath#Abbreviated_syntax" format="html"
+  <p><indexterm>XML data<indexterm>processing with the simplified XPath
+                syntax</indexterm></indexterm><indexterm>XPath syntax<indexterm>for processing XML
+                    data</indexterm></indexterm>When using an XPath expression to generate records
+            from an XML document, use a simplified version of the <xref
+                href="https://en.wikipedia.org/wiki/XPath#Abbreviated_syntax" format="html"
                 scope="external">abbreviated XPath syntax</xref>. </p>
         <p>Use the abbreviated XPath syntax with the following restrictions:<dl>
                 <dlentry>

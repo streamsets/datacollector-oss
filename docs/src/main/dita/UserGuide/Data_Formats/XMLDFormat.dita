@@ -18,14 +18,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lty_42b_dy">
-    <title>XML Data Format and Data Processing</title>
+    <title>Reading and Processing XML Data</title>
     <conbody>
         <p><indexterm>XML data<indexterm>processing in origins and the XML Parser
-                    processor</indexterm></indexterm><indexterm>origins<indexterm>processing XML
-                    data</indexterm></indexterm><indexterm>XML Parser processor<indexterm>processing
-                    XML data</indexterm></indexterm>You can parse XML documents from an origin
-            system with an origin enabled for the XML data format. You can also parse XML documents
-            in a field in a <ph
+                    processor</indexterm></indexterm><indexterm>origins<indexterm>reading and
+                    processing XML data</indexterm></indexterm><indexterm>XML Parser
+                    processor<indexterm>processing XML data</indexterm></indexterm>You can parse XML
+            documents from an origin system with an origin enabled for the XML data format. You can
+            also parse XML documents in a field in a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             record with the XML Parser processor. </p>
         <p>You can use the XML data format and the XML Parser to process well-formed XML documents.

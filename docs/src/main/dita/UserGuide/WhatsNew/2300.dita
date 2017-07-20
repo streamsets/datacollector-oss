@@ -358,7 +358,7 @@
                     <dd>
                         <ul id="ul_hpw_zwt_5y">
                             <li><xref
-                                    href="../Pipeline_Design/WholeFile-TransferRate.dita#concept_prp_jzd_py"
+                                    href="../Data_Formats/WholeFile-TransferRate.dita#concept_prp_jzd_py"
                                     >Whole File enhancement</xref> - You can now specify a transfer
                                 rate to help control the resources used to process whole files. You
                                 can specify the rate limit in all origins that process whole

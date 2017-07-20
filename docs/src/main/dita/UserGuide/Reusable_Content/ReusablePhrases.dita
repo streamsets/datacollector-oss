@@ -572,7 +572,7 @@
                                     origin, the origin processes the object based on the error
                                     handling configured for the stage.</dd>
                               <dd>For more information about the root field types, see <xref
-                                          href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
+                                          href="../Data_Formats/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
                                     />.</dd>
                         </dlentry>
                         <dlentry id="OriginDF-DELIMFILE">
@@ -613,7 +613,7 @@
                                           <li>Stop Pipeline - The origin stops the pipeline. </li>
                                     </ul></dd>
                               <dd>For more information about the root field types, see <xref
-                                          href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
+                                          href="../Data_Formats/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
                                     />.</dd>
                         </dlentry>
                         <dlentry id="OriginDF-JSON">
@@ -673,7 +673,7 @@
                                     message based on the stage error handling property and continues
                                     reading the next message. </dd>
                               <dd>For information about generating the descriptor file, see <xref
-                                          href="../Pipeline_Design/Protobuf-Prerequisites.dita"
+                                          href="../Data_Formats/Protobuf-Prerequisites.dita"
                                     />.</dd>
                         </dlentry>
                   </dl>
@@ -690,7 +690,7 @@
                               processing data in the file. The origin handles the file based on file
                               error handling properties and continues reading the next file. </dd>
                         <dd>For information about generating the descriptor file, see <xref
-                                    href="../Pipeline_Design/Protobuf-Prerequisites.dita"/>.</dd>
+                                    href="../Data_Formats/Protobuf-Prerequisites.dita"/>.</dd>
                   </dlentry>
             </dl>
             <p>
@@ -717,7 +717,7 @@
                                     truncated.</dd>
                               <dd>For more information about processing text with a custom
                                     delimiter, see <xref
-                                          href="../Pipeline_Design/TextCDelim.dita#concept_lg2_gcg_jx"
+                                          href="../Data_Formats/TextCDelim.dita#concept_lg2_gcg_jx"
                                     />.</dd>
                         </dlentry>
                   </dl>
@@ -734,7 +734,7 @@
                                     truncated.</dd>
                               <dd>For more information about processing text with a custom
                                     delimiter, see <xref
-                                          href="../Pipeline_Design/TextCDelim.dita#concept_lg2_gcg_jx"
+                                          href="../Data_Formats/TextCDelim.dita#concept_lg2_gcg_jx"
                                     />.</dd>
                         </dlentry>
                         <dlentry>
@@ -754,7 +754,7 @@
                                     resources to perform the transfer. </dd>
                               <dd>The origin generates two fields: one for a file reference and one
                                     for file information. For more information, see <xref
-                                          href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                                          href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"
                                     />.</dd>
                         </dlentry>
                         <dlentry>
@@ -774,7 +774,7 @@
                                     transmission.</dd>
                               <dd>The origin generates two fields: one for a file reference and one
                                     for file information. For more information, see <xref
-                                          href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                                          href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"
                                     />.</dd>
                         </dlentry>
                   </dl>
@@ -805,14 +805,14 @@
                                     handling. </dd>
                               <dd>Use the XML data format to process valid XML documents. For more
                                     information about XML processing, see <xref
-                                          href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"
+                                          href="../Data_Formats/XMLDFormat.dita#concept_lty_42b_dy"
                                     />.</dd>
                               <dd>
                                     <note type="tip"><ph>If you want to process invalid XML
                                                 documents, you can try using the text data format
                                                 with custom delimiters. For more information, see
                                                   <xref
-                                                  href="../Pipeline_Design/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
+                                                  href="../Data_Formats/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
                                                 />.</ph>
                                     </note>
                               </dd>
@@ -851,12 +851,12 @@
                                     </ul></dd>
                               <dd>Use the XML data format to process valid XML documents. For more
                                     information about XML processing, see <xref
-                                          href="../Pipeline_Design/XMLDFormat.dita#concept_lty_42b_dy"
+                                          href="../Data_Formats/XMLDFormat.dita#concept_lty_42b_dy"
                                     />. <note type="tip"><ph id="ph-p-InvalidXML-CustomDelimXref">If
                                                 you want to process invalid XML documents, you can
                                                 try using the text data format with custom
                                                 delimiters. For more information, see <xref
-                                                  href="../Pipeline_Design/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
+                                                  href="../Data_Formats/TextCDelim-XMLdata.dita#concept_okt_kmg_jx"
                                                 />.</ph>
                                     </note></dd>
                         </dlentry>
@@ -1720,7 +1720,7 @@ input_stream.read()</codeblock></p>
                               the definition of the message type in the descriptor file to generate
                               the message. </dd>
                         <dd>For information about generating the descriptor file, see <xref
-                                    href="../Pipeline_Design/Protobuf-Prerequisites.dita"/>.</dd>
+                                    href="../Data_Formats/Protobuf-Prerequisites.dita"/>.</dd>
                   </dlentry>
             </dl>
             <draft-comment author="Loretta"><b>DestDF-ProtoFile</b> - Amazon S3, Directory? Hadoop
@@ -1732,7 +1732,7 @@ input_stream.read()</codeblock></p>
                         <dd>Uses the user-defined message type and the definition of the message
                               type in the descriptor file to generate the messages in the file. </dd>
                         <dd>For information about generating the descriptor file, see <xref
-                                    href="../Pipeline_Design/Protobuf-Prerequisites.dita"/>.</dd>
+                                    href="../Data_Formats/Protobuf-Prerequisites.dita"/>.</dd>
                   </dlentry>
                   <dlentry id="DEST-DataF-SDC">
                         <dt>SDC Record</dt>
@@ -1778,7 +1778,7 @@ input_stream.read()</codeblock></p>
                               file and pass checksum information to the destination system in an
                               event record. </dd>
                         <dd>For more information about the whole file data format, see <xref
-                                    href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"
                               />.</dd>
                   </dlentry>
                   <dlentry id="D-DF-WholeF-Basic">
@@ -1794,7 +1794,7 @@ input_stream.read()</codeblock></p>
                               file and pass checksum information to the destination system in an
                               event record. </dd>
                         <dd>For more information about the whole file data format, see <xref
-                                    href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"
                               />.</dd>
                   </dlentry>
                   <dlentry id="D-DF-WholeF-noEvent">
@@ -1807,7 +1807,7 @@ input_stream.read()</codeblock></p>
                               destination system. You can specify an expression that defines access
                               permissions. </dd>
                         <dd>For more information about the whole file data format, see <xref
-                                    href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"
                               />.</dd>
                   </dlentry>
                   <dlentry id="D-DF-WholeF-HDFS">
@@ -1826,7 +1826,7 @@ input_stream.read()</codeblock></p>
                                     Type</wintitle> property to <uicontrol>Whole
                               File</uicontrol>.</dd>
                         <dd>For more information about the whole file data format, see <xref
-                                    href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"
+                                    href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"
                               />.</dd>
                   </dlentry>
             </dl>

@@ -52,10 +52,10 @@
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             /> runs on a machine with Java 8u111 or later, consider using an HTTPS proxy server. Or
             as a workaround, consider adding the following Java property to the SDC_JAVA_OPTS
-            environment variable, setting the property to an empty
-                string:<codeblock>-Djdk.http.auth.tunneling.disabledSchemes=''</codeblock><p>However,
-                use this workaround with caution since it exposes credentials by sending them
-                through an unencrypted proxy.</p></note>
+            environment variable, setting the property to an empty string:<p>
+                <codeblock>-Djdk.http.auth.tunneling.disabledSchemes=''</codeblock>
+            </p><p>However, use this workaround with caution since it exposes credentials by sending
+                them through an unencrypted proxy.</p></note>
     </conbody>
     <related-links>
         <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>

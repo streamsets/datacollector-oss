@@ -29,6 +29,6 @@
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Script-CloseStream"/>
  </conbody>
     <related-links>
-        <link href="../Pipeline_Design/WholeFile.dita#concept_nfc_qkh_xw"/>
+        <link href="../Data_Formats/WholeFile.dita#concept_nfc_qkh_xw"/>
     </related-links>
 </concept>
