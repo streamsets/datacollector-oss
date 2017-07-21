@@ -44,7 +44,9 @@
                 <dlentry>
                     <dt>From a specified system change number (SCN)</dt>
                     <dd>The origin processes all changes that occurred in the specified SCN and
-                        later. Typically, a database admin can provide the SCN to use.</dd>
+                        later. when using the specified SCN, the origin starts processing with the
+                        timestamp associated with the SCN.</dd>
+                    <dd>Typically, a database admin can provide the SCN to use.</dd>
                 </dlentry>
             </dl></p>
         <section>

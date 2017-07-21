@@ -23,11 +23,12 @@
         <p><indexterm>Oracle CDC Client origin<indexterm>CDC header
                 attributes</indexterm></indexterm>The Oracle CDC Client origin provides the
             following CDC record header attributes for each record:<ul id="ul_j3y_yxd_dx">
-                <li>oracle.cdc.user</li>
                 <li>oracle.cdc.operation</li>
+                <li>oracle.cdc.rowId</li>
+                <li>oracle.cdc.scn</li>
                 <li>oracle.cdc.timestamp</li>
                 <li>oracle.cdc.table</li>
-                <li>oracle.cdc.scn</li>
+                <li>oracle.cdc.user</li>
             </ul></p>
         <p>And it includes the following record header attributes for each decimal field in the
                 record:<ul id="ul_jvj_p1j_fx">

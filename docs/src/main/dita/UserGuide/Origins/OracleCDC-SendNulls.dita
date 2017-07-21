@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ehz_nqm_n1b">
+ <title>Include Nulls</title>
+ <conbody>
+  <p><indexterm>Oracle CDC Client origin<indexterm>include nulls</indexterm></indexterm>When the
+            Oracle LogMiner performs full supplemental logging, the resulting data includes all
+            columns in the table with null values where no changes occurred. When the Oracle CDC
+            Client processes this data, by default, it ignores null values when generating
+            records.</p>
+        <p>You can configure the origin to include the null values in the record. You might need to
+            include the null values when the destination system has required fields. To include null
+            values, enable the Include Nulls property on the Oracle CDC tab.</p>
+ </conbody>
+</concept>

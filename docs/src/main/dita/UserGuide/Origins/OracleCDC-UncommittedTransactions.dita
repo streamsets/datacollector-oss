@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ssg_tgm_p1b">
+ <title>Uncommitted Transaction Handling</title>
+ <conbody>
+  <p><indexterm>Oracle CDC Client origin<indexterm>uncommitted transaction
+                handling</indexterm></indexterm>When using local buffers, you can configure how the
+            Oracle CDC Client origin handles old uncommitted transactions. Old transactions are
+            those that are older than the current transaction window. </p>
+        <p>By default, the origin processes old committed transactions. It converts each LogMiner
+            redo SQL statement to a record and passes the record to the stage for error handling. </p>
+        <p>If you don't need the error records, you can configure the origin to discard uncommitted
+            transactions. This also reduces the overhead used to generate the error records.</p>
+ </conbody>
+</concept>

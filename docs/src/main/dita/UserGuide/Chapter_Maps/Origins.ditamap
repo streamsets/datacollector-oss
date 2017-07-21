@@ -294,7 +294,14 @@
     <topicref href="../Origins/OracleCDC-T4-ExtractDict.dita"/>
     <topicref href="../Origins/OracleCDC-T5-InstallDriver.dita"/>
    </topicref>
+   <topicref href="../Origins/OracleCDC-Req.dita"/>
    <topicref href="../Origins/OracleCDC-InitialChange.dita"/>
+   <topicref href="../Origins/OracleCDC-ChoosingBuffers.dita">
+    <topicref href="../Origins/OracleCDC-LocalBuffers.dita"/>
+    <topicref href="../Origins/OracleCDC-UncommittedTransactions.dita"/>
+   </topicref>
+   <topicref href="../Origins/OracleCDC-SendNulls.dita"/>
+   <topicref href="../Origins/OracleCDC-UnsupportedTypes.dita"/>
    <topicref href="../Origins/OracleCDC-GeneratedRecords.dita">
     <topicref href="../Origins/OracleCDC-CDCOpHeaderAtt.dita"/>
     <topicref href="../Origins/OracleCDC-CDCAdditionalAtts.dita"/>

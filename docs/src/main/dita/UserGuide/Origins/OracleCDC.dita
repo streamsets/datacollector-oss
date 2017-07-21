@@ -47,7 +47,14 @@
         </p>
         <p>When you configure Oracle CDC Client, you configure change data capture details, such as
             the schema and tables to read from, how to read the initial change, the dictionary
-            source location, and the operations to include. </p>
+            source location, and the operations to include. You also specify the transaction window
+            and LogMiner session windows to use. </p>
+        <p>You can configure the origin to buffer records locally rather than using database
+            buffers. When enabling this option, perform the local buffer prerequisite task and
+            specify the action to take for uncommitted transactions.</p>
+        <p>You can specify the behavior when the origin encounters an unsupported data type, and you
+            can configure the origin to pass null values when it receives them from supplemental
+            logging data. </p>
         <p>You also specify JDBC connection information and user credentials. If the schema was
             created in a pluggable database, state the pluggable database name. You can configure
             custom properties that the driver requires.</p>
