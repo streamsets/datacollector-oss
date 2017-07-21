@@ -52,6 +52,9 @@ import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
+import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
+import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesModeChooserValues;
 import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.parser.udp.DatagramParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
@@ -895,6 +898,90 @@ public class DataParserFormatConfig implements DataFormatConfig {
   )
   public String authFilePath;
 
+  // Netflow v9
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE_STR,
+      label = NetflowDataParserFactory.OUTPUT_VALUES_MODE_LABEL,
+      description = NetflowDataParserFactory.OUTPUT_VALUES_MODE_TOOLTIP,
+      displayPosition = 870,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "NETFLOW"
+  )
+  @ValueChooserModel(OutputValuesModeChooserValues.class)
+  public OutputValuesMode netflowOutputValuesMode = NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE_STR,
+      label = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_LABEL,
+      description = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_TOOLTIP,
+      displayPosition = 880,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "NETFLOW"
+  )
+  public int maxTemplateCacheSize = NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS_STR,
+      label = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_LABEL,
+      description = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_TOOLTIP,
+      displayPosition = 890,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "NETFLOW"
+  )
+  public int templateCacheTimeoutMs = NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS;
+
+  // within Datagram packet (since we don't allow logical OR dependencies)
+  // TODO: remove duplicate fields once API-149 is implemented
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE_STR,
+      label = NetflowDataParserFactory.OUTPUT_VALUES_MODE_LABEL,
+      description = NetflowDataParserFactory.OUTPUT_VALUES_MODE_TOOLTIP,
+      displayPosition = 870,
+      group = "DATA_FORMAT",
+      dependsOn = "datagramMode",
+      triggeredByValue = "NETFLOW"
+  )
+  @ValueChooserModel(OutputValuesModeChooserValues.class)
+  public OutputValuesMode netflowOutputValuesModeDatagram = NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE_STR,
+      label = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_LABEL,
+      description = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_TOOLTIP,
+      displayPosition = 880,
+      group = "DATA_FORMAT",
+      dependsOn = "datagramMode",
+      triggeredByValue = "NETFLOW"
+  )
+  public int maxTemplateCacheSizeDatagram = NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS_STR,
+      label = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_LABEL,
+      description = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_TOOLTIP,
+      displayPosition = 890,
+      group = "DATA_FORMAT",
+      dependsOn = "datagramMode",
+      triggeredByValue = "NETFLOW"
+  )
+  public int templateCacheTimeoutMsDatagram = NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS;
+
+
   //Whole File
   @ConfigDef(
       required = true,
@@ -1043,16 +1130,36 @@ public class DataParserFormatConfig implements DataFormatConfig {
       case DATAGRAM:
         if (datagramMode == DatagramMode.COLLECTD) {
           checkCollectdParserConfigs(context, configPrefix, issues);
+        } else if (datagramMode == DatagramMode.NETFLOW) {
+          NetflowDataParserFactory.validateConfigs(
+              context,
+              issues,
+              stageGroup,
+              configPrefix + ".",
+              maxTemplateCacheSizeDatagram,
+              templateCacheTimeoutMsDatagram,
+              "maxTemplateCacheSizeDatagram",
+              "templateCacheTimeoutMsDatagram"
+          );
         }
         break;
       case WHOLE_FILE:
         valid = validateWholeFile(context, configPrefix, issues);
         break;
+      case NETFLOW:
+        NetflowDataParserFactory.validateConfigs(
+            context,
+            issues,
+            stageGroup,
+            configPrefix + ".",
+            maxTemplateCacheSize,
+            templateCacheTimeoutMs
+        );
+        break;
       case SDC_JSON:
       case BINARY:
       case AVRO:
       case SYSLOG:
-      case NETFLOW:
         // nothing to validate for these formats
         break;
       default:
@@ -1334,7 +1441,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
         buildSyslogParser(builder);
         break;
       case NETFLOW:
-        // nothing to configure for Netflow parser as it's a completely fixed format
+        buildNetflowParser(builder);
         break;
       default:
         throw new IllegalStateException("Unexpected data format" + dataFormat);
@@ -1397,6 +1504,9 @@ public class DataParserFormatConfig implements DataFormatConfig {
       .setConfig(DatagramParserFactory.EXCLUDE_INTERVAL_KEY, excludeInterval)
       .setConfig(DatagramParserFactory.AUTH_FILE_PATH_KEY, authFilePath)
       .setConfig(DatagramParserFactory.TYPES_DB_PATH_KEY, typesDbPath)
+      .setConfig(NetflowDataParserFactory.OUTPUT_VALUES_MODE_KEY, netflowOutputValuesModeDatagram)
+      .setConfig(NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_KEY, maxTemplateCacheSizeDatagram)
+      .setConfig(NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_KEY, templateCacheTimeoutMsDatagram)
       .setMode(datagramMode)
       .setMaxDataLen(-1);
   }
@@ -1422,6 +1532,13 @@ public class DataParserFormatConfig implements DataFormatConfig {
     builder
       .setMaxDataLen(-1)
       .setCharset(Charset.forName(charset));
+  }
+
+  private void buildNetflowParser(DataParserFactoryBuilder builder) {
+    builder
+        .setConfig(NetflowDataParserFactory.OUTPUT_VALUES_MODE_KEY, netflowOutputValuesMode)
+        .setConfig(NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_KEY, maxTemplateCacheSize)
+        .setConfig(NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_KEY, templateCacheTimeoutMs);
   }
 
   /**

@@ -24,6 +24,9 @@ import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
+import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
+import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesModeChooserValues;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingModeChooserValues;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
@@ -169,6 +172,46 @@ public class TCPServerSourceConfig {
   )
   @ValueChooserModel(CharsetChooserValues.class)
   public String lengthFieldCharset;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE_STR,
+      label = NetflowDataParserFactory.OUTPUT_VALUES_MODE_LABEL,
+      description = NetflowDataParserFactory.OUTPUT_VALUES_MODE_TOOLTIP,
+      displayPosition = 90,
+      group = "NETFLOW_V9",
+      dependsOn = "tcpMode",
+      triggeredByValue = "NETFLOW"
+  )
+  @ValueChooserModel(OutputValuesModeChooserValues.class)
+  public OutputValuesMode netflowOutputValuesMode = NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE_STR,
+      label = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_LABEL,
+      description = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_TOOLTIP,
+      displayPosition = 92,
+      group = "NETFLOW_V9",
+      dependsOn = "tcpMode",
+      triggeredByValue = "NETFLOW"
+  )
+  public int maxTemplateCacheSize = NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS_STR,
+      label = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_LABEL,
+      description = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_TOOLTIP,
+      displayPosition = 95,
+      group = "NETFLOW_V9",
+      dependsOn = "tcpMode",
+      triggeredByValue = "NETFLOW"
+  )
+  public int templateCacheTimeoutMs = NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS;
 
   @ConfigDef(
       required = true,

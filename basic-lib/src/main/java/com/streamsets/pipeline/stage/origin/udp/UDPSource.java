@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
+import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
 import com.streamsets.pipeline.lib.parser.net.raw.RawDataMode;
 import com.streamsets.pipeline.lib.parser.udp.AbstractParser;
 import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
@@ -57,6 +59,9 @@ import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.AUTH_FILE_P
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CONVERT_TIME;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.EXCLUDE_INTERVAL;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_MAX_TEMPLATE_CACHE_SIZE;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_OUTPUT_VALUES_MODE;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_TEMPLATE_CACHE_TIMEOUT_MS;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MODE;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MULTIPLE_VALUES_BEHAVIOR;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_OUTPUT_FIELD_PATH;
@@ -140,7 +145,21 @@ public class UDPSource extends BaseSource {
     Charset charset;
     switch (dataFormat) {
       case NETFLOW:
-        parser = new NetflowParser(getContext());
+        final int maxTemplateCacheSize = parserConfig.getInteger(NETFLOW_MAX_TEMPLATE_CACHE_SIZE);
+        final int templateCacheTimeoutMs = parserConfig.getInteger(NETFLOW_TEMPLATE_CACHE_TIMEOUT_MS);
+        NetflowDataParserFactory.validateConfigs(
+            getContext(),
+            issues,
+            Groups.NETFLOW_V9.name(),
+            "",
+            maxTemplateCacheSize,
+            templateCacheTimeoutMs
+        );
+        parser = new NetflowParser(
+            getContext(),
+            (OutputValuesMode) parserConfig.get(NETFLOW_OUTPUT_VALUES_MODE),
+            maxTemplateCacheSize, templateCacheTimeoutMs
+        );
         break;
       case SYSLOG:
         charset = validateCharset(Groups.SYSLOG.name(), issues);

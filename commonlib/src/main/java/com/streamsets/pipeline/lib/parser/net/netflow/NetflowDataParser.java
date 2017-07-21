@@ -17,16 +17,16 @@ package com.streamsets.pipeline.lib.parser.net.netflow;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.net.BaseNetworkMessageDataParser;
+import com.streamsets.pipeline.lib.parser.net.netflow.v5.NetflowV5Message;
 import io.netty.buffer.ByteBuf;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
-public class NetflowDataParser extends BaseNetworkMessageDataParser<NetflowMessage> {
+public class NetflowDataParser extends BaseNetworkMessageDataParser<BaseNetflowMessage> {
 
-  private final NetflowDecoder netflowDecoder;
+  private final NetflowCommonDecoder netflowDecoder;
 
   public NetflowDataParser(
       Stage.Context context,
@@ -34,10 +34,13 @@ public class NetflowDataParser extends BaseNetworkMessageDataParser<NetflowMessa
       InputStream inputStream,
       Long readerOffset,
       int maxObjectLen,
-      Charset charset
+      Charset charset,
+      OutputValuesMode outputValuesMode,
+      int maxTemplateCacheSize,
+      int templateCacheTimeoutMs
   ) {
     super(context, readerId, inputStream, readerOffset, maxObjectLen, charset);
-    netflowDecoder = new NetflowDecoder();
+    netflowDecoder = new NetflowCommonDecoder(outputValuesMode, maxTemplateCacheSize, templateCacheTimeoutMs);
   }
 
   @Override

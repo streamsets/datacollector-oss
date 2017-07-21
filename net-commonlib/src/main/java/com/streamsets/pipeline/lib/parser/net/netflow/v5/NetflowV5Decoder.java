@@ -13,37 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser.net.netflow;
+
+package com.streamsets.pipeline.lib.parser.net.netflow.v5;
 
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.parser.net.netflow.Errors;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowCommonDecoder;
+import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
+import com.streamsets.pipeline.lib.parser.net.netflow.UUIDs;
+import com.streamsets.pipeline.lib.parser.net.netflow.VersionSpecificNetflowDecoder;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ReplayingDecoder;
 
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by reading:
- * <a href="https://github.com/brockn/netflow">ASF licensed scala based netflow</a>,
- * <a href="http://www.cisco.com/en/US/technologies/tk648/tk362/technologies_white_paper09186a00800a3db9.html">v9 spec</a>,
- * and
- * <a href="http://www.cisco.com/c/en/us/td/docs/net_mgmt/netflow_collection_engine/3-6/user/guide/format.html#wp1003394">v1 and v5 spec</a>
- * <a href="http://www.cisco.com/en/US/technologies/tk648/tk362/technologies_white_paper09186a00800a3db9.html">v9</a>.
- */
-
-public class NetflowDecoder extends ReplayingDecoder<Void> {
+public class NetflowV5Decoder implements VersionSpecificNetflowDecoder<NetflowV5Message> {
   private static final int V5_HEADER_SIZE = 24;
   private static final int V5_FLOW_SIZE = 48;
 
-  // BEGIN ReplayingDecoder state vars
+  private final NetflowCommonDecoder parentDecoder;
+
+  // BEGIN state vars
   private boolean readHeader = false;
-  private int version = 0;
-  private boolean readVersion = false;
   private int count = 0;
   private long uptime = 0;
   private long seconds = 0;
@@ -59,98 +53,16 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
   private UUID packetId = null;
   private String readerId = null;
   private int readIndex = 0;
-  private List<NetflowMessage> result = new LinkedList<>();
-  // END ReplayingDecoder state vars
+  private List<NetflowV5Message> result = new LinkedList<>();
+  // END state vars
 
-  /**
-   * Decodes one or more {@link NetflowMessage} from a packet.  For this method, the data (ByteBuf) is assumed
-   * to be complete (i.e. it will contain all the data), which is the case for UDP.
-   *
-   * @param buf the byte buffer from the packet
-   * @param resultMessages a list of messages to populate from the parsing operation
-   * @param sender the packet sender address
-   * @param recipient the packet recipient address
-   * @throws OnRecordErrorException
-   */
-  public void decodeStandaloneBuffer(
-      ByteBuf buf,
-      List<NetflowMessage> resultMessages,
-      InetSocketAddress sender,
-      InetSocketAddress recipient
-  ) throws OnRecordErrorException {
-    final List<Object> results = new LinkedList<>();
-    try {
-      decode(null, buf, results, sender, recipient, true);
-      for (Object result : results) {
-        if (result instanceof NetflowMessage) {
-          resultMessages.add((NetflowMessage) result);
-        } else {
-          throw new IllegalStateException(String.format(
-              "Found unexpected object type in results: %s",
-              result.getClass().getName())
-          );
-        }
-      }
-    } finally {
-      resetStateVariables();
-    }
+  public NetflowV5Decoder(NetflowCommonDecoder parentDecoder) {
+    this.parentDecoder = parentDecoder;
   }
 
   @Override
-  protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
-    decode(ctx, buf, out, null, null, false);
-  }
-
-  protected void decode(
-      ChannelHandlerContext ctx,
-      ByteBuf buf,
-      List<Object> out,
-      InetSocketAddress sender,
-      InetSocketAddress recipient,
-      boolean packetLengthCheck
-  ) throws OnRecordErrorException {
-    int packetLength = buf.readableBytes();
-    if (!readVersion) {
-      // 0-1
-      version = buf.readUnsignedShort();
-      readVersion = true;
-      checkpoint();
-    }
-
-    if (ctx != null) {
-      if (sender == null) {
-        SocketAddress socketAddress = ctx.channel().remoteAddress();
-        if (socketAddress instanceof InetSocketAddress) {
-          sender = (InetSocketAddress) socketAddress;
-        }
-      }
-      if (recipient == null) {
-        SocketAddress socketAddress = ctx.channel().localAddress();
-        if (socketAddress instanceof InetSocketAddress) {
-          recipient = (InetSocketAddress) socketAddress;
-        }
-      }
-    }
-
-    switch (version) {
-      case 5:
-        try {
-          out.addAll(parseV5(version, packetLength, packetLengthCheck, buf, sender, recipient));
-        } catch (Exception e) {
-          resetStateVariables();
-          // this is not in a finally block, because we do NOT want to reset after each invocation, since
-          // ReplayingDecoder can call this multiple times
-          throw e;
-        }
-        break;
-      default:
-        resetStateVariables();
-        throw new OnRecordErrorException(Errors.NETFLOW_00, version);
-    }
-  }
-
-  private List<NetflowMessage> parseV5(
-      int version,
+  public List<NetflowV5Message> parse(
+      int netflowVersion,
       int packetLength,
       boolean packetLengthCheck,
       ByteBuf buf,
@@ -161,7 +73,7 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
       // 2-3
       count = buf.readUnsignedShort();
       if (count <= 0) {
-        throw new OnRecordErrorException(Errors.NETFLOW_01,Utils.format("Count is invalid: {}", count));
+        throw new OnRecordErrorException(Errors.NETFLOW_01, Utils.format("Count is invalid: {}", count));
       } else if (packetLengthCheck && packetLength < V5_HEADER_SIZE + count * V5_FLOW_SIZE) {
         String msg = Utils.format(
             "Readable bytes {} too small for count {} (max {})",
@@ -197,13 +109,13 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
       samplingInterval = sampling & 0x3FFF;
       samplingMode = sampling >> 14;
       readHeader = true;
-      checkpoint();
+      parentDecoder.doCheckpoint();
     }
 
     while (readIndex < count) {
       //ByteBuf flowBuf = buf.slice(V5_HEADER_SIZE + (readIndex * V5_FLOW_SIZE), V5_FLOW_SIZE);
 
-      NetflowMessage msg = new NetflowMessage();
+      NetflowV5Message msg = new NetflowV5Message();
       msg.setSeconds(seconds);
       msg.setNanos(nanos);
       msg.setCount(count);
@@ -218,7 +130,6 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
       msg.setSnmpInput(buf.readUnsignedShort());
       // 14
       msg.setSnmpOnput(buf.readUnsignedShort());
-      msg.setVersion(version);
 
       msg.setPacketId(packetId.toString());
       msg.setSender((sender == null) ? "unknown" : sender.getAddress().toString());
@@ -259,9 +170,9 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
       msg.setSrcAddr(srcaddr);
       msg.setDstAddr(dstaddr);
       msg.setNextHop(nexthop);
-      msg.setSrcAddrString(ipToString(srcaddr));
-      msg.setDstAddrString(ipToString(dstaddr));
-      msg.setNexthopString(ipToString(nexthop));
+      msg.setSrcAddrString(NetflowCommonDecoder.ipV4ToString(srcaddr));
+      msg.setDstAddrString(NetflowCommonDecoder.ipV4ToString(dstaddr));
+      msg.setNexthopString(NetflowCommonDecoder.ipV4ToString(nexthop));
       // 32
       msg.setSrcPort(buf.readUnsignedShort());
       // 34
@@ -289,27 +200,18 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
       buf.readBytes(2);
       result.add(msg);
       readIndex++;
-      checkpoint();
+      parentDecoder.doCheckpoint();
     }
 
     // if we reached this point without any further Signal errors, we have finished consuming
     //checkpoint();
-    LinkedList<NetflowMessage> returnResults = new LinkedList<>(result);
-    resetStateVariables();
+    LinkedList<NetflowV5Message> returnResults = new LinkedList<>(result);
+    resetState();
     return returnResults;
   }
 
-  private static String ipToString(int ip) {
-    return String.format("%d.%d.%d.%d",
-      (ip >> 24 & 0xff),
-      (ip >> 16 & 0xff),
-      (ip >> 8 & 0xff),
-      (ip & 0xff));
-  }
-
-  private void resetStateVariables() {
-    version = 0;
-    readVersion = false;
+  @Override
+  public void resetState() {
     readHeader = false;
     count = 0;
     uptime = 0;
@@ -328,5 +230,4 @@ public class NetflowDecoder extends ReplayingDecoder<Void> {
     readIndex = 0;
     result.clear();
   }
-
 }

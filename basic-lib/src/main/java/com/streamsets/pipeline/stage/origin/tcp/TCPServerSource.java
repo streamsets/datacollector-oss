@@ -28,7 +28,8 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.net.DataFormatParserDecoder;
 import com.streamsets.pipeline.lib.parser.net.DelimitedLengthFieldBasedFrameDecoder;
-import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDecoder;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowCommonDecoder;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogDecoder;
 import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -261,7 +262,14 @@ public class TCPServerSource extends BasePushSource {
 
     switch (config.tcpMode) {
       case NETFLOW:
-        // nothing to validate (fixed format)
+        NetflowDataParserFactory.validateConfigs(
+            getContext(),
+            issues,
+            Groups.NETFLOW_V9.name(),
+            "conf.",
+            config.maxTemplateCacheSize,
+            config.templateCacheTimeoutMs
+        );
         break;
       case SYSLOG:
         try {
@@ -349,7 +357,11 @@ public class TCPServerSource extends BasePushSource {
 
     switch (config.tcpMode) {
       case NETFLOW:
-        decoderChain.add(new NetflowDecoder());
+        decoderChain.add(new NetflowCommonDecoder(
+            config.netflowOutputValuesMode,
+            config.maxTemplateCacheSize,
+            config.templateCacheTimeoutMs
+        ));
         break;
       case SYSLOG:
         final Charset syslogCharset = Charset.forName(config.syslogCharset);

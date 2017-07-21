@@ -13,28 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.tcp;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+package com.streamsets.pipeline.lib.parser.net.netflow;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  TCP("TCP"),
-  SYSLOG("Syslog"),
-  DATA_FORMAT("Data Format"),
-  TLS("TLS"),
-  NETFLOW_V9("Netflow v9"),
-  ;
+import com.streamsets.pipeline.lib.parser.net.MessageToRecord;
 
-  private final String label;
+public abstract class BaseNetflowMessage implements MessageToRecord {
+  private String readerId;
 
-  Groups(String label) {
-    this.label = label;
+  public String getReaderId() {
+    return readerId;
   }
 
-  @Override
-  public String getLabel() {
-    return this.label;
+  public void setReaderId(String readerId) {
+    this.readerId = readerId;
   }
+
+  public abstract int getNetflowVersion();
 }

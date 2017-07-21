@@ -32,6 +32,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
 import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
@@ -254,10 +255,31 @@ public class DataFormatParser {
       case DATAGRAM:
         if (dataFormatConfig.datagramMode == DatagramMode.COLLECTD) {
           dataFormatConfig.checkCollectdParserConfigs(context, prefix, issues);
+        } else if (dataFormatConfig.datagramMode == DatagramMode.NETFLOW) {
+          NetflowDataParserFactory.validateConfigs(
+              context,
+              issues,
+              DataFormatGroups.DATA_FORMAT.name(),
+              prefix,
+              dataFormatConfig.maxTemplateCacheSizeDatagram,
+              dataFormatConfig.templateCacheTimeoutMsDatagram,
+              "maxTemplateCacheSizeDatagram",
+              "templateCacheTimeoutMsDatagram"
+          );
         }
         break;
-      case SYSLOG:
       case NETFLOW:
+        NetflowDataParserFactory.validateConfigs(
+            context,
+            issues,
+            DataFormatGroups.DATA_FORMAT.name(),
+            prefix,
+            dataFormatConfig.maxTemplateCacheSize,
+            dataFormatConfig.templateCacheTimeoutMs
+        );
+        break;
+      case SYSLOG:
+        // nothing to validate
         break;
       default:
         issues.add(
@@ -359,8 +381,14 @@ public class DataFormatParser {
         dataFormatConfig.buildDatagramParser(builder);
         break;
       case SYSLOG:
-      case NETFLOW:
         builder.setMaxDataLen(-1);
+        break;
+      case NETFLOW:
+        builder
+          .setMaxDataLen(-1)
+          .setConfig(NetflowDataParserFactory.OUTPUT_VALUES_MODE_KEY, dataFormatConfig.netflowOutputValuesMode)
+          .setConfig(NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_KEY, dataFormatConfig.maxTemplateCacheSize)
+          .setConfig(NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_KEY, dataFormatConfig.templateCacheTimeoutMs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unknown data format: {}", dataFormat));

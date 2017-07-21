@@ -26,6 +26,9 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
+import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
+import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesModeChooserValues;
 import com.streamsets.pipeline.lib.parser.net.raw.RawDataMode;
 import com.streamsets.pipeline.lib.parser.net.raw.RawDataModeChooserValues;
 import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
@@ -41,6 +44,9 @@ import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.AUTH_FILE_P
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CONVERT_TIME;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.EXCLUDE_INTERVAL;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_MAX_TEMPLATE_CACHE_SIZE;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_OUTPUT_VALUES_MODE;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_TEMPLATE_CACHE_TIMEOUT_MS;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MODE;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MULTIPLE_VALUES_BEHAVIOR;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_OUTPUT_FIELD_PATH;
@@ -220,6 +226,47 @@ public class UDPDSource extends DSource {
   @ValueChooserModel(CharsetChooserValues.class)
   public String collectdCharset;
 
+  // Netflow v9
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE_STR,
+      label = NetflowDataParserFactory.OUTPUT_VALUES_MODE_LABEL,
+      description = NetflowDataParserFactory.OUTPUT_VALUES_MODE_TOOLTIP,
+      displayPosition = 80,
+      group = "NETFLOW_V9",
+      dependsOn = "dataFormat",
+      triggeredByValue = "NETFLOW"
+  )
+  @ValueChooserModel(OutputValuesModeChooserValues.class)
+  public OutputValuesMode netflowOutputValuesMode = NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE_STR,
+      label = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_LABEL,
+      description = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_TOOLTIP,
+      displayPosition = 90,
+      group = "NETFLOW_V9",
+      dependsOn = "dataFormat",
+      triggeredByValue = "NETFLOW"
+  )
+  public int maxTemplateCacheSize = NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS_STR,
+      label = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_LABEL,
+      description = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_TOOLTIP,
+      displayPosition = 100,
+      group = "NETFLOW_V9",
+      dependsOn = "dataFormat",
+      triggeredByValue = "NETFLOW"
+  )
+  public int templateCacheTimeoutMs = NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS;
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -313,6 +360,11 @@ public class UDPDSource extends DSource {
             RAW_DATA_SEPARATOR_BYTES,
             StringEscapeUtils.unescapeJava(rawDataSeparatorBytes).getBytes()
         );
+        break;
+      case NETFLOW:
+        parserConfig.put(NETFLOW_OUTPUT_VALUES_MODE, netflowOutputValuesMode);
+        parserConfig.put(NETFLOW_MAX_TEMPLATE_CACHE_SIZE, maxTemplateCacheSize);
+        parserConfig.put(NETFLOW_TEMPLATE_CACHE_TIMEOUT_MS, templateCacheTimeoutMs);
         break;
       default:
         // NOOP

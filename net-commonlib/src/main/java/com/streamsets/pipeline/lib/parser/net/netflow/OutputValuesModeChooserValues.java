@@ -13,28 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.tcp;
+package com.streamsets.pipeline.lib.parser.net.netflow;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  TCP("TCP"),
-  SYSLOG("Syslog"),
-  DATA_FORMAT("Data Format"),
-  TLS("TLS"),
-  NETFLOW_V9("Netflow v9"),
-  ;
-
-  private final String label;
-
-  Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+public class OutputValuesModeChooserValues extends BaseEnumChooserValues<OutputValuesMode> {
+  public OutputValuesModeChooserValues() {
+    super(OutputValuesMode.class);
   }
 }

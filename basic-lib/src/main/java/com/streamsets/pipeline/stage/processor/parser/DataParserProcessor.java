@@ -48,7 +48,7 @@ public class DataParserProcessor extends SingleLaneRecordProcessor {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    issues.addAll(parser.init(getContext()));
+    issues.addAll(parser.init(getContext(), "configs."));
     return issues;
   }
 

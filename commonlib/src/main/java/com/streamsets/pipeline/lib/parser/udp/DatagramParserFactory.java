@@ -21,6 +21,8 @@ import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
+import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
 import com.streamsets.pipeline.lib.parser.udp.collectd.CollectdParser;
 import com.streamsets.pipeline.lib.parser.udp.netflow.NetflowParser;
 import com.streamsets.pipeline.lib.parser.udp.syslog.SyslogParser;
@@ -51,6 +53,18 @@ public class DatagramParserFactory extends DataParserFactory {
     configs.put(AUTH_FILE_PATH_KEY, "");
     configs.put(TYPES_DB_PATH_KEY, "");
     configs.put(EXCLUDE_INTERVAL_KEY, EXCLUDE_INTERVAL_DEFAULT);
+    configs.put(
+        NetflowDataParserFactory.OUTPUT_VALUES_MODE_KEY,
+        NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE
+    );
+    configs.put(
+        NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_KEY,
+        NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE
+    );
+    configs.put(
+        NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_KEY,
+        NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS
+    );
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 
@@ -73,7 +87,12 @@ public class DatagramParserFactory extends DataParserFactory {
         parser = new SyslogParser(settings.getContext(), settings.getCharset());
         break;
       case NETFLOW:
-        parser = new NetflowParser(settings.getContext());
+        parser = new NetflowParser(
+            settings.getContext(),
+            settings.getConfig(NetflowDataParserFactory.OUTPUT_VALUES_MODE_KEY),
+            settings.getConfig(NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_KEY),
+            settings.getConfig(NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_KEY)
+        );
         break;
       case COLLECTD:
         parser = new CollectdParser(

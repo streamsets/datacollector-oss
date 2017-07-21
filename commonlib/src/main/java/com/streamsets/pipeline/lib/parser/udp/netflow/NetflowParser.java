@@ -19,15 +19,17 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.parser.net.netflow.BaseNetflowMessage;
 import com.streamsets.pipeline.lib.parser.net.netflow.Errors;
-import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDecoder;
-import com.streamsets.pipeline.lib.parser.net.netflow.NetflowMessage;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowCommonDecoder;
+import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
 import com.streamsets.pipeline.lib.parser.udp.AbstractParser;
 import io.netty.buffer.ByteBuf;
 
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by reading:
@@ -40,15 +42,26 @@ import java.util.List;
 
 public class NetflowParser extends AbstractParser {
 
-  private long recordId;
+  private final AtomicLong recordId;
+  private final OutputValuesMode outputValuesMode;
+  private final int maxTemplateCacheSize;
+  private final int templateCacheTimeoutMs;
 
-  public NetflowParser(Stage.Context context) {
+  public NetflowParser(
+      Stage.Context context,
+      OutputValuesMode outputValuesMode,
+      int maxTemplateCacheSize,
+      int templateCacheTimeoutMs
+  ) {
     super(context);
-    this.recordId = 0;
+    recordId = new AtomicLong(0L);
+    this.outputValuesMode = outputValuesMode;
+    this.maxTemplateCacheSize = maxTemplateCacheSize;
+    this.templateCacheTimeoutMs = templateCacheTimeoutMs;
   }
 
-  public Record buildRecord(NetflowMessage message) {
-    Record record = context.createRecord(message.getReaderId() + "::" + recordId++);
+  public Record buildRecord(BaseNetflowMessage message) {
+    Record record = context.createRecord(message.getReaderId() + "::" + recordId.getAndIncrement());
     message.populateRecord(record);
     return record;
   }
@@ -64,11 +77,16 @@ public class NetflowParser extends AbstractParser {
           Utils.format("Packet must be at least 4 bytes, was: {}", packetLength)
       );
     }
-    final List<NetflowMessage> messages = new LinkedList<>();
+    final List<BaseNetflowMessage> messages = new LinkedList<>();
     final List<Record> records = new LinkedList<>();
     // create new instance to handle multithreading
-    new NetflowDecoder().decodeStandaloneBuffer(buf, messages, sender, recipient);
-    for (NetflowMessage message : messages) {
+    final NetflowCommonDecoder decoder = new NetflowCommonDecoder(
+        outputValuesMode,
+        maxTemplateCacheSize,
+        templateCacheTimeoutMs
+    );
+    decoder.decodeStandaloneBuffer(buf, messages, sender, recipient);
+    for (BaseNetflowMessage message : messages) {
       records.add(buildRecord(message));
     }
     return records;

@@ -21,6 +21,9 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 
 public class Matchers {
 
@@ -51,6 +54,22 @@ public class Matchers {
     };
   }
 
+  public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, final int value) {
+    return new MapFieldWithEntryMatcher(nestedFieldName, value, Field::getValueAsInteger);
+  }
+
+  public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, final long value) {
+    return new MapFieldWithEntryMatcher(nestedFieldName, value, Field::getValueAsLong);
+  }
+
+  public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, final String value) {
+    return new MapFieldWithEntryMatcher(nestedFieldName, value, Field::getValueAsString);
+  }
+
+  public static Matcher<Field> mapFieldWithEntry(final String nestedFieldName, final BigDecimal value) {
+    return new MapFieldWithEntryMatcher(nestedFieldName, value, Field::getValueAsDecimal);
+  }
+
   private abstract static class FieldMatcher extends BaseMatcher<Field> {
     private final Field.Type type;
     private final Object value;
@@ -77,5 +96,40 @@ public class Matchers {
     }
 
     protected abstract Object getValueFromField(Field field);
+  }
+
+  private static class MapFieldWithEntryMatcher<VT> extends BaseMatcher<Field> {
+    private final String nestedFieldName;
+    private final VT expectedValue;
+    private final ValueAccessor<VT> valueAccessor;
+
+    MapFieldWithEntryMatcher(String nestedFieldName, VT expectedValue, ValueAccessor<VT> valueAccessor) {
+      this.nestedFieldName = nestedFieldName;
+      this.expectedValue = expectedValue;
+      this.valueAccessor = valueAccessor;
+    }
+
+    @Override
+    public boolean matches(Object item) {
+      if (item instanceof Field) {
+        Field field = (Field) item;
+        if (field.getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
+          final Map<String, Field> childFields = field.getValueAsMap();
+          if (!childFields.containsKey(nestedFieldName)) {
+            return false;
+          }
+          return expectedValue.equals(valueAccessor.getValue(childFields.get(nestedFieldName)));
+        }
+      }
+      return false;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+      description.appendText(String.format(
+          "Field of type MAP or LIST_MAP with field entry named %s having value ",
+          nestedFieldName
+      )).appendValue(expectedValue);
+    }
   }
 }

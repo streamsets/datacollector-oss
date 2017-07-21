@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DatagramMode;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
 import com.streamsets.pipeline.lib.parser.net.raw.RawDataMode;
 import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
 import com.streamsets.pipeline.lib.parser.udp.ParserConfigKey;
@@ -47,6 +48,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.CHARSET;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_MAX_TEMPLATE_CACHE_SIZE;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_OUTPUT_VALUES_MODE;
+import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.NETFLOW_TEMPLATE_CACHE_TIMEOUT_MS;
 import static com.streamsets.pipeline.lib.parser.udp.ParserConfigKey.RAW_DATA_MODE;
 import static org.junit.Assume.assumeTrue;
 
@@ -151,6 +155,12 @@ public class TestUDPSource {
       byte[] bytes = null;
       switch (dataFormat) {
         case NETFLOW:
+          parserConfig.put(NETFLOW_OUTPUT_VALUES_MODE, NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE);
+          parserConfig.put(NETFLOW_MAX_TEMPLATE_CACHE_SIZE, NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE);
+          parserConfig.put(
+              NETFLOW_TEMPLATE_CACHE_TIMEOUT_MS,
+              NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS
+          );
           InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(TEN_PACKETS_RESOURCE);
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
           IOUtils.copy(is, baos);

@@ -25,6 +25,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
 import com.streamsets.pipeline.lib.parser.net.netflow.NetflowTestUtil;
 import com.streamsets.pipeline.lib.udp.UDPConstants;
 import com.streamsets.pipeline.lib.util.UDPTestUtil;
@@ -75,6 +76,15 @@ public class TestDatagramParser {
         .setMaxDataLen(-1)
         .setMode(DatagramMode.NETFLOW)
         .setCharset(StandardCharsets.UTF_8)
+        .setConfig(NetflowDataParserFactory.OUTPUT_VALUES_MODE_KEY, NetflowDataParserFactory.DEFAULT_OUTPUT_VALUES_MODE)
+        .setConfig(
+            NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_KEY,
+            NetflowDataParserFactory.DEFAULT_MAX_TEMPLATE_CACHE_SIZE
+        )
+        .setConfig(
+            NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_KEY,
+            NetflowDataParserFactory.DEFAULT_TEMPLATE_CACHE_TIMEOUT_MS
+        )
         .build();
 
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(

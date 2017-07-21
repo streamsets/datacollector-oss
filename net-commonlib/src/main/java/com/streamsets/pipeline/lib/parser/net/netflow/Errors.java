@@ -24,6 +24,13 @@ public enum Errors implements ErrorCode {
   NETFLOW_00("Invalid version: '{}'"),
   NETFLOW_01("Corrupt packet: {}"),
   NETFLOW_02("Unexpected error: {}"),
+  NETFLOW_10("Unrecognized flowset ID of {} (less than 256, but not 0 [template] or 1 [options])"),
+  NETFLOW_11("Message field referenced flowset template ID {}, but that was not seen in a template record"),
+  NETFLOW_12("Expected single byte field with type ID {}, but it was actually {} bytes"),
+  NETFLOW_13("Error parsing IPV6 address ({}): {}"),
+  NETFLOW_14("Error parsing IPV4 address from bytes {}: {}"),
+  NETFLOW_15("Max template cache size must be a positive number, or -1 to indicate unlimited"),
+  NETFLOW_16("Template cache timeout (ms) be a positive number, or -1 to indicate unlimited"),
   ;
 
   private final String msg;

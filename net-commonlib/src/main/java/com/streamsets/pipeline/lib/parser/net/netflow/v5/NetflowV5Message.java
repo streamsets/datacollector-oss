@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser.net.netflow;
+package com.streamsets.pipeline.lib.parser.net.netflow.v5;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.parser.net.MessageToRecord;
+import com.streamsets.pipeline.lib.parser.net.netflow.BaseNetflowMessage;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class NetflowMessage implements MessageToRecord {
+public class NetflowV5Message extends BaseNetflowMessage {
 
   public static final String FIELD_VERSION = "version";
   public static final String FIELD_PACKETID = "packetid";
@@ -68,7 +69,6 @@ public class NetflowMessage implements MessageToRecord {
   public static final String FIELD_SAMPLINGINT = "samplingint";
   public static final String FIELD_SAMPLINGMODE = "samplingmode";
 
-  private int version;
   private String packetId;
 
   private int count;
@@ -113,12 +113,9 @@ public class NetflowMessage implements MessageToRecord {
   private long rawFirst;
   private long rawLast;
 
-  public int getVersion() {
-    return version;
-  }
-
-  public void setVersion(int version) {
-    this.version = version;
+  @Override
+  public int getNetflowVersion() {
+    return 5;
   }
 
   public String getPacketId() {
@@ -436,7 +433,7 @@ public class NetflowMessage implements MessageToRecord {
   @Override
   public void populateRecord(Record record) {
     Map<String, Field> fields = new HashMap<>();
-    fields.put(FIELD_VERSION, Field.create(getVersion()));
+    fields.put(FIELD_VERSION, Field.create(getNetflowVersion()));
     fields.put(FIELD_PACKETID, Field.create(getPacketId()));
     fields.put(FIELD_SENDER, Field.create(getSender()));
     fields.put(FIELD_LENGTH, Field.create(getLength()));
