@@ -18,9 +18,11 @@ package com.streamsets.datacollector.definition;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Primitives;
+import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -48,6 +50,10 @@ public abstract class ConfigValueExtractor {
                                                                    Float.class, Float.TYPE,
                                                                    Double.class, Double.TYPE);
   public final static Set<Class> CHARACTER_TYPES = ImmutableSet.<Class>of(Character.class, Character.TYPE);
+
+  public static boolean isCredentialValueConfig(Class type) {
+    return CredentialValue.class.isAssignableFrom(type);
+  }
 
   @SuppressWarnings("unchecked")
   public List<ErrorMessage> validate(Field field, ConfigDef.Type type, String valueStr, Object contextMsg,
@@ -149,6 +155,11 @@ public abstract class ConfigValueExtractor {
               errors.add(new ErrorMessage(DefinitionError.DEF_011, contextMsg, field.getType()));
             }
             break;
+          case CREDENTIAL:
+            if (!CredentialValue.class.isAssignableFrom(field.getType())) {
+              errors.add(new ErrorMessage(DefinitionError.DEF_014, contextMsg, field.getType()));
+            }
+            break;
         }
       }
     }
@@ -224,6 +235,9 @@ public abstract class ConfigValueExtractor {
                 break;
               case TEXT:
                 value = valueStr;
+                break;
+              case CREDENTIAL:
+                value = new ClearCredentialValue(valueStr);
                 break;
             }
           } catch (IOException ex) {

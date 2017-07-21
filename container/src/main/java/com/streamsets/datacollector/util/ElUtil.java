@@ -18,10 +18,12 @@ package com.streamsets.datacollector.util;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.lib.el.StringEL;
 
@@ -59,7 +61,21 @@ public class ElUtil {
         } else {
           klass = (Class<?>) genericType;
         }
-        return elEvaluator.evaluate(new ELVariables(constants), (String)value, klass);
+        if (configDefinition.getType() == ConfigDef.Type.CREDENTIAL) {
+          value = elEvaluator.evaluate(new ELVariables(constants), (String) value, Object.class);
+          if (value instanceof String) {
+            value = new ClearCredentialValue((String)value);
+          } else if (!(value instanceof CredentialValue)) {
+            throw new ELEvalException(
+                ContainerError.CONTAINER_01500,
+                stageDefinition.getName(),
+                configDefinition.getName(),
+                value.getClass()
+            );
+          }
+        } else {
+          value = elEvaluator.evaluate(new ELVariables(constants), (String) value, klass);
+        }
       }
     }
     return value;

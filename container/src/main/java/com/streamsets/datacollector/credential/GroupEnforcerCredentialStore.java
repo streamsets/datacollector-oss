@@ -20,6 +20,7 @@ import com.streamsets.lib.security.http.HeadlessSSOPrincipal;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import javax.security.auth.Subject;
@@ -49,10 +50,10 @@ public class GroupEnforcerCredentialStore implements CredentialStore {
   }
 
   @Override
-  public String get(String group, String name, String credentialStoreOptions) throws StageException {
+  public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
     Preconditions.checkNotNull(group, "group cannot be NULL");
     Preconditions.checkNotNull(name, "name cannot be NULL");
-    String value;
+    CredentialValue value;
     Subject subject = Subject.getSubject(AccessController.getContext());
     Set<SSOPrincipal> principals = subject.getPrincipals(SSOPrincipal.class);
     if (principals.isEmpty()) {

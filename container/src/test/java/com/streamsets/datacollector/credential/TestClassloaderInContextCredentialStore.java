@@ -19,6 +19,7 @@ import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -47,9 +48,9 @@ public class TestClassloaderInContextCredentialStore {
     }
 
     @Override
-    public String get(String group, String name, String credentialStoreOptions) throws StageException {
+    public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
       Assert.assertEquals(expectedClassLoader, Thread.currentThread().getContextClassLoader());
-      return "credential";
+     return () -> "credential";
     }
 
     @Override
@@ -89,7 +90,7 @@ public class TestClassloaderInContextCredentialStore {
     Mockito.verify(store, Mockito.times(1)).init(Mockito.eq(context));
     Assert.assertEquals(currentClassLoader, Thread.currentThread().getContextClassLoader());
 
-    Assert.assertEquals("credential", proxyStore.get("group", "name", "options"));
+    Assert.assertEquals("credential", proxyStore.get("group", "name", "options").get());
     Mockito.verify(store, Mockito.times(1)).get(Mockito.eq("group"), Mockito.eq("name"), Mockito.eq("options"));
     Assert.assertEquals(currentClassLoader, Thread.currentThread().getContextClassLoader());
 

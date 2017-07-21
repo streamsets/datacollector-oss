@@ -27,6 +27,7 @@ import com.streamsets.lib.security.http.SSOPrincipalJson;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialStoreDef;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -57,8 +58,8 @@ public class TestCredentialStoresTaskImpl {
     }
 
     @Override
-    public String get(String group, String name, String credentialStoreOptions) throws StageException {
-      return group + ":" + name + ":" + credentialStoreOptions;
+    public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
+      return () -> group + ":" + name + ":" + credentialStoreOptions;
     }
 
     @Override

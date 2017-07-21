@@ -20,6 +20,7 @@ import com.streamsets.lib.security.http.HeadlessSSOPrincipal;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -36,45 +37,53 @@ public class TestGroupEnforcerCredentialStore {
     store.get("g", "n", "o");
   }
 
+  private static final CredentialValue CREDENTIAL_VALUE = new CredentialValue() {
+    @Override
+    public String get() throws StageException {
+      return "c";
+    }
+  };
+
+
   @Test
   public void testNotEnforced() throws Exception {
     CredentialStore store = Mockito.mock(CredentialStore.class);
-    Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn("c");
+    Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
     GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore(store);
 
     SSOPrincipal principal = HeadlessSSOPrincipal.createRecoveryPrincipal("uid");
     Subject subject = new Subject();
     subject.getPrincipals().add(principal);
-    String value = Subject.doAs(subject, (PrivilegedExceptionAction<String>) () -> enforcerStore.get("g", "n", "o"));
+    CredentialValue value = Subject.doAs(subject, (PrivilegedExceptionAction<CredentialValue>) () -> enforcerStore.get("g", "n", "o"));
 
-    Assert.assertEquals("c", value);
+    Assert.assertEquals(CREDENTIAL_VALUE, value);
   }
 
   @Test
   public void testEnforcedOk() throws Exception {
     CredentialStore store = Mockito.mock(CredentialStore.class);
-    Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn("c");
+    Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
     GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore(store);
 
     SSOPrincipal principal = new HeadlessSSOPrincipal("uid", ImmutableSet.of("g"));
     Subject subject = new Subject();
     subject.getPrincipals().add(principal);
-    String value = Subject.doAs(subject, (PrivilegedExceptionAction<String>) () -> enforcerStore.get("g", "n", "o"));
+    CredentialValue value = Subject.doAs(subject, (PrivilegedExceptionAction<CredentialValue>) () -> enforcerStore.get("g", "n", "o"));
 
-    Assert.assertEquals("c", value);
+    Assert.assertEquals(CREDENTIAL_VALUE, value);
   }
 
   @Test(expected = StageException.class)
   public void testEnforcedFail() throws Throwable {
     CredentialStore store = Mockito.mock(CredentialStore.class);
-    Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn("c");
+    Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
     GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore(store);
 
     SSOPrincipal principal = new HeadlessSSOPrincipal("uid", ImmutableSet.of("g"));
     Subject subject = new Subject();
     subject.getPrincipals().add(principal);
     try {
-      Subject.doAs(subject, (PrivilegedExceptionAction<String>) () -> enforcerStore.get("h", "n", "o"));
+      Subject.doAs(subject, (PrivilegedExceptionAction<CredentialValue>) () -> enforcerStore.get("h", "n", "o"));
     } catch (Exception ex) {
       throw ex.getCause();
     }

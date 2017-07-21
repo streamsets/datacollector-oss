@@ -16,8 +16,10 @@
 package com.streamsets.datacollector.credential.javakeystore;
 
 import com.streamsets.datacollector.io.DataStore;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialStoreDef;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.output.CloseShieldOutputStream;
 import org.slf4j.Logger;
@@ -142,28 +144,53 @@ public class JavaKeyStoreCredentialStore implements CredentialStore {
     return keyStore;
   }
 
+  class JksCredentialValue implements CredentialValue {
+    private final String name;
+
+    public JksCredentialValue(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public String get() throws StageException {
+      String credential = null;
+      if (needsToReloadKeyStore()) {
+        setKeyStore(loadKeyStore());
+      }
+      KeyStore keyStore = getKeyStore();
+      if (keyStore == null) {
+        throw new StageException(Errors.JKS_CRED_STORE_003, name);
+      } else {
+        try {
+          KeyStore.SecretKeyEntry entry = (KeyStore.SecretKeyEntry) getKeyStore().getEntry(
+              name,
+              new KeyStore.PasswordProtection(getKeystorePassword().toCharArray())
+          );
+          if (entry != null) {
+            credential = new String(entry.getSecretKey().getEncoded(), "UTF-8");
+          } else {
+            throw new StageException(Errors.JKS_CRED_STORE_003, name);
+          }
+        } catch (Exception ex) {
+          throw new StageException(Errors.JKS_CRED_STORE_004, name, ex);
+        }
+      }
+      return credential;
+    }
+
+    @Override
+    public String toString() {
+      return "JksCredentialValue{}";
+    }
+
+  }
+
   @Override
-  public String get(String group, String name, String credentialStoreOptions) {
+  public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
     Utils.checkNotNull(group, "group cannot be NULL");
     Utils.checkNotNull(name, "name cannot be NULL");
-    String credential = null;
-    if (needsToReloadKeyStore()) {
-      setKeyStore(loadKeyStore());
-    }
-    KeyStore keyStore = getKeyStore();
-    if (keyStore != null) {
-      try {
-        KeyStore.SecretKeyEntry entry = (KeyStore.SecretKeyEntry) getKeyStore().getEntry(
-            name,
-            new KeyStore.PasswordProtection(getKeystorePassword().toCharArray())
-        );
-        if (entry != null) {
-          credential = new String(entry.getSecretKey().getEncoded(), "UTF-8");
-        }
-      } catch (Exception ex) {
-        throw new RuntimeException(ex);
-      }
-    }
+    CredentialValue credential = new JksCredentialValue(name);
+    credential.get();
     return credential;
   }
 

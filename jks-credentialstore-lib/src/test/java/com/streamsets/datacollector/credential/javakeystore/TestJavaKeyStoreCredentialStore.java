@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.credential.javakeystore;
 
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import org.junit.After;
 import org.junit.Assert;
@@ -124,7 +125,7 @@ public class TestJavaKeyStoreCredentialStore {
   }
 
   @Test
-  public void testStoreGetDeleteList() {
+  public void testStoreGetDeleteList() throws StageException {
     JavaKeyStoreCredentialStore store = new JavaKeyStoreCredentialStore();
     store = Mockito.spy(store);
 
@@ -139,14 +140,25 @@ public class TestJavaKeyStoreCredentialStore {
 
     Assert.assertTrue(store.init(context).isEmpty());
 
-    Assert.assertNull(store.get("group", "name", ""));
+    try {
+      store.get("group", "name", "");
+      Assert.fail();
+    } catch (StageException ex) {
+    }
+
     Assert.assertTrue(store.getAliases().isEmpty());
     store.storeCredential("name", "password");
-    Assert.assertEquals("password", store.get("group", "name", ""));
+    Assert.assertEquals("password", store.get("group", "name", "").get());
     Assert.assertEquals(1, store.getAliases().size());
     Assert.assertEquals("name", store.getAliases().get(0));
     store.deleteCredential("name");
-    Assert.assertNull(store.get("group", "name", ""));
+
+    try {
+      store.get("group", "name", "");
+      Assert.fail();
+    } catch (StageException ex) {
+    }
+
     Assert.assertTrue(store.getAliases().isEmpty());
   }
 

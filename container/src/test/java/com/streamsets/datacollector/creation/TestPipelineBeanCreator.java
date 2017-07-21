@@ -45,7 +45,12 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.el.CredentialEL;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -60,6 +65,31 @@ import java.util.UUID;
 
 @SuppressWarnings("unchecked")
 public class TestPipelineBeanCreator {
+
+  @Before
+  public void setup() {
+    CredentialStore cs = new CredentialStore() {
+      @Override
+      public List<CredentialStore.ConfigIssue> init(Context context) {
+        return null;
+      }
+
+      @Override
+      public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
+        return () -> "secret";
+      }
+
+      @Override
+      public void destroy() {
+
+      }
+    };
+    Utils.setCredentialStores(org.testcontainers.shaded.com.google.common.collect.ImmutableMap.of("cs", cs));
+  }
+
+  public void cleanup() {
+    Utils.setCredentialStores(null);
+  }
 
   private StageDefinition getStageDef() {
     StageDefinition def = Mockito.mock(StageDefinition.class);
@@ -293,7 +323,6 @@ public class TestPipelineBeanCreator {
     @MultiValueChooserModel(EValueChooser.class)
     public List<E> enumMJavaDefault = Arrays.asList(E.A);
 
-
     @ConfigDef(
         label = "L",
         type = ConfigDef.Type.MODEL,
@@ -301,6 +330,33 @@ public class TestPipelineBeanCreator {
     )
     @ValueChooserModel(EValueChooser.class)
     public E enumSNoDefaultAlAll;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.CREDENTIAL,
+        required = true,
+        defaultValue = "${credential:get('cs','all','g')}",
+        elDefs = CredentialEL.class
+    )
+    public CredentialValue password1;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.CREDENTIAL,
+        required = true,
+        defaultValue = "${'a'}",
+        elDefs = CredentialEL.class
+    )
+    public CredentialValue password2;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.CREDENTIAL,
+        required = true,
+        defaultValue = "b",
+        elDefs = CredentialEL.class
+    )
+    public CredentialValue password3;
 
     @Override
     public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
@@ -465,7 +521,7 @@ public class TestPipelineBeanCreator {
   }
 
   @Test
-  public void testCreateAndInjectStageUsingDefaults() {
+  public void testCreateAndInjectStageUsingDefaults() throws StageException {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
@@ -489,6 +545,9 @@ public class TestPipelineBeanCreator {
     Assert.assertEquals(ImmutableList.of("3"), stage.bean.beanSubBean.subBeanList);
     Assert.assertEquals("B", stage.bean.beanSubBean.subBeanString);
     Assert.assertEquals(Collections.emptyList(), stage.complexField);
+    Assert.assertEquals("secret", stage.password1.get());
+    Assert.assertEquals("a", stage.password2.get());
+    Assert.assertEquals("b", stage.password3.get());
   }
 
   @Test

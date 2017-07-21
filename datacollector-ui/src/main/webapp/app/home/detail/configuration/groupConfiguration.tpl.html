@@ -14,12 +14,23 @@
     <ng-include src="'elStringConfigurationTemplate'"></ng-include>
   </div>
 
+  <div ng-switch-when="CREDENTIAL">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
+  </div>
+
   <div ng-switch-when="CHARACTER">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'characterConfigurationTemplate'"></ng-include>
   </div>
 
   <div ng-switch-when="EL_STRING" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'labelConfigurationTemplate'"></ng-include>
+    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="EL_CREDENTIAL" class="expression-language"
        ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
     <ng-include src="'elStringConfigurationTemplate'"></ng-include>

@@ -37,6 +37,8 @@ public enum DefinitionError implements ErrorCode {
   DEF_012("{}, configuration field is a '{}' enum, the list has an invalid enum value: {}"),
   DEF_013("{}, configuration field is '{}', must have a numeric value"),
 
+  DEF_014("{}, configuration field is '{}', it must be 'CredentialValue'"),
+
   //ELDefinitionExtractor
   DEF_050("{} Class='{}' Method='{}', method must be public to be an EL function"),
   DEF_051("{} Class='{}' Method='{}', EL function name cannot be empty"),

@@ -13,31 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.credential.javakeystore;
+package com.streamsets.datacollector.credential;
 
-import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
-public enum Errors implements ErrorCode {
-  JKS_CRED_STORE_000("Missing configuration '{}'"),
-  JKS_CRED_STORE_001("File '{}' does not exist"),
-  JKS_CRED_STORE_002("Invalid KeyStore type '{}'"),
-  JKS_CRED_STORE_003("Credential '{}' not found"),
-  JKS_CRED_STORE_004("Credential '{}' could not be retrieved: {}"),
-  ;
+public class ClearCredentialValue implements CredentialValue {
+  private final String value;
 
-  private final String message;
-
-  Errors(String message) {
-    this.message = message;
+  public ClearCredentialValue(String value) {
+    this.value = value;
   }
 
   @Override
-  public String getCode() {
-    return name();
+  public String get() {
+    return value;
   }
 
   @Override
-  public String getMessage() {
-    return message;
+  public String toString() {
+    return "ClearCredentialValue{}";
   }
+
 }

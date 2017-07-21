@@ -25,6 +25,7 @@ import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialStoreDef;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -41,7 +42,7 @@ public class TestCredentialStoreDefinitionExtractor {
     }
 
     @Override
-    public String get(String group, String name, String credentialStoreOptions) throws StageException {
+    public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
       return null;
     }
 

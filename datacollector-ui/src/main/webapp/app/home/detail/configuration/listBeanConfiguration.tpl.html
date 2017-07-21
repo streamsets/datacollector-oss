@@ -11,11 +11,22 @@
     <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
   </div>
 
+  <div ng-switch-when="CREDENTIAL"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)"
+       class="expression-language">
+    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+  </div>
+
   <div ng-switch-when="BOOLEAN">
     <ng-include src="'booleanComplexConfigurationTemplate'"></ng-include>
   </div>
 
   <div ng-switch-when="EL_STRING" class="expression-language"
+       ng-click="onFieldSelectorFocus(detailPaneConfig)">
+    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+  </div>
+
+  <div ng-switch-when="EL_CREDENTIAL" class="expression-language"
        ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
   </div>

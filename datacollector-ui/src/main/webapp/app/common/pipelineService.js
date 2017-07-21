@@ -1802,6 +1802,11 @@ angular.module('dataCollectorApp.common')
           name: "STRING",
           description: "Field Type String",
           returnType: "Type"
+        },
+        {
+          name: "CREDENTIAL",
+          description: "Field Type Credential",
+          returnType: "Type"
         }
       ];
     };

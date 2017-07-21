@@ -26,6 +26,7 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.datacollector.definition.ConfigValueExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
@@ -38,6 +39,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -397,7 +399,7 @@ public abstract class PipelineBeanCreator {
       if(pipelineLifecycleStage) {
         if(!stageDef.isPipelineLifecycleStage()) {
           errors.add(issueCreator.create(
-              CreationError.CREATION_017,
+              CreationError.CREATION_018,
               stageDef.getLibraryLabel(),
               stageDef.getLabel(),
               stageConf.getStageVersion())
@@ -905,6 +907,17 @@ public abstract class PipelineBeanCreator {
     return value;
   }
 
+  Object toCredentialValue(Object value, StageDefinition stageDef, String stageName, String groupName, String configName,
+      List<Issue> errors) {
+    IssueCreator issueCreator = IssueCreator.getStage(stageName);
+    if (value instanceof String) {
+      value = new ClearCredentialValue((String) value);
+    } else if (!(value instanceof CredentialValue)) {
+      errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_012, value.getClass().getSimpleName()));
+    }
+    return value;
+  }
+
   private Object resolveIfImplicitEL(Object value, StageDefinition stageDef, ConfigDefinition configDef,
       Map<String, Object> pipelineConstants, String stageName, List<Issue> errors) {
     IssueCreator issueCreator = IssueCreator.getStage(stageName);
@@ -968,6 +981,8 @@ public abstract class PipelineBeanCreator {
             value = toBoolean(value, stageDef, stageName, groupName, configName, errors);
           } else if (ConfigValueExtractor.NUMBER_TYPES.contains(field.getType())) {
             value = toNumber(field.getType(), value, stageDef, stageName, groupName, configName, errors);
+          } else if (ConfigValueExtractor.isCredentialValueConfig(field.getType())) {
+            value = toCredentialValue(value, stageDef, stageName, groupName, configName, errors);
           } else {
             errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_051,
                                            field.getType().getSimpleName()));

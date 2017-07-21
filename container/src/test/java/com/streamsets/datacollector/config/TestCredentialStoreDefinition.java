@@ -17,6 +17,7 @@ package com.streamsets.datacollector.config;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -32,7 +33,7 @@ public class TestCredentialStoreDefinition {
     }
 
     @Override
-    public String get(String group, String name, String credentialStoreOptions) throws StageException {
+    public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
       return null;
     }
 

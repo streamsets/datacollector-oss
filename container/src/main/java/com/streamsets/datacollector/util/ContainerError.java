@@ -159,6 +159,8 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_01300("Environment variable 'STREAMSETS_LIBRARIES_EXTRA_DIR' is not set"),
   CONTAINER_01301("Invalid library name '{}'"),
 
+  CONTAINER_01500("Stage '{}' configuration '{}', EL must resolve to String or to a CredentialValue resolved to '{}'"),
+
   ;
 
   private final String msg;

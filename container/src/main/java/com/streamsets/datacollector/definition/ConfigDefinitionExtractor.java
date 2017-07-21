@@ -549,8 +549,13 @@ public abstract class ConfigDefinitionExtractor {
     }
   }
 
-  private static final Set<ConfigDef.Type> TYPES_SUPPORTING_ELS = ImmutableSet.of(
-      ConfigDef.Type.LIST, ConfigDef.Type.MAP, ConfigDef.Type.NUMBER, ConfigDef.Type.STRING, ConfigDef.Type.TEXT);
+  private static final Set<ConfigDef.Type> TYPES_SUPPORTING_ELS = ImmutableSet.of(ConfigDef.Type.LIST,
+      ConfigDef.Type.MAP,
+      ConfigDef.Type.NUMBER,
+      ConfigDef.Type.STRING,
+      ConfigDef.Type.TEXT,
+      ConfigDef.Type.CREDENTIAL
+  );
 
   private static final Set<ModelType> MODELS_SUPPORTING_ELS = ImmutableSet.of(ModelType.PREDICATE);
 

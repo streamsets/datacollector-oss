@@ -19,6 +19,7 @@ import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.util.LambdaUtil;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
 
@@ -45,7 +46,7 @@ public class ClassloaderInContextCredentialStore implements CredentialStore {
   }
 
   @Override
-  public String get(String group, String name, String credentialStoreOptions) throws StageException {
+  public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
     return LambdaUtil.withClassLoader(storeClassLoader,() -> {
       try {
         return store.get(group, name, credentialStoreOptions);
