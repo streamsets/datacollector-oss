@@ -146,6 +146,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String TIMESTAMP_HEADER = PREFIX + TIMESTAMP.toLowerCase();
   private static final String TABLE = PREFIX + "table";
   private static final String ROWID_KEY = PREFIX + "rowId";
+  private static final String QUERY_KEY = PREFIX + "query";
   private static final String NULL = "NULL";
   private static final String VERSION_STR = "v2";
   private static final String VERSION_UNCOMMITTED = "v3";
@@ -807,6 +808,9 @@ public class OracleCDCSource extends BaseSource {
       for (int i = 0; i < batchSize && !records.isEmpty(); i++) {
         RecordSequence r = records.remove();
         try {
+          if (configBean.keepOriginalQuery) {
+            r.headers.put(QUERY_KEY, r.sqlString);
+          }
           RuleContextAndOpCode ctxOp = getRuleContextAndCode(r.sqlString, r.opCode);
           Record record = generateRecord(r.headers, ctxOp.operationCode, ctxOp.context);
           if (record != null) {

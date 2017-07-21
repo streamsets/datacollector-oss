@@ -113,9 +113,20 @@ public class OracleCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
+      label = "Send Redo Query",
+      description = "Send the actual redo query returned by logminer in record headers",
+      displayPosition = 90,
+      group = "CDC",
+      defaultValue = "false"
+  )
+  public boolean keepOriginalQuery;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
       label = "Buffer Changes Locally",
       description = "Buffer changes in SDC memory or on Disk. Use this to reduce PGA memory usage on the DB",
-      displayPosition = 90,
+      displayPosition = 100,
       group = "CDC",
       defaultValue = "false"
   )
@@ -125,7 +136,7 @@ public class OracleCDCConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Buffer Location",
-      displayPosition = 100,
+      displayPosition = 110,
       group = "CDC",
       defaultValue = "IN_MEMORY",
       dependsOn = "bufferLocally",
@@ -140,7 +151,7 @@ public class OracleCDCConfigBean {
       label = "Discard old uncommitted transactions",
       description = "If uncommitted transactions have gone past the transaction window, discard them. If unchecked, such" +
           " transactions are sent to error",
-      displayPosition = 110,
+      displayPosition = 120,
       group = "CDC",
       dependsOn = "bufferLocally",
       triggeredByValue = "true",
@@ -153,7 +164,7 @@ public class OracleCDCConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Dictionary Source",
       description = "Location of the LogMiner dictionary",
-      displayPosition = 120,
+      displayPosition = 130,
       group = "CDC"
   )
   @ValueChooserModel(DictionaryChooserValues.class)
@@ -165,7 +176,7 @@ public class OracleCDCConfigBean {
       label = "Unsupported Field Type",
       description = "Action to take if an unsupported field type is encountered. When buffering locally," +
           " the action is triggered immediately when the record is read without waiting for the commit",
-      displayPosition = 130,
+      displayPosition = 140,
       group = "CDC",
       defaultValue = "TO_ERROR"
   )
