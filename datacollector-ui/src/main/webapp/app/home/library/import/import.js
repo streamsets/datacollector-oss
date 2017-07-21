@@ -124,6 +124,8 @@ angular
                     newPipelineObject.version = jsonConfigObj.version;
                     newPipelineObject.schemaVersion = jsonConfigObj.schemaVersion;
                     newPipelineObject.metadata = jsonConfigObj.metadata;
+                    newPipelineObject.startEventStages = jsonConfigObj.startEventStages;
+                    newPipelineObject.stopEventStages = jsonConfigObj.stopEventStages;
                     return api.pipelineAgent.savePipelineConfig(name, newPipelineObject);
                   })
                   .then(function(res) {
