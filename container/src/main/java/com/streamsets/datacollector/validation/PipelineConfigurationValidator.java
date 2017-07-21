@@ -139,8 +139,7 @@ public class PipelineConfigurationValidator {
     canPreview &= validateEventAndDataLanesDoNotCross();
     canPreview &= validateErrorStage();
     canPreview &= validateStatsAggregatorStage();
-    canPreview &= validatePipelineLifecycleEventStages(pipelineConfiguration.getStartEventStages());
-    canPreview &= validatePipelineLifecycleEventStages(pipelineConfiguration.getStopEventStages());
+    canPreview &= validatePipelineLifecycleEvents();
     canPreview &= validateStagesExecutionMode(pipelineConfiguration);
     canPreview &= validateCommitTriggerStage(pipelineConfiguration);
 
@@ -1304,6 +1303,30 @@ public class PipelineConfigurationValidator {
       IssueCreator errorStageCreator = IssueCreator.getStage(statsAggregatorStage.getInstanceName());
       preview = validateStageConfiguration(false, statsAggregatorStage, true, errorStageCreator);
     }
+    return preview;
+  }
+
+  boolean validatePipelineLifecycleEvents() {
+    boolean preview = true;
+
+    // Pipeline lifecycle events are only supported in STANDALONE mode
+    List<Issue> localIssues = new ArrayList<>();
+    ExecutionMode pipelineExecutionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, localIssues);
+    issues.addAll(localIssues);
+
+    // Validate each start/stop event handlers
+    preview &= validatePipelineLifecycleEventStages(pipelineConfiguration.getStartEventStages());
+    preview &= validatePipelineLifecycleEventStages(pipelineConfiguration.getStopEventStages());
+
+    if(preview && pipelineExecutionMode != ExecutionMode.STANDALONE
+      && (!pipelineConfiguration.getStartEventStages().isEmpty() || !pipelineConfiguration.getStopEventStages().isEmpty())) {
+      preview = false;
+      issues.add(IssueCreator.getPipeline().create(
+          ValidationError.VALIDATION_0106,
+          pipelineExecutionMode.name()
+      ));
+    }
+
     return preview;
   }
 

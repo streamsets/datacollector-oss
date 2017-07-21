@@ -112,6 +112,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0103("Stage '{}' have merged input from both data and event part of the pipeline."),
   VALIDATION_0104("Stage has open event streams"),
   VALIDATION_0105("Invalid pipeline lifecycle specification: {}"),
+  VALIDATION_0106("Pipeline lifecycle events are not supported in mode: {}"),
   ;
 
   private final String msg;

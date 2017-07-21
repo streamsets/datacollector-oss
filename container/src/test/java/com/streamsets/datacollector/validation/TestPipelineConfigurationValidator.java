@@ -386,4 +386,23 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(ValidationError.VALIDATION_0036.name(), issues.get(0).getErrorCode());
     Assert.assertEquals(ValidationError.VALIDATION_0012.name(), issues.get(1).getErrorCode());
   }
+
+  // Incorrect configuration - cluster mode
+  @Test
+  public void testPipelineLifecycleEventsClusterMode() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationLifecycleEvents();
+    conf.getConfiguration().remove(conf.getConfiguration("executionMode"));
+    conf.getConfiguration().add(new Config("executionMode", ExecutionMode.CLUSTER_BATCH));
+
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    validator.validate();
+
+    Assert.assertTrue(validator.getIssues().hasIssues());
+    Assert.assertFalse(validator.canPreview());
+
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(ValidationError.VALIDATION_0106.name(), issues.get(0).getErrorCode());
+  }
 }
