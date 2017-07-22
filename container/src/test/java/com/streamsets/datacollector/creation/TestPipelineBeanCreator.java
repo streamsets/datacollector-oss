@@ -22,6 +22,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.credential.CredentialEL;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
@@ -47,7 +48,6 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.api.el.CredentialEL;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -84,11 +84,11 @@ public class TestPipelineBeanCreator {
 
       }
     };
-    Utils.setCredentialStores(org.testcontainers.shaded.com.google.common.collect.ImmutableMap.of("cs", cs));
+    CredentialEL.setCredentialStores(org.testcontainers.shaded.com.google.common.collect.ImmutableMap.of("cs", cs));
   }
 
   public void cleanup() {
-    Utils.setCredentialStores(null);
+    CredentialEL.setCredentialStores(null);
   }
 
   private StageDefinition getStageDef() {

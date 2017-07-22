@@ -25,6 +25,7 @@ import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
+import com.streamsets.datacollector.credential.CredentialEL;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.pipeline.api.Dependency;
@@ -453,7 +454,11 @@ public abstract class ConfigDefinitionExtractor {
         int displayPosition = annotation.displayPosition();
         List<ElFunctionDefinition> elFunctionDefinitions = getELFunctions(annotation, model, contextMsg);
         List<ElConstantDefinition> elConstantDefinitions = getELConstants(annotation, model ,contextMsg);
-        List<Class> elDefs = new ImmutableList.Builder().add(annotation.elDefs()).add(ELDefinitionExtractor.DEFAULT_EL_DEFS).build();
+        ImmutableList.Builder<Class> builder = new ImmutableList.Builder().add(annotation.elDefs()).add(ELDefinitionExtractor.DEFAULT_EL_DEFS);
+        if (annotation.type() == ConfigDef.Type.CREDENTIAL) {
+          builder.add(CredentialEL.class);
+        }
+        List<Class> elDefs = builder.build();
         long min = annotation.min();
         long max = annotation.max();
         String mode = (annotation.mode() != null) ? getMimeString(annotation.mode()) : null;
@@ -582,7 +587,11 @@ public abstract class ConfigDefinitionExtractor {
     List<ElFunctionDefinition> functions = Collections.emptyList();
     if (TYPES_SUPPORTING_ELS.contains(annotation.type()) ||
         (annotation.type() == ConfigDef.Type.MODEL && MODELS_SUPPORTING_ELS.contains(model.getModelType()))) {
-      functions = ELDefinitionExtractor.get().extractFunctions(annotation.elDefs(), contextMsg);
+      List<Class> elClasses = ImmutableList.copyOf(annotation.elDefs());
+      if (annotation.type() == ConfigDef.Type.CREDENTIAL) {
+        elClasses = ImmutableList.<Class>builder().addAll(elClasses).add(CredentialEL.class).build();
+      }
+      functions = ELDefinitionExtractor.get().extractFunctions(elClasses.toArray(new Class[elClasses.size()]), contextMsg);
     }
     return functions;
   }

@@ -84,7 +84,7 @@ public class TestCredentialStoresTaskImpl {
     // init
     storeTask.initTask();
     Mockito.verify(storeTask, Mockito.times(1)).loadAndInitStores();
-    Assert.assertEquals(stores, Utils.getCredentialStores());
+    Assert.assertEquals(stores, CredentialEL.getCredentialStores());
 
     // stop
     CredentialStore store = Mockito.mock(CredentialStore.class);

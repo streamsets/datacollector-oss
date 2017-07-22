@@ -18,11 +18,11 @@ package com.streamsets.datacollector.util;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.credential.ClearCredentialValue;
+import com.streamsets.datacollector.credential.CredentialEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.api.el.CredentialEL;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -65,11 +65,11 @@ public class TestElUtil {
 
       }
     };
-    Utils.setCredentialStores(ImmutableMap.of("cs", cs));
+    CredentialEL.setCredentialStores(ImmutableMap.of("cs", cs));
   }
 
   public void cleanup() {
-    Utils.setCredentialStores(null);
+    CredentialEL.setCredentialStores(null);
   }
 
   private Object evaluate(String el) throws Exception {

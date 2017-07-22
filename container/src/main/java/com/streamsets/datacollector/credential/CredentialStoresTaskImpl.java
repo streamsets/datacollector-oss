@@ -60,7 +60,7 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
     if (!issues.isEmpty()) {
       throw new RuntimeException("Could not initialize credential stores: " + issues);
     }
-    Utils.setCredentialStores(getStores());
+    CredentialEL.setCredentialStores(getStores());
   }
 
   @Override
