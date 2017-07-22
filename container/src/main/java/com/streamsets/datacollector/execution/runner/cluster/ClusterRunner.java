@@ -843,7 +843,7 @@ public class ClusterRunner extends AbstractRunner {
         metricsEventRunnable.clearSlaveMetrics();
       }
       List<Issue> errors = new ArrayList<>();
-      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
+      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors, null);
       if (pipelineConfigBean == null) {
         throw new PipelineRunnerException(ContainerError.CONTAINER_0116, errors);
       }

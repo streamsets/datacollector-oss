@@ -291,7 +291,7 @@ public class MetricsEventRunnable implements Runnable {
       isDPMPipeline = isRemotePipeline(state);
       if (isDPMPipeline && isWriteStatsToDPMDirectlyEnabled()) {
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get()
-            .create(pipelineConfiguration, new ArrayList<>());
+            .create(pipelineConfiguration, new ArrayList<>(), null);
         for (String key : pipelineConfigBean.constants.keySet()) {
           switch (key) {
             case REMOTE_TIMESERIES_URL:

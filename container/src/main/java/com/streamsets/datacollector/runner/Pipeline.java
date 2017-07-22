@@ -132,7 +132,7 @@ public class Pipeline {
     this.lineagePublisherTask = lineagePublisherTask;
   }
 
-  PipelineConfigBean getPipelineConfig() {
+  public PipelineConfigBean getPipelineConfig() {
     return pipelineBean.getConfig();
   }
 

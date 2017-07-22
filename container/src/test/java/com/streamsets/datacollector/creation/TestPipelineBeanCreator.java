@@ -639,6 +639,15 @@ public class TestPipelineBeanCreator {
     Assert.assertEquals(1, bean.getStopEventStages().size());
     LifecycleEventMyTarget stopStage = (LifecycleEventMyTarget)bean.getStopEventStages().get(0).getStage();
     Assert.assertEquals(ImmutableList.of("stop-list"), stopStage.list);
+
+    // pass runtime parameters
+    Map<String, Object> runtimeParameters = ImmutableMap.of("MEMORY_LIMIT", 2000);
+    issues = new ArrayList<>();
+    bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues, runtimeParameters);
+    Assert.assertNotNull(bean);
+    // pipeline configs
+    Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
+    Assert.assertEquals(2000, bean.getConfig().memoryLimit);
   }
 
   @Test

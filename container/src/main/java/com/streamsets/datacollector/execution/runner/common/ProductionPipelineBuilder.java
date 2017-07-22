@@ -16,8 +16,6 @@
 package com.streamsets.datacollector.execution.runner.common;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.creation.PipelineBeanCreator;
-import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Observer;
@@ -31,7 +29,6 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ValidationUtil;
-import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
@@ -39,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
-import java.util.ArrayList;
 import java.util.Map;
 
 public class ProductionPipelineBuilder {
@@ -76,7 +72,11 @@ public class ProductionPipelineBuilder {
     this.lineagePublisherTask = lineagePublisherTask;
   }
 
-  public ProductionPipeline build(UserContext userContext, PipelineConfiguration pipelineConf, long startTime) throws PipelineRuntimeException, StageException {
+  public ProductionPipeline build(
+      UserContext userContext,
+      PipelineConfiguration pipelineConf,
+      long startTime
+  ) throws PipelineRuntimeException, StageException {
     return build(userContext, pipelineConf, startTime, null);
   }
 
@@ -112,8 +112,14 @@ public class ProductionPipelineBuilder {
       sourceOffsetTracker = new ProductionSourceOffsetTracker(name, rev, runtimeInfo);
     }
     runner.setOffsetTracker(sourceOffsetTracker);
-    PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, new ArrayList<Issue>());
-    return new ProductionPipeline(name, rev, pipelineConf, configuration, pipeline, pipelineConfigBean.shouldRetry);
+    return new ProductionPipeline(
+        name,
+        rev,
+        pipelineConf,
+        configuration,
+        pipeline,
+        pipeline.getPipelineConfig().shouldRetry
+    );
   }
 
 }

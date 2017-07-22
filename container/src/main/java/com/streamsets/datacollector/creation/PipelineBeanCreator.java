@@ -54,7 +54,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 public abstract class PipelineBeanCreator {
@@ -104,9 +103,13 @@ public abstract class PipelineBeanCreator {
     );
   }
 
-  public PipelineConfigBean create(PipelineConfiguration pipelineConf, List<Issue> errors) {
+  public PipelineConfigBean create(
+      PipelineConfiguration pipelineConf,
+      List<Issue> errors,
+      Map<String, Object> runtimeParameters
+  ) {
     int priorErrors = errors.size();
-    PipelineConfigBean pipelineConfigBean = createPipelineConfigs(pipelineConf, errors);
+    PipelineConfigBean pipelineConfigBean = createPipelineConfigs(pipelineConf, errors, runtimeParameters);
     return (errors.size() == priorErrors) ? pipelineConfigBean : null;
   }
 
@@ -154,7 +157,7 @@ public abstract class PipelineBeanCreator {
       Map<String, Object> runtimeParameters
   ) {
     int priorErrors = errors.size();
-    PipelineConfigBean pipelineConfigBean = create(pipelineConf, errors);
+    PipelineConfigBean pipelineConfigBean = create(pipelineConf, errors, runtimeParameters);
     StageBean errorStageBean = null;
     StageBean statsStageBean = null;
     StageBean origin = null;
@@ -163,15 +166,7 @@ public abstract class PipelineBeanCreator {
     PipelineStageBeans stopEventBeans = null;
     if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
 
-      // Merge constant and runtime Constants
       Map<String, Object> resolvedConstants = pipelineConfigBean.constants;
-      if (runtimeParameters != null) {
-        for (String key: runtimeParameters.keySet()) {
-          if (resolvedConstants.containsKey(key)) {
-            resolvedConstants.put(key, runtimeParameters.get(key));
-          }
-        }
-      }
 
       // Instantiate usual stages
       if(!pipelineConf.getStages().isEmpty()) {
@@ -449,7 +444,11 @@ public abstract class PipelineBeanCreator {
   }
 
   @SuppressWarnings("unchecked")
-  private PipelineConfigBean createPipelineConfigs(PipelineConfiguration pipelineConf, List<Issue> errors) {
+  private PipelineConfigBean createPipelineConfigs(
+      PipelineConfiguration pipelineConf,
+      List<Issue> errors,
+      Map<String, Object> runtimeParameters
+  ) {
     PipelineConfigBean pipelineConfigBean = new PipelineConfigBean();
     if (createConfigBeans(pipelineConfigBean, "", PIPELINE_DEFINITION, "pipeline", errors)) {
 
@@ -478,6 +477,16 @@ public abstract class PipelineBeanCreator {
 
       if (pipelineConfigBean.constants == null) {
         pipelineConfigBean.constants = Collections.emptyMap();
+      } else {
+        // Merge constant and runtime Constants
+        Map<String, Object> resolvedConstants = pipelineConfigBean.constants;
+        if (runtimeParameters != null) {
+          for (String key: runtimeParameters.keySet()) {
+            if (resolvedConstants.containsKey(key)) {
+              resolvedConstants.put(key, runtimeParameters.get(key));
+            }
+          }
+        }
       }
 
       injectConfigs(

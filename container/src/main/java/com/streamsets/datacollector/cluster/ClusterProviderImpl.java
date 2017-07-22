@@ -796,7 +796,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
     addKerberosConfiguration(environment);
     errors.clear();
-    PipelineConfigBean config = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
+    PipelineConfigBean config = PipelineBeanCreator.get().create(pipelineConfiguration, errors, null);
     Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
     String numExecutors = config.workerCount == 0 ?
         sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY) : String.valueOf(config.workerCount);

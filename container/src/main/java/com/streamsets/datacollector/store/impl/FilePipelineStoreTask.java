@@ -388,7 +388,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
         if (pipelineStateStore != null) {
           List<Issue> errors = new ArrayList<>();
-          PipelineBeanCreator.get().create(pipeline, errors);
+          PipelineBeanCreator.get().create(pipeline, errors, null);
           pipelineStateStore.edited(user, name, tag,  PipelineBeanCreator.get().getExecutionMode(pipeline, errors), false);
           pipeline.getIssues().addAll(errors);
         }

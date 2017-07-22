@@ -698,7 +698,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
         PipelineConfiguration pipelineConfiguration = getPipelineConf(name, rev);
         List<Issue> errors = new ArrayList<>();
-        PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
+        PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
+            pipelineConfiguration,
+            errors,
+            runtimeParameters
+        );
         if (pipelineConfigBean == null) {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
         }
