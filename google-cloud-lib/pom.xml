@@ -31,7 +31,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <gcp-beta.version>0.17.1-beta</gcp-beta.version>
+    <gcp-beta.version>0.20.1-beta</gcp-beta.version>
   </properties>
 
   <dependencies>
@@ -39,6 +39,11 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-bigquery</artifactId>
+      <version>${gcp-beta.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-pubsub</artifactId>
       <version>${gcp-beta.version}</version>
     </dependency>
     <dependency>
