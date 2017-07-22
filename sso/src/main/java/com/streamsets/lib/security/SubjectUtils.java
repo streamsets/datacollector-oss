@@ -43,7 +43,7 @@ public class SubjectUtils {
     if (principal != null) {
       subject.getPrincipals().add(principal);
     }
-    subject.setReadOnly();
+//    subject.setReadOnly();
     return subject;
   }
 

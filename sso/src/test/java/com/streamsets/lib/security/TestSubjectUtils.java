@@ -45,6 +45,6 @@ public class TestSubjectUtils {
     Assert.assertEquals(ImmutableSet.of(principal, principalX), subjectX.getPrincipals());
     Assert.assertEquals(ImmutableSet.of(pubCredential), subjectX.getPublicCredentials());
     Assert.assertEquals(ImmutableSet.of(privCredential), subjectX.getPrivateCredentials());
-    Assert.assertTrue(subjectX.isReadOnly());
+    Assert.assertFalse(subjectX.isReadOnly());
   }
 }
