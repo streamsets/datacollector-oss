@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,33 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.bigquery.origin;
+
+package com.streamsets.pipeline.stage.pubsub.origin;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DSource;
-import com.streamsets.pipeline.stage.bigquery.lib.Groups;
+import com.streamsets.pipeline.configurablestage.DPushSource;
+import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 
 @StageDef(
-    version = 2,
-    label = "Google BigQuery",
-    description = "Executes a query job and processes the result from Google BigQuery",
-    icon="bigquery.png",
+    version = 1,
+    label = "Google PubSub Subscriber",
+    description = "Consumes messages from a Google PubSub subscription",
+    icon="pubsub.png",
     execution = ExecutionMode.STANDALONE,
-    producesEvents = true,
-    upgrader = BigQuerySourceUpgrader.class,
-    onlineHelpRefUrl = "index.html#Origins/BigQuery.html#task_n5w_ykv_q1b"
+    onlineHelpRefUrl = "index.html#Origins/PubSub.html#task_jvp_f5l_r1b"
 )
 @ConfigGroups(Groups.class)
-public class BigQueryDSource extends DSource {
+public class PubSubDSource extends DPushSource {
   @ConfigDefBean
-  public BigQuerySourceConfig conf = new BigQuerySourceConfig();
+  public PubSubSourceConfig conf = new PubSubSourceConfig();
 
   @Override
-  protected Source createSource() {
-    return new BigQuerySource(conf);
+  protected PushSource createPushSource() {
+    return new PubSubSource(conf);
   }
 }

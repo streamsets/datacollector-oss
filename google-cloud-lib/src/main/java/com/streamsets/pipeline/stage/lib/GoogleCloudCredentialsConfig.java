@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.bigquery.lib;
+package com.streamsets.pipeline.stage.lib;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 public class GoogleCloudCredentialsConfig {
   @ConfigDef(
@@ -29,11 +30,24 @@ public class GoogleCloudCredentialsConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Credentials Provider",
+      defaultValue = "DEFAULT_PROVIDER",
+      displayPosition = 20,
+      group = "CREDENTIALS"
+  )
+  @ValueChooserModel(CredentialsProviderChooserValues.class)
+  public CredentialsProviderType credentialsProvider;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Credentials File Path (JSON)",
       description = "Path to the credentials file. Relative path to the Data Collector resources directory, or " +
           "absolute path.",
-      displayPosition = 20,
+      dependsOn = "credentialsProvider",
+      triggeredByValue = "JSON_PROVIDER",
+      displayPosition = 30,
       group = "CREDENTIALS"
   )
   public String path = "";
