@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.pubsub.origin;
+package com.streamsets.pipeline.stage.pubsub.destination;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DPushSource;
+import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 
 @StageDef(
     version = 1,
-    label = "Google PubSub Subscriber",
-    description = "Consumes messages from a Google PubSub subscription",
+    label = "Google PubSub Publisher",
+    description = "Publishes messages to Google Cloud PubSub",
     icon = "pubsub.png",
-    execution = ExecutionMode.STANDALONE,
-    onlineHelpRefUrl = "index.html#Origins/PubSub.html#task_jvp_f5l_r1b"
+    onlineHelpRefUrl = ""
 )
-@ConfigGroups(Groups.class)
-public class PubSubDSource extends DPushSource {
+@ConfigGroups(value = Groups.class)
+@GenerateResourceBundle
+public class PubSubDTarget extends DTarget {
   @ConfigDefBean
-  public PubSubSourceConfig conf = new PubSubSourceConfig();
+  public PubSubTargetConfig conf = new PubSubTargetConfig();
 
   @Override
-  protected PushSource createPushSource() {
-    return new PubSubSource(conf);
+  protected Target createTarget() {
+    return new PubSubTarget(conf);
   }
 }

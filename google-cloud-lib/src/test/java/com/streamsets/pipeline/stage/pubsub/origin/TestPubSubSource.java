@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_01;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -40,8 +41,8 @@ public class TestPubSubSource {
   }
 
   @Test
-  public void invalidDefaultCredentials() throws Exception {
-    PubSubSourceConfig config = getConfig("test");
+  public void testInvalidDefaultCredentials() throws Exception {
+    PubSubSourceConfig config = getConfig();
 
     PubSubSource source = new PubSubSource(config);
     PushSourceRunner runner = new PushSourceRunner.Builder(PubSubSource.class, source)
@@ -55,8 +56,8 @@ public class TestPubSubSource {
   }
 
   @Test
-  public void JsonCredentialsNotFound() throws Exception {
-    PubSubSourceConfig config = getConfig("test");
+  public void testJsonCredentialsNotFound() throws Exception {
+    PubSubSourceConfig config = getConfig();
     config.credentials.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     config.credentials.path = "/tmp/does_not_exist.json";
 
@@ -68,17 +69,17 @@ public class TestPubSubSource {
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     assertEquals(1, issues.size());
-    assertTrue(issues.get(0).toString().contains("PUBSUB_01"));
+    assertTrue(issues.get(0).toString().contains(GOOGLE_01.name()));
   }
 
-  private PubSubSourceConfig getConfig(String subscription) {
+  private PubSubSourceConfig getConfig() {
     PubSubSourceConfig config = new PubSubSourceConfig();
     config.basic.maxWaitTime = 1000;
     config.basic.maxBatchSize = 2;
     config.credentials.credentialsProvider = CredentialsProviderType.DEFAULT_PROVIDER;
     config.credentials.projectId = "test";
     config.maxThreads = 1;
-    config.subscriptionId = subscription;
+    config.subscriptionId = "test";
     config.dataFormat = DataFormat.TEXT;
 
     return config;

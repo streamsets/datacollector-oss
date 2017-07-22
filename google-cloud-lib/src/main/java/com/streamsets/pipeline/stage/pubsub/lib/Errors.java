@@ -19,11 +19,14 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  PUBSUB_01("Credentials file '{}' not found"),
-  PUBSUB_02("Error reading credentials file"),
+  PUBSUB_02("Pipeline force stopped while waiting for pending messages."),
   PUBSUB_03("Supplied credentials do not have permission to access the specified subscription."),
   PUBSUB_04("Error validating permissions: '{}'"),
   PUBSUB_05("Failed to parse message: '{}'"),
+
+  PUBSUB_06("Error serializing record: '{}'"),
+  PUBSUB_07("Failed to create publisher for topic '{}' due to: '{}'"),
+  PUBSUB_08("Error publishing message: '{}'"),
   ;
 
   private final String msg;

@@ -19,12 +19,9 @@ package com.streamsets.pipeline.stage.pubsub.origin;
 import com.google.api.gax.batching.FlowControlSettings;
 import com.google.api.gax.batching.FlowController;
 import com.google.api.gax.core.CredentialsProvider;
-import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.api.gax.grpc.ChannelProvider;
 import com.google.api.gax.grpc.ExecutorProvider;
 import com.google.api.gax.grpc.InstantiatingExecutorProvider;
-import com.google.auth.Credentials;
-import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.pubsub.v1.PagedResponseWrappers;
 import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.cloud.pubsub.v1.SubscriptionAdminSettings;
@@ -42,7 +39,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
-import com.streamsets.pipeline.stage.lib.CredentialsProviderType;
 import com.streamsets.pipeline.stage.pubsub.lib.Errors;
 import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 import com.streamsets.pipeline.stage.pubsub.lib.MessageProcessor;
@@ -52,12 +48,7 @@ import com.streamsets.pipeline.stage.pubsub.lib.MessageProcessorImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,12 +58,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
-import static com.streamsets.pipeline.stage.pubsub.lib.Errors.PUBSUB_01;
-import static com.streamsets.pipeline.stage.pubsub.lib.Errors.PUBSUB_02;
+import static com.streamsets.pipeline.stage.lib.GoogleCloudCredentialsConfig.CONF_CREDENTIALS_CREDENTIALS_PROVIDER;
 
 public class PubSubSource extends BasePushSource {
   private static final Logger LOG = LoggerFactory.getLogger(PubSubSource.class);
-  private static final String CONF_CREDENTIALS_CREDENTIALS_PROVIDER = "conf.credentials.credentialsProvider";
   private static final String PUBSUB_SUBSCRIPTIONS_GET_PERMISSION = "pubsub.subscriptions.get";
 
   private static final int MAX_INBOUND_MESSAGE_SIZE = 20 * 1024 * 1024; // 20MB API maximum message size.
@@ -128,28 +117,10 @@ public class PubSubSource extends BasePushSource {
       parserFactory = conf.dataFormatConfig.getParserFactory();
     }
 
-    issues.addAll(createCredentialsProvider());
+    conf.credentials.getCredentialsProvider(getContext(), issues).ifPresent(p -> credentialsProvider = p);
+
     if (issues.isEmpty()) {
       issues.addAll(testPermissions(conf));
-    }
-
-    return issues;
-  }
-
-  private List<ConfigIssue> createCredentialsProvider() {
-    List<ConfigIssue> issues = new ArrayList<>();
-
-    if (conf.credentials.credentialsProvider.equals(CredentialsProviderType.DEFAULT_PROVIDER)) {
-      credentialsProvider = SubscriptionAdminSettings.defaultCredentialsProviderBuilder().build();
-    } else if (conf.credentials.credentialsProvider.equals(CredentialsProviderType.JSON_PROVIDER)) {
-      Credentials credentials = getCredentials(issues);
-      credentialsProvider = new FixedCredentialsProvider() {
-        @Nullable
-        @Override
-        public Credentials getCredentials() {
-          return credentials;
-        }
-      };
     }
 
     return issues;
@@ -201,45 +172,6 @@ public class PubSubSource extends BasePushSource {
       ));
     }
     return issues;
-  }
-
-  /**
-   * Reads a JSON credentials file for a service account from and returns any errors.
-   *
-   * @param issues list to append any discovered issues.
-   * @return a generic credentials object
-   */
-  private Credentials getCredentials(List<ConfigIssue> issues) {
-    Credentials credentials = null;
-
-    File credentialsFile;
-    if (Paths.get(conf.credentials.path).isAbsolute()) {
-      credentialsFile = new File(conf.credentials.path);
-    } else {
-      credentialsFile = new File(getContext().getResourcesDirectory(), conf.credentials.path);
-    }
-
-    if (!credentialsFile.exists() || !credentialsFile.isFile()) {
-      LOG.error(PUBSUB_01.getMessage(), credentialsFile.getPath());
-      issues.add(getContext().createConfigIssue(
-          Groups.CREDENTIALS.name(), CONF_CREDENTIALS_CREDENTIALS_PROVIDER,
-          PUBSUB_01,
-          credentialsFile.getPath()
-      ));
-      return null;
-    }
-
-    try (InputStream in = new FileInputStream(credentialsFile)) {
-      credentials = ServiceAccountCredentials.fromStream(in);
-    } catch (IOException | IllegalArgumentException e) {
-      LOG.error(PUBSUB_02.getMessage(), e);
-      issues.add(getContext().createConfigIssue(
-          Groups.CREDENTIALS.name(), CONF_CREDENTIALS_CREDENTIALS_PROVIDER,
-          PUBSUB_02
-      ));
-    }
-
-    return credentials;
   }
 
   @Override

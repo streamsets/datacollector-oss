@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,25 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.bigquery.lib;
-
+package com.streamsets.pipeline.stage.lib;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  BIGQUERY("BigQuery"),
-  CREDENTIALS("Credentials"),
+public enum Errors implements ErrorCode {
+  GOOGLE_01("Credentials file '{}' not found"),
+  GOOGLE_02("Error reading credentials file"),
   ;
 
-  private final String label;
+  private final String msg;
 
-  Groups(String label) {
-    this.label = label;
+  Errors(String msg) {
+    this.msg = msg;
   }
 
   @Override
-  public String getLabel() {
-    return label;
+  public String getCode() {
+    return name();
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
   }
 }
