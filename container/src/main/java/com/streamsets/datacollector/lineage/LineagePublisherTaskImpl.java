@@ -171,7 +171,15 @@ public class LineagePublisherTaskImpl extends AbstractTask implements LineagePub
 
     LineagePublisherContext context = new LineagePublisherContext(name, configuration);
 
-    List<LineagePublisher.ConfigIssue> issues = publisherRuntime.init(context);
+    List<LineagePublisher.ConfigIssue> issues;
+
+    try {
+      issues = publisherRuntime.init(context);
+    } catch (Throwable t) {
+      LOG.error("Failed initializing lineage publisher: {}", t.toString(), t);
+      throw new RuntimeException("Failed initializing lineage publisher", t);
+    }
+
     // If the issues aren't empty, terminate the execution
     if(!issues.isEmpty()) {
       for(LineagePublisher.ConfigIssue issue : issues) {
