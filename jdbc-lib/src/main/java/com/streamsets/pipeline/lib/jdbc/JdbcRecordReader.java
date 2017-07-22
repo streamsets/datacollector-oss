@@ -106,7 +106,7 @@ public class JdbcRecordReader {
       if (record.has(fieldPath)) {
         filtered.put(columnName, parameters.get(columnName));
       } else {
-        LOG.warn("Record is missing a field for column {} for the operation code {}", columnName, op);
+        LOG.trace("Record is missing a field for column {} for the operation code {}", columnName, op);
       }
     }
     return filtered;
