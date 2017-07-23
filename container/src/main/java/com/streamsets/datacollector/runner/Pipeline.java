@@ -406,12 +406,8 @@ public class Pipeline {
     if(stopEventStage != null) {
       try {
         if(productionExecution && stopEventStageInitialized) {
-          // Temporary record for now, SDC-6821
           LOG.info("Processing lifecycle stop event");
-          runner.runLifecycleEvent(
-            new RecordImpl(stopEventStage.getInfo().getInstanceName(), "", null, null),
-            stopEventStage
-          );
+          runner.runLifecycleEvent(createStopEvent(stopReason), stopEventStage);
         }
       } catch (Exception ex) {
         String msg = Utils.format("Can't execute pipeline stop stage: {}", ex);
@@ -987,4 +983,24 @@ public class Pipeline {
     return eventRecord;
   }
 
+  /**
+   * Create pipeline stop event.
+   */
+  private Record createStopEvent(PipelineStopReason stopReason) {
+    Preconditions.checkState(stopEventStage != null, "Stop Event Stage is not set!");
+    EventRecord eventRecord = new EventRecordImpl(
+      "pipeline-stop",
+      1,
+      stopEventStage.getInfo().getInstanceName(),
+      "",
+      null,
+      null
+    );
+
+    Map<String, Field> rootField = new LinkedHashMap<>();
+    rootField.put("reason", Field.create(Field.Type.STRING, stopReason.name()));
+
+    eventRecord.set(Field.create(rootField));
+    return eventRecord;
+  }
 }
