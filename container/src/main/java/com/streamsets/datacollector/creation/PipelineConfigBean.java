@@ -23,6 +23,7 @@ import com.streamsets.datacollector.config.ExecutionModeChooserValues;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.MemoryLimitExceededChooserValues;
 import com.streamsets.datacollector.config.PipelineGroups;
+import com.streamsets.datacollector.config.PipelineLifecycleStageChooserValues;
 import com.streamsets.datacollector.config.PipelineState;
 import com.streamsets.datacollector.config.PipelineStateChooserValues;
 import com.streamsets.datacollector.config.PipelineWebhookConfig;
@@ -76,6 +77,28 @@ public class PipelineConfigBean implements Stage {
   )
   @ValueChooserModel(DeliveryGuaranteeChooserValues.class)
   public DeliveryGuarantee deliveryGuarantee;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "Start Event",
+      description = "Stage that should handle pipeline start event.",
+      defaultValue = "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1",
+      displayPosition = 23
+  )
+  @ValueChooserModel(PipelineLifecycleStageChooserValues.class)
+  public String startEventStage;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "Stop Event",
+      description = "Stage that should handle pipeline stop event.",
+      defaultValue = "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1",
+      displayPosition = 26
+  )
+  @ValueChooserModel(PipelineLifecycleStageChooserValues.class)
+  public String stopEventStage;
 
   @ConfigDef(
     required = true,

@@ -678,6 +678,10 @@ angular.module('dataCollectorApp.common')
         return 'Error Records - ' + label;
       } else if (options.statsAggregatorStage) {
         return 'Stats Aggregator - ' + label;
+      } else if (options.startEventStage) {
+        return 'Start Event - ' + label;
+      } else if (options.stopEventStage) {
+        return 'Stop Event - ' + label;
       } else {
         var similarStageInstances = _.filter(pipelineConfig.stages, function(stageInstance) {
           return stageInstance.uiInfo.label.indexOf(label) !== -1;
@@ -702,6 +706,10 @@ angular.module('dataCollectorApp.common')
         return stageName + '_ErrorStage';
       } else if (options.statsAggregatorStage) {
         return stageName + '_StatsAggregatorStage';
+      } else if (options.startEventStage) {
+        return stageName + '_StartEventStage';
+      } else if (options.stopEventStage) {
+        return stageName + '_StopEventStage';
       } else {
         var similarStageInstancesNumber = [];
         angular.forEach(pipelineConfig.stages, function(stageInstance) {

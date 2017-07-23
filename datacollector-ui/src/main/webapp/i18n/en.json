@@ -507,6 +507,8 @@
         "valuePlaceholder": "Value"
       },
       "statsAggregator": "Stats Aggregator",
+      "startEvent": "Start Event",
+      "stopEvent": "Stop Event",
       "summary": "Summary",
       "summaryTab": {
         "alertsTitle": "Alerts",

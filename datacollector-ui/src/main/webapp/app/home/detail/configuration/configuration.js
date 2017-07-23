@@ -33,6 +33,12 @@ angular
       } else if (config.statsAggregatorStage && issues.stageIssues &&
         issues.stageIssues[config.statsAggregatorStage.instanceName] && instanceName) {
         issues = issues.stageIssues[config.statsAggregatorStage.instanceName];
+      } else if (config.startEventStages[0] && issues.stageIssues &&
+        issues.stageIssues[config.startEventStages[0].instanceName] && instanceName) {
+        issues = issues.stageIssues[config.startEventStages[0].instanceName];
+      } else if (config.stopEventStages[0] && issues.stageIssues &&
+        issues.stageIssues[config.stopEventStages[0].instanceName] && instanceName) {
+        issues = issues.stageIssues[config.stopEventStages[0].instanceName];
       } else if (issues.pipelineIssues){
         issues = issues.pipelineIssues;
       }
@@ -707,6 +713,18 @@ angular
         $scope.statsAggregatorStageConfigActive = true;
       } else {
         $scope.statsAggregatorStageConfigActive = options.statsAggregatorStage;
+      }
+
+      if (options.configGroup && options.configGroup === 'startEventStageConfig') {
+        $scope.startEventStageConfigActive = true;
+      } else {
+        $scope.startEventStageConfigActive = options.startEventStage;
+      }
+
+      if (options.configGroup && options.configGroup === 'stopEventStageConfig') {
+        $scope.stopEventStageConfigActive = true;
+      } else {
+        $scope.stopEventStageConfigActive = options.stopEventStage;
       }
     };
 

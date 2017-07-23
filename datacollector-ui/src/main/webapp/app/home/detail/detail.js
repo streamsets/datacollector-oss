@@ -275,6 +275,12 @@ angular
             } else if (config.statsAggregatorStage && issuesMap.stageIssues &&
               issuesMap.stageIssues[config.statsAggregatorStage.instanceName]) {
               issues.push.apply(issues, issuesMap.stageIssues[config.statsAggregatorStage.instanceName]);
+            } else if(config.startEventStages[0] && issuesMap.stageIssues &&
+              issuesMap.stageIssues[config.startEventStages[0].instanceName]) {
+              issues.push.apply(issues, issuesMap.stageIssues[config.startEventStages[0].instanceName]);
+            } else if(config.stopEventStages[0] && issuesMap.stageIssues &&
+              issuesMap.stageIssues[config.stopEventStages[0].instanceName]) {
+              issues.push.apply(issues, issuesMap.stageIssues[config.stopEventStages[0].instanceName]);
             }
           }
         }

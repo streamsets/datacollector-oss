@@ -120,7 +120,85 @@
       </div>
     </tab>
 
+    <tab ng-if="startEventStageConfig"
+         select="onTabSelect({name: 'startEventStageConfig'})"
+         active="startEventStageConfigActive">
+      <tab-heading ng-controller="StartEventConfigurationController">
+        <i class="fa fa-exclamation-triangle icon-danger"
+           ng-show="showConfigurationWarning(detailPaneConfig, undefined, true)"></i>
+        {{'home.detailPane.startEvent' | translate}} - {{startEventStageConfigDefn.label}}
+      </tab-heading>
+      <div class="tabs-content" ng-if="startEventStageConfigActive" ng-controller="StartEventConfigurationController">
+        <form class="form-horizontal" role="form"
+              ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
+              name="badRecordsForm">
+          <div class="form-group"
+               ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
+               ng-repeat="configDefinition in startEventStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
+               ng-if="(verifyDependsOnMap(startEventStageConfig, configDefinition))"
+               ng-init="configIndex = getConfigIndex(startEventStageConfig, configDefinition);">
 
+            <ng-include ng-if="selectedType !== pipelineConstant.LINK"
+                        src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
+          </div>
+        </form>
+
+        <div class="row" ng-if="!startEventStageConfigDefn">
+          <div class="col-md-12" >
+            <div class="alert alert-danger" role="alert">
+              <i class="fa fa-exclamation-triangle"></i>
+              <span translate="home.detailPane.noStageDefinitionFound" translate-values="{stageName: detailPaneConfig.stageName, library: detailPaneConfig.library}"></span>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-md-offset-1" >
+            <button class="btn btn-primary" ng-click="onInstallMissingLibraryClick(detailPaneConfig.library)">Install Missing Stage Library</button>
+          </div>
+
+        </div>
+
+      </div>
+    </tab>
+
+    <tab ng-if="stopEventStageConfig"
+         select="onTabSelect({name: 'stopEventStageConfig'})"
+         active="stopEventStageConfigActive">
+      <tab-heading ng-controller="StopEventConfigurationController">
+        <i class="fa fa-exclamation-triangle icon-danger"
+           ng-show="showConfigurationWarning(detailPaneConfig, undefined, true)"></i>
+        {{'home.detailPane.stopEvent' | translate}} - {{stopEventStageConfigDefn.label}}
+      </tab-heading>
+      <div class="tabs-content" ng-if="stopEventStageConfigActive" ng-controller="StopEventConfigurationController">
+        <form class="form-horizontal" role="form"
+              ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
+              name="badRecordsForm">
+          <div class="form-group"
+               ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
+               ng-repeat="configDefinition in stopEventStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
+               ng-if="(verifyDependsOnMap(stopEventStageConfig, configDefinition))"
+               ng-init="configIndex = getConfigIndex(stopEventStageConfig, configDefinition);">
+
+            <ng-include ng-if="selectedType !== pipelineConstant.LINK"
+                        src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
+          </div>
+        </form>
+
+        <div class="row" ng-if="!stopEventStageConfigDefn">
+          <div class="col-md-12" >
+            <div class="alert alert-danger" role="alert">
+              <i class="fa fa-exclamation-triangle"></i>
+              <span translate="home.detailPane.noStageDefinitionFound" translate-values="{stageName: detailPaneConfig.stageName, library: detailPaneConfig.library}"></span>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-md-offset-1" >
+            <button class="btn btn-primary" ng-click="onInstallMissingLibraryClick(detailPaneConfig.library)">Install Missing Stage Library</button>
+          </div>
+
+        </div>
+
+      </div>
+    </tab>
 
   </tabset>
 

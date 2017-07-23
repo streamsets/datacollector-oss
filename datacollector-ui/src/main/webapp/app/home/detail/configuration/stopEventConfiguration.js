@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,26 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.config;
-
-import com.streamsets.pipeline.api.Label;
-
-public enum PipelineGroups implements Label {
-  PARAMETERS("Parameters"),
-  NOTIFICATIONS("Notifications"),
-  BAD_RECORDS("Error Records"),
-  CLUSTER("Cluster"),
-  STATS("Statistics"),
-  ;
-
-  private final String label;
-
-  PipelineGroups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
-  }
-}
+/**
+ * Controller for Stop Event Configuration.
+ */
+angular
+  .module('dataCollectorApp.home')
+  .controller('StopEventConfigurationController', function ($scope) {
+    $scope.detailPaneConfig = $scope.stopEventStageConfig;
+    $scope.$watch('stopEventStageConfig', function() {
+      $scope.detailPaneConfig = $scope.stopEventStageConfig;
+    });
+  });

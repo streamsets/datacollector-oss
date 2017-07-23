@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineLifecycleStageChooserValues;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
@@ -221,6 +222,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     // initializing the list of targets that can be used as aggregating sink
     StatsTargetChooserValues.setStatsTargetOptions(this);
+
+    // initializing the list of targets that can be used for pipeline lifecycle events
+    PipelineLifecycleStageChooserValues.setHandlingOptions(this);
 
     // initializing the pool of private stage classloaders
     GenericKeyedObjectPoolConfig poolConfig = new GenericKeyedObjectPoolConfig();

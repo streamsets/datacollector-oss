@@ -18,17 +18,19 @@ package com.streamsets.pipeline.stage.destination.devnull;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.StageDef;
 
 @StageDef(
     version = 1,
     label = "Discard",
-    description = "Discards records",
+    description = "Discards records and events",
     icon="",
     onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
 @ErrorStage
+@PipelineLifecycleStage
 @GenerateResourceBundle
 public class ToErrorNullDTarget extends NullDTarget {
 }

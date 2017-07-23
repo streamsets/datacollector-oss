@@ -513,6 +513,8 @@ angular
         var instance;
         var errorStage = $scope.pipelineConfig.errorStage;
         var statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
+        var startEventStage = $scope.pipelineConfig.startEventStages[0];
+        var stopEventStage = $scope.pipelineConfig.stopEventStages[0];
 
         angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
           if (stageInstance.instanceName === stageInstanceName) {
@@ -526,6 +528,14 @@ angular
 
         if (!instance && statsAggregatorStage && statsAggregatorStage.instanceName === stageInstanceName) {
           instance = statsAggregatorStage;
+        }
+
+        if (!instance && startEventStage && startEventStage.instanceName === stageInstanceName) {
+          instance = startEventStage;
+        }
+
+        if (!instance && stopEventStage && stopEventStage.instanceName === stageInstanceName) {
+          instance = stopEventStage;
         }
 
         return (instance && instance.uiInfo) ? instance.uiInfo.label : undefined;
@@ -600,6 +610,30 @@ angular
               configGroup: issue.configGroup,
               configName: issue.configName,
               statsAggregatorStage: true
+            });
+          } else if (pipelineConfig.startEventStage[0] &&
+            pipelineConfig.startEventStage[0].instanceName === instanceName){
+            //StartEvent Stage Configuration Issue
+            $scope.$broadcast('selectNode');
+            $scope.changeStageSelection({
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE,
+              detailTabName: 'configuration',
+              configGroup: issue.configGroup,
+              configName: issue.configName,
+              startEventStage: true
+            });
+          } else if (pipelineConfig.stopEventStage[0] &&
+            pipelineConfig.stopEventStage[0].instanceName === instanceName){
+            //StopEvent Stage Configuration Issue
+            $scope.$broadcast('selectNode');
+            $scope.changeStageSelection({
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE,
+              detailTabName: 'configuration',
+              configGroup: issue.configGroup,
+              configName: issue.configName,
+              stopEventStage: true
             });
           }
 
@@ -1013,6 +1047,8 @@ angular
               res.stages = config.stages;
               res.errorStage = config.errorStage;
               res.statsAggregatorStage = config.statsAggregatorStage;
+              res.startEventStages = config.startEventStages;
+              res.stopEventStages = config.stopEventStages;
 
               saveUpdates(config);
             }
@@ -1235,6 +1271,32 @@ angular
           $scope.statsAggregatorStageConfigDefn = undefined;
         }
 
+
+        var startEventStage = $scope.pipelineConfig.startEventStages[0];
+        if (startEventStage && startEventStage.configuration && startEventStage.configuration.length) {
+          $scope.startEventStageConfig = startEventStage;
+          $scope.startEventStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === startEventStage.library &&
+              stageLibrary.name === startEventStage.stageName &&
+              stageLibrary.version === startEventStage.stageVersion;
+          });
+        } else {
+          $scope.startEventStageConfig = undefined;
+          $scope.startEventStageConfigDefn = undefined;
+        }
+
+        var stopEventStage = $scope.pipelineConfig.stopEventStages[0];
+        if (stopEventStage && stopEventStage.configuration && stopEventStage.configuration.length) {
+          $scope.stopEventStageConfig = stopEventStage;
+          $scope.stopEventStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === stopEventStage.library &&
+              stageLibrary.name === stopEventStage.stageName &&
+              stageLibrary.version === stopEventStage.stageVersion;
+          });
+        } else {
+          $scope.stopEventStageConfig = undefined;
+          $scope.stopEventStageConfigDefn = undefined;
+        }
       }
 
       if (!ignoreArchive) {
@@ -1265,6 +1327,8 @@ angular
           triggeredAlerts: $scope.isPipelineRunning ? $scope.triggeredAlerts : [],
           errorStage: $scope.pipelineConfig.errorStage,
           statsAggregatorStage: $scope.pipelineConfig.statsAggregatorStage,
+          startEventStage: $scope.pipelineConfig.startEventStages[0],
+          stopEventStage: $scope.pipelineConfig.stopEventStages[0],
           fitToBounds: fitToBounds
         });
       });
@@ -1281,6 +1345,8 @@ angular
       var type = options.type;
       var errorStage = $scope.pipelineConfig.errorStage;
       var statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
+      var startEventStage = $scope.pipelineConfig.startEventStages[0];
+      var stopEventStage = $scope.pipelineConfig.stopEventStages[0];
       var stageLibraryList = [];
       var optionsLength = Object.keys(options).length;
 
@@ -1296,6 +1362,10 @@ angular
       $scope.errorStageConfigDefn = undefined;
       $scope.statsAggregatorStageConfig = undefined;
       $scope.statsAggregatorStageConfigDefn = undefined;
+      $scope.startEventStageConfig = undefined;
+      $scope.startEventStageConfigDefn = undefined;
+      $scope.stopEventStageConfig = undefined;
+      $scope.stopEventStageConfigDefn = undefined;
 
       if (options.configName) {
         $scope.$storage.maximizeDetailPane = false;
@@ -1363,6 +1433,24 @@ angular
             return stageLibrary.library === statsAggregatorStage.library &&
               stageLibrary.name === statsAggregatorStage.stageName &&
               stageLibrary.version === statsAggregatorStage.stageVersion;
+          });
+        }
+
+        if (startEventStage && startEventStage.configuration && startEventStage.configuration.length) {
+          $scope.startEventStageConfig = startEventStage;
+          $scope.startEventStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === startEventStage.library &&
+              stageLibrary.name === startEventStage.stageName &&
+              stageLibrary.version === startEventStage.stageVersion;
+          });
+        }
+
+        if (stopEventStage && stopEventStage.configuration && stopEventStage.configuration.length) {
+          $scope.stopEventStageConfig = stopEventStage;
+          $scope.stopEventStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === stopEventStage.library &&
+              stageLibrary.name === stopEventStage.stageName &&
+              stageLibrary.version === stopEventStage.stageVersion;
           });
         }
 
@@ -1747,7 +1835,77 @@ angular
           }
         }
 
+        // Start Event check
+        var startEventStageConfig = _.find(newValue.configuration, function (c) {
+          return c.name === 'startEventStage';
+        });
+        var startEventStageConfigArr = (startEventStageConfig && startEventStageConfig.value) ?
+          (startEventStageConfig.value).split('::') : undefined;
+        var startEventStageInst = newValue.startEventStages[0];
 
+        if ((startEventStageConfigArr && startEventStageConfigArr.length === 3) &&
+          (!startEventStageInst || startEventStageInst.library !== startEventStageConfigArr[0] ||
+          startEventStageInst.stageName !== startEventStageConfigArr[1] ||
+          startEventStageInst.stageVersion !== startEventStageConfigArr[2])) {
+
+          var startEventStage = _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === startEventStageConfigArr[0] &&
+              stageLibrary.name === startEventStageConfigArr[1] &&
+              stageLibrary.version === startEventStageConfigArr[2];
+          });
+
+          if (startEventStage) {
+            var saConfig;
+            if (startEventStageInst && startEventStageInst.stageName == startEventStage.name  &&
+              startEventStageInst.stageVersion == startEventStage.version) {
+              saConfig = startEventStageInst.configuration;
+            }
+            eventStage = pipelineService.getNewStageInstance({
+              stage: startEventStage,
+              pipelineConfig: $scope.pipelineConfig,
+              startEventStage: true,
+              configuration: saConfig
+            });
+
+            newValue.startEventStages = [ eventStage ]
+          }
+        }
+
+        // Stop Event check
+        var stopEventStageConfig = _.find(newValue.configuration, function (c) {
+          return c.name === 'stopEventStage';
+        });
+        var stopEventStageConfigArr = (stopEventStageConfig && stopEventStageConfig.value) ?
+          (stopEventStageConfig.value).split('::') : undefined;
+        var stopEventStageInst = newValue.stopEventStages[0];
+
+        if ((stopEventStageConfigArr && stopEventStageConfigArr.length === 3) &&
+          (!stopEventStageInst || stopEventStageInst.library !== stopEventStageConfigArr[0] ||
+          stopEventStageInst.stageName !== stopEventStageConfigArr[1] ||
+          stopEventStageInst.stageVersion !== stopEventStageConfigArr[2])) {
+
+          var stopEventStage = _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === stopEventStageConfigArr[0] &&
+              stageLibrary.name === stopEventStageConfigArr[1] &&
+              stageLibrary.version === stopEventStageConfigArr[2];
+          });
+
+          if (stopEventStage) {
+            var saConfig;
+            if (stopEventStageInst && stopEventStageInst.stageName == stopEventStage.name  &&
+              stopEventStageInst.stageVersion == stopEventStage.version) {
+              saConfig = stopEventStageInst.configuration;
+            }
+            eventStage = pipelineService.getNewStageInstance({
+              stage: stopEventStage,
+              pipelineConfig: $scope.pipelineConfig,
+              stopEventStage: true,
+              configuration: saConfig
+            });
+
+            newValue.stopEventStages = [ eventStage ]
+          }
+        }
 
         if (configTimeout) {
           $timeout.cancel(configTimeout);
