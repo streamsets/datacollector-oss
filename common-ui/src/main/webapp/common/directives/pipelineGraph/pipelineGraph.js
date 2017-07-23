@@ -1664,11 +1664,12 @@ angular.module('pipelineGraphDirectives', [])
     });
 
     var getEdgePreviewIcon = function(pipelineRules, triggeredAlerts, d) {
-      var atLeastOneRuleDefined = false,
-        atLeastOneRuleActive = false,
-        triggeredAlert = _.filter(triggeredAlerts, function(triggered) {
-          return triggered.ruleDefinition.lane === d.outputLane || triggered.ruleDefinition.lane === d.eventLane;
-        });
+      var atLeastOneRuleDefined = false;
+      var atLeastOneRuleActive = false;
+      var triggeredAlert = _.filter(triggeredAlerts, function (triggered) {
+        return triggered.ruleDefinition.lane && (triggered.ruleDefinition.lane === d.outputLane ||
+          triggered.ruleDefinition.lane === d.eventLane);
+      });
 
       _.each(pipelineRules.dataRuleDefinitions, function(ruleDefn) {
         if (ruleDefn.lane === d.outputLane || ruleDefn.lane === d.eventLane) {

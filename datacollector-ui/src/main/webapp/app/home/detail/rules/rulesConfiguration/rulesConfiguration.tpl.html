@@ -1,10 +1,10 @@
 <div class="configuration-tab">
   <form class="form-horizontal email-IDs-tab"
-        ng-controller="WebHookController"
+        ng-controller="RulesConfigurationController"
         ng-class="{'form-group-sm': $storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT}"
         role="form" name="webhooksForm">
     <div class="form-group "
-         ng-class="{'has-error': false}"
+         ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
          ng-repeat="configDefinition in pipelineRulesConfigDefinition.configDefinitions | orderBy: 'displayPosition'"
          ng-if="(verifyDependsOnMap(pipelineRules, configDefinition))"
          ng-init="configIndex = getConfigIndex(pipelineRules, configDefinition)">

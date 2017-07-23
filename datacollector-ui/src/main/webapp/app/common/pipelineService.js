@@ -1609,8 +1609,8 @@ angular.module('dataCollectorApp.common')
         return;
       }
 
-      var gauges = pipelineMetrics.gauges,
-        alerts = [];
+      var gauges = pipelineMetrics.gauges;
+      var alerts = [];
 
       angular.forEach(pipelineRules.metricsRuleDefinitions, function(rule) {
         var gaugeName = 'alert.' + rule.id + '.gauge';

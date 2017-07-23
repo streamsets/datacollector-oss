@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.config;
 
+import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.RuleIssue;
 import com.streamsets.pipeline.api.Config;
 
@@ -36,6 +37,7 @@ public class RuleDefinitions {
   private List<RuleIssue> ruleIssues;
   private UUID uuid = null;
   private List<Config> configuration;
+  private List<Issue> configIssues;
 
   public RuleDefinitions(
       int schemaVersion,
@@ -119,5 +121,13 @@ public class RuleDefinitions {
 
   public void setConfiguration(List<Config> configuration) {
     this.configuration = configuration;
+  }
+
+  public List<Issue> getConfigIssues() {
+    return configIssues;
+  }
+
+  public void setConfigIssues(List<Issue> configIssues) {
+    this.configIssues = configIssues;
   }
 }

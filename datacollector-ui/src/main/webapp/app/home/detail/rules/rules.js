@@ -21,8 +21,13 @@ angular
   .module('dataCollectorApp.home')
   .controller('RulesController', function ($scope, pipelineService, $timeout) {
     angular.extend($scope, {
-      onTabSelect: function(tab) {
+      onTabSelect: function() {
         refreshCodemirrorWidget();
+      },
+
+      showConfigurationWarning: function() {
+        var pipelineRules = $scope.pipelineRules;
+        return pipelineRules && pipelineRules.configIssues && pipelineRules.configIssues.length > 0;
       }
     });
 

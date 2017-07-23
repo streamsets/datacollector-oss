@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 /**
- * Controller for WebHooks tab.
+ * Controller for Rules Configuration tab.
  */
 
 angular
   .module('dataCollectorApp.home')
-  .controller('WebHookController', function ($rootScope, $scope, pipelineService) {
+  .controller('RulesConfigurationController', function ($rootScope, $scope, pipelineService) {
     angular.extend($scope, {
       pipelineRulesConfigDefinition: pipelineService.getPipelineRulesConfigDefinition(),
       detailPaneConfig: $scope.pipelineRules,
@@ -182,6 +182,26 @@ angular
         });
 
         return returnValue;
+      },
+
+      /**
+       * Returns issues for the given Configuration Object and Definition.
+       *
+       * @param configObject
+       * @param configDefinition
+       */
+      getConfigurationIssues: function(configObject, configDefinition) {
+        var config = $scope.pipelineRules;
+        var issues;
+
+        if (config && config.configIssues && config.configIssues.length) {
+          issues =  _.filter((config.configIssues), function(issue) {
+            return (issue.configName === configDefinition.name);
+          });
+        }
+        return issues;
       }
     });
+
+
   });

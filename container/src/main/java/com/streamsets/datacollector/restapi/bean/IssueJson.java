@@ -16,15 +16,18 @@
 package com.streamsets.datacollector.restapi.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.streamsets.datacollector.util.NullDeserializer;
 import com.streamsets.datacollector.validation.Issue;
 
 import java.util.Map;
 
+@JsonDeserialize(using = NullDeserializer.Object.class)
 public class IssueJson {
 
   private final Issue issue;
 
-  public IssueJson(Issue issue) {
+  IssueJson(Issue issue) {
     this.issue = issue;
   }
 

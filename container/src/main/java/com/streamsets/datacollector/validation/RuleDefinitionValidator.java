@@ -78,8 +78,9 @@ public class RuleDefinitionValidator {
   public boolean validateRuleDefinition() {
     List<RuleIssue> ruleIssues = new ArrayList<>();
     ruleIssues.addAll(upgradeRuleDefinitions());
+    List<Issue> configIssues = new ArrayList<>();
     RuleDefinitionsConfigBean ruleDefinitionsConfigBean = PipelineBeanCreator.get()
-        .createRuleDefinitionsConfigBean(ruleDefinitions, new ArrayList<>(), pipelineParameters);
+        .createRuleDefinitionsConfigBean(ruleDefinitions, configIssues, pipelineParameters);
     List<String> emailIds = ruleDefinitionsConfigBean.emailIDs;
 
     for(DataRuleDefinition dataRuleDefinition : ruleDefinitions.getDataRuleDefinitions()) {
@@ -179,7 +180,8 @@ public class RuleDefinitionValidator {
     }
 
     ruleDefinitions.setRuleIssues(ruleIssues);
-    return ruleIssues.size() == 0;
+    ruleDefinitions.setConfigIssues(configIssues);
+    return ruleIssues.size() == 0 && configIssues.size() == 0;
   }
 
   private RuleIssue validateMetricAlertExpressions(String condition, String ruleId){

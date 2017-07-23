@@ -92,6 +92,14 @@ public class RuleDefinitionsJson {
     return BeanHelper.wrapConfigConfiguration(ruleDefinitions.getConfiguration());
   }
 
+  public List<IssueJson> getConfigIssues() {
+    return BeanHelper.wrapIssues(ruleDefinitions.getConfigIssues());
+  }
+
+  public void setConfigIssues(List<IssueJson> configIssues) {
+    //NO-OP, for jackson
+  }
+
   @JsonIgnore
   public RuleDefinitions getRuleDefinitions() {
     return ruleDefinitions;

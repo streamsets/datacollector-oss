@@ -27,12 +27,14 @@
       </div>
     </tab>
 
-    <tab select="onTabSelect({name: 'webhook'})">
+    <tab select="onTabSelect()">
       <tab-heading>
+        <i class="fa fa-exclamation-triangle icon-danger"
+           ng-show="showConfigurationWarning()"></i>
         {{'home.detailPane.notifications' | translate}}
       </tab-heading>
       <div class="tabs-content">
-        <ng-include src="'app/home/detail/rules/webhook/webhook.tpl.html'"></ng-include>
+        <ng-include src="'app/home/detail/rules/rulesConfiguration/rulesConfiguration.tpl.html'"></ng-include>
       </div>
     </tab>
   </tabset>

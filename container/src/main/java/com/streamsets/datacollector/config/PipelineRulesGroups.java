@@ -18,8 +18,7 @@ package com.streamsets.datacollector.config;
 import com.streamsets.pipeline.api.Label;
 
 public enum PipelineRulesGroups implements Label {
-  EMAIL_IDS("Email IDs"),
-  WEBHOOK("Webhook"),
+  NOTIFICATIONS("Notifications"),
   ;
 
   private final String label;

@@ -48,7 +48,7 @@ public class RuleDefinitionsConfigBean implements Stage {
       label = "Email IDs",
       description = "Email Addresses",
       displayPosition = 76,
-      group = "EMAIL_IDS"
+      group = "NOTIFICATIONS"
   )
   public List<String> emailIDs;
 
@@ -58,7 +58,7 @@ public class RuleDefinitionsConfigBean implements Stage {
       label = "Webhooks",
       description = "Webhooks",
       displayPosition = 200,
-      group = "WEBHOOK"
+      group = "NOTIFICATIONS"
   )
   @ListBeanModel
   public List<RuleDefinitionsWebhookConfig> webhookConfigs;

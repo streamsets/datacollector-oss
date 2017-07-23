@@ -19,66 +19,65 @@
 
 angular
   .module('dataCollectorApp.home')
-
   .controller('DetailController', function ($scope, $rootScope, _, pipelineConstant, api, contextHelpService, $modal) {
-    var infoTab =  {
-        name:'info',
-        template:'app/home/detail/info/info.tpl.html',
-        iconClass: 'fa fa-info-circle'
-      },
-      historyTab = {
-        name:'history',
-        template:'app/home/detail/history/history.tpl.html',
-        iconClass: 'fa fa-history'
-      },
-      configurationTab = {
-        name:'configuration',
-        template:'app/home/detail/configuration/configuration.tpl.html',
-        iconClass: 'fa fa-gear'
-      },
-      rawPreviewTab = {
-        name:'rawPreview',
-        template:'app/home/detail/rawPreview/rawPreview.tpl.html',
-        iconClass: 'fa fa-eye'
-      },
-      summaryTab = {
-        name:'summary',
-        template:'app/home/detail/summary/summary.tpl.html',
-        iconClass: 'fa fa-bar-chart',
-        active: true,
-        helpId: 'pipeline-monitoring'
-      },
-      errorTab = {
-        name:'errors',
-        template:'app/home/detail/badRecords/badRecords.tpl.html',
-        iconClass: 'fa fa-exclamation-triangle',
-        helpId: 'errors-tab'
-      },
-      dataSummaryTab = {
-        name:'summary',
-        template:'app/home/detail/dataSummary/dataSummary.tpl.html',
-        iconClass: 'fa fa-bar-chart',
-        active: true,
-        helpId: 'pipeline-monitoring'
-      },
-      dataRulesTab = {
-        name:'dataRules',
-        template:'app/home/detail/rules/dataRules/dataRules.tpl.html',
-        iconClass: 'fa fa-list',
-        helpId: 'data-rules-tab'
-      },
-      dataDriftRulesTab = {
-        name:'dataDriftRules',
-        template:'app/home/detail/rules/dataDriftRules/dataDriftRules.tpl.html',
-        iconClass: 'fa fa-list',
-        helpId: 'data-drift-rules-tab'
-      },
-      rulesTab = {
-        name:'rules',
-        template:'app/home/detail/rules/rules.tpl.html',
-        iconClass: 'fa fa-list',
-        helpId: 'metric-rules-tab'
-      };
+    var infoTab = {
+      name: 'info',
+      template: 'app/home/detail/info/info.tpl.html',
+      iconClass: 'fa fa-info-circle'
+    };
+    var historyTab = {
+      name: 'history',
+      template: 'app/home/detail/history/history.tpl.html',
+      iconClass: 'fa fa-history'
+    };
+    var configurationTab = {
+      name: 'configuration',
+      template: 'app/home/detail/configuration/configuration.tpl.html',
+      iconClass: 'fa fa-gear'
+    };
+    var rawPreviewTab = {
+      name: 'rawPreview',
+      template: 'app/home/detail/rawPreview/rawPreview.tpl.html',
+      iconClass: 'fa fa-eye'
+    };
+    var summaryTab = {
+      name: 'summary',
+      template: 'app/home/detail/summary/summary.tpl.html',
+      iconClass: 'fa fa-bar-chart',
+      active: true,
+      helpId: 'pipeline-monitoring'
+    };
+    var errorTab = {
+      name: 'errors',
+      template: 'app/home/detail/badRecords/badRecords.tpl.html',
+      iconClass: 'fa fa-exclamation-triangle',
+      helpId: 'errors-tab'
+    };
+    var dataSummaryTab = {
+      name: 'summary',
+      template: 'app/home/detail/dataSummary/dataSummary.tpl.html',
+      iconClass: 'fa fa-bar-chart',
+      active: true,
+      helpId: 'pipeline-monitoring'
+    };
+    var dataRulesTab = {
+      name: 'dataRules',
+      template: 'app/home/detail/rules/dataRules/dataRules.tpl.html',
+      iconClass: 'fa fa-list',
+      helpId: 'data-rules-tab'
+    };
+    var dataDriftRulesTab = {
+      name: 'dataDriftRules',
+      template: 'app/home/detail/rules/dataDriftRules/dataDriftRules.tpl.html',
+      iconClass: 'fa fa-list',
+      helpId: 'data-drift-rules-tab'
+    };
+    var rulesTab = {
+      name: 'rules',
+      template: 'app/home/detail/rules/rules.tpl.html',
+      iconClass: 'fa fa-list',
+      helpId: 'metric-rules-tab'
+    };
 
     /**
      * Returns list tabs based on type.
@@ -92,8 +91,8 @@ angular
         executionMode = $scope.activeConfigStatus.executionMode;
       switch(type) {
         case pipelineConstant.PIPELINE:
-          if(isPipelineRunning) {
-            if(executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
+          if (isPipelineRunning) {
+            if (executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
                 executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING) {
               tabsList = [summaryTab, infoTab, configurationTab, historyTab];
             } else {
@@ -105,8 +104,8 @@ angular
 
           return tabsList;
         case pipelineConstant.STAGE_INSTANCE:
-          if(isPipelineRunning) {
-            if(executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
+          if (isPipelineRunning) {
+            if (executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
               executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING) {
               tabsList = [summaryTab, infoTab, configurationTab];
             } else {
@@ -116,14 +115,14 @@ angular
             tabsList = [infoTab, configurationTab];
           }
 
-          if($scope.detailPaneConfigDefn && $scope.detailPaneConfigDefn.rawSourceDefinition) {
+          if ($scope.detailPaneConfigDefn && $scope.detailPaneConfigDefn.rawSourceDefinition) {
             tabsList.push(rawPreviewTab);
           }
 
           return tabsList;
         case pipelineConstant.LINK:
-          if(isPipelineRunning) {
-            if(executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
+          if (isPipelineRunning) {
+            if (executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
               executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING) {
               return [dataRulesTab, dataDriftRulesTab, infoTab];
             } else {
@@ -225,7 +224,7 @@ angular
         var selectedType = $scope.selectedType,
           selectedObject = $scope.selectedObject;
 
-        if(selectedObject) {
+        if (selectedObject) {
           switch(selectedType) {
             case pipelineConstant.PIPELINE:
               return selectedObject.info.title;
@@ -258,22 +257,22 @@ angular
           issues = [];
 
 
-        if(commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
+        if (commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
           issuesMap = commonErrors[0];
-        } else if(config && config.issues){
+        } else if (config && config.issues){
           issuesMap = config.issues;
         }
 
-        if(issuesMap) {
-          if(stageInstance.instanceName && issuesMap.stageIssues &&
+        if (issuesMap) {
+          if (stageInstance.instanceName && issuesMap.stageIssues &&
             issuesMap.stageIssues[stageInstance.instanceName]) {
             issues = issuesMap.stageIssues[stageInstance.instanceName];
-          } else if(!stageInstance.instanceName && issuesMap.pipelineIssues){
+          } else if (!stageInstance.instanceName && issuesMap.pipelineIssues){
             issues.push.apply(issues, issuesMap.pipelineIssues);
 
-            if(config.errorStage && issuesMap.stageIssues && issuesMap.stageIssues[config.errorStage.instanceName]) {
+            if (config.errorStage && issuesMap.stageIssues && issuesMap.stageIssues[config.errorStage.instanceName]) {
               issues.push.apply(issues, issuesMap.stageIssues[config.errorStage.instanceName]);
-            } else if(config.statsAggregatorStage && issuesMap.stageIssues &&
+            } else if (config.statsAggregatorStage && issuesMap.stageIssues &&
               issuesMap.stageIssues[config.statsAggregatorStage.instanceName]) {
               issues.push.apply(issues, issuesMap.stageIssues[config.statsAggregatorStage.instanceName]);
             }
@@ -292,8 +291,14 @@ angular
        * @returns {*}
        */
       showWarning: function(tab) {
-        if(tab.name === 'configuration') {
+        if (tab.name === 'configuration') {
           return $scope.hasConfigurationIssues($scope.detailPaneConfig);
+        }
+
+        if (tab.name === 'rules') {
+          var pipelineRules = $scope.pipelineRules;
+          return pipelineRules && ((pipelineRules.ruleIssues && pipelineRules.ruleIssues.length) ||
+              (pipelineRules.configIssues && pipelineRules.configIssues.length))
         }
         return false;
       },
@@ -305,7 +310,7 @@ angular
       selectRulesTab: function(triggeredAlert) {
         var rulesTabName = (triggeredAlert && triggeredAlert.type === 'DATA_DRIFT_ALERT' ? 'dataDriftRules' : 'dataRules');
         angular.forEach($scope.detailPaneTabs, function(tab) {
-          if(tab.name === 'rules' || tab.name === rulesTabName) {
+          if (tab.name === 'rules' || tab.name === rulesTabName) {
             tab.active = true;
           }
         });
@@ -315,15 +320,15 @@ angular
        * Launch Contextual Help
        */
       launchHelp: function() {
-        var helpId = '',
-          selectedObject = $scope.selectedObject,
-          activeTab = _.find($scope.detailPaneTabs, function(tab) {
-            return tab.active;
-          });
+        var helpId = '';
+        var selectedObject = $scope.selectedObject;
+        var activeTab = _.find($scope.detailPaneTabs, function (tab) {
+          return tab.active;
+        });
 
         switch($scope.selectedType) {
           case pipelineConstant.PIPELINE:
-            if(activeTab.helpId) {
+            if (activeTab.helpId) {
               helpId = activeTab.helpId;
             } else {
               helpId = 'pipeline-configuration';
@@ -399,15 +404,15 @@ angular
     $scope.$on('onSelectionChange', function(event, options) {
       $scope.detailPaneTabs = getDetailTabsList(options.type, $scope.isPipelineRunning, options.selectedObject);
 
-      if(options.detailTabName) {
+      if (options.detailTabName) {
         angular.forEach($scope.detailPaneTabs, function(tab) {
-          if(tab.name === options.detailTabName) {
+          if (tab.name === options.detailTabName) {
             tab.active = true;
           }
         });
       }
 
-      if(!options.detailTabName && options.type === pipelineConstant.LINK && !$scope.isPipelineRunning &&
+      if (!options.detailTabName && options.type === pipelineConstant.LINK && !$scope.isPipelineRunning &&
         $scope.detailPaneTabs.length > 1) {
         $scope.detailPaneTabs[1].active = true;
       }
@@ -416,11 +421,11 @@ angular
     $scope.$watch('isPipelineRunning', function(newValue) {
       var tabs = $scope.detailPaneTabs = getDetailTabsList($scope.selectedType, newValue);
 
-      if(newValue || $scope.detailPaneTabs.length < 2 ) {
+      if (newValue || $scope.detailPaneTabs.length < 2 ) {
         angular.forEach(tabs, function(tab) {
           tab.active = (tab.name === 'summary');
         });
-      } else if($scope.detailPaneTabs.length > 1) {
+      } else if ($scope.detailPaneTabs.length > 1) {
         angular.forEach(tabs, function(tab) {
           tab.active = (tab.name === 'configuration' || tab.name === 'dataRules');
         });

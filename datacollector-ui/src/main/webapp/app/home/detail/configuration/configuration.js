@@ -156,9 +156,9 @@ angular
        * @param configDefinition
        */
       getConfigurationIssues: function(configObject, configDefinition) {
-        var config = $scope.pipelineConfig,
-          commonErrors = $rootScope.common.errors,
-          issues;
+        var config = $scope.pipelineConfig;
+        var commonErrors = $rootScope.common.errors;
+        var issues;
 
         if (config && config.issues) {
           issues = getIssues(config, config.issues, configObject.instanceName, configDefinition);
@@ -534,11 +534,10 @@ angular
        * @returns {*}
        */
       showConfigurationWarning: function(stageInstance, groupName, errorStage) {
-        var config = $scope.pipelineConfig,
-          commonErrors = $rootScope.common.errors,
-          issuesMap,
-          issues;
-
+        var config = $scope.pipelineConfig;
+        var commonErrors = $rootScope.common.errors;
+        var issuesMap;
+        var issues;
 
         if (commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
           issuesMap = commonErrors[0];

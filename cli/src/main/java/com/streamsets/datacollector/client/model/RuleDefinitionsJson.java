@@ -34,6 +34,7 @@ public class RuleDefinitionsJson   {
   private String uuid = null;
   private List<RuleIssueJson> ruleIssues = new ArrayList<RuleIssueJson>();
   List<ConfigConfigurationJson> configuration = new ArrayList<>();
+  private List<IssueJson> configIssues = new ArrayList<IssueJson>();
 
   /**
    **/
@@ -105,6 +106,17 @@ public class RuleDefinitionsJson   {
     this.configuration = configuration;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("configIssues")
+  public List<IssueJson> getConfigIssues() {
+    return configIssues;
+  }
+  public void setConfigIssues(List<IssueJson> configIssues) {
+    this.configIssues = configIssues;
+  }
+
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
@@ -116,6 +128,7 @@ public class RuleDefinitionsJson   {
     sb.append("    uuid: ").append(StringUtil.toIndentedString(uuid)).append("\n");
     sb.append("    ruleIssues: ").append(StringUtil.toIndentedString(ruleIssues)).append("\n");
     sb.append("    configuration: ").append(StringUtil.toIndentedString(configuration)).append("\n");
+    sb.append("    configIssues: ").append(StringUtil.toIndentedString(configIssues)).append("\n");
     sb.append("}");
     return sb.toString();
   }

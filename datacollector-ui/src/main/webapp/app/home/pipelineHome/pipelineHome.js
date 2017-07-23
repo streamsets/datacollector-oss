@@ -1241,12 +1241,10 @@ angular
         addToArchive($scope.pipelineConfig, $scope.pipelineRules);
       }
 
-
       $timeout(function() {
-        var config = $scope.pipelineConfig,
-          commonErrors = $rootScope.common.errors,
-          issuesMap;
-
+        var config = $scope.pipelineConfig;
+        var commonErrors = $rootScope.common.errors;
+        var issuesMap;
 
         if (commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
           issuesMap = commonErrors[0];
@@ -1593,6 +1591,7 @@ angular
           ignoreUpdate = true;
           rules = $scope.pipelineRules;
           rules.ruleIssues = res.ruleIssues;
+          rules.configIssues = res.configIssues;
           rules.uuid = res.uuid;
 
           angular.forEach(rules.metricsRuleDefinitions, function(rule, index) {
@@ -1880,8 +1879,12 @@ angular
           $scope.$broadcast('updateErrorCount', getStageErrorCounts());
         }
 
-        $scope.triggeredAlerts = pipelineService.getTriggeredAlerts(routeParamPipelineName, $scope.pipelineRules,
-          $rootScope.common.pipelineMetrics);
+        $scope.triggeredAlerts = pipelineService.getTriggeredAlerts(
+          routeParamPipelineName,
+          $scope.pipelineRules,
+          $rootScope.common.pipelineMetrics
+        );
+
         $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, $scope.triggeredAlerts);
       } else {
         $scope.triggeredAlerts = [];
