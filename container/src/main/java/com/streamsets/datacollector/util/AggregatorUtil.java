@@ -21,9 +21,12 @@ import com.streamsets.datacollector.config.MetricElement;
 import com.streamsets.datacollector.config.MetricType;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.ThresholdType;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
+import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import org.slf4j.Logger;
@@ -175,8 +178,16 @@ public class AggregatorUtil {
   }
 
   public static Record createConfigChangeRequestRecord(
-      RulesConfigurationChangeRequest rulesConfigurationChangeRequest
+      RulesConfigurationChangeRequest rulesConfigurationChangeRequest,
+      Map<String, Object> resolvedParameters
   ) {
+    RuleDefinitionsConfigBean ruleDefinitionsConfigBean = PipelineBeanCreator.get()
+        .createRuleDefinitionsConfigBean(
+            rulesConfigurationChangeRequest.getRuleDefinitions(),
+            new ArrayList<Issue>(),
+            resolvedParameters
+        );
+    List<String> emailIds = ruleDefinitionsConfigBean.emailIDs;
     Record record = createRecord(CONFIGURATION_CHANGE);
     Map<String, Field> map = new HashMap<>();
     map.put(
@@ -197,11 +208,7 @@ public class AggregatorUtil {
     );
     map.put(
       EMAILS,
-      Field.create(
-        createListField(
-          rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds()
-        )
-      )
+      Field.create(createListField(emailIds))
     );
     map.put(AggregatorUtil.TIMESTAMP, Field.create(System.currentTimeMillis()));
     record.set(Field.create(map));

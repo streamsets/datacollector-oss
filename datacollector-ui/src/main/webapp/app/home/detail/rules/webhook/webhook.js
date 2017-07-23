@@ -84,11 +84,16 @@ angular
       },
 
       getCodeMirrorHints: function(configDefinition) {
+        var pipelineConfig = $scope.pipelineConfig;
+        var pipelineConstants = _.find(pipelineConfig.configuration, function (config) {
+          return config.name === 'constants';
+        });
+        var hints = pipelineService.getGeneralRulesElMetadata();
         return {
-          elFunctionDefinitions: [],
-          elConstantDefinitions: [],
-          pipelineConstants: [],
-          runtimeConfigs: [],
+          elFunctionDefinitions: hints.elFunctionDefinitions,
+          elConstantDefinitions: hints.elConstantDefinitions,
+          pipelineConstants: pipelineConstants ? pipelineConstants.value : [],
+          runtimeConfigs: pipelineService.getRuntimeConfigs(),
           regex: 'wordColonSlash'
         };
       },

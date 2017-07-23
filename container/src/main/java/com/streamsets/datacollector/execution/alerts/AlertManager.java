@@ -124,7 +124,6 @@ public class AlertManager {
   @SuppressWarnings("unchecked")
   public void alert(
       Object value,
-      List<String> emailIds,
       RuleDefinitionsConfigBean ruleDefinitionsConfigBean,
       RuleDefinition ruleDefinition
   ) {
@@ -162,7 +161,11 @@ public class AlertManager {
             LOG.error("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",
               ruleDefinition.getId(), emailBody);
           } else {
-            emailSender.send(emailIds, EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + ruleDefinition.getAlertText(), emailBody);
+            emailSender.send(
+                ruleDefinitionsConfigBean.emailIDs,
+                EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + ruleDefinition.getAlertText(),
+                emailBody
+            );
           }
         } catch (EmailException | IOException e) {
           LOG.error("Error sending alert email, reason: {}", e.toString(), e);

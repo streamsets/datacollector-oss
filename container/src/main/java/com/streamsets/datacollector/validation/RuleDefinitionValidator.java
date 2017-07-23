@@ -15,11 +15,15 @@
  */
 package com.streamsets.datacollector.validation;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ThresholdType;
+import com.streamsets.datacollector.configupgrade.RuleDefinitionsUpgrader;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.RuleELRegistry;
@@ -27,7 +31,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.lib.el.RecordEL;
-
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,18 +57,31 @@ public class RuleDefinitionValidator {
   private static final String EMAIL_IDS = "emailIds";
   private static final String SAMPLING_PERCENTAGE = "Sampling Percentage";
 
+  private final String pipelineId;
+  private final RuleDefinitions ruleDefinitions;
+  private final Map<String, Object> pipelineParameters;
   private final ELEvaluator elEvaluator;
   private final ELVariables variables;
 
-  public RuleDefinitionValidator() {
+  public RuleDefinitionValidator(
+      String pipelineId,
+      RuleDefinitions ruleDefinitions,
+      Map<String, Object> pipelineParameters
+  ) {
+    this.pipelineId = Preconditions.checkNotNull(pipelineId, "pipelineId cannot be null");
+    this.ruleDefinitions = Preconditions.checkNotNull(ruleDefinitions, "ruleDefinitions cannot be null");
+    this.pipelineParameters = pipelineParameters;
     variables = new ELVariables();
     elEvaluator = new ELEvaluator("RuleDefinitionValidator", false, RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL));
   }
 
-  public boolean validateRuleDefinition(RuleDefinitions ruleDefinitions) {
-    Preconditions.checkNotNull(ruleDefinitions);
-
+  public boolean validateRuleDefinition() {
     List<RuleIssue> ruleIssues = new ArrayList<>();
+    ruleIssues.addAll(upgradeRuleDefinitions());
+    RuleDefinitionsConfigBean ruleDefinitionsConfigBean = PipelineBeanCreator.get()
+        .createRuleDefinitionsConfigBean(ruleDefinitions, new ArrayList<>(), pipelineParameters);
+    List<String> emailIds = ruleDefinitionsConfigBean.emailIDs;
+
     for(DataRuleDefinition dataRuleDefinition : ruleDefinitions.getDataRuleDefinitions()) {
       //reset valid flag before validating
       dataRuleDefinition.setValid(true);
@@ -96,8 +113,7 @@ public class RuleDefinitionValidator {
         ruleIssues.add(r);
         dataRuleDefinition.setValid(false);
       }
-      if(dataRuleDefinition.isSendEmail() &&
-        (ruleDefinitions.getEmailIds() == null || ruleDefinitions.getEmailIds().isEmpty())) {
+      if(dataRuleDefinition.isSendEmail() && CollectionUtils.isEmpty(emailIds)) {
         RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0042);
         r.setAdditionalInfo(PROPERTY, EMAIL_IDS);
         ruleIssues.add(r);
@@ -154,8 +170,7 @@ public class RuleDefinitionValidator {
           metricsRuleDefinition.setValid(false);
         }
       }
-      if(metricsRuleDefinition.isSendEmail() &&
-        (ruleDefinitions.getEmailIds() == null || ruleDefinitions.getEmailIds().isEmpty())) {
+      if(metricsRuleDefinition.isSendEmail() && CollectionUtils.isEmpty(emailIds)) {
         RuleIssue r = RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0042);
         r.setAdditionalInfo(PROPERTY, EMAIL_IDS);
         ruleIssues.add(r);
@@ -164,7 +179,7 @@ public class RuleDefinitionValidator {
     }
 
     ruleDefinitions.setRuleIssues(ruleIssues);
-    return ruleIssues.size() == 0 ? true : false;
+    return ruleIssues.size() == 0;
   }
 
   private RuleIssue validateMetricAlertExpressions(String condition, String ruleId){
@@ -343,6 +358,21 @@ public class RuleDefinitionValidator {
       return RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0045, condition, ex.toString());
     }
     return null;
+  }
+
+  @VisibleForTesting
+  RuleDefinitionsUpgrader getUpgrader() {
+    return RuleDefinitionsUpgrader.get();
+  }
+
+  private List<RuleIssue> upgradeRuleDefinitions() {
+    List<RuleIssue> upgradeIssues = new ArrayList<>();
+    RuleDefinitions upgradedRuleDefinitions = getUpgrader().upgradeIfNecessary(
+        pipelineId,
+        ruleDefinitions,
+        upgradeIssues
+    );
+    return upgradeIssues;
   }
 
 }

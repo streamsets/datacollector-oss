@@ -30,6 +30,8 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.Manager;
@@ -815,15 +817,22 @@ public class PipelineStoreResource {
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getPipelineRules(
-      @PathParam("pipelineId") String name,
+      @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") @DefaultValue("0") String rev
   ) throws PipelineException {
-    PipelineInfo pipelineInfo = store.getInfo(name);
+    PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
-    RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
+    RuleDefinitions ruleDefinitions = store.retrieveRules(pipelineId, rev);
     if(ruleDefinitions != null) {
-      RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
-      ruleDefinitionValidator.validateRuleDefinition(ruleDefinitions);
+      PipelineConfiguration pipelineConfiguration = store.load(pipelineId, rev);
+      PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
+          .create(pipelineConfiguration, Collections.emptyList(), null);
+      RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
+          pipelineId,
+          ruleDefinitions,
+          pipelineConfigBean.constants
+      );
+      ruleDefinitionValidator.validateRuleDefinition();
     }
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
         BeanHelper.wrapRuleDefinitions(ruleDefinitions)).build();
@@ -843,19 +852,26 @@ public class PipelineStoreResource {
       AuthzRole.ADMIN_REMOTE
   })
   public Response savePipelineRules(
-      @PathParam("pipelineId") String name,
+      @PathParam("pipelineId") String pipelineId,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @ApiParam(name="pipeline", required = true) RuleDefinitionsJson ruleDefinitionsJson
   ) throws PipelineException {
-    if (store.isRemotePipeline(name, rev)) {
-      throw new PipelineException(ContainerError.CONTAINER_01101, "SAVE_RULES_PIPELINE", name);
+    if (store.isRemotePipeline(pipelineId, rev)) {
+      throw new PipelineException(ContainerError.CONTAINER_01101, "SAVE_RULES_PIPELINE", pipelineId);
     }
-    PipelineInfo pipelineInfo = store.getInfo(name);
+    PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
-    RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
-    ruleDefinitionValidator.validateRuleDefinition(ruleDefs);
-    ruleDefs = store.storeRules(name, rev, ruleDefs);
+    PipelineConfiguration pipelineConfiguration = store.load(pipelineId, rev);
+    PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
+        .create(pipelineConfiguration, Collections.emptyList(), null);
+    RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
+        pipelineId,
+        ruleDefs,
+        pipelineConfigBean.constants
+    );
+    ruleDefinitionValidator.validateRuleDefinition();
+    ruleDefs = store.storeRules(pipelineId, rev, ruleDefs);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapRuleDefinitions(ruleDefs)).build();
   }
 
@@ -1036,6 +1052,15 @@ public class PipelineStoreResource {
     pipelineConfig = store.save(user, name, rev, pipelineConfig.getDescription(), pipelineConfig);
 
     ruleDefinitions.setUuid(newRuleDefinitions.getUuid());
+
+    PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
+        .create(pipelineConfig, Collections.emptyList(), null);
+    RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
+        name,
+        ruleDefinitions,
+        pipelineConfigBean.constants
+    );
+    ruleDefinitionValidator.validateRuleDefinition();
     ruleDefinitions = store.storeRules(name, rev, ruleDefinitions);
 
     pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));

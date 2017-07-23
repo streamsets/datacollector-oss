@@ -116,7 +116,8 @@ public abstract class PipelineBeanCreator {
 
   public RuleDefinitionsConfigBean createRuleDefinitionsConfigBean(
       RuleDefinitions ruleDefinitions,
-      List<Issue> errors
+      List<Issue> errors,
+      Map<String, Object> runtimeParameters
   ) {
     RuleDefinitionsConfigBean ruleDefinitionsConfigBean = new RuleDefinitionsConfigBean();
     if (createConfigBeans(ruleDefinitionsConfigBean, "", RULES_DEFINITION, "pipeline", errors)) {
@@ -125,7 +126,7 @@ public abstract class PipelineBeanCreator {
           "", RULES_DEFINITION.getConfigDefinitionsMap(),
           RULES_DEFINITION,
           getRulesConfAsStageConf(ruleDefinitions),
-          Collections.emptyMap(),
+          runtimeParameters,
           errors
       );
     }
@@ -475,11 +476,13 @@ public abstract class PipelineBeanCreator {
         }
       }
 
+      Map<String, Object> resolvedConstants = pipelineConfigBean.constants;
+
       if (pipelineConfigBean.constants == null) {
         pipelineConfigBean.constants = Collections.emptyMap();
+        resolvedConstants = Collections.emptyMap();
       } else {
         // Merge constant and runtime Constants
-        Map<String, Object> resolvedConstants = pipelineConfigBean.constants;
         if (runtimeParameters != null) {
           for (String key: runtimeParameters.keySet()) {
             if (resolvedConstants.containsKey(key)) {
@@ -498,6 +501,10 @@ public abstract class PipelineBeanCreator {
           pipelineConfigBean.constants,
           errors
       );
+
+      if (runtimeParameters != null) {
+        pipelineConfigBean.constants = resolvedConstants;
+      }
     }
     return pipelineConfigBean;
   }

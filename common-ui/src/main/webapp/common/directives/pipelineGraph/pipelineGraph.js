@@ -29,15 +29,15 @@ angular.module('pipelineGraphDirectives', [])
   .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, $location, $modal,
                                                   pipelineConstant, $translate, pipelineService){
 
-    var showTransition = false,
-      graphErrorBadgeLabel = '';
+    var showTransition = false;
+    var graphErrorBadgeLabel = '';
 
     $translate('global.messages.info.graphErrorBadgeLabel').then(function(translation) {
       graphErrorBadgeLabel = [translation];
     });
 
     // define graphcreator object
-    var GraphCreator = function(svg, nodes, edges, issues){
+    var GraphCreator = function(svg, nodes, edges, issues) {
       var thisGraph = this;
       thisGraph.idct = 0;
 
@@ -47,11 +47,12 @@ angular.module('pipelineGraphDirectives', [])
 
       // define arrow markers for graph links
 
-      var markerWidth = 3.5,
-        markerHeight = 3.5,
-        cRadius = -7, // play with the cRadius value
-        refX = cRadius + (markerWidth * 2),
-        defs = svg.append('svg:defs');
+      var markerWidth = 3.5;
+      var markerHeight = 3.5;
+      var cRadius = -7;
+      // play with the cRadius value
+      var refX = cRadius + (markerWidth * 2);
+      var defs = svg.append('svg:defs');
 
       defs.append('svg:marker')
         .attr('id', 'end-arrow')

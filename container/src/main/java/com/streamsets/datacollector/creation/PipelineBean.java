@@ -24,7 +24,7 @@ public class PipelineBean {
   private final PipelineStageBeans startEventStages;
   private final PipelineStageBeans stopEventStages;
 
-  public PipelineBean(
+  PipelineBean(
       PipelineConfigBean config,
       StageBean origin,
       PipelineStageBeans stages,

@@ -733,7 +733,13 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         //So if a pipeline is started again for the second time, the object graph recreates the production pipeline
         //with fresh instances of MetricRegistry, alert manager, observer etc etc..
         ObjectGraph objectGraph = this.objectGraph.plus(
-            new PipelineProviderModule(name, pipelineConfiguration.getTitle(), rev, statsAggregationEnabled)
+            new PipelineProviderModule(
+                name,
+                pipelineConfiguration.getTitle(),
+                rev,
+                statsAggregationEnabled,
+                pipelineConfigBean.constants
+            )
         );
 
         threadHealthReporter = objectGraph.get(ThreadHealthReporter.class);

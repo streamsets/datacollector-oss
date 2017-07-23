@@ -652,8 +652,8 @@ public class TestPipelineStoreResource extends JerseyTest {
           new com.streamsets.datacollector.store.PipelineRevInfo(new PipelineInfo("xyz","label",
             "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null, "x", "y"))));
-        Mockito.when(pipelineStore.load("xyz", "1")).thenReturn(
-            MockStages.createPipelineConfigurationSourceProcessorTarget());
+        Mockito.when(pipelineStore.load(Matchers.matches("xyz|myPipeline|newFromImport|readOnly"), Mockito.anyString()))
+            .thenReturn(MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.when(pipelineStore.load(Matchers.matches("abc|def"), Matchers.matches("0"))).thenReturn(
             MockStages.createPipelineConfigurationWithLabels(new ArrayList<String>()));
         Mockito.when(pipelineStore.create("user1", "myPipeline", "myPipeline", "my description", false)).thenReturn(

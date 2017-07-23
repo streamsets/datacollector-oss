@@ -28,6 +28,7 @@ import com.streamsets.datacollector.validation.Issue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MetricsObserverRunner {
 
@@ -41,19 +42,22 @@ public class MetricsObserverRunner {
   private final String name;
   private final String rev;
   private final boolean statsAggregationEnabled;
+  private Map<String, Object> resolvedParameters;
 
   public MetricsObserverRunner(
       String name,
       String rev,
       boolean statsAggregationEnabled,
       MetricRegistry metrics,
-      AlertManager alertManager
+      AlertManager alertManager,
+      Map<String, Object> resolvedParameters
   ) {
     this.metrics = metrics;
     this.alertManager = alertManager;
     this.name = name;
     this.rev = rev;
     this.statsAggregationEnabled = statsAggregationEnabled;
+    this.resolvedParameters = resolvedParameters;
   }
 
   public void evaluate() {
@@ -77,14 +81,14 @@ public class MetricsObserverRunner {
         RuleDefinitionsConfigBean ruleDefinitionsConfigBean = PipelineBeanCreator.get()
             .createRuleDefinitionsConfigBean(
                 currentChangeRequest.getRuleDefinitions(),
-                new ArrayList<Issue>()
+                new ArrayList<Issue>(),
+                resolvedParameters
             );
         for (MetricsRuleDefinition metricsRuleDefinition : metricsRuleDefinitions) {
           MetricRuleEvaluator metricAlertsHelper = new MetricRuleEvaluator(
               metricsRuleDefinition,
               metrics,
               alertManager,
-              currentChangeRequest.getRuleDefinitions().getEmailIds(),
               ruleDefinitionsConfigBean
           );
           metricAlertsHelper.checkForAlerts();

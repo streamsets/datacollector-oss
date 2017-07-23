@@ -58,9 +58,16 @@ public class DataObserverRunner {
   private MetricRegistryJson metricRegistryJson;
   private final Map<String, Object> pipelineELContext;
   private BlockingQueue<Record> startsAggregatorQueue;
+  private Map<String, Object> resolvedParameters;
 
-  public DataObserverRunner(String name, String rev, MetricRegistry metrics, AlertManager alertManager,
-                            Configuration configuration) {
+  DataObserverRunner(
+      String name,
+      String rev,
+      MetricRegistry metrics,
+      AlertManager alertManager,
+      Configuration configuration,
+      Map<String, Object> resolvedParameters
+  ) {
     this.metrics = metrics;
     this.ruleToSampledRecordsMap = new HashMap<>();
     this.configuration = configuration;
@@ -68,13 +75,14 @@ public class DataObserverRunner {
     this.name = name;
     this.rev = rev;
     this.pipelineELContext = new HashMap<>();
+    this.resolvedParameters = resolvedParameters;
   }
 
-  public void setStatsQueue(BlockingQueue<Record> startsAggregatorQueue) {
+  void setStatsQueue(BlockingQueue<Record> startsAggregatorQueue) {
     this.startsAggregatorQueue = startsAggregatorQueue;
   }
 
-  public void handleDataRulesEvaluationRequest(DataRulesEvaluationRequest dataRulesEvaluationRequest) {
+  void handleDataRulesEvaluationRequest(DataRulesEvaluationRequest dataRulesEvaluationRequest) {
 
     //This is the map of ruleId vs sampled records
     Map<String, Map<String, List<Record>>> snapshot = dataRulesEvaluationRequest.getSnapshot();
@@ -92,14 +100,14 @@ public class DataObserverRunner {
             RuleDefinitionsConfigBean ruleDefinitionsConfigBean = PipelineBeanCreator.get()
                 .createRuleDefinitionsConfigBean(
                     rulesConfigurationChangeRequest.getRuleDefinitions(),
-                    new ArrayList<Issue>()
+                    new ArrayList<Issue>(),
+                    resolvedParameters
                 );
             DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(
                 name,
                 rev,
                 metrics,
                 alertManager,
-                rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(),
                 ruleDefinitionsConfigBean,
                 pipelineELContext,
                 dataRuleDefinition,
@@ -138,7 +146,8 @@ public class DataObserverRunner {
     if (startsAggregatorQueue != null) {
       startsAggregatorQueue.offer(
           AggregatorUtil.createConfigChangeRequestRecord(
-              rulesConfigurationChangeRequest
+              rulesConfigurationChangeRequest,
+              resolvedParameters
           )
       );
     }
@@ -171,7 +180,13 @@ public class DataObserverRunner {
       LOG.error("Cannot send alert for throwable due to null RulesConfigurationChangeRequest: " +
         request.getThrowable(), request.getThrowable());
     } else {
-      List<String> emailIds = rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds();
+      RuleDefinitionsConfigBean ruleDefinitionsConfigBean = PipelineBeanCreator.get()
+          .createRuleDefinitionsConfigBean(
+              rulesConfigurationChangeRequest.getRuleDefinitions(),
+              new ArrayList<Issue>(),
+              resolvedParameters
+          );
+      List<String> emailIds = ruleDefinitionsConfigBean.emailIDs;
       if (emailIds != null && !emailIds.isEmpty()) {
         alertManager.alert(emailIds, request.getThrowable());
       }

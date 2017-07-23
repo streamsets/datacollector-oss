@@ -446,6 +446,7 @@
       "metricAlertRules": "Metric Rules",
       "monitoring": "Monitoring",
       "monitoringJSONData": "Pipeline Monitoring",
+      "notifications": "Notifications",
       "noStageDefinitionFound": "Could not find stage definition for stage name: {{stageName}}, library: {{library}}",
       "pipelineConfigJSONData": "Pipeline Configuration",
       "pipelinePreviewJSONData": "Preview Data",

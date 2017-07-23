@@ -39,7 +39,18 @@ import java.util.List;
 @ConfigGroups(PipelineRulesGroups.class)
 public class RuleDefinitionsConfigBean implements Stage {
 
-  public static final int VERSION = 1;
+  public static final int VERSION = 2;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.LIST,
+      defaultValue = "[]",
+      label = "Email IDs",
+      description = "Email Addresses",
+      displayPosition = 76,
+      group = "EMAIL_IDS"
+  )
+  public List<String> emailIDs;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,

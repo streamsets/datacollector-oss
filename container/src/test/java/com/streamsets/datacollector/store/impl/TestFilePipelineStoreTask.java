@@ -323,7 +323,7 @@ public class TestFilePipelineStoreTask {
         tempRuleDef.getMetricsRuleDefinitions(),
         tempRuleDef.getDataRuleDefinitions(),
         new ArrayList<DriftRuleDefinition>(),
-        tempRuleDef.getEmailIds(),
+        Collections.emptyList(),
         tempRuleDef.getUuid(),
         Collections.emptyList()
     );

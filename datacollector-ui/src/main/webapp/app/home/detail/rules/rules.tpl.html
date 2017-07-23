@@ -9,7 +9,6 @@
       </div>
     </tab>
 
-
     <tab>
       <tab-heading>
         {{'home.detailPane.rulesTab.dataRules' | translate}}
@@ -28,18 +27,9 @@
       </div>
     </tab>
 
-    <tab>
-      <tab-heading>
-        {{'home.detailPane.emailIDs' | translate}}
-      </tab-heading>
-      <div class="tabs-content">
-        <ng-include src="'app/home/detail/rules/emailIDs/emailIDs.tpl.html'"></ng-include>
-      </div>
-    </tab>
-
     <tab select="onTabSelect({name: 'webhook'})">
       <tab-heading>
-        {{'home.detailPane.webhook' | translate}}
+        {{'home.detailPane.notifications' | translate}}
       </tab-heading>
       <div class="tabs-content">
         <ng-include src="'app/home/detail/rules/webhook/webhook.tpl.html'"></ng-include>

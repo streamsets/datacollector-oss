@@ -76,10 +76,6 @@ public class RuleDefinitionsJson {
     return BeanHelper.wrapDriftRuleDefinitions(ruleDefinitions.getDriftRuleDefinitions());
   }
 
-  public List<String> getEmailIds() {
-    return ruleDefinitions.getEmailIds();
-  }
-
   public List<RuleIssueJson> getRuleIssues() {
     return BeanHelper.wrapRuleIssues(ruleDefinitions.getRuleIssues());
   }

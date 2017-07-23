@@ -29,7 +29,10 @@ public class RuleDefinitions {
   private final List<MetricsRuleDefinition> metricsRuleDefinitions;
   private final List<DataRuleDefinition> dataRuleDefinitions;
   private final List<DriftRuleDefinition> driftRuleDefinitions;
+
+  @Deprecated
   private final List<String> emailIds;
+
   private List<RuleIssue> ruleIssues;
   private UUID uuid = null;
   private List<Config> configuration;
@@ -62,6 +65,10 @@ public class RuleDefinitions {
     return schemaVersion;
   }
 
+  public void setSchemaVersion(int schemaVersion) {
+    this.schemaVersion = schemaVersion;
+  }
+
   public int getVersion() {
     return version;
   }
@@ -85,6 +92,7 @@ public class RuleDefinitions {
     return rules;
   }
 
+  @Deprecated
   public List<String> getEmailIds() {
     return emailIds;
   }

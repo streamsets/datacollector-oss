@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -40,9 +41,23 @@ public class DataObserverRunnable implements Runnable {
   private final DataObserverRunner dataObserverRunner;
   private final ThreadHealthReporter threadHealthReporter;
 
-  public DataObserverRunnable(String name, String rev, ThreadHealthReporter threadHealthReporter,
-                              MetricRegistry metrics, AlertManager alertManager, Configuration configuration) {
-    this.dataObserverRunner = new DataObserverRunner(name, rev, metrics, alertManager, configuration);
+  public DataObserverRunnable(
+      String name,
+      String rev,
+      ThreadHealthReporter threadHealthReporter,
+      MetricRegistry metrics,
+      AlertManager alertManager,
+      Configuration configuration,
+      Map<String, Object> resolvedParameters
+  ) {
+    this.dataObserverRunner = new DataObserverRunner(
+        name,
+        rev,
+        metrics,
+        alertManager,
+        configuration,
+        resolvedParameters
+    );
     this.threadHealthReporter = threadHealthReporter;
   }
 

@@ -102,13 +102,13 @@ angular
        * @returns {*}
        */
       getCodeMirrorHints: function(configDefinition) {
-        var pipelineConfig = $scope.pipelineConfig,
-          pipelineConstants = _.find(pipelineConfig.configuration, function(config) {
-            return config.name === 'constants';
-          }),
-          elCatalog = pipelineService.getELCatalog(),
-          elFunctionDefinitions = [],
-          elConstantDefinitions = [];
+        var pipelineConfig = $scope.pipelineConfig;
+        var pipelineConstants = _.find(pipelineConfig.configuration, function (config) {
+          return config.name === 'constants';
+        });
+        var elCatalog = pipelineService.getELCatalog();
+        var elFunctionDefinitions = [];
+        var elConstantDefinitions = [];
 
         if (configDefinition.elFunctionDefinitionsIdx) {
           angular.forEach(_.uniq(configDefinition.elFunctionDefinitionsIdx), function(idx) {

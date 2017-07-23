@@ -15,16 +15,13 @@
  */
 package com.streamsets.datacollector.client.model;
 
-import com.streamsets.datacollector.client.StringUtil;
-import com.streamsets.datacollector.client.model.DataRuleDefinitionJson;
-import java.util.*;
-import com.streamsets.datacollector.client.model.MetricsRuleDefinitionJson;
-import com.streamsets.datacollector.client.model.RuleIssueJson;
-
-
-
-import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.datacollector.client.StringUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @ApiModel(description = "")
@@ -36,7 +33,7 @@ public class RuleDefinitionsJson   {
   private List<String> emailIds = new ArrayList<String>();
   private String uuid = null;
   private List<RuleIssueJson> ruleIssues = new ArrayList<RuleIssueJson>();
-
+  List<ConfigConfigurationJson> configuration = new ArrayList<>();
 
   /**
    **/
@@ -97,7 +94,16 @@ public class RuleDefinitionsJson   {
     this.ruleIssues = ruleIssues;
   }
 
-
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("configuration")
+  public List<ConfigConfigurationJson> getConfiguration() {
+    return configuration;
+  }
+  public void setConfiguration(List<ConfigConfigurationJson> configuration) {
+    this.configuration = configuration;
+  }
 
   @Override
   public String toString()  {
@@ -109,6 +115,7 @@ public class RuleDefinitionsJson   {
     sb.append("    emailIds: ").append(StringUtil.toIndentedString(emailIds)).append("\n");
     sb.append("    uuid: ").append(StringUtil.toIndentedString(uuid)).append("\n");
     sb.append("    ruleIssues: ").append(StringUtil.toIndentedString(ruleIssues)).append("\n");
+    sb.append("    configuration: ").append(StringUtil.toIndentedString(configuration)).append("\n");
     sb.append("}");
     return sb.toString();
   }

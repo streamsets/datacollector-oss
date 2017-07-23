@@ -50,6 +50,7 @@ import dagger.Provides;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.util.Map;
 
 @Module(injects = {EmailNotifier.class, EmailSender.class, AlertManager.class, Observer.class, RulesConfigLoader.class,
   ThreadHealthReporter.class, DataObserverRunnable.class, RulesConfigLoaderRunnable.class, MetricObserverRunnable.class,
@@ -57,21 +58,29 @@ import javax.inject.Singleton;
   library = true, complete = false, includes = {MetricsModule.class})
 public class PipelineProviderModule {
 
-  private final String name;
+  private final String pipelineId;
   private final String title;
   private final String rev;
   private final boolean statsAggregationEnabled;
+  private final Map<String, Object> resolvedParameters;
 
-  public PipelineProviderModule(String name, String title, String rev, boolean statsAggregationEnabled) {
-    this.name = name;
+  public PipelineProviderModule(
+      String pipelineId,
+      String title,
+      String rev,
+      boolean statsAggregationEnabled,
+      Map<String, Object> resolvedParameters
+  ) {
+    this.pipelineId = pipelineId;
     this.title = title;
     this.rev = rev;
     this.statsAggregationEnabled = statsAggregationEnabled;
+    this.resolvedParameters = resolvedParameters;
   }
 
   @Provides @Named("name")
   public String provideName() {
-    return name;
+    return pipelineId;
   }
 
   @Provides @Named("rev")
@@ -98,7 +107,14 @@ public class PipelineProviderModule {
 
   @Provides @Singleton
   public MetricsObserverRunner provideMetricsObserverRunner(MetricRegistry metricRegistry, AlertManager alertManager) {
-    return new MetricsObserverRunner(name, rev, statsAggregationEnabled, metricRegistry, alertManager);
+    return new MetricsObserverRunner(
+        pipelineId,
+        rev,
+        statsAggregationEnabled,
+        metricRegistry,
+        alertManager,
+        resolvedParameters
+    );
   }
 
   @Provides @Singleton
@@ -107,7 +123,9 @@ public class PipelineProviderModule {
   }
 
   @Provides @Singleton
-  public SourceOffsetTracker provideProductionSourceOffsetTracker(ProductionSourceOffsetTracker productionSourceOffsetTracker) {
+  public SourceOffsetTracker provideProductionSourceOffsetTracker(
+      ProductionSourceOffsetTracker productionSourceOffsetTracker
+  ) {
     return productionSourceOffsetTracker;
   }
 
@@ -123,7 +141,7 @@ public class PipelineProviderModule {
 
   @Provides @Singleton
   public ThreadHealthReporter provideThreadHealthReporter(MetricRegistry metricRegistry) {
-    ThreadHealthReporter threadHealthReporter = new ThreadHealthReporter(name, rev, metricRegistry);
+    ThreadHealthReporter threadHealthReporter = new ThreadHealthReporter(pipelineId, rev, metricRegistry);
     threadHealthReporter.register(RulesConfigLoaderRunnable.RUNNABLE_NAME);
     threadHealthReporter.register(MetricObserverRunnable.RUNNABLE_NAME);
     threadHealthReporter.register(DataObserverRunnable.RUNNABLE_NAME);
@@ -133,23 +151,38 @@ public class PipelineProviderModule {
   }
 
   @Provides @Singleton
-  public RulesConfigLoaderRunnable provideRulesConfigLoaderRunnable(ThreadHealthReporter threadHealthReporter,
-                                                                    RulesConfigLoader rulesConfigLoader,
-                                                                    Observer observer) {
+  public RulesConfigLoaderRunnable provideRulesConfigLoaderRunnable(
+      ThreadHealthReporter threadHealthReporter,
+      RulesConfigLoader rulesConfigLoader,
+      Observer observer
+  ) {
     return new RulesConfigLoaderRunnable(threadHealthReporter, rulesConfigLoader, observer);
   }
 
   @Provides @Singleton
-  public MetricObserverRunnable provideMetricObserverRunnable(ThreadHealthReporter threadHealthReporter,
-                                                              MetricsObserverRunner metricsObserverRunner) {
+  public MetricObserverRunnable provideMetricObserverRunnable(
+      ThreadHealthReporter threadHealthReporter,
+      MetricsObserverRunner metricsObserverRunner
+  ) {
     return new MetricObserverRunnable(threadHealthReporter, metricsObserverRunner);
   }
 
   @Provides @Singleton
-  public DataObserverRunnable provideDataObserverRunnable(ThreadHealthReporter threadHealthReporter,
-                                                          MetricRegistry metricRegistry, AlertManager alertManager,
-                                                          Configuration configuration) {
-    return new DataObserverRunnable(name, rev, threadHealthReporter, metricRegistry, alertManager, configuration);
+  public DataObserverRunnable provideDataObserverRunnable(
+      ThreadHealthReporter threadHealthReporter,
+      MetricRegistry metricRegistry,
+      AlertManager alertManager,
+      Configuration configuration
+  ) {
+    return new DataObserverRunnable(
+        pipelineId,
+        rev,
+        threadHealthReporter,
+        metricRegistry,
+        alertManager,
+        configuration,
+        resolvedParameters
+    );
   }
 
 

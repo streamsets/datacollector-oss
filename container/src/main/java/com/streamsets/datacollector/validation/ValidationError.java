@@ -83,7 +83,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0046("The condition must use the following format: '${value()<operator><number>}'"),
   VALIDATION_0047("The condition '{}' defined for the metric alert is not valid"),
   VALIDATION_0050("The property '{}' must be defined for the metric alert"),
-
+  VALIDATION_0051("Unsupported rule definition schema version '{}'"),
 
   VALIDATION_0060("Define the error record handling for the pipeline"),
   VALIDATION_0061("Define the directory for error record files"),

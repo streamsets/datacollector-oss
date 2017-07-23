@@ -23,15 +23,12 @@ import com.streamsets.datacollector.util.ObserverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 public class MetricRuleEvaluator {
 
   private static final Logger LOG = LoggerFactory.getLogger(MetricRuleEvaluator.class);
 
   private final MetricsRuleDefinition metricsRuleDefinition;
   private final MetricRegistry metrics;
-  private final List<String> emailIds;
   private final RuleDefinitionsConfigBean ruleDefinitionsConfigBean;
   private final AlertManager alertManager;
 
@@ -39,12 +36,10 @@ public class MetricRuleEvaluator {
       MetricsRuleDefinition metricsRuleDefinition,
       MetricRegistry metricRegistry,
       AlertManager alertManager,
-      List<String> emailIds,
       RuleDefinitionsConfigBean ruleDefinitionsConfigBean
   ) {
     this.metricsRuleDefinition = metricsRuleDefinition;
     this.metrics = metricRegistry;
-    this.emailIds = emailIds;
     this.ruleDefinitionsConfigBean = ruleDefinitionsConfigBean;
     this.alertManager = alertManager;
   }
@@ -64,7 +59,7 @@ public class MetricRuleEvaluator {
             metric
           );
           if (MetricRuleEvaluatorHelper.evaluate(value, metricsRuleDefinition.getCondition())) {
-            alertManager.alert(value, emailIds, ruleDefinitionsConfigBean, metricsRuleDefinition);
+            alertManager.alert(value, ruleDefinitionsConfigBean, metricsRuleDefinition);
           }
         } catch (ObserverException e) {
           //A faulty condition should not take down rest of the alerts with it.
