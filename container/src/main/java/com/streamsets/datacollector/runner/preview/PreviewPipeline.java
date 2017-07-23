@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner.preview;
 
+import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StageOutput;
@@ -60,7 +61,7 @@ public class PreviewPipeline {
   }
 
   public void destroy() {
-    pipeline.destroy(true);
+    pipeline.destroy(true, PipelineStopReason.UNKNOWN);
   }
 
 }

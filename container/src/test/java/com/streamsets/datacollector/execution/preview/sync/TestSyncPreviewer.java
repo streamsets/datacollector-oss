@@ -17,7 +17,7 @@ package com.streamsets.datacollector.execution.preview.sync;
 
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.preview.TestPreviewer;
-import com.streamsets.datacollector.execution.preview.sync.SyncPreviewer;
+import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.preview.PreviewPipeline;
 import com.streamsets.datacollector.runner.preview.PreviewPipelineRunner;
@@ -42,7 +42,7 @@ public class TestSyncPreviewer extends TestPreviewer {
     Pipeline pipeline = Mockito.mock(Pipeline.class);
     Mockito.doReturn(Collections.emptyList()).when(pipeline).init(true);
     Mockito.doNothing().when(pipeline).run(Mockito.anyList());
-    Mockito.doNothing().when(pipeline).destroy(true);
+    Mockito.doNothing().when(pipeline).destroy(true, PipelineStopReason.UNKNOWN);
     PreviewPipelineRunner previewPipelineRunner = Mockito.mock(PreviewPipelineRunner.class);
     Mockito.doReturn(null).when(previewPipelineRunner).getMetrics();
     Mockito.doReturn(null).when(previewPipelineRunner).getBatchesOutput();
@@ -51,7 +51,7 @@ public class TestSyncPreviewer extends TestPreviewer {
     Mockito.doReturn(previewPipeline).when(spyPreviewer).buildPreviewPipeline(Mockito.anyInt(), Mockito.anyInt(),
         Mockito.anyString(), Mockito.anyBoolean());
     spyPreviewer.start(1, 1, true, "", null, -1);
-    Mockito.verify(pipeline, Mockito.times(1)).destroy(true);
+    Mockito.verify(pipeline, Mockito.times(1)).destroy(true, PipelineStopReason.UNKNOWN);
     // Check if preview returns non empty issue list
     Mockito.doReturn(Arrays.asList(Mockito.mock(Issue.class))).when(pipeline).init(true);
     try {
@@ -60,6 +60,6 @@ public class TestSyncPreviewer extends TestPreviewer {
       // expected as issues is non empty
     }
     // check that destroy is still called, total times its called should be 2
-    Mockito.verify(pipeline, Mockito.times(2)).destroy(true);
+    Mockito.verify(pipeline, Mockito.times(2)).destroy(true, PipelineStopReason.UNKNOWN);
   }
 }

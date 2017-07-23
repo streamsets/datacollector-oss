@@ -133,7 +133,17 @@ public class ProductionPipeline {
         LOG.debug("Destroying");
 
         try {
-          pipeline.destroy(true);
+          // Determine the reason why we got all the way here
+          PipelineStopReason stopReason;
+          if(errorWhileRunning) {
+            stopReason = PipelineStopReason.FAILURE;
+          } else if(wasStopped()) {
+            stopReason = PipelineStopReason.USER_ACTION;
+          } else {
+            stopReason = PipelineStopReason.FINISHED;
+          }
+          // Destroy the pipeline
+          pipeline.destroy(true, stopReason);
         } catch (Throwable e) {
           LOG.warn("Error while calling destroy: " + e, e);
           throw e;

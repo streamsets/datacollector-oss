@@ -45,6 +45,7 @@ import com.streamsets.datacollector.execution.cluster.ClusterHelper;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.datacollector.execution.runner.RetryUtils;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner;
@@ -662,7 +663,7 @@ public class ClusterRunner extends AbstractRunner {
         throw e;
       }
     } finally {
-      pipeline.destroy(false);
+      pipeline.destroy(false, PipelineStopReason.UNUSED);
     }
     ProtoSource source = p.getPipeline().getSource();
     ClusterSource clusterSource;

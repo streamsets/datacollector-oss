@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner.preview;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -88,7 +89,7 @@ public class TestPreviewRun {
       .build(runner);
     pipeline.init(false);
     pipeline.run();
-    pipeline.destroy(false);
+    pipeline.destroy(false, PipelineStopReason.UNUSED);
     List<StageOutput> output = runner.getBatchesOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
@@ -355,7 +356,7 @@ public class TestPreviewRun {
       .build(runner);
     pipeline.init(false);
     pipeline.run();
-    pipeline.destroy(false);
+    pipeline.destroy(false, PipelineStopReason.UNUSED);
     List<StageOutput> output = runner.getBatchesOutput().get(0);
     Assert.assertEquals(1, output.get(0).getOutput().get("s").get(0).get().getValue());
     Assert.assertEquals(2, output.get(1).getOutput().get("p").get(0).get().getValue());
@@ -376,7 +377,7 @@ public class TestPreviewRun {
 
     pipeline.init(false);
     pipeline.run(Arrays.asList(sourceOutput));
-    pipeline.destroy(false);
+    pipeline.destroy(false, PipelineStopReason.UNUSED);
     output = runner.getBatchesOutput().get(0);
     Assert.assertEquals(10, output.get(0).getOutput().get("s").get(0).get().getValue());
     Assert.assertEquals(20, output.get(1).getOutput().get("p").get(0).get().getValue());

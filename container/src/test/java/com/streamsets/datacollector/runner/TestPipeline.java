@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
@@ -395,7 +396,7 @@ public class TestPipeline {
     Mockito.reset(runner);
     pipeline.run();
 
-    pipeline.destroy(true);
+    pipeline.destroy(true, PipelineStopReason.UNKNOWN);
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
     // We're using the same handler for both start/stop events, hence the destroy should have been called twice
     Mockito.verify(executor, Mockito.times(2)).destroy();
@@ -467,7 +468,7 @@ public class TestPipeline {
                                                      Mockito.any(Processor.Context.class));
     Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                   Mockito.any(Target.Context.class));
-    pipeline.destroy(false);
+    pipeline.destroy(false, PipelineStopReason.UNUSED);
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
 
     // test runtime exception on init
@@ -491,7 +492,7 @@ public class TestPipeline {
     Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class),
                                                   Mockito.any(Target.Context.class));
 
-    pipeline.destroy(false);
+    pipeline.destroy(false, PipelineStopReason.UNUSED);
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
 
     // test exception on destroy
@@ -507,7 +508,7 @@ public class TestPipeline {
     pipeline = builder.build(runner);
 
     pipeline.init(false);
-    pipeline.destroy(false);
+    pipeline.destroy(false, PipelineStopReason.UNUSED);
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
   }
 

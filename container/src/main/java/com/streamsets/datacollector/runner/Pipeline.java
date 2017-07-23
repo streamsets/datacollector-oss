@@ -26,6 +26,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.PipelineStageBeans;
 import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
@@ -202,7 +203,7 @@ public class Pipeline {
       LOG.error("Uncaught error in init: " + throwable, throwable);
       throw Throwables.propagate(throwable);
     } finally {
-      destroy(false);
+      destroy(false, PipelineStopReason.UNUSED);
     }
   }
 
@@ -381,7 +382,7 @@ public class Pipeline {
     runner.errorNotification(originPipe, pipes, throwable);
   }
 
-  public void destroy(boolean productionExecution) {
+  public void destroy(boolean productionExecution, PipelineStopReason stopReason) {
     // TODO: Would it make sense to create a new state STOP_FAILURE or something?
     RuntimeException exception = null;
 
