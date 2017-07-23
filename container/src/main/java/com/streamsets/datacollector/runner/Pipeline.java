@@ -29,6 +29,7 @@ import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
+import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
@@ -39,10 +40,13 @@ import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -51,6 +55,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -249,12 +254,8 @@ public class Pipeline {
       // Run if in production mode
       try {
         if(productionExecution && validationSuccessful) {
-          // Temporary record for now, SDC-6820
           LOG.info("Processing lifecycle start event with stage");
-          runner.runLifecycleEvent(
-            new RecordImpl(startEventStage.getInfo().getInstanceName(), "", null, null),
-            startEventStage
-          );
+          runner.runLifecycleEvent(createStartEvent(), startEventStage);
         }
       } catch (Exception ex) {
         LOG.warn(ContainerError.CONTAINER_0791.getMessage(), ex.toString(), ex);
@@ -950,6 +951,39 @@ public class Pipeline {
       runner.getClass().getSimpleName(),
       observerName
     );
+  }
+
+  /**
+   * Create pipeline start event.
+   */
+  private Record createStartEvent() {
+    Preconditions.checkState(startEventStage != null, "Start Event Stage is not set!");
+    EventRecord eventRecord = new EventRecordImpl(
+      "pipeline-start",
+      1,
+      startEventStage.getInfo().getInstanceName(),
+      "",
+      null,
+      null
+    );
+
+    Map<String, Field> rootField = new LinkedHashMap<>();
+    rootField.put("user", Field.create(Field.Type.STRING, userContext.getUser()));
+
+    // Pipeline parameters
+    Map<String, Field> parameters = new LinkedHashMap<>();
+    if(runtimeParameters != null) {
+      for (Map.Entry<String, Object> entry : runtimeParameters.entrySet()) {
+        parameters.put(
+          entry.getKey(),
+          Field.create(Field.Type.STRING, entry.getValue().toString())
+        );
+      }
+    }
+    rootField.put("parameters", Field.create(parameters));
+
+    eventRecord.set(Field.create(rootField));
+    return eventRecord;
   }
 
 }
