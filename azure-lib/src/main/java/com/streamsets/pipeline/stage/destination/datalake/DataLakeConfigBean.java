@@ -41,13 +41,13 @@ public class DataLakeConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "Client ID",
-      description = "Azure Client ID.",
+      label = "Application ID",
+      description = "Azure Application ID.",
       displayPosition = 10,
       elDefs = VaultEL.class,
       group = "#0"
   )
-  public String clientId;
+  public String applicationId;
 
   @ConfigDef(
       required = true,
@@ -77,13 +77,13 @@ public class DataLakeConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "Client Key",
-      description = "Azure Client Key.",
+      label = "Application Key",
+      description = "Azure Application Key.",
       displayPosition = 40,
       elDefs = VaultEL.class,
       group = "#0"
   )
-  public String clientKey;
+  public String applicationKey;
 
   @ConfigDef(
       required = false,
