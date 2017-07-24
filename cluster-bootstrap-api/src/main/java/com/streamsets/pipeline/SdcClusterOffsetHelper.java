@@ -22,6 +22,7 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.DataInput;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -139,7 +140,10 @@ public final class SdcClusterOffsetHelper {
     if (!fs.exists(checkPointFilePath)) {
       throw new IOException(Utils.format("Checkpoint file path {} does not exist", checkPointFilePath));
     }
-    ClusterSourceOffsetJson clusterSourceOffsetJson = OBJECT_MAPPER.readValue(fs.open(checkPointFilePath), ClusterSourceOffsetJson.class);
+    ClusterSourceOffsetJson clusterSourceOffsetJson = OBJECT_MAPPER.readValue(
+        (DataInput) fs.open(checkPointFilePath),
+        ClusterSourceOffsetJson.class
+    );
     String lastSourceOffset = clusterSourceOffsetJson.getOffset();
     if (!StringUtils.isEmpty(lastSourceOffset)) {
       return deserializeKafkaPartitionOffset(lastSourceOffset, numberOfPartitions);

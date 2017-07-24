@@ -69,7 +69,7 @@
     <dagger.version>1.2.2</dagger.version>
     <google.http.version>1.22.0</google.http.version>
     <guava.version>18.0</guava.version>
-    <hk2-api.version>2.4.0-b34</hk2-api.version>
+    <hk2-api.version>2.5.0-b32</hk2-api.version>
     <httpclient.version>4.5.2</httpclient.version>
     <icegreen.version>1.4.0</icegreen.version>
     <javassist.version>3.19.0-GA</javassist.version>
@@ -86,7 +86,7 @@
     <mockserver.version>3.10.4</mockserver.version>
     <selma.version>0.13</selma.version>
     <servlet.version>3.1.0</servlet.version>
-    <swagger.version>1.5.3</swagger.version>
+    <swagger.version>1.5.16</swagger.version>
   </properties>
 
   <dependencyManagement>

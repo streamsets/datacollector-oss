@@ -35,8 +35,6 @@
   <properties>
     <jaxrpc.version>2.0.1</jaxrpc.version>
     <javax.inject.version>1</javax.inject.version>
-    <hk2-api.version>2.4.0-b34</hk2-api.version>
-    <jersey.version>2.22.2</jersey.version>
   </properties>
 
   <dependencies>

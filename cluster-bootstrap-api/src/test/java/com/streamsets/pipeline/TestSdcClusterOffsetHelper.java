@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.DataInput;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -85,7 +86,10 @@ public class TestSdcClusterOffsetHelper {
 
     Assert.assertTrue(fs.exists(checkpointFilePath));
 
-    ClusterSourceOffsetJson clusterSourceOffsetJson = OBJECT_MAPPER.readValue(fs.open(checkpointFilePath), ClusterSourceOffsetJson.class);
+    ClusterSourceOffsetJson clusterSourceOffsetJson = OBJECT_MAPPER.readValue(
+        (DataInput) fs.open(checkpointFilePath),
+        ClusterSourceOffsetJson.class
+    );
     Assert.assertEquals("1", clusterSourceOffsetJson.getVersion());
     Assert.assertEquals(OBJECT_MAPPER.writeValueAsString(ImmutableMap.of(0, 1L, 1, 2L)), clusterSourceOffsetJson.getOffset());
   }
@@ -149,7 +153,10 @@ public class TestSdcClusterOffsetHelper {
     Assert.assertEquals(2L, readOffsetsFromBackupOffsetFile.get(1).longValue());
 
     //Now also check the main offset file is updated with right offset after we recovered reading the offsets from backup file
-    ClusterSourceOffsetJson clusterSourceOffsetJson = OBJECT_MAPPER.readValue(fs.open(checkpointFilePath), ClusterSourceOffsetJson.class);
+    ClusterSourceOffsetJson clusterSourceOffsetJson = OBJECT_MAPPER.readValue(
+        (DataInput) fs.open(checkpointFilePath),
+        ClusterSourceOffsetJson.class
+    );
     Assert.assertEquals("1", clusterSourceOffsetJson.getVersion());
     Assert.assertEquals(OBJECT_MAPPER.writeValueAsString(ImmutableMap.of(0, 1L, 1, 2L)), clusterSourceOffsetJson.getOffset());
   }

@@ -119,8 +119,10 @@ public class JsonObjectReaderImpl implements JsonObjectReader {
 
   @Override
   public long getReaderPosition() {
-    return (mode == Mode.ARRAY_OBJECTS) ? jsonParser.getTokenLocation().getCharOffset() : jsonParser.getTokenLocation()
-        .getCharOffset() + posCorrection;
+    // Jackson 2.7+ will now return -1 for token location if nextToken has not yet been called rather than 0
+    // This change broke our usage and so taking the max will return the value we expect.
+    return (mode == Mode.ARRAY_OBJECTS) ? Math.max(jsonParser.getTokenLocation().getCharOffset(), 0)
+        : Math.max(jsonParser.getTokenLocation().getCharOffset(), 0) + posCorrection;
   }
 
   @Override
@@ -175,10 +177,8 @@ public class JsonObjectReaderImpl implements JsonObjectReader {
       }
     }
     JsonToken token = jsonParser.nextToken();
-    if (token != null) {
-      if (token != JsonToken.END_ARRAY) {
-        value = jsonParser.readValueAs(Object.class);
-      }
+    if (token != null && token != JsonToken.END_ARRAY) {
+      value = jsonParser.readValueAs(Object.class);
     }
     return value;
   }
