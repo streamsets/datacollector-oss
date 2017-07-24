@@ -27,17 +27,21 @@ angular
     var getIssues = function(config, issues, instanceName, configDefinition) {
       if (instanceName && issues.stageIssues && issues.stageIssues[instanceName]) {
         issues = issues.stageIssues[instanceName];
-      } else if (config.errorStage && issues.stageIssues && issues.stageIssues[config.errorStage.instanceName] &&
-        instanceName) {
+      } else if (config.errorStage && issues.stageIssues && instanceName &&
+        issues.stageIssues[config.errorStage.instanceName] &&
+        issues.stageIssues[config.errorStage.instanceName] == instanceName) {
         issues = issues.stageIssues[config.errorStage.instanceName];
-      } else if (config.statsAggregatorStage && issues.stageIssues &&
-        issues.stageIssues[config.statsAggregatorStage.instanceName] && instanceName) {
+      } else if (config.statsAggregatorStage && issues.stageIssues && instanceName &&
+        issues.stageIssues[config.statsAggregatorStage.instanceName] &&
+        issues.stageIssues[config.statsAggregatorStage.instanceName] == instanceName) {
         issues = issues.stageIssues[config.statsAggregatorStage.instanceName];
-      } else if (config.startEventStages[0] && issues.stageIssues &&
-        issues.stageIssues[config.startEventStages[0].instanceName] && instanceName) {
+      } else if (config.startEventStages[0] && issues.stageIssues && instanceName &&
+        issues.stageIssues[config.startEventStages[0].instanceName] &&
+        issues.stageIssues[config.startEventStages[0].instanceName] == instanceName) {
         issues = issues.stageIssues[config.startEventStages[0].instanceName];
-      } else if (config.stopEventStages[0] && issues.stageIssues &&
-        issues.stageIssues[config.stopEventStages[0].instanceName] && instanceName) {
+      } else if (config.stopEventStages[0] && issues.stageIssues && instanceName &&
+        issues.stageIssues[config.stopEventStages[0].instanceName] &&
+        issues.stageIssues[config.stopEventStages[0].instanceName] == instanceName) {
         issues = issues.stageIssues[config.stopEventStages[0].instanceName];
       } else if (issues.pipelineIssues){
         issues = issues.pipelineIssues;
