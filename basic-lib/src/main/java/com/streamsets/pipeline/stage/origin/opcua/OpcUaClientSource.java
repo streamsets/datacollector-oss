@@ -30,6 +30,7 @@ import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
 import org.eclipse.milo.opcua.stack.client.UaTcpStackClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
+import org.eclipse.milo.opcua.stack.core.StatusCodes;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ByteString;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
@@ -75,6 +76,13 @@ import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 public class OpcUaClientSource implements PushSource {
 
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaClientSource.class);
+  private static final String SOURCE_TIME_FIELD_NAME = "sourceTime";
+  private static final String SOURCE_PICO_SECONDS_FIELD_NAME = "sourcePicoSeconds";
+  private static final String SERVER_TIME_FIELD_NAME = "serverTime";
+  private static final String SERVER_PICO_SECONDS_FIELD_NAME = "serverPicoSeconds";
+  private static final String STATUS_CODE_FIELD_NAME = "statusCode";
+  private static final String STATUS_CODE_STR_FIELD_NAME = "statusCodeStr";
+  private static final String VALUE_FIELD_NAME = "value";
   private final OpcUaClientSourceConfigBean conf;
   private Context context;
   private AtomicLong counter = new AtomicLong();
@@ -536,7 +544,44 @@ public class OpcUaClientSource implements PushSource {
           }
       }
 
-      record.set(fieldName, Field.create(fieldType, value));
+      LinkedHashMap<String, Field> valueMap = new LinkedHashMap<>();
+
+      if (dataValue.getSourceTime() != null) {
+        valueMap.put(SOURCE_TIME_FIELD_NAME, Field.createDatetime(dataValue.getSourceTime().getJavaDate()));
+      } else {
+        valueMap.put(SOURCE_TIME_FIELD_NAME, Field.create(Field.Type.LONG, null));
+      }
+
+      if (dataValue.getSourcePicoseconds() != null) {
+        valueMap.put(SOURCE_PICO_SECONDS_FIELD_NAME, Field.create(dataValue.getSourcePicoseconds().longValue()));
+      } else {
+        valueMap.put(SOURCE_PICO_SECONDS_FIELD_NAME, Field.create(Field.Type.LONG, 0));
+      }
+
+      if (dataValue.getServerTime() != null) {
+        valueMap.put(SERVER_TIME_FIELD_NAME, Field.createDatetime(dataValue.getServerTime().getJavaDate()));
+      } else {
+        valueMap.put(SERVER_TIME_FIELD_NAME, Field.create(Field.Type.LONG, null));
+      }
+
+      if (dataValue.getServerPicoseconds() != null) {
+        valueMap.put(SERVER_PICO_SECONDS_FIELD_NAME, Field.create(dataValue.getServerPicoseconds().longValue()));
+      } else {
+        valueMap.put(SERVER_PICO_SECONDS_FIELD_NAME, Field.create(Field.Type.LONG, 0));
+      }
+
+      if (dataValue.getStatusCode() != null) {
+        valueMap.put(STATUS_CODE_FIELD_NAME, Field.create(dataValue.getStatusCode().getValue()));
+        StatusCodes.lookup(dataValue.getStatusCode().getValue()).ifPresent(
+            nameAndDesc -> valueMap.put(STATUS_CODE_STR_FIELD_NAME, Field.create(nameAndDesc[0])));
+      } else {
+        valueMap.put(STATUS_CODE_FIELD_NAME, Field.create(Field.Type.LONG, null));
+        valueMap.put(STATUS_CODE_STR_FIELD_NAME, Field.create(Field.Type.STRING, null));
+      }
+
+      valueMap.put(VALUE_FIELD_NAME, Field.create(fieldType, value));
+      record.set(fieldName, Field.createListMap(valueMap));
+
     });
 
     batchContext.getBatchMaker().addRecord(record);
