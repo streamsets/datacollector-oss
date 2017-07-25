@@ -20,11 +20,15 @@
 <concept id="concept_pvx_wxp_xz">
  <title>Step 2. Run the Command to Set Up MapR</title>
  <shortdesc>After installing the required client libraries, run the <codeph>setup-mapr</codeph>
-        command. The command modifies configuration files and creates the required symbolic links.
-        You can run the command in interactive or non-interactive mode. </shortdesc>
+        command. The command modifies configuration files, creates the required symbolic links, and
+        installs the appropriate MapR stage libraries. You can run the command in interactive or
+        non-interactive mode. </shortdesc>
     <conbody>
         <p> In interactive mode, the command prompts you for the MapR version and home directory. In
             non-interactive mode, you define the MapR version and home directory in environment
             variables before running the command. </p>
+        <p>In either mode, the command checks if the MapR distribution of Spark is installed in the
+            specified MapR cluster. If a supported version is installed, the command also installs
+            the MapR Spark stage library for you.</p>
     </conbody>
 </concept>

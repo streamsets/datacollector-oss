@@ -23,7 +23,10 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. As a
         result, you must perform additional steps to enable the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        machine to connect to MapR.</shortdesc>
+        machine to connect to MapR. <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> does
+        not display MapR origins and destinations in the stage library until you perform these
+        prerequisites.</shortdesc>
  <conbody>
         <p><indexterm>MapR<indexterm>prerequisites</indexterm></indexterm>MapR prerequisites include
             installing the required client libraries and then running the command to set up MapR. </p>
