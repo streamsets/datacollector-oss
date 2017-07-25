@@ -37,6 +37,8 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum Errors implements ErrorCode {
   PUBSUB_01("Credentials file '{}' not found"),
   PUBSUB_02("Error reading credentials file"),
+  PUBSUB_03("Supplied credentials do not have permission to access the specified subscription."),
+  PUBSUB_04("Error validating permissions: '{}'"),
   ;
 
   private final String msg;

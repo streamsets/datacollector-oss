@@ -16,10 +16,53 @@
 
 package com.streamsets.pipeline.stage.pubsub.origin;
 
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.lib.GoogleCloudCredentialsConfig;
+import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
+import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 public class PubSubConfig {
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Data Format",
+      description = "Format of data in the topic",
+      displayPosition = 1,
+      group = "DATA_FORMAT"
+  )
+  @ValueChooserModel(DataFormatChooserValues.class)
+  public DataFormat dataFormat;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Subscription ID",
+      displayPosition = 10,
+      group = "PUBSUB"
+  )
+  public String subscriptionId;
+
+  @ConfigDefBean(groups = "PUBSUB")
+  public BasicConfig basic = new BasicConfig();
+
+  @ConfigDefBean
+  public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "${runtime:availableProcessors()}",
+      label = "Max Threads",
+      description = "Maximum number of subscriber threads to run in parallel.",
+      displayPosition = 80,
+      group = "#0",
+      min = 1,
+      max = Integer.MAX_VALUE
+  )
+  public int maxThreads;
 
   @ConfigDefBean(groups = "CREDENTIALS")
   public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();

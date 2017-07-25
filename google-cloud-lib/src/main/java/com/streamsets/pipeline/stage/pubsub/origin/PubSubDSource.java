@@ -22,11 +22,11 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DPushSource;
-import com.streamsets.pipeline.stage.bigquery.lib.Groups;
+import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 
 @StageDef(
     version = 1,
-    label = "Google PubSub Subscriber",
+    label = "Google PubSub",
     description = "",
     icon="pubsub.png",
     execution = ExecutionMode.STANDALONE,

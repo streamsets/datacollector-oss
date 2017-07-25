@@ -37,8 +37,9 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  PUBSUB("BigQuery"),
+  PUBSUB("Pub/Sub"),
   CREDENTIALS("Credentials"),
+  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;
