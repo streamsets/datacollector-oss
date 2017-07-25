@@ -952,6 +952,25 @@ angular
       });
     };
 
+    /**
+     * Group config definitions together based on the display group
+     *
+     * @param stageDefinition Definition of the stage itself
+     */
+    var getGroupConfigDefinitions = function(stageDefinition) {
+      if(!stageDefinition) {
+        return undefined;
+      }
+
+      return stageDefinition.configGroupDefinition.groupNameToLabelMapList.map(function(group) {
+        return {
+          'group' : group,
+          'configDefinitions': _.filter(stageDefinition.configDefinitions, function(configDefinition) {
+            return configDefinition.group == group.name;
+          })
+        };
+      });
+    };
 
     /**
      * Revert the changes.
@@ -1280,9 +1299,11 @@ angular
               stageLibrary.name === startEventStage.stageName &&
               stageLibrary.version === startEventStage.stageVersion;
           });
+          $scope.startEventStageConfigDefnGroups = getGroupConfigDefinitions($scope.startEventStageConfigDefn);
         } else {
           $scope.startEventStageConfig = undefined;
           $scope.startEventStageConfigDefn = undefined;
+          $scope.startEventStageConfigDefnGroups = undefined;
         }
 
         var stopEventStage = $scope.pipelineConfig.stopEventStages[0];
@@ -1293,9 +1314,11 @@ angular
               stageLibrary.name === stopEventStage.stageName &&
               stageLibrary.version === stopEventStage.stageVersion;
           });
+          $scope.stopEventStageConfigDefnGroups = getGroupConfigDefinitions($scope.stopEventStageConfigDefn);
         } else {
           $scope.stopEventStageConfig = undefined;
           $scope.stopEventStageConfigDefn = undefined;
+          $scope.stopEventStageConfigDefnGroups = undefined;
         }
       }
 
@@ -1366,6 +1389,8 @@ angular
       $scope.startEventStageConfigDefn = undefined;
       $scope.stopEventStageConfig = undefined;
       $scope.stopEventStageConfigDefn = undefined;
+      $scope.stopEventStageConfigDefnGroups = undefined;
+      $scope.startEventStageConfigDefnGroups = undefined;
 
       if (options.configName) {
         $scope.$storage.maximizeDetailPane = false;
@@ -1443,6 +1468,7 @@ angular
               stageLibrary.name === startEventStage.stageName &&
               stageLibrary.version === startEventStage.stageVersion;
           });
+          $scope.startEventStageConfigDefnGroups = getGroupConfigDefinitions($scope.startEventStageConfigDefn);
         }
 
         if (stopEventStage && stopEventStage.configuration && stopEventStage.configuration.length) {
@@ -1452,6 +1478,7 @@ angular
               stageLibrary.name === stopEventStage.stageName &&
               stageLibrary.version === stopEventStage.stageVersion;
           });
+          $scope.stopEventStageConfigDefnGroups = getGroupConfigDefinitions($scope.stopEventStageConfigDefn);
         }
 
         if (!options.detailTabName) {

@@ -132,14 +132,19 @@
         <form class="form-horizontal" role="form"
               ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
               name="badRecordsForm">
-          <div class="form-group"
-               ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
-               ng-repeat="configDefinition in startEventStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
-               ng-if="(verifyDependsOnMap(startEventStageConfig, configDefinition))"
-               ng-init="configIndex = getConfigIndex(startEventStageConfig, configDefinition);">
 
-            <ng-include ng-if="selectedType !== pipelineConstant.LINK"
-                        src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
+          <div ng-repeat="configurationGroup in startEventStageConfigDefnGroups">
+            <h3 ng-if="isGroupVisible(detailPaneConfig, configurationGroup.configDefinitions, configurationGroup.group.name)">{{configurationGroup.group.label}}</h3>
+
+            <div class="form-group"
+                 ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
+                 ng-repeat="configDefinition in configurationGroup.configDefinitions | orderBy: 'displayPosition'"
+                 ng-if="(verifyDependsOnMap(startEventStageConfig, configDefinition))"
+                 ng-init="configIndex = getConfigIndex(startEventStageConfig, configDefinition);">
+
+              <ng-include ng-if="selectedType !== pipelineConstant.LINK"
+                          src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
+            </div>
           </div>
         </form>
 
@@ -172,14 +177,19 @@
         <form class="form-horizontal" role="form"
               ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
               name="badRecordsForm">
-          <div class="form-group"
-               ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
-               ng-repeat="configDefinition in stopEventStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
-               ng-if="(verifyDependsOnMap(stopEventStageConfig, configDefinition))"
-               ng-init="configIndex = getConfigIndex(stopEventStageConfig, configDefinition);">
 
-            <ng-include ng-if="selectedType !== pipelineConstant.LINK"
-                        src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
+          <div ng-repeat="configurationGroup in stopEventStageConfigDefnGroups">
+            <h3 ng-if="isGroupVisible(detailPaneConfig, configurationGroup.configDefinitions, configurationGroup.group.name)">{{configurationGroup.group.label}}</h3>
+
+            <div class="form-group"
+                 ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
+                 ng-repeat="configDefinition in configurationGroup.configDefinitions | orderBy: 'displayPosition'"
+                 ng-if="(verifyDependsOnMap(stopEventStageConfig, configDefinition))"
+                 ng-init="configIndex = getConfigIndex(stopEventStageConfig, configDefinition);">
+
+              <ng-include ng-if="selectedType !== pipelineConstant.LINK"
+                          src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
+            </div>
           </div>
         </form>
 
