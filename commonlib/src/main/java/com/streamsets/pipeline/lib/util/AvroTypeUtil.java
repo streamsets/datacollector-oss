@@ -139,8 +139,16 @@ public class AvroTypeUtil {
 
   private static Field avroToSdcField(Record record, String fieldPath, Schema schema, Object value) {
     if(schema.getType() == Schema.Type.UNION) {
+      List<Schema> unionTypes = schema.getTypes();
+
+      // Special case for unions of [null, actual type]
+      if(unionTypes.size() == 2 && unionTypes.get(0).getType() == Schema.Type.NULL && value == null) {
+        return Field.create(getFieldType(unionTypes.get(1).getType()), null);
+      }
+
+      // By default try to resolve index of the union bby the data itself
       int typeIndex = GenericData.get().resolveUnion(schema, value);
-      schema = schema.getTypes().get(typeIndex);
+      schema = unionTypes.get(typeIndex);
       record.getHeader().setAttribute(AVRO_UNION_TYPE_INDEX_PREFIX + fieldPath, String.valueOf(typeIndex));
     }
     if(value == null) {
