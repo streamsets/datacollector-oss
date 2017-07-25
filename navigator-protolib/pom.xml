@@ -33,23 +33,42 @@
   <name>StreamSets Data Collector Navigator ProtoLib</name>
   <packaging>jar</packaging>
 
+
   <properties>
+    <guava.version>14.0.1</guava.version>
+    <navigator.version>1.1</navigator.version>
+    <commons-lang3.version>3.4</commons-lang3.version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdk</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>provided</scope>
     </dependency>
 
-    <!-- Test dependencies -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
+      <groupId>com.cloudera.navigator</groupId>
+      <artifactId>navigator-sdk-client</artifactId>
+      <version>${navigator.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
