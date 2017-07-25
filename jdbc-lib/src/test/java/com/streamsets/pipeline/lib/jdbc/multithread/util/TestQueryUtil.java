@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.util;
+
+package com.streamsets.pipeline.lib.jdbc.multithread.util;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,18 +29,19 @@ import java.util.Map;
 public class TestQueryUtil {
   private final int maxBatchSize = 1;
   private final String tableName = "dbo.test";
-  private final List<String> offsetColumns = ImmutableList.of(QueryUtil.SYS_CHANGE_VERSION, "pk1", "pk2");
+  private final List<String> offsetColumns = ImmutableList.of(MSQueryUtil.SYS_CHANGE_VERSION, "pk1", "pk2");
 
   @Test
   public void testInitialQuery() throws Exception {
     Map<String, String> offsetMap = new HashMap<>();
-    offsetMap.put(QueryUtil.SYS_CHANGE_VERSION, "0");
+    offsetMap.put(MSQueryUtil.SYS_CHANGE_VERSION, "0");
     final boolean includeJoin = true;
-    String query = QueryUtil.buildQuery(offsetMap, maxBatchSize, tableName, offsetColumns, offsetMap, includeJoin);
 
-    String expected = "SELECT TOP 1 * \nFROM " + tableName + " AS " + QueryUtil.TABLE_NAME +
+    String query = MSQueryUtil.buildQuery(offsetMap, maxBatchSize, tableName, offsetColumns, offsetMap, includeJoin);
+
+    String expected = "SELECT TOP 1 * \nFROM " + tableName + " AS " + MSQueryUtil.TABLE_NAME +
         "\nRIGHT OUTER JOIN CHANGETABLE(CHANGES " + tableName + ", @synchronization_version) AS " +
-        QueryUtil.CT_TABLE_NAME;
+        MSQueryUtil.CT_TABLE_NAME;
 
     Assert.assertTrue(StringUtils.contains(query, expected));
   }

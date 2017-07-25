@@ -84,8 +84,22 @@ public class JdbcRunnableBuilder {
 
   public JdbcBaseRunnable build() {
     final String SQLServerCT = "SQLServerChangeTrackingClient";
+    final String SQLServerCDC = "SQLServerCDCClient";
+
     if (context.getStageInfo().getInstanceName().startsWith(SQLServerCT)) {
       return new CTJdbcRunnable(
+          context,
+          threadNumber,
+          batchSize,
+          offsets,
+          tableProvider,
+          connectionManager,
+          tableJdbcConfigBean,
+          commonSourceConfigBean,
+          tableReadContextCache
+      );
+    } else if (context.getStageInfo().getInstanceName().startsWith(SQLServerCDC)) {
+      return new CDCJdbcRunnable(
           context,
           threadNumber,
           batchSize,

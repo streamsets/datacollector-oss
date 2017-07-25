@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
@@ -27,10 +28,11 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.CTTableConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.util.QueryUtil;
-import com.streamsets.pipeline.stage.origin.jdbc.table.Groups;
-import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
+import com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.Groups;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.CDCTableConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
+import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcELEvalContext;
@@ -571,28 +573,61 @@ public final class TableContextUtil {
     return tableContextMap;
   }
 
-  private static long getCurrentVersion(Connection connection) throws SQLException, StageException {
-    try (PreparedStatement preparedStatement = connection.prepareStatement(QueryUtil.getCurrentVersion());
-         ResultSet resultSet = preparedStatement.executeQuery()) {
-      while (resultSet.next()) {
-        return resultSet.getLong(1);
-      }
+  public static Map<String, TableContext> listCDCTablesForConfig(
+      Connection connection,
+      CDCTableConfigBean tableConfigBean
+  ) throws SQLException, StageException {
+    Map<String, TableContext> tableContextMap = new LinkedHashMap<>();
+    Pattern p =
+        StringUtils.isEmpty(tableConfigBean.tableExclusionPattern)?
+            null : Pattern.compile(tableConfigBean.tableExclusionPattern);
 
-      throw new StageException(JdbcErrors.JDBC_201, -1);
+
+
+    // CDC table name convention
+    final String tablePattern = tableConfigBean.schema + "_" + tableConfigBean.tablePattern + "_CT";
+    final String cdcSchema = "cdc";
+    try (ResultSet rs
+             = JdbcUtil.getTableMetadata(connection, null, cdcSchema, tablePattern)) {
+      while (rs.next()) {
+        String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
+        String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
+        if (p == null || !p.matcher(tableName).matches()) {
+          // validate table is change tracking enabled
+          try {
+              tableContextMap.put(
+                  getQualifiedTableName(schemaName, tableName),
+                  createCDCTableContext(schemaName, tableName, tableConfigBean.initialOffset)
+              );
+
+          } catch (SQLException | StageException e) {
+            LOG.error(JdbcErrors.JDBC_200.getMessage(), schemaName + "." + tableName, e);
+          }
+        }
+      }
     }
 
+    return tableContextMap;
+  }
+
+  private static long getCurrentVersion(Connection connection) throws SQLException, StageException {
+    PreparedStatement preparedStatement = connection.prepareStatement(MSQueryUtil.getCurrentVersion());
+    ResultSet resultSet = preparedStatement.executeQuery();
+    while (resultSet.next()) {
+      return resultSet.getLong(1);
+    }
+
+    throw new StageException(JdbcErrors.JDBC_201, -1);
   }
 
   private static long validateTable(Connection connection, String table) throws SQLException, StageException {
-    try (PreparedStatement validation = connection.prepareStatement(String.format(QueryUtil.getMinVersion(), table));
-         ResultSet resultSet = validation.executeQuery()) {
-      if (resultSet.next()) {
-        return resultSet.getLong("min_valid_version");
-      }
-
-      throw new StageException(JdbcErrors.JDBC_200, table);
+    PreparedStatement validation = connection.prepareStatement(String.format(MSQueryUtil.getMinVersion(), table));
+    ResultSet resultSet = validation.executeQuery();
+    if (resultSet.next()) {
+      return resultSet.getLong("min_valid_version");
     }
 
+    throw new StageException(JdbcErrors.JDBC_200, table);
   }
 
   private static TableContext createCTTableContext(
@@ -613,14 +648,48 @@ public final class TableContextUtil {
     }
     primaryKeys.forEach(primaryKey -> offsetColumnToType.put(primaryKey, columnNameToType.get(primaryKey)));
 
-    offsetColumnToType.put(QueryUtil.SYS_CHANGE_VERSION, QueryUtil.SYS_CHANGE_VERSION_TYPE);
+    offsetColumnToType.put(MSQueryUtil.SYS_CHANGE_VERSION, MSQueryUtil.SYS_CHANGE_VERSION_TYPE);
 
     long initalSyncVersion = tableConfigBean.initialOffset;
 
     if (tableConfigBean.initialOffset < 0) {
       initalSyncVersion = currentSyncVersion;
     }
-    offsetColumnToStartOffset.put(QueryUtil.SYS_CHANGE_VERSION, Long.toString(initalSyncVersion));
+    offsetColumnToStartOffset.put(MSQueryUtil.SYS_CHANGE_VERSION, Long.toString(initalSyncVersion));
+
+    final Map<String, String> offsetAdjustments = new HashMap<>();
+    final Map<String, String> offsetColumnMinValues = new HashMap<>();
+    final PartitioningMode partitioningMode = TableConfigBean.PARTITIONING_MODE_DEFAULT_VALUE;
+    final int maxNumActivePartitions = 0;
+    final String extraOffsetColumnConditions = "";
+
+    return new TableContext(
+        schemaName,
+        tableName,
+        offsetColumnToType,
+        offsetColumnToStartOffset,
+        offsetAdjustments,
+        offsetColumnMinValues,
+        partitioningMode,
+        maxNumActivePartitions,
+        extraOffsetColumnConditions
+    );
+  }
+
+  private static TableContext createCDCTableContext(
+      String schemaName,
+      String tableName,
+      String initalOffset
+  ) throws SQLException, StageException {
+    LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
+    Map<String, String> offsetColumnToStartOffset = new HashMap<>();
+
+    if (!Strings.isNullOrEmpty(initalOffset)) {
+      offsetColumnToStartOffset.put(MSQueryUtil.CDC_START_LSN, initalOffset);
+    }
+
+    offsetColumnToType.put(MSQueryUtil.CDC_START_LSN, Types.VARBINARY);
+    offsetColumnToType.put(MSQueryUtil.CDC_SEQVAL, Types.VARBINARY);
 
     final Map<String, String> offsetAdjustments = new HashMap<>();
     final Map<String, String> offsetColumnMinValues = new HashMap<>();

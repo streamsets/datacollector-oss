@@ -20,8 +20,8 @@ import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
-import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.sql.Connection;
@@ -29,22 +29,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SQLServerCTContextLoader extends CacheLoader<TableRuntimeContext, TableReadContext>{
+public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, TableReadContext> {
   private final ConnectionManager connectionManager;
   private final Map<String, String> offsets;
   private final int fetchSize;
-  private final boolean includeJoin;
 
-  public SQLServerCTContextLoader(
+  public SQLServerCDCContextLoader(
       ConnectionManager connectionManager,
       Map<String, String> offsets,
-      int fetchSize,
-      boolean includeJoin
+      int fetchSize
   ) {
     this.connectionManager = connectionManager;
     this.offsets = offsets;
     this.fetchSize = fetchSize;
-    this.includeJoin = includeJoin;
   }
 
   @Override
@@ -53,14 +50,7 @@ public class SQLServerCTContextLoader extends CacheLoader<TableRuntimeContext, T
 
     final Map<String, String> offset = OffsetQueryUtil.getColumnsToOffsetMapFromOffsetFormat(offsets.get(tableRuntimeContext.getOffsetKey()));
 
-    String query = MSQueryUtil.buildQuery(
-        offset,
-        fetchSize,
-        tableContext.getQualifiedName(),
-        tableContext.getOffsetColumns(),
-        tableContext.getOffsetColumnToStartOffset(),
-        includeJoin
-    );
+    String query = MSQueryUtil.buildCDCQuery(offset, fetchSize, tableContext.getQualifiedName(), tableContext.getOffsetColumnToStartOffset());
 
     Pair<String, List<Pair<Integer, String>>> queryAndParamValToSet = Pair.of(query, new ArrayList<>());
 
@@ -73,6 +63,9 @@ public class SQLServerCTContextLoader extends CacheLoader<TableRuntimeContext, T
             queryAndParamValToSet.getRight(),
             fetchSize
         );
+
+    // update last offset
+    tableContext.clearStartOffset();
 
     return tableReadContext;
   }

@@ -80,7 +80,7 @@ public class MSOperationCode {
    * @param op Numeric operation code in String
    * @return Operation code in int, -1 if invalid number
    */
-  static int convertToJDBCCode(int op)  {
+  public static int convertToJDBCCode(int op)  {
     if (CRUD_MAP.containsKey(op)){
       return CRUD_MAP.get(op);
     }
