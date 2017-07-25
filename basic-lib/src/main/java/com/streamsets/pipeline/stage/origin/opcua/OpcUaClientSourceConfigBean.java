@@ -16,8 +16,10 @@
 package com.streamsets.pipeline.stage.origin.opcua;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
 import java.util.List;
 
@@ -92,6 +94,32 @@ public class OpcUaClientSourceConfigBean {
       triggeredByValue = "POLLING"
   )
   public long pollingInterval = 5000;
+
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Security Policy",
+      defaultValue = "NONE",
+      displayPosition = 70,
+      group = "SECURITY"
+  )
+  @ValueChooserModel(SecurityPolicyChooserValues.class)
+  public SecurityPolicyValues securityPolicy = SecurityPolicyValues.NONE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Client Private Key Alias",
+      defaultValue = "client-ai",
+      description = "An alias is specified when you add an entity to the keystore using the -genseckey command to generate a secret key, -genkeypair command to generate a key pair (public and private key).",
+      displayPosition = 80,
+      group = "SECURITY"
+  )
+  public String clientKeyAlias = "client-ai";
+
+  @ConfigDefBean(groups = "SECURITY")
+  public TlsConfigBean tlsConfig = new TlsConfigBean();
 
   @ConfigDef(
       label = "",

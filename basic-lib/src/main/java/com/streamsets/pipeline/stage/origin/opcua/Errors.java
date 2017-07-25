@@ -24,7 +24,8 @@ public enum Errors implements ErrorCode {
   OPC_UA_02("Failed to connect : {}"),
   OPC_UA_03("Field cannot be empty"),
   OPC_UA_04("Failed to initialize Node IDs : {}"),
-  OPC_UA_05("Failed to create Monitoring item for nodeId={} (status={})")
+  OPC_UA_05("Failed to create Monitoring item for nodeId={} (status={})"),
+  OPC_UA_06("Enable TLS for security policy: {}"),
   ;
 
   private final String msg;

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,24 +15,10 @@
  */
 package com.streamsets.pipeline.stage.origin.opcua;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  OPC_UA("OPC UA"),
-  NODE_IDS("Node IDs"),
-  SECURITY("Security")
-  ;
-
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+public class SecurityPolicyChooserValues extends BaseEnumChooserValues<SecurityPolicyValues> {
+  public SecurityPolicyChooserValues() {
+    super(SecurityPolicyValues.class);
   }
 }

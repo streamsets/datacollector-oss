@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
+import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
 import org.eclipse.milo.opcua.sdk.client.api.identity.AnonymousProvider;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
@@ -57,6 +58,12 @@ import org.eclipse.milo.opcua.stack.core.types.structured.ReferenceDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -76,6 +83,7 @@ import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 public class OpcUaClientSource implements PushSource {
 
   private static final Logger LOG = LoggerFactory.getLogger(OpcUaClientSource.class);
+  private static final String SSL_CONFIG_PREFIX = "conf.tlsConfig.";
   private static final String SOURCE_TIME_FIELD_NAME = "sourceTime";
   private static final String SOURCE_PICO_SECONDS_FIELD_NAME = "sourcePicoSeconds";
   private static final String SERVER_TIME_FIELD_NAME = "serverTime";
@@ -91,6 +99,7 @@ public class OpcUaClientSource implements PushSource {
   private final AtomicLong clientHandles = new AtomicLong(1L);
   private OpcUaClient opcUaClient;
   private List<NodeId> nodeIds;
+  private boolean destroyed = false;
 
   OpcUaClientSource(OpcUaClientSourceConfigBean conf) {
     this.conf = conf;
@@ -107,6 +116,28 @@ public class OpcUaClientSource implements PushSource {
     this.context = context;
     errorQueue = new ArrayBlockingQueue<>(100);
     errorList = new ArrayList<>(100);
+
+    SecurityPolicy securityPolicy = conf.securityPolicy.getSecurityPolicy();
+    if (!securityPolicy.equals(SecurityPolicy.None) && !conf.tlsConfig.isEnabled()) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.SECURITY.name(),
+              SSL_CONFIG_PREFIX + "tlsEnabled",
+              Errors.OPC_UA_06,
+              conf.securityPolicy.getLabel()
+          )
+      );
+      return issues;
+    }
+
+    if (conf.tlsConfig.isEnabled()) {
+      conf.tlsConfig.init(
+          context,
+          Groups.SECURITY.name(),
+          SSL_CONFIG_PREFIX,
+          issues
+      );
+    }
 
     try {
       opcUaClient = createClient();
@@ -165,7 +196,7 @@ public class OpcUaClientSource implements PushSource {
   }
 
   private OpcUaClient createClient() throws Exception {
-    SecurityPolicy securityPolicy = SecurityPolicy.None;
+    SecurityPolicy securityPolicy = conf.securityPolicy.getSecurityPolicy();
 
     EndpointDescription[] endpoints = UaTcpStackClient.getEndpoints(conf.resourceUrl).get();
 
@@ -173,10 +204,25 @@ public class OpcUaClientSource implements PushSource {
         .filter(e -> e.getSecurityPolicyUri().equals(securityPolicy.getSecurityPolicyUri()))
         .findFirst().orElseThrow(() -> new StageException(Errors.OPC_UA_01));
 
-    OpcUaClientConfig config = OpcUaClientConfig.builder()
+    OpcUaClientConfigBuilder clientConfigBuilder = OpcUaClientConfig.builder()
         .setApplicationName(LocalizedText.english(conf.applicationName))
-        .setApplicationUri(conf.applicationUri)
-        .setEndpoint(endpoint)
+        .setApplicationUri(conf.applicationUri);
+
+    if (!securityPolicy.equals(SecurityPolicy.None)) {
+      KeyStore keyStore = conf.tlsConfig.getKeyStore();
+      if (keyStore != null) {
+        Key clientPrivateKey = keyStore.getKey(conf.clientKeyAlias, conf.tlsConfig.keyStorePassword.toCharArray());
+        if (clientPrivateKey instanceof PrivateKey) {
+          X509Certificate clientCertificate = (X509Certificate) keyStore.getCertificate(conf.clientKeyAlias);
+          PublicKey clientPublicKey = clientCertificate.getPublicKey();
+          KeyPair clientKeyPair = new KeyPair(clientPublicKey, (PrivateKey) clientPrivateKey);
+          clientConfigBuilder.setCertificate(clientCertificate)
+              .setKeyPair(clientKeyPair);
+        }
+      }
+    }
+
+    OpcUaClientConfig config = clientConfigBuilder.setEndpoint(endpoint)
         .setIdentityProvider(new AnonymousProvider())
         .setRequestTimeout(uint(conf.requestTimeoutMillis))
         .build();
@@ -208,6 +254,9 @@ public class OpcUaClientSource implements PushSource {
   }
 
   private void pollForData() {
+    if (destroyed) {
+      return;
+    }
     opcUaClient.readValues(0.0, TimestampsToReturn.Both, nodeIds)
         .thenAccept(values -> {
           try {
@@ -653,6 +702,7 @@ public class OpcUaClientSource implements PushSource {
   public void destroy() {
     if (opcUaClient != null) {
       try {
+        destroyed = true;
         opcUaClient.disconnect().get();
       } catch (InterruptedException | ExecutionException ex) {
         LOG.error("Failed during OPC UA Client disconnect call: {}", ex.getMessage());
