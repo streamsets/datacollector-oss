@@ -31,6 +31,8 @@ import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.BatchContextImpl;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.datacollector.runner.BatchListener;
+import com.streamsets.datacollector.runner.ErrorSink;
+import com.streamsets.datacollector.runner.EventSink;
 import com.streamsets.datacollector.runner.FullPipeBatch;
 import com.streamsets.datacollector.runner.MultiplexerPipe;
 import com.streamsets.datacollector.runner.Observer;
@@ -171,8 +173,8 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
       1000,
       batch,
       null,
-      null,
-      null
+      new ErrorSink(),
+      new EventSink()
     );
   }
 

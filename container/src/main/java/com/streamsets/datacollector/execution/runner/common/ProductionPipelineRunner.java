@@ -46,6 +46,7 @@ import com.streamsets.datacollector.runner.BatchContextImpl;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.datacollector.runner.BatchListener;
 import com.streamsets.datacollector.runner.ErrorSink;
+import com.streamsets.datacollector.runner.EventSink;
 import com.streamsets.datacollector.runner.FullPipeBatch;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipe;
@@ -328,8 +329,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       1000,
       batch,
       null,
-      null,
-      null
+      new ErrorSink(),
+      new EventSink()
     );
   }
 
