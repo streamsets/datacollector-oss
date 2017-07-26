@@ -90,7 +90,7 @@ public class HiveQueryExecutor extends BaseExecutor {
         List<String> queriesToExecute = getEvaluatedQueriesForTheRecord(record, variables);
         executeQueries(record, queriesToExecute);
       } catch (OnRecordErrorException e) {
-        LOG.error("Error when processing record", e.toString());
+        LOG.error("Error when processing record: {}", e.toString(), e);
         errorRecordHandler.onError(e);
       }
     }
@@ -130,6 +130,7 @@ public class HiveQueryExecutor extends BaseExecutor {
         //Query Successful
         HiveQueryExecutorEvents.successfulQuery.create(getContext()).with(HiveQueryExecutorEvents.QUERY_EVENT_FIELD, query).createAndSend();
       } catch (SQLException e) {
+        LOG.error("Failed to execute query: {}", query, e);
         //Query failed for some reason
         EventCreator.EventBuilder failedQueryEventBuilder = HiveQueryExecutorEvents.failedQuery.create(getContext()).with(HiveQueryExecutorEvents.QUERY_EVENT_FIELD, query);
         failedQueriesToReason.add(Utils.format("Failed to execute query '{}'. Reason: {}", query, e));
