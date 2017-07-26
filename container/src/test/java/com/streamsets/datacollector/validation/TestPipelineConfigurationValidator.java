@@ -402,7 +402,8 @@ public class TestPipelineConfigurationValidator {
     Assert.assertFalse(validator.canPreview());
 
     List<Issue> issues = conf.getIssues().getIssues();
-    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(2, issues.size());
     Assert.assertEquals(ValidationError.VALIDATION_0106.name(), issues.get(0).getErrorCode());
+    Assert.assertEquals(ValidationError.VALIDATION_0106.name(), issues.get(1).getErrorCode());
   }
 }

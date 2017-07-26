@@ -64,6 +64,7 @@ import java.util.Set;
 @SuppressWarnings("Duplicates")
 public class PipelineConfigurationValidator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigurationValidator.class);
+  private static final String TO_ERROR_NULL_TARGET = "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget";
 
   private final StageLibraryTask stageLibrary;
   private final String name;
@@ -1315,22 +1316,16 @@ public class PipelineConfigurationValidator {
     issues.addAll(localIssues);
 
     // Validate each start/stop event handlers
-    preview &= validatePipelineLifecycleEventStages(pipelineConfiguration.getStartEventStages());
-    preview &= validatePipelineLifecycleEventStages(pipelineConfiguration.getStopEventStages());
-
-    if(preview && pipelineExecutionMode != ExecutionMode.STANDALONE
-      && (!pipelineConfiguration.getStartEventStages().isEmpty() || !pipelineConfiguration.getStopEventStages().isEmpty())) {
-      preview = false;
-      issues.add(IssueCreator.getPipeline().create(
-          ValidationError.VALIDATION_0106,
-          pipelineExecutionMode.name()
-      ));
-    }
+    preview &= validatePipelineLifecycleEventStages(pipelineConfiguration.getStartEventStages(), pipelineExecutionMode);
+    preview &= validatePipelineLifecycleEventStages(pipelineConfiguration.getStopEventStages(), pipelineExecutionMode);
 
     return preview;
   }
 
-  boolean validatePipelineLifecycleEventStages(List<StageConfiguration> eventStages) {
+  boolean validatePipelineLifecycleEventStages(
+      List<StageConfiguration> eventStages,
+      ExecutionMode executionMode
+  ) {
     if(eventStages == null) {
       issues.add(IssueCreator.getPipeline().create(
         ValidationError.VALIDATION_0105,
@@ -1348,6 +1343,16 @@ public class PipelineConfigurationValidator {
     }
 
     if(eventStages.size() == 1) {
+      // Special exception for cluster pipelines - UI will always inject discard executor, so we need to ignore it
+      if(executionMode != ExecutionMode.STANDALONE && !TO_ERROR_NULL_TARGET.equals(eventStages.get(0).getStageName())) {
+        issues.add(IssueCreator.getPipeline().create(
+            ValidationError.VALIDATION_0106,
+            executionMode
+        ));
+        return false;
+      }
+
+      // Validate the stage configuration itself as it's specified properly
       IssueCreator errorStageCreator = IssueCreator.getStage(eventStages.get(0).getInstanceName());
       return validateStageConfiguration(false, eventStages.get(0), true, errorStageCreator);
     }
