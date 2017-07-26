@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.http;
 
+import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
@@ -49,11 +50,12 @@ public class SlaveWebServerTask extends DataCollectorWebServerTask {
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration conf,
+      Activation activation,
       Set<ContextConfigurator> contextConfigurators,
       Set<WebAppProvider> webAppProviders,
       UserGroupManager userGroupManager
   ) {
-    super(buildInfo, runtimeInfo, conf, contextConfigurators, webAppProviders, userGroupManager);
+    super(buildInfo, runtimeInfo, conf, activation, contextConfigurators, webAppProviders, userGroupManager);
     this.conf = conf;
   }
 

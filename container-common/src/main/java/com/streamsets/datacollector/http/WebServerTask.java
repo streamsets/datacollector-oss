@@ -18,6 +18,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.activation.Activation;
+import com.streamsets.datacollector.activation.ActivationAuthenticator;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
@@ -35,6 +37,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import org.eclipse.jetty.jaas.JAASLoginService;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.rewrite.handler.RewriteRegexRule;
+import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.DefaultIdentityService;
@@ -166,6 +169,7 @@ public abstract class WebServerTask extends AbstractTask {
   private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
   private final Configuration conf;
+  private final Activation activation;
   private final Set<WebAppProvider> webAppProviders;
   private final Set<ContextConfigurator> contextConfigurators;
   private int port;
@@ -179,10 +183,11 @@ public abstract class WebServerTask extends AbstractTask {
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration conf,
+      Activation activation,
       Set<ContextConfigurator> contextConfigurators,
       Set<WebAppProvider> webAppProviders
   ) {
-    this("webserver", buildInfo, runtimeInfo, conf, contextConfigurators, webAppProviders);
+    this("webserver", buildInfo, runtimeInfo, conf, activation, contextConfigurators, webAppProviders);
   }
 
   public WebServerTask(
@@ -190,6 +195,7 @@ public abstract class WebServerTask extends AbstractTask {
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration conf,
+      Activation activation,
       Set<ContextConfigurator> contextConfigurators,
       Set<WebAppProvider> webAppProviders
   ) {
@@ -198,6 +204,7 @@ public abstract class WebServerTask extends AbstractTask {
     this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     this.conf = conf;
+    this.activation = activation;
     this.webAppProviders = webAppProviders;
     this.contextConfigurators = contextConfigurators;
   }
@@ -498,8 +505,12 @@ public abstract class WebServerTask extends AbstractTask {
     // registering ssoService with runtime, to enable cache flushing
     ((List)getRuntimeInfo().getAttribute(SSO_SERVICES_ATTR)).add(proxySsoService);
     appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, proxySsoService);
-    security.setAuthenticator(new SSOAuthenticator(appContext, proxySsoService, appConf));
+    security.setAuthenticator(injectActivationCheck(new SSOAuthenticator(appContext, proxySsoService, appConf)));
     return security;
+  }
+
+  protected Authenticator injectActivationCheck(Authenticator authenticator) {
+    return (activation == null) ? authenticator : new ActivationAuthenticator(authenticator, activation);
   }
 
   private ConstraintSecurityHandler configureDigestBasic(Configuration conf, Server server, String mode) {
@@ -509,10 +520,18 @@ public abstract class WebServerTask extends AbstractTask {
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
     switch (mode) {
       case "digest":
-        security.setAuthenticator(new ProxyAuthenticator(new DigestAuthenticator(), runtimeInfo, conf));
+        security.setAuthenticator(injectActivationCheck(new ProxyAuthenticator(
+            new DigestAuthenticator(),
+            runtimeInfo,
+            conf
+        )));
         break;
       case "basic":
-        security.setAuthenticator(new ProxyAuthenticator(new BasicAuthenticator(), runtimeInfo, conf));
+        security.setAuthenticator(injectActivationCheck(new ProxyAuthenticator(
+            new BasicAuthenticator(),
+            runtimeInfo,
+            conf
+        )));
         break;
       default:
         // no action
@@ -530,7 +549,7 @@ public abstract class WebServerTask extends AbstractTask {
     securityHandler.setLoginService(loginService);
 
     FormAuthenticator authenticator = new FormAuthenticator("/login.html", "/login.html?error=true", true);
-    securityHandler.setAuthenticator(new ProxyAuthenticator(authenticator, runtimeInfo, conf));
+    securityHandler.setAuthenticator(injectActivationCheck(new ProxyAuthenticator(authenticator, runtimeInfo, conf)));
     return securityHandler;
   }
 

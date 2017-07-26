@@ -16,6 +16,8 @@
 package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.activation.Activation;
+import com.streamsets.datacollector.activation.NopActivation;
 import com.streamsets.datacollector.http.TestWebServerTaskHttpHttps.PingServlet;
 import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.FileUserGroupManager;
@@ -70,6 +72,7 @@ public class SlaveWebServerTaskIT {
         new DataCollectorBuildInfo(),
         runtimeInfo,
         conf,
+        new NopActivation(),
         configurators,
         webAppProviders,
         new FileUserGroupManager()

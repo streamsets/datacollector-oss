@@ -20,6 +20,7 @@ public class AuthzRole {
   public static final String MANAGER = "manager";
   public static final String CREATOR = "creator";
   public static final String ADMIN = "admin";
+  public static final String ADMIN_ACTIVATION = "admin-activation";
 
   public static final String GUEST_REMOTE = "datacollector:guest";
   public static final String MANAGER_REMOTE = "datacollector:manager";

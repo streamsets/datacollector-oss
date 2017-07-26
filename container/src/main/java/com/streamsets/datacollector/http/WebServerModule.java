@@ -17,6 +17,8 @@ package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.activation.Activation;
+import com.streamsets.datacollector.activation.ActivationLoader;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
@@ -26,6 +28,7 @@ import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.publicrestapi.PublicRestAPI;
 import com.streamsets.datacollector.restapi.RestAPI;
 import com.streamsets.datacollector.restapi.configuration.AclStoreInjector;
+import com.streamsets.datacollector.restapi.configuration.ActivationInjector;
 import com.streamsets.datacollector.restapi.configuration.BuildInfoInjector;
 import com.streamsets.datacollector.restapi.configuration.ConfigurationInjector;
 import com.streamsets.datacollector.restapi.configuration.PipelineStoreInjector;
@@ -56,6 +59,7 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 
+import javax.inject.Singleton;
 import javax.servlet.DispatcherType;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -75,6 +79,12 @@ public class WebServerModule {
   @Provides
   public Manager provideManager() {
     return mgr;
+  }
+
+  @Provides
+  @Singleton
+  public Activation provideActivation(final RuntimeInfo runtimeInfo) {
+    return new ActivationLoader(runtimeInfo).getActivation();
   }
 
   private final String SWAGGER_PACKAGE = "io.swagger.jaxrs.listing";
@@ -316,6 +326,16 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(StandAndClusterManagerInjector.PIPELINE_MANAGER_MGR, pipelineManager);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideActivation(final Activation activation) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(ActivationInjector.ACTIVATION, activation);
       }
     };
   }

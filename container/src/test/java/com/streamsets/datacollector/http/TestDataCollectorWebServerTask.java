@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.http;
 
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.activation.NopActivation;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.FileUserGroupManager;
@@ -40,6 +41,7 @@ public class TestDataCollectorWebServerTask {
         buildInfo,
         runtimeInfo,
         new Configuration(),
+        new NopActivation(),
         Collections.<ContextConfigurator>emptySet(),
         Collections.<WebAppProvider>emptySet(),
         new FileUserGroupManager()

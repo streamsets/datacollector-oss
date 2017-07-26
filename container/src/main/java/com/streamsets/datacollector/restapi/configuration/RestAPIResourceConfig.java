@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.restapi.configuration;
 
+import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -55,6 +56,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(StandAndClusterManagerInjector.class).to(Manager.class);
         bindFactory(SupportBundleInjector.class).to(SupportBundleManager.class);
         bindFactory(UserGroupManagerInjector.class).to(UserGroupManager.class);
+        bindFactory(ActivationInjector.class).to(Activation.class);
       }
     });
 

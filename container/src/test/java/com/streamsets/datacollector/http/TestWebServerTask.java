@@ -17,6 +17,7 @@ package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.activation.NopActivation;
 import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
@@ -70,7 +71,13 @@ public class TestWebServerTask {
       final Set<WebAppProvider> webAppProviders
   ) throws Exception {
     Set<ContextConfigurator> configurators = new HashSet<>();
-    return new WebServerTask(new DataCollectorBuildInfo(), runtimeInfo, conf, configurators, webAppProviders) {
+    return new WebServerTask(new DataCollectorBuildInfo(),
+        runtimeInfo,
+        conf,
+        new NopActivation(),
+        configurators,
+        webAppProviders
+    ) {
       @Override
       protected String getAppAuthToken(Configuration appConfiguration) {
         return "applicationToken";

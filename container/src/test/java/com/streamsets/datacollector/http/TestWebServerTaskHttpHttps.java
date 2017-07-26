@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,8 @@ package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.activation.Activation;
+import com.streamsets.datacollector.activation.NopActivation;
 import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.FileUserGroupManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -119,6 +121,7 @@ public class TestWebServerTaskHttpHttps {
     return new DataCollectorWebServerTask(new DataCollectorBuildInfo(),
         runtimeInfo,
         conf,
+        new NopActivation(),
         configurators,
         webAppProviders,
         new FileUserGroupManager()
