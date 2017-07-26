@@ -24,6 +24,7 @@ import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 import junit.framework.Assert;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;

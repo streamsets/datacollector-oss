@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,7 +21,6 @@ package com.streamsets.pipeline.stage.processor.kudulookup;
 
 import com.streamsets.pipeline.api.*;
 import com.streamsets.pipeline.configurablestage.DProcessor;
-import com.streamsets.pipeline.stage.destination.kudu.Groups;
 
 @StageDef(
     version = 1,
@@ -30,7 +29,7 @@ import com.streamsets.pipeline.stage.destination.kudu.Groups;
     icon = "kudu.png",
     privateClassLoader = true,
     upgrader = KuduProcessorUpgrader.class,
-    onlineHelpRefUrl = "TODO"
+    onlineHelpRefUrl = "index.html#Processors/KuduLookup.html#task_b5b_dyl_p1b"
 )
 
 @ConfigGroups(Groups.class)

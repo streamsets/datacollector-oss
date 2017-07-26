@@ -23,6 +23,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationActionChooserValues;
+import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 
 import java.util.List;
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,8 +23,11 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
-import com.streamsets.pipeline.stage.destination.kudu.KuduFieldMappingConfig;
+import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 
 import java.util.List;
@@ -43,7 +46,6 @@ public class KuduLookupConfig {
   )
   public String kuduMaster;
 
-  // kudu tab
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
@@ -56,14 +58,46 @@ public class KuduLookupConfig {
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "",
-      label = "Field to Column Mapping",
-      description = "Specify which columns from kudu to populate the record with",
+      label = "Key Columns Mapping",
+      description = "Specify columns which will be used as key for scan. This must include primary key columns.",
+      displayPosition = 30,
+      group = "KUDU"
+  )
+  @ListBeanModel
+  public List<KuduFieldMappingConfig> keyColumnMapping;
+
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Column to Output Field Mapping",
+      description = "Specify field name to write the result",
       displayPosition = 40,
       group = "KUDU"
   )
   @ListBeanModel
-  public List<KuduFieldMappingConfig> fieldMappingConfigs;
+  public List<KuduOutputColumnMapping> outputColumnMapping;
+
+  @ConfigDef(required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Case Sensitive",
+      description = "If not set, table name and all column names are processed in lowercase",
+      displayPosition = 50,
+      group = "KUDU"
+  )
+  @ListBeanModel
+  public boolean caseSensitive;
+
+  @ConfigDef(required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Ignore Missing Value",
+      description = "If set, process records even if values specified above Output Column to Field Mapping are missing. " +
+          "If not set, send records to error.",
+      displayPosition = 60,
+      group = "KUDU"
+  )
+  @ListBeanModel
+  public boolean ignoreMissing;
 
   @ConfigDef(
       required = true,

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.kudu;
+package com.streamsets.pipeline.stage.lib.kudu;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -34,12 +34,14 @@ public enum Errors implements ErrorCode {
   KUDU_12("Invalid table name template expression '{}': {}"),
   KUDU_13("Operation not supported: {}"),
   KUDU_14("Unknown action for unsupported operation: {}"),
-  KUDU_15("Row key {} not found"),
+  KUDU_15("Row key '{}' not found"),
 
-  KUDU_30("Column mappings must be specified for lookup processor"),
+  KUDU_30("Column mappings must be specified for lookup processor: {}"),
   KUDU_31("No rows found"),
   KUDU_32("Primary key field '{}' not found in record"),
-  KUDU_33("Unsupported primary key type: {}")
+  KUDU_33("Unsupported column type: {}"),
+  KUDU_34("Primary key '{}' is not configured in Key Column Mapping"),
+  KUDU_35("Missing a value for column '{}'"),
   ;
   private final String msg;
 

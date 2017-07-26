@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.pipeline.stage.lib.kudu.Errors;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

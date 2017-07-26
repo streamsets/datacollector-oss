@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.kudu;
+package com.streamsets.pipeline.stage.lib.kudu;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
@@ -40,7 +40,7 @@ public class KuduFieldMappingConfig {
     type = ConfigDef.Type.MODEL,
     defaultValue = "",
     label = "SDC Field",
-    description = "The field in the incoming record to output.",
+    description = "The field in the incoming record",
     displayPosition = 10
   )
   @FieldSelectorModel(singleValued = true)
@@ -51,7 +51,7 @@ public class KuduFieldMappingConfig {
     type = ConfigDef.Type.STRING,
     defaultValue="",
     label = "Column Name",
-    description = "The column name to write this field to.",
+    description = "Corresponding column name in Kudu",
     displayPosition = 20
   )
   public String columnName;

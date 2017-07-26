@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,37 +31,41 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.destination.kudu.Errors;
-import com.streamsets.pipeline.stage.destination.kudu.Groups;
-import com.streamsets.pipeline.stage.destination.kudu.KuduFieldMappingConfig;
+import com.streamsets.pipeline.stage.lib.kudu.Errors;
+import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
+import com.streamsets.pipeline.stage.lib.kudu.KuduUtils;
 import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
-import org.apache.kudu.client.*;
+import org.apache.kudu.client.AsyncKuduClient;
+import org.apache.kudu.client.AsyncKuduSession;
+import org.apache.kudu.client.KuduTable;
+import org.apache.kudu.client.OperationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class KuduLookupProcessor extends SingleLaneRecordProcessor {
   private static final String KUDU_MASTER = "kuduMaster";
   private static final String KUDU_TABLE = "kuduTable";
-  private static final String FIELD_MAPPING_CONFIGS = "fieldMappingConfigs";
+  private static final String KEY_MAPPING_CONFIGS = "keyColumnMapping";
+  private static final String OUTPUT_MAPPING_CONFIG = "outputColumnMapping";
 
   private static final Logger LOG = LoggerFactory.getLogger(KuduLookupProcessor.class);
   private KuduLookupConfig conf;
   private ErrorRecordHandler errorRecordHandler;
-  private KuduClient kuduClient;
-  private KuduSession kuduSession;
+  private AsyncKuduClient kuduClient;
+  private AsyncKuduSession kuduSession;
   private KuduTable kuduTable;
   private KuduLookupLoader store;
-  private final List<String> projectColumns = new ArrayList<>();
+
+  private final List<String> keyColumns = new ArrayList<>();
   private final Map<String, String> columnToField = new HashMap<>();
-  private final Map<String, String> fieldToColumn = new HashMap<>();
-  private LoadingCache<Record, List<Map<String, Field>>> cache;
+
+  private LoadingCache<Map<String, Field>, List<Map<String, Field>>> cache;
   private CacheCleaner cacheCleaner;
 
   public KuduLookupProcessor(KuduLookupConfig conf) {
@@ -73,48 +77,42 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
   protected List<ConfigIssue> init() {
     final List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-
-    if (conf.fieldMappingConfigs.isEmpty()) {
+    if (conf.keyColumnMapping.isEmpty()) {
       issues.add(getContext().createConfigIssue(
           Groups.KUDU.name(),
-          KuduLookupConfig.CONF_PREFIX + FIELD_MAPPING_CONFIGS,
+          KuduLookupConfig.CONF_PREFIX + KEY_MAPPING_CONFIGS,
           Errors.KUDU_30
       ));
     }
 
-    for (KuduFieldMappingConfig fieldConfig : conf.fieldMappingConfigs) {
-      projectColumns.add(fieldConfig.columnName);
-      columnToField.put(fieldConfig.columnName, fieldConfig.field);
-      fieldToColumn.put(fieldConfig.field, fieldConfig.columnName);
+    if (conf.outputColumnMapping.isEmpty()) {
+      issues.add(getContext().createConfigIssue(
+          Groups.KUDU.name(),
+          KuduLookupConfig.CONF_PREFIX + OUTPUT_MAPPING_CONFIG,
+          Errors.KUDU_30
+      ));
     }
 
-    kuduClient = new KuduClient.KuduClientBuilder(conf.kuduMaster).defaultOperationTimeoutMs(conf.operationTimeout)
-        .build();
+    for (KuduFieldMappingConfig fieldConfig : conf.keyColumnMapping) {
+      String columnName = conf.caseSensitive ? fieldConfig.columnName : fieldConfig.columnName.toLowerCase();
+      keyColumns.add(columnName);
+      columnToField.put(columnName, fieldConfig.field);
+    }
+
+    kuduClient = new AsyncKuduClient.AsyncKuduClientBuilder(conf.kuduMaster).defaultOperationTimeoutMs(conf.operationTimeout).build();
     if (issues.isEmpty()) {
       kuduSession = kuduClient.newSession();
     }
 
     if (issues.isEmpty()) {
       // Check if SDC can reach the Kudu Master
-      try {
-        kuduClient.getTablesList();
-      } catch (KuduException ex) {
-        issues.add(
-            getContext().createConfigIssue(
-                Groups.KUDU.name(),
-                KuduLookupConfig.CONF_PREFIX + KUDU_MASTER,
-                Errors.KUDU_00,
-                ex.toString(),
-                ex
-            )
-        );
-      }
+      KuduUtils.checkConnection(kuduClient, getContext(), KUDU_MASTER, issues);
     }
-
     if (issues.isEmpty()) {
       try {
-        kuduTable = kuduClient.openTable(conf.kuduTable);
-      } catch (KuduException ex) {
+        String tableName = conf.caseSensitive ? conf.kuduTable : conf.kuduTable.toLowerCase();
+        kuduTable = kuduClient.openTable(tableName).join();
+      } catch (Exception ex) {
         issues.add(
             getContext().createConfigIssue(
                 Groups.KUDU.name(),
@@ -128,8 +126,7 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
     }
 
     if (issues.isEmpty()) {
-      store = new KuduLookupLoader(getContext(), kuduClient, kuduTable, projectColumns, columnToField, fieldToColumn,
-          conf);
+      store = new KuduLookupLoader(getContext(), kuduClient, kuduTable, keyColumns, columnToField, conf);
       cache = LookupUtils.buildCache(store, conf.cache);
       cacheCleaner = new CacheCleaner(cache, "KuduLookupProcessor", 10 * 60 * 1000);
     }
@@ -142,12 +139,12 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
     super.destroy();
     if (kuduSession != null) {
       try {
-        List<OperationResponse> result = kuduSession.close();
+        List<OperationResponse> result = kuduSession.close().join();
         if (result != null && !result.isEmpty()) {
           String msg = "Unexpected operation responses from session close: " + result;
           throw new RuntimeException(msg);
         }
-      } catch (IOException  e) {
+      } catch (Exception  e) {
         String msg = "Unexpected exception closing KuduSession: " + e;
         LOG.error(msg, e);
         throw new RuntimeException(e);
@@ -156,7 +153,7 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
     if (kuduClient != null) {
       try {
         kuduClient.close();
-      } catch (IOException  e) {
+      } catch (Exception  e) {
         String msg = "Unexpected exception closing KuduClient: " + e;
         LOG.error(msg, e);
         throw new RuntimeException(e);
@@ -178,7 +175,8 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
   protected void process(Record record, SingleLaneProcessor.SingleLaneBatchMaker batchMaker) throws StageException {
     try {
       try {
-        List<Map<String, Field>> values = cache.get(record);
+        Map<String, Field> key = getKeyColumns(record);
+        List<Map<String, Field>> values = cache.get(key);
         if (values.isEmpty()) {
           // No results
           errorRecordHandler.onError(new OnRecordErrorException(record, Errors.KUDU_31));
@@ -209,7 +207,7 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
     }
   }
 
-  private void setFieldsInRecord(Record record, Map<String, Field>fields) {
+  private void setFieldsInRecord(Record record, Map<String, Field> fields) {
     for (Map.Entry<String, Field> entry : fields.entrySet()) {
       String columnName = entry.getKey();
       String fieldPath = columnToField.get(columnName);
@@ -229,7 +227,7 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
           case LIST_MAP:
           case MAP:
             // Just use the column name
-            fieldPath = "/" + columnName;
+            fieldPath = columnName;
             break;
           default:
             break;
@@ -237,5 +235,23 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
       }
       record.set(fieldPath, field);
     }
+  }
+
+  /**
+   * Create a map of keyColumn - value to lookup in cache.
+   * @param record
+   * @return Map of keyColumn - value
+   * @throws OnRecordErrorException
+   */
+  private Map<String, Field> getKeyColumns(final Record record) throws OnRecordErrorException{
+    Map<String, Field> keyList = new HashMap<>();
+    for (Map.Entry<String, String> key : columnToField.entrySet()){
+      String fieldName = key.getValue();
+      if (!record.has(fieldName)) {
+        throw new OnRecordErrorException(record, Errors.KUDU_32, fieldName);
+      }
+      keyList.put(key.getKey(), record.get(fieldName));
+    }
+    return keyList;
   }
 }

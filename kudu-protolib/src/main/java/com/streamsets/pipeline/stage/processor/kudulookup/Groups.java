@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.kudu;
+package com.streamsets.pipeline.stage.processor.kudulookup;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   KUDU("Kudu"),
   ADVANCED("Advanced"),
+  LOOKUP("Lookup"),
   ;
 
   private final String label;

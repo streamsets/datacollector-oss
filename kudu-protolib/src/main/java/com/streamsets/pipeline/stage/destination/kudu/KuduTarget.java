@@ -37,6 +37,9 @@ import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.stage.lib.kudu.Errors;
+import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
+
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;

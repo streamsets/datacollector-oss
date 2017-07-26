@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,132 +19,142 @@
  */
 package com.streamsets.pipeline.stage.processor.kudulookup;
 
-import com.codahale.metrics.*;
 import com.codahale.metrics.Timer;
+import com.codahale.metrics.Meter;
 import com.google.common.cache.CacheLoader;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.stage.destination.kudu.Errors;
+import com.streamsets.pipeline.stage.lib.kudu.Errors;
+import com.streamsets.pipeline.stage.lib.kudu.KuduUtils;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Type;
-import org.apache.kudu.client.*;
+import org.apache.kudu.Schema;
+import org.apache.kudu.client.KuduTable;
+import org.apache.kudu.client.AsyncKuduClient;
+import org.apache.kudu.client.AsyncKuduScanner;
+import org.apache.kudu.client.RowResultIterator;
+import org.apache.kudu.client.RowResult;
+import org.apache.kudu.client.KuduException;
+import org.apache.kudu.client.KuduPredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
-public class KuduLookupLoader extends CacheLoader<Record, List<Map<String, Field>>> {
+public class KuduLookupLoader extends CacheLoader<Map<String, Field>, List<Map<String, Field>>> {
   private static final Logger LOG = LoggerFactory.getLogger(KuduLookupLoader.class);
 
-  private final KuduClient kuduClient;
+  private final AsyncKuduClient kuduClient;
   private final KuduTable kuduTable;
   private final Meter selectMeter;
   private final Timer selectTimer;
-  private final List<String> projectColumns;
+  // For key columns
+  private final List<String> keyColumns;
   private final Map<String, String> columnToField;
-  private final Map<String, String> fieldToColumn;
+  // For output columns
+  private final List<String> projectColumns = new ArrayList<>();
+  private final Map<String, String> outputColumnToField = new HashMap<>();
+  private final Map<String, String> outputDefault = new HashMap<>();
+
+  private final boolean ignoreMissing;
+  private final Schema schema;
 
   public KuduLookupLoader(Stage.Context context,
-                          KuduClient kuduClient,
+                          AsyncKuduClient kuduClient,
                           KuduTable kuduTable,
-                          List<String> projectColumns,
+                          List<String> keyColumns,
                           Map<String, String> columnToField,
-                          Map<String, String> fieldToColumn,
-                          KuduLookupConfig config) {
+                          KuduLookupConfig conf
+  ) {
     this.selectMeter = context.createMeter("Select Queries");
     this.selectTimer = context.createTimer("Select Queries");
     this.kuduClient = kuduClient;
     this.kuduTable = kuduTable;
-    this.projectColumns = projectColumns;
+    this.keyColumns = keyColumns;
     this.columnToField = columnToField;
-    this.fieldToColumn = fieldToColumn;
+    this.ignoreMissing = conf.ignoreMissing;
+
+    // output fields
+    for (KuduOutputColumnMapping columnConfig : conf.outputColumnMapping) {
+      String columnName = conf.caseSensitive ? columnConfig.columnName : columnConfig.columnName.toLowerCase();
+      projectColumns.add(columnName);
+      outputColumnToField.put(columnName, columnConfig.field);
+      outputDefault.put(columnName, columnConfig.defaultValue);
+    }
+    this.schema = kuduTable.getSchema();
   }
 
   @Override
-  public List<Map<String, Field>> load(Record record) throws Exception {
-    LOG.debug("Looking up values for:  {}", record);
+  public List<Map<String, Field>> load(Map<String, Field> key) throws Exception {
     List<Map<String, Field>> lookupItems = new ArrayList<>();
-    KuduScanner scanner = null;
+    AsyncKuduScanner scanner = null;
     Timer.Context t = selectTimer.time();
+
     try {
-      KuduScanner.KuduScannerBuilder scannerBuilder = kuduClient.newScannerBuilder(kuduTable)
+      // Scanner is not reusable. Need to build per record.
+      AsyncKuduScanner.AsyncKuduScannerBuilder scannerBuilder = kuduClient.newScannerBuilder(kuduTable)
           .setProjectedColumnNames(projectColumns);
-      for (ColumnSchema keySchema : kuduTable.getSchema().getPrimaryKeyColumns()) {
-        String predicateColumn = keySchema.getName();
-        ColumnSchema schema = kuduTable.getSchema().getColumn(predicateColumn);
-        Type type = schema.getType();
-        String fieldName = columnToField.get(predicateColumn);
-        if (type == Type.STRING) {
-          String value = record.get(fieldName).getValueAsString();
-          if (value == null) {
-            throw new OnRecordErrorException(record, Errors.KUDU_32, fieldName);
-          } else {
-            scannerBuilder.addPredicate(KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, value));
-          }
-        } else if (type == Type.INT8 || type == Type.INT16 || type == Type.INT32 || type == Type.INT64) {
-          Long value = record.get(fieldName).getValueAsLong();
-          if (value == null) {
-            throw new OnRecordErrorException(record, Errors.KUDU_32, fieldName);
-          } else {
-            scannerBuilder.addPredicate(KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, value));
-          }
-        } else {
-          throw new StageException(Errors.KUDU_33, type.getName());
+      List<String> kColumns = new ArrayList<>(keyColumns);
+      // Set primary keys to scanner
+      for (ColumnSchema keySchema : schema.getPrimaryKeyColumns()) {
+        if (!kColumns.contains(keySchema.getName())){
+          // Primary key is not configured in Key Column Mapping. Worth stopping pipeline.
+          throw new StageException(Errors.KUDU_34, keySchema.getName());
+        }
+        String keyColumnName = keySchema.getName();
+        addPredicate(key.get(keyColumnName), scannerBuilder, keySchema.getName());
+        kColumns.remove(keyColumnName);
+      }
+      // Set non-primary key columns to scanner if specified in Key Column Mapping
+      if (!kColumns.isEmpty()) {
+        for (String nonPrimary : kColumns) {
+          addPredicate(key.get(nonPrimary), scannerBuilder, nonPrimary);
         }
       }
-      scanner = scannerBuilder.build();
+      try {
+        scanner = scannerBuilder.build();
+      } catch (IllegalArgumentException ex) {
+        // Thrown here if mapping config has columns that don't exist in the table. Worth stopping pipeline
+        throw new StageException(Errors.KUDU_02, ex);
+      }
+
       while (scanner.hasMoreRows()) {
-        RowResultIterator results = scanner.nextRows();
+        RowResultIterator results = scanner.nextRows().join();
         while (results.hasNext()) {
           RowResult result = results.next();
           if (LOG.isDebugEnabled()) {
             LOG.debug("Found row: {}", result.toStringLongFormat());
           }
-          LinkedHashMap<String, Field> fields = new LinkedHashMap<>(projectColumns.size());
-          for (String column : projectColumns) {
-            Type type = result.getColumnType(column);
+          LinkedHashMap<String, Field> fields = new LinkedHashMap<>(outputColumnToField.size());
+          for (Map.Entry<String, String> column : outputColumnToField.entrySet()) {
             Field field = null;
-            switch (type) {
-              case INT8:
-                field = Field.create(Field.Type.BYTE, result.getByte(column));
-                break;
-              case INT16:
-                field = Field.create(Field.Type.SHORT, result.getShort(column));
-                break;
-              case INT32:
-                field = Field.create(Field.Type.INTEGER, result.getInt(column));
-                break;
-              case INT64:
-                field = Field.create(Field.Type.LONG, result.getLong(column));
-                break;
-              case BINARY:
-                field = Field.create(Field.Type.BYTE_ARRAY, result.getBinary(column));
-                break;
-              case STRING:
-                field = Field.create(Field.Type.STRING, result.getString(column));
-                break;
-              case BOOL:
-                field = Field.create(Field.Type.BOOLEAN, result.getBoolean(column));
-                break;
-              case FLOAT:
-                field = Field.create(Field.Type.FLOAT, result.getFloat(column));
-                break;
-              case DOUBLE:
-                field = Field.create(Field.Type.DOUBLE, result.getDouble(column));
-                break;
-              default:
-                throw new StageException(Errors.KUDU_10, column, type.getName());
-            }
-            String fieldName;
-            if (columnToField.containsKey(column)) {
-              fieldName = columnToField.get(column);
+            Type type = null;
+            String columnName = column.getKey();
+            if (result.isNull(columnName)){
+              // Apply default value or send to error
+              if (ignoreMissing && !outputDefault.get(columnName).isEmpty()) {
+                // Apply default value
+                ColumnSchema columnSchema = schema.getColumn(columnName);
+                field = Field.create(
+                    KuduUtils.convertFromKuduType(columnSchema.getType()),
+                    outputDefault.get(columnName)
+                );
+              } else {
+                // Missing value for output, and default value is not configured
+                throw new OnRecordErrorException(Errors.KUDU_35, columnName);
+              }
             } else {
-              fieldName = column;
+              type = result.getColumnType(column.getKey());
+              field = KuduUtils.createField(result, columnName, type);
             }
-            fields.put(fieldName, field);
+            fields.put(column.getValue(), field);
           }
           lookupItems.add(fields);
         }
@@ -164,5 +174,54 @@ public class KuduLookupLoader extends CacheLoader<Record, List<Map<String, Field
       selectMeter.mark();
     }
     return lookupItems;
+  }
+
+  private void addPredicate(Field field, AsyncKuduScanner.AsyncKuduScannerBuilder scannerBuilder, String keyColumn) throws StageException {
+    ColumnSchema schema;
+    if (field == null) {
+      throw new OnRecordErrorException(Errors.KUDU_32, keyColumn);
+    }
+
+    try {
+      schema = kuduTable.getSchema().getColumn(keyColumn);
+    } catch (IllegalArgumentException ex) {
+      // Thrown if keyColumn doesn't exist in Kudu. Worth stopping pipeline
+      throw new StageException(Errors.KUDU_03, Utils.format("Key column '{}' doesn't exist in Kudu table ", keyColumn), ex);
+    }
+    Type type = schema.getType();
+    KuduPredicate predicate = null;
+    String fieldName = columnToField.get(keyColumn);
+
+    try {
+      switch (type) {
+        case STRING:
+          if (field.getValueAsString().isEmpty()) {
+            throw new OnRecordErrorException(Errors.KUDU_32, fieldName);
+          }
+          predicate = KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, field.getValueAsString());
+          break;
+        case INT8:
+        case INT16:
+        case INT32:
+        case INT64:
+          // API takes long type for all int
+          predicate = KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, field.getValueAsLong());
+          break;
+        case BOOL:
+          predicate = KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, field.getValueAsBoolean());
+          break;
+        case BINARY:
+          predicate = KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, field.getValueAsByteArray());
+          break;
+        case UNIXTIME_MICROS:
+          predicate = KuduPredicate.newComparisonPredicate(schema, KuduPredicate.ComparisonOp.EQUAL, field.getValueAsDatetime().getTime());
+          break;
+        default:
+          throw new StageException(Errors.KUDU_33, type.getName());
+      }
+    } catch (IllegalArgumentException ex){
+      throw new OnRecordErrorException(Errors.KUDU_09, fieldName, field.toString(), ex);
+    }
+    scannerBuilder.addPredicate(predicate);
   }
 }
