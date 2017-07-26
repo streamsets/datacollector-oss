@@ -1155,6 +1155,7 @@ angular
             batchSize: 10,
             timeout: 10000,
             writeToDestinations: false,
+            executeLifecycleEvents: false,
             showHeader: false,
             showFieldType: true,
             rememberMe: false

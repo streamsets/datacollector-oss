@@ -126,7 +126,7 @@ public class SyncPreviewer implements Previewer {
   public void validateConfigs(long timeoutMillis) throws PipelineException {
     changeState(PreviewStatus.VALIDATING, null);
     try {
-      previewPipeline = buildPreviewPipeline(0, 0, null, false);
+      previewPipeline = buildPreviewPipeline(0, 0, null, false, true);
       List<Issue> stageIssues = previewPipeline.validateConfigs();
       PreviewStatus status = stageIssues.size() == 0 ? PreviewStatus.VALID : PreviewStatus.INVALID;
       changeState(status, new PreviewOutputImpl(status, new Issues(stageIssues), null, null));
@@ -188,12 +188,18 @@ public class SyncPreviewer implements Previewer {
   }
 
   @Override
-  public void start(int batches, int batchSize, boolean skipTargets, String stopStage, List<StageOutput> stagesOverride,
-                    long timeoutMillis)
-    throws PipelineException {
+  public void start(
+      int batches,
+      int batchSize,
+      boolean skipTargets,
+      boolean skipLifecycleEvents,
+      String stopStage,
+      List<StageOutput> stagesOverride,
+      long timeoutMillis
+  ) throws PipelineException {
     changeState(PreviewStatus.RUNNING, null);
     try {
-      previewPipeline = buildPreviewPipeline(batches, batchSize, stopStage, skipTargets);
+      previewPipeline = buildPreviewPipeline(batches, batchSize, stopStage, skipTargets, skipLifecycleEvents);
       PreviewPipelineOutput output = previewPipeline.run(stagesOverride);
       changeState(PreviewStatus.FINISHED, new PreviewOutputImpl(PreviewStatus.FINISHED, output.getIssues(),
         output.getBatchesOutput(), null));
@@ -280,7 +286,8 @@ public class SyncPreviewer implements Previewer {
       int batches,
       int batchSize,
       String endStageInstanceName,
-      boolean skipTargets
+      boolean skipTargets,
+      boolean skipLifecycleEvents
   ) throws PipelineException, StageException {
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
@@ -289,8 +296,16 @@ public class SyncPreviewer implements Previewer {
     PipelineEL.setConstantsInContext(pipelineConf, userContext);
     batches = Math.min(maxBatches, batches);
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(Collections.<String, String>emptyMap());
-    PreviewPipelineRunner runner = new PreviewPipelineRunner(name, rev, runtimeInfo, tracker, batchSize, batches,
-      skipTargets);
+    PreviewPipelineRunner runner = new PreviewPipelineRunner(
+        name,
+        rev,
+        runtimeInfo,
+        tracker,
+        batchSize,
+        batches,
+        skipTargets,
+        skipLifecycleEvents
+    );
     return new PreviewPipelineBuilder(
       stageLibrary,
       configuration,

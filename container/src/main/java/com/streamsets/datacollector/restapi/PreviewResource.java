@@ -121,6 +121,7 @@ public class PreviewResource {
       @QueryParam("batchSize") @DefaultValue("" + Integer.MAX_VALUE) int batchSize,
       @QueryParam("batches") @DefaultValue("1") int batches,
       @QueryParam("skipTargets") @DefaultValue("true") boolean skipTargets,
+      @QueryParam("skipLifecycleEvents") @DefaultValue("true") boolean skipLifecycleEvents,
       @QueryParam("endStage") String endStageInstanceName,
       @QueryParam("timeout") @DefaultValue("2000") long timeout,
       @ApiParam(name="stageOutputsToOverrideJson", required = true)  List<StageOutputJson> stageOutputsToOverrideJson
@@ -138,8 +139,15 @@ public class PreviewResource {
 
     Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev);
     try {
-      previewer.start(batches, batchSize, skipTargets, endStageInstanceName,
-        BeanHelper.unwrapStageOutput(stageOutputsToOverrideJson), timeout);
+      previewer.start(
+          batches,
+          batchSize,
+          skipTargets,
+          skipLifecycleEvents,
+          endStageInstanceName,
+          BeanHelper.unwrapStageOutput(stageOutputsToOverrideJson),
+          timeout
+      );
       PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
     } catch (PipelineRuntimeException ex) {

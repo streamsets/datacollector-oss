@@ -15,9 +15,7 @@
  */
 package com.streamsets.datacollector.execution;
 
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StageOutput;
-import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.PipelineException;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -46,8 +44,18 @@ public interface Previewer {
   public RawPreview getRawSource(int maxLength, MultivaluedMap<String, String> previewParams)
       throws PipelineException;
 
-  public void start(int batches, int batchSize, boolean skipTargets, String stopStage, List<StageOutput> stagesOverride,
-                    long timeoutMillis) throws PipelineException;
+  /**
+   * Start preview
+   */
+  public void start(
+      int batches,
+      int batchSize,
+      boolean skipTargets,
+      boolean skipLifecycleEvents,
+      String stopStage,
+      List<StageOutput> stagesOverride,
+      long timeoutMillis
+  ) throws PipelineException;
 
   public void stop();
 

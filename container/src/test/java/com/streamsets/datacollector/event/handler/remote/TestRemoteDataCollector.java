@@ -539,6 +539,7 @@ public class TestRemoteDataCollector {
         int batches,
         int batchSize,
         boolean skipTargets,
+        boolean skipLifecycleEvents,
         String stopStage,
         List<StageOutput> stagesOverride,
         long timeoutMillis

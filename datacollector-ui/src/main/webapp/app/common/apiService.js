@@ -802,7 +802,7 @@ angular.module('dataCollectorApp.common')
        * @param timeout
        * @returns {*}
        */
-      createPreview: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList, endStage, timeout) {
+      createPreview: function(name, sourceOffset, batchSize, rev, skipTargets, skipLifecycleEvents, stageOutputList, endStage, timeout) {
         var url;
 
         if (!batchSize) {
@@ -814,7 +814,7 @@ angular.module('dataCollectorApp.common')
         }
 
         url = apiBase + '/pipeline/' + name + '/preview?batchSize=' + batchSize + '&rev=' + rev +
-            '&skipTargets=' + skipTargets + '&timeout=' + timeout;
+            '&skipTargets=' + skipTargets + '&timeout=' + timeout + '&skipLifecycleEvents=' + skipLifecycleEvents;
 
         if (endStage) {
           url += '&endStage=' + endStage;

@@ -19,7 +19,9 @@ import com.codahale.metrics.ExponentiallyDecayingReservoir;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.el.PipelineEL;
@@ -27,6 +29,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.BatchContextImpl;
+import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.datacollector.runner.BatchListener;
 import com.streamsets.datacollector.runner.FullPipeBatch;
 import com.streamsets.datacollector.runner.MultiplexerPipe;
@@ -48,6 +51,7 @@ import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
+import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
@@ -74,6 +78,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private final int batchSize;
   private final int batches;
   private final boolean skipTargets;
+  private final boolean skipLifecycleEvents;
   private final MetricRegistry metrics;
   private final List<List<StageOutput>> batchesOutput;
   private final String name;
@@ -92,8 +97,16 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private AtomicInteger batchesProcessed;
   private PipelineConfiguration pipelineConfiguration;
 
-  public PreviewPipelineRunner(String name, String rev, RuntimeInfo runtimeInfo, SourceOffsetTracker offsetTracker,
-                               int batchSize, int batches, boolean skipTargets) {
+  public PreviewPipelineRunner(
+      String name,
+      String rev,
+      RuntimeInfo runtimeInfo,
+      SourceOffsetTracker offsetTracker,
+      int batchSize,
+      int batches,
+      boolean skipTargets,
+      boolean skipLifecycleEvents
+  ) {
     this.name = name;
     this.rev = rev;
     this.runtimeInfo = runtimeInfo;
@@ -101,6 +114,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     this.batchSize = batchSize;
     this.batches = batches;
     this.skipTargets = skipTargets;
+    this.skipLifecycleEvents = skipLifecycleEvents;
     this.metrics = new MetricRegistry();
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", name, rev);
     batchesOutput = Collections.synchronizedList(new ArrayList<List<StageOutput>>());
@@ -135,7 +149,31 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     Record eventRecord,
     StageRuntime stageRuntime
   ) throws StageException, PipelineRuntimeException {
-    // We're currently not running pipeline lifecycle events in preview, tracked by SDC-6800
+    if(skipLifecycleEvents) {
+      return;
+    }
+
+   // One record batch with empty offsets
+    Batch batch = new BatchImpl(
+      stageRuntime.getConfiguration().getInstanceName(),
+      "",
+      "",
+      ImmutableList.of(eventRecord)
+    );
+
+    // We're only supporting Executor and Target types
+    Preconditions.checkArgument(
+      stageRuntime.getDefinition().getType().isOneOf(StageType.EXECUTOR, StageType.TARGET),
+      "Invalid lifecycle event stage type: " + stageRuntime.getDefinition().getType()
+    );
+    stageRuntime.execute(
+      null,
+      1000,
+      batch,
+      null,
+      null,
+      null
+    );
   }
 
   @Override

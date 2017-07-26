@@ -112,7 +112,7 @@ public class TestAsyncPreviewer extends TestPreviewer {
     Mockito.when(pipelineStore.load(Mockito.anyString(),
       Mockito.anyString())).thenReturn(MockStages.createPipelineConfigurationSourceProcessorTarget());
     final Previewer previewer  = createPreviewer();
-    previewer.start(1, 10, false, null, new ArrayList<StageOutput>(), 200);
+    previewer.start(1, 10, false, false,null, new ArrayList<StageOutput>(), 200);
 
     await().until(desiredPreviewStatus(previewer, PreviewStatus.TIMED_OUT));
   }
