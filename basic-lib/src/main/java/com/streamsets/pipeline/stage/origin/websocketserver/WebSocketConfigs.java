@@ -24,7 +24,7 @@ import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 public class WebSocketConfigs extends HttpConfigs {
 
   public WebSocketConfigs() {
-    super(Groups.WEB_SOCKET.name(), "config.");
+    super(Groups.WEB_SOCKET.name(), "webSocketConfigs.");
   }
 
   @ConfigDefBean(groups = "TLS")

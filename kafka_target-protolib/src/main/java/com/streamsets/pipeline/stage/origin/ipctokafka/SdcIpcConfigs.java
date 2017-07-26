@@ -24,7 +24,7 @@ import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 public class SdcIpcConfigs extends HttpConfigs {
 
   public SdcIpcConfigs() {
-    super(Groups.RPC.name(), "config.");
+    super(Groups.RPC.name(), "configs.");
   }
 
   @ConfigDefBean(groups = "TLS")

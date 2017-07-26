@@ -24,7 +24,7 @@ import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 public class RawHttpConfigs extends HttpConfigs {
 
   public RawHttpConfigs() {
-    super("HTTP", "config.");
+    super("HTTP", "httpConfigs.");
   }
 
   @ConfigDefBean(groups = "TLS")
