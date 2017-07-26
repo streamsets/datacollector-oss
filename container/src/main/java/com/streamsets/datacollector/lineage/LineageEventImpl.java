@@ -56,13 +56,11 @@ public class LineageEventImpl implements LineageEvent {
     generalAttributes.put(LineageGeneralAttribute.PERMALINK, permalink);
     generalAttributes.put(LineageGeneralAttribute.STAGE_NAME, stageName);
     generalAttributes.put(LineageGeneralAttribute.TIME_STAMP, Long.toString(System.currentTimeMillis()));
-
-
   }
 
   @Override
-  public String getEventType() {
-    return generalAttributes.get(LineageGeneralAttribute.EVENT_TYPE);
+  public LineageEventType getEventType() {
+    return LineageEventType.valueOf(generalAttributes.get(LineageGeneralAttribute.EVENT_TYPE));
   }
 
   @Override
@@ -147,7 +145,7 @@ public class LineageEventImpl implements LineageEvent {
   public List<LineageSpecificAttribute> missingSpecificAttributes() {
     LineageEventType type;
     try {
-      type = LineageEventType.valueOf(getEventType());
+      type = getEventType();
     } catch (IllegalArgumentException | NullPointerException ex) {
       throw new IllegalArgumentException(
           Utils.format(
