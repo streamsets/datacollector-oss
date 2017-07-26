@@ -31,11 +31,11 @@ import com.streamsets.pipeline.stage.bigquery.lib.Groups;
 @StageDef(
     version = 1,
     label = "Google BigQuery",
-    description = "Executes a Query Job and Processes the result from Google BigQuery",
+    description = "Executes a query job and processes the result from Google BigQuery",
     icon="bigquery.png",
     execution = ExecutionMode.STANDALONE,
     producesEvents = true,
-    onlineHelpRefUrl = "TODO"
+    onlineHelpRefUrl = "index.html#Origins/BigQuery.html#task_n5w_ykv_q1b"
 )
 @ConfigGroups(Groups.class)
 public class BigQueryDSource extends DSource {

@@ -40,7 +40,7 @@ public class BigQuerySourceConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Legacy SQL",
-      description = "By default Standard SQL is used. When checked Legacy SQL is used.",
+      description = "By default, standard SQL is used. When checked, legacy SQL is used.",
       defaultValue = "false",
       displayPosition = 20,
       group = "BIGQUERY"
@@ -50,7 +50,7 @@ public class BigQuerySourceConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Use Query Cache",
+      label = "Use cached query results.",
       defaultValue = "true",
       displayPosition = 30,
       group = "BIGQUERY"

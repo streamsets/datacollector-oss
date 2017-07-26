@@ -36,7 +36,8 @@ public class GoogleCloudCredentialsConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Credentials File Path (JSON)",
-      description = "Path relative to resources directory or absolute path",
+      description = "Path to the credentials file. Relative path to the Data Collector resources directory, or " +
+          "absolute path.",
       displayPosition = 20,
       group = "CREDENTIALS"
   )
