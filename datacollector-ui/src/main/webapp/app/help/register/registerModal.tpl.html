@@ -1,0 +1,38 @@
+<form class="register-modal-form" role="form" ng-submit="uploadActivationKey()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="register.headerLabel">Upload Activation key</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div class="input-group" ng-hide="operationDone">
+      <span class="input-group-btn">
+          <span class="btn btn-primary btn-file">
+              {{'home.import.browse' | translate}}&hellip; <input type="file" fileread="uploadFile">
+          </span>
+      </span>
+      <input type="text" class="form-control" readonly ng-model="uploadFile.name"
+             placeholder="{{'home.import.fileUploadPlaceholder' | translate}}">
+    </div>
+
+    <div class="alert alert-success alert-dismissible" role="alert"
+         ng-show="operationDone"
+         translate="register.successMessage">
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-hide="operationDone || operationInProgress"
+            translate="global.form.cancel">Cancel</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="!uploadFile.name"
+            ng-hide="operationDone" translate="global.form.upload">Upload</button>
+
+    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-show="operationDone"
+            translate="global.form.close">Close</button>
+  </div>
+</form>

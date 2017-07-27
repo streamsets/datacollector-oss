@@ -19,16 +19,34 @@
  */
 
 /**
- * This is the main application stylesheet. It should include or import all
- * stylesheets used throughout the application as this is the only stylesheet in
- * the Grunt configuration that is automatically processed.
+ * Import Modal dialog
  */
 
+.register-modal-form {
 
-@import '../../../../../common-ui/src/main/webapp/less/common.less';
-@import '../app/home/home.less';
-@import '../app/home/pipelineHome/pipelineHome.less';
-@import '../app/help/register/register.less';
-@import '../app/help/restapi/restapi.less';
-@import '../app/home/packageManager/package_manager.less';
-@import '../app/home/usersAndGroups/users_and_groups.less';
+  .btn-file {
+    position: relative;
+    overflow: hidden;
+
+    input[type=file] {
+      position: absolute;
+      top: 0;
+      right: 0;
+      min-width: 100%;
+      min-height: 100%;
+      font-size: 100px;
+      text-align: right;
+      filter: alpha(opacity=0);
+      opacity: 0;
+      outline: none;
+      background: white;
+      cursor: inherit;
+      display: block;
+    }
+  }
+
+  input[readonly] {
+    background-color: white !important;
+    cursor: text !important;
+  }
+}

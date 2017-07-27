@@ -71,7 +71,7 @@ angular
 
     //Clear potentially remaining notifications from previous page views
     $rootScope.common.errors = [];
-    $rootScope.common.infoList = [];
+    // $rootScope.common.infoList = [];
     $rootScope.common.successList = [];
 
     angular.extend($scope, {

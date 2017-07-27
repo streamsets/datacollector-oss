@@ -33,6 +33,7 @@
         "useHelp": "Help:",
         "localHelp": "Local Help",
         "hostedHelp": "Hosted Help",
+        "register": "Register",
         "restFulAPI": "RESTful API",
         "settings": "Settings",
         "supportBundle": "Support Bundle"
@@ -833,6 +834,10 @@
       "successMessage": "Successfully installed external library. Restart the Data Collector for the changes to take effect. If you started the Data Collector manually, click Restart Data Collector. If you started the Data Collector as a service, click Cancel and then run the following command: sdc service restart",
       "title": "Install External Libraries"
     }
+  },
+  "register": {
+    "headerLabel": "Upload Activation key",
+    "successMessage": "Successfully uploaded Activation Key"
   },
   "restapi": {
     "title": "Data Collector RESTful API"

@@ -1634,5 +1634,37 @@ angular.module('dataCollectorApp.common')
       }
     };
 
+    api.activation = {
+      /**
+       * Returns SDC activation information
+       *
+       * @returns {*}
+       */
+      getActivation: function () {
+        var url = apiBase + '/activation';
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
+       * Uploads the SDC activation key
+       *
+       * @returns {*}
+       */
+      updateActivation: function (activationKey) {
+        var url = apiBase + '/activation';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: activationKey,
+          headers:  {
+            'Content-Type': 'text/plain'
+          }
+        });
+      }
+    };
+
     return api;
   });
