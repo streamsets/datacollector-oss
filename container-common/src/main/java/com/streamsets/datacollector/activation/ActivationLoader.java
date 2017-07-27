@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.activation;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -23,7 +22,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
@@ -64,13 +62,13 @@ public class ActivationLoader {
     LOG.debug("Initialized");
     if (activation.isEnabled()) {
       Activation.Info info = activation.getInfo();
-      if (info.isExpired()) {
-        LOG.info("Activation enabled, already expired");
+      if (!info.isValid()) {
+        LOG.info("Activation enabled, activation is not valid");
       } else if (info.getExpiration() == -1) {
-        LOG.info("Activation enabled, it does not expire");
+        LOG.info("Activation enabled, activation is valid and it does not expire");
       } else {
         long daysToExpire = TimeUnit.MILLISECONDS.toDays(info.getExpiration() - System.currentTimeMillis() );
-        LOG.info("Activation enabled, expires in '{}' days", daysToExpire);
+        LOG.info("Activation enabled, activation is valid and it expires in '{}' days", daysToExpire);
       }
     } else {
       LOG.debug("Activation disabled");

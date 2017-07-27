@@ -83,12 +83,12 @@ public class TestActivationAuthenticator {
     // test user, activation enabled, activation not expired
     Mockito.when(activation.isEnabled()).thenReturn(true);
     Activation.Info info = Mockito.mock(Activation.Info.class);
-    Mockito.when(info.isExpired()).thenReturn(false);
+    Mockito.when(info.isValid()).thenReturn(true);
     Mockito.when(activation.getInfo()).thenReturn(info);
     Assert.assertEquals(authResponse, activationAuth.validateRequest(req, res, false));
 
     // test user, activation enabled, activation expired
-    Mockito.when(info.isExpired()).thenReturn(true);
+    Mockito.when(info.isValid()).thenReturn(false);
     Authentication authResponseGot = activationAuth.validateRequest(req, res, false);
     Assert.assertTrue(authResponseGot instanceof ActivationAuthenticator.ExpiredActivationUser);
   }

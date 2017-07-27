@@ -66,7 +66,7 @@ public class ActivationAuthenticator implements Authenticator {
   ) throws ServerAuthException {
     Authentication authentication = authenticator.validateRequest(request, response, mandatory);
     if (authentication instanceof Authentication.User) {
-      if (activation.isEnabled() && activation.getInfo().isExpired()) {
+      if (activation.isEnabled() && !activation.getInfo().isValid()) {
         authentication = createExpiredActivationUser((Authentication.User) authentication);
       }
     }

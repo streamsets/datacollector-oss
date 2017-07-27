@@ -38,11 +38,11 @@ public interface Activation {
     String getType();
 
     /**
-     * Returns if the activation is expired or not.
+     * Returns if the activation is valid or not.
      *
-     * @return if the activation is expired or not.
+     * @return if the activation is valid or not.
      */
-    boolean isExpired();
+    boolean isValid();
 
     /**
      * Returns the first use of the data collector in epoch millis.
