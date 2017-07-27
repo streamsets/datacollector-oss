@@ -60,7 +60,7 @@ public class PreviewPipeline {
     return pipeline.validateConfigs();
   }
 
-  public void destroy() {
+  public void destroy() throws StageException, PipelineRuntimeException {
     pipeline.destroy(true, PipelineStopReason.UNKNOWN);
   }
 

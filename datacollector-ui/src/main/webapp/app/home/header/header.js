@@ -470,7 +470,7 @@ angular
           api.pipelineAgent.getPreviewStatus(previewerId)
             .then(function(res) {
               var data = res.data;
-              if (data && _.contains(['INVALID', 'VALIDATION_ERROR', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'VALID'], data.status)) {
+              if (data && _.contains(['INVALID', 'VALIDATION_ERROR', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'STOP_ERROR', 'VALID'], data.status)) {
                 fetchValidateConfigData(previewerId, defer);
               } else {
                 checkForValidateConfigStatus(previewerId, defer);

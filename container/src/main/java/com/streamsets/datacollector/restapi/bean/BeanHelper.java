@@ -754,6 +754,8 @@ public class BeanHelper {
         return StatusJson.START_ERROR;
       case RETRY:
         return StatusJson.RETRY;
+      case STOP_ERROR:
+        return StatusJson.STOP_ERROR;
       default:
         throw new IllegalArgumentException("Unrecognized state" + status);
 
@@ -797,6 +799,8 @@ public class BeanHelper {
         return PipelineStatus.START_ERROR;
       case RETRY:
         return PipelineStatus.RETRY;
+      case STOP_ERROR:
+        return PipelineStatus.STOP_ERROR;
       default:
         throw new IllegalArgumentException("Unrecognized state");
     }

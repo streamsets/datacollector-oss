@@ -81,6 +81,7 @@ public class ProductionPipeline {
 
   public void run() throws StageException, PipelineRuntimeException {
     boolean finishing = false;
+    boolean errorWhileInitializing = false;
     boolean errorWhileRunning = false;
     boolean isRecoverable = true;
     String runningErrorMsg = "";
@@ -93,6 +94,7 @@ public class ProductionPipeline {
         } catch (Throwable e) {
           if (!wasStopped()) {
             LOG.warn("Error while starting: {}", e.toString(), e);
+            errorWhileInitializing = true;
             stateChanged(PipelineStatus.START_ERROR, e.toString(), null);
           }
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0702, e.toString(), e);
@@ -145,22 +147,26 @@ public class ProductionPipeline {
           // Destroy the pipeline
           pipeline.destroy(true, stopReason);
         } catch (Throwable e) {
-          LOG.warn("Error while calling destroy: " + e, e);
+          LOG.warn("Error while calling destroy: " + e.toString(), e);
+          if(!errorWhileInitializing) {
+            stateChanged(PipelineStatus.STOP_ERROR, e.toString(), null);
+          }
           throw e;
         } finally {
-          // if the destroy throws an Exception but pipeline.run() finishes well,
-          // me move to finished state
-          if (finishing) {
-            LOG.debug("Finished");
-            stateChanged(PipelineStatus.FINISHED, null, null);
-          } else if (errorWhileRunning) {
+          // There was an error while processing
+          if(errorWhileRunning) {
             LOG.debug("Stopped due to an error");
             if (shouldRetry && !pipeline.shouldStopOnStageError() && !isExecutingInSlave && isRecoverable) {
               stateChanged(PipelineStatus.RETRY, runningErrorMsg, null);
             } else {
               stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
             }
+          } else if(finishing) {
+            // Graceful shutdown
+            LOG.debug("Finished");
+            stateChanged(PipelineStatus.FINISHED, null, null);
           }
+
           if (isExecutingInSlave) {
             LOG.debug("Calling cluster source post destroy");
             ((ClusterSource) pipeline.getSource()).postDestroy();

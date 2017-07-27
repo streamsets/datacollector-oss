@@ -133,6 +133,7 @@ public enum ContainerError implements ErrorCode {
   //Pipeline Lifecycle events
   CONTAINER_0790("Pipeline lifecycle event stage initialization error: {}"),
   CONTAINER_0791("Pipeline lifecycle event stage run error: {}"),
+  CONTAINER_0792("Pipeline lifecycle event stage generated error record: {}"),
 
   //Runner
   CONTAINER_0800("Pipeline '{}' validation error : {}"),

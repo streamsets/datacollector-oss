@@ -165,8 +165,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     .put(PipelineStatus.RUNNING_ERROR, ImmutableSet.of(PipelineStatus.RETRY, PipelineStatus.RUN_ERROR))
     .put(PipelineStatus.RETRY, ImmutableSet.of(PipelineStatus.STARTING, PipelineStatus.STOPPING, PipelineStatus.DISCONNECTING))
     .put(PipelineStatus.RUN_ERROR, ImmutableSet.of(PipelineStatus.STARTING))
-    .put(PipelineStatus.FINISHING, ImmutableSet.of(PipelineStatus.FINISHED))
-    .put(PipelineStatus.STOPPING, ImmutableSet.of(PipelineStatus.STOPPED))
+    .put(PipelineStatus.STOP_ERROR, ImmutableSet.of(PipelineStatus.STARTING))
+    .put(PipelineStatus.FINISHING, ImmutableSet.of(PipelineStatus.FINISHED, PipelineStatus.STOP_ERROR))
+    .put(PipelineStatus.STOPPING, ImmutableSet.of(PipelineStatus.STOPPED, PipelineStatus.STOP_ERROR))
     .put(PipelineStatus.FINISHED, ImmutableSet.of(PipelineStatus.STARTING))
     .put(PipelineStatus.STOPPED, ImmutableSet.of(PipelineStatus.STARTING))
     .put(PipelineStatus.DISCONNECTING, ImmutableSet.of(PipelineStatus.DISCONNECTED))
@@ -239,6 +240,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         case KILLED:
         case START_ERROR:
         case STOPPED:
+        case STOP_ERROR:
           break;
         default:
           throw new IllegalStateException(Utils.format("Pipeline in undefined state: '{}'", status));

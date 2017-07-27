@@ -319,6 +319,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       ImmutableList.of(eventRecord)
     );
 
+    ErrorSink errorSink = new ErrorSink();
+
     // We're only supporting Executor and Target types
     Preconditions.checkArgument(
       stageRuntime.getDefinition().getType().isOneOf(StageType.EXECUTOR, StageType.TARGET),
@@ -329,9 +331,14 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       1000,
       batch,
       null,
-      new ErrorSink(),
+      errorSink,
       new EventSink()
     );
+
+    // Pipeline lifecycle stage generating error record is fatal error
+    if(!errorSink.getErrorRecords().isEmpty()) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0792);
+    }
   }
 
   @Override

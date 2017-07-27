@@ -35,6 +35,8 @@ public enum StatusJson {
   STOPPING,         // pipeline job has been manually stopped (calling destroy on pipeline)
   STOPPED,          // pipeline job has been manually stopped (done)
 
+  STOP_ERROR,       // There was a problem when stopping pipeline (e.g. during destroy() phase)
+
   DISCONNECTING,    // SDC going down gracefully (calling destroy on pipeline for LOCAL, doing nothing for CLUSTER)
   DISCONNECTED,     // SDC going down gracefully (done)
 

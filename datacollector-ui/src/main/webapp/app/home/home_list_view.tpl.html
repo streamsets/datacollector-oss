@@ -217,7 +217,7 @@
         </div>
 
         <div class="invalid-status pull-right"
-             ng-if="common.pipelineStatusMap[pipeline.pipelineId].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUN_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'CONNECT_ERROR'"
+             ng-if="common.pipelineStatusMap[pipeline.pipelineId].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUN_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'CONNECT_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'STOP_ERROR'"
              tooltip-placement="bottom"
              tooltip="{{'Pipeline Status :' + common.pipelineStatusMap[pipeline.pipelineId].status + ': ' + common.pipelineStatusMap[pipeline.pipelineId].message}}">
           <i class="fa fa-exclamation-triangle fa-12x"></i>

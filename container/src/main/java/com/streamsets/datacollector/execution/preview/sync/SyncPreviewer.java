@@ -57,6 +57,8 @@ import dagger.ObjectGraph;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BoundedInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.MultivaluedMap;
@@ -68,6 +70,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class SyncPreviewer implements Previewer {
+  private static final Logger LOG = LoggerFactory.getLogger(SyncPreviewer.class);
 
   private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
   private static final int MAX_BATCH_SIZE_DEFAULT = 10;
@@ -221,11 +224,15 @@ public class SyncPreviewer implements Previewer {
       changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
     } finally {
-      PipelineEL.unsetConstantsInContext();
       if (previewPipeline != null) {
-        previewPipeline.destroy();
+        try {
+          previewPipeline.destroy();
+        } catch (StageException e) {
+          throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
+        }
         previewPipeline = null;
       }
+      PipelineEL.unsetConstantsInContext();
     }
   }
 
@@ -235,10 +242,7 @@ public class SyncPreviewer implements Previewer {
     if(previewStatus.isActive()) {
       changeState(PreviewStatus.CANCELLING, null);
     }
-    if(previewPipeline != null) {
-      previewPipeline.destroy();
-      previewPipeline = null;
-    }
+    destroyPipeline();
     if(previewStatus == PreviewStatus.CANCELLING) {
       changeState(PreviewStatus.CANCELLED, null);
     }
@@ -250,14 +254,24 @@ public class SyncPreviewer implements Previewer {
     if(previewStatus.isActive()) {
       changeState(PreviewStatus.TIMING_OUT, null);
     }
-    if(previewPipeline != null) {
-      previewPipeline.destroy();
-      previewPipeline = null;
-    }
+    destroyPipeline();
     if(previewStatus == PreviewStatus.TIMING_OUT) {
       changeState(PreviewStatus.TIMED_OUT, null);
     }
     PipelineEL.unsetConstantsInContext();
+  }
+
+  private void destroyPipeline() {
+    if(previewPipeline == null) {
+      return;
+    }
+
+    try {
+      previewPipeline.destroy();
+    } catch (StageException|PipelineRuntimeException e) {
+      LOG.error("Error destroying pipeline", e);
+    }
+    previewPipeline = null;
   }
 
 

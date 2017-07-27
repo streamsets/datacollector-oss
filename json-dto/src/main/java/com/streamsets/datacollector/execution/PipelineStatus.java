@@ -36,6 +36,8 @@ public enum PipelineStatus {
   STOPPING (true),         // pipeline job has been manually stopped (calling destroy on pipeline)
   STOPPED (false),          // pipeline job has been manually stopped (done)
 
+  STOP_ERROR(false),       // There was a problem when stopping pipeline (e.g. during destroy() phase)
+
   DISCONNECTING (true),    // SDC going down gracefully (calling destroy on pipeline for LOCAL, doing nothing for CLUSTER)
   DISCONNECTED (true),     // SDC going down gracefully (done)
 

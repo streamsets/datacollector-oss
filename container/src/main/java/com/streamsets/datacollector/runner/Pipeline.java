@@ -207,7 +207,11 @@ public class Pipeline {
       LOG.error("Uncaught error in init: " + throwable, throwable);
       throw Throwables.propagate(throwable);
     } finally {
-      destroy(false, PipelineStopReason.UNUSED);
+      try {
+        destroy(false, PipelineStopReason.UNUSED);
+      } catch (StageException|PipelineRuntimeException e) {
+        LOG.error("Exception while destroying() pipeline", e);
+      }
     }
   }
 
@@ -392,15 +396,17 @@ public class Pipeline {
     runner.errorNotification(originPipe, pipes, throwable);
   }
 
-  public void destroy(boolean productionExecution, PipelineStopReason stopReason) {
-    // TODO: Would it make sense to create a new state STOP_FAILURE or something?
-    RuntimeException exception = null;
+  public void destroy(boolean productionExecution, PipelineStopReason stopReason) throws StageException, PipelineRuntimeException {
+    Throwable exception = null;
 
     try {
       runner.destroy(originPipe, pipes, badRecordsHandler, statsAggregationHandler);
     } catch (StageException|PipelineRuntimeException ex) {
       String msg = Utils.format("Exception thrown in destroy phase: {}", ex.getMessage());
       LOG.warn(msg, ex);
+      if(exception == null) {
+        exception = ex;
+      }
     }
 
     // Lifecycle event handling
@@ -410,6 +416,9 @@ public class Pipeline {
       } catch (Exception ex) {
         String msg = Utils.format("Exception thrown during pipeline start event handler destroy: {}", ex);
         LOG.warn(msg, ex);
+        if(exception == null) {
+          exception = ex;
+        }
       }
     }
 
@@ -422,7 +431,7 @@ public class Pipeline {
       } catch (Exception ex) {
         String msg = Utils.format("Can't execute pipeline stop stage: {}", ex);
         LOG.error(msg, ex);
-        exception = new RuntimeException(msg, ex);
+        exception = new PipelineRuntimeException(ContainerError.CONTAINER_0791, ex.toString());
       }
 
       // Destroy
@@ -431,6 +440,9 @@ public class Pipeline {
       } catch (Exception ex) {
         String msg = Utils.format("Exception thrown during pipeline stop event handler destroy: {}", ex);
         LOG.warn(msg, ex);
+        if(exception == null) {
+          exception = ex;
+        }
       }
     }
 
@@ -439,6 +451,9 @@ public class Pipeline {
     } catch (Exception ex) {
       String msg = Utils.format("Exception thrown during bad record handler destroy: {}", ex);
       LOG.warn(msg, ex);
+      if(exception == null) {
+        exception = ex;
+      }
     }
     try {
       if (statsAggregationHandler != null) {
@@ -447,6 +462,9 @@ public class Pipeline {
     } catch (Exception ex) {
       String msg = Utils.format("Exception thrown during Stats Aggregator handler destroy: {}", ex);
       LOG.warn(msg, ex);
+      if(exception == null) {
+        exception = ex;
+      }
     }
     if (scheduledExecutorService != null) {
       scheduledExecutorService.shutdown();
@@ -462,7 +480,9 @@ public class Pipeline {
 
     // Propagate exception if it was thrown
     if(exception != null) {
-      throw exception;
+      Throwables.propagateIfInstanceOf(exception, StageException.class);
+      Throwables.propagateIfInstanceOf(exception, PipelineRuntimeException.class);
+      throw new RuntimeException(exception);
     }
   }
 
