@@ -29,7 +29,7 @@
             Azure AD User Identity authentication is not supported at this time.</p>
         <p>Before you use the destination, you must perform some prerequisite tasks.</p>
         <p>When you configure the Azure Data Lake Store destination, you specify connection
-            information such as the Client ID and fully qualified domain name (FQDN) for the
+            information such as the Application ID and fully qualified domain name (FQDN) for the
             account. </p>
         <p>You can define a directory template and time basis to determine the output directories
             that the destination creates and the files where records are written. You can also

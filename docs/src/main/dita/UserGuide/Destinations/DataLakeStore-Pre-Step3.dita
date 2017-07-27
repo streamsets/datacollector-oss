@@ -38,7 +38,7 @@
                             Explorer</uicontrol>.</p><p><image
                             href="../Graphics/DLStore-DataExplorer.png" id="image_rct_gvj_1y"
                             scale="55"/></p></li>
-                <li>If necessary, click <uicontrol>Create Folder</uicontrol> and create the folders
+                <li>If necessary, click <uicontrol>New Folder</uicontrol> and create the folders
                     that you want to use. </li>
                 <li>To grant write access to a folder, select the folder, and then click
                         <uicontrol>Access</uicontrol>. <p><image
@@ -47,8 +47,10 @@
                         existing permissions. </p></li>
                 <li>To add the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> web application as a user, in the Access panel, click
-                        <uicontrol>Add</uicontrol>.</li>
+                    /> web application as a user, in the Access panel, click the
+                        <uicontrol>Add</uicontrol> icon.<p><image
+                            href="../Graphics/DLStore-ExistingPerm.png" id="image_ltz_5jx_q1b"
+                            scale="50"/></p></li>
                 <li>In the <wintitle>Assign Permissions</wintitle> panel, select <uicontrol>Select
                         User or Group</uicontrol>.</li>
                 <li>In the <wintitle>Select User or Group</wintitle> panel, scroll and select the
@@ -68,7 +70,9 @@
                                 children</uicontrol>.</li>
                         <li>For <uicontrol>Add as</uicontrol>, you can use the default,
                                 <uicontrol>An access permission entry</uicontrol>.</li>
-                    </ul><p>Click <uicontrol>Ok</uicontrol> to save your changes. </p><p>The <ph
+                    </ul><p><image href="../Graphics/DLStore-SelectPerms.png" id="image_pp2_3mx_q1b"
+                            scale="55"/></p><p>Click <uicontrol>Ok</uicontrol> to save your changes.
+                        </p><p>The <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> web application displays in the Assigned Permissions section of the
                             <wintitle>Access</wintitle> panel. </p><p><image

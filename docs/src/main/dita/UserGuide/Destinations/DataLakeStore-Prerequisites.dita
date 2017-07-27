@@ -33,8 +33,6 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> web application.</li>
             </ol></p>
-        <p>At the time of writing, Microsoft Azure Data Lake Store is still in Beta, so the
-            information here is subject to change. </p>
         <p>If the steps below are no longer accurate, you might try the following article or check
             for updates to the Microsoft Azure Data Lake Store documentation: <xref
                 href="https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-authenticate-using-active-directory"

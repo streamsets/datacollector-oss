@@ -31,36 +31,33 @@
             web application to Azure Active Directory. </p>
         <p>
             <ol id="ol_fdz_tsb_1y">
-                <li>Log in to the classic Azure portal: <xref
-                        href="https://manage.windowsazure.com/" format="html" scope="external"
-                        >https://manage.windowsazure.com</xref>.<p>Web applications are not yet available in the new Azure portal.<draft-comment author="Loretta"
-                            >Doc reminder: Check back after February 2017 - that's when MS says this
-                            will be available in the new portal. (As stated in the classic portal,
-                            11/2016.)</draft-comment></p></li>
-                <li>In the Navigation panel, scroll down and click <uicontrol>Active
-                        Directory</uicontrol>, and then select the Active Directory account to use. </li>
-                <li>To create an application, in the menu, select
-                        <uicontrol>Applications</uicontrol>. Then, at the bottom of the window,
-                    click <uicontrol>Add</uicontrol>.<p><image href="../Graphics/DLStore-AD.png"
-                            id="image_q3b_pp5_zx" scale="50"/></p><p>This launches the
-                            <uicontrol>Add Application</uicontrol> wizard. </p></li>
-                <li>On the <wintitle>What do you want to do?</wintitle> page, select <uicontrol>Add
-                        an application my organization is developing</uicontrol>. </li>
-                <li>On the <wintitle>Tell us about your application</wintitle> page, perform the
-                    following steps:<ol id="ul_orv_hq5_zx">
-                        <li>Enter an application name, such as "sdc".</li>
-                        <li>Verify that the <uicontrol>Web Application and/or Web API</uicontrol>
-                            option is selected. </li>
-                        <li>To continue to the next page, click the <uicontrol>Next</uicontrol>
-                            arrow.</li>
-                    </ol></li>
-                <li>In the <wintitle>App properties</wintitle> page, set <uicontrol>Sign-On
-                        URL</uicontrol> to a URL that describes the application, and set
-                        <uicontrol>App ID URI</uicontrol> to a URLs that identifies the application.
-                        <p>Use any URL, such as <uicontrol>http://streamsets.com</uicontrol>.
-                    </p></li>
-                <li>Click the <uicontrol>Complete</uicontrol> check mark icon. <p>Active Directory
-                        creates the wizard and displays a welcome screen. </p></li>
+                <li>Log in to the Azure portal: <xref href="https://portal.azure.com" format="html"
+                        scope="external"/>.</li>
+                <li>In the Navigation panel, scroll down and click <uicontrol>Azure Active
+                        Directory</uicontrol>. <p><image href="../Graphics/DLStore-Nav.png"
+                            id="image_b5r_xmv_q1b" scale="55"/></p></li>
+                <li>If you have multiple accounts and need to select a different account, in the
+                    upper right hand corner, click your user name, then select the account to use.
+                            <p><image href="../Graphics/DLStore-Accounts.png" id="image_nhb_fpv_q1b"
+                            scale="60"/></p></li>
+                <li>To create an application, in the menu, select <uicontrol>App
+                        Registrations</uicontrol>, then click <uicontrol>New Application
+                        Registration</uicontrol>.<p><image href="../Graphics/DLStore-AppReg.png"
+                            id="image_vgh_ypv_q1b" scale="55"/></p></li>
+                <li>On the <wintitle>Create</wintitle> page, enter the following information:<p>
+                        <ul id="ul_sjl_2qv_q1b">
+                            <li><uicontrol>Name</uicontrol>: Enter an application name, such as
+                                "sdc".</li>
+                            <li><uicontrol>Application Type</uicontrol>: Use the default,
+                                    <uicontrol>Web App / API</uicontrol>.</li>
+                            <li><uicontrol>Sign-on URL</uicontrol>: Enter a URL that describes the
+                                application. You can use any URL, such as
+                                "http://yourdomain.com".</li>
+                        </ul>
+                    </p><p><image href="../Graphics/DLStore-CreateApp.png" scale="50"
+                            id="image_uy4_qdx_q1b"/></p></li>
+                <li>Click <uicontrol>Create</uicontrol>.<p>Active Directory creates the application
+                        and lists all available applications. </p></li>
             </ol>
         </p>
  </conbody>

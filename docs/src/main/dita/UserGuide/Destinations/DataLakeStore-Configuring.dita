@@ -49,13 +49,13 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Client ID</entry>
-                                    <entry>Azure Client ID. <p>The Client ID for the <ph
+                                    <entry>Application ID</entry>
+                                    <entry>Azure Application ID. <p>The Application ID for the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> web application created in Active Directory.
                                             </p><p>For help locating this information in Azure, see
                                                 <xref
-                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/ClientID"
+                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/Step-AppID"
                                                 >Step 2. Retrieve Details from
                                         Azure</xref>.</p></entry>
                                 </row>
@@ -65,7 +65,7 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> web application.<p>For help locating this information in
                                             Azure, see <xref
-                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/AuthToken"
+                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/Step-AuthTokenEndpoint"
                                                 >Step 2. Retrieve Details from
                                         Azure</xref>.</p></entry>
                                 </row>
@@ -74,17 +74,17 @@
                                     <entry>The host name of the Data Lake Store. For example:
                                             <codeblock>&lt;service name>.azuredatalakestore.net</codeblock><p>For
                                             help locating this information in Azure, see <xref
-                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/AccountFDQN"
+                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/Step-AccountFDQN"
                                                 >Step 2. Retrieve Details from
                                         Azure</xref>.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Client Key</entry>
-                                    <entry>The Client Key of the <ph
+                                    <entry>Application Key</entry>
+                                    <entry>The Application Key of the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> web application created in Active Directory. <p>For help
                                             locating this information in Azure, see <xref
-                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/ClientKey"
+                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/Step-AppKey"
                                                 >Step 2. Retrieve Details from
                                         Azure</xref>.</p></entry>
                                 </row>

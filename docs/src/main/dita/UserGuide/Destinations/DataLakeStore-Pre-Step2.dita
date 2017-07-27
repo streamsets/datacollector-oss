@@ -25,82 +25,94 @@
                     Store destination</indexterm></indexterm>Retrieve information from Azure to help
             you configure the Azure Data Lake Store destination. When you configure the destination,
             you need the following information:<ul id="ul_pqn_42h_1y">
-                <li>Client ID</li>
-                <li>Client Key</li>
                 <li>Auth Token Endpoint</li>
+                <li>Application ID</li>
+                <li>Application Key</li>
                 <li>Account FQDN</li>
             </ul></p>
-        <p>To retrieve this information, you will access both the classic and new Azure portals. At
-            the time of writing, several properties are available only in the classic portal. </p>
         <dl>
             <dlentry>
-                <dt>Retrieve the Client ID, Client Key, and Auth Token Endpoint from the classic
-                    Azure portal</dt>
+                <dt>Retrieve the OAuth 2.0 Token Endpoint</dt>
                 <dd>
-                    <ol id="ol_rhz_hwb_1y">
-                        <li>If continuing directly from creating the web application, click
-                                <uicontrol>Configure</uicontrol>.<p><image
-                                    href="../Graphics/DLStore-ADConfig.png" scale="50"
-                                    id="image_mzs_ysb_1y"/></p><p>If starting fresh, log in to the
-                                classic Azure portal: <xref href="https://manage.windowsazure.com/"
-                                    format="html" scope="external"
-                                    >https://manage.windowsazure.com</xref>. In the navigation
-                                panel, select <uicontrol>Active Directory</uicontrol>. </p><p>Select
-                                the account to use, then <uicontrol>Applications</uicontrol>. Then,
-                                select the <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> web application. </p><p>The <wintitle>Properties</wintitle> page
-                                appears.</p></li>
-                        <li id="ClientID">Scroll down the page and note the <uicontrol>Client
-                                ID</uicontrol>:<p><image href="../Graphics/DLStore-ADClientID.png"
-                                    id="image_tqh_y1v_zx" scale="60"/></p><p>
-                                <note type="important">When you configure the Azure Data Lake Store
-                                    destination, use this number for the <uicontrol>Client
-                                        ID</uicontrol> property.</note>
-                            </p></li>
-                        <li id="ClientKey">To retrieve the Client Key, continue to scroll down to
-                            the <wintitle>Keys</wintitle> section. If you already have a key
-                            generated, copy the key. <p>Otherwise, to generate a key, select a
-                                duration for the key, and then click
-                                <uicontrol>Save</uicontrol>:</p><p><image
-                                    href="../Graphics/DLStore-KeySave.png" scale="65"
-                                    id="image_e2n_ctb_1y"/></p><p>The Azure portal saves your
-                                changes and generates a key. Copy the key value. </p><p><image
-                                    href="../Graphics/DLStore-Key.png" scale="65"
-                                    id="image_f2n_ctb_1y"/></p><note type="important">When you
-                                configure the Azure Data Lake Store destination, use this key for
-                                the <uicontrol>Client Key</uicontrol> property.</note></li>
-                        <li>At the bottom of the <wintitle>Properties</wintitle> page, click the
-                                <uicontrol>View Endpoints</uicontrol> icon. <p><image
+                    <ol id="ol_p2s_2sv_q1b">
+                        <li id="Step-AuthTokenEndpoint">If continuing directly from creating a new
+                            application, above the list of applications on the <wintitle>App
+                                Registrations</wintitle> page, select
+                                <uicontrol>Endpoints</uicontrol>.<p>Otherwise, log in to the new
+                                Azure portal: <xref href="https://portal.azure.com/" format="html"
+                                    scope="external">https://portal.azure.com/</xref>. If you have
+                                more than one account, select the account to use. Click
+                                    <uicontrol>Azure Active Directory</uicontrol>, then click
+                                    <uicontrol>App Registrations</uicontrol>. </p><p><image
                                     href="../Graphics/DLStore-ViewEndpoints.png"
-                                    id="image_sfr_w5b_1y" scale="55"/></p></li>
-                        <li id="AuthToken">In the <wintitle>App Endpoints</wintitle> window, locate
-                            and copy the <uicontrol>OAuth 2.0 Token Endpoint</uicontrol> URL.
-                                    <p><image href="../Graphics/DLStore-OAuth.png"
-                                    id="image_mld_hcw_zx" scale="65"/></p><note type="important"
-                                >When you configure the Azure Data Lake Store destination, use this
-                                URL for the <uicontrol>Auth Token Endpoint</uicontrol> property.
-                            </note></li>
-                        <li>Click the <uicontrol>Check</uicontrol> icon to close the window.</li>
+                                    id="image_vwz_d5v_q1b" scale="50"/></p></li>
+                        <li>In the <wintitle>Endpoints</wintitle> window, locate and copy the
+                                <uicontrol>OAuth 2.0 Token Endpoint</uicontrol> URL.<p>When you
+                                configure the Azure Data Lake Store destination, use this URL for
+                                the <uicontrol>Auth Token Endpoint</uicontrol> stage property.
+                                    </p><p><image href="../Graphics/DLStore-OAuth.png" scale="65"
+                                    id="image_iql_mbw_q1b"/></p></li>
+                        <li>In the upper right corner of the <wintitle>Endpoints</wintitle> window,
+                            click the <uicontrol>Close</uicontrol> icon to close the window.</li>
                     </ol>
                 </dd>
             </dlentry>
             <dlentry>
-                <dt>Retrieve the Account FDQN from the new Azure portal</dt>
+                <dt>Note the Application ID</dt>
+                <dd>
+                    <ol id="ol_cdc_vvw_q1b">
+                        <li id="Step-AppID">On the <wintitle>App Registrations</wintitle> page,
+                            click the new account that you created. <p>The
+                                    <wintitle>Properties</wintitle> page appears.</p></li>
+                        <li>Copy the <uicontrol>Application ID</uicontrol>.<p>When you configure the
+                                Azure Data Lake Store destination, use this value for the
+                                    <uicontrol>Application ID</uicontrol> stage
+                                    property.</p><p><image href="../Graphics/DLStore-AppID.png"
+                                    id="image_mlr_ncw_q1b" scale="50"/></p></li>
+                    </ol>
+                </dd>
+            </dlentry>
+            <dlentry>
+                <dt>Generate and copy the Application Key</dt>
+                <dd>
+                    <ol id="ol_a4z_lzw_q1b">
+                        <li id="Step-AppKey">With the new application selected, in the
+                                <wintitle>Settings</wintitle> list, select
+                                <uicontrol>Keys</uicontrol>.<p><image
+                                    href="../Graphics/DLStore-FindKeys.png" id="image_kbf_c1x_q1b"
+                                    scale="55"/></p></li>
+                        <li>If you already have a key generated, copy the key. <p>Othewise, to
+                                generate a key:</p><ol id="ol_hjp_l1x_q1b">
+                                <li>Optionally enter a description for the key. </li>
+                                <li>Select a duration of time for the key to remain valid. </li>
+                                <li>Click <uicontrol>Save</uicontrol> to generate the key.</li>
+                                <li>Copy the generated key immediately.<p><image
+                                            href="../Graphics/DLStore-Key.png" scale="60"
+                                            id="image_f2n_ctb_1y"/></p><p>When you configure the
+                                        Azure Data Lake Store destination, use this key for the
+                                            <uicontrol>Application Key</uicontrol> stage
+                                        property.</p></li>
+                            </ol></li>
+                    </ol>
+                </dd>
+            </dlentry>
+            <dlentry>
+                <dt>Retrieve the Account FDQN</dt>
                 <dd>
                     <ol id="ol_y35_2vb_1y">
-                        <li>Log in to the new Azure portal: <xref href="https://portal.azure.com/"
-                                format="html" scope="external"
-                            >https://portal.azure.com/</xref>.</li>
+                        <li id="Step-AcctFDQN">In the Navigation panel, select the <uicontrol>All
+                                Resources</uicontrol> icon: <p><image
+                                    href="../Graphics/DLStore-AllResourcesIcon.png"
+                                    id="image_hc3_pxw_q1b" scale="55"/></p></li>
                         <li>From the <uicontrol>All Resources</uicontrol> list, select the Data Lake
                             Store resource to use.</li>
                         <li id="AccountFDQN">In the <wintitle>Essentials</wintitle> page, note the
-                                    URL:<p><image href="../Graphics/DLStore-URL.png"
-                                    id="image_vxz_gfw_zx" scale="60"/></p><note type="important"
-                                >When you configure the Azure Data Lake Store destination, use the
-                                host name from this URL for the <uicontrol>Account FQDN</uicontrol>
-                                property. In this case, the host name is
-                                servicename.azuredatalakestore.net. </note></li>
+                            host name in the URL:<p>When you configure the Azure Data Lake Store
+                                destination, use the host name from this URL for the
+                                    <uicontrol>Account FQDN</uicontrol> stage property. In this
+                                case, the host name is servicename.azuredatalakestore.net.
+                                    </p><p><image href="../Graphics/DLStore-URL.png"
+                                    id="image_vxz_gfw_zx" scale="60"/></p></li>
                     </ol>
                 </dd>
             </dlentry>
