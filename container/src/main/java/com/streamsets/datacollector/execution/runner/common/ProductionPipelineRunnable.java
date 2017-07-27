@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 public class ProductionPipelineRunnable implements Runnable {
 
@@ -98,37 +97,15 @@ public class ProductionPipelineRunnable implements Runnable {
     this.isStopped = true;
     this.nodeProcessShutdown = nodeProcessShutdown;
     pipeline.stop();
-    Thread thread = runningThread;
-    if (thread != null) {
-      // cannot interrupt the thread as it does not play well with writing to HDFS
-      // this causes issues in batch mode when we are trying to rename files on stop
-      thread.interrupt();
-      LOG.info("Pipeline stopped, thread '{}' running the pipeline", thread.getName());
-    }
-    boolean isDone = false;
     try {
-      isDone = countDownLatch.await(5, TimeUnit.MINUTES);
+      countDownLatch.await();
     } catch (InterruptedException e) {
       LOG.info("Thread interrupted: {}", e.toString(), e);
     }
 
-    if (!isDone) {
-      // Comes here only when thread interrupt doesn't work due to non-interruptable issue
-      // (i.e. scripting processor has sleep, infinite loop, etc) and user waited until timeout.
-      // However this thread is still running
-      LOG.warn("Pipeline waited for 5 minutes and is terminating");
-      synchronized (relatedTasks){
-        if (runningThread != null) {
-          runningThread = null;
-          cancelTask();
-          postStop();
-        }
-      }
-    } else {
-      // Comes here when thread is interrupted and run() did post-stop process, or
-      // when pipeline is stopped by force quit.
-      LOG.info("Pipeline is in terminal state");
-    }
+    // Comes here when thread is interrupted and run() did post-stop process, or
+    // when pipeline is stopped by force quit.
+    LOG.info("Pipeline is in terminal state");
   }
 
   /**
@@ -139,6 +116,7 @@ public class ProductionPipelineRunnable implements Runnable {
   public void forceQuit() {
     synchronized (relatedTasks){
       if (runningThread != null) {
+        runningThread.interrupt();
         runningThread = null;
         cancelTask();
         postStop();
