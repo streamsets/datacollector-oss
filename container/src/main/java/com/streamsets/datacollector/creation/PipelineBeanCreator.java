@@ -595,7 +595,7 @@ public abstract class PipelineBeanCreator {
         } else {
           Object value = valueMap.get(configName);
           if (value == null) {
-            LOG.warn("Stage '{}' missing configuration '{}', using default", stageName, configDef.getName());
+            LOG.trace("Stage '{}' missing configuration '{}', using default", stageName, configDef.getName());
             injectDefaultValue(obj, field, stageDef, stageConf, configDef, pipelineConstants, stageName, errors);
           } else {
             injectConfigValue(obj, field, value, stageDef, stageConf, configDef, null, pipelineConstants, errors);
@@ -626,7 +626,7 @@ public abstract class PipelineBeanCreator {
         if (configDef != null) {
           Config configConf = stageConf.getConfig(configName);
           if (configConf == null) {
-            LOG.warn("Stage '{}' missing configuration '{}', using default", stageName, configDef.getName());
+            LOG.trace("Stage '{}' missing configuration '{}', using default", stageName, configDef.getName());
             injectDefaultValue(obj, field, stageDef, stageConf, configDef, pipelineConstants, stageName, errors);
           } else {
             injectConfigValue(obj, field, stageDef, stageConf, configDef, configConf, pipelineConstants, errors);
