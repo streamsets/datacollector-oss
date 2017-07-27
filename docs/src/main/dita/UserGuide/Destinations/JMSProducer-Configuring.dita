@@ -139,10 +139,9 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
                 <cmd/>
             </step>
-            <step>
-                <cmd>
-                    <draft-comment author="Loretta">add XML after drafted.</draft-comment>
-                </cmd>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-WriteXML-messages">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

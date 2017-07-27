@@ -17,13 +17,18 @@
  <title>Data Formats</title>
     <topicref href="../Data_Formats/DataFormats-Title.dita">
         <topicref href="../Data_Formats/DataFormats-Overview.dita"/>
-        <topicref href="../Data_Formats/DelimitedDataRootFieldTypes.dita"/>
-        <topicref href="../Data_Formats/Protobuf-Prerequisites.dita"/>
-        <topicref href="../Pipeline_Design/SDCRecordFormat.dita"/>
-        <topicref href="../Data_Formats/TextCDelim.dita">
+        <topicref href="../Data_Formats/DelimitedDataRootFieldTypes.dita">
+            <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+        <topicref href="../Data_Formats/Protobuf-Prerequisites.dita">
+            <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+        <topicref href="../Pipeline_Design/SDCRecordFormat.dita">
+            <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+        <topicref href="../Data_Formats/TextCDelim.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Data_Formats/TextCDelim-XMLdata.dita"/>
         </topicref>
-        <topicref href="../Data_Formats/WholeFile.dita">
+        <topicref href="../Data_Formats/WholeFile.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Data_Formats/WholeFile-BasicPipeline.dita"/>
             <topicref href="../Data_Formats/WholeFile-Records.dita"/>
             <topicref href="../Data_Formats/WholeFile-AdditionalProcessors.dita"/>
@@ -33,7 +38,8 @@
                 <topicref href="../Data_Formats/WholeFile-IncludingChecksumEvent.dita"/>
             </topicref>
         </topicref>
-        <topicref href="../Data_Formats/XMLDFormat.dita">
+        <topicref href="../Data_Formats/XMLDFormat.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Data_Formats/XMLDF-XMLelement.dita">
                 <topicref href="../Data_Formats/XMLDF-XMLelem-Namespace.dita"/>
             </topicref>
@@ -48,5 +54,8 @@
             <topicref href="../Data_Formats/XMLDF-OutputFAttributes.dita"/>
             <topicref href="../Data_Formats/XMLDF-Record.dita"/>
         </topicref>
+        <topicref href="../Data_Formats/WritingXML.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../Data_Formats/WritingXML-Requirement.dita"/></topicref>
     </topicref>
 </map>

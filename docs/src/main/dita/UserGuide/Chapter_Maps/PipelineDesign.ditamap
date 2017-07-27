@@ -58,7 +58,8 @@
    </topicref>
    <topicref href="../Pipeline_Design/Attributes-ViewinginDPreview.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Design/FieldAttributes.dita">
+  <topicref href="../Pipeline_Design/FieldAttributes.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Design/FieldAtts-Working.dita"/>
    <topicref href="../Pipeline_Design/FieldAttributeGeneratingStages.dita"/>
    <topicref href="../Pipeline_Design/FieldAtts-DataPreview.dita"/>

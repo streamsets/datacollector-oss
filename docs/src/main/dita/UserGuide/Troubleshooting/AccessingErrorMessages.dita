@@ -56,6 +56,8 @@
        another system for review</xref>. The information in the following record header attributes
       can help you determine the problem that occurred. For more information, see <xref
        href="../Pipeline_Design/InternalAttributes.dita#concept_itf_55z_dz"/>.</dd>
+     <dd>For more information about error records and error record handling, see <xref
+       href="../Pipeline_Design/ErrorHandling.dita#concept_pm4_txm_vq"/>.</dd>
     </dlentry>
     <dlentry>
      <dt><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

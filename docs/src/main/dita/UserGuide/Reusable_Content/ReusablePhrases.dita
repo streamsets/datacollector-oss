@@ -1831,6 +1831,29 @@ input_stream.read()</codeblock></p>
                   </dlentry>
             </dl>
             <p>
+                  <draft-comment author="Loretta">The following DEST-XMLmessages is used by Kafka
+                        Producer and JMS Producer</draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry id="DEST-XMLmessages ">
+                              <dt>XML</dt>
+                              <dd>The destination creates a valid XML document for each record. The
+                                    destination requires the record to have a single root field that
+                                    contains the rest of the record data. For details and
+                                    suggestions for how to accomplish this, see <xref
+                                          href="../Data_Formats/WritingXML-Requirement.dita#concept_cmn_hml_r1b"
+                                          />.<p>The destination can include indentation to produce
+                                          human-readable documents. It can also validate <ph
+                                                id="ph-WriteXML-ValidateSchema">that the generated
+                                                XML conforms to the specified schema definition.
+                                                Records with invalid schemas are handled based on
+                                                the error handling configured for the
+                                                destination.</ph></p></dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
                   <draft-comment author="Loretta">The note/tip
                               <uicontrol>WF-TIP-DataPreview</uicontrol> is used in Whole File -
                         Additional Processors. <uicontrol>WF-ph-DataPreview</uicontrol> is used in

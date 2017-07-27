@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_cmn_hml_r1b">
+ <title>Record Structure Requirement</title>
+    <conbody>
+        <p><indexterm>XML data format<indexterm>requirement for writing
+            XML</indexterm></indexterm>When writing XML data, the destination expects all record
+            data under a single root field. When necessary, merge record data into a root field
+            earlier in the pipeline. You can use the Expression Evaluator and Field Remover
+            processors to perform this task. </p>
+        <p>For example, in the following pipeline, the Expression Evaluator uses the expression,
+                <codeph>${record:value('/')}</codeph>, to create a root field and copy the entire
+            record under the root field:</p>
+        <p><image href="../Graphics/writeXML-ExpEval.png" id="image_pxd_qkl_r1b" scale="65"/></p>
+        <p>Then, you can use the Field Remover to keep only the root field, which removes all other
+            fields:</p>
+        <p><image href="../Graphics/writeXML-FieldRemover.png" id="image_gy4_hll_r1b" scale="65"
+            /></p>
+    </conbody>
+</concept>

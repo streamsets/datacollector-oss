@@ -18,9 +18,9 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lww_3b3_kr">
- <title>Data Formats</title>
- <conbody>
-  <p><indexterm>JMS Producer destination<indexterm>data
+  <title>Data Formats</title>
+  <conbody>
+    <p><indexterm>JMS Producer destination<indexterm>data
         formats</indexterm></indexterm><indexterm>data formats<indexterm>JMS Producer
           destinations</indexterm></indexterm>The JMS Producer destination writes data to JMS based
       on the data format that you select. You can use the following data formats:<dl>
@@ -56,12 +56,11 @@
           <dt/>
           <dd/>
         </dlentry>
-        <dlentry>
+        <dlentry
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-XMLmessages">
           <dt/>
-          <dd>
-            <draft-comment author="Loretta">add XML after drafted.</draft-comment>
-          </dd>
+          <dd/>
         </dlentry>
       </dl></p>
- </conbody>
+  </conbody>
 </concept>

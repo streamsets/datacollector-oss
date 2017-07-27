@@ -3812,7 +3812,53 @@
                 </info>
             </step>
             <step>
-                <cmd/>
+                <cmd>
+                    <draft-comment author="Loretta">The following step is used by message-based
+                        destinations that write XML data - JMS Producer and Kafka Producer for
+                        now:</draft-comment>
+                </cmd>
+            </step>
+            <step id="step-WriteXML-messages">
+                <cmd>For XML data, on the <wintitle>XML</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_sst_c5l_r1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>XML Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Pretty Format</entry>
+                                    <entry>Adds indentation to make the resulting XML document
+                                        easier to read. Increases the record size
+                                        accordingly.</entry>
+                                </row>
+                                <row>
+                                    <entry>Validate Schema</entry>
+                                    <entry>Validates <ph
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/ph-WriteXML-ValidateSchema"/><p>
+                                            <note type="important">Regardless of whether you
+                                                validate the XML schema, the destination requires
+                                                the record in a specific format. For more
+                                                information, see <xref
+                                                  href="../Data_Formats/WritingXML-Requirement.dita#concept_cmn_hml_r1b"
+                                                />.</note>
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>XML Schema</entry>
+                                    <entry>The XML schema to use to validate records.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>

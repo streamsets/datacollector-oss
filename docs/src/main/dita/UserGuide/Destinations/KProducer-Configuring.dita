@@ -61,6 +61,7 @@
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_ucp_chr_br"/></xref></li>
                                             <li>Text</li>
+                                            <li>XML</li>
                                         </ul></entry>
                                 </row>
                             </tbody>
@@ -84,6 +85,10 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
+                <cmd/>
+            </step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-WriteXML-messages">
                 <cmd/>
             </step>
         </steps>
