@@ -15,25 +15,18 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.streamsets.datacollector.store.PipelineStoreException;
+import javax.ws.rs.container.DynamicFeature;
+import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.core.FeatureContext;
+import javax.ws.rs.ext.Provider;
 
-import javax.annotation.security.PermitAll;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
+@Provider
+public class StartupAuthorizationFeature implements DynamicFeature {
 
-@Path("/v1/authentication")
-@RequiresCredentialsDeployed
-public class AuthenticationResource {
-
-  @POST
-  @Path("/logout")
-  @PermitAll
-  public void logout(@Context HttpServletRequest request) throws PipelineStoreException {
-    HttpSession session = request.getSession();
-    session.invalidate();
+  @Override
+  public void configure(ResourceInfo resourceInfo, FeatureContext context) {
+    if (resourceInfo.getResourceClass().isAnnotationPresent(RequiresCredentialsDeployed.class)) {
+      context.register(StartupAuthorizationFilter.class);
+    }
   }
-
 }

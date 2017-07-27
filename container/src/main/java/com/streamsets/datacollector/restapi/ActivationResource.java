@@ -39,6 +39,7 @@ import java.util.Map;
 @Path("/v1/activation")
 @Api(value = "activation")
 @DenyAll
+@RequiresCredentialsDeployed
 public class ActivationResource {
 
   private final Activation activation;

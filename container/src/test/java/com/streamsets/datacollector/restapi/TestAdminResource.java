@@ -23,7 +23,6 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
-import com.streamsets.datacollector.restapi.configuration.SupportBundleInjector;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
@@ -33,22 +32,17 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import javax.inject.Singleton;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
 
 public class TestAdminResource extends JerseyTest {
-
-  private static File confDir;
 
   @Test
   public void testEnableDPM() throws IOException {
@@ -113,42 +107,6 @@ public class TestAdminResource extends JerseyTest {
     }
   }
 
-  static class RuntimeInfoTestInjector implements Factory<RuntimeInfo> {
-
-    public RuntimeInfoTestInjector() {
-    }
-
-    @Singleton
-    @Override
-    public RuntimeInfo provide() {
-      confDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
-      confDir.mkdirs();
-      Assert.assertTrue("Could not create: " + confDir, confDir.isDirectory());
-      RuntimeInfo mock = mock(RuntimeInfo.class);
-      Mockito.when(mock.getConfigDir()).thenReturn(confDir.getAbsolutePath());
-      return mock;
-    }
-
-    @Override
-    public void dispose(RuntimeInfo runtimeInfo) {
-
-    }
-  }
-
-
-  public static class ConfigurationTestInjector implements Factory<Configuration> {
-    @Singleton
-    @Override
-    public Configuration provide() {
-      Configuration configuration = mock(Configuration.class);
-      return configuration;
-    }
-
-    @Override
-    public void dispose(Configuration configuration) {
-    }
-
-  }
 
   public static class UserGroupManagerTestInjector implements Factory<UserGroupManager> {
     @Singleton

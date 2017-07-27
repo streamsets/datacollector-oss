@@ -313,15 +313,21 @@ public class Configuration {
     return (value != null) ? Boolean.parseBoolean(value) : defaultValue;
   }
 
-  public void load(Reader reader) throws IOException {
+  public void load(Reader reader, boolean loadIncludes) throws IOException {
     Preconditions.checkNotNull(reader, "reader cannot be null");
     Properties props = new Properties();
     props.load(reader);
     for (Map.Entry entry : props.entrySet()) {
       map.put((String) entry.getKey(), createRef((String) entry.getValue()));
     }
-    loadConfigIncludes();
+    if (loadIncludes) {
+      loadConfigIncludes();
+    }
     reader.close();
+  }
+
+  public void load(Reader reader) throws IOException {
+    load(reader, true);
   }
 
   public static final String CONFIG_INCLUDES = "config.includes";

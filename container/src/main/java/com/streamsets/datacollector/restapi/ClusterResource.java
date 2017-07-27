@@ -42,6 +42,7 @@ import java.util.List;
 
 @Path("/v1/cluster")
 @DenyAll
+@RequiresCredentialsDeployed
 public class ClusterResource {
 
   private final Manager manager;

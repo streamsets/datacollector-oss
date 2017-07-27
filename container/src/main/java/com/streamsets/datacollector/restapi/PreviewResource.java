@@ -67,6 +67,7 @@ import java.util.List;
 @Path("/v1")
 @Api(value = "preview")
 @DenyAll
+@RequiresCredentialsDeployed
 public class PreviewResource {
   private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
   private static final int MAX_BATCH_SIZE_DEFAULT = 10;

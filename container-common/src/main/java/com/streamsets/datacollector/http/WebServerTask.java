@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package com.streamsets.datacollector.http;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -22,6 +23,7 @@ import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.activation.ActivationAuthenticator;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.restapi.WebServerAgentCondition;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
@@ -773,6 +775,11 @@ public abstract class WebServerTask extends AbstractTask {
       setSSLContext();
     }
     postStart();
+    try {
+      WebServerAgentCondition.waitForCredentials();
+    } catch (InterruptedException ex) {
+      LOG.error("Interrupted while waiting for credentials to be deployed", ex);
+    }
   }
 
   public URI getServerURI() throws ServerNotYetRunningException {

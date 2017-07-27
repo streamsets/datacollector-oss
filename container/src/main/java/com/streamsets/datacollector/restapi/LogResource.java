@@ -58,7 +58,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -73,6 +72,7 @@ import java.util.Map;
 @Path("/v1/system")
 @Api(value = "system")
 @DenyAll
+@RequiresCredentialsDeployed
 public class LogResource {
   private static final String X_SDC_LOG_PREVIOUS_OFFSET_HEADER = "X-SDC-LOG-PREVIOUS-OFFSET";
   private static final String EXCEPTION = "exception";

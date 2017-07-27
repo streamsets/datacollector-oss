@@ -48,6 +48,7 @@ import java.util.Map;
 @Path("/v1/system")
 @Api(value = "system")
 @DenyAll
+@RequiresCredentialsDeployed
 public class InfoResource {
 
   private final BuildInfo buildInfo;

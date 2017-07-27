@@ -75,6 +75,7 @@ import java.util.Properties;
 @Path("/v1")
 @Api(value = "definitions")
 @DenyAll
+@RequiresCredentialsDeployed
 public class StageLibraryResource {
   private static final String DEFAULT_ICON_FILE = "PipelineDefinition-bundle.properties";
   private static final String PNG_MEDIA_TYPE = "image/png";

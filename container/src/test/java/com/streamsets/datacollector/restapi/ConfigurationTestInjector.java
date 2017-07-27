@@ -15,25 +15,23 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.util.Configuration;
+import org.glassfish.hk2.api.Factory;
 
-import javax.annotation.security.PermitAll;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
+import javax.inject.Singleton;
 
-@Path("/v1/authentication")
-@RequiresCredentialsDeployed
-public class AuthenticationResource {
+import static org.mockito.Mockito.mock;
 
-  @POST
-  @Path("/logout")
-  @PermitAll
-  public void logout(@Context HttpServletRequest request) throws PipelineStoreException {
-    HttpSession session = request.getSession();
-    session.invalidate();
+public class ConfigurationTestInjector implements Factory<Configuration> {
+  @Singleton
+  @Override
+  public Configuration provide() {
+    Configuration configuration = mock(Configuration.class);
+    return configuration;
+  }
+
+  @Override
+  public void dispose(Configuration configuration) {
   }
 
 }

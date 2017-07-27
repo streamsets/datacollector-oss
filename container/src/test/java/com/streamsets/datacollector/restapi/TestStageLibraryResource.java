@@ -16,10 +16,6 @@
 package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.el.RuleELRegistry;
-import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -44,14 +40,6 @@ public class TestStageLibraryResource extends JerseyTest {
         register(MultiPartFeature.class);
       }
     };
-  }
-  static class StageLibraryResourceConfig extends AbstractBinder {
-    @Override
-    protected void configure() {
-      bindFactory(TestUtil.StageLibraryTestInjector.class).to(StageLibraryTask.class);
-      bindFactory(TestUtil.RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
-      bindFactory(TestUtil.BuildInfoTestInjector.class).to(BuildInfo.class);
-    }
   }
 
   @Test

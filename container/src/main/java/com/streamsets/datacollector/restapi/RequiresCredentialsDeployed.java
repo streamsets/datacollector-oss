@@ -15,25 +15,12 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.streamsets.datacollector.store.PipelineStoreException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import javax.annotation.security.PermitAll;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-
-@Path("/v1/authentication")
-@RequiresCredentialsDeployed
-public class AuthenticationResource {
-
-  @POST
-  @Path("/logout")
-  @PermitAll
-  public void logout(@Context HttpServletRequest request) throws PipelineStoreException {
-    HttpSession session = request.getSession();
-    session.invalidate();
-  }
-
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface RequiresCredentialsDeployed {
 }

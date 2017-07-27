@@ -80,6 +80,7 @@ import java.util.Map;
 @Path("/v1")
 @Api(value = "manager")
 @DenyAll
+@RequiresCredentialsDeployed
 public class ManagerResource {
   private final String user;
   private final Manager manager;

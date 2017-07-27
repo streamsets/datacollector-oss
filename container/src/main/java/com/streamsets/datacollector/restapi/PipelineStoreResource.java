@@ -118,6 +118,7 @@ import java.util.zip.ZipOutputStream;
 @Path("/v1")
 @Api(value = "store")
 @DenyAll
+@RequiresCredentialsDeployed
 public class PipelineStoreResource {
   private static final String HIGH_BAD_RECORDS_ID = "badRecordsAlertID";
   private static final String HIGH_BAD_RECORDS_TEXT = "High incidence of Error Records";

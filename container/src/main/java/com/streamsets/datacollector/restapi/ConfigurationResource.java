@@ -39,6 +39,7 @@ import java.util.TimeZone;
 @Path("/v1/system")
 @Api(value = "system")
 @DenyAll
+@RequiresCredentialsDeployed
 public class ConfigurationResource {
   private static final String UI_PREFIX = "ui.";
 

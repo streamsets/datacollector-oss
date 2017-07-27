@@ -83,6 +83,7 @@ import java.util.Map;
 @Path("/v1/system")
 @Api(value = "system")
 @DenyAll
+@RequiresCredentialsDeployed
 public class AdminResource {
   private static final Logger LOG = LoggerFactory.getLogger(AdminResource.class);
   private static final String APP_TOKEN_FILE = "application-token.txt";

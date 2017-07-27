@@ -15,25 +15,16 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
-import javax.annotation.security.PermitAll;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-
-@Path("/v1/authentication")
-@RequiresCredentialsDeployed
-public class AuthenticationResource {
-
-  @POST
-  @Path("/logout")
-  @PermitAll
-  public void logout(@Context HttpServletRequest request) throws PipelineStoreException {
-    HttpSession session = request.getSession();
-    session.invalidate();
+public class StageLibraryResourceConfig extends AbstractBinder {
+  @Override
+  protected void configure() {
+    bindFactory(TestUtil.StageLibraryTestInjector.class).to(StageLibraryTask.class);
+    bindFactory(TestUtil.RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
+    bindFactory(TestUtil.BuildInfoTestInjector.class).to(BuildInfo.class);
   }
-
 }

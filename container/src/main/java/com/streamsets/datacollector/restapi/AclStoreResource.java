@@ -63,6 +63,7 @@ import java.util.Map;
 @Path("/v1/acl")
 @Api(value = "acl")
 @DenyAll
+@RequiresCredentialsDeployed
 public class AclStoreResource {
   private final PipelineStoreTask store;
   private final AclStoreTask aclStore;
