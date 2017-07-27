@@ -18,6 +18,7 @@ package com.streamsets.datacollector.activation;
 import com.streamsets.datacollector.main.RuntimeInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Contract for an activation implementation.
@@ -77,6 +78,14 @@ public interface Activation {
      * @return the list of valid SDC IDs
      */
     List<String> getValidSdcIds();
+
+    /**
+     * Returns any additional info provided in the activation key.
+     *
+     * @return any additional info provided in the activation key.
+     */
+    Map<String, Object> getAdditionalInfo();
+
   }
 
   /**

@@ -60,7 +60,7 @@ public class ActivationResource {
   @POST
   @Path("/")
   @ApiOperation(value = "Uploads the SDC activation key", response = Map.class, authorizations = @Authorization(value = "admin"))
-  @Consumes(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.TEXT_PLAIN)
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE, AuthzRole.ADMIN_ACTIVATION})
   public Response updateActivation(String activationKey) throws PipelineException, IOException {

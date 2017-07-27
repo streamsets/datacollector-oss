@@ -69,7 +69,7 @@ public class ActivationLoader {
       } else if (info.getExpiration() == -1) {
         LOG.info("Activation enabled, it does not expire");
       } else {
-        long daysToExpire = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - info.getExpiration());
+        long daysToExpire = TimeUnit.MILLISECONDS.toDays(info.getExpiration() - System.currentTimeMillis() );
         LOG.info("Activation enabled, expires in '{}' days", daysToExpire);
       }
     } else {

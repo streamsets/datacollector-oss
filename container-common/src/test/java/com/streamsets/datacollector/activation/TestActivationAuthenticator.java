@@ -116,6 +116,7 @@ public class TestActivationAuthenticator {
     Mockito.verify(authUser, Mockito.times(1)).logout();
 
     // non admin user
+    Assert.assertTrue(expiredAuthUser.isUserInRole(null, "user"));
     Assert.assertTrue(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST));
     Assert.assertTrue(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST_REMOTE));
     Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN_ACTIVATION));
@@ -123,8 +124,8 @@ public class TestActivationAuthenticator {
     Assert.assertFalse(expiredAuthUser.isUserInRole(null, "foo"));
 
     // admin user
-
     Mockito.when(authUser.isUserInRole(Mockito.eq(null), Mockito.eq(AuthzRole.ADMIN))).thenReturn(true);
+    Assert.assertTrue(expiredAuthUser.isUserInRole(null, "user"));
     Assert.assertTrue(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST));
     Assert.assertTrue(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST_REMOTE));
     Assert.assertTrue(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN_ACTIVATION));
@@ -134,6 +135,7 @@ public class TestActivationAuthenticator {
 
     // remote admin user
     Mockito.when(authUser.isUserInRole(Mockito.eq(null), Mockito.eq(AuthzRole.ADMIN_REMOTE))).thenReturn(true);
+    Assert.assertTrue(expiredAuthUser.isUserInRole(null, "user"));
     Assert.assertTrue(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST));
     Assert.assertTrue(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST_REMOTE));
     Assert.assertTrue(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN_ACTIVATION));
@@ -141,6 +143,7 @@ public class TestActivationAuthenticator {
     Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN_REMOTE));
     Assert.assertFalse(expiredAuthUser.isUserInRole(null, "foo"));
 
+    // verify UserIdentity.isUserInRole() delegation to ExpiredActivationUser.isUserInRole()
     expiredAuthUser = activationAuth.createExpiredActivationUser(authUser);
     expiredAuthUser = Mockito.spy(expiredAuthUser);
     userIdentity = expiredAuthUser.getUserIdentity();

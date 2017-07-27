@@ -80,7 +80,7 @@ public class ActivationAuthenticator implements Authenticator {
     return authenticator.secureResponse(request, response, mandatory, validatedUser);
   }
 
-  private static final Set<String> ALLOWED_ROLES = ImmutableSet.of(AuthzRole.GUEST, AuthzRole.GUEST_REMOTE);
+  private static final Set<String> ALLOWED_ROLES = ImmutableSet.of("user", AuthzRole.GUEST, AuthzRole.GUEST_REMOTE);
 
   protected Authentication.User createExpiredActivationUser(Authentication.User user) {
     return new ExpiredActivationUser(user);
