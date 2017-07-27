@@ -30,6 +30,8 @@ import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.lineage.LineageEventImpl;
+import com.streamsets.datacollector.lineage.LineageGeneralAttribute;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
@@ -73,7 +75,6 @@ import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.lib.sampling.RecordSampler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -603,11 +604,24 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     return new EventRecordImpl(type, version, stageInfo.getInstanceName(), recordSourceId, null, null);
   }
 
+  @Override
   public LineageEvent createLineageEvent(LineageEventType type) {
-    LOG.error("got here - createLineageEvent() is a placeholder.");
-    throw new NotImplementedException();
-  }
+    if (type.isFrameworkOnly()) {
+      throw new IllegalArgumentException(Utils.format(ContainerError.CONTAINER_01401.getMessage(), type.getLabel()));
+    }
 
+    return new LineageEventImpl(
+        type,
+        pipelineId,
+        getUserContext().getUser(),
+        startTime,
+        pipelineId,
+        getSdcId(),
+        "http://streamsets.com",
+        stageInfo.getInstanceName()
+    );
+
+  }
   @Override
   public void publishLineageEvent(LineageEvent event) {
     lineagePublisherDelegator.publishLineageEvent(event);

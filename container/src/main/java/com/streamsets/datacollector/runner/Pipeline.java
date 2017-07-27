@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,11 +27,11 @@ import com.streamsets.datacollector.creation.PipelineStageBeans;
 import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
+import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.record.EventRecordImpl;
-import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -51,11 +51,14 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -69,6 +72,7 @@ public class Pipeline {
   private static final String DELIVERY_GUARANTEE_CONFIG_KEY = "deliveryGuarantee";
   private static final String MAX_RUNNERS_CONFIG_KEY = "pipeline.max.runners.count";
   private static final int MAX_RUNNERS_DEFAULT = 50;
+  private static final String FRAMEWORK_NAME = "Framework";
 
   private final PipelineBean pipelineBean;
   private final String name;
@@ -219,7 +223,13 @@ public class Pipeline {
 
     List<Issue> issues = new ArrayList<>();
 
-    // Error and stats aggregation first
+    // Publish LineageEvent first...
+    if(productionExecution) {
+      LineageEvent event = createLineageEvent(LineageEventType.START);
+      lineagePublisherTask.publishEvent(event);
+    }
+
+    // Then Error and stats aggregation
     try {
       issues.addAll(badRecordsHandler.init(pipeContext));
     } catch (Exception ex) {
@@ -440,6 +450,14 @@ public class Pipeline {
     }
     if (scheduledExecutorService != null) {
       scheduledExecutorService.shutdown();
+    }
+
+    if(productionExecution) {
+      LineageEvent event = createLineageEvent(LineageEventType.STOP);
+      Map<String, String> props = new HashMap<>();
+      props.put("Pipeline_Stop_Reason", stopReason.name());
+      event.setProperties(props);
+      lineagePublisherTask.publishEvent(event);
     }
 
     // Propagate exception if it was thrown
@@ -1003,4 +1021,22 @@ public class Pipeline {
     eventRecord.set(Field.create(rootField));
     return eventRecord;
   }
+
+  private LineageEvent createLineageEvent(LineageEventType type) {
+    if (!type.isFrameworkOnly()) {
+      throw new IllegalArgumentException(Utils.format(ContainerError.CONTAINER_01402.getMessage(), type.getLabel()));
+    }
+
+    return new LineageEventImpl(
+        type,
+        pipelineConf.getTitle(),
+        userContext.getUser(),
+        startTime,
+        pipelineConf.getPipelineId(),
+        runner.getRuntimeInfo().getId(),
+        "http://streamsets.com",
+        FRAMEWORK_NAME
+    );
+  }
+
 }
