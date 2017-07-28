@@ -17,7 +17,9 @@ package com.streamsets.pipeline.stage.processor.kudulookup;
 
 import com.codahale.metrics.Timer;
 import com.codahale.metrics.Meter;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -43,12 +45,13 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
-public class KuduLookupLoader extends CacheLoader<Map<String, Field>, List<Map<String, Field>>> {
+public class KuduLookupLoader extends CacheLoader<KuduLookupKey, List<Map<String, Field>>> {
   private static final Logger LOG = LoggerFactory.getLogger(KuduLookupLoader.class);
 
   private final AsyncKuduClient kuduClient;
-  private final KuduTable kuduTable;
   private final Meter selectMeter;
   private final Timer selectTimer;
   // For key columns
@@ -59,12 +62,12 @@ public class KuduLookupLoader extends CacheLoader<Map<String, Field>, List<Map<S
   private final Map<String, String> outputColumnToField = new HashMap<>();
   private final Map<String, String> outputDefault = new HashMap<>();
 
+  private final LoadingCache<String, KuduTable> tableCache;
+
   private final boolean ignoreMissing;
-  private final Schema schema;
 
   public KuduLookupLoader(Stage.Context context,
                           AsyncKuduClient kuduClient,
-                          KuduTable kuduTable,
                           List<String> keyColumns,
                           Map<String, String> columnToField,
                           KuduLookupConfig conf
@@ -72,7 +75,6 @@ public class KuduLookupLoader extends CacheLoader<Map<String, Field>, List<Map<S
     this.selectMeter = context.createMeter("Select Queries");
     this.selectTimer = context.createTimer("Select Queries");
     this.kuduClient = kuduClient;
-    this.kuduTable = kuduTable;
     this.keyColumns = keyColumns;
     this.columnToField = columnToField;
     this.ignoreMissing = conf.ignoreMissing;
@@ -84,34 +86,55 @@ public class KuduLookupLoader extends CacheLoader<Map<String, Field>, List<Map<S
       outputColumnToField.put(columnName, columnConfig.field);
       outputDefault.put(columnName, columnConfig.defaultValue);
     }
-    this.schema = kuduTable.getSchema();
+    // Build table cache.
+    CacheBuilder cacheBuilder;
+    if (conf.enableTableCache) {
+      cacheBuilder = CacheBuilder.newBuilder().maximumSize(0);
+    } else {
+      cacheBuilder = CacheBuilder.newBuilder().maximumSize(conf.cacheSize);
+    }
+
+    tableCache = cacheBuilder.build(new CacheLoader<String, KuduTable>() {
+      @Override
+      public KuduTable load(String tableName) throws Exception {
+        return kuduClient.openTable(tableName).join();
+      }
+    });
   }
 
   @Override
-  public List<Map<String, Field>> load(Map<String, Field> key) throws Exception {
+  public List<Map<String, Field>> load(KuduLookupKey key) throws Exception {
     List<Map<String, Field>> lookupItems = new ArrayList<>();
     AsyncKuduScanner scanner = null;
     Timer.Context t = selectTimer.time();
 
+    KuduTable kuduTable = null;
     try {
-      // Scanner is not reusable. Need to build per record.
-      AsyncKuduScanner.AsyncKuduScannerBuilder scannerBuilder = kuduClient.newScannerBuilder(kuduTable)
-          .setProjectedColumnNames(projectColumns);
-      List<String> kColumns = new ArrayList<>(keyColumns);
+      kuduTable = tableCache.get(key.tableName);
+    } catch (ExecutionException ex) {
+      throw new OnRecordErrorException(Errors.KUDU_03, ex.getMessage(), ex);
+    }
+
+    // Scanner is not reusable. Need to build per record.
+    AsyncKuduScanner.AsyncKuduScannerBuilder scannerBuilder = kuduClient.newScannerBuilder(kuduTable)
+        .setProjectedColumnNames(projectColumns);
+    List<String> kColumns = new ArrayList<>(keyColumns);
+    try {
       // Set primary keys to scanner
+      Schema schema = kuduTable.getSchema();
       for (ColumnSchema keySchema : schema.getPrimaryKeyColumns()) {
         if (!kColumns.contains(keySchema.getName())){
           // Primary key is not configured in Key Column Mapping. Worth stopping pipeline.
           throw new StageException(Errors.KUDU_34, keySchema.getName());
         }
         String keyColumnName = keySchema.getName();
-        addPredicate(key.get(keyColumnName), scannerBuilder, keySchema.getName());
+        addPredicate(key.columns.get(keyColumnName), scannerBuilder, kuduTable, keySchema.getName());
         kColumns.remove(keyColumnName);
       }
       // Set non-primary key columns to scanner if specified in Key Column Mapping
       if (!kColumns.isEmpty()) {
         for (String nonPrimary : kColumns) {
-          addPredicate(key.get(nonPrimary), scannerBuilder, nonPrimary);
+          addPredicate(key.columns.get(nonPrimary), scannerBuilder, kuduTable, nonPrimary);
         }
       }
       try {
@@ -172,7 +195,9 @@ public class KuduLookupLoader extends CacheLoader<Map<String, Field>, List<Map<S
     return lookupItems;
   }
 
-  private void addPredicate(Field field, AsyncKuduScanner.AsyncKuduScannerBuilder scannerBuilder, String keyColumn) throws StageException {
+  private void addPredicate(Field field, AsyncKuduScanner.AsyncKuduScannerBuilder scannerBuilder, KuduTable kuduTable, String keyColumn)
+      throws StageException
+  {
     ColumnSchema schema;
     if (field == null) {
       throw new OnRecordErrorException(Errors.KUDU_32, keyColumn);

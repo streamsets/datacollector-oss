@@ -45,12 +45,15 @@ public class KuduLookupConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Kudu Table",
-      description = "Table name, case sensitive",
+      elDefs = {RecordEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      defaultValue = "${record:attribute('tableName')}",
+      label = "Kudu Table Name",
+      description = "Table name to perform lookup",
       displayPosition = 20,
       group = "KUDU"
   )
-  public String kuduTable;
+  public String kuduTableTemplate;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
@@ -118,6 +121,32 @@ public class KuduLookupConfig {
   )
   public int operationTimeout;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Cache Kudu Table",
+      description = "Cache table objects. Enable only if table schema won't change often. This will improve performance.",
+      displayPosition = 10,
+      group = "LOOKUP"
+  )
+  public boolean enableTableCache;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "-1",
+      label = "Maximum Entries to Cache Table Objects",
+      description = "Maximum number of object to cache. If exceeded, oldest values are evicted to make room. Default value is -1 which is unlimited",
+      dependsOn = "enableTableCache",
+      triggeredByValue = "true",
+      displayPosition = 20,
+      group = "LOOKUP"
+  )
+  public int cacheSize = -1;
+
+
   @ConfigDefBean(groups = "LOOKUP")
   public CacheConfig cache = new CacheConfig();
+
 }

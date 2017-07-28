@@ -66,7 +66,6 @@ public class TestKuduLookup {
     // Mock KuduTable class
     KuduTable table = PowerMockito.spy(PowerMockito.mock(KuduTable.class));
     PowerMockito.suppress(PowerMockito.method(AsyncKuduClient.class, "getTablesList"));
-    PowerMockito.stub(PowerMockito.method(AsyncKuduClient.class, "tableExists")).toReturn(true);
     PowerMockito.when(table.getSchema()).thenReturn(schema);
 
     // Mock KuduSession class
@@ -104,34 +103,15 @@ public class TestKuduLookup {
 
   /**
    * If table name template is not EL, we access Kudu and check if the table exists.
-   * This test checks when Kudu returned true for tableExists() method.
-   * @throws Exception
-   */
-  @Test
-  public void testTableExistsNoEL() throws Exception{
-    //  This test is failing now
-    /*
-    ProcessorRunner runner = setProcessorRunner(tableName);
-
-    try {
-      List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
-      Assert.assertEquals(0, issues.size());
-    } catch (StageException e){
-      Assert.fail();
-    } */
-  }
-
-  /**
-   * If table name template is not EL, we access Kudu and check if the table exists.
    * This test checks when Kudu's tableExists() method returns false.
    * @throws Exception
    */
   @Test
   public void testTableDoesNotExistNoEL() throws Exception{
     // Mock table doesn't exist in Kudu.
-    PowerMockito.stub(PowerMockito.method(AsyncKuduClient.class, "openTable"))
-        .toThrow(PowerMockito.mock(Exception.class));
-
+    PowerMockito.stub(
+        PowerMockito.method(AsyncKuduClient.class, "tableExists"))
+        .toThrow(PowerMockito.mock(KuduException.class));
     ProcessorRunner runner = setProcessorRunner(tableName);
 
     try {
@@ -146,7 +126,7 @@ public class TestKuduLookup {
   {
     KuduLookupConfig conf = new KuduLookupConfig();
     conf.kuduMaster = KUDU_MASTER;
-    conf.kuduTable = tableName;
+    conf.kuduTableTemplate = tableName;
     conf.keyColumnMapping = new ArrayList<>();
     conf.keyColumnMapping.add(new KuduFieldMappingConfig("/key", "key"));
     conf.outputColumnMapping = new ArrayList<>();
