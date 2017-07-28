@@ -264,6 +264,7 @@
                     <exclude>com.streamsets.pipeline.api.ext.json.*</exclude>
                     <exclude>com.streamsets.pipeline.api.ext.io.*</exclude>
                     <exclude>com.streamsets.pipeline.api.base.*</exclude>
+                    <exclude>com.streamsets.pipeline.api.lineage.*</exclude>
                     <exclude>com.streamsets.pipeline.api.impl.*</exclude>
                     <exclude>com.streamsets.pipeline.api.impl.annotationsprocessor.*</exclude>
                     <exclude>com.streamsets.pipeline.sdk.*</exclude>
