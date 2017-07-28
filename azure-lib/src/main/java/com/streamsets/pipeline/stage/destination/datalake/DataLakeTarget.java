@@ -156,7 +156,7 @@ public class DataLakeTarget extends BaseTarget {
     if (issues.isEmpty()) {
       // connect to ADLS
       try {
-        client = createClient(conf.authTokenEndpoint, conf.applicationId, conf.applicationKey, conf.accountFQDN);
+        client = createClient(conf.authTokenEndpoint, conf.clientId, conf.clientKey, conf.accountFQDN);
 
         if (conf.checkPermission && !conf.dirPathTemplateInHeader) {
           validatePermission();
@@ -203,8 +203,8 @@ public class DataLakeTarget extends BaseTarget {
           conf.maxFileSize * MEGA_BYTE,
           conf.dataFormatConfig.wholeFileExistsAction,
           conf.authTokenEndpoint,
-          conf.applicationId,
-          conf.applicationKey,
+          conf.clientId,
+          conf.clientKey,
           idleTimeSecs
       );
     }

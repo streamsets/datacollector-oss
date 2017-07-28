@@ -22,9 +22,9 @@ public class DataLakeTargetBuilder {
 
   public DataLakeTargetBuilder() {
     conf = new DataLakeConfigBean();
-    conf.applicationId = "1";
+    conf.clientId = "1";
     final String dummyKey = "dummy";
-    conf.applicationKey = dummyKey;
+    conf.clientKey = dummyKey;
     conf.dirPathTemplate = "/tmp/out/";
     conf.uniquePrefix = "test";
     conf.fileNameSuffix = "";

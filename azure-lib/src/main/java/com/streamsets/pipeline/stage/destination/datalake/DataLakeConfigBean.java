@@ -47,7 +47,7 @@ public class DataLakeConfigBean {
       elDefs = VaultEL.class,
       group = "#0"
   )
-  public String applicationId;
+  public String clientId;
 
   @ConfigDef(
       required = true,
@@ -83,7 +83,7 @@ public class DataLakeConfigBean {
       elDefs = VaultEL.class,
       group = "#0"
   )
-  public String applicationKey;
+  public String clientKey;
 
   @ConfigDef(
       required = false,
