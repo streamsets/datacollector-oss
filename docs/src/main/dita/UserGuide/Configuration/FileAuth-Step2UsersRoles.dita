@@ -65,9 +65,9 @@
                 </table></p>
             <p>For file-based authentication, <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> also provides a default All group that includes every user, and a dev and test
-                group. The following sample user accounts are available for the dev and test user
-                groups:</p>
+                /> also provides a default "all" group that includes every user, and a "dev" and
+                "test" group. The following sample user accounts are available for the dev and test
+                user groups:</p>
             <table conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/User-Groups"
                 id="table_dmw_rjl_yy">
                 <tgroup cols="1">

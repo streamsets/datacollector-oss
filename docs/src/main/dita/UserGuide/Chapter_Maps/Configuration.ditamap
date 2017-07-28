@@ -107,6 +107,19 @@
    <topicref href="../Configuration/CustomStageLibraries-RPMTarball.dita"/>
    <topicref href="../Configuration/CustomStageLibraries-CM.dita"/>
   </topicref>
+  <topicref href="../Configuration/CredentialStores.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Configuration/CredentialStores-Groups.dita"/>
+   <topicref href="../Configuration/CredentialStores-JKS.dita">
+    <topicref href="../Configuration/CredentialStores-Step1-StageLib.dita"/>
+    <topicref href="../Configuration/CredentialStores-Step2-PropertiesFile.dita"/>
+    <topicref href="../Configuration/CredentialStores-Step3-JKSCmd.dita"/>
+    <topicref href="../Configuration/CredentialStores-Step4-Functions.dita"/>
+    <topicref href="../Configuration/CredentialStores-jks-cs-Cmd.dita"/>
+   </topicref>
+  </topicref>
   <topicref href="../Configuration/Vault-Overview.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
