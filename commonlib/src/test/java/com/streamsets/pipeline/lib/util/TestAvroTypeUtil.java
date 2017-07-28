@@ -208,6 +208,7 @@ public class TestAvroTypeUtil {
     Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, BigDecimal.valueOf(1.5));
     Assert.assertEquals(Field.Type.DECIMAL, field.getType());
     Assert.assertEquals(BigDecimal.valueOf(1.5), field.getValueAsDecimal());
+    Assert.assertEquals("decimal", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
 
     record.set(field);
     Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
@@ -240,6 +241,7 @@ public class TestAvroTypeUtil {
     Record record = RecordCreator.create();
     Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, new Date(116, 0, 1));
     Assert.assertEquals(Field.Type.DATE, field.getType());
+    Assert.assertEquals("date", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
     Assert.assertEquals(new Date(116, 0, 1), field.getValueAsDate());
 
     record.set(field);
@@ -276,6 +278,71 @@ public class TestAvroTypeUtil {
     Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, avroObject);
     Assert.assertEquals(Field.Type.DATE, field.getType());
     Assert.assertEquals(expectedDate, field.getValueAsDate());
+  }
+
+  @Test
+  public void testCreateTimeMillisField() throws Exception {
+    String schema = "{\"name\": \"name\", \"type\": \"int\", \"logicalType\": \"time-millis\"}";
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 1000);
+    Assert.assertEquals(Field.Type.TIME, field.getType());
+    Assert.assertEquals("time-millis", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
+    Assert.assertEquals(new Date(1000L), field.getValueAsDate());
+
+    record.set(field);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<>());
+    Assert.assertTrue(avroObject instanceof Integer);
+    Assert.assertEquals(1000, (int)avroObject);
+  }
+
+  @Test
+  public void testCreateTimeMicrosField() throws Exception {
+    String schema = "{\"name\": \"name\", \"type\": \"long\", \"logicalType\": \"time-micros\"}";
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 1000);
+    Assert.assertEquals(Field.Type.LONG, field.getType());
+    Assert.assertEquals("time-micros", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
+    Assert.assertEquals(1000L, field.getValueAsLong());
+
+    record.set(field);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<>());
+    Assert.assertTrue(avroObject instanceof Long);
+    Assert.assertEquals(1000, (long)avroObject);
+  }
+
+  @Test
+  public void testCreateTimestampMillisField() throws Exception {
+    String schema = "{\"name\": \"name\", \"type\": \"long\", \"logicalType\": \"timestamp-millis\"}";
+    Date date = new Date(116, 0, 1, 3, 30, 5);
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, date);
+    Assert.assertEquals(Field.Type.DATETIME, field.getType());
+    Assert.assertEquals("timestamp-millis", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
+    Assert.assertEquals(date, field.getValueAsDate());
+
+    record.set(field);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<>());
+    Assert.assertTrue(avroObject instanceof Long);
+    Assert.assertEquals(date.getTime(), (long)avroObject);
+  }
+
+  @Test
+  public void testCreateTimestampMicrosField() throws Exception {
+    String schema = "{\"name\": \"name\", \"type\": \"long\", \"logicalType\": \"timestamp-micros\"}";
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, 1000L);
+    Assert.assertEquals(Field.Type.LONG, field.getType());
+    Assert.assertEquals("timestamp-micros", field.getAttribute(AvroTypeUtil.FIELD_ATTRIBUTE_TYPE));
+    Assert.assertEquals(1000L, field.getValueAsLong());
+
+    record.set(field);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<>());
+    Assert.assertTrue(avroObject instanceof Long);
+    Assert.assertEquals(1000L, (long)avroObject);
   }
 
   @Test

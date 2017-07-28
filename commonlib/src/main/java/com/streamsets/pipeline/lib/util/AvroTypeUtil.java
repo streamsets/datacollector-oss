@@ -64,9 +64,14 @@ public class AvroTypeUtil {
   private static final String LOGICAL_TYPE = "logicalType";
   private static final String LOGICAL_TYPE_DECIMAL = "decimal";
   private static final String LOGICAL_TYPE_DATE = "date";
+  private static final String LOGICAL_TYPE_TIME_MILLIS = "time-millis";
+  private static final String LOGICAL_TYPE_TIME_MICROS = "time-micros";
+  private static final String LOGICAL_TYPE_TIMESTAMP_MILLIS = "timestamp-millis";
+  private static final String LOGICAL_TYPE_TIMESTAMP_MICROS = "timestamp-micros";
 
   @VisibleForTesting
   static final String AVRO_UNION_TYPE_INDEX_PREFIX = "avro.union.typeIndex.";
+  static final String FIELD_ATTRIBUTE_TYPE = "avro.type";
 
   private static final String FORWARD_SLASH = "/";
 
@@ -159,6 +164,7 @@ public class AvroTypeUtil {
     // Logical types
     String logicalType = schema.getProp(LOGICAL_TYPE);
     if(logicalType != null && !logicalType.isEmpty()) {
+      Field returnField = null;
       switch (logicalType) {
         case LOGICAL_TYPE_DECIMAL:
           if(schema.getType() != Schema.Type.BYTES) {
@@ -173,10 +179,10 @@ public class AvroTypeUtil {
             //Set scale
             value = new BigDecimal(unscaledBigInteger, scale);
           }
-          f = Field.create(Field.Type.DECIMAL, value);
-          f.setAttribute(SCALE, String.valueOf(scale));
-          f.setAttribute(PRECISION, String.valueOf(precision));
-          return f;
+          returnField = Field.create(Field.Type.DECIMAL, value);
+          returnField.setAttribute(SCALE, String.valueOf(scale));
+          returnField.setAttribute(PRECISION, String.valueOf(precision));
+          break;
         case LOGICAL_TYPE_DATE:
           if(schema.getType() != Schema.Type.INT) {
             throw new IllegalStateException("Unexpected physical type for logical date type: " + schema.getType());
@@ -186,7 +192,40 @@ public class AvroTypeUtil {
             long millis = daysToMillis((int)value);
             value = new Date(millis);
           }
-          return Field.create(Field.Type.DATE, value);
+          returnField = Field.create(Field.Type.DATE, value);
+          break;
+        case LOGICAL_TYPE_TIME_MILLIS:
+          if(schema.getType() != Schema.Type.INT) {
+            throw new IllegalStateException("Unexpected physical type for logical time millis type: " + schema.getType());
+          }
+
+          returnField = Field.create(Field.Type.TIME, (long)(int)value);
+          break;
+        case LOGICAL_TYPE_TIME_MICROS:
+          if(schema.getType() != Schema.Type.LONG) {
+            throw new IllegalStateException("Unexpected physical type for logical time micros type: " + schema.getType());
+          }
+          // We don't have a better type to represent microseconds
+          returnField = Field.create(Field.Type.LONG, value);
+          break;
+        case LOGICAL_TYPE_TIMESTAMP_MILLIS:
+          if(schema.getType() != Schema.Type.LONG) {
+            throw new IllegalStateException("Unexpected physical type for logical timestamp millis type: " + schema.getType());
+          }
+          returnField = Field.create(Field.Type.DATETIME, value);
+        break;
+        case LOGICAL_TYPE_TIMESTAMP_MICROS:
+          if(schema.getType() != Schema.Type.LONG) {
+            throw new IllegalStateException("Unexpected physical type for logical timestamp micros type: " + schema.getType());
+          }
+          // We don't have a better type to represent microseconds
+          returnField = Field.create(Field.Type.LONG, value);
+          break;
+      }
+
+      if(returnField != null) {
+        returnField.setAttribute(FIELD_ATTRIBUTE_TYPE, logicalType);
+        return returnField;
       }
     }
 
@@ -348,6 +387,26 @@ public class AvroTypeUtil {
             throw new IllegalStateException("Unexpected physical type for logical date type: " + schema.getType());
           }
           return millisToDays(field.getValueAsDate().getTime());
+        case LOGICAL_TYPE_TIME_MILLIS:
+          if(schema.getType() != Schema.Type.INT) {
+            throw new IllegalStateException("Unexpected physical type for logical time millis type: " + schema.getType());
+          }
+          return (int)field.getValueAsTime().getTime();
+        case LOGICAL_TYPE_TIME_MICROS:
+          if(schema.getType() != Schema.Type.LONG) {
+            throw new IllegalStateException("Unexpected physical type for logical time micros type: " + schema.getType());
+          }
+          return field.getValueAsLong();
+        case LOGICAL_TYPE_TIMESTAMP_MILLIS:
+          if(schema.getType() != Schema.Type.LONG) {
+            throw new IllegalStateException("Unexpected physical type for logical timestamp millis type: " + schema.getType());
+          }
+          return field.getValueAsDatetime().getTime();
+        case LOGICAL_TYPE_TIMESTAMP_MICROS:
+          if(schema.getType() != Schema.Type.LONG) {
+            throw new IllegalStateException("Unexpected physical type for logical timestamp micros type: " + schema.getType());
+          }
+          return field.getValueAsLong();
       }
     }
 
