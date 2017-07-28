@@ -48,9 +48,10 @@
                     /> worker to process data. When Spark Streaming runs on YARN, you can limit the
                     number of workers spawned by configuring the <xref
                         href="../Pipeline_Configuration/ConfiguringAPipeline.dita#task_xlv_jdw_kq/YarnStreaming-WorkerCount"
-                        >Worker Count cluster pipeline property</xref>.<p>Use the Kafka Consumer
-                        origin to process data from a Kafka cluster in cluster streaming
-                    mode.</p></dd>
+                        >Worker Count cluster pipeline property</xref>. And you can use the Extra
+                    Spark Configuration property to pass Spark configurations to the spark-submit
+                        script.<p>Use the Kafka Consumer origin to process data from a Kafka cluster
+                        in cluster streaming mode.</p></dd>
          </dlentry>
      </dl><dl>
          <dlentry>

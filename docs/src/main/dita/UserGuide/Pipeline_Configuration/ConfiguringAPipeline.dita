@@ -96,9 +96,12 @@
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> spawns additional workers as needed to process
                                                 data, by default. You can limit the number of
-                                                workers with the Worker Count cluster property. Use
-                                                to stream data from a Kafka or MapR cluster that
-                                                uses Spark Streaming on YARN.</li>
+                                                workers with the Worker Count cluster property. And
+                                                you can use the Extra Spark Configuration property
+                                                to pass Spark configurations to the spark-submit
+                                                  script.<p>Use to stream data from a Kafka or MapR
+                                                  cluster that uses Spark Streaming on
+                                                YARN.</p></li>
                                             <li>Cluster Mesos Streaming - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> spawns additional workers as needed to process
@@ -733,6 +736,25 @@
                                     <entry>Maximum amount of memory allocated to each <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> worker in the cluster.<p>Default is 1024 MB.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Extra Spark Configuration</entry>
+                                    <entry>For Cluster Yarn Streaming pipelines, you can configure
+                                        additional Spark configurations to pass to the spark-submit
+                                        script. Enter the Spark configuration name and the value to
+                                        use. <p>The specified configurations are passed to the
+                                            spark-submit script as
+                                            follows:<codeblock>spark-submit --conf &lt;key>=&lt;value></codeblock></p><p>For
+                                            example, to limit the off-heap memory allocated to each
+                                            executor, you can use the
+                                                <codeph>spark.yarn.executor.memoryOverhead</codeph>
+                                            configuration and set it to the number of MB that you
+                                            want to use. </p><p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> does not validate the property names or values.
+                                            </p><p>For details on additional Spark configurations
+                                            that you can use, see the Spark documentation for the
+                                            Spark version that you are using. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
