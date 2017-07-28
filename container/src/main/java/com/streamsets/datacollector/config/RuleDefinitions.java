@@ -75,6 +75,10 @@ public class RuleDefinitions {
     return version;
   }
 
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
   public List<MetricsRuleDefinition> getMetricsRuleDefinitions() {
     return metricsRuleDefinitions;
   }

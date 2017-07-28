@@ -165,7 +165,7 @@ public class PipelineConfigurationUpgrader {
     return upgrade;
   }
 
-  boolean needsUpgrade(StageDefinition def, StageConfiguration conf, List<Issue> issues) {
+  static boolean needsUpgrade(StageDefinition def, StageConfiguration conf, List<Issue> issues) {
     boolean upgrade = false;
     if (def == null) {
       issues.add(IssueCreator.getStage(conf.getInstanceName()).create(ContainerError.CONTAINER_0901, conf.getLibrary(),
@@ -266,7 +266,7 @@ public class PipelineConfigurationUpgrader {
     return pipelineConf;
   }
 
-  StageConfiguration upgrade(StageDefinition def, StageConfiguration conf, List<Issue> issues) {
+  static StageConfiguration upgrade(StageDefinition def, StageConfiguration conf, List<Issue> issues) {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     int fromVersion = conf.getStageVersion();
     int toVersion = def.getVersion();

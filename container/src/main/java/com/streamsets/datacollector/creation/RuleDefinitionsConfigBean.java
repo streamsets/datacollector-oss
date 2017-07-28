@@ -34,6 +34,7 @@ import java.util.List;
 @StageDef(
     version = RuleDefinitionsConfigBean.VERSION,
     label = "Pipeline Rules",
+    upgrader = RuleDefinitionsConfigUpgrader.class,
     onlineHelpRefUrl = "not applicable"
 )
 @ConfigGroups(PipelineRulesGroups.class)

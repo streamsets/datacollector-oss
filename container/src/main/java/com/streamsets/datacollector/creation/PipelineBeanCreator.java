@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -86,7 +86,7 @@ public abstract class PipelineBeanCreator {
     return StageDefinitionExtractor.get().extract(libraryDef, PipelineConfigBean.class, "Pipeline Config Definitions");
   }
 
-  private static final StageDefinition RULES_DEFINITION = getRulesDefinition();
+  public static final StageDefinition RULES_DEFINITION = getRulesDefinition();
 
   static private StageDefinition getRulesDefinition() {
     StageLibraryDefinition libraryDef = new StageLibraryDefinition(
@@ -335,7 +335,13 @@ public abstract class PipelineBeanCreator {
     List<StageBean> stageBeans = new ArrayList<>(pipelineStageBeans.size());
 
     for(StageBean original: pipelineStageBeans.getStages()) {
-      StageBean stageBean = createStage(original.getDefinition(), ClassLoaderReleaser.NOOP_RELEASER, original.getConfiguration(), constants, errors);
+      StageBean stageBean = createStage(
+          original.getDefinition(),
+          ClassLoaderReleaser.NOOP_RELEASER,
+          original.getConfiguration(),
+          constants,
+          errors
+      );
 
       if (stageBean != null) {
         stageBeans.add(stageBean);
@@ -426,19 +432,28 @@ public abstract class PipelineBeanCreator {
 
   @SuppressWarnings("unchecked")
   public static StageConfiguration getPipelineConfAsStageConf(PipelineConfiguration pipelineConf) {
-    return new StageConfiguration(null, "none", "pipeline", pipelineConf.getVersion(), pipelineConf.getConfiguration(),
-                                  Collections.EMPTY_MAP, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+    return new StageConfiguration(
+        null,
+        "none",
+        "pipeline",
+        pipelineConf.getVersion(),
+        pipelineConf.getConfiguration(),
+        Collections.EMPTY_MAP,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_LIST
+    );
   }
 
 
   @SuppressWarnings("unchecked")
-  private static StageConfiguration getRulesConfAsStageConf(RuleDefinitions ruleDefinitions) {
+  public static StageConfiguration getRulesConfAsStageConf(RuleDefinitions ruleDefinitions) {
     return new StageConfiguration(
         null,
         "none",
         "pipeline",
         ruleDefinitions.getVersion(),
-        ruleDefinitions.getConfiguration(),
+        ruleDefinitions.getConfiguration() != null ? ruleDefinitions.getConfiguration() : Collections.EMPTY_LIST,
         Collections.EMPTY_MAP,
         Collections.EMPTY_LIST,
         Collections.EMPTY_LIST,

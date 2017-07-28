@@ -77,8 +77,9 @@ public class RuleDefinitionValidator {
 
   public boolean validateRuleDefinition() {
     List<RuleIssue> ruleIssues = new ArrayList<>();
-    ruleIssues.addAll(upgradeRuleDefinitions());
+
     List<Issue> configIssues = new ArrayList<>();
+    configIssues.addAll(upgradeRuleDefinitions());
     RuleDefinitionsConfigBean ruleDefinitionsConfigBean = PipelineBeanCreator.get()
         .createRuleDefinitionsConfigBean(ruleDefinitions, configIssues, pipelineParameters);
     List<String> emailIds = ruleDefinitionsConfigBean.emailIDs;
@@ -367,8 +368,8 @@ public class RuleDefinitionValidator {
     return RuleDefinitionsUpgrader.get();
   }
 
-  private List<RuleIssue> upgradeRuleDefinitions() {
-    List<RuleIssue> upgradeIssues = new ArrayList<>();
+  private List<Issue> upgradeRuleDefinitions() {
+    List<Issue> upgradeIssues = new ArrayList<>();
     RuleDefinitions upgradedRuleDefinitions = getUpgrader().upgradeIfNecessary(
         pipelineId,
         ruleDefinitions,

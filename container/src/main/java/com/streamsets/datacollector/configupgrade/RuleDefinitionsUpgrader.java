@@ -17,14 +17,19 @@ package com.streamsets.datacollector.configupgrade;
 
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.store.PipelineStoreTask;
-import com.streamsets.datacollector.validation.RuleIssue;
+import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.pipeline.api.Config;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RuleDefinitionsUpgrader {
@@ -42,7 +47,7 @@ public class RuleDefinitionsUpgrader {
   public RuleDefinitions upgradeIfNecessary(
       String pipelineId,
       RuleDefinitions ruleDefinitions,
-      List<RuleIssue> issues
+      List<Issue> issues
   ) {
     Preconditions.checkArgument(issues.size() == 0, "Given list of issues must be empty.");
     boolean upgrade;
@@ -53,30 +58,39 @@ public class RuleDefinitionsUpgrader {
       ruleDefinitions = upgradeSchema(pipelineId, ruleDefinitions, issues);
     }
 
+    if(issues.isEmpty()) {
+      upgrade(ruleDefinitions, issues);
+    }
+
     return (issues.isEmpty()) ? ruleDefinitions : null;
   }
 
-  private boolean needsSchemaUpgrade(RuleDefinitions ruleDefinitions, List<RuleIssue> ownIssues) {
+  private boolean needsSchemaUpgrade(RuleDefinitions ruleDefinitions, List<Issue> ownIssues) {
     return ruleDefinitions.getSchemaVersion() != PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION;
   }
 
-  private RuleDefinitions upgradeSchema(String pipelineId, RuleDefinitions ruleDefinitions, List<RuleIssue> issues) {
+  private RuleDefinitions upgradeSchema(String pipelineId, RuleDefinitions ruleDefinitions, List<Issue> issues) {
     LOG.debug("Upgrading schema from version {} on rule definitions for pipeline {}",
         ruleDefinitions.getSchemaVersion(), pipelineId);
     switch (ruleDefinitions.getSchemaVersion()) {
+      case 0:
       case 1:
       case 2:
         upgradeSchema2to3(ruleDefinitions, issues);
         break;
       default:
-        issues.add(RuleIssue.createRuleIssue(null, ValidationError.VALIDATION_0000, ruleDefinitions.getSchemaVersion()));
+        issues.add(IssueCreator.getStage(null)
+            .create(ValidationError.VALIDATION_0000, ruleDefinitions.getSchemaVersion()));
     }
 
     ruleDefinitions.setSchemaVersion(PipelineStoreTask.RULE_DEFINITIONS_SCHEMA_VERSION);
     return issues.isEmpty() ? ruleDefinitions : null;
   }
 
-  private void upgradeSchema2to3(RuleDefinitions ruleDefinitions, List<RuleIssue> issues) {
+  private void upgradeSchema2to3(RuleDefinitions ruleDefinitions, List<Issue> issues) {
+    if (ruleDefinitions.getConfiguration() == null) {
+      ruleDefinitions.setConfiguration(new ArrayList<>());
+    }
     if (!CollectionUtils.isEmpty(ruleDefinitions.getEmailIds())) {
       List<Config> configList = ruleDefinitions.getConfiguration();
       for (int i = 0; i < configList.size(); i++) {
@@ -87,6 +101,19 @@ public class RuleDefinitionsUpgrader {
         }
       }
       configList.add(new Config("emailIDs", ruleDefinitions.getEmailIds()));
+    }
+  }
+
+  private StageDefinition getRulesDefinition() {
+    return PipelineBeanCreator.RULES_DEFINITION;
+  }
+
+  private void upgrade(RuleDefinitions ruleDefinitions, List<Issue> issues) {
+    StageConfiguration rulesConfAsStageConf = PipelineBeanCreator.getRulesConfAsStageConf(ruleDefinitions);
+    if (PipelineConfigurationUpgrader.needsUpgrade(getRulesDefinition(), rulesConfAsStageConf, issues)) {
+      rulesConfAsStageConf = PipelineConfigurationUpgrader.upgrade(getRulesDefinition(), rulesConfAsStageConf, issues);
+      ruleDefinitions.setConfiguration(rulesConfAsStageConf.getConfiguration());
+      ruleDefinitions.setVersion(rulesConfAsStageConf.getStageVersion());
     }
   }
 }
