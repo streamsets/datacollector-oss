@@ -144,6 +144,10 @@
               <entry/>
             </row>
             <row>
+              <entry>Google BigQuery</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
               <entry>Hadoop FS</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_j5s_p2c_kv"
                 /></entry>

@@ -58,6 +58,14 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>Google BigQuery</entry>
+                            <entry>
+                                <ul id="ul_rns_2jx_q1b">
+                                    <li>Successfully completes a query.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>JDBC Query Consumer origin</entry>
                             <entry>
                                 <ul id="ul_fsn_ct5_lz">

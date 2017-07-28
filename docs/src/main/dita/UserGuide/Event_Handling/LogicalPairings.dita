@@ -61,6 +61,16 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>Google BigQuery</entry>
+                            <entry>
+                                <ul>
+                                    <li>Email executor to send email each time the origin
+                                        successfully completes a query.</li>
+                                    <li>Any destination for event storage.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>JDBC Multitable Consumer</entry>
                             <entry>
                                 <ul id="ul_a1m_jx5_lz">

@@ -95,6 +95,15 @@
    </topicref>
    <topicref href="../Origins/FileTail-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/BigQuery.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/BigQuery-Prereqs.dita"/>
+   <topicref href="../Origins/BigQuery-Datatypes.dita"/>
+   <topicref href="../Origins/BigQuery-EventGen.dita">
+    <topicref href="../Origins/BigQuery-EventRecord.dita"/>
+   </topicref>
+   <topicref href="../Origins/BigQuery-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/HadoopFS-origin.dita" chunk="to-content">   
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Hadoop-OtherFS.dita"/>
