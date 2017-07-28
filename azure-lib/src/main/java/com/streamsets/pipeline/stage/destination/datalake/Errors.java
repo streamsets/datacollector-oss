@@ -33,6 +33,8 @@ public enum Errors implements ErrorCode {
   ADLS_10("The late record time limit expression '{}' is invalid: {}"),
   ADLS_11("ExecutionException data generation thread '{}'"),
   ADLS_12("Error while writing to ADLS: {}"),
+  ADLS_13("Error while renaming _tmp_ files: {}"),
+  ADLS_14("ADLException was thrown with requestID: {}, httpResponsecode: {}, httpResponseMessage: {}, remoteExceptionMessage: {}, remoteExceptionName: {}, remoteExceptionJavaClassName: {}"),
   ;
   private final String msg;
 

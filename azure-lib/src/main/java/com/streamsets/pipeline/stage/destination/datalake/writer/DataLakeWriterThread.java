@@ -35,85 +35,130 @@ public class DataLakeWriterThread implements Callable<List<OnRecordErrorExceptio
   private String tmpFilePath;
   private List<Record> records;
   private RecordWriter writer;
+  private final long threadId;
+  private final int MAX_RETRY = 3;
 
   public DataLakeWriterThread(RecordWriter writer, String tmpFilePath, List<Record> records) {
     this.writer = writer;
     this.tmpFilePath = tmpFilePath;
     this.records = records;
+    threadId = Thread.currentThread().getId();
   }
 
   @Override
   public List<OnRecordErrorException> call() {
-    long threadId = Thread.currentThread().getId();
     int numErrorRecords = 0;
     LOG.debug("Thread {} starts to write {} records to {}", threadId, records.size(), tmpFilePath);
     List<OnRecordErrorException> errorRecords = new ArrayList<>();
-    int retry = 0;
     boolean isFlushed = false;
 
     for (int i = 0; i < records.size(); i++) {
       Record record = records.get(i);
-      try {
-        String dirPath = tmpFilePath.substring(0, tmpFilePath.lastIndexOf("/"));
-        writer.write(tmpFilePath, record);
+      String dirPath = tmpFilePath.substring(0, tmpFilePath.lastIndexOf("/"));
 
+      try {
+        handleError(() -> writer.write(tmpFilePath, record));
+      } catch (IOException | StageException ex) {
+
+        if (!(ex instanceof ADLException)) {
+          LOG.debug(Errors.ADLS_03.getMessage(), ex.toString(), ex);
+        }
+
+        // acutal throwing the error happening on the main thread
+        errorRecords.add(new OnRecordErrorException(record, Errors.ADLS_03, ex.toString()));
+        numErrorRecords++;
+      }
+
+
+      try {
         if (writer.shouldRoll(record, dirPath)) {
-          writer.commitOldFile(tmpFilePath);
+          handleError(() -> writer.commitOldFile(tmpFilePath));
           isFlushed = true;
         } else {
           isFlushed = false;
         }
+      } catch (IOException | StageException ex) {
 
-      } catch (ADLException ex) {
-        // for 401 error, renew the token and retry the request
-        if (ex.httpResponseCode == 401 && retry < 3) {
-          try {
-            writer.updateToken();
-            LOG.info("Thread {} obtained a renewed access token", threadId);
-            retry = 0;
-            i--;
-            continue;
-          } catch (IOException ex1) {
-            // retry to obtain the token
-            retry++;
-          }
+        if (!(ex instanceof ADLException)) {
+          LOG.debug(Errors.ADLS_13.getMessage(), tmpFilePath, ex.toString(), ex);
         }
         // acutal throwing the error happening on the main thread
-        LOG.debug(Errors.ADLS_03.getMessage(), ex.getMessage(), ex);
-        errorRecords.add(new OnRecordErrorException(record, Errors.ADLS_03, ex.getMessage()));
-        numErrorRecords++;
-      } catch (IOException | StageException ex) {
-        // acutal throwing the error happening on the main thread
-        LOG.debug(Errors.ADLS_03.getMessage(), ex.toString(), ex);
-        errorRecords.add(new OnRecordErrorException(record, Errors.ADLS_03, ex.toString()));
+        errorRecords.add(new OnRecordErrorException(record, Errors.ADLS_13, ex.toString()));
         numErrorRecords++;
       }
     }
 
+
     if (!isFlushed) {
       try {
-        writer.flush(tmpFilePath);
-      } catch (IOException ex) {
+        handleError(() -> writer.flush(tmpFilePath));
+        isFlushed = true;
+      } catch (IOException | StageException ex) {
         // reset error records
         errorRecords.clear();
         numErrorRecords = 0;
+
+        if (!(ex instanceof ADLException)) {
+          LOG.debug(Errors.ADLS_03.getMessage(), ex.toString(), ex);
+        }
+
         // send to error records
         for (Record record : records) {
-          LOG.debug(Errors.ADLS_03.getMessage(), ex.toString(), ex);
           errorRecords.add(new OnRecordErrorException(record, Errors.ADLS_03, ex.toString()));
           numErrorRecords++;
         }
       }
     }
 
-    LOG.debug(
-        "Thread {} ends to write {} out of {} records to {}",
-        threadId,
-        records.size() - numErrorRecords,
-        records.size(),
-        tmpFilePath
-    );
+    if (isFlushed) {
+      LOG.debug(
+          "Thread {} ends to write {} out of {} records to {}",
+          threadId,
+          records.size() - numErrorRecords,
+          records.size(),
+          tmpFilePath
+      );
+    }
 
     return errorRecords;
+  }
+
+  private void handleError(RetryFunctionHandler retryFunctionHandler) throws IOException, StageException{
+    int retry = 0;
+    while (retry < MAX_RETRY) {
+      try {
+        retryFunctionHandler.run();
+        return;
+      } catch (ADLException ex) {
+        int httpResponseCode = ex.httpResponseCode;
+
+        LOG.debug(
+            Errors.ADLS_14.getMessage(),
+            ex.requestId,
+            ex.httpResponseCode,
+            ex.httpResponseMessage,
+            ex.remoteExceptionMessage,
+            ex.remoteExceptionName,
+            ex.remoteExceptionJavaClassName,
+            ex
+        );
+
+        if (httpResponseCode == 401 || httpResponseCode == 400) {
+          try {
+            writer.updateToken();
+            LOG.debug("Thread {} obtained a renewed access token", threadId);
+          } catch (IOException ex1) {
+            LOG.error("Thread {} obtained a renewed access token failed retrying..", threadId);
+            retry++;
+          }
+        } else {
+          throw ex;
+        }
+      }
+    }
+  }
+
+  private interface RetryFunctionHandler {
+    void run() throws IOException, StageException;
   }
 }
