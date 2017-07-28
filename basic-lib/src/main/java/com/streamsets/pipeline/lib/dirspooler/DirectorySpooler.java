@@ -634,7 +634,7 @@ public class DirectorySpooler {
           }
         });
       } catch (Exception ex) {
-        throw new IOException("findAndQueueFiles(): walkFileTree error. startingFile " + startingFile + ex.getMessage());
+        throw new IOException("findAndQueueFiles(): walkFileTree error. startingFile " + startingFile + ex.getMessage(), ex);
       }
     } else {
       directories.add(spoolDirPath);
@@ -659,7 +659,7 @@ public class DirectorySpooler {
           }
         }
       } catch(Exception ex) {
-        LOG.error("findAndQueueFiles(): newDirectoryStream failed. " + ex.getMessage());
+        LOG.error("findAndQueueFiles(): newDirectoryStream failed. " + ex.getMessage(), ex);
       }
     }
 
@@ -702,7 +702,8 @@ public class DirectorySpooler {
       } catch (Exception ex) {
         throw new IOException("traverseDirectories(): walkFileTree error. startingFile "
             + startingFile
-            + ex.getMessage()
+            + ex.getMessage(),
+            ex
         );
       }
 
