@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.main;
 
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.uuid.Generators;
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -23,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.Callable;
 
 public class StandaloneRuntimeInfo extends RuntimeInfo {
@@ -77,7 +77,7 @@ public class StandaloneRuntimeInfo extends RuntimeInfo {
     File idFile = new File(dataDir, "sdc.id");
     if (!idFile.exists()) {
       try {
-        Files.write(UUID.randomUUID().toString(), idFile, StandardCharsets.UTF_8);
+        Files.write(Generators.timeBasedGenerator().generate().toString(), idFile, StandardCharsets.UTF_8);
       } catch (IOException ex) {
         throw new RuntimeException(Utils.format("Could not create SDC ID file '{}': {}", idFile, ex.toString()), ex);
       }
