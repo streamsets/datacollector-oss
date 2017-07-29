@@ -51,4 +51,4 @@ We welcome contributors, please check out our [guidelines](CONTRIBUTING.md) to g
 
 Changelog
 ----------
-See the latest [changelog](https://github.com/StreamSets/datacollector/blob/master/CHANGES.txt)
+See the latest [changelog](https://streamsets.com/documentation/datacollector/latest/help/index.html#WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy)
