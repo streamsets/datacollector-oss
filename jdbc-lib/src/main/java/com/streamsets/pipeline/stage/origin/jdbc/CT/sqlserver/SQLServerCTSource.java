@@ -271,7 +271,7 @@ public class SQLServerCTSource extends BasePushSource {
 
       while (!getContext().isStopped()) {
         checkWorkerStatus(completionService);
-        // TODO: generate NoMore Data Event
+        JdbcUtil.generateNoMoreDataEventIfNeeded(tableOrderProvider.shouldGenerateNoMoreDataEvent(), getContext());
       }
     } catch (Exception e) {
       LOG.error("Exception thrown during produce", e);

@@ -22,7 +22,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -30,6 +32,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
@@ -944,5 +947,20 @@ public class JdbcUtil {
   public static String getCTOffset(ResultSet rs, String version, String operation, List<String> primaryKeys) throws SQLException {
     final String delimitor = "::";
     return version + "=" + rs.getString(version) + delimitor + operation + "=" + rs.getString(operation) + delimitor + Joiner.on(delimitor).join(primaryKeys);
+  }
+
+  /**
+   * Checks whether to generate a no-more-data event, if
+   * so creates a new batch and then
+   */
+  public static void generateNoMoreDataEventIfNeeded(boolean shouldGenerate, PushSource.Context context) {
+    //final boolean shouldGenerate = tableOrderProvider.shouldGenerateNoMoreDataEvent();
+    if (shouldGenerate) {
+      //throw event
+      LOG.info("No More data to process, Triggered No More Data Event");
+      BatchContext batchContext = context.startBatch();
+      CommonEvents.NO_MORE_DATA.create(context, batchContext).createAndSend();
+      context.processBatch(batchContext);
+    }
   }
 }

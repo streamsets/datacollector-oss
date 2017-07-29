@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     description = "Origin that an read change events from an MS SQL Server Database",
     icon = "sql-server.png",
     resetOffset = true,
+    producesEvents = true,
     onlineHelpRefUrl = ""
 )
 @GenerateResourceBundle

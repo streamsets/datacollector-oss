@@ -20,13 +20,11 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
-import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
-import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
@@ -333,25 +331,10 @@ public class TableJdbcSource extends BasePushSource {
 
       while (!getContext().isStopped()) {
         checkWorkerStatus(completionService);
-        generateNoMoreDataEventIfNeeded();
+        JdbcUtil.generateNoMoreDataEventIfNeeded(tableOrderProvider.shouldGenerateNoMoreDataEvent(), getContext());
       }
     } finally {
       shutdownExecutorIfNeeded();
-    }
-  }
-
-  /**
-   * Checks whether to generate a no-more-data event, if
-   * so creates a new batch and then
-   */
-  private void generateNoMoreDataEventIfNeeded() {
-    final boolean shouldGenerate = tableOrderProvider.shouldGenerateNoMoreDataEvent();
-    if (shouldGenerate) {
-      //throw event
-      LOG.info("No More data to process, Triggered No More Data Event");
-      BatchContext batchContext = getContext().startBatch();
-      CommonEvents.NO_MORE_DATA.create(getContext(), batchContext).createAndSend();
-      getContext().processBatch(batchContext);
     }
   }
 
