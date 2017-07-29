@@ -36,16 +36,21 @@
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
   </properties>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>cdh.repo</id>
+      <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+      <name>Cloudera Repositories</name>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-dist</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.cloudera.enterprise</groupId>
-      <artifactId>schema-validator</artifactId>
-      <version>5.5.0</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -71,32 +76,26 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.4.0</version>
+        <groupId>com.cloudera.enterprise</groupId>
+        <artifactId>schema-validator-maven-plugin</artifactId>
+        <version>5.12.0</version>
         <executions>
           <execution>
-            <id>run-validator</id>
+            <id>validate-schema</id>
             <phase>test</phase>
             <goals>
-              <goal>exec</goal>
+              <goal>validate</goal>
             </goals>
             <configuration>
-              <executable>java</executable>
-              <keeyAlive>true</keeyAlive>
-              <classpathScope>test</classpathScope>
-              <arguments>
-                <argument>-cp</argument>
-                <classpath/>
-                <argument>com.cloudera.cli.validator.Main</argument>
-                <argument>-s</argument>
-                <argument>${basedir}/src/main/descriptor/service.sdl</argument>
-              </arguments>
+              <sourceDirectory>src</sourceDirectory>
+              <strictMode>true</strictMode>
             </configuration>
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
