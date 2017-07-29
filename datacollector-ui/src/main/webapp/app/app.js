@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 angular.module('dataCollectorApp')
   .config(function($routeProvider, $locationProvider, $translateProvider, $provide,
-                   tmhDynamicLocaleProvider, uiSelectConfig, $httpProvider, AnalyticsProvider, $qProvider) {
+                   tmhDynamicLocaleProvider, uiSelectConfig, $httpProvider, AnalyticsProvider) {
 
     $locationProvider.html5Mode({enabled: true, requireBase: false});
     $routeProvider.otherwise({
@@ -57,8 +58,6 @@ angular.module('dataCollectorApp')
 
     tmhDynamicLocaleProvider.localeLocationPattern('bower_components/angular-i18n/angular-locale_{{locale}}.js');
     tmhDynamicLocaleProvider.useCookieStorage('NG_TRANSLATE_LANG_KEY');
-
-    $qProvider.errorOnUnhandledRejections(false);
 
     uiSelectConfig.theme = 'bootstrap';
 
@@ -342,7 +341,12 @@ angular.module('dataCollectorApp')
           templateUrl: 'app/help/register/registerModal.tpl.html',
           controller: 'RegisterModalInstanceController',
           size: '',
-          backdrop: 'static'
+          backdrop: 'static',
+          resolve: {
+            activationInfo: function () {
+              return $rootScope.common.activationInfo;
+            }
+          }
         });
       },
 

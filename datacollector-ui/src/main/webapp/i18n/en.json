@@ -836,7 +836,7 @@
     }
   },
   "register": {
-    "headerLabel": "Upload Activation key",
+    "headerLabel": "Data Collector Activation key",
     "successMessage": "Successfully uploaded Activation Key"
   },
   "restapi": {

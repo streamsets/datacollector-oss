@@ -10,13 +10,37 @@
 
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
+    <div class="alert alert-danger alert-dismissible" role="alert"
+         ng-show="!activationInfo.info.valid">Activation key is not valid</div>
+
+    <table class="table">
+      <tbody>
+      <tr>
+        <td><label>Licensed to</label></td>
+        <td>{{activationInfo.info.userInfo}}</td>
+      </tr>
+      <tr>
+        <td><label>Expiration</label></td>
+        <td>{{activationInfo.info.expiration | date:'medium'}}</td>
+      </tr>
+      <tr>
+        <td><label>Licensed to SDC IDs</label></td>
+        <td>{{activationInfo.info.validSdcIds}}</td>
+      </tr>
+      <tr>
+        <td><label>SDC ID</label></td>
+        <td>{{activationInfo.info.sdcId}}</td>
+      </tr>
+      </tbody>
+    </table>
+
     <div class="input-group" ng-hide="operationDone">
       <span class="input-group-btn">
           <span class="btn btn-primary btn-file">
               {{'home.import.browse' | translate}}&hellip; <input type="file" fileread="uploadFile">
           </span>
       </span>
-      <input type="text" class="form-control" readonly ng-model="uploadFile.name"
+      <input class="form-control" readonly ng-model="uploadFile.name"
              placeholder="{{'home.import.fileUploadPlaceholder' | translate}}">
     </div>
 

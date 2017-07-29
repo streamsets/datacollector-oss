@@ -2,6 +2,7 @@
   <div class="error-alert-div">
     <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
     <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+    <ng-include src="'app/home/alerts/info/infoAlert.tpl.html'"></ng-include>
   </div>
   <div class="create-pipeline-btn-group" ng-if="!common.isSlaveNode">
     <div class="create-pipeline-btn-group-cell">

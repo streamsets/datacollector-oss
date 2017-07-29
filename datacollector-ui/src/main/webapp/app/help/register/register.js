@@ -19,7 +19,7 @@
 
 angular
   .module('dataCollectorApp')
-  .controller('RegisterModalInstanceController', function ($scope, $modalInstance, api) {
+  .controller('RegisterModalInstanceController', function ($scope, $modalInstance, api, activationInfo) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -28,7 +28,7 @@ angular
       uploadFile: {},
       operationDone: false,
       operationInProgress: false,
-
+      activationInfo: activationInfo,
 
       /**
        * Upload button callback function.
@@ -42,7 +42,13 @@ angular
             api.activation.updateActivation(parsedObj)
               .then(
                 function(res) {
-                  $scope.operationDone = true;
+                  $scope.activationInfo = res.data;
+                  if ($scope.activationInfo && $scope.activationInfo.info.valid) {
+                    $scope.operationDone = true;
+                    $scope.common.errors = [];
+                  } else {
+                    $scope.common.errors = ['Uploaded activation key is not valid'];
+                  }
                   $scope.operationInProgress = false;
                 },
                 function(res) {
@@ -65,6 +71,7 @@ angular
        */
       cancel: function () {
         $modalInstance.dismiss('cancel');
+        window.location.reload();
       }
     });
 
