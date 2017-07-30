@@ -183,6 +183,7 @@
     <module>cluster-bootstrap</module>
     <module>mapr-cluster-bootstrap</module>
     <module>mesos-bootstrap</module>
+    <module>client-api</module>
     <module>cli</module>
     <module>common-ui</module>
     <module>sdc-solr-api</module>
