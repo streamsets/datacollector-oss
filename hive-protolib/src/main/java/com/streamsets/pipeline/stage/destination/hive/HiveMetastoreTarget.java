@@ -16,13 +16,15 @@
 package com.streamsets.pipeline.stage.destination.hive;
 
 import com.google.common.base.Joiner;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
@@ -46,6 +48,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class HiveMetastoreTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(HiveMetastoreTarget.class.getCanonicalName());
@@ -53,18 +59,21 @@ public class HiveMetastoreTarget extends BaseTarget {
   private static final String STORED_AS_AVRO = "storedAsAvro";
   private static final String EXTERNAL = "External";
   private static final Joiner JOINER = Joiner.on(".");
+  private static final String KEY_LOCKS = "table-locks";
 
   private final HMSTargetConfigBean conf;
 
   private HiveQueryExecutor queryExecutor;
   private ErrorRecordHandler defaultErrorRecordHandler;
   private HMSCache hmsCache;
+  private LoadingCache<String, Lock> tableLocks;
 
   public HiveMetastoreTarget(HMSTargetConfigBean conf) {
     this.conf = conf;
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     defaultErrorRecordHandler = new DefaultErrorRecordHandler(getContext());
@@ -92,6 +101,23 @@ public class HiveMetastoreTarget extends BaseTarget {
             e.getMessage()
         ));
       }
+
+      // Table locks is a cache shared with all runners that contains locks for all tables. Locks inside will expire
+      // in 15 minutes -- idea is that if a thread holds a lock for more then 15 minutes, then we have bigger issues to
+      // worry about than that two threads could be altering two tables.
+      Map<String, Object> runnerSharedMap = getContext().getStageRunnerSharedMap();
+      synchronized (runnerSharedMap) {
+        tableLocks = (LoadingCache<String, Lock>) runnerSharedMap.computeIfAbsent(KEY_LOCKS,
+          key -> CacheBuilder.newBuilder()
+            .expireAfterAccess(15, TimeUnit.MINUTES)
+            .build(new CacheLoader<String, Lock>() {
+              @Override
+              public Lock load(String key) throws Exception {
+                return new ReentrantLock();
+              }
+            })
+        );
+      }
     }
     return issues;
   }
@@ -101,12 +127,17 @@ public class HiveMetastoreTarget extends BaseTarget {
     Iterator<Record> recordIterator = batch.getRecords();
     while (recordIterator.hasNext()) {
       Record metadataRecord = recordIterator.next();
+      Lock tableLock = null;
       try {
         HiveMetastoreUtil.validateMetadataRecordForRecordTypeAndVersion(metadataRecord);
         String tableName = HiveMetastoreUtil.getTableName(metadataRecord);
         String databaseName = HiveMetastoreUtil.getDatabaseName(metadataRecord);
         String qualifiedTableName = HiveMetastoreUtil.getQualifiedTableName(databaseName, tableName);
         String location = HiveMetastoreUtil.getLocation(metadataRecord);
+
+        // Get exclusive lock for this table
+        tableLock = tableLocks.get(qualifiedTableName);
+        tableLock.lock();
 
         TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo = HiveMetastoreUtil.getCacheInfo(
             hmsCache,
@@ -158,6 +189,13 @@ public class HiveMetastoreTarget extends BaseTarget {
       } catch (HiveStageCheckedException e) {
         LOG.error("Error processing record: {}", e);
         defaultErrorRecordHandler.onError(new OnRecordErrorException(metadataRecord, e.getErrorCode(), e.getParams()));
+      } catch (ExecutionException e) {
+        LOG.error("Can't retrieve lock for table: {}", e);
+        defaultErrorRecordHandler.onError(new OnRecordErrorException(metadataRecord, Errors.HIVE_01, e.toString()));
+      } finally {
+        if(tableLock != null) {
+          tableLock.unlock();
+        }
       }
     }
   }
