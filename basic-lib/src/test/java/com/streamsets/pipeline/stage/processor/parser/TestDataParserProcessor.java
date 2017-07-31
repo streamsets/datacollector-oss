@@ -30,10 +30,12 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +54,7 @@ public class TestDataParserProcessor {
     int priority = 17;
     int facility = priority / 8;
     int severity = priority % 8;
-    LocalDateTime date = LocalDateTime.of(2017, 6, 29, 12, 21, 17);
+    LocalDateTime date = LocalDateTime.now().withNano(0);
     String host = "1.2.3.4";
     String rest = "Nothing interesting happened.";
 

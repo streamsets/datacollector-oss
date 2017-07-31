@@ -393,15 +393,14 @@ public class SyslogDecoder extends ByteToMessageDecoder {
     } catch (DateTimeParseException e) {
       throw new OnRecordErrorException(Errors.SYSLOG_10, ts, e);
     }
-    // try to deal with boundary cases, i.e. new year's eve.
-    // rfc3164 dates are really dumb.
-    // NB: cannot handle replaying of old logs or going back to the future
+    // The RFC3164 is a bit weird date format - it contains day and month, but no year. So we have to somehow guess
+    // the year. The current logic is to provide a sliding window - going 11 months to the past and 1 month to the
+    // future. If the message is outside of this window, it will have incorrectly guessed year. We go 11 months to the
+    // past as we're expecting that more messages will be from the past (syslog usually contains historical data).
     LocalDateTime fixed = date;
-    // flume clock is ahead or there is some latency, and the year rolled
     if (fixed.isAfter(now) && fixed.minusMonths(1).isAfter(now)) {
       fixed = date.withYear(year - 1);
-      // flume clock is behind and the year rolled
-    } else if (fixed.isBefore(now) && fixed.plusMonths(1).isBefore(now)) {
+    } else if (fixed.isBefore(now) && fixed.plusMonths(11).isBefore(now)) {
       fixed = date.withYear(year + 1);
     }
     date = fixed;
