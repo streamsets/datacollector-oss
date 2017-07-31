@@ -125,7 +125,7 @@ public final class HiveMetastoreUtil {
   private static final String UNSUPPORTED_PARTITION_VALUE_REGEX = "(.*)[\\\\\"\'/?*%?^=\\[\\]]+(.*)";
   private static final Pattern UNSUPPORTED_PARTITION_VALUE_PATTERN = Pattern.compile(UNSUPPORTED_PARTITION_VALUE_REGEX);
   //Letters followed by letters/numbers/underscore
-  private static final Pattern COLUMN_NAME_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
+  private static final Pattern OBJECT_NAME_PATTERN = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
   private static final Pattern COMMENT_PATTERN = Pattern.compile("[^\"]*");
 
   public enum MetadataRecordType {
@@ -714,10 +714,10 @@ public final class HiveMetastoreUtil {
   }
 
   /**
-   * Validate that given column name is valid.
+   * Validate that given object name (column, table, database, ...) is valid.
    */
-  public static boolean validateColumnName(String colName) {
-    return COLUMN_NAME_PATTERN.matcher(colName).matches();
+  public static boolean validateObjectName(String objName) {
+    return OBJECT_NAME_PATTERN.matcher(objName).matches();
   }
 
   /**

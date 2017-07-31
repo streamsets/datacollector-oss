@@ -54,7 +54,7 @@ public class AvroHiveSchemaGenerator extends AvroSchemaGenerator<Map<String, Hiv
   {
     Map<String, Schema> fields = new LinkedHashMap<>();
     for(Map.Entry<String, HiveTypeInfo> pair:  record.entrySet()) {
-      if(!HiveMetastoreUtil.validateColumnName(pair.getKey())) {
+      if(!HiveMetastoreUtil.validateObjectName(pair.getKey())) {
         throw new HiveStageCheckedException(Errors.HIVE_30, pair.getKey());
       }
       Schema columnSchema = Schema.createUnion(ImmutableList.of(Schema.create(Schema.Type.NULL), traverse(pair)));

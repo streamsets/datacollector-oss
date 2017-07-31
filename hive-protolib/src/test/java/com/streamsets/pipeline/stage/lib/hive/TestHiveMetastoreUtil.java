@@ -211,17 +211,17 @@ public class TestHiveMetastoreUtil {
 
   @Test
   public void testValidateColumnName() {
-    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("table"));
-    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("Jarcec"));
-    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("Junko"));
-    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("Santhosh"));
-    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("sdc_log"));
-    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("sdc_log2"));
-    Assert.assertTrue(HiveMetastoreUtil.validateColumnName("_abc"));
+    Assert.assertTrue(HiveMetastoreUtil.validateObjectName("table"));
+    Assert.assertTrue(HiveMetastoreUtil.validateObjectName("Jarcec"));
+    Assert.assertTrue(HiveMetastoreUtil.validateObjectName("Junko"));
+    Assert.assertTrue(HiveMetastoreUtil.validateObjectName("Santhosh"));
+    Assert.assertTrue(HiveMetastoreUtil.validateObjectName("sdc_log"));
+    Assert.assertTrue(HiveMetastoreUtil.validateObjectName("sdc_log2"));
+    Assert.assertTrue(HiveMetastoreUtil.validateObjectName("_abc"));
 
-    Assert.assertFalse(HiveMetastoreUtil.validateColumnName("cool column"));
-    Assert.assertFalse(HiveMetastoreUtil.validateColumnName("0"));
-    Assert.assertFalse(HiveMetastoreUtil.validateColumnName("cool@column"));
+    Assert.assertFalse(HiveMetastoreUtil.validateObjectName("cool column"));
+    Assert.assertFalse(HiveMetastoreUtil.validateObjectName("0"));
+    Assert.assertFalse(HiveMetastoreUtil.validateObjectName("cool@column"));
   }
 
   @Test

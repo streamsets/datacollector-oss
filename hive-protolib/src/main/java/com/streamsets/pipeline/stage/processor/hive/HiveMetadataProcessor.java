@@ -19,7 +19,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Field;
@@ -31,7 +30,6 @@ import com.streamsets.pipeline.api.base.RecordProcessor;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
@@ -191,7 +189,7 @@ public class HiveMetadataProcessor extends RecordProcessor {
       PartitionColumnTypeChooserValues supportedPartitionTypes = new PartitionColumnTypeChooserValues();
       for (PartitionConfig partition: partitionConfigList) {
         // Validation on partition column name
-        if (!HiveMetastoreUtil.validateColumnName(partition.name)) {
+        if (!HiveMetastoreUtil.validateObjectName(partition.name)) {
           issues.add(getContext().createConfigIssue(
               Groups.HIVE.name(),
               "partitionList",
@@ -371,6 +369,13 @@ public class HiveMetadataProcessor extends RecordProcessor {
       dbName = DEFAULT_DB;
     }
     try {
+      // Validate Database and Table names
+      if (!HiveMetastoreUtil.validateObjectName(dbName)) {
+        throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, "database name", dbName);
+      }
+      if (!HiveMetastoreUtil.validateObjectName(tableName)) {
+        throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, "table name", tableName);
+      }
 
       partitionValMap = getPartitionValuesFromRecord(variables);
 
