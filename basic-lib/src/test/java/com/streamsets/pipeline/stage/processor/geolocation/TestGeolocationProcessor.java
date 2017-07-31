@@ -413,12 +413,14 @@ public class TestGeolocationProcessor {
   public void testMissingAddress() throws Exception {
     String ip = "0.0.0.0";
     List<GeolocationFieldConfig> configs = new ArrayList<>();
-    GeolocationFieldConfig config;
-    config = new GeolocationFieldConfig();
-    config.inputFieldName = "/ipAsString";
-    config.outputFieldName = "/ipCountry";
-    config.targetType = GeolocationField.COUNTRY_NAME;
-    configs.add(config);
+    for(int i = 0; i < 2; i++) {
+      GeolocationFieldConfig config;
+      config = new GeolocationFieldConfig();
+      config.inputFieldName = "/ipAsString";
+      config.outputFieldName = Utils.format("/ipCountry_{}", i);
+      config.targetType = GeolocationField.COUNTRY_NAME;
+      configs.add(config);
+    }
 
     List<GeolocationDatabaseConfig> dbConfigs = new ArrayList<>();
     GeolocationDatabaseConfig dbConfig = new GeolocationDatabaseConfig();
@@ -439,7 +441,8 @@ public class TestGeolocationProcessor {
     Record record = RecordCreator.create("s", "s:1");
     record.set(Field.create(map));
     StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-    Assert.assertEquals(output.getRecords().get("a").get(0).get("/ipCountry").getValue(), null);
+    Assert.assertEquals(output.getRecords().get("a").get(0).get("/ipCountry_0").getValue(), null);
+    Assert.assertEquals(output.getRecords().get("a").get(0).get("/ipCountry_1").getValue(), null);
 
     runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
         .addConfiguration("fieldTypeConverterConfigs", configs)
