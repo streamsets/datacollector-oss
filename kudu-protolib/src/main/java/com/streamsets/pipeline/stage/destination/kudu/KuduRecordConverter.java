@@ -100,8 +100,8 @@ public class KuduRecordConverter {
             default:
               throw new OnRecordErrorException(record, Errors.KUDU_04, fieldName, type.name());
           }
-        } catch (NumberFormatException nfe) {
-          throw new OnRecordErrorException(record, Errors.KUDU_09, fieldName, type.name(), nfe.toString(), nfe);
+        } catch (IllegalArgumentException e) {
+          throw new OnRecordErrorException(record, Errors.KUDU_09, fieldName, type.name(), e.toString(), e);
         }
       }
     } else {
