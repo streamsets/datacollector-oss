@@ -770,10 +770,12 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     if (conf.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
       records.forEach(record -> list.add(record.get()));
-      Record record = records.get(0);
-      record.set(Field.create(list));
-      records.clear();
-      records.add(record);
+      if(!list.isEmpty()) {
+        Record record = records.get(0);
+        record.set(Field.create(Field.Type.LIST, list));
+        records.clear();
+        records.add(record);
+      }
     }
     return records;
   }

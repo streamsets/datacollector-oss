@@ -249,13 +249,13 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     }
     if (conf.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
-      for (Record record : records) {
-        list.add(record.get());
+      records.forEach(record -> list.add(record.get()));
+      if(!list.isEmpty()) {
+        Record record = records.get(0);
+        record.set(Field.create(Field.Type.LIST, list));
+        records.clear();
+        records.add(record);
       }
-      Record record = records.get(0);
-      record.set(Field.create(list));
-      records.clear();
-      records.add(record);
     }
     return records;
   }

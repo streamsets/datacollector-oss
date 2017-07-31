@@ -221,9 +221,7 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
     }
     if (conf.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
-      for (Record record : records) {
-        list.add(record.get());
-      }
+      records.forEach(record -> list.add(record.get()));
       if (!list.isEmpty()) {
         Record record = records.get(0);
         record.set(Field.create(list));
