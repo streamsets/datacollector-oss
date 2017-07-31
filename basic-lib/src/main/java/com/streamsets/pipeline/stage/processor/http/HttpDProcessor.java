@@ -25,7 +25,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.http.Groups;
 
 @StageDef(
-    version = 9,
+    version = 10,
     label = "HTTP Client",
     description = "Uses an HTTP client to make arbitrary requests.",
     icon = "httpclient.png",

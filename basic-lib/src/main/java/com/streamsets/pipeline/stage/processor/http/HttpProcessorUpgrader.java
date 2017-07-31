@@ -85,6 +85,9 @@ public class HttpProcessorUpgrader implements StageUpgrader {
         // fall through
       case 8:
         upgradeV8ToV9(configs);
+        // fall through
+      case 9:
+        upgradeV9ToV10(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -135,5 +138,22 @@ public class HttpProcessorUpgrader implements StageUpgrader {
 
   private void upgradeV8ToV9(List<Config> configs) {
     TlsConfigBeanUpgradeUtil.upgradeHttpSslConfigBeanToTlsConfigBean(configs, "conf.client.");
+  }
+
+  private void upgradeV9ToV10(List<Config> configs) {
+    configsToAdd.clear();
+    configsToRemove.clear();
+
+    String key = joiner.join(CONF, "rateLimit");
+
+    for (Config config : configs) {
+      if (key.equals(config.getName())) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(key, (int)config.getValue() == 0 ? 0 : (int)(1000.0 / (int)config.getValue())));
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }

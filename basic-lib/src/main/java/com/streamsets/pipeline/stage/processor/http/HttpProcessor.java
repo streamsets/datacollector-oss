@@ -115,7 +115,7 @@ public class HttpProcessor extends SingleLaneProcessor {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext()); // NOSONAR
 
-    int rateLimit = conf.rateLimit > 0 ? conf.rateLimit : Integer.MAX_VALUE;
+    double rateLimit = conf.rateLimit > 0 ? (1000.0 / conf.rateLimit) : Double.MAX_VALUE;
     rateLimiter = RateLimiter.create(rateLimit);
 
     httpClientCommon.init(issues, getContext());
