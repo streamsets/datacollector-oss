@@ -58,11 +58,11 @@ From within the Data Collector directory, execute:
 
 To start the Data Collector, execute:
 
-`dist/target/streamsets-datacollector-2.6.0.2-dpm/streamsets-datacollector-2.6.0.2-dpm/bin/streamsets dc`
+`dist/target/streamsets-datacollector-2.6.0.3-SNAPSHOT-dpm/streamsets-datacollector-2.6.0.3-SNAPSHOT-dpm/bin/streamsets dc`
 
 For Data Collector CLI, execute:
 
-`dist/target/streamsets-datacollector-2.6.0.2-dpm/streamsets-datacollector-2.6.0.2-dpm/bin/streamsets cli`
+`dist/target/streamsets-datacollector-2.6.0.3-SNAPSHOT-dpm/streamsets-datacollector-2.6.0.3-SNAPSHOT-dpm/bin/streamsets cli`
 
 To skip the RAT report during the build use the `-DskipRat` option.
 
@@ -74,12 +74,12 @@ From within the Data Collector directory, execute:
 
 The release tarball will be created at:
 
-`release/target/streamsets-datacollector-all-2.6.0.2-dpm.tgz`
+`release/target/streamsets-datacollector-all-2.6.0.3-SNAPSHOT-dpm.tgz`
 
 Extract the tarball to your preferred location :
 
-`tar xf streamsets-datacollector-all-2.6.0.2-dpm.tgz`
+`tar xf streamsets-datacollector-all-2.6.0.3-SNAPSHOT-dpm.tgz`
 
 To start the DataCollector, execute:
 
-`streamsets-datacollector-all-2.6.0.2-dpm/bin/streamsets dc`
+`streamsets-datacollector-all-2.6.0.3-SNAPSHOT-dpm/bin/streamsets dc`
