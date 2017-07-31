@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,11 +57,10 @@ public class TestPreviewApi {
   }
 
   private ApiClient getApiClient(String authenticationType) {
-    ApiClient apiClient = new ApiClient(authenticationType);
-    apiClient.setBasePath(baseURL+ "/rest");
-    apiClient.setUsername("admin");
-    apiClient.setPassword("admin");
-    return apiClient;
+    return new ApiClient(authenticationType)
+        .setBasePath(baseURL + "/rest")
+        .setUsername("admin")
+        .setPassword("admin");
   }
 
   private void testValidationConfig(ApiClient apiClient ) throws ApiException, InterruptedException {

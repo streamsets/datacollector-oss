@@ -48,7 +48,6 @@ public class DefinitionsApi {
     this.apiClient = apiClient;
   }
 
-
   /**
    * Returns pipeline &amp; stage configuration definitions
    *
@@ -66,12 +65,6 @@ public class DefinitionsApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -84,16 +77,9 @@ public class DefinitionsApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<DefinitionsJson>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams,
+        formParams, accept, contentType, authNames, returnType);
   }
 
   /**
@@ -113,12 +99,6 @@ public class DefinitionsApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "application/json"
     };
@@ -131,16 +111,9 @@ public class DefinitionsApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<Map<String, Object>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams,
+        formParams, accept, contentType, authNames, returnType);
   }
 
   /**
@@ -174,12 +147,6 @@ public class DefinitionsApi {
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
-
-
-
-
-
-
     final String[] accepts = {
       "image/svg+xml", "image/png"
     };
@@ -192,16 +159,9 @@ public class DefinitionsApi {
 
     String[] authNames = new String[] { "basic" };
 
-
-
-
-
     TypeRef returnType = new TypeRef<Object>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
-
-
-
-
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams,
+        accept, contentType, authNames, returnType);
   }
 
 }

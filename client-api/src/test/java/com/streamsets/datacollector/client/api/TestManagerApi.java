@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +17,15 @@ package com.streamsets.datacollector.client.api;
 
 import com.streamsets.datacollector.client.ApiClient;
 import com.streamsets.datacollector.client.ApiException;
-import com.streamsets.datacollector.client.model.DefinitionsJson;
+import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
+import com.streamsets.datacollector.client.model.PipelineStateJson;
 import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.testing.NetworkUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class  TestDefinitionsApi {
+public class TestManagerApi {
   private String baseURL;
   private String[] authenticationTypes = {"none", "basic", "form", "digest"};
 
@@ -37,20 +38,12 @@ public class  TestDefinitionsApi {
         server = TestUtil.startServer(port, authType);
         baseURL = "http://127.0.0.1:" + port;
         ApiClient apiClient = getApiClient(authType);
-
-        DefinitionsApi definitionsApi = new DefinitionsApi(apiClient);
-
-        testGetDefinitions(definitionsApi);
-
-        if(!authType.equals("none")) {
-          testInvalidUserNamePassword(authType);
-        }
+        testManagerAPI(apiClient);
 
         TestUtil.stopServer(server);
       }
     } catch (Exception e) {
       e.printStackTrace();
-      Assert.fail(e.getMessage());
     } finally {
       if(server != null) {
         TestUtil.stopServer(server);
@@ -59,34 +52,41 @@ public class  TestDefinitionsApi {
   }
 
   private ApiClient getApiClient(String authenticationType) {
-    ApiClient apiClient = new ApiClient(authenticationType);
-    apiClient.setBasePath(baseURL+ "/rest");
-    apiClient.setUsername("admin");
-    apiClient.setPassword("admin");
-    return apiClient;
+    return new ApiClient(authenticationType)
+        .setBasePath(baseURL + "/rest")
+        .setUsername("admin")
+        .setPassword("admin");
   }
 
-  public void testGetDefinitions(DefinitionsApi definitionsApi) throws ApiException  {
-    DefinitionsJson definitions = definitionsApi.getDefinitions();
-    Assert.assertNotNull(definitions);
+  private void testManagerAPI(ApiClient apiClient) throws ApiException, InterruptedException {
+    StoreApi storeApi = new StoreApi(apiClient);
+    ManagerApi managerApi = new ManagerApi(apiClient);
+
+    String pipelineName = "testManagerAPI";
+
+    //Create Pipeline
+    PipelineConfigurationJson pipelineConfig = storeApi.createPipeline(
+        pipelineName,
+      "Testing getPipeline test case",
+        false
+    );
+    Assert.assertNotNull(pipelineConfig);
+
+    //Get Pipeline Status
+    PipelineStateJson pipelineState = managerApi.getPipelineStatus(pipelineName, "0");
+    Assert.assertEquals(PipelineStateJson.StatusEnum.EDITED, pipelineState.getStatus());
+
+    //Try to start invalid pipeline
+    pipelineState = managerApi.startPipeline(pipelineName, "0", null);
+    Assert.assertEquals(PipelineStateJson.StatusEnum.STARTING, pipelineState.getStatus());
+
+    Thread.sleep(500L);
+
+    //Get Pipeline Status
+    pipelineState = managerApi.getPipelineStatus(pipelineName, "0");
+    Assert.assertEquals(PipelineStateJson.StatusEnum.START_ERROR, pipelineState.getStatus());
+
   }
 
-  public void testInvalidUserNamePassword(String authType) {
-    ApiClient apiClient = new ApiClient(authType);
-    apiClient.setBasePath(baseURL + "/rest");
-    apiClient.setUsername("notvaliduser");
-    apiClient.setPassword("notvalidpassword");
 
-    boolean exceptionThrown = false;
-    DefinitionsApi definitionsApi = new DefinitionsApi(apiClient);
-    try {
-      definitionsApi.getDefinitions();
-    } catch (ApiException e) {
-      exceptionThrown = true;
-      Assert.assertEquals("HTTP Error 401 - Unauthorized: Access is denied due to invalid credentials.",
-        e.getLocalizedMessage());
-    }
-
-    Assert.assertTrue(exceptionThrown);
-  }
 }

@@ -74,7 +74,6 @@ public class ApiClient {
     // Set default User-Agent.
     setUserAgent("Java-Swagger");
 
-
     switch(authType) {
       case "basic":
       case "form":
@@ -117,28 +116,31 @@ public class ApiClient {
   /**
    * Helper method to set username for the first HTTP basic authentication.
    */
-  public void setUsername(String username) {
+  public ApiClient setUsername(String username) {
     if(authentication != null) {
       authentication.setUsername(username);
     }
+    return this;
   }
 
   /**
    * Helper method to set password for the first HTTP basic authentication.
    */
-  public void setPassword(String password) {
+  public ApiClient setPassword(String password) {
     if(authentication != null) {
       authentication.setPassword(password);
     }
+    return this;
   }
 
   /**
    * Helper method to set dpmBaseURL for the first HTTP DPM authentication.
    */
-  public void setDPMBaseURL(String dpmBaseURL) {
+  public ApiClient setDPMBaseURL(String dpmBaseURL) {
     if(dpmBaseURL != null && authentication != null) {
       authentication.setDPMBaseURL(dpmBaseURL);
     }
+    return this;
   }
 
   /**

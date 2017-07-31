@@ -15,9 +15,7 @@
  */
 package com.streamsets.datacollector.client.util;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.datacollector.client.cli.DataCollector;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.MainStandalonePipelineManagerModule;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -28,10 +26,8 @@ import com.streamsets.datacollector.util.Configuration;
 import dagger.ObjectGraph;
 import org.junit.Assert;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintStream;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
@@ -91,17 +87,5 @@ public class TestUtil {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
     return dir.getAbsolutePath();
-  }
-
-  public static String runCliCommand(String... args) {
-    System.out.println("$ streamsets cli " + Joiner.on(' ').join(args));
-    PrintStream stdout = System.out;
-    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(outContent));
-    DataCollector.main(args);
-    String output = outContent.toString();
-    System.setOut(stdout);
-    System.out.println(output);
-    return output;
   }
 }
