@@ -20,11 +20,12 @@ import com.streamsets.pipeline.api.ConfigDef;
 
 public class CTTableConfigBean {
   @ConfigDef(
-      required = false,
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Schema",
       description = "Schema Name",
       displayPosition = 20,
+      defaultValue = "dbo",
       group = "TABLE"
   )
   public String schema;
@@ -54,10 +55,10 @@ public class CTTableConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.NUMBER,
-      label = "Initial Sync Version",
-      description = "Set -1 for current_sync_version()",
+      label = "Initial Offset",
+      description = "Use -1 to opt out of this option",
       displayPosition =  50,
       group = "TABLE"
   )
-  public long initialSyncVersion;
+  public long initialOffset;
 }

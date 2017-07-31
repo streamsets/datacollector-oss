@@ -26,12 +26,12 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 @StageDef(
     version = 1,
-    label = "MS SQL Server Change Tracking Client",
-    description = "Origin that an read change events from an MS SQL Server Database",
+    label = "SQL Server Change Tracking Client",
+    description = "Origin that an read change events from an SQL Server Database",
     icon = "sql-server.png",
     resetOffset = true,
     producesEvents = true,
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Origins/SQLServerChange.html#task_vsh_22s_r1b"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)

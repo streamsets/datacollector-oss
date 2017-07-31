@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver;
 
 import com.streamsets.pipeline.api.ConfigDef;
@@ -26,7 +25,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategyChooserValues;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
-import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategyChooserValues;
+import com.streamsets.pipeline.stage.origin.jdbc.CT.TableOrderStrategyChooserValues;
 
 import java.util.List;
 

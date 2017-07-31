@@ -612,9 +612,9 @@ public final class TableContextUtil {
 
     offsetColumnToType.put(QueryUtil.SYS_CHANGE_VERSION, QueryUtil.SYS_CHANGE_VERSION_TYPE);
 
-    long initalSyncVersion = tableConfigBean.initialSyncVersion;
+    long initalSyncVersion = tableConfigBean.initialOffset;
 
-    if (tableConfigBean.initialSyncVersion < 0) {
+    if (tableConfigBean.initialOffset < 0) {
       initalSyncVersion = currentSyncVersion;
     }
     offsetColumnToStartOffset.put(QueryUtil.SYS_CHANGE_VERSION, Long.toString(initalSyncVersion));

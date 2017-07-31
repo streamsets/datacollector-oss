@@ -83,7 +83,7 @@ public class JdbcRunnableBuilder {
   }
 
   public JdbcBaseRunnable build() {
-    final String SQLServerCT = "MSSQLServerChangeTrackingClient";
+    final String SQLServerCT = "SQLServerChangeTrackingClient";
     if (context.getStageInfo().getInstanceName().startsWith(SQLServerCT)) {
       return new CTJdbcRunnable(
           context,

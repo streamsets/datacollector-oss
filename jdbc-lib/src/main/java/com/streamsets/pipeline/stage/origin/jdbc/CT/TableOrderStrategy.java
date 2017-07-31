@@ -13,28 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver;
+package com.streamsets.pipeline.stage.origin.jdbc.CT;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  JDBC("JDBC"),
-  TABLE("Change Tracking"),
-  CREDENTIALS("Credentials"),
-  LEGACY("Legacy"),
-  ADVANCED("Advanced")
+public enum TableOrderStrategy implements Label {
+  NONE("None"),
+  ALPHABETICAL("Alphabetical"),
   ;
 
   private final String label;
 
-  private Groups(String label) {
+  TableOrderStrategy(String label) {
     this.label = label;
   }
 
-  @Override
   public String getLabel() {
     return this.label;
   }
+
 }
