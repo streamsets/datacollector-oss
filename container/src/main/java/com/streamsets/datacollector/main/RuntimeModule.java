@@ -34,6 +34,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Module(library = true, injects = {
     BuildInfo.class,
@@ -49,6 +50,7 @@ public class RuntimeModule {
   public static final String PIPELINE_EXECUTION_MODE_KEY = "pipeline.execution.mode";
   public static final String PIPELINE_ACCESS_CONTROL_ENABLED = "pipeline.access.control.enabled";
   public static final boolean PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT = false;
+  public static final String SECURITY_PREFIX = "java.security.";
   private static List<ClassLoader> stageLibraryClassLoaders = Collections.emptyList();//ImmutableList.of(RuntimeModule.class.getClassLoader());
 
   public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
@@ -93,6 +95,15 @@ public class RuntimeModule {
     } else {
       LOG.error("Error did not find sdc.properties at expected location: {}", configFile);
     }
+
+    // Transfer all security properties to the JVM configuration
+    for(Map.Entry<String, String> entry : conf.getSubSetConfiguration(SECURITY_PREFIX).getValues().entrySet()) {
+      java.security.Security.setProperty(
+        entry.getKey().substring(SECURITY_PREFIX.length()),
+        entry.getValue()
+      );
+    }
+
     return conf;
   }
 
