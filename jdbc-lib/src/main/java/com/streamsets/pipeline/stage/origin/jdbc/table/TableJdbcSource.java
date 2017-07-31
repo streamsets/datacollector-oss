@@ -20,6 +20,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
+import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -84,6 +86,7 @@ public class TableJdbcSource extends BasePushSource {
   private final TableJdbcConfigBean tableJdbcConfigBean;
   private final Properties driverProperties = new Properties();
   private final Map<String, TableContext> allTableContexts;
+  private final Map<String, Integer> qualifiedTableNameToConfigIndex;
   //If we have more state to clean up, we can introduce a state manager to do that which
   //can keep track of different closeables from different threads
   private final Collection<Cache<TableRuntimeContext, TableReadContext>> toBeInvalidatedThreadCaches;
@@ -105,6 +108,7 @@ public class TableJdbcSource extends BasePushSource {
     this.tableJdbcConfigBean = tableJdbcConfigBean;
     driverProperties.putAll(hikariConfigBean.driverProperties);
     allTableContexts = new LinkedHashMap<>();
+    qualifiedTableNameToConfigIndex = new HashMap<>();
     toBeInvalidatedThreadCaches = new ArrayList<>();
   }
 
@@ -118,16 +122,21 @@ public class TableJdbcSource extends BasePushSource {
     if (issues.isEmpty()) {
       try {
         connectionManager = new ConnectionManager(hikariDataSource);
-        for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
+        for (int i = 0; i < tableJdbcConfigBean.tableConfigs.size(); i++) {
+          TableConfigBean tableConfigBean = tableJdbcConfigBean.tableConfigs.get(i);
+
           //No duplicates even though a table matches multiple configurations, we will add it only once.
-          allTableContexts.putAll(
-              TableContextUtil.listTablesForConfig(
-                  connectionManager.getConnection(),
-                  tableConfigBean,
-                  new TableJdbcELEvalContext(context, context.createELVars()),
-                  tableJdbcConfigBean.quoteChar
-              )
+          final Map<String, TableContext> tableContexts = TableContextUtil.listTablesForConfig(
+              connectionManager.getConnection(),
+              tableConfigBean,
+              new TableJdbcELEvalContext(context, context.createELVars()),
+              tableJdbcConfigBean.quoteChar
           );
+
+          allTableContexts.putAll(tableContexts);
+          for (String qualifiedTableName : tableContexts.keySet()) {
+            qualifiedTableNameToConfigIndex.put(qualifiedTableName, i);
+          }
         }
 
         LOG.info("Selected Tables: \n {}", NEW_LINE_JOINER.join(allTableContexts.keySet()));
@@ -141,7 +150,7 @@ public class TableJdbcSource extends BasePushSource {
               )
           );
         } else {
-          issues = validatePartitioningConfigs(context, issues, allTableContexts);
+          issues = validatePartitioningConfigs(context, issues, allTableContexts, qualifiedTableNameToConfigIndex);
           if (!issues.isEmpty()) {
             return;
           }
@@ -253,31 +262,60 @@ public class TableJdbcSource extends BasePushSource {
     return issues;
   }
 
+  /**
+   *
+   * @param context the stage context
+   * @param issues
+   * @param allTableContexts
+   * @param qualifiedTableNameToTableConfigIndex the map from qualified table names to corresponding index of the
+   * {@link TableConfigBean} that leds  Once API-138 is complete, the index here can be consulted in order to set the precise list index of the
+   * {@link TableConfigBean} that resulted in the {@link TableContext} having the issue
+   * @return
+   */
   private List<ConfigIssue> validatePartitioningConfigs(
       Stage.Context context,
       List<ConfigIssue> issues,
-      Map<String, TableContext> allTableContexts
+      Map<String, TableContext> allTableContexts,
+      Map<String, Integer> qualifiedTableNameToTableConfigIndex
   ) {
     for (Map.Entry<String, TableContext> tableEntry : allTableContexts.entrySet()) {
       TableContext table = tableEntry.getValue();
+      final String tableName = table.getQualifiedName();
 
       if (table.isEnablePartitioning() && !table.isPartitionable()) {
         List<String> reasons = new LinkedList<>();
         TableContext.isPartitionable(table, reasons);
-        issues.add(context.createConfigIssue(
+        final ConfigIssue issue = context.createConfigIssue(
             Groups.TABLE.name(),
             TableJdbcConfigBean.TABLE_CONFIG,
             JdbcErrors.JDBC_100,
-            table.getQualifiedName(),
+            tableName,
             StringUtils.join(reasons, ", ")
-        ));
-      }
+        );
 
+        if (qualifiedTableNameToTableConfigIndex.containsKey(tableName)) {
+          // TODO: once API-138 is complete, do this (also for other issues created in this method)
+          // issue.setAdditionalInfo("index", qualifiedTableNameToTableConfigIndex.get(tableName));
+        }
+        issues.add(issue);
+      }
 
       if (table.isEnablePartitioning()) {
         Map.Entry<String, Integer> entry = table.getOffsetColumnToType().entrySet().iterator().next();
 
         String partitionSize = table.getOffsetColumnToPartitionOffsetAdjustments().get(entry.getKey());
+
+        final int maxActivePartitions = table.getMaxNumActivePartitions();
+        if (maxActivePartitions == 0 || maxActivePartitions == 1) {
+          // TODO: set index once API-138 is complete
+          issues.add(context.createConfigIssue(
+              Groups.TABLE.name(),
+              TableJdbcConfigBean.TABLE_CONFIG,
+              JdbcErrors.JDBC_102,
+              maxActivePartitions,
+              tableName
+          ));
+        }
 
         final String validationError = TableContextUtil.getPartitionSizeValidationError(
             entry.getValue(),
@@ -285,11 +323,12 @@ public class TableJdbcSource extends BasePushSource {
             partitionSize
         );
         if (!Strings.isNullOrEmpty(validationError)) {
+          // TODO: set index once API-138 is complete
           issues.add(context.createConfigIssue(
               Groups.TABLE.name(),
               TableJdbcConfigBean.TABLE_CONFIG,
               JdbcErrors.JDBC_101,
-              table.getQualifiedName(),
+              tableName,
               validationError
           ));
         }

@@ -131,14 +131,13 @@ public final class TableConfigBean {
       type = ConfigDef.Type.NUMBER,
       label = "Max Number of Active Partitions",
       description = "The maximum number of active partitions that can be active at once for the individual table(s)." +
-          "  Use a negative value to indicate unconstrained number (in which case it will be bound on the number of" +
-          " threads.",
+          " Use -1 to indicate unconstrained number (in which case it will be the default value of 2 * num threads).",
       displayPosition = 100,
       defaultValue = "" + DEFAULT_MAX_NUM_ACTIVE_PARTITIONS,
       group = "TABLE",
       dependsOn = "scaleUpEnabled",
       triggeredByValue = "true",
-      min = 1
+      min = -1
   )
   public int maxNumActivePartitions = DEFAULT_MAX_NUM_ACTIVE_PARTITIONS;
 

@@ -730,6 +730,27 @@ public class BasicIT extends BaseTableJdbcSourceIT {
         "invalid for offset column"
     );
 
+    tableConfigBean.partitionSize = "100";
+    tableConfigBean.maxNumActivePartitions = 0;
+    validateAndAssertConfigIssue(
+        tableJdbcSource,
+        JdbcErrors.JDBC_102,
+        null
+    );
+
+    tableConfigBean.maxNumActivePartitions = 1;
+    validateAndAssertConfigIssue(
+        tableJdbcSource,
+        JdbcErrors.JDBC_102,
+        null
+    );
+
+    tableConfigBean.maxNumActivePartitions = 2;
+    validateAndAssertNoConfigIssues(tableJdbcSource);
+  }
+
+  private static void validateAndAssertNoConfigIssues(TableJdbcSource tableJdbcSource) throws StageException {
+    validateAndAssertConfigIssue(tableJdbcSource, null, null);
   }
 
   private static void validateAndAssertConfigIssue(
@@ -743,18 +764,22 @@ public class BasicIT extends BaseTableJdbcSourceIT {
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
     List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
-    assertThat(configIssues, hasSize(1));
-    Stage.ConfigIssue issue = configIssues.get(0);
+    if (expectedErrorCode == null) {
+      assertThat(configIssues, hasSize(0));
+    } else {
+      assertThat(configIssues, hasSize(1));
+      Stage.ConfigIssue issue = configIssues.get(0);
 
-    final ErrorMessage errorMsg = (ErrorMessage) Whitebox.getInternalState(issue, "message");
-    assertThat(errorMsg, notNullValue());
-    Assert.assertEquals(
-        expectedErrorCode.getCode(),
-        errorMsg.getErrorCode()
-    );
+      final ErrorMessage errorMsg = (ErrorMessage) Whitebox.getInternalState(issue, "message");
+      assertThat(errorMsg, notNullValue());
+      Assert.assertEquals(
+          expectedErrorCode.getCode(),
+          errorMsg.getErrorCode()
+      );
 
-    if (expectedInErrorMessage != null) {
-      assertThat(errorMsg.getLocalized(), containsString(expectedInErrorMessage));
+      if (expectedInErrorMessage != null) {
+        assertThat(errorMsg.getLocalized(), containsString(expectedInErrorMessage));
+      }
     }
   }
 
