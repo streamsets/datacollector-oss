@@ -1001,8 +1001,7 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        // Using "0" leads to SDC-6429
-        new CommonSourceConfigBean(10, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(0, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
@@ -1023,15 +1022,24 @@ public class TestJdbcSource {
       Assert.assertEquals(1, runner.getEventRecords().size());
       Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
       Assert.assertEquals(4, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
+      runner.clearEvents();
 
-      // Second batch should generate empty batch and run "empty" query
+      // Second batch should generate empty batch and run "empty" query thus triggering the no-more-data event
       output = runner.runProduce(output.getNewOffset(), 10);
       Assert.assertEquals(0, output.getRecords().get("lane").size());
       Assert.assertEquals(2, runner.getEventRecords().size());
       Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals(0, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
       Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
       Assert.assertEquals(4, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
+      runner.clearEvents();
 
+      // Third batch will also generate empty batch, but this thime should not trigger no-more-data event
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(0, output.getRecords().get("lane").size());
+      Assert.assertEquals(1, runner.getEventRecords().size());
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals(0, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
     } finally {
       runner.runDestroy();
     }

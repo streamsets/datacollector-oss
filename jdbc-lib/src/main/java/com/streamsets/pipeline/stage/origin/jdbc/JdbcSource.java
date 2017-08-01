@@ -117,7 +117,6 @@ public class JdbcSource extends BaseSource {
   private int queryRowCount = 0;
   private int numQueryErrors = 0;
   private SQLException firstQueryException = null;
-  private boolean shouldSendNoMoreDataEvent = true;
   private long noMoreDataRecordCount = 0;
   private String tableNames;
 
@@ -337,6 +336,7 @@ public class JdbcSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(this.commonSourceConfigBean.maxBatchSize, maxBatchSize);
     String nextSourceOffset = lastSourceOffset == null ? initialOffset : lastSourceOffset;
+    boolean queryStartedInThisBatch = false;
 
     long now = System.currentTimeMillis();
     long delay = Math.max(0, (lastQueryCompletedTime + queryIntervalMillis) - now);
@@ -345,16 +345,6 @@ public class JdbcSource extends BaseSource {
       // Sleep in one second increments so we don't tie up the app.
       LOG.debug("{}ms remaining until next fetch.", delay);
       ThreadUtil.sleep(Math.min(delay, 1000));
-
-      // send event only once for each time we run out of data.
-      if(shouldSendNoMoreDataEvent) {
-        CommonEvents.NO_MORE_DATA.create(getContext())
-          .with("record-count", noMoreDataRecordCount)
-          .createAndSend();
-        noMoreDataRecordCount = 0;
-        shouldSendNoMoreDataEvent = false;
-      }
-
     } else {
       Statement statement;
       Hasher hasher = HF.newHasher();
@@ -393,6 +383,7 @@ public class JdbcSource extends BaseSource {
           queryRowCount = 0;
           numQueryErrors = 0;
           firstQueryException = null;
+          queryStartedInThisBatch = true;
         }
         // Read Data and track last offset
         int rowCount = 0;
@@ -445,9 +436,16 @@ public class JdbcSource extends BaseSource {
               .createAndSend();
         }
 
-        if(rowCount > 0) {
-          // processed some records - reset the no-more-data event.
-          shouldSendNoMoreDataEvent = true;
+        /**
+         * We want to generate no-more data event on next batch if:
+         * 1) We run a query in this batch and returned empty.
+         * 2) We consumed at least some data since last time (to not generate the event all the time)
+         */
+        if(queryStartedInThisBatch && rowCount == 0 && noMoreDataRecordCount > 0) {
+          CommonEvents.NO_MORE_DATA.create(getContext())
+            .with("record-count", noMoreDataRecordCount)
+            .createAndSend();
+          noMoreDataRecordCount = 0;
         }
 
       } catch (SQLException e) {
