@@ -128,8 +128,8 @@ public final class TableConfigBean {
       displayPosition = 90,
       defaultValue = DEFAULT_PARTITION_SIZE,
       group = "TABLE",
-      dependsOn = "scaleUpEnabled",
-      triggeredByValue = "true"
+      dependsOn = "partitioningMode",
+      triggeredByValue = {"BEST_EFFORT", "REQUIRED"}
   )
   public String partitionSize = DEFAULT_PARTITION_SIZE;
 
@@ -142,8 +142,8 @@ public final class TableConfigBean {
       displayPosition = 100,
       defaultValue = "" + DEFAULT_MAX_NUM_ACTIVE_PARTITIONS,
       group = "TABLE",
-      dependsOn = "scaleUpEnabled",
-      triggeredByValue = "true",
+      dependsOn = "partitioningMode",
+      triggeredByValue = {"BEST_EFFORT", "REQUIRED"},
       min = -1
   )
   public int maxNumActivePartitions = DEFAULT_MAX_NUM_ACTIVE_PARTITIONS;
