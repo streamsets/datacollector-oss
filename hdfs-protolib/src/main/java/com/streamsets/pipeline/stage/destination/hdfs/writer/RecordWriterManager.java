@@ -23,6 +23,10 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.FakeRecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
@@ -203,6 +207,11 @@ public class RecordWriterManager {
       .with("filename", finalPath.getName())
       .with("length", status.getLen())
       .createAndSend();
+
+    LineageEvent event = context.createLineageEvent(LineageEventType.ENTITY_CREATED);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.HDFS.name());
+    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, finalPath.toString());
+    context.publishLineageEvent(event);
   }
 
   /**

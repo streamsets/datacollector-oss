@@ -23,6 +23,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -332,11 +335,11 @@ public class TestHdfsTarget {
   }
 
   @Test
-  public void testIdleTimeout() throws Exception {
+  public void testIdleTimeoutEventRecordsLineageEvents() throws Exception {
     HdfsTarget hdfsTarget = HdfsTargetUtil.newBuilder()
-      .dirPathTemplate(getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}")
-      .idleTimeout("1")
-      .build();
+        .dirPathTemplate(getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}")
+        .idleTimeout("1")
+        .build();
 
     TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
@@ -386,6 +389,23 @@ public class TestHdfsTarget {
     for (File f: list) {
       System.out.print(f.getName());
     }
+
+    List<LineageEvent> lineageEvents = runner.getLineageEvents();
+    Assert.assertEquals(3, lineageEvents.size());
+    for(LineageEvent event : lineageEvents) {
+      Assert.assertEquals(LineageEventType.ENTITY_CREATED.name(), event.getEventType().name());
+      boolean matched = false;
+      for(File f : list) {
+        if (f.getAbsolutePath().equals(event.getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME))) {
+          matched = true;
+          break;
+        }
+      }
+      if (!matched) {
+        Assert.fail("LineageEvent: ENTITY_NAME is not in the list of files.");
+      }
+    }
+
     Assert.assertEquals(3, list.length);
     Assert.assertEquals(3, runner.getEventRecords().size());
   }
