@@ -323,6 +323,10 @@ public class JdbcSource extends BaseSource {
       Hasher hasher = HF.newHasher();
       try {
         if (null == resultSet || resultSet.isClosed()) {
+          // The result set got closed outside of us, so we also clean up the connection (if any)
+          if(connection != null) {
+            closeQuietly(connection);
+          }
           connection = dataSource.getConnection();
 
           if (!txnColumnName.isEmpty()) {
