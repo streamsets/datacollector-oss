@@ -28,6 +28,10 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,6 +143,11 @@ public class RandomDataGeneratorSource extends BasePushSource {
   @Override
   protected List<ConfigIssue> init() {
     counter = 0;
+
+    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.DEVDATA.name());
+    getContext().publishLineageEvent(event);
+
     return super.init();
   }
 
