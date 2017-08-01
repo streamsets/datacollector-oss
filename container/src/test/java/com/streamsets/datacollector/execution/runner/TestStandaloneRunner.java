@@ -34,13 +34,18 @@ import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
+import com.streamsets.datacollector.record.RecordImpl;
+import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
+import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import dagger.Module;
 import dagger.ObjectGraph;
@@ -58,6 +63,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -481,6 +487,50 @@ public class TestStandaloneRunner {
     }
   }
 
+  /**
+   * SDC-6491: Make sure that snapshot will wait on first non-empty batch.
+   */
+  @Test (timeout = 60000)
+  public void testEnsureNonEmptySnapshot() throws Exception {
+    MockStages.setSourceCapture(new Source() {
+      int counter = 0;
+
+      // First 10 batches will "empty", then generate batches with exactly one record
+      @Override
+      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+        if(counter++ < 10) {
+          return "skipping";
+        }
+        batchMaker.addRecord(new RecordImpl("stage", "id", null, null));
+        return "generated-record";
+      }
+
+      @Override
+      public List<ConfigIssue> init(Info info, Context context) {
+        return Collections.emptyList();
+      }
+
+      @Override
+      public void destroy() {
+      }
+    });
+
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    final String snapshotId = UUID.randomUUID().toString();
+    runner.startAndCaptureSnapshot("admin", null, snapshotId, "snapshot label", 1, 10);
+    waitForState(runner, PipelineStatus.RUNNING);
+
+    await().until(() -> !runner.getSnapshot(snapshotId).getInfo().isInProgress());
+
+    ((AsyncRunner)runner).getRunner().prepareForStop("admin");
+    ((AsyncRunner)runner).getRunner().stop("admin");
+    waitForState(runner, PipelineStatus.STOPPED);
+
+    Snapshot snapshot = runner.getSnapshot(snapshotId);
+    assertEquals(11, snapshot.getInfo().getBatchNumber());
+
+    assertNotNull(snapshot.getOutput());
+  }
 
   @Test (timeout = 60000)
   public void testRunningMaxPipelines() throws Exception {

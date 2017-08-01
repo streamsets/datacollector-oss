@@ -797,8 +797,8 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     }
 
     synchronized (this) {
-      if( batchesToCapture > 0 && pipeBatch.getSnapshotsOfAllStagesOutput() != null) {
-        List<StageOutput> snapshot = pipeBatch.getSnapshotsOfAllStagesOutput();
+      List<StageOutput> snapshot = pipeBatch.getSnapshotsOfAllStagesOutput();
+      if( batchesToCapture > 0 && isSnapshotOutputUsable(pipeBatch.getSnapshotsOfAllStagesOutput())) {
         if (!snapshot.isEmpty()) {
           capturedBatches.add(snapshot);
         }
@@ -830,6 +830,29 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       statsAggregatorRequests.drainTo(stats);
       statsAggregationHandler.handle(entityName, previousOffset, stats);
     }
+  }
+
+  /**
+   * Returns true if given snapshot output is usable - e.g. if it make sense to persist.
+   */
+  private static boolean isSnapshotOutputUsable(List<StageOutput> snapshotsOfAllStagesOutput) {
+    // In case that the snapshot actually does not exists
+    if(snapshotsOfAllStagesOutput == null) {
+      return false;
+    }
+
+    // We're looking for at least one output lane that is not empty. In most cases the first stage in the list will
+    // be origin that generated some data and hence the loop will terminate fast. In the worst case scenario we will
+    // iterate over all stages in attempt to find at least one record in the snapshot.
+    for(StageOutput output : snapshotsOfAllStagesOutput) {
+      for(Map.Entry<String, List<Record>> entry : output.getOutput().entrySet()) {
+        if(!entry.getValue().isEmpty()) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   private void enforceMemoryLimit(Map<String, Long> memoryConsumedByStage) throws PipelineRuntimeException {
