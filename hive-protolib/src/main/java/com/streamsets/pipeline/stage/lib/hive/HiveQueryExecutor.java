@@ -619,7 +619,8 @@ public final class HiveQueryExecutor {
       LOG.error("Exception while processing query: {}", query, e);
       throw new HiveStageCheckedException(Errors.HIVE_20, query, e.getMessage());
     } finally {
-      t.stop();
+      long time = t.stop();
+      LOG.debug("Query '{}' took {} nanoseconds", query, time);
       updateMeter.mark();
     }
   }
@@ -641,7 +642,8 @@ public final class HiveQueryExecutor {
       ResultSet rs = statement.executeQuery(query);
     ) {
       // Stop timer immediately so that we're calculating only query execution time and not the processing time
-      t.stop();
+      long time = t.stop();
+      LOG.debug("Query '{}' took {} nanoseconds", query, time);
       t = null;
 
       return execution.run(rs);
@@ -651,7 +653,8 @@ public final class HiveQueryExecutor {
     } finally {
       // If the timer wasn't stopped due to exception yet, stop it now
       if(t != null) {
-        t.stop();
+        long time = t.stop();
+        LOG.debug("Query '{}' took {} nanoseconds", query, time);
       }
       selectMeter.mark();
     }
