@@ -394,6 +394,7 @@ public class TestPipeline {
     Mockito.verifyNoMoreInteractions(executor);
 
     Mockito.reset(runner);
+    Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     pipeline.run();
 
     pipeline.destroy(true, PipelineStopReason.UNKNOWN);
