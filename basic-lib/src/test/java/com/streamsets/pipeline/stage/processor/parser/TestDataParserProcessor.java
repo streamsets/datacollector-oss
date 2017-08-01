@@ -59,12 +59,12 @@ public class TestDataParserProcessor {
     String rest = "Nothing interesting happened.";
 
     String inputFieldPath = "input";
-    String outputFieldPath = "output";
+    String outputFieldPath = "/output";
 
     String syslogMsg = String.format(
         "<%d>%s %s %s",
         priority,
-        DateTimeFormatter.ofPattern("MMM d HH:mm:ss").format(date),
+        DateTimeFormatter.ofPattern("MMM dd HH:mm:ss").format(date),
         host,
         rest
     );
@@ -74,7 +74,7 @@ public class TestDataParserProcessor {
     final DataParserFormatConfig dataParserFormatConfig = new DataParserFormatConfig();
     configs.dataFormatConfig = dataParserFormatConfig;
     configs.fieldPathToParse = "/" + inputFieldPath;
-    configs.parsedFieldPath = "/" + outputFieldPath;
+    configs.parsedFieldPath = outputFieldPath;
 
     DataParserProcessor processor = new DataParserProcessor(configs);
 
@@ -94,7 +94,9 @@ public class TestDataParserProcessor {
       assertTrue(output.getRecords().containsKey(outputLane));
       final List<Record> records = output.getRecords().get(outputLane);
       assertEquals(1, records.size());
-      Map<String, Field> syslogFields = records.get(0).get().getValueAsMap().get(outputFieldPath).getValueAsMap();
+      assertTrue(records.get(0).has(outputFieldPath));
+      assertEquals(Field.Type.MAP, records.get(0).get(outputFieldPath).getType());
+      Map<String, Field> syslogFields = records.get(0).get(outputFieldPath).getValueAsMap();
       assertThat(syslogFields, hasKey(SyslogMessage.FIELD_SYSLOG_PRIORITY));
       assertThat(syslogFields.get(SyslogMessage.FIELD_SYSLOG_PRIORITY), fieldWithValue(priority));
       assertThat(syslogFields.get(SyslogMessage.FIELD_SYSLOG_FACILITY), fieldWithValue(facility));
