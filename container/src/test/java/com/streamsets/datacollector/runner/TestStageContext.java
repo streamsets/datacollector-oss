@@ -25,8 +25,8 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
-import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.util.Configuration;
@@ -39,6 +39,9 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -48,6 +51,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.Assert.fail;
 
 @SuppressWarnings("unchecked")
 public class TestStageContext {
@@ -179,7 +184,7 @@ public class TestStageContext {
 
     try {
       context.notify(ImmutableList.of("foo", "bar"), "SUBJECT", "BODY");
-      Assert.fail("Expected StageException");
+      fail("Expected StageException");
     } catch (StageException e) {
 
     }
@@ -225,6 +230,44 @@ public class TestStageContext {
     Assert.assertEquals("custom_type", event.getHeader().getAttribute(EventRecord.TYPE));
     Assert.assertEquals("2", event.getHeader().getAttribute(EventRecord.VERSION));
     Assert.assertNotNull(event.getHeader().getAttribute(EventRecord.CREATION_TIMESTAMP));
+  }
+
+  @Test
+  public void testMissingSpecificAttributes() throws Exception {
+    StageContext context = createStageContextForSDK();
+
+    for (int ok = 0; ok < 2; ok++) {
+      for (LineageEventType type : LineageEventType.values()) {
+        for (LineageSpecificAttribute attr : type.getSpecificAttributes()) {
+          LineageEvent event = new LineageEventImpl(
+              type,
+              "pipelineTitle",
+              "sdk-user",
+              System.currentTimeMillis(),
+              "pipelineId",
+              "sdc-id",
+              "http://streamsets.com",
+              "stageName"
+          );
+          for (LineageSpecificAttribute other : type.getSpecificAttributes()) {
+            if (ok % 2 == 1) {
+              if (!other.equals(attr)) {
+                event.setSpecificAttribute(other, "something");
+              } else {
+                event.setSpecificAttribute(other, "something");
+              }
+            } else {
+              event.setSpecificAttribute(other, "something_else");
+            }
+            try {
+              context.publishLineageEvent(event);
+            } catch (IllegalArgumentException ex) {
+              Assert.assertTrue(ex.getMessage().contains("missingSpecificAttributes()"));
+            }
+          }
+        }
+      }
+    }
   }
 
   @Test

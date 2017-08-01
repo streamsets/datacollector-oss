@@ -31,7 +31,6 @@ import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
-import com.streamsets.datacollector.lineage.LineageGeneralAttribute;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
@@ -72,7 +71,9 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.sampling.RecordSampler;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -623,7 +624,18 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
   }
   @Override
-  public void publishLineageEvent(LineageEvent event) {
+  public void publishLineageEvent(LineageEvent event) throws IllegalArgumentException {
+    List<LineageSpecificAttribute> missing = new ArrayList<>(event.missingSpecificAttributes());
+    if (!missing.isEmpty()) {
+      List<String> args = new ArrayList<>();
+      for (LineageSpecificAttribute attrib : missing) {
+        args.add(attrib.name());
+      }
+      throw new IllegalArgumentException(Utils.format(ContainerError.CONTAINER_01403.getMessage(),
+          StringUtils.join(args, ", ")
+      ));
+    }
+
     lineagePublisherDelegator.publishLineageEvent(event);
   }
 

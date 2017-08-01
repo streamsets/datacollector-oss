@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.lineage;
 
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
@@ -147,11 +148,7 @@ public class LineageEventImpl implements LineageEvent {
     try {
       type = getEventType();
     } catch (IllegalArgumentException | NullPointerException ex) {
-      throw new IllegalArgumentException(
-          Utils.format(
-          "Invalid LineageEventType passed to missingSpecificAttributes() '{}'",
-              getEventType()
-      ));
+      throw new IllegalArgumentException(Utils.format(ContainerError.CONTAINER_01404.getMessage(), getEventType()));
     }
 
     // List of all the attributes we would accept...
