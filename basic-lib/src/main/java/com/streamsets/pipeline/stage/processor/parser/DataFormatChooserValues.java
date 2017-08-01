@@ -22,8 +22,14 @@ public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
   public DataFormatChooserValues() {
     super(
+        DataFormat.AVRO,
+        DataFormat.DELIMITED,
+        DataFormat.JSON,
+        DataFormat.LOG,
+        DataFormat.NETFLOW,
+        DataFormat.PROTOBUF,
         DataFormat.SYSLOG,
-        DataFormat.NETFLOW
+        DataFormat.XML
     );
   }
 
