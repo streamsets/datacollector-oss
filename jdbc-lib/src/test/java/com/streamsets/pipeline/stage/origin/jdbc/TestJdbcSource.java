@@ -20,6 +20,10 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -1028,6 +1032,51 @@ public class TestJdbcSource {
       Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
       Assert.assertEquals(4, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
 
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testLineageEvent() throws Exception {
+    JdbcSource origin = new JdbcSource(
+        true,
+        query,
+        "0",
+        "P_ID",
+        false,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        // Using "0" leads to SDC-6429
+        new CommonSourceConfigBean(10, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        false,
+        "",
+        createConfigBean(h2ConnectionString, username, password),
+        UnknownTypeAction.STOP_PIPELINE
+    );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      StageRunner.Output output;
+
+      // First batch should read all 4 records
+      output = runner.runProduce(null, 10);
+      Assert.assertEquals(4, output.getRecords().get("lane").size());
+      Assert.assertEquals(1, runner.getEventRecords().size());
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals(4, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
+      List<LineageEvent> events = runner.getLineageEvents();
+
+      Assert.assertEquals(1, events.size());
+      Assert.assertEquals(LineageEventType.ENTITY_READ, events.get(0).getEventType());
+      Assert.assertEquals(query, events.get(0).getSpecificAttribute(LineageSpecificAttribute.DESCRIPTION));
+      Assert.assertEquals(EndPointType.JDBC.name(), events.get(0).getSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE));
+      Assert.assertTrue(events.get(0).getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME).contains(h2ConnectionString));
     } finally {
       runner.runDestroy();
     }

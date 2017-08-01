@@ -25,6 +25,10 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
@@ -116,6 +120,7 @@ public class JdbcSource extends BaseSource {
   private SQLException firstQueryException = null;
   private boolean shouldSendNoMoreDataEvent = true;
   private long noMoreDataRecordCount = 0;
+  private String tableNames;
 
   public JdbcSource(
       boolean isIncrementalMode,
@@ -237,6 +242,35 @@ public class JdbcSource extends BaseSource {
       LOG.debug(formattedError, e);
       issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, formattedError));
     }
+
+    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+    // TODO: add the per-event specific details here.
+    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, query);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.JDBC.name());
+    Map<String, String> props = new HashMap<>();
+    props.put("Connection String", hikariConfigBean.connectionString);
+    props.put("Offset Column", offsetColumn);
+    props.put("Is Incremental Mode", isIncrementalMode ? "true" : "false");
+    if (!StringUtils.isEmpty(tableNames)) {
+      event.setSpecificAttribute(
+          LineageSpecificAttribute.ENTITY_NAME,
+          hikariConfigBean.connectionString +
+          " " +
+          tableNames
+      );
+      props.put("Table Names", tableNames);
+
+    } else {
+      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, hikariConfigBean.connectionString);
+
+    }
+
+    for (final String n : driverProperties.stringPropertyNames()) {
+      props.put(n, driverProperties.getProperty(n));
+    }
+    event.setProperties(props);
+    getContext().publishLineageEvent(event);
+
     return issues;
   }
 
@@ -264,6 +298,7 @@ public class JdbcSource extends BaseSource {
   }
 
   private void validateResultSetMetadata(List<ConfigIssue> issues, Source.Context context, ResultSet rs) {
+    Set<String> allTables = new HashSet<>();
     try {
       Set<String> columnLabels = new HashSet<>();
       ResultSetMetaData metadata = rs.getMetaData();
@@ -275,6 +310,7 @@ public class JdbcSource extends BaseSource {
         } else {
           columnLabels.add(columnLabel);
         }
+        allTables.add(metadata.getTableName(columnIdx));
       }
       if (!StringUtils.isEmpty(offsetColumn) && offsetColumn.contains(".")) {
         issues.add(context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, JdbcErrors.JDBC_32, offsetColumn));
@@ -287,6 +323,7 @@ public class JdbcSource extends BaseSource {
       LOG.warn(JdbcErrors.JDBC_33.getMessage(), offsetColumn, query);
       LOG.warn(JdbcUtil.formatSqlException(e));
     }
+    tableNames = StringUtils.join(allTables, ", ");
   }
 
   @Override
