@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -29,12 +30,14 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -94,7 +97,14 @@ public class TestTableExclusion {
       TableConfigBean tableConfigBean,
       TableJdbcELEvalContext tableJdbcELEvalContext
   ) throws SQLException, StageException {
-    return TableContextUtil.listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext, QuoteChar.NONE);
+    return TableContextUtil.listTablesForConfig(
+        createTestContext(),
+        new LinkedList<Stage.ConfigIssue>(),
+        connection,
+        tableConfigBean,
+        tableJdbcELEvalContext,
+        QuoteChar.NONE
+    );
   }
 
   @Test
@@ -105,7 +115,14 @@ public class TestTableExclusion {
         .build();
     Assert.assertEquals(
         TABLE_NAMES.size(),
-        TableContextUtil.listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext, QuoteChar.NONE).size()
+        TableContextUtil.listTablesForConfig(
+            createTestContext(),
+            new LinkedList<Stage.ConfigIssue>(),
+            connection,
+            tableConfigBean,
+            tableJdbcELEvalContext,
+            QuoteChar.NONE
+        ).size()
     );
   }
 
@@ -161,5 +178,9 @@ public class TestTableExclusion {
         8,
         listTablesForConfig(connection, tableConfigBean, tableJdbcELEvalContext).size()
     );
+  }
+
+  private static PushSource.Context createTestContext() {
+    return Mockito.mock(PushSource.Context.class);
   }
 }

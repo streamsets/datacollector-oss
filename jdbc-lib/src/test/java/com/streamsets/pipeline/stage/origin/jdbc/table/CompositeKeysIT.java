@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.testing.RandomTestUtils;
@@ -164,5 +165,25 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
         runner.runDestroy();
       }
     }
+  }
+
+  @Test
+  public void testPartitioningMode() throws Exception {
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("%")
+        .schema(database)
+        .partitioningMode(PartitioningMode.REQUIRED)
+        .build();
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .quoteChar(QuoteChar.BACKTICK)
+        .build();
+
+    validateAndAssertConfigIssue(tableJdbcSource, JdbcErrors.JDBC_100, TABLE_NAME);
+
+    tableConfigBean.partitioningMode = PartitioningMode.BEST_EFFORT;
+
+    validateAndAssertNoConfigIssues(tableJdbcSource);
   }
 }

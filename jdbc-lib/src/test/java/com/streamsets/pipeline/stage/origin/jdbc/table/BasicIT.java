@@ -19,7 +19,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -57,7 +56,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -707,7 +705,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
         new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
             .tablePattern("CRICKET_STARS")
             .schema(database)
-            .scaleUpEnabled(true)
+            .partitioningMode(PartitioningMode.BEST_EFFORT)
             .partitionSize("-1")
             .build();
 
@@ -747,40 +745,6 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
     tableConfigBean.maxNumActivePartitions = 2;
     validateAndAssertNoConfigIssues(tableJdbcSource);
-  }
-
-  private static void validateAndAssertNoConfigIssues(TableJdbcSource tableJdbcSource) throws StageException {
-    validateAndAssertConfigIssue(tableJdbcSource, null, null);
-  }
-
-  private static void validateAndAssertConfigIssue(
-      TableJdbcSource tableJdbcSource,
-      ErrorCode expectedErrorCode,
-      String expectedInErrorMessage
-  ) throws StageException {
-
-    PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
-        .addOutputLane("a")
-        .setOnRecordError(OnRecordError.TO_ERROR)
-        .build();
-    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
-    if (expectedErrorCode == null) {
-      assertThat(configIssues, hasSize(0));
-    } else {
-      assertThat(configIssues, hasSize(1));
-      Stage.ConfigIssue issue = configIssues.get(0);
-
-      final ErrorMessage errorMsg = (ErrorMessage) Whitebox.getInternalState(issue, "message");
-      assertThat(errorMsg, notNullValue());
-      Assert.assertEquals(
-          expectedErrorCode.getCode(),
-          errorMsg.getErrorCode()
-      );
-
-      if (expectedInErrorMessage != null) {
-        assertThat(errorMsg.getLocalized(), containsString(expectedInErrorMessage));
-      }
-    }
   }
 
   private void runSourceForInitialOffset(List<Record> expectedRecords, int batchSize, Map<String, String> lastOffsets) throws Exception {
@@ -836,6 +800,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%_STARS")
         .schema(database)
+        .partitioningMode(PartitioningMode.DISABLED)
         .build();
 
     TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)

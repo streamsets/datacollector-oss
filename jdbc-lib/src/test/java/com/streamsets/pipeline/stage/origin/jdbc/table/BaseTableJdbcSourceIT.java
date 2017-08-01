@@ -19,8 +19,13 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -30,6 +35,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +58,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 public abstract class BaseTableJdbcSourceIT {
   private static final Logger LOG = LoggerFactory.getLogger(BaseTableJdbcSourceIT.class);
@@ -87,6 +98,40 @@ public abstract class BaseTableJdbcSourceIT {
           .build();
 
   protected static Connection connection;
+
+  protected static void validateAndAssertNoConfigIssues(TableJdbcSource tableJdbcSource) throws StageException {
+    validateAndAssertConfigIssue(tableJdbcSource, null, null);
+  }
+
+  protected static void validateAndAssertConfigIssue(
+      TableJdbcSource tableJdbcSource,
+      ErrorCode expectedErrorCode,
+      String expectedInErrorMessage
+  ) throws StageException {
+
+    PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
+        .addOutputLane("a")
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+    if (expectedErrorCode == null) {
+      assertThat(configIssues, hasSize(0));
+    } else {
+      assertThat(configIssues, hasSize(1));
+      Stage.ConfigIssue issue = configIssues.get(0);
+
+      final ErrorMessage errorMsg = (ErrorMessage) Whitebox.getInternalState(issue, "message");
+      assertThat(errorMsg, notNullValue());
+      Assert.assertEquals(
+          expectedErrorCode.getCode(),
+          errorMsg.getErrorCode()
+      );
+
+      if (expectedInErrorMessage != null) {
+        assertThat(errorMsg.getLocalized(), containsString(expectedInErrorMessage));
+      }
+    }
+  }
 
 
   static class JdbcPushSourceTestCallback implements PushSourceRunner.Callback {

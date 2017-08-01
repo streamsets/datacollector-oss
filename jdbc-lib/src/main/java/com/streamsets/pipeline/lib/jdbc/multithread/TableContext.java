@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
+import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,8 @@ public class TableContext {
   private final LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
   private final Map<String, String> offsetColumnToPartitionOffsetAdjustments = new HashMap<>();
   private final Map<String, String> offsetColumnToMinValues = new HashMap<>();
-  private final boolean enablePartitioning;
+
+  private final PartitioningMode partitioningMode;
   private final int maxNumActivePartitions;
   private final String extraOffsetColumnConditions;
   private final boolean partitionable;
@@ -49,7 +51,7 @@ public class TableContext {
       Map<String, String> offsetColumnToStartOffset,
       Map<String, String> offsetColumnToPartitionOffsetAdjustments,
       Map<String, String> offsetColumnToMinValues,
-      boolean enablePartitioning,
+      PartitioningMode partitioningMode,
       int maxNumActivePartitions,
       String extraOffsetColumnConditions
   ) {
@@ -65,7 +67,7 @@ public class TableContext {
       this.offsetColumnToMinValues.putAll(offsetColumnToMinValues);
     }
     this.extraOffsetColumnConditions = extraOffsetColumnConditions;
-    this.enablePartitioning = enablePartitioning;
+    this.partitioningMode = partitioningMode;
     this.maxNumActivePartitions = maxNumActivePartitions;
     if (offsetColumnToPartitionOffsetAdjustments != null) {
       this.offsetColumnToPartitionOffsetAdjustments.putAll(offsetColumnToPartitionOffsetAdjustments);
@@ -113,12 +115,12 @@ public class TableContext {
     return Collections.unmodifiableMap(offsetColumnToMinValues);
   }
 
-  public boolean isEnablePartitioning() {
-    return enablePartitioning;
-  }
-
   public boolean isPartitionable() {
     return partitionable;
+  }
+
+  public PartitioningMode getPartitioningMode() {
+    return partitioningMode;
   }
 
   public int getMaxNumActivePartitions() {

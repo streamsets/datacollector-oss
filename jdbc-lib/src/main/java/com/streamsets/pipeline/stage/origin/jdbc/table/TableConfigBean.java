@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 
@@ -29,9 +30,14 @@ public final class TableConfigBean {
   public static final String DEFAULT_PARTITION_SIZE = "1000000";
   public static final int DEFAULT_MAX_NUM_ACTIVE_PARTITIONS = -1;
 
-  public static final String SCALE_UP_ENABLED_FIELD = "scaleUpEnabled";
+  public static final String PARTITIONING_MODE_FIELD = "partitioningMode";
   public static final String MAX_NUM_ACTIVE_PARTITIONS_FIELD = "maxNumActivePartitions";
   public static final String PARTITION_SIZE_FIELD = "partitionSize";
+
+  public static final String PARTITIONING_MODE_DEFAULT_VALUE_STR = "BEST_EFFORT";
+  public static final PartitioningMode PARTITIONING_MODE_DEFAULT_VALUE = PartitioningMode.valueOf(
+      PARTITIONING_MODE_DEFAULT_VALUE_STR
+  );
 
   @ConfigDef(
       required = false,
@@ -103,14 +109,15 @@ public final class TableConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Allow Scale-Up (Partitioning)",
+      type = ConfigDef.Type.MODEL,
+      label = "Partitioning (Scale-up) Mode",
       description = "Enables the scale-up feature for the table(s).  Please read the documentation for more details.",
       displayPosition = 80,
-      defaultValue = "false",
+      defaultValue = PARTITIONING_MODE_DEFAULT_VALUE_STR,
       group = "TABLE"
   )
-  public boolean scaleUpEnabled;
+  @ValueChooserModel(PartitioningModeChooserValues.class)
+  public PartitioningMode partitioningMode = PARTITIONING_MODE_DEFAULT_VALUE;
 
   @ConfigDef(
       required = false,

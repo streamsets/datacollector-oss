@@ -21,6 +21,7 @@ import com.google.common.collect.SortedSetMultimap;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
+import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,7 @@ public class TableRuntimeContext {
       TableContext sourceTableContext,
       Map<String, String> storedOffsets
   ) {
-    if (sourceTableContext.isEnablePartitioning() && sourceTableContext.isPartitionable()) {
+    if (sourceTableContext.getPartitioningMode() != PartitioningMode.DISABLED && sourceTableContext.isPartitionable()) {
       return new TableRuntimeContext(sourceTableContext, true, 1, sourceTableContext.getOffsetColumnToStartOffset(), null, storedOffsets);
     } else {
       return new TableRuntimeContext(sourceTableContext, false, NON_PARTITIONED_SEQUENCE, sourceTableContext.getOffsetColumnToStartOffset(), null, storedOffsets);

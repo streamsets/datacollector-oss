@@ -86,7 +86,7 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
         (List<LinkedHashMap<String, Object>>) tableConfigs.getValue();
 
     for (LinkedHashMap<String, Object> tableConfigMap : tableConfigsMap) {
-      tableConfigMap.put(TableConfigBean.SCALE_UP_ENABLED_FIELD, false);
+      tableConfigMap.put(TableConfigBean.PARTITIONING_MODE_FIELD, PartitioningMode.DISABLED.name());
       tableConfigMap.put(TableConfigBean.PARTITION_SIZE_FIELD, TableConfigBean.DEFAULT_PARTITION_SIZE);
       tableConfigMap.put(
           TableConfigBean.MAX_NUM_ACTIVE_PARTITIONS_FIELD,

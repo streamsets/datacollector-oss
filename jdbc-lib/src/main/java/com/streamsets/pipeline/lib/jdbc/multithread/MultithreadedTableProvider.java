@@ -22,6 +22,7 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.SortedSetMultimap;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcSource;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -157,10 +158,10 @@ public final class MultithreadedTableProvider {
       );
 
       final boolean partitioningTurnedOff = lastPartition.isPartitioned()
-          && !sourceTableContext.isEnablePartitioning();
+          && sourceTableContext.getPartitioningMode() == PartitioningMode.DISABLED;
       final boolean partitioningTurnedOn = !lastPartition.isPartitioned()
           && sourceTableContext.isPartitionable()
-          && sourceTableContext.isEnablePartitioning();
+          && sourceTableContext.getPartitioningMode() != PartitioningMode.DISABLED;
 
       if (!partitioningTurnedOff && !partitioningTurnedOn) {
         continue;
@@ -347,7 +348,7 @@ public final class MultithreadedTableProvider {
   boolean isNewPartitionAllowed(TableRuntimeContext partition) {
     final TableContext tableContext = partition.getSourceTableContext();
     if (!partition.isPartitioned() &&
-        (!tableContext.isEnablePartitioning() || !tableContext.isPartitionable())) {
+        (tableContext.getPartitioningMode() == PartitioningMode.DISABLED || !tableContext.isPartitionable())) {
       if (LOG.isDebugEnabled()) {
         LOG.debug(
             "Cannot create new partition for ({}) because it is not partitionable, and the underlying table is" +

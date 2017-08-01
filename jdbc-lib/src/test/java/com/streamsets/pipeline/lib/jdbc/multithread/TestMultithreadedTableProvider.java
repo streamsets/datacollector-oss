@@ -23,6 +23,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
+import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.testing.RandomTestUtils;
 import jersey.repackaged.com.google.common.collect.Maps;
 import org.hamcrest.BaseMatcher;
@@ -590,7 +591,9 @@ public class TestMultithreadedTableProvider {
       String tableName = String.format("table%d", t);
 
       int type = sqlTypes.get(RandomTestUtils.nextInt(0, sqlTypes.size()));
-      boolean partitioned = enablePartitioning && random.nextBoolean();
+      PartitioningMode partitioningMode = enablePartitioning && random.nextBoolean()
+          ? PartitioningMode.BEST_EFFORT : PartitioningMode.DISABLED;
+      final boolean partitioned = partitioningMode == PartitioningMode.BEST_EFFORT;
       int maxNumPartitions = partitioned ? RandomTestUtils.nextInt(1, 10) : 1;
 
       // an integer should be compatible with all partitionable types
@@ -603,7 +606,7 @@ public class TestMultithreadedTableProvider {
           Collections.singletonMap(offsetColName, null),
           Collections.singletonMap(offsetColName, String.valueOf(partitionSize)),
           Collections.singletonMap(offsetColName, "0"),
-          partitioned,
+          partitioningMode,
           maxNumPartitions,
           null
       );
@@ -625,8 +628,7 @@ public class TestMultithreadedTableProvider {
         }
 
         TableRuntimeContext partition = new TableRuntimeContext(
-            table,
-            partitioned,
+            table, partitioned,
             partitioned ? p + 1 : TableRuntimeContext.NON_PARTITIONED_SEQUENCE,
             Collections.singletonMap(offsetColName, String.valueOf(startOffset)),
             Collections.singletonMap(offsetColName, String.valueOf(maxOffset)),
@@ -686,7 +688,7 @@ public class TestMultithreadedTableProvider {
         offsetColumnToStartOffset,
         offsetColumnToPartitionSizes,
         offsetColumnToMinValues,
-        enablePartitioning,
+        enablePartitioning ? PartitioningMode.BEST_EFFORT : PartitioningMode.DISABLED,
         maxActivePartitions,
         extraOffsetColumnConditions
     );

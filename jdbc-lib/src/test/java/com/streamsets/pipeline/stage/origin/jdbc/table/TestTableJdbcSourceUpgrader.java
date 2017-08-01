@@ -104,8 +104,8 @@ public class TestTableJdbcSourceUpgrader {
         upgradedTableConfig2
     );
     assertAllContain(
-        TableConfigBean.SCALE_UP_ENABLED_FIELD,
-        false,
+        TableConfigBean.PARTITIONING_MODE_FIELD,
+        "DISABLED",
         upgradedTableConfig1,
         upgradedTableConfig2
     );

@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
@@ -26,12 +28,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.mockito.Mockito;
 
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.UUID;
 
 @RunWith(Parameterized.class)
@@ -71,6 +75,8 @@ public class TestInvalidStartOffset {
     String randomStringValue = UUID.randomUUID().toString();
     try {
       TableContextUtil.checkForInvalidInitialOffsetValues(
+          Mockito.mock(PushSource.Context.class),
+          new LinkedList<Stage.ConfigIssue>(),
           "",
           new LinkedHashMap<>(ImmutableMap.of("column", sqlType)),
           ImmutableMap.of("column", randomStringValue)

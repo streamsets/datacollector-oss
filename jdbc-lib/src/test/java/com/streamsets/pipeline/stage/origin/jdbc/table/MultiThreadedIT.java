@@ -282,7 +282,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
     TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%")
         .maxNumActivePartitions(6)
-        .scaleUpEnabled(true)
+        .partitioningMode(PartitioningMode.BEST_EFFORT)
         .partitionSize("1000")
         .schema(database)
         .offsetColumns(Collections.singletonList(OFFSET_FIELD_NAME.toUpperCase()))
@@ -304,7 +304,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
         .tablePattern("%")
         .schema(database)
         .partitionSize("1000")
-        .scaleUpEnabled(true)
+        .partitioningMode(PartitioningMode.BEST_EFFORT)
         .offsetColumns(Collections.singletonList(OFFSET_FIELD_NAME.toUpperCase()))
         .overrideDefaultOffsetColumns(true)
         .build();
@@ -325,7 +325,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
         .tablePattern("%")
         .schema(database)
         .partitionSize("1000")
-        .scaleUpEnabled(true)
+        .partitioningMode(PartitioningMode.BEST_EFFORT)
         .offsetColumns(Collections.singletonList(OFFSET_FIELD_NAME.toUpperCase()))
         .overrideDefaultOffsetColumns(true)
         .build();

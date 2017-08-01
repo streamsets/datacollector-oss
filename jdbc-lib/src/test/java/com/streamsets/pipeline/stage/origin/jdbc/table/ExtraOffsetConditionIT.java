@@ -332,6 +332,7 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
         .overrideDefaultOffsetColumns(true)
         .offsetColumns(offsetColumns)
         .extraOffsetColumnConditions(extraOffsetConditions)
+        .partitioningMode(PartitioningMode.DISABLED)
         .build();
 
     TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)

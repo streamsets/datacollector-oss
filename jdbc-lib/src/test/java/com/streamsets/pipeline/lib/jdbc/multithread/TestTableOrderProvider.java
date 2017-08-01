@@ -23,6 +23,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -164,7 +165,7 @@ public class TestTableOrderProvider {
         Collections.emptyMap(),
         Collections.emptyMap(),
         Collections.emptyMap(),
-        false,
+        PartitioningMode.DISABLED,
         -1,
         null
     );

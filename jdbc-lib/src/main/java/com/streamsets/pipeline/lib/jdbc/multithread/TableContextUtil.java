@@ -19,6 +19,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
@@ -27,8 +28,11 @@ import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.CTTableConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.util.QueryUtil;
+import com.streamsets.pipeline.stage.origin.jdbc.table.Groups;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
+import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcELEvalContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -130,6 +134,8 @@ public final class TableContextUtil {
   }
 
   private static TableContext createTableContext(
+      PushSource.Context context,
+      List<Stage.ConfigIssue> issues,
       Connection connection,
       String schemaName,
       String tableName,
@@ -145,18 +151,37 @@ public final class TableContextUtil {
 
     if (tableConfigBean.overrideDefaultOffsetColumns) {
       if (tableConfigBean.offsetColumns.isEmpty()) {
-        throw new StageException(JdbcErrors.JDBC_62, tableName);
+        issues.add(context.createConfigIssue(
+            Groups.TABLE.name(),
+            TableJdbcConfigBean.TABLE_CONFIG,
+            JdbcErrors.JDBC_62,
+            tableName
+        ));
+        return null;
       }
       for (String overridenPartitionColumn : tableConfigBean.offsetColumns) {
         if (!columnNameToType.containsKey(overridenPartitionColumn)) {
-          throw new StageException(JdbcErrors.JDBC_63, tableName, overridenPartitionColumn);
+          issues.add(context.createConfigIssue(
+              Groups.TABLE.name(),
+              TableJdbcConfigBean.TABLE_CONFIG,
+              JdbcErrors.JDBC_63,
+              tableName,
+              overridenPartitionColumn
+          ));
+          return null;
         }
         offsetColumnToType.put(overridenPartitionColumn, columnNameToType.get(overridenPartitionColumn));
       }
     } else {
       List<String> primaryKeys = JdbcUtil.getPrimaryKeys(connection, schemaName, tableName);
       if (primaryKeys.isEmpty()) {
-        throw new StageException(JdbcErrors.JDBC_62, tableName);
+        issues.add(context.createConfigIssue(
+            Groups.TABLE.name(),
+            TableJdbcConfigBean.TABLE_CONFIG,
+            JdbcErrors.JDBC_62,
+            tableName
+        ));
+        return null;
       }
       primaryKeys.forEach(primaryKey -> offsetColumnToType.put(primaryKey, columnNameToType.get(primaryKey)));
     }
@@ -179,19 +204,26 @@ public final class TableContextUtil {
           Sets.difference(tableConfigBean.offsetColumnToInitialOffsetValue.keySet(), offsetColumnToType.keySet());
 
       if (!missingColumns.isEmpty() || !extraColumns.isEmpty()) {
-        throw new StageException(
+        issues.add(context.createConfigIssue(
+            Groups.TABLE.name(),
+            TableJdbcConfigBean.TABLE_CONFIG,
             JdbcErrors.JDBC_64,
             missingColumns.isEmpty() ? "(none)" : COMMA_JOINER.join(missingColumns),
             extraColumns.isEmpty() ? "(none)" : COMMA_JOINER.join(extraColumns)
-        );
+        ));
+        return null;
       }
 
       populateInitialOffset(
+          context,
+          issues,
           tableConfigBean.offsetColumnToInitialOffsetValue,
           tableJdbcELEvalContext,
           offsetColumnToStartOffset
       );
       checkForInvalidInitialOffsetValues(
+          context,
+          issues,
           qualifiedTableName,
           offsetColumnToType,
           offsetColumnToStartOffset
@@ -208,7 +240,7 @@ public final class TableContextUtil {
         offsetColumnToStartOffset,
         offsetAdjustments,
         offsetColumnMinValues,
-        tableConfigBean.scaleUpEnabled,
+        tableConfigBean.partitioningMode,
         tableConfigBean.maxNumActivePartitions,
         tableConfigBean.extraOffsetColumnConditions
     );
@@ -219,6 +251,8 @@ public final class TableContextUtil {
    * in {@param offsetColumnToStartOffset}
    */
   private static void populateInitialOffset(
+      PushSource.Context context,
+      List<Stage.ConfigIssue> issues,
       Map<String, String> configuredColumnToInitialOffset,
       TableJdbcELEvalContext tableJdbcELEvalContext,
       Map<String, String> offsetColumnToStartOffset
@@ -231,14 +265,24 @@ public final class TableContextUtil {
             partitionColumnInitialOffsetEntry.getValue()
         );
         if (value == null) {
-          throw new StageException(
+          issues.add(context.createConfigIssue(
+              Groups.TABLE.name(),
+              TableJdbcConfigBean.TABLE_CONFIG,
               JdbcErrors.JDBC_73,
               partitionColumnInitialOffsetEntry.getValue(),
               Utils.format("Expression returned date as null. Check Expression")
-          );
+          ));
+          return;
         }
       } catch (ELEvalException e) {
-        throw new StageException(JdbcErrors.JDBC_73, partitionColumnInitialOffsetEntry.getValue(), e);
+        issues.add(context.createConfigIssue(
+            Groups.TABLE.name(),
+            TableJdbcConfigBean.TABLE_CONFIG,
+            JdbcErrors.JDBC_73,
+            partitionColumnInitialOffsetEntry.getValue(),
+            e
+        ));
+        return;
       }
       offsetColumnToStartOffset.put(
           partitionColumnInitialOffsetEntry.getKey(),
@@ -253,6 +297,8 @@ public final class TableContextUtil {
    */
   //@VisibleForTesting
   static void checkForInvalidInitialOffsetValues(
+      PushSource.Context context,
+      List<Stage.ConfigIssue> issues,
       String qualifiedTableName,
       LinkedHashMap<String, Integer> offsetColumnToType,
       Map<String, String> offsetColumnToStartOffset
@@ -298,6 +344,8 @@ public final class TableContextUtil {
    * @throws StageException if partition configuration is not correct.
    */
   public static Map<String, TableContext> listTablesForConfig(
+      PushSource.Context context,
+      List<Stage.ConfigIssue> issues,
       Connection connection,
       TableConfigBean tableConfigBean,
       TableJdbcELEvalContext tableJdbcELEvalContext,
@@ -314,6 +362,8 @@ public final class TableContextUtil {
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
         if (p == null || !p.matcher(tableName).matches()) {
           TableContext tableContext = createTableContext(
+              context,
+              issues,
               connection,
               schemaName,
               tableName,
@@ -321,10 +371,12 @@ public final class TableContextUtil {
               tableJdbcELEvalContext,
               quoteChar
           );
-          tableContextMap.put(
-              getQualifiedTableName(schemaName, tableName),
-              tableContext
-          );
+          if (tableContext != null) {
+            tableContextMap.put(
+                getQualifiedTableName(schemaName, tableName),
+                tableContext
+            );
+          }
         }
       }
     }
@@ -517,23 +569,27 @@ public final class TableContextUtil {
   }
 
   private static long getCurrentVersion(Connection connection) throws SQLException, StageException {
-    PreparedStatement preparedStatement = connection.prepareStatement(QueryUtil.getCurrentVersion());
-    ResultSet resultSet = preparedStatement.executeQuery();
-    while (resultSet.next()) {
-      return resultSet.getLong(1);
+    try (PreparedStatement preparedStatement = connection.prepareStatement(QueryUtil.getCurrentVersion());
+         ResultSet resultSet = preparedStatement.executeQuery()) {
+      while (resultSet.next()) {
+        return resultSet.getLong(1);
+      }
+
+      throw new StageException(JdbcErrors.JDBC_201, -1);
     }
 
-    throw new StageException(JdbcErrors.JDBC_201, -1);
   }
 
   private static long validateTable(Connection connection, String table) throws SQLException, StageException {
-    PreparedStatement validation = connection.prepareStatement(String.format(QueryUtil.getMinVersion(), table));
-    ResultSet resultSet = validation.executeQuery();
-    if (resultSet.next()) {
-      return resultSet.getLong("min_valid_version");
+    try (PreparedStatement validation = connection.prepareStatement(String.format(QueryUtil.getMinVersion(), table));
+         ResultSet resultSet = validation.executeQuery()) {
+      if (resultSet.next()) {
+        return resultSet.getLong("min_valid_version");
+      }
+
+      throw new StageException(JdbcErrors.JDBC_200, table);
     }
 
-    throw new StageException(JdbcErrors.JDBC_200, table);
   }
 
   private static TableContext createCTTableContext(
@@ -565,7 +621,7 @@ public final class TableContextUtil {
 
     final Map<String, String> offsetAdjustments = new HashMap<>();
     final Map<String, String> offsetColumnMinValues = new HashMap<>();
-    final boolean scaleUpEnabled = false;
+    final PartitioningMode partitioningMode = TableConfigBean.PARTITIONING_MODE_DEFAULT_VALUE;
     final int maxNumActivePartitions = 0;
     final String extraOffsetColumnConditions = "";
 
@@ -576,7 +632,7 @@ public final class TableContextUtil {
         offsetColumnToStartOffset,
         offsetAdjustments,
         offsetColumnMinValues,
-        scaleUpEnabled,
+        partitioningMode,
         maxNumActivePartitions,
         extraOffsetColumnConditions
     );

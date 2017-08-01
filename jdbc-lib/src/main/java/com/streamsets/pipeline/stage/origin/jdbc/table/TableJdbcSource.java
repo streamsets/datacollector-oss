@@ -124,11 +124,15 @@ public class TableJdbcSource extends BasePushSource {
           TableConfigBean tableConfigBean = tableJdbcConfigBean.tableConfigs.get(i);
 
           //No duplicates even though a table matches multiple configurations, we will add it only once.
-          final Map<String, TableContext> tableContexts = TableContextUtil.listTablesForConfig(
-              connectionManager.getConnection(),
-              tableConfigBean,
-              new TableJdbcELEvalContext(context, context.createELVars()),
-              tableJdbcConfigBean.quoteChar
+          final Map<String, TableContext> tableContexts =
+              TableContextUtil.listTablesForConfig(
+                  getContext(),
+                  issues,
+                  connectionManager.getConnection(),
+                  tableConfigBean,
+                  new TableJdbcELEvalContext(context, context.createELVars()),
+                  tableJdbcConfigBean.quoteChar
+
           );
 
           allTableContexts.putAll(tableContexts);
@@ -280,7 +284,7 @@ public class TableJdbcSource extends BasePushSource {
       TableContext table = tableEntry.getValue();
       final String tableName = table.getQualifiedName();
 
-      if (table.isEnablePartitioning() && !table.isPartitionable()) {
+      if (table.getPartitioningMode() == PartitioningMode.REQUIRED && !table.isPartitionable()) {
         List<String> reasons = new LinkedList<>();
         TableContext.isPartitionable(table, reasons);
         final ConfigIssue issue = context.createConfigIssue(
@@ -298,7 +302,7 @@ public class TableJdbcSource extends BasePushSource {
         issues.add(issue);
       }
 
-      if (table.isEnablePartitioning()) {
+      if (table.getPartitioningMode() != PartitioningMode.DISABLED && table.isPartitionable()) {
         Map.Entry<String, Integer> entry = table.getOffsetColumnToType().entrySet().iterator().next();
 
         String partitionSize = table.getOffsetColumnToPartitionOffsetAdjustments().get(entry.getKey());
