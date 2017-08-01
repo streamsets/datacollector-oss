@@ -933,11 +933,6 @@ public class JdbcUtil {
     return formattedError;
   }
 
-  public static String getCTOffset(ResultSet rs, String version, String operation, List<String> primaryKeys) throws SQLException {
-    final String delimitor = "::";
-    return version + "=" + rs.getString(version) + delimitor + operation + "=" + rs.getString(operation) + delimitor + Joiner.on(delimitor).join(primaryKeys);
-  }
-
   /**
    * Checks whether to generate a no-more-data event, if
    * so creates a new batch and then

@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.MSOperationCode;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
@@ -35,10 +36,9 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -95,16 +95,17 @@ public final class CTJdbcRunnable extends JdbcBaseRunnable {
         recordHeader
     );
 
-    List<String> primaryKeys = new ArrayList<>();
+    Map<String, String> columnOffsets = new HashMap<>();
 
+
+    // Generate Offset includes primary keys, sys_change_version, and sys_change_operation
     for (String key : tableContext.getSourceTableContext().getOffsetColumns()) {
-      if (!key.equals(SYS_CHANGE_VERSION)) {
-        primaryKeys.add(key + "=" + rs.getString(key));
-      }
+      columnOffsets.put(key, rs.getString(key));
     }
 
-    String offsetFormat = JdbcUtil.getCTOffset(rs, SYS_CHANGE_VERSION, SYS_CHANGE_OPERATION, primaryKeys);
+    columnOffsets.put(SYS_CHANGE_OPERATION, rs.getString(SYS_CHANGE_OPERATION));
 
+    String offsetFormat = OffsetQueryUtil.getOffsetFormat(columnOffsets);
 
     Record record = context.createRecord(tableContext.getQualifiedName() + "::" + offsetFormat);
     record.set(Field.createListMap(fields));
