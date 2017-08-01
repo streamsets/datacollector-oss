@@ -152,6 +152,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String VERSION_UNCOMMITTED = "v3";
   private static final String ZERO = "0";
   private static final int ONE_HOUR = 60 * 60 * 1000;
+  private static final int MAX_RECORD_GENERATION_ATTEMPTS = 100;
 
   // What are all these constants?
   // String templates used in debug logging statements. To avoid unnecessarily creating new strings,
@@ -291,7 +292,8 @@ public class OracleCDCSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, final BatchMaker batchMaker) throws StageException {
     boolean recordsProduced = false;
     final int batchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
-    while (!getContext().isStopped() && !recordsProduced) {
+    int recordGenerationAttempts = 0;
+    while (!getContext().isStopped() && !recordsProduced && recordGenerationAttempts++ < MAX_RECORD_GENERATION_ATTEMPTS) {
       if (currentCommitTxn.isPresent()) {
         Offset os = new Offset(lastSourceOffset);
         bufferedRecordsLock.lock();
@@ -438,7 +440,7 @@ public class OracleCDCSource extends BaseSource {
             startDate = startDate.minusSeconds(configBean.txnWindow);
           }
           LocalDateTime endTime = getEndTimeForStartTime(startDate);
-          if (lastSCN == null || !configBean.bufferLocally) {
+          if (lastSCN == null || !configBean.bufferLocally || getContext().isPreview()) {
             startLogMinerUsingGivenDates(startDate.format(dtFormatter), endTime.format(dtFormatter));
           } else {
             startLogMnrForResume.execute();
@@ -452,7 +454,7 @@ public class OracleCDCSource extends BaseSource {
 
         final PreparedStatement select = selectChanges;
         final boolean closeRS = closeResultSet;
-        generateRecords(batchSize, select, batchMaker, closeRS);
+        recordsProduced = generateRecords(batchSize, select, batchMaker, closeRS);
       } catch (Exception ex) {
         // In preview, destroy gets called after timeout which can cause a SQLException
         if (getContext().isPreview() && ex instanceof SQLException) {
@@ -461,9 +463,6 @@ public class OracleCDCSource extends BaseSource {
         }
         LOG.error("Error while attempting to produce records", ex);
         errorRecordHandler.onError(JDBC_44, Throwables.getStackTraceAsString(ex));
-      }
-      if (offsetReference.get() != null) {
-        recordsProduced = true;
       }
     }
     if (offsetReference.get() != null) {
@@ -490,7 +489,7 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private void generateRecords(
+  private boolean generateRecords(
       int batchSize,
       PreparedStatement selectChanges,
       BatchMaker batchMaker,
@@ -499,6 +498,7 @@ public class OracleCDCSource extends BaseSource {
     StringBuilder query = new StringBuilder();
     ResultSet resultSet;
     int countToCheck = 0;
+    boolean recordsProduced = false;
     if (!currentResultSet.isPresent()) {
       resultSet = selectChanges.executeQuery();
       currentResultSet = Optional.of(resultSet);
@@ -516,7 +516,7 @@ public class OracleCDCSource extends BaseSource {
         // CSF is 1 if the query is incomplete, so read the next row before parsing
         // CSF being 0 means query is complete, generate the record
         if (resultSet.getInt(9) == 0) {
-          count++;
+
           incompleteRedoStatement = false;
           BigDecimal scnDecimal = resultSet.getBigDecimal(1);
           String scn = scnDecimal.toPlainString();
@@ -566,6 +566,7 @@ public class OracleCDCSource extends BaseSource {
           }
 
           if (op != DDL_CODE && op != COMMIT_CODE && op != ROLLBACK_CODE) {
+            count++;
             if (configBean.bufferLocally) {
               // Since local buffering offsets are commit scn and number of records sent, we still stick with the last
               // offset before this one.
@@ -582,9 +583,10 @@ public class OracleCDCSource extends BaseSource {
             attributes.put(XID, xid);
             attributes.put(RS_ID, rsId);
             attributes.put(SSN, ssn.toString());
-            if (!configBean.bufferLocally) {
+            if (!configBean.bufferLocally || getContext().isPreview()) {
               Record record = generateRecord(attributes, ctxOp.operationCode, ctxOp.context);
               if (record != null && record.getEscapedFieldPaths().size() > 0) {
+                recordsProduced = true;
                 batchMaker.addRecord(record);
               }
             } else {
@@ -604,7 +606,7 @@ public class OracleCDCSource extends BaseSource {
                 bufferedRecordsLock.unlock();
               }
             }
-          } else if (configBean.bufferLocally && (op == COMMIT_CODE || op == ROLLBACK_CODE)) {
+          } else if (!getContext().isPreview() && configBean.bufferLocally && (op == COMMIT_CODE || op == ROLLBACK_CODE)) {
             // so this commit was previously processed or it is a rollback, so don't care.
             if (op == ROLLBACK_CODE || scnDecimal.compareTo(resumeCommitSCN) < 0) {
               if (scnDecimal.compareTo(resumeCommitSCN) < 0) {
@@ -646,6 +648,7 @@ public class OracleCDCSource extends BaseSource {
                   } else {
                     recordsSent += lastSeq;
                   }
+                  recordsProduced = recordsSent > 0;
                 }
                 resumeSeq = lastSeq;
                 offset = new Offset(VERSION_UNCOMMITTED, tsDate, scn, lastSeq);
@@ -656,16 +659,20 @@ public class OracleCDCSource extends BaseSource {
           } else {
             offset = new Offset(VERSION_STR, null, scn, 0);
             boolean sendSchema = false;
-            // Event is sent on every DDL, but schema is not always sent.
-            // Schema sending logic:
-            // CREATE/ALTER: Schema is sent if the schema after the ALTER is newer than the cached schema
-            // (which we would have sent as an event earlier, at the last alter)
-            // DROP/TRUNCATE: Schema is not sent, since they don't change schema.
-            DDL_EVENT type = getDdlType(queryString);
-            if (type == DDL_EVENT.ALTER || type == DDL_EVENT.CREATE) {
-              sendSchema = refreshSchema(scnDecimal, table);
+            // Commit/rollback in Preview will also end up here, so don't really do any of the following in preview
+            // Don't bother with DDL events here.
+            if (!getContext().isPreview()) {
+              // Event is sent on every DDL, but schema is not always sent.
+              // Schema sending logic:
+              // CREATE/ALTER: Schema is sent if the schema after the ALTER is newer than the cached schema
+              // (which we would have sent as an event earlier, at the last alter)
+              // DROP/TRUNCATE: Schema is not sent, since they don't change schema.
+              DDL_EVENT type = getDdlType(queryString);
+              if (type == DDL_EVENT.ALTER || type == DDL_EVENT.CREATE) {
+                sendSchema = refreshSchema(scnDecimal, table);
+              }
+              getContext().toEvent(createEventRecord(type, queryString, table, offset.toString(), sendSchema));
             }
-            getContext().toEvent(createEventRecord(type, queryString, table, offset.toString(), sendSchema));
           }
           this.offsetReference.set(offset);
           query.setLength(0);
@@ -673,7 +680,7 @@ public class OracleCDCSource extends BaseSource {
           incompleteRedoStatement = true;
         }
         if (!incompleteRedoStatement) {
-          countToCheck = configBean.bufferLocally ? recordsSent : count;
+          countToCheck = !getContext().isPreview() && configBean.bufferLocally ? recordsSent : count;
           if (countToCheck >= batchSize) {
             LOG.info("Batch count = " + countToCheck);
             break;
@@ -700,6 +707,7 @@ public class OracleCDCSource extends BaseSource {
         lastSCN = null;
       }
     }
+    return recordsProduced;
   }
 
   private Record generateRecord(Map<String, String> attributes, int operationCode, ParserRuleContext ruleContext)
