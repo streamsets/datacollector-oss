@@ -23,32 +23,49 @@ import com.streamsets.datacollector.client.model.StageOutputJson;
 import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.testing.NetworkUtils;
+import com.streamsets.testing.ParametrizedUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.util.Collection;
 import java.util.Collections;
 
+@RunWith(Parameterized.class)
 public class TestPreviewApi {
+
+  @Parameterized.Parameters(name = "str({0})")
+  public static Collection<Object[]> data() throws Exception {
+    return ParametrizedUtils.toArrayOfArrays(
+      "none",
+      "basic",
+      "form",
+      "digest"
+    );
+  }
+
   private String baseURL;
-  private String[] authenticationTypes = {"none", "basic", "form", "digest"};
+  private String authType;
+
+  public TestPreviewApi(String authType) {
+    this.authType = authType;
+  }
+
 
   @Test
-  public void testForDifferentAuthenticationTypes() {
+  public void testForDifferentAuthenticationTypes() throws Exception {
     Task server = null;
     try {
-      for(String authType: authenticationTypes) {
-        int port = NetworkUtils.getRandomPort();
-        server = TestUtil.startServer(port, authType);
-        baseURL = "http://127.0.0.1:" + port;
-        ApiClient apiClient = getApiClient(authType);
+      int port = NetworkUtils.getRandomPort();
+      server = TestUtil.startServer(port, authType);
+      baseURL = "http://127.0.0.1:" + port;
+      ApiClient apiClient = getApiClient(authType);
 
-        testValidationConfig(apiClient);
-        testRunningPreview(apiClient);
+      testValidationConfig(apiClient);
+      testRunningPreview(apiClient);
 
-        TestUtil.stopServer(server);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
+      TestUtil.stopServer(server);
     } finally {
       if(server != null) {
         TestUtil.stopServer(server);
@@ -85,7 +102,7 @@ public class TestPreviewApi {
     PreviewInfoJson lastPreviewStatus;
     while(true) {
       PreviewInfoJson previewInfo = previewApi.getPreviewStatus(pipelineName, previewInfoJson.getPreviewerId());
-      if(previewInfo.getStatus() != PreviewInfoJson.StatusEnum.VALIDATING) {
+      if(!previewInfo.getStatus().isOneOf(PreviewInfoJson.StatusEnum.VALIDATING)) {
         lastPreviewStatus = previewInfo;
         break;
       }
@@ -117,14 +134,16 @@ public class TestPreviewApi {
     Assert.assertNotNull(previewInfoJson.getPreviewerId());
 
     if(previewInfoJson.getStatus() != null) {
-      Assert.assertTrue(previewInfoJson.getStatus() == PreviewInfoJson.StatusEnum.RUNNING ||
-        previewInfoJson.getStatus() == PreviewInfoJson.StatusEnum.RUN_ERROR);
+      Assert.assertTrue(
+        "Unexpected status: " + previewInfoJson.getStatus().name(),
+        previewInfoJson.getStatus().isOneOf(PreviewInfoJson.StatusEnum.RUNNING, PreviewInfoJson.StatusEnum.RUN_ERROR)
+      );
     }
 
     PreviewInfoJson lastPreviewStatus;
     while(true) {
       PreviewInfoJson previewInfo = previewApi.getPreviewStatus(pipelineName, previewInfoJson.getPreviewerId());
-      if(previewInfo.getStatus() == PreviewInfoJson.StatusEnum.RUN_ERROR) {
+      if(previewInfo.getStatus().isOneOf(PreviewInfoJson.StatusEnum.RUN_ERROR)) {
         lastPreviewStatus = previewInfo;
         break;
       }

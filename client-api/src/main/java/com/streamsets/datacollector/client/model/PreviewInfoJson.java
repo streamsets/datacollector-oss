@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.streamsets.datacollector.client.StringUtil;
 
 
@@ -52,6 +53,21 @@ public enum StatusEnum {
     this.value = value;
   }
 
+  @JsonIgnore
+  public boolean isOneOf(StatusEnum ...types) {
+    if(types == null) {
+      return false;
+    }
+
+    for(StatusEnum t : types) {
+      if(this == t) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   @Override
   public String toString() {
     return value;
@@ -59,7 +75,6 @@ public enum StatusEnum {
 }
 
   private StatusEnum status = null;
-
 
   /**
    **/
