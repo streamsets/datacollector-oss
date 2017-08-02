@@ -29,6 +29,8 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
+import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
+
 @StageDef(
     version = 10,
     label = "HTTP Server",
@@ -82,6 +84,9 @@ public class HttpServerDPushSource extends DPushSource {
 
   @Override
   protected PushSource createPushSource() {
+    if (dataFormat == DataFormat.AVRO) {
+      dataFormatConfig.avroSchemaSource = SOURCE;
+    }
     return new HttpServerPushSource(httpConfigs, maxRequestSizeMB, dataFormat, dataFormatConfig);
   }
 
