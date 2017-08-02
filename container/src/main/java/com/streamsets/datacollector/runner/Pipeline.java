@@ -403,10 +403,11 @@ public class Pipeline {
       runner.destroy(originPipe, pipes, badRecordsHandler, statsAggregationHandler);
     } catch (StageException|PipelineRuntimeException ex) {
       String msg = Utils.format("Exception thrown in destroy phase: {}", ex.getMessage());
-      LOG.warn(msg, ex);
+      LOG.error(msg, ex);
       if(exception == null) {
         exception = ex;
       }
+      stopReason = PipelineStopReason.FAILURE;
     }
 
     // Lifecycle event handling
@@ -415,11 +416,35 @@ public class Pipeline {
         startEventStage.destroy(null, null);
       } catch (Exception ex) {
         String msg = Utils.format("Exception thrown during pipeline start event handler destroy: {}", ex);
-        LOG.warn(msg, ex);
+        LOG.error(msg, ex);
         if(exception == null) {
           exception = ex;
         }
       }
+      stopReason = PipelineStopReason.FAILURE;
+    }
+
+    try {
+      badRecordsHandler.destroy();
+    } catch (Exception ex) {
+      String msg = Utils.format("Exception thrown during bad record handler destroy: {}", ex);
+      LOG.error(msg, ex);
+      if(exception == null) {
+        exception = ex;
+      }
+      stopReason = PipelineStopReason.FAILURE;
+    }
+    try {
+      if (statsAggregationHandler != null) {
+        statsAggregationHandler.destroy();
+      }
+    } catch (Exception ex) {
+      String msg = Utils.format("Exception thrown during Stats Aggregator handler destroy: {}", ex);
+      LOG.error(msg, ex);
+      if(exception == null) {
+        exception = ex;
+      }
+      stopReason = PipelineStopReason.FAILURE;
     }
 
     if(stopEventStage != null) {
@@ -439,33 +464,13 @@ public class Pipeline {
         stopEventStage.destroy(null, null);
       } catch (Exception ex) {
         String msg = Utils.format("Exception thrown during pipeline stop event handler destroy: {}", ex);
-        LOG.warn(msg, ex);
+        LOG.error(msg, ex);
         if(exception == null) {
           exception = ex;
         }
       }
     }
 
-    try {
-      badRecordsHandler.destroy();
-    } catch (Exception ex) {
-      String msg = Utils.format("Exception thrown during bad record handler destroy: {}", ex);
-      LOG.warn(msg, ex);
-      if(exception == null) {
-        exception = ex;
-      }
-    }
-    try {
-      if (statsAggregationHandler != null) {
-        statsAggregationHandler.destroy();
-      }
-    } catch (Exception ex) {
-      String msg = Utils.format("Exception thrown during Stats Aggregator handler destroy: {}", ex);
-      LOG.warn(msg, ex);
-      if(exception == null) {
-        exception = ex;
-      }
-    }
     if (scheduledExecutorService != null) {
       scheduledExecutorService.shutdown();
     }
