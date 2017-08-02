@@ -52,6 +52,16 @@ public class TestPreviewRun {
   private Configuration configuration;
   private RuntimeInfo runtimeInfo;
 
+  private static class ReturnNumberSource extends BaseSource {
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      Record record = getContext().createRecord("x");
+      record.set(Field.create(1));
+      batchMaker.addRecord(record);
+      return "1";
+    }
+  }
+
   @Before
   public void setUp() {
     MockStages.resetStageCaptures();
@@ -61,15 +71,7 @@ public class TestPreviewRun {
 
   @Test
   public void testPreviewRun() throws Exception {
-    MockStages.setSourceCapture(new BaseSource() {
-      @Override
-      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-        Record record = getContext().createRecord("x");
-        record.set(Field.create(1));
-        batchMaker.addRecord(record);
-        return "1";
-      }
-    });
+    MockStages.setSourceCapture(new ReturnNumberSource());
     MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
       @Override
       protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
@@ -102,16 +104,36 @@ public class TestPreviewRun {
   }
 
   @Test
-  public void testPreviewPipelineBuilder() throws Exception {
-    MockStages.setSourceCapture(new BaseSource() {
+  public void testPreviewIgnoreEmptyBatches() throws Exception {
+    MockStages.setSourceCapture(new ReturnNumberSource() {
+      int count = 0;
+
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-        Record record = getContext().createRecord("x");
-        record.set(Field.create(1));
-        batchMaker.addRecord(record);
-        return "1";
+        // Skip first few batches
+        if(count++ < 10) {
+          return "skipped";
+        }
+
+        // Otherwise return real batch
+        return super.produce(lastSourceOffset, maxBatchSize, batchMaker);
       }
     });
+    SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
+    PipelineRunner runner = new PreviewPipelineRunner( "name", "0", runtimeInfo, tracker, -1, 1, true, true);
+    Pipeline pipeline = new MockPipelineBuilder()
+      .withPipelineConf(MockStages.createPipelineConfigurationSourceTarget())
+      .build(runner);
+    pipeline.init(false);
+    pipeline.run();
+    pipeline.destroy(false, PipelineStopReason.UNUSED);
+    List<StageOutput> output = runner.getBatchesOutput().get(0);
+    Assert.assertEquals(1, output.get(0).getOutput().get("a").get(0).get().getValue());
+  }
+
+  @Test
+  public void testPreviewPipelineBuilder() throws Exception {
+    MockStages.setSourceCapture(new ReturnNumberSource());
     MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
       @Override
       protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
@@ -143,15 +165,7 @@ public class TestPreviewRun {
 
   @Test
   public void testPreviewPipelineBuilderWithLastStage() throws Exception {
-    MockStages.setSourceCapture(new BaseSource() {
-      @Override
-      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-        Record record = getContext().createRecord("x");
-        record.set(Field.create(1));
-        batchMaker.addRecord(record);
-        return "1";
-      }
-    });
+    MockStages.setSourceCapture(new ReturnNumberSource());
     MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
       @Override
       protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
@@ -250,18 +264,13 @@ public class TestPreviewRun {
 
   @Test
   public void testIsPreview() throws Exception {
-    MockStages.setSourceCapture(new BaseSource() {
+    MockStages.setSourceCapture(new ReturnNumberSource() {
 
       @Override
       protected List<ConfigIssue> init() {
         List<ConfigIssue> issues = super.init();
         Assert.assertTrue(getContext().isPreview());
         return issues;
-      }
-
-      @Override
-      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-        return "X";
       }
     });
 
@@ -285,15 +294,10 @@ public class TestPreviewRun {
   @Test
   public void testPreviewRunFailValidationConfigs() throws Exception {
 
-    MockStages.setSourceCapture(new BaseSource() {
+    MockStages.setSourceCapture(new ReturnNumberSource() {
       @Override
       public List<ConfigIssue> init(Info info, Source.Context context) {
         return Arrays.asList(context.createConfigIssue(null, null, ContainerError.CONTAINER_0000));
-      }
-
-      @Override
-      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-        return "1";
       }
     });
     MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
@@ -325,15 +329,7 @@ public class TestPreviewRun {
 
   @Test
   public void testPreviewRunOverride() throws Exception {
-    MockStages.setSourceCapture(new BaseSource() {
-      @Override
-      public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-        Record record = getContext().createRecord("x");
-        record.set(Field.create(1));
-        batchMaker.addRecord(record);
-        return "1";
-      }
-    });
+    MockStages.setSourceCapture(new ReturnNumberSource());
     MockStages.setProcessorCapture(new SingleLaneRecordProcessor() {
       @Override
       protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {

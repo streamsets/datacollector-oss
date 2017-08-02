@@ -15,12 +15,17 @@
  */
 package com.streamsets.datacollector.util;
 
+import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.pipeline.api.Record;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Various validation utilities for our execution engine (various runners).
+ */
 public class ValidationUtil {
 
   private  ValidationUtil() {}
@@ -37,4 +42,26 @@ public class ValidationUtil {
     return sb.toString();
   }
 
+  /**
+   * Returns true if given snapshot output is usable - e.g. if it make sense to persist.
+   */
+  public static boolean isSnapshotOutputUsable(List<StageOutput> stagesOutput) {
+    // In case that the snapshot actually does not exists
+    if(stagesOutput == null) {
+      return false;
+    }
+
+    // We're looking for at least one output lane that is not empty. In most cases the first stage in the list will
+    // be origin that generated some data and hence the loop will terminate fast. In the worst case scenario we will
+    // iterate over all stages in attempt to find at least one record in the snapshot.
+    for(StageOutput output : stagesOutput) {
+      for(Map.Entry<String, List<Record>> entry : output.getOutput().entrySet()) {
+        if(!entry.getValue().isEmpty()) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
 }

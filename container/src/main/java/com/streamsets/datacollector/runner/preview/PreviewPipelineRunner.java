@@ -53,6 +53,7 @@ import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
+import com.streamsets.datacollector.util.ValidationUtil;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
@@ -203,6 +204,9 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     this.statsAggregationHandler = statsAggregationHandler;
     this.runnerPool = new RunnerPool<>(pipes, new RuntimeStats(), new Histogram(new ExponentiallyDecayingReservoir()));
 
+    // Counter of batches that were already processed
+    batchesProcessed = new AtomicInteger(0);
+
     stagesToSkip = new HashMap<>();
     for (StageOutput stageOutput : stageOutputsToOverride) {
       stagesToSkip.put(stageOutput.getInstanceName(), stageOutput);
@@ -218,9 +222,6 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   private void runPushSource() throws StageException, PipelineRuntimeException {
     // This object will receive delegated calls from the push origin callbacks
     originPipe.getStage().setPushSourceContextDelegate(this);
-
-    // Counter of batches that were already processed
-    batchesProcessed = new AtomicInteger(0);
 
     if(stagesToSkip.containsKey(originPipe.getStage().getInfo().getInstanceName())) {
       // We're skipping the origin's execution, so let's run the pipeline in "usual" manner
@@ -268,9 +269,8 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
       );
 
       // Increment amount of intercepted batches by one and end the processing if we have desirable amount
-      int count = batchesProcessed.incrementAndGet();
-      if(count >= batches) {
-        ((StageContext)originPipe.getStage().getContext()).setStop(true);
+      if (batchesProcessed.get() >= batches) {
+        ((StageContext) originPipe.getStage().getContext()).setStop(true);
       }
 
       // Not doing any commits in the preview
@@ -299,7 +299,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   }
 
   private void runPollSource() throws StageException, PipelineRuntimeException {
-    for (int i = 0; i < batches; i++) {
+    while(batchesProcessed.get() < batches) {
       FullPipeBatch pipeBatch = new FullPipeBatch(
         Source.POLL_SOURCE_OFFSET_KEY,
         offsetTracker.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY),
@@ -358,7 +358,12 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     offsetTracker.commitOffset(offsetEntity, newOffset);
     //TODO badRecordsHandler HANDLE ERRORS
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
-    batchesOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());
+
+    List<StageOutput> stageOutputs = pipeBatch.getSnapshotsOfAllStagesOutput();
+    if(ValidationUtil.isSnapshotOutputUsable(stageOutputs)) {
+      batchesOutput.add(pipeBatch.getSnapshotsOfAllStagesOutput());
+      batchesProcessed.incrementAndGet();
+    }
   }
 
   @Override
