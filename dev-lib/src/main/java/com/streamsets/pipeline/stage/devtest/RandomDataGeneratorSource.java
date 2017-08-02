@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,6 +147,12 @@ public class RandomDataGeneratorSource extends BasePushSource {
 
     LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
     event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.DEVDATA.name());
+    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, getContext().getStageInfo().getName());
+    List<String> names = new ArrayList<>();
+    for(DataGeneratorConfig con : dataGenConfigs) {
+      names.add(con.field);
+    }
+    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, StringUtils.join(names, ", "));
     getContext().publishLineageEvent(event);
 
     return super.init();
