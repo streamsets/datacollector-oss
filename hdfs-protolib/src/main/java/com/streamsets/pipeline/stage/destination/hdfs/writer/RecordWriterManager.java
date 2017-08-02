@@ -211,6 +211,7 @@ public class RecordWriterManager {
     LineageEvent event = context.createLineageEvent(LineageEventType.ENTITY_CREATED);
     event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.HDFS.name());
     event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, finalPath.toString());
+    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, finalPath.toString());
     context.publishLineageEvent(event);
   }
 
