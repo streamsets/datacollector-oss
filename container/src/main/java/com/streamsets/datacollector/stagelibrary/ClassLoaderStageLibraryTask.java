@@ -42,7 +42,6 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.datacollector.vault.Vault;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
@@ -85,7 +84,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private static final String CONFIG_STAGE_ALIAS_PREFIX = "stage.alias.";
 
   private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderStageLibraryTask.class);
-  private static final String VAULT_SERVICE_KEY = "com.streamsets.datacollector.vault";
 
   private final RuntimeInfo runtimeInfo;
   private final Map<String,String> libraryNameAliases;
@@ -298,8 +296,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     try {
       RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
-      final Vault vault = new Vault(configuration);
-      DataCollectorServices.instance().put(VAULT_SERVICE_KEY, vault);
       DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapperImpl());
     } catch (IOException e) {
       throw new RuntimeException(

@@ -22,6 +22,7 @@ import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ import java.util.Map;
 
 public class CredentialStoresTaskImpl extends AbstractTask implements CredentialStoresTask {
   private static final Logger LOG = LoggerFactory.getLogger(CredentialStoresTaskImpl.class);
+  static final String VAULT_CREDENTIAL_STORE_KEY = "com.streamsets.datacollector.vaultELs.credentialStore";
 
   private final Configuration configuration;
   private final StageLibraryTask stageLibraryTask;
@@ -61,6 +63,22 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
       throw new RuntimeException("Could not initialize credential stores: " + issues);
     }
     CredentialEL.setCredentialStores(getStores());
+
+    String vaultELcredentialStoreId = configuration.get("vaultEL.credentialStore.id", null);
+    if (vaultELcredentialStoreId != null) {
+      CredentialStore store = getStores().get(vaultELcredentialStoreId);
+      if (store == null) {
+        throw new RuntimeException(Utils.format(
+            "Vault EL functions CredentialStore '{}' is not defined",
+            vaultELcredentialStoreId
+        ));
+      }
+      DataCollectorServices.instance().put(VAULT_CREDENTIAL_STORE_KEY, store);
+      LOG.warn(
+          "Vault EL functions are deprecated. CredentialStore '{}' registered as vault EL functions implementation",
+          vaultELcredentialStoreId
+      );
+    }
   }
 
   @Override

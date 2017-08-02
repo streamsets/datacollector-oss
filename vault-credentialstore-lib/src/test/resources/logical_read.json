@@ -1,0 +1,10 @@
+{
+  "lease_id": "",
+  "renewable": false,
+  "lease_duration": 2592000,
+  "data": {
+    "ingest": "is fun"
+  },
+  "warnings": null,
+  "auth": null
+}

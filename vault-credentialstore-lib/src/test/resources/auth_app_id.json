@@ -1,0 +1,20 @@
+{
+  "lease_id": "",
+  "renewable": false,
+  "lease_duration": 0,
+  "data": null,
+  "warnings": null,
+  "auth": {
+    "client_token": "26845a04-96f4-2b21-e404-c6e858d08a71",
+    "accessor": "19be60b2-dec3-69ab-266f-4ba39279532a",
+    "policies": [
+      "root"
+    ],
+    "metadata": {
+      "app-id": "sha1:0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33",
+      "user-id": "sha1:62cdb7020ff920e5aa642c3d4066950dd1f01f4d"
+    },
+    "lease_duration": 0,
+    "renewable": true
+  }
+}

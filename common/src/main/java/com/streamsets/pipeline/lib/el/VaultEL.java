@@ -18,26 +18,20 @@ package com.streamsets.pipeline.lib.el;
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
+@Deprecated
 public class VaultEL {
   public static final String PREFIX = "vault";
-  private static final String VAULT_SERVICE_KEY = "com.streamsets.datacollector.vault";
+  private static final String VAULT_CREDENTIAL_STORE_KEY = "com.streamsets.datacollector.vaultELs.credentialStore";
 
-  private static final Method READ_WITH_DELAY;
+  private static final CredentialStore vaultCredentialStore;
 
   static {
     DataCollectorServices services = DataCollectorServices.instance();
-    Object vault = services.get(VAULT_SERVICE_KEY);
-    Class<?> c = vault.getClass();
-    try {
-      READ_WITH_DELAY = c.getDeclaredMethod("read", String.class, String.class, long.class);
-    } catch (NoSuchMethodException e) {
-      throw new RuntimeException(e); // NOSONAR
-    }
+    vaultCredentialStore = services.get(VAULT_CREDENTIAL_STORE_KEY);
   }
 
   private VaultEL() {}
@@ -58,16 +52,14 @@ public class VaultEL {
           "Primarily for AWS since generated credentials can take 5-10 seconds before they are ready for use."
   )
   public static String read(@ElParam("path") String path, @ElParam("key") String key, @ElParam("delay") long delay) {
+    if (vaultCredentialStore == null) {
+      throw new RuntimeException("There is no VaultCredentialStore configured for use with the vault EL functions");
+    }
     try {
-      Object vault = DataCollectorServices.instance().get(VAULT_SERVICE_KEY);
-      Object result = READ_WITH_DELAY.invoke(vault, path, key, delay);
-      return (String) result;
-    } catch (IllegalAccessException | InvocationTargetException e) {
-      Throwable err = e;
-      if (e.getCause() != null) {
-        err = e.getCause();
-      }
-      throw Throwables.propagate(err);
+      return vaultCredentialStore.get("all", path + "@" + key, "delay=" + delay).get();
+    } catch (StageException ex) {
+      throw Throwables.propagate(ex);
     }
   }
+
 }

@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 StreamSets Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialStoreDef;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -170,6 +170,36 @@ public class TestCredentialStoresTaskImpl {
     CredentialStore.ConfigIssue issue = context.createConfigIssue(Errors.CREDENTIAL_STORE_000, "MESSAGE");
     Assert.assertTrue(issue.toString().contains("CREDENTIAL_STORE_000"));
     Assert.assertTrue(issue.toString().contains("MESSAGE"));
+  }
+
+  @Test
+  public void testVaultELCredentialStoreRegistration() {
+    StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
+    Mockito.when(libraryDef.getName()).thenReturn("lib");
+    CredentialStoreDefinition storeDef =
+        CredentialStoreDefinitionExtractor.get().extract(libraryDef, MyCredentialStore.class);
+
+
+    Configuration conf = new Configuration();
+    conf.set("credentialStores", "id");
+    conf.set("credentialStore.id.def", libraryDef.getName() + "::" + storeDef.getName());
+    conf.set("credentialStore.id.config.foo", "bar");
+    StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
+    Mockito.when(libraryTask.getCredentialStoreDefinitions()).thenReturn(ImmutableList.of(storeDef));
+
+    // testing no Vault EL impl registered
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    storeTask.initTask();
+    Assert.assertNull(DataCollectorServices.instance().get(CredentialStoresTaskImpl.VAULT_CREDENTIAL_STORE_KEY));
+    storeTask.stopTask();
+
+    // testing Vault EL impl registered
+    conf.set("vaultEL.credentialStore.id", "id");
+    storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    storeTask.initTask();
+    CredentialStore store = DataCollectorServices.instance().get(CredentialStoresTaskImpl.VAULT_CREDENTIAL_STORE_KEY);
+    Assert.assertNotNull(store);
+    storeTask.stopTask();
   }
 
 }

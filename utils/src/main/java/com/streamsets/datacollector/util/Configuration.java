@@ -18,10 +18,8 @@ package com.streamsets.datacollector.util;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
-import com.streamsets.datacollector.vault.Vault;
-import com.streamsets.datacollector.vault.VaultRuntimeException;
-import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,8 +33,6 @@ import java.util.Properties;
 import java.util.Set;
 
 public class Configuration {
-  private static final String VAULT_SERVICE_KEY = "com.streamsets.datacollector.vault";
-
   private static File fileRefsBaseDir;
 
   // Only RuntimeModules should be calling this
@@ -177,52 +173,6 @@ public class Configuration {
 
   }
 
-  public static class VaultRef extends Ref {
-    private static final String PREFIX = "${vault(";
-    private static final String SUFFIX = ")}";
-
-    protected VaultRef(String unresolvedValue) {
-      super(unresolvedValue);
-    }
-
-    @Override
-    public String getPrefix() {
-      return PREFIX;
-    }
-
-    @Override
-    public String getSuffix() {
-      return SUFFIX;
-    }
-
-    @Override
-    public String getDelimiter() {
-      throw new UnsupportedOperationException();
-    }
-
-    public static boolean isValueMyRef(String value) {
-      String trimmed = value.trim();
-      return trimmed.startsWith(PREFIX) && trimmed.endsWith(SUFFIX);
-    }
-
-    @Override
-    protected String getUnresolvedValueWithoutDelimiter() {
-      return getUnresolvedValue().substring(PREFIX.length(), getUnresolvedValue().length() - SUFFIX.length());
-    }
-
-    @Override
-    public String getValue() {
-      String[] params = getUnresolvedValueWithoutDelimiter().replace("\"", "").replace("'", "").split(",");
-      if (params.length != 2) {
-        throw new VaultRuntimeException(getUnresolvedValue() + " does not comply with format vault(path, key)");
-      }
-      Vault vault = DataCollectorServices.instance().get(VAULT_SERVICE_KEY);
-      final String path = params[0].trim();
-      final String key = params[1].trim();
-      return vault.read(path, key);
-    }
-  }
-
   private static class EnvRef extends Ref {
     @Deprecated
     private static final String DELIMITER = "$";
@@ -262,8 +212,6 @@ public class Configuration {
       ref = new FileRef(value);
     } else if (EnvRef.isValueMyRef(value)) {
       ref = new EnvRef(value);
-    } else if (VaultRef.isValueMyRef(value)) {
-      ref = new VaultRef(value);
     } else {
       ref = new StringRef(value);
     }

@@ -80,6 +80,7 @@
     <redis-lib>redis-lib</redis-lib>
     <salesforce-lib>salesforce-lib</salesforce-lib>
     <stats-lib>stats-lib</stats-lib>
+    <vault-credentialstore-lib>vault-credentialstore-lib</vault-credentialstore-lib>
 
   </properties>
 
@@ -216,6 +217,7 @@
     <module>redis-lib</module>
     <module>salesforce-lib</module>
     <module>stats-lib</module>
+    <module>vault-credentialstore-lib</module>
   </modules>
 
   <build>

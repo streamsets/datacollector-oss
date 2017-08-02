@@ -1,0 +1,8 @@
+{
+  "lease_id": "aws/creds/s3ReadOnly/895aad27-028e-301b-5475-906a6561f8f8",
+  "renewable": true,
+  "lease_duration": 60,
+  "data": null,
+  "warnings": null,
+  "auth": null
+}
