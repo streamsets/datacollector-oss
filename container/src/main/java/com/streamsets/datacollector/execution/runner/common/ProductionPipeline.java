@@ -83,6 +83,7 @@ public class ProductionPipeline {
     boolean finishing = false;
     boolean errorWhileInitializing = false;
     boolean errorWhileRunning = false;
+    boolean errorWhileDestroying = false;
     boolean isRecoverable = true;
     String runningErrorMsg = "";
     try {
@@ -95,7 +96,7 @@ public class ProductionPipeline {
           if (!wasStopped()) {
             LOG.warn("Error while starting: {}", e.toString(), e);
             errorWhileInitializing = true;
-            stateChanged(PipelineStatus.START_ERROR, e.toString(), null);
+            stateChanged(PipelineStatus.STARTING_ERROR, e.toString(), null);
           }
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0702, e.toString(), e);
         }
@@ -127,7 +128,8 @@ public class ProductionPipeline {
             issues.get(0).getMessage());
           Map<String, Object> attributes = new HashMap<>();
           attributes.put("issues", new IssuesJson(new Issues(issues)));
-          stateChanged(PipelineStatus.START_ERROR, issues.get(0).getMessage(), attributes);
+          stateChanged(PipelineStatus.STARTING_ERROR, issues.get(0).getMessage(), attributes);
+          errorWhileInitializing = true;
           getPipeline().errorNotification(e);
           throw e;
         }
@@ -148,18 +150,20 @@ public class ProductionPipeline {
           pipeline.destroy(true, stopReason);
         } catch (Throwable e) {
           LOG.warn("Error while calling destroy: " + e.toString(), e);
-          if(!errorWhileInitializing) {
-            stateChanged(PipelineStatus.STOP_ERROR, e.toString(), null);
-          }
+          stateChanged(PipelineStatus.STOPPING_ERROR, e.toString(), null);
+          errorWhileDestroying = true;
           throw e;
         } finally {
-          // There was an error while processing
-          if(errorWhileRunning) {
-            LOG.debug("Stopped due to an error");
-            if (shouldRetry && !pipeline.shouldStopOnStageError() && !isExecutingInSlave && isRecoverable) {
+          // If there was any problem, we will consider retry
+          if(errorWhileInitializing || errorWhileRunning || errorWhileDestroying) {
+            if (shouldRetry && !pipeline.shouldStopOnStageError() && !isExecutingInSlave && isRecoverable && !wasStopped()) {
               stateChanged(PipelineStatus.RETRY, runningErrorMsg, null);
-            } else {
+            } else if(errorWhileInitializing) {
+              stateChanged(PipelineStatus.START_ERROR, runningErrorMsg, null);
+            } else if(errorWhileRunning) {
               stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
+            } else if(errorWhileDestroying) {
+              stateChanged(PipelineStatus.STOP_ERROR, runningErrorMsg, null);
             }
           } else if(finishing) {
             // Graceful shutdown

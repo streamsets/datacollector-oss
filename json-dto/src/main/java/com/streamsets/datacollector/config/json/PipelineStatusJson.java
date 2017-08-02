@@ -20,6 +20,7 @@ public enum PipelineStatusJson {
   EDITED,          // pipeline job has been create/modified, didn't run since the creation/modification
 
   STARTING,         // pipeline job starting (initialization)
+  STARTING_ERROR,   // Pipeline failed while starting (but the destroy did not finished yet)
   START_ERROR,      // pipeline job failed while start (during initialization)
 
   RUNNING,          // pipeline job running
@@ -35,7 +36,8 @@ public enum PipelineStatusJson {
   STOPPING,         // pipeline job has been manually stopped (calling destroy on pipeline)
   STOPPED,          // pipeline job has been manually stopped (done)
 
-  STOP_ERROR,       // There was a problem when stopping pipeline (e.g. during destroy() phase)
+  STOPPING_ERROR,   // There was a problem when stopping pipeline
+  STOP_ERROR,       // Terminal state representing that pipeline failed to stop properly
 
   DISCONNECTING,    // SDC going down gracefully (calling destroy on pipeline for LOCAL, doing nothing for CLUSTER)
   DISCONNECTED,     // SDC going down gracefully (done)

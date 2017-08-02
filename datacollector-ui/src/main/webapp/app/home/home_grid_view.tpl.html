@@ -42,7 +42,7 @@
       </section>
 
       <section class="invalid-status"
-               ng-if="common.pipelineStatusMap[pipeline.pipelineId].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUN_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'CONNECT_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'STOP_ERROR'"
+               ng-if="common.pipelineStatusMap[pipeline.pipelineId].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'STARTING_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'RUN_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'CONNECT_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'STOP_ERROR' || common.pipelineStatusMap[pipeline.pipelineId].status == 'STOPPING_ERROR'"
                tooltip-placement="bottom"
                tooltip="{{'Pipeline Status :' + common.pipelineStatusMap[pipeline.pipelineId].status + ': ' + common.pipelineStatusMap[pipeline.pipelineId].message}}">
         <i class="fa fa-exclamation-triangle fa-12x"></i>

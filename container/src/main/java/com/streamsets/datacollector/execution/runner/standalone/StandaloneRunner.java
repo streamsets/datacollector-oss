@@ -156,23 +156,75 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   private static final Map<PipelineStatus, Set<PipelineStatus>> VALID_TRANSITIONS =
     new ImmutableMap.Builder<PipelineStatus, Set<PipelineStatus>>()
-    .put(PipelineStatus.EDITED, ImmutableSet.of(PipelineStatus.STARTING))
-    .put(PipelineStatus.STARTING, ImmutableSet.of(PipelineStatus.START_ERROR, PipelineStatus.RUNNING,
-      PipelineStatus.DISCONNECTING, PipelineStatus.STOPPING))
-    .put(PipelineStatus.START_ERROR, ImmutableSet.of(PipelineStatus.STARTING))
-    .put(PipelineStatus.RUNNING, ImmutableSet.of(PipelineStatus.RUNNING_ERROR, PipelineStatus.FINISHING,
-      PipelineStatus.STOPPING, PipelineStatus.DISCONNECTING))
-    .put(PipelineStatus.RUNNING_ERROR, ImmutableSet.of(PipelineStatus.RETRY, PipelineStatus.RUN_ERROR))
-    .put(PipelineStatus.RETRY, ImmutableSet.of(PipelineStatus.STARTING, PipelineStatus.STOPPING, PipelineStatus.DISCONNECTING))
-    .put(PipelineStatus.RUN_ERROR, ImmutableSet.of(PipelineStatus.STARTING))
-    .put(PipelineStatus.STOP_ERROR, ImmutableSet.of(PipelineStatus.STARTING))
-    .put(PipelineStatus.FINISHING, ImmutableSet.of(PipelineStatus.FINISHED, PipelineStatus.STOP_ERROR))
-    .put(PipelineStatus.STOPPING, ImmutableSet.of(PipelineStatus.STOPPED, PipelineStatus.STOP_ERROR))
-    .put(PipelineStatus.FINISHED, ImmutableSet.of(PipelineStatus.STARTING))
-    .put(PipelineStatus.STOPPED, ImmutableSet.of(PipelineStatus.STARTING))
-    .put(PipelineStatus.DISCONNECTING, ImmutableSet.of(PipelineStatus.DISCONNECTED))
-    .put(PipelineStatus.DISCONNECTED, ImmutableSet.of(PipelineStatus.CONNECTING))
-    .put(PipelineStatus.CONNECTING, ImmutableSet.of(PipelineStatus.STARTING, PipelineStatus.DISCONNECTING, PipelineStatus.RETRY))
+    .put(PipelineStatus.EDITED, ImmutableSet.of(
+      PipelineStatus.STARTING
+    ))
+    .put(PipelineStatus.STARTING, ImmutableSet.of(
+      PipelineStatus.START_ERROR,     // Used when we can't even build runtime structures
+      PipelineStatus.STARTING_ERROR,  // Used when runtime structures are built, but then pipeline's init() fails
+      PipelineStatus.RUNNING,
+      PipelineStatus.DISCONNECTING,
+      PipelineStatus.STOPPING
+    ))
+    .put(PipelineStatus.STARTING_ERROR, ImmutableSet.of(
+      PipelineStatus.START_ERROR,
+      PipelineStatus.STOPPING_ERROR
+    ))
+    .put(PipelineStatus.START_ERROR, ImmutableSet.of(
+      PipelineStatus.STARTING
+    ))
+    .put(PipelineStatus.RUNNING, ImmutableSet.of(
+      PipelineStatus.RUNNING_ERROR,
+      PipelineStatus.FINISHING,
+      PipelineStatus.STOPPING,
+      PipelineStatus.DISCONNECTING
+    ))
+    .put(PipelineStatus.RUNNING_ERROR, ImmutableSet.of(
+      PipelineStatus.RETRY,
+      PipelineStatus.STOPPING_ERROR,
+      PipelineStatus.RUN_ERROR
+    ))
+    .put(PipelineStatus.RETRY, ImmutableSet.of(
+      PipelineStatus.STARTING,
+      PipelineStatus.STOPPING,
+      PipelineStatus.DISCONNECTING
+    ))
+    .put(PipelineStatus.RUN_ERROR, ImmutableSet.of(
+      PipelineStatus.STARTING
+    ))
+    .put(PipelineStatus.STOPPING_ERROR, ImmutableSet.of(
+      PipelineStatus.START_ERROR,
+      PipelineStatus.RUN_ERROR,
+      PipelineStatus.STOP_ERROR
+    ))
+    .put(PipelineStatus.STOP_ERROR, ImmutableSet.of(
+      PipelineStatus.STARTING
+    ))
+    .put(PipelineStatus.FINISHING, ImmutableSet.of(
+      PipelineStatus.FINISHED,
+      PipelineStatus.STOPPING_ERROR
+    ))
+    .put(PipelineStatus.STOPPING, ImmutableSet.of(
+      PipelineStatus.STOPPED,
+      PipelineStatus.STOPPING_ERROR
+    ))
+    .put(PipelineStatus.FINISHED, ImmutableSet.of(
+      PipelineStatus.STARTING
+    ))
+    .put(PipelineStatus.STOPPED, ImmutableSet.of(
+      PipelineStatus.STARTING
+    ))
+    .put(PipelineStatus.DISCONNECTING, ImmutableSet.of(
+      PipelineStatus.DISCONNECTED
+    ))
+    .put(PipelineStatus.DISCONNECTED, ImmutableSet.of(
+      PipelineStatus.CONNECTING
+    ))
+    .put(PipelineStatus.CONNECTING, ImmutableSet.of(
+      PipelineStatus.STARTING,
+      PipelineStatus.DISCONNECTING,
+      PipelineStatus.RETRY
+    ))
     .build();
 
   public StandaloneRunner(String name, String rev, ObjectGraph objectGraph) {
