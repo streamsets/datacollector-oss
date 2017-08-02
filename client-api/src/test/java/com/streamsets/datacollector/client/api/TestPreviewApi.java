@@ -136,7 +136,12 @@ public class TestPreviewApi {
     if(previewInfoJson.getStatus() != null) {
       Assert.assertTrue(
         "Unexpected status: " + previewInfoJson.getStatus().name(),
-        previewInfoJson.getStatus().isOneOf(PreviewInfoJson.StatusEnum.RUNNING, PreviewInfoJson.StatusEnum.RUN_ERROR)
+        previewInfoJson.getStatus().isOneOf(
+          PreviewInfoJson.StatusEnum.CREATED,
+          PreviewInfoJson.StatusEnum.STARTING,
+          PreviewInfoJson.StatusEnum.RUNNING,
+          PreviewInfoJson.StatusEnum.RUN_ERROR
+        )
       );
     }
 
