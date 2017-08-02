@@ -31,7 +31,10 @@ public class StageDefinitionJson   {
   private String name = null;
 
   public enum TypeEnum {
-    SOURCE("SOURCE"), PROCESSOR("PROCESSOR"), TARGET("TARGET");
+    SOURCE("SOURCE"),
+    PROCESSOR("PROCESSOR"),
+    EXECUTOR("EXECUTOR"),
+    TARGET("TARGET");
 
     private final String value;
 
