@@ -584,7 +584,7 @@ angular
             .then(function(res) {
               var data = res.data;
               if (data && _.contains(
-                ['INVALID', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'FINISHED', 'STOP_ERROR'],
+                ['INVALID', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'FINISHED', 'STOP_ERROR', 'TIMED_OUT'],
                 data.status
               )) {
                 fetchPreviewData(pipelineId, previewerId, defer);

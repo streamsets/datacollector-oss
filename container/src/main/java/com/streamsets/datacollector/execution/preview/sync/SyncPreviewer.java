@@ -96,6 +96,7 @@ public class SyncPreviewer implements Previewer {
   private volatile PreviewStatus previewStatus;
   private volatile PreviewOutput previewOutput;
   private volatile PreviewPipeline previewPipeline;
+  private volatile boolean timingOut = false;
 
   public SyncPreviewer(
       String id,
@@ -218,6 +219,10 @@ public class SyncPreviewer implements Previewer {
       changeState(PreviewStatus.FINISHED, new PreviewOutputImpl(PreviewStatus.FINISHED, output.getIssues(),
           output.getBatchesOutput(), null));
     } catch (PipelineRuntimeException e) {
+      if(timingOut) {
+        LOG.debug("Ignoring exception during time out {}", e.toString(), e);
+        return;
+      }
       //Preview Pipeline Builder validates configurations and throws PipelineRuntimeException with code CONTAINER_0165
       //for validation errors.
       if (e.getErrorCode() == ContainerError.CONTAINER_0165) {
@@ -229,9 +234,17 @@ public class SyncPreviewer implements Previewer {
         throw e;
       }
     } catch (PipelineStoreException e) {
+      if(timingOut) {
+        LOG.debug("Ignoring exception during time out {}", e.toString(), e);
+        return;
+      }
       changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
       throw e;
     } catch (Throwable e) {
+      if(timingOut) {
+        LOG.debug("Ignoring exception during time out {}", e.toString(), e);
+        return;
+      }
       changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
     } finally {
@@ -258,6 +271,10 @@ public class SyncPreviewer implements Previewer {
       changeState(PreviewStatus.CANCELLED, null);
     }
     PipelineEL.unsetConstantsInContext();
+  }
+
+  public void prepareForTimeout() {
+    this.timingOut = true;
   }
 
   public void timeout() {

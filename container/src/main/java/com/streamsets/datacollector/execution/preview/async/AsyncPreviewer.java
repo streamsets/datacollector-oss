@@ -113,6 +113,7 @@ public class AsyncPreviewer implements Previewer {
     if (future != null) {
       synchronized (future) {
         if(!future.isDone()) {
+          syncPreviewer.prepareForTimeout();
           future.cancel(true);
           syncPreviewer.stop();
         }
@@ -158,6 +159,7 @@ public class AsyncPreviewer implements Previewer {
         if (future != null) {
           synchronized (future) {
             if (!future.isDone()) {
+              syncPreviewer.prepareForTimeout();
               future.cancel(true);
               syncPreviewer.timeout();
               return true;
