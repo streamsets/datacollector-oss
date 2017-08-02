@@ -58,7 +58,7 @@ public class KuduLookupConfig {
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       label = "Key Columns Mapping",
-      description = "Specify columns which will be used as key for scan. This must include primary key columns.",
+      description = "Specify the columns used as keys for the lookup. The mapping must include a primary key column",
       displayPosition = 30,
       group = "KUDU"
   )
@@ -68,7 +68,7 @@ public class KuduLookupConfig {
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       label = "Column to Output Field Mapping",
-      description = "Specify field name to write the result",
+      description = "Map column names to SDC field names",
       displayPosition = 40,
       group = "KUDU"
   )
@@ -79,7 +79,7 @@ public class KuduLookupConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Case Sensitive",
-      description = "If not set, table name and all column names are processed in lowercase",
+      description = "If not set, the table name and all column names are processed in lowercase",
       displayPosition = 50,
       group = "KUDU"
   )
@@ -90,8 +90,7 @@ public class KuduLookupConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Ignore Missing Value",
-      description = "If set, process records even if values specified above Output Column to Field Mapping are missing. " +
-          "If not set, send records to error.",
+      description = "If set, process records even if column values are missing. If not set, send records to error",
       displayPosition = 60,
       group = "KUDU"
   )
