@@ -15,40 +15,46 @@
  */
 package com.streamsets.pipeline.stage.destination.kudu;
 
-import com.streamsets.pipeline.api.Record;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 import junit.framework.Assert;
+import org.apache.kudu.ColumnSchema;
+import org.apache.kudu.Schema;
+import org.apache.kudu.Type;
+import org.apache.kudu.client.Insert;
+import org.apache.kudu.client.KuduClient;
+import org.apache.kudu.client.KuduException;
+import org.apache.kudu.client.KuduSession;
+import org.apache.kudu.client.KuduTable;
+import org.apache.kudu.client.Operation;
+import org.apache.kudu.client.PartialRow;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.apache.kudu.ColumnSchema;
-import org.apache.kudu.Schema;
-import org.apache.kudu.Type;
-import org.apache.kudu.client.KuduClient;
-import org.apache.kudu.client.KuduTable;
-import org.apache.kudu.client.KuduSession;
-import org.apache.kudu.client.Operation;
-import org.apache.kudu.client.Insert;
-import org.apache.kudu.client.PartialRow;
-import org.apache.kudu.client.KuduException;
-import org.junit.runner.RunWith;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.*;
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
@@ -193,11 +199,47 @@ public class TestKuduTarget {
     targetRunner.runInit();
 
     try {
-     targetRunner.runWrite(ImmutableList.of(record));
+      targetRunner.runWrite(ImmutableList.of(record));
     } catch (StageException e){
       Assert.fail();
     }
     Assert.assertTrue(targetRunner.getErrorRecords().isEmpty());
+    targetRunner.runDestroy();
+  }
+
+  /**
+   * Checks that a LineageEvent is returned.
+   * @throws Exception
+   */
+  @Test
+  public void testLineageEvent() throws Exception{
+    TargetRunner targetRunner = setTargetRunner(
+        "${record:attribute('tableName')}",
+        KuduOperationType.INSERT,
+        UnsupportedOperationAction.DISCARD
+    );
+
+    Record record =  RecordCreator.create();
+    LinkedHashMap<String, Field> field = new LinkedHashMap<>();
+    field.put("key", Field.create(1));
+    field.put("value", Field.create("value"));
+    field.put("name", Field.create("name"));
+    record.set(Field.createListMap(field));
+    record.getHeader().setAttribute("tableName", "test_table");
+    targetRunner.runInit();
+
+    try {
+      targetRunner.runWrite(ImmutableList.of(record));
+    } catch (StageException e){
+      Assert.fail();
+    }
+    List<LineageEvent> events = targetRunner.getLineageEvents();
+    Assert.assertEquals(1, events.size());
+    Assert.assertEquals(LineageEventType.ENTITY_WRITTEN, events.get(0).getEventType());
+    Assert.assertEquals(
+        "test_table",
+        events.get(0).getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME)
+    );
     targetRunner.runDestroy();
   }
 

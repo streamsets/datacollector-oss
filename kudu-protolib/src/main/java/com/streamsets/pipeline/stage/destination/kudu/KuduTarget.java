@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.destination.kudu;
 
-
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -32,14 +31,17 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
-
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
@@ -58,9 +60,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -103,6 +107,8 @@ public class KuduTarget extends BaseTarget {
 
   private KuduOperationType defaultOperation;
 
+  private Set<String> accessedTables;
+
   public KuduTarget(KuduConfigBean configBean) {
     this.configBean = configBean;
     this.kuduMaster = Strings.nullToEmpty(configBean.kuduMaster).trim();
@@ -137,6 +143,8 @@ public class KuduTarget extends BaseTarget {
     tableNameEval = getContext().createELEval(TABLE_NAME_TEMPLATE);
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     validateServerSideConfig(issues);
+    accessedTables = new HashSet<>();
+
     return issues;
   }
 
@@ -324,6 +332,13 @@ public class KuduTarget extends BaseTarget {
     KuduSession session = Preconditions.checkNotNull(kuduSession, KUDU_SESSION);
 
     for (String tableName : partitions.keySet()) {
+
+      // Send one LineageEvent per table that is accessed.
+      if(!accessedTables.contains(tableName)) {
+        accessedTables.add(tableName);
+        sendLineageEvent(tableName);
+      }
+
       Map<String, Record> keyToRecordMap = new HashMap<>();
       Iterator<Record> it = partitions.get(tableName).iterator();
 
@@ -476,5 +491,15 @@ public class KuduTarget extends BaseTarget {
     kuduSession = null;
     kuduTables.invalidateAll();
     super.destroy();
+  }
+
+  private void sendLineageEvent(String tableName) {
+
+    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_WRITTEN);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KUDU.name());
+    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, tableName);
+    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, configBean.kuduMaster);
+    getContext().publishLineageEvent(event);
+
   }
 }
