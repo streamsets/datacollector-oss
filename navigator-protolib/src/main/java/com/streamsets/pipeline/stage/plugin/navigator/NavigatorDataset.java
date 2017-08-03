@@ -76,8 +76,10 @@ public class NavigatorDataset extends Entity {
 
     if (!StringUtils.isEmpty(event.getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME))) {
       Path path = Paths.get(event.getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME));
-      setName(NavigatorHelper.nameChopper(path.getFileName().toString()));
-      setParentPath(path.getParent().toString());
+      if(path.getParent() != null) {
+        setParentPath(path.getParent().toString());
+      }
+      setName(NavigatorHelper.nameChopper(event.getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME)));
 
     } else {
       // otherwise, default to stage name.

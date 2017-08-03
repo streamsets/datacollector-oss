@@ -35,6 +35,7 @@ public class NavigatorParameters {
         entityType = EntityType.DATABASE;
         break;
 
+      case HBASE:
       case JDBC:
       case KUDU:
         sourceType = SourceType.SDK;

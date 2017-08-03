@@ -163,8 +163,8 @@ public enum ContainerError implements ErrorCode {
   //LineageEvent problems:
   CONTAINER_01401("Cannot create framework-level event '{}' in a stage"),
   CONTAINER_01402("Cannot create stage-level event '{}' in the framework"),
-  CONTAINER_01403("missingSpecificAttributes() '{}'"),
-  CONTAINER_01404("Invalid LineageEventType passed to missingSpecificAttributes() '{}'"),
+  CONTAINER_01403("Missing or Empty SpecificAttributes '{}'"),
+  CONTAINER_01404("Unknown LineageEventType passed to missingSpecificAttributes() '{}'"),
 
   CONTAINER_01500("Stage '{}' configuration '{}', EL must resolve to String or to a CredentialValue resolved to '{}'"),
   ;

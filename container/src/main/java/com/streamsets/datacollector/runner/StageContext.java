@@ -625,17 +625,16 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   }
   @Override
   public void publishLineageEvent(LineageEvent event) throws IllegalArgumentException {
-    List<LineageSpecificAttribute> missing = new ArrayList<>(event.missingSpecificAttributes());
-    if (!missing.isEmpty()) {
+    List<LineageSpecificAttribute> missingOrEmpty = new ArrayList<>(event.missingSpecificAttributes());
+    if (!missingOrEmpty.isEmpty()) {
       List<String> args = new ArrayList<>();
-      for (LineageSpecificAttribute attrib : missing) {
+      for (LineageSpecificAttribute attrib : missingOrEmpty) {
         args.add(attrib.name());
       }
       throw new IllegalArgumentException(Utils.format(ContainerError.CONTAINER_01403.getMessage(),
           StringUtils.join(args, ", ")
       ));
     }
-
     lineagePublisherDelegator.publishLineageEvent(event);
   }
 

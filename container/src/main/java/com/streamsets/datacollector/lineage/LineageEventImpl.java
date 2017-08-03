@@ -20,11 +20,14 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class LineageEventImpl implements LineageEvent {
   private Map<LineageGeneralAttribute, String> generalAttributes;
@@ -151,12 +154,22 @@ public class LineageEventImpl implements LineageEvent {
       throw new IllegalArgumentException(Utils.format(ContainerError.CONTAINER_01404.getMessage(), getEventType()));
     }
 
-    // List of all the attributes we would accept...
-    ArrayList<LineageSpecificAttribute> expected = new ArrayList<>(type.getSpecificAttributes());
+    Set<LineageSpecificAttribute> badFields = new HashSet<>(type.getSpecificAttributes());
 
-    // Remove attributes we have from the group we expect...
-    expected.removeAll(specificAttributes.keySet());
-    return expected;
+    // Remove attributes we have - from the group of attributes we expect...
+    badFields.removeAll(specificAttributes.keySet());
+
+    // at this point, badFields is a list of attributes we
+    // expected to be there, but are missing.
+
+    // now we add attributes which are there, but may have null or empty values.
+    for(LineageSpecificAttribute att : type.getSpecificAttributes()) {
+      if(StringUtils.isEmpty(specificAttributes.get(att))) {
+        badFields.add(att);
+      }
+    }
+
+    return new ArrayList<>(badFields);
   }
 
   @Override
