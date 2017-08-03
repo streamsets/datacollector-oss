@@ -194,7 +194,10 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
           if (tableRuntimeContext == null) {
             // small sleep before trying to acquire a table again, to potentially allow a new partition to be
             // returned to shared queue or created
-            ThreadUtil.sleep(ACQUIRE_TABLE_SLEEP_INTERVAL);
+            final boolean uninterrupted = ThreadUtil.sleep(ACQUIRE_TABLE_SLEEP_INTERVAL);
+            if (!uninterrupted && tableRuntimeContext == null) {
+              return;
+            }
           }
         }
         updateGauge(JdbcBaseRunnable.Status.QUERYING_TABLE);
