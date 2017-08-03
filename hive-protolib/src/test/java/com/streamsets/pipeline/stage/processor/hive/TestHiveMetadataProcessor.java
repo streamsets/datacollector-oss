@@ -161,21 +161,10 @@ public class TestHiveMetadataProcessor {
             HMSCache.class,
             "getOrLoad",
             HMSCacheType.class,
-            String.class
+            String.class,
+            HiveQueryExecutor.class
         )
     );
-    PowerMockito.replace(
-        MemberMatcher.method(
-            HMSCache.Builder.class,
-            "build"
-        )
-    ).with(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        args[0] = Mockito.mock(HiveQueryExecutor.class);
-        return method.invoke(proxy, args);
-      }
-    });
     // Do not create issues
     PowerMockito.suppress(
         MemberMatcher.method(

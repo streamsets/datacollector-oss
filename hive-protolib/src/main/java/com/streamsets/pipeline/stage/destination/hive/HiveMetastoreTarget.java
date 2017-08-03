@@ -92,7 +92,7 @@ public class HiveMetastoreTarget extends BaseTarget {
                 )
             )
             .maxCacheSize(conf.hiveConfigBean.maxCacheSize)
-            .build(queryExecutor);
+            .build();
       } catch (StageException e) {
         issues.add(getContext().createConfigIssue(
             Groups.HIVE.name(),
@@ -142,7 +142,8 @@ public class HiveMetastoreTarget extends BaseTarget {
         TBLPropertiesInfoCacheSupport.TBLPropertiesInfo tblPropertiesInfo = HiveMetastoreUtil.getCacheInfo(
             hmsCache,
             HMSCacheType.TBLPROPERTIES_INFO,
-            qualifiedTableName
+            qualifiedTableName,
+            queryExecutor
         );
 
         // get dataFormat from metadataRecord
@@ -221,7 +222,8 @@ public class HiveMetastoreTarget extends BaseTarget {
     TypeInfoCacheSupport.TypeInfo cachedColumnTypeInfo = HiveMetastoreUtil.getCacheInfo(
         hmsCache,
         cacheType,
-        qualifiedTableName
+        qualifiedTableName,
+        hiveQueryExecutor
     );
     LinkedHashMap<String, HiveTypeInfo> newColumnTypeInfo = HiveMetastoreUtil.getColumnNameType(metadataRecord);
     LinkedHashMap<String, HiveTypeInfo> partitionTypeInfo = HiveMetastoreUtil.getPartitionNameType(metadataRecord);
@@ -337,7 +339,8 @@ public class HiveMetastoreTarget extends BaseTarget {
     //Partition Addition
     TypeInfoCacheSupport.TypeInfo cachedTypeInfo = hmsCache.getOrLoad(
         HMSCacheType.TYPE_INFO,
-        qualifiedTableName
+        qualifiedTableName,
+        hiveQueryExecutor
     );
 
     if (cachedTypeInfo == null) {
@@ -350,7 +353,8 @@ public class HiveMetastoreTarget extends BaseTarget {
     PartitionInfoCacheSupport.PartitionInfo cachedPartitionInfo = HiveMetastoreUtil.getCacheInfo(
         hmsCache,
         hmsCacheType,
-        qualifiedTableName
+        qualifiedTableName,
+        hiveQueryExecutor
     );
     LinkedHashMap<String, String> partitionValMap = HiveMetastoreUtil.getPartitionNameValue(metadataRecord);
     PartitionInfoCacheSupport.PartitionValues partitionValues =

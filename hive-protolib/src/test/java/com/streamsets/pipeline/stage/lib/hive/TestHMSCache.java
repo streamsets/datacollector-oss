@@ -57,6 +57,7 @@ public class TestHMSCache {
   private static final String qualifiedTableName = "default.sample";
   public static final LinkedHashMap<String, HiveTypeInfo> EMPTY_TYPE_INFO = new LinkedHashMap<>();
   public static final Map<PartitionInfoCacheSupport.PartitionValues, String> EMPTY_PARTITION_INFO = new HashMap<>();
+  private static final HiveQueryExecutor queryExecutor = Mockito.mock(HiveQueryExecutor.class);
 
   private HMSCache hmsCache;
 
@@ -105,7 +106,7 @@ public class TestHMSCache {
   @Test
   public void testInvalidHMSCache() throws Exception {
     try {
-      hmsCache = HMSCache.newCacheBuilder().build(Mockito.mock(HiveQueryExecutor.class));
+      hmsCache = HMSCache.newCacheBuilder().build();
       Assert.fail("Cache should have supported cache types");
     } catch (Exception e) {
       //Expected exception
@@ -114,7 +115,7 @@ public class TestHMSCache {
     try {
       hmsCache = HMSCache.newCacheBuilder()
           .addCacheTypeSupport(HMSCacheType.TBLPROPERTIES_INFO)
-          .build(Mockito.mock(HiveQueryExecutor.class));
+          .build();
       hmsCache.getIfPresent(HMSCacheType.TYPE_INFO, qualifiedTableName);
       Assert.fail("Unsupported cache types should fail");
     } catch (StageException e) {
@@ -129,7 +130,7 @@ public class TestHMSCache {
     hmsCache = HMSCache.newCacheBuilder()
         .addCacheTypeSupport(hmsCacheType)
         .maxCacheSize(maxCachSize)
-        .build(Mockito.mock(HiveQueryExecutor.class));
+        .build();
   }
 
   private void checkCacheType(Class expected, HMSCacheSupport.HMSCacheInfo hmsCacheInfo) {
@@ -167,7 +168,7 @@ public class TestHMSCache {
     setMockForHMSCacheLoader(EMPTY_TYPE_INFO, EMPTY_TYPE_INFO, EMPTY_PARTITION_INFO, false, false);
 
     //Cache loader returns Optional.absent by default when column type info is not present
-    Assert.assertNull(hmsCache.getOrLoad(cacheType, qualifiedTableName));
+    Assert.assertNull(hmsCache.getOrLoad(cacheType, qualifiedTableName, queryExecutor));
 
     // Optional.absent is store after the above call so invalidating again.
     hmsCache.invalidate(cacheType, qualifiedTableName);
@@ -176,7 +177,7 @@ public class TestHMSCache {
     columnTypeInfo.put("id", TestHiveMetastoreUtil.generatePrimitiveTypeInfo(HiveType.STRING, "id"));
     setMockForHMSCacheLoader(columnTypeInfo, EMPTY_TYPE_INFO, EMPTY_PARTITION_INFO, true, true);
 
-    tblPropertiesInfo = hmsCache.getOrLoad(cacheType, qualifiedTableName);
+    tblPropertiesInfo = hmsCache.getOrLoad(cacheType, qualifiedTableName, queryExecutor);
 
     //Check cache loading - returns
     Assert.assertTrue("External Mismatch", tblPropertiesInfo.isExternal());
@@ -226,7 +227,7 @@ public class TestHMSCache {
     //Now set the cache loader to return true false
     setMockForHMSCacheLoader(columnTypeInfo, EMPTY_TYPE_INFO, EMPTY_PARTITION_INFO, true, false);
 
-    tblPropertiesInfo1 = hmsCache.getOrLoad(cacheType, table1);
+    tblPropertiesInfo1 = hmsCache.getOrLoad(cacheType, table1, queryExecutor);
     //This means cache is loaded and returns value from the mock.
     Assert.assertTrue("External Mismatch", tblPropertiesInfo1.isExternal());
     Assert.assertFalse("As Avro Mismatch", tblPropertiesInfo1.isStoredAsAvro());
@@ -281,7 +282,7 @@ public class TestHMSCache {
     //invalidate and set cache loader
     setMockForHMSCacheLoader(defaultColumnTypeInfo, defaultPartitionTypeInfo, EMPTY_PARTITION_INFO, false, true);
     hmsCache.invalidate(cacheType, qualifiedTableName);
-    typeInfo = hmsCache.getOrLoad(cacheType, qualifiedTableName);
+    typeInfo = hmsCache.getOrLoad(cacheType, qualifiedTableName, queryExecutor);
     Assert.assertEquals("Column Size mismatch", defaultColumnTypeInfo.size(), typeInfo.getColumnTypeInfo().size());
     Assert.assertEquals(
         "Partition Size mismatch",
@@ -402,7 +403,7 @@ public class TestHMSCache {
         true
     );
     hmsCache.invalidate(cacheType, qualifiedTableName);
-    partitionInfo = hmsCache.getOrLoad(cacheType, qualifiedTableName);
+    partitionInfo = hmsCache.getOrLoad(cacheType, qualifiedTableName, queryExecutor);
     Assert.assertEquals(
         "Partition Values Size mismatch",
         defaultPartitionValues.size(),
@@ -465,7 +466,7 @@ public class TestHMSCache {
     );
     //Trying to load will fail.
     try {
-      hmsCache.getOrLoad(cacheType, qualifiedTableName);
+      hmsCache.getOrLoad(cacheType, qualifiedTableName, queryExecutor);
       Assert.fail("Trying to use load on avro schema info should fail");
     } catch (StageException e) {
       Assert.assertEquals("Error code mismatch", Errors.HIVE_01, e.getErrorCode());

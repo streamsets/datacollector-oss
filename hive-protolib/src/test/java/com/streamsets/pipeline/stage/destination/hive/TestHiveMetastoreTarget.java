@@ -93,18 +93,6 @@ public class TestHiveMetastoreTarget {
     );
     PowerMockito.replace(
         MemberMatcher.method(
-            HMSCache.Builder.class,
-            "build"
-        )
-    ).with(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        args[0] = Mockito.mock(HiveQueryExecutor.class);
-        return method.invoke(proxy, args);
-      }
-    });
-    PowerMockito.replace(
-        MemberMatcher.method(
             HiveConfigBean.class,
             "getHiveConnection"
         )

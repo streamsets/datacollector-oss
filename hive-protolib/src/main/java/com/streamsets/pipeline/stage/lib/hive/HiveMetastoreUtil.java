@@ -916,12 +916,13 @@ public final class HiveMetastoreUtil {
   public static <T extends HMSCacheSupport.HMSCacheInfo> T getCacheInfo(
       HMSCache hmsCache,
       HMSCacheType cacheType,
-      String qualifiedName
+      String qualifiedName,
+      HiveQueryExecutor queryExecutor
   ) throws StageException {
     HMSCacheSupport.HMSCacheInfo cacheInfo = hmsCache.getIfPresent(cacheType, qualifiedName);
     if (cacheType != HMSCacheType.AVRO_SCHEMA_INFO && cacheInfo == null) {
       // Try loading by executing HMS query
-      cacheInfo = hmsCache.getOrLoad(cacheType, qualifiedName);
+      cacheInfo = hmsCache.getOrLoad(cacheType, qualifiedName, queryExecutor);
     }
     return (T)cacheInfo;
   }
