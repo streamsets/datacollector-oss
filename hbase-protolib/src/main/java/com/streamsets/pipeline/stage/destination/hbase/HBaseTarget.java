@@ -30,6 +30,10 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.hbase.common.Errors;
@@ -40,6 +44,7 @@ import com.streamsets.pipeline.lib.hbase.common.HBaseUtil;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HConstants;
 import org.apache.hadoop.hbase.HTableDescriptor;
@@ -55,6 +60,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.security.PrivilegedExceptionAction;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -177,6 +183,24 @@ public class HBaseTarget extends BaseTarget {
       }
     }
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+
+    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_WRITTEN);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, conf.tableName);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.HBASE.name());
+    List<String> names = new ArrayList<>();
+    for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
+      names.add(column.columnName);
+    }
+
+    if(!names.isEmpty()) {
+      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, StringUtils.join(names, ", "));
+    } else {
+      if(implicitFieldMapping) {
+        event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, "Implicit Field Mapping");
+      }
+    }
+    getContext().publishLineageEvent(event);
+
     return issues;
   }
 

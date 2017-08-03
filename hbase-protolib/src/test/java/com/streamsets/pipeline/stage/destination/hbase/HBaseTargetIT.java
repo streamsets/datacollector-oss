@@ -31,6 +31,9 @@ import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.hbase.common.Errors;
 import com.streamsets.pipeline.lib.hbase.common.HBaseConnectionConfig;
 import com.streamsets.pipeline.lib.util.JsonUtil;
@@ -236,6 +239,12 @@ public class HBaseTargetIT {
     List<Record> singleRecord = ImmutableList.of(record);
     targetRunner.runInit();
     targetRunner.runWrite(singleRecord);
+
+    List<LineageEvent> events = targetRunner.getLineageEvents();
+    Assert.assertEquals(1, events.size());
+    Assert.assertEquals(LineageEventType.ENTITY_WRITTEN, events.get(0).getEventType());
+    Assert.assertEquals("cf:a, cf:b, cf:c, cf:d", events.get(0).getSpecificAttribute(LineageSpecificAttribute.DESCRIPTION));
+
     targetRunner.runDestroy();
 
     HTable htable = new HTable(conf, tableName);
