@@ -22,6 +22,9 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.DataFormat;
@@ -227,7 +230,6 @@ public class TestSpoolDirSource {
     }
   }
 
-
   @Test
   public void testProduceNoInitialFileWithFileInSpoolDirNullOffset() throws Exception {
     TSpoolDirSource source = createSource("file-0.log");
@@ -372,6 +374,15 @@ public class TestSpoolDirSource {
 
       // 2 each of new-file and finished-file and 1 no-more-data
       Assert.assertEquals(5, runner.getEventRecords().size());
+
+      // check for LineageEvents.
+      List<LineageEvent> events = runner.getLineageEvents();
+      Assert.assertEquals(2, events.size());
+      Assert.assertEquals(LineageEventType.ENTITY_READ, events.get(0).getEventType());
+      Assert.assertEquals(LineageEventType.ENTITY_READ, events.get(1).getEventType());
+
+      Assert.assertTrue(events.get(0).getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME).contains("file-0.log"));
+      Assert.assertTrue(events.get(1).getSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME).contains("file-1.log"));
     } finally {
       runner.runDestroy();
     }

@@ -26,6 +26,10 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.io.ObjectLengthException;
 import com.streamsets.pipeline.api.ext.io.OverrunException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
@@ -511,6 +515,15 @@ public class SpoolDirSource extends BaseSource {
               .with("error-count", perFileErrorCount)
               .with("record-count", perFileRecordCount)
             .createAndSend();
+
+          LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+          event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, currentFile.getAbsolutePath());
+          event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.LOCAL_FS.name());
+          event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.filePattern);
+          Map<String, String> props = new HashMap<>();
+          props.put("Record Count", Long.toString(perFileRecordCount));
+          event.setProperties(props);
+          getContext().publishLineageEvent(event);
         }
       } catch (BadSpoolFileException ex) {
         LOG.error(Errors.SPOOLDIR_01.getMessage(), ex.getFile(), ex.getPos(), ex.toString(), ex);

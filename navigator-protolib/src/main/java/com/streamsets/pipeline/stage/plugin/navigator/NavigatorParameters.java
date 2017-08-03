@@ -42,6 +42,8 @@ public class NavigatorParameters {
         entityType = EntityType.TABLE;
         break;
 
+      case LOCAL_FS:
+        // TODO: fix this when Navigator is fixed - should be SDK, FILE.
       case DEVDATA:
       case HDFS:
         // TODO: fix this when the Navigator API is fixed.  should be HDFS, FILE
