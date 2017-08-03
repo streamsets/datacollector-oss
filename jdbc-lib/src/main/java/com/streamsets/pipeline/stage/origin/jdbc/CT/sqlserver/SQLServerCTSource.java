@@ -41,14 +41,14 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProviderFactory;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
-import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.cache.SQLServerCTContextLoader;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 import com.zaxxer.hikari.HikariDataSource;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,7 +57,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -77,7 +76,6 @@ public class SQLServerCTSource extends BasePushSource {
   private final HikariPoolConfigBean hikariConfigBean;
   private final CommonSourceConfigBean commonSourceConfigBean;
   private final CTTableJdbcConfigBean ctTableJdbcConfigBean;
-  private final Properties driverProperties = new Properties();
   private final Map<String, TableContext> allTableContexts;
   //If we have more state to clean up, we can introduce a state manager to do that which
   //can keep track of different closeables from different threads
@@ -94,7 +92,6 @@ public class SQLServerCTSource extends BasePushSource {
     this.hikariConfigBean = hikariConfigBean;
     this.commonSourceConfigBean = commonSourceConfigBean;
     this.ctTableJdbcConfigBean = tableJdbcConfigBean;
-    driverProperties.putAll(hikariConfigBean.driverProperties);
     allTableContexts = new LinkedHashMap<>();
     toBeInvalidatedThreadCaches = new ArrayList<>();
   }
@@ -132,7 +129,7 @@ public class SQLServerCTSource extends BasePushSource {
   @VisibleForTesting
   void checkConnectionAndBootstrap(Stage.Context context, List<ConfigIssue> issues) {
     try {
-      dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean, driverProperties);
+      dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
     } catch (StageException e) {
       issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
     }

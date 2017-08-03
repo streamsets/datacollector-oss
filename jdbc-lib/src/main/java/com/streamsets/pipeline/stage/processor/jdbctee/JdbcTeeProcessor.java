@@ -27,7 +27,15 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
-import com.streamsets.pipeline.lib.jdbc.*;
+import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
+import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JDBCOperationType;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
+import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
+import com.streamsets.pipeline.lib.jdbc.JdbcRecordReaderWriterFactory;
+import com.streamsets.pipeline.lib.jdbc.JdbcRecordWriter;
+import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -40,7 +48,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class JdbcTeeProcessor extends SingleLaneProcessor {
@@ -61,7 +68,6 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
   private final List<JdbcFieldColumnMapping> generatedColumnMappings;
   private final boolean caseSensitive;
 
-  private final Properties driverProperties = new Properties();
   private final ChangeLogFormat changeLogFormat;
   private final HikariPoolConfigBean hikariConfigBean;
   private final CacheCleaner cacheCleaner;
@@ -100,7 +106,6 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
     this.useMultiRowOp = useMultiRowOp;
     this.maxPrepStmtParameters = maxPrepStmtParameters;
     this.maxPrepStmtCache = maxPrepStmtCache;
-    this.driverProperties.putAll(hikariConfigBean.driverProperties);
     this.changeLogFormat = changeLogFormat;
     this.hikariConfigBean = hikariConfigBean;
     this.defaultOperation = defaultOp;
@@ -174,16 +179,14 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
     if (issues.isEmpty() && null == dataSource) {
       try {
         dataSource = JdbcUtil.createDataSourceForWrite(
-            hikariConfigBean,
-            driverProperties,
-            schema,
+            hikariConfigBean, schema,
             tableNameTemplate,
             caseSensitive,
             issues,
             customMappings,
             getContext()
         );
-      } catch (RuntimeException | SQLException e) {
+      } catch (RuntimeException | SQLException | StageException e) {
         LOG.debug("Could not connect to data source", e);
         issues.add(getContext().createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       }

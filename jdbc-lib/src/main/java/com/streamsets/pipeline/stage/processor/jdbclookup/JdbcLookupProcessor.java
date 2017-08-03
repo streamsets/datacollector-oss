@@ -48,7 +48,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import static com.streamsets.pipeline.lib.jdbc.JdbcUtil.closeQuietly;
@@ -75,7 +74,6 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private Map<String, String> columnsToFields = new HashMap<>();
   private Map<String, String> columnsToDefaults = new HashMap<>();
   private Map<String, DataType> columnsToTypes = new HashMap<>();
-  private final Properties driverProperties = new Properties();
 
   private LoadingCache<String, List<Map<String, Field>>> cache;
   private CacheCleaner cacheCleaner;
@@ -96,7 +94,6 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
     this.maxBlobSize = maxBlobSize;
     this.hikariConfigBean = hikariConfigBean;
     this.cacheConfig = cacheConfig;
-    driverProperties.putAll(hikariConfigBean.driverProperties);
   }
 
   /** {@inheritDoc} */
@@ -114,7 +111,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
     if (issues.isEmpty() && null == dataSource) {
       try {
-        dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean, driverProperties);
+        dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
       } catch (StageException e) {
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       }

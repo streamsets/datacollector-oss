@@ -33,11 +33,11 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.event.CommonEvents;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
-import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang.StringUtils;
@@ -71,7 +71,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.SortedMap;
 
@@ -634,10 +633,9 @@ public class JdbcUtil {
 
   private static HikariConfig createDataSourceConfig(
     HikariPoolConfigBean hikariConfigBean,
-    Properties driverProperties,
     boolean autoCommit,
     boolean readOnly
-  ) {
+  ) throws StageException {
     HikariConfig config = new HikariConfig();
 
     // Log all registered drivers
@@ -647,8 +645,8 @@ public class JdbcUtil {
     });
 
     config.setJdbcUrl(hikariConfigBean.connectionString);
-    config.setUsername(hikariConfigBean.username);
-    config.setPassword(hikariConfigBean.password);
+    config.setUsername(hikariConfigBean.username.get());
+    config.setPassword(hikariConfigBean.password.get());
     config.setAutoCommit(autoCommit);
     config.setReadOnly(readOnly);
     config.setMaximumPoolSize(hikariConfigBean.maximumPoolSize);
@@ -669,27 +667,20 @@ public class JdbcUtil {
       config.setTransactionIsolation(hikariConfigBean.transactionIsolation.name());
     }
 
-    config.setDataSourceProperties(driverProperties);
+    config.setDataSourceProperties(hikariConfigBean.getDriverProperties());
 
     return config;
   }
 
   public static HikariDataSource createDataSourceForWrite(
-      HikariPoolConfigBean hikariConfigBean,
-      Properties driverProperties,
-      String schema,
+      HikariPoolConfigBean hikariConfigBean, String schema,
       String tableNameTemplate,
       boolean caseSensitive,
       List<Stage.ConfigIssue> issues,
       List<JdbcFieldColumnParamMapping> customMappings,
       Stage.Context context
-  ) throws SQLException {
-    HikariDataSource dataSource = new HikariDataSource(createDataSourceConfig(
-      hikariConfigBean,
-      driverProperties,
-      false,
-      false
-    ));
+  ) throws SQLException, StageException {
+    HikariDataSource dataSource = new HikariDataSource(createDataSourceConfig(hikariConfigBean, false, false));
 
     // Can only validate schema if the user specified a single table.
     if (!tableNameTemplate.contains(EL_PREFIX)) {
@@ -724,16 +715,14 @@ public class JdbcUtil {
   }
 
   public static HikariDataSource createDataSourceForRead(
-      HikariPoolConfigBean hikariConfigBean,
-      Properties driverProperties
+      HikariPoolConfigBean hikariConfigBean
   ) throws StageException {
     HikariDataSource dataSource;
     try {
       dataSource = new HikariDataSource(createDataSourceConfig(
-        hikariConfigBean,
-        driverProperties,
-        hikariConfigBean.autoCommit,
-        hikariConfigBean.readOnly
+          hikariConfigBean,
+          hikariConfigBean.autoCommit,
+          hikariConfigBean.readOnly
       ));
     } catch (RuntimeException e) {
       LOG.error(JdbcErrors.JDBC_06.getMessage(), e);

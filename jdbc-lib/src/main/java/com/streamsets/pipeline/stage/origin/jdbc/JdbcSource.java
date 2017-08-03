@@ -96,7 +96,6 @@ public class JdbcSource extends BaseSource {
   private final String query;
   private final String initialOffset;
   private final String offsetColumn;
-  private final Properties driverProperties = new Properties();
   private final String txnColumnName;
   private final int txnMaxSize;
   private final JdbcRecordType jdbcRecordType;
@@ -143,7 +142,6 @@ public class JdbcSource extends BaseSource {
     this.offsetColumn = offsetColumn;
     this.disableValidation = disableValidation;
     this.queryIntervalMillis = 1000 * commonSourceConfigBean.queryInterval;
-    driverProperties.putAll(hikariConfigBean.driverProperties);
     this.txnColumnName = txnColumnName;
     this.txnMaxSize = txnMaxSize;
     this.commonSourceConfigBean = commonSourceConfigBean;
@@ -212,9 +210,11 @@ public class JdbcSource extends BaseSource {
       issues.add(context.createConfigIssue(Groups.ADVANCED.name(), JDBC_NS_HEADER_PREFIX, JdbcErrors.JDBC_15));
     }
 
+    Properties driverProps = new Properties();
     try {
+      driverProps = hikariConfigBean.getDriverProperties();
       if (null == dataSource) {
-        dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean, driverProperties);
+        dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
       }
     } catch (StageException e) {
       LOG.error(JdbcErrors.JDBC_00.getMessage(), e.toString(), e);
@@ -265,8 +265,8 @@ public class JdbcSource extends BaseSource {
 
     }
 
-    for (final String n : driverProperties.stringPropertyNames()) {
-      props.put(n, driverProperties.getProperty(n));
+    for (final String n : driverProps.stringPropertyNames()) {
+      props.put(n, driverProps.getProperty(n));
     }
     event.setProperties(props);
     getContext().publishLineageEvent(event);

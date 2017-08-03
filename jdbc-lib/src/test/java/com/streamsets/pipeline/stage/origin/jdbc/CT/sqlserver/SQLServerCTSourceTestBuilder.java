@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver;
 
+import com.streamsets.pipeline.lib.jdbc.ConnectionPropertyBean;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
@@ -32,7 +33,7 @@ public class SQLServerCTSourceTestBuilder {
   private boolean useCredentials;
   private String username;
   private String password;
-  private Map<String, String> driverProperties;
+  private List<ConnectionPropertyBean> driverProperties;
   private  String driverClassName;
   private String connectionTestQuery;
   private long queryInterval;
@@ -57,7 +58,7 @@ public class SQLServerCTSourceTestBuilder {
     this.useCredentials = useCredentials;
     this.username = username;
     this.password = password;
-    this.driverProperties = Collections.emptyMap();
+    this.driverProperties = new ArrayList<>();
     this.driverClassName = "";
     this.connectionTestQuery = "";
     this.queryInterval = 1;
@@ -97,7 +98,12 @@ public class SQLServerCTSourceTestBuilder {
   }
 
   public SQLServerCTSourceTestBuilder driverProperties(Map<String, String> driverProperties) {
-    this.driverProperties = driverProperties;
+    for (Map.Entry<String,String> entry : driverProperties.entrySet()) {
+      ConnectionPropertyBean config = new ConnectionPropertyBean();
+      config.key = entry.getKey();
+      config.value = () -> entry.getValue();
+      this.driverProperties.add(config);
+    }
     return this;
   }
 
@@ -190,8 +196,8 @@ public class SQLServerCTSourceTestBuilder {
     HikariPoolConfigBean hikariPoolConfigBean = new HikariPoolConfigBean();
     hikariPoolConfigBean.useCredentials = useCredentials;
     hikariPoolConfigBean.connectionString = connectionString;
-    hikariPoolConfigBean.username = username;
-    hikariPoolConfigBean.password = password;
+    hikariPoolConfigBean.username = () -> username;
+    hikariPoolConfigBean.password = () -> password;
     hikariPoolConfigBean.driverClassName = driverClassName;
     hikariPoolConfigBean.driverProperties = driverProperties;
     hikariPoolConfigBean.connectionTestQuery = connectionTestQuery;

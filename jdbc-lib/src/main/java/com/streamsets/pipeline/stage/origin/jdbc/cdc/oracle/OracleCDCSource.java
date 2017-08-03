@@ -74,7 +74,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Semaphore;
@@ -242,7 +241,6 @@ public class OracleCDCSource extends BaseSource {
 
   private final OracleCDCConfigBean configBean;
   private final HikariPoolConfigBean hikariConfigBean;
-  private final Properties driverProperties = new Properties();
   private final Map<String, Map<String, Integer>> tableSchemas = new HashMap<>();
   private final Map<String, Map<String, String>> dateTimeColumns = new HashMap<>();
   private final Map<String, Map<String, PrecisionAndScale>> decimalColumns = new HashMap<>();
@@ -336,7 +334,7 @@ public class OracleCDCSource extends BaseSource {
       try {
         if (dataSource == null || dataSource.isClosed()) {
           connection = null; // Force re-init without checking validity which takes time.
-          dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean, driverProperties);
+          dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
         }
         if (connection == null || !connection.isValid(30)) {
           if (connection != null) {
@@ -1002,10 +1000,9 @@ public class OracleCDCSource extends BaseSource {
       }
     }
     issues = hikariConfigBean.validateConfigs(getContext(), issues);
-    driverProperties.putAll(hikariConfigBean.driverProperties);
     if (connection == null) { // For tests, we set a mock connection
       try {
-        dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean, driverProperties);
+        dataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
         connection = dataSource.getConnection();
         connection.setAutoCommit(false);
       } catch (StageException | SQLException e) {

@@ -143,8 +143,8 @@ public class TestJdbcQueryExecutor {
     config.hikariConfigBean = new HikariPoolConfigBean();
     config.hikariConfigBean.connectionString = JDBC_CONNECTION;
     config.hikariConfigBean.useCredentials = true;
-    config.hikariConfigBean.username = JDBC_USER;
-    config.hikariConfigBean.password = JDBC_PASSWD;
+    config.hikariConfigBean.username = () -> JDBC_USER;
+    config.hikariConfigBean.password = () -> JDBC_PASSWD;
 
     config.query = query;
     return new JdbcQueryExecutor(config);

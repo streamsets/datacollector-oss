@@ -27,7 +27,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -48,8 +47,8 @@ public class TestJdbcUtil {
   private HikariPoolConfigBean createConfigBean() {
     HikariPoolConfigBean bean = new HikariPoolConfigBean();
     bean.connectionString = h2ConnectionString;
-    bean.username = username;
-    bean.password = password;
+    bean.username = () -> username;
+    bean.password = () -> password;
 
     return bean;
   }
@@ -112,7 +111,7 @@ public class TestJdbcUtil {
     HikariPoolConfigBean config = createConfigBean();
     config.transactionIsolation = TransactionIsolationLevel.TRANSACTION_READ_COMMITTED;
 
-    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config, new Properties());
+    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config);
     Connection connection = dataSource.getConnection();
     assertNotNull(connection);
     assertEquals(Connection.TRANSACTION_READ_COMMITTED, connection.getTransactionIsolation());
@@ -123,7 +122,7 @@ public class TestJdbcUtil {
   public void testGetTableMetadata() throws Exception {
     HikariPoolConfigBean config = createConfigBean();
 
-    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config, new Properties());
+    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config);
     Connection connection = dataSource.getConnection();
 
     boolean caseSensitive = false;
@@ -135,7 +134,7 @@ public class TestJdbcUtil {
   public void testGetTableMetadataWithDots() throws Exception {
     HikariPoolConfigBean config = createConfigBean();
 
-    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config, new Properties());
+    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config);
     Connection connection = dataSource.getConnection();
 
     boolean caseSensitive = true;
@@ -147,7 +146,7 @@ public class TestJdbcUtil {
   @Test
   public void testResultToField() throws Exception {
     HikariPoolConfigBean config = createConfigBean();
-    try (HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config, new Properties())) {
+    try (HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config)) {
       try (Connection connection = dataSource.getConnection()) {
         try (Statement stmt = connection.createStatement()) {
           // Currently only validates TIMESTAMP WITH TIME ZONE (H2 does not support TIME WITH TIME ZONE)

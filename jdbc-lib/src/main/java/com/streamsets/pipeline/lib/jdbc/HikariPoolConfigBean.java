@@ -15,16 +15,19 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
-import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 public class HikariPoolConfigBean {
   private static final int TEN_MINUTES = 600;
@@ -79,7 +82,7 @@ public class HikariPoolConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       dependsOn = "useCredentials",
       triggeredByValue = "true",
       label = "Username",
@@ -87,11 +90,11 @@ public class HikariPoolConfigBean {
       elDefs = VaultEL.class,
       group = "CREDENTIALS"
   )
-  public String username;
+  public CredentialValue username;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       dependsOn = "useCredentials",
       triggeredByValue = "true",
       label = "Password",
@@ -99,11 +102,11 @@ public class HikariPoolConfigBean {
       elDefs = VaultEL.class,
       group = "CREDENTIALS"
   )
-  public String password;
+  public CredentialValue password;
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.MAP,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "Additional JDBC Configuration Properties",
       description = "Additional properties to pass to the underlying JDBC driver.",
@@ -111,7 +114,8 @@ public class HikariPoolConfigBean {
       elDefs = VaultEL.class,
       group = "JDBC"
   )
-  public Map<String, String> driverProperties = new HashMap<>();
+  @ListBeanModel
+  public List<ConnectionPropertyBean> driverProperties = new ArrayList<>();
 
   @ConfigDef(
       required = false,
@@ -324,4 +328,13 @@ public class HikariPoolConfigBean {
 
     return issues;
   }
+
+  public Properties getDriverProperties() throws StageException {
+    Properties properties = new Properties();
+    for (ConnectionPropertyBean bean : driverProperties) {
+      properties.setProperty(bean.key, bean.value.get());
+    }
+    return properties;
+  }
+
 }

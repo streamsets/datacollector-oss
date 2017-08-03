@@ -41,8 +41,8 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProviderFactory;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
-import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
+import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -58,7 +58,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -82,7 +81,6 @@ public class TableJdbcSource extends BasePushSource {
   private final HikariPoolConfigBean hikariConfigBean;
   private final CommonSourceConfigBean commonSourceConfigBean;
   private final TableJdbcConfigBean tableJdbcConfigBean;
-  private final Properties driverProperties = new Properties();
   private final Map<String, TableContext> allTableContexts;
   private final Map<String, Integer> qualifiedTableNameToConfigIndex;
   //If we have more state to clean up, we can introduce a state manager to do that which
@@ -104,7 +102,6 @@ public class TableJdbcSource extends BasePushSource {
     this.hikariConfigBean = hikariConfigBean;
     this.commonSourceConfigBean = commonSourceConfigBean;
     this.tableJdbcConfigBean = tableJdbcConfigBean;
-    driverProperties.putAll(hikariConfigBean.driverProperties);
     allTableContexts = new LinkedHashMap<>();
     qualifiedTableNameToConfigIndex = new HashMap<>();
     toBeInvalidatedThreadCaches = new ArrayList<>();
@@ -113,7 +110,7 @@ public class TableJdbcSource extends BasePushSource {
   @VisibleForTesting
   void checkConnectionAndBootstrap(Stage.Context context, List<ConfigIssue> issues) {
     try {
-      hikariDataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean, driverProperties);
+      hikariDataSource = JdbcUtil.createDataSourceForRead(hikariConfigBean);
     } catch (StageException e) {
       issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
     }

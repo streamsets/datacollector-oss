@@ -116,8 +116,8 @@ public class TestJdbcTee {
   private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
     HikariPoolConfigBean bean = new HikariPoolConfigBean();
     bean.connectionString = connectionString;
-    bean.username = username;
-    bean.password = password;
+    bean.username = () -> username;
+    bean.password = () -> password;
 
     return bean;
   }
