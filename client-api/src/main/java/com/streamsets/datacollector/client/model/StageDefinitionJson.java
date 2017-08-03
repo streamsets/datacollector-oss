@@ -55,6 +55,8 @@ public class StageDefinitionJson   {
   private ConfigGroupDefinitionJson configGroupDefinition = null;
   private RawSourceDefinitionJson rawSourceDefinition = null;
   private Boolean errorStage = null;
+  private Boolean statsAggregatorStage = null;
+  private Boolean pipelineLifecycleStage = null;
   private Boolean variableOutputStreams = null;
   private Integer outputStreams = null;
   private String outputStreamLabelProviderClass = null;
@@ -187,6 +189,27 @@ public class StageDefinitionJson   {
     this.errorStage = errorStage;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("statsAggregatorStage")
+  public Boolean getStatsAggregatorStage() {
+    return statsAggregatorStage;
+  }
+  public void setStatsAggregatorStage(Boolean statsAggregatorStage) {
+    this.statsAggregatorStage = statsAggregatorStage;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("pipelineLifecycleStage")
+  public Boolean getPipelineLifecycleStage() {
+    return pipelineLifecycleStage;
+  }
+  public void setPipelineLifecycleStage(Boolean pipelineLifecycleStage) {
+    this.pipelineLifecycleStage = pipelineLifecycleStage;
+  }
 
   /**
    **/

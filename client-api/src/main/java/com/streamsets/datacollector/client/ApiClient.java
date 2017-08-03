@@ -22,16 +22,18 @@ import com.streamsets.datacollector.client.auth.HttpDigestAuth;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
-import org.glassfish.jersey.filter.LoggingFilter;
+import org.glassfish.jersey.logging.LoggingFeature;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -44,10 +46,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ApiClient {
-  private Map<String, Client> hostMap = new HashMap<String, Client>();
-  private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
+  private Map<String, Client> hostMap = new HashMap<>();
+  private Map<String, String> defaultHeaderMap = new HashMap<>();
   private boolean debugging = false;
   private String basePath = "https://localhost/rest";
   private JSON json = new JSON();
@@ -346,25 +350,30 @@ public class ApiClient {
   /**
    * Deserialize response body to Java object according to the Content-Type.
    */
-  public <T> T deserialize(Response response, TypeRef returnType) throws ApiException {
+  private <T> T deserialize(Response response, TypeRef returnType) throws ApiException {
     String contentType = null;
     List<Object> contentTypes = response.getHeaders().get("Content-Type");
-    if (contentTypes != null && !contentTypes.isEmpty())
+    if (contentTypes != null && !contentTypes.isEmpty()) {
       contentType = (String)contentTypes.get(0);
-    if (contentType == null)
-      throw new ApiException(500, "missing Content-Type in response");
+    }
 
-    String body;
-    if (response.hasEntity())
-      body = (String) response.readEntity(String.class);
-    else
-      body = "";
+    if (contentType == null) {
+      throw new ApiException(500, "missing Content-Type in response");
+    }
 
     if (contentType.startsWith("application/json")) {
+      String body;
+      if (response.hasEntity()) {
+        body = response.readEntity(String.class);
+      } else {
+        body = "";
+      }
       if (body.length() > 0) {
         return json.deserialize(body, returnType);
       }
       return null;
+    } if (contentType.startsWith("image")) {
+      return (T) response.readEntity(InputStream.class);
     } else {
       throw new ApiException(500, "can not deserialize Content-Type: " + contentType);
     }
@@ -399,7 +408,9 @@ public class ApiClient {
     WebTarget target = client.target(basePath + path + querystring);
 
     if (debugging) {
-      target.register(new LoggingFilter());
+      Logger logger = Logger.getLogger(getClass().getName());
+      Feature loggingFeature = new LoggingFeature(logger, Level.INFO, null, null);
+      target.register(loggingFeature);
     }
 
     if(authentication != null) {
@@ -470,17 +481,17 @@ public class ApiClient {
                          String contentType, String[] authNames, TypeRef returnType) throws ApiException {
 
     Response response = getAPIResponse(path, method, queryParams, body, binaryBody, headerParams, formParams,
-      accept, contentType, authNames);
+        accept, contentType, authNames);
 
     statusCode = response.getStatusInfo().getStatusCode();
     responseHeaders = response.getHeaders();
 
     if(statusCode == 401) {
       throw new ApiException(
-        response.getStatusInfo().getStatusCode(),
-        "HTTP Error 401 - Unauthorized: Access is denied due to invalid credentials.",
-        response.getHeaders(),
-        null);
+          response.getStatusInfo().getStatusCode(),
+          "HTTP Error 401 - Unauthorized: Access is denied due to invalid credentials.",
+          response.getHeaders(),
+          null);
     } else if(response.getStatusInfo() == Response.Status.NO_CONTENT) {
       return null;
     } else if (response.getStatusInfo().getFamily() == Family.SUCCESSFUL) {
@@ -500,10 +511,10 @@ public class ApiClient {
         }
       }
       throw new ApiException(
-        response.getStatusInfo().getStatusCode(),
-        message,
-        response.getHeaders(),
-        respBody);
+          response.getStatusInfo().getStatusCode(),
+          message,
+          response.getHeaders(),
+          respBody);
     }
   }
 
@@ -517,9 +528,9 @@ public class ApiClient {
       String keyStr = param.getKey();
       String valueStr = parameterToString(param.getValue());
       try {
-        formParamBuilder.append(URLEncoder.encode(param.getKey(), "utf8"))
-          .append("=")
-          .append(URLEncoder.encode(valueStr, "utf8"));
+        formParamBuilder.append(URLEncoder.encode(keyStr, "utf8"))
+            .append("=")
+            .append(URLEncoder.encode(valueStr, "utf8"));
         formParamBuilder.append("&");
       } catch (UnsupportedEncodingException e) {
         // move on to next
