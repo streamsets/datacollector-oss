@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.PipelineLifecycleStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DExecutor;
 import com.streamsets.pipeline.stage.executor.s3.config.AmazonS3ExecutorConfig;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.stage.executor.s3.config.AmazonS3ExecutorConfig;
   onlineHelpRefUrl = "index.html#Executors/AmazonS3.html#task_nky_cnm_f1b"
 )
 @ConfigGroups(Groups.class)
+@PipelineLifecycleStage
 @GenerateResourceBundle
 @HideConfigs({
   "config.s3Config.commonPrefix",
