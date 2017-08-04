@@ -262,7 +262,7 @@ public class TestStageContext {
             try {
               context.publishLineageEvent(event);
             } catch (IllegalArgumentException ex) {
-              Assert.assertTrue(ex.getMessage().contains("missingSpecificAttributes()"));
+              Assert.assertTrue(ex.getMessage().contains("Missing or Empty SpecificAttributes"));
             }
           }
         }
