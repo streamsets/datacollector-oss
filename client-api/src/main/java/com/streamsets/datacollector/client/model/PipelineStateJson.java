@@ -35,7 +35,7 @@ public class PipelineStateJson   {
   public enum StatusEnum {
     EDITED("EDITED"),
     STARTING("STARTING"),
-    STARTING_ERROR("START_ERROR"),
+    STARTING_ERROR("STARTING_ERROR"),
     START_ERROR("START_ERROR"),
     RUNNING("RUNNING"),
     RUNNING_ERROR("RUNNING_ERROR"),

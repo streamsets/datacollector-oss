@@ -22,28 +22,45 @@ import com.streamsets.datacollector.client.model.PipelineStateJson;
 import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.testing.NetworkUtils;
+import com.streamsets.testing.ParametrizedUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.util.Collection;
+
+@RunWith(Parameterized.class)
 public class TestManagerApi {
+
+  @Parameterized.Parameters(name = "str({0})")
+  public static Collection<Object[]> data() throws Exception {
+    return ParametrizedUtils.toArrayOfArrays(
+      "none",
+      "basic",
+      "form",
+      "digest"
+    );
+  }
+
   private String baseURL;
-  private String[] authenticationTypes = {"none", "basic", "form", "digest"};
+  private String authType;
+
+  public TestManagerApi(String authType) {
+    this.authType = authType;
+  }
 
   @Test
-  public void testForDifferentAuthenticationTypes() {
+  public void testForDifferentAuthenticationTypes() throws Exception {
     Task server = null;
     try {
-      for(String authType: authenticationTypes) {
-        int port = NetworkUtils.getRandomPort();
-        server = TestUtil.startServer(port, authType);
-        baseURL = "http://127.0.0.1:" + port;
-        ApiClient apiClient = getApiClient(authType);
-        testManagerAPI(apiClient);
+      int port = NetworkUtils.getRandomPort();
+      server = TestUtil.startServer(port, authType);
+      baseURL = "http://127.0.0.1:" + port;
+      ApiClient apiClient = getApiClient(authType);
+      testManagerAPI(apiClient);
 
-        TestUtil.stopServer(server);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
+      TestUtil.stopServer(server);
     } finally {
       if(server != null) {
         TestUtil.stopServer(server);

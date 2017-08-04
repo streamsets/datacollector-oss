@@ -21,36 +21,52 @@ import com.streamsets.datacollector.client.model.DefinitionsJson;
 import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.testing.NetworkUtils;
+import com.streamsets.testing.ParametrizedUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
-public class  TestDefinitionsApi {
+import java.util.Collection;
+
+@RunWith(Parameterized.class)
+public class TestDefinitionsApi {
+
+  @Parameterized.Parameters(name = "str({0})")
+  public static Collection<Object[]> data() throws Exception {
+    return ParametrizedUtils.toArrayOfArrays(
+      "none",
+      "basic",
+      "form",
+      "digest"
+    );
+  }
+
   private String baseURL;
-  private String[] authenticationTypes = {"none", "basic", "form", "digest"};
+  private String authType;
+
+  public TestDefinitionsApi(String authType) {
+    this.authType = authType;
+  }
 
   @Test
-  public void testForDifferentAuthenticationTypes() {
+  public void testForDifferentAuthenticationTypes() throws Exception {
     Task server = null;
     try {
-      for(String authType: authenticationTypes) {
-        int port = NetworkUtils.getRandomPort();
-        server = TestUtil.startServer(port, authType);
-        baseURL = "http://127.0.0.1:" + port;
-        ApiClient apiClient = getApiClient(authType);
+      int port = NetworkUtils.getRandomPort();
+      server = TestUtil.startServer(port, authType);
+      baseURL = "http://127.0.0.1:" + port;
+      ApiClient apiClient = getApiClient(authType);
 
-        DefinitionsApi definitionsApi = new DefinitionsApi(apiClient);
+      DefinitionsApi definitionsApi = new DefinitionsApi(apiClient);
 
-        testGetDefinitions(definitionsApi);
+      testGetDefinitions(definitionsApi);
 
-        if(!authType.equals("none")) {
-          testInvalidUserNamePassword(authType);
-        }
-
-        TestUtil.stopServer(server);
+      if(!authType.equals("none")) {
+        testInvalidUserNamePassword(authType);
       }
-    } catch (Exception e) {
-      e.printStackTrace();
-      Assert.fail(e.getMessage());
+
+      TestUtil.stopServer(server);
     } finally {
       if(server != null) {
         TestUtil.stopServer(server);

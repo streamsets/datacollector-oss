@@ -21,41 +21,55 @@ import com.streamsets.datacollector.client.util.TestUtil;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.testing.NetworkUtils;
+import com.streamsets.testing.ParametrizedUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+@RunWith(Parameterized.class)
 public class TestSystemApi {
+
+  @Parameterized.Parameters(name = "str({0})")
+  public static Collection<Object[]> data() throws Exception {
+    return ParametrizedUtils.toArrayOfArrays(
+      "none",
+      "basic",
+      "form",
+      "digest"
+    );
+  }
+
   private String baseURL;
-  private String[] authenticationTypes = {"none", "basic", "form", "digest"};
+  private String authType;
+
+  public TestSystemApi(String authType) {
+    this.authType = authType;
+  }
 
   @Test
-  public void testForDifferentAuthenticationTypes() {
+  public void testForDifferentAuthenticationTypes() throws Exception {
     Task server = null;
     try {
-      for(String authType: authenticationTypes) {
-        int port = NetworkUtils.getRandomPort();
-        server = TestUtil.startServer(port, authType);
-        baseURL = "http://127.0.0.1:" + port;
-        ApiClient apiClient = getApiClient(authType);
+      int port = NetworkUtils.getRandomPort();
+      server = TestUtil.startServer(port, authType);
+      baseURL = "http://127.0.0.1:" + port;
+      ApiClient apiClient = getApiClient(authType);
 
-        SystemApi systemApi = new SystemApi(apiClient);
+      SystemApi systemApi = new SystemApi(apiClient);
 
-        testGetConfiguration(systemApi);
-        testGetSDCDirectories(systemApi);
-        testGetBuildInfo(systemApi);
-        testGetUserInfo(systemApi);
-        testGetServerTime(systemApi);
-        testGetThreadsDump(systemApi);
+      testGetConfiguration(systemApi);
+      testGetSDCDirectories(systemApi);
+      testGetBuildInfo(systemApi);
+      testGetUserInfo(systemApi);
+      testGetServerTime(systemApi);
+      testGetThreadsDump(systemApi);
 
-        TestUtil.stopServer(server);
-
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      Assert.fail(e.getMessage());
+      TestUtil.stopServer(server);
     } finally {
       if(server != null) {
         TestUtil.stopServer(server);
