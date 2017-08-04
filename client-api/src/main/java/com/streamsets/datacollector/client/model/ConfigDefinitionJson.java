@@ -31,20 +31,29 @@ public class ConfigDefinitionJson   {
 
   private String name = null;
 
-public enum TypeEnum {
-  BOOLEAN("BOOLEAN"), NUMBER("NUMBER"), STRING("STRING"), LIST("LIST"), MAP("MAP"), MODEL("MODEL"), CHARACTER("CHARACTER"), TEXT("TEXT");
+  public enum TypeEnum {
+    BOOLEAN("BOOLEAN"),
+    NUMBER("NUMBER"),
+    STRING("STRING"),
+    LIST("LIST"),
+    MAP("MAP"),
+    MODEL("MODEL"),
+    CHARACTER("CHARACTER"),
+    TEXT("TEXT"),
+    CREDENTIAL("CREDENTIAL"),
+    ;
 
-  private String value;
+    private String value;
 
-  TypeEnum(String value) {
-    this.value = value;
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return value;
+    }
   }
-
-  @Override
-  public String toString() {
-    return value;
-  }
-}
 
   private TypeEnum type = null;
   private Object defaultValue = null;

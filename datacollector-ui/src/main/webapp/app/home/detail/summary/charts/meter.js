@@ -39,7 +39,7 @@ angular
       chartOptions: {
         chart: {
           type: 'multiBarChart',
-          stacked: true,
+          stacked: false,
           height: 250,
           showLabels: true,
           duration: 0,
