@@ -188,13 +188,16 @@ public final class TableContextUtil {
 
     checkForUnsupportedOffsetColumns(offsetColumnToType);
 
-    Map<String, String> offsetColumnMinValues = JdbcUtil.getMinimumOffsetValues(
-        connection,
-        schemaName,
-        tableName,
-        quoteChar,
-        offsetColumnToType.keySet()
-    );
+    Map<String, String> offsetColumnMinValues = new HashMap<>();
+    if (tableConfigBean.partitioningMode != PartitioningMode.DISABLED) {
+      offsetColumnMinValues.putAll(JdbcUtil.getMinimumOffsetValues(
+          connection,
+          schemaName,
+          tableName,
+          quoteChar,
+          offsetColumnToType.keySet()
+      ));
+    }
 
     //Initial offset should exist for all partition columns or none at all.
     if (!tableConfigBean.offsetColumnToInitialOffsetValue.isEmpty()) {
