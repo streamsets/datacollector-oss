@@ -35,6 +35,7 @@ public class PipelineStateJson   {
   public enum StatusEnum {
     EDITED("EDITED"),
     STARTING("STARTING"),
+    STARTING_ERROR("START_ERROR"),
     START_ERROR("START_ERROR"),
     RUNNING("RUNNING"),
     RUNNING_ERROR("RUNNING_ERROR"),
@@ -45,10 +46,14 @@ public class PipelineStateJson   {
     KILLED("KILLED"),
     STOPPING("STOPPING"),
     STOPPED("STOPPED"),
+    STOPPING_ERROR("STOPPED"),
+    STOP_ERROR("STOPPED"),
     DISCONNECTING("DISCONNECTING"),
     DISCONNECTED("DISCONNECTED"),
     CONNECTING("CONNECTING"),
-    CONNECT_ERROR("CONNECT_ERROR");
+    CONNECT_ERROR("CONNECT_ERROR"),
+    DELETED("DELETED"),
+    ;
 
     private final String value;
 
