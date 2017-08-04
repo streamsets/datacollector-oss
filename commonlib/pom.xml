@@ -303,10 +303,6 @@
                 <!-- Protobuf -->
                 <relocation>
                   <pattern>com.google.protobuf</pattern>
-                  <shadedPattern>_ss_com.com.google</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>google.protobuf</pattern>
                   <shadedPattern>_ss_com.google.protobuf</shadedPattern>
                 </relocation>
               </relocations>
