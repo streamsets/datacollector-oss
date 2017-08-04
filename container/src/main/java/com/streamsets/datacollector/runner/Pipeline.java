@@ -1009,6 +1009,8 @@ public class Pipeline {
 
     Map<String, Field> rootField = new LinkedHashMap<>();
     rootField.put("user", Field.create(Field.Type.STRING, userContext.getUser()));
+    rootField.put("pipelineId", Field.create(Field.Type.STRING, name));
+    rootField.put("pipelineTitle", Field.create(Field.Type.STRING, pipelineConf.getTitle()));
 
     // Pipeline parameters
     Map<String, Field> parameters = new LinkedHashMap<>();
@@ -1042,6 +1044,8 @@ public class Pipeline {
 
     Map<String, Field> rootField = new LinkedHashMap<>();
     rootField.put("reason", Field.create(Field.Type.STRING, stopReason.name()));
+    rootField.put("pipelineId", Field.create(Field.Type.STRING, name));
+    rootField.put("pipelineTitle", Field.create(Field.Type.STRING, pipelineConf.getTitle()));
 
     eventRecord.set(Field.create(rootField));
     return eventRecord;
