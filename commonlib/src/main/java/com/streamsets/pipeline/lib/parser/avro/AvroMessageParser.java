@@ -21,6 +21,7 @@ import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.SeekableByteArrayInput;
@@ -78,6 +79,7 @@ public class AvroMessageParser extends AbstractDataParser {
     if(genericRecord != null) {
       record = context.createRecord(messageId);
       record.set(AvroTypeUtil.avroToSdcField(record, genericRecord.getSchema(), genericRecord));
+      record.getHeader().setAttribute(HeaderAttributeConstants.AVRO_SCHEMA, genericRecord.getSchema().toString());
     }
     return record;
   }

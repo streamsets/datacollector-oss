@@ -25,6 +25,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.generic.GenericData;
@@ -53,6 +54,8 @@ public class TestAvroDataFileParser {
     Record parse = avroDataFileParser.parse();
     Assert.assertNotNull(parse);
     Assert.assertEquals("244::1", avroDataFileParser.getOffset());
+    Assert.assertNotNull(parse.getHeader().getAttribute(HeaderAttributeConstants.AVRO_SCHEMA));
+    Assert.assertEquals(Schema.parseJson(SdcAvroTestUtil.AVRO_SCHEMA), Schema.parseJson(parse.getHeader().getAttribute(HeaderAttributeConstants.AVRO_SCHEMA)));
 
     parse = avroDataFileParser.parse();
     Assert.assertNotNull(parse);

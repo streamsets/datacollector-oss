@@ -64,4 +64,11 @@ public class HeaderAttributeConstants {
    */
   public static final String PARTITION = "partition";
 
+  /**
+   * Avro schema.
+   *
+   * JSON representation of Avro schema associated with the record.
+   */
+  public static final String AVRO_SCHEMA = "avroSchema";
+
 }

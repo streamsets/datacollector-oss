@@ -21,6 +21,7 @@ import com.streamsets.pipeline.lib.io.OverrunInputStream;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileStream;
 import org.apache.avro.generic.GenericData;
@@ -70,6 +71,7 @@ public class AvroDataStreamParser extends AbstractDataParser {
       recordCount++;
       Record record = context.createRecord(streamName + OFFSET_SEPARATOR + recordCount);
       record.set(AvroTypeUtil.avroToSdcField(record, avroRecord.getSchema(), avroRecord));
+      record.getHeader().setAttribute(HeaderAttributeConstants.AVRO_SCHEMA, avroRecord.getSchema().toString());
       return record;
     }
     eof = true;
