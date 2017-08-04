@@ -158,7 +158,7 @@ public class MessageProcessorImpl implements MessageProcessor {
       // Create a raw record of the gRPC message data, set attributes as headers, and use the messageId for the recordId
       Record errorRecord = context.createRecord(message.getMessageId(), message.getData().toByteArray(), MIME_GRPC);
       setHeaders(message, errorRecord);
-      context.reportError(new OnRecordErrorException(errorRecord, Errors.PUBSUB_05));
+      context.reportError(new OnRecordErrorException(errorRecord, Errors.PUBSUB_05, e.toString()));
     }
   }
 
