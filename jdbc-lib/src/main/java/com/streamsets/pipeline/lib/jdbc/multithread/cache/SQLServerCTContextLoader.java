@@ -74,10 +74,6 @@ public class SQLServerCTContextLoader extends CacheLoader<TableRuntimeContext, T
             fetchSize
         );
 
-    // update last offset
-    tableContext.clearStartOffset();
-    tableContext.setOffsetColumnToStartOffset(offset);
-
     return tableReadContext;
   }
 }

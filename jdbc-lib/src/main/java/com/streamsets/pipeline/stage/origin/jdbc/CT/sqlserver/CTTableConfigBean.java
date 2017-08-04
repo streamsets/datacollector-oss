@@ -58,7 +58,8 @@ public class CTTableConfigBean {
       label = "Initial Offset",
       description = "Use -1 to opt out of this option",
       displayPosition =  50,
+      defaultValue = "-1",
       group = "TABLE"
   )
-  public long initialOffset;
+  public long initialOffset = -1;
 }
