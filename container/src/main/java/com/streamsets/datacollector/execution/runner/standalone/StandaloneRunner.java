@@ -273,6 +273,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           msg = "Pipeline was in DISCONNECTING state, forcing it to DISCONNECTED";
           transitions.add(PipelineStatus.DISCONNECTED);
           break;
+        case STARTING_ERROR:
+          msg = "Pipeline was in STARTING_ERROR state, forcing it to START_ERROR";
+          transitions.add(PipelineStatus.START_ERROR);
+          break;
+        case STOPPING_ERROR:
+          msg = "Pipeline was in STOPPING_ERROR state, forcing it to STOP_ERROR";
+          transitions.add(PipelineStatus.STOP_ERROR);
+          break;
         case RUNNING_ERROR:
           msg = "Pipeline was in RUNNING_ERROR state, forcing it to terminal state of RUN_ERROR";
           transitions.add(PipelineStatus.RUN_ERROR);
