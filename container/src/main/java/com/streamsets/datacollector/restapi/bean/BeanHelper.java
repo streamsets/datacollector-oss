@@ -750,12 +750,18 @@ public class BeanHelper {
         return StatusJson.RUNNING_ERROR;
       case STARTING:
         return StatusJson.STARTING;
+      case STARTING_ERROR:
+        return StatusJson.STARTING_ERROR;
       case START_ERROR:
         return StatusJson.START_ERROR;
       case RETRY:
         return StatusJson.RETRY;
       case STOP_ERROR:
         return StatusJson.STOP_ERROR;
+      case STOPPING_ERROR:
+        return StatusJson.STOPPING_ERROR;
+      case DELETED:
+        return StatusJson.DELETED;
       default:
         throw new IllegalArgumentException("Unrecognized state" + status);
 
@@ -797,10 +803,16 @@ public class BeanHelper {
         return PipelineStatus.STARTING;
       case START_ERROR:
         return PipelineStatus.START_ERROR;
+      case STARTING_ERROR:
+        return PipelineStatus.STARTING_ERROR;
       case RETRY:
         return PipelineStatus.RETRY;
       case STOP_ERROR:
         return PipelineStatus.STOP_ERROR;
+      case STOPPING_ERROR:
+        return PipelineStatus.STOPPING_ERROR;
+      case DELETED:
+        return PipelineStatus.DELETED;
       default:
         throw new IllegalArgumentException("Unrecognized state");
     }
