@@ -18,8 +18,8 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 import com.streamsets.pipeline.api.Label;
 
 public enum UnsupportedFieldTypeValues implements Label {
-  SEND_TO_PIPELINE("Send record with all other fields to the pipeline"),
-  TO_ERROR("Send record with all other fields to error"),
+  SEND_TO_PIPELINE("Send Record to Pipeline"),
+  TO_ERROR("Send Record To Error"),
   DISCARD("Discard Record"),
   ;
 
