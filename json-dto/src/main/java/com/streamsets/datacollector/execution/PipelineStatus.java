@@ -60,4 +60,18 @@ public enum PipelineStatus {
     return isActive;
   }
 
+  public boolean isOneOf(PipelineStatus ...statuses) {
+    if(statuses == null) {
+      return false;
+    }
+
+    for(PipelineStatus s : statuses) {
+      if(this == s) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 }

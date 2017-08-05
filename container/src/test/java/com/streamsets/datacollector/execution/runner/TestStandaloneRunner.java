@@ -44,7 +44,6 @@ import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import dagger.Module;
@@ -66,7 +65,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPipelineState;
 import static org.awaitility.Awaitility.await;
@@ -181,7 +179,7 @@ public class TestStandaloneRunner {
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RETRY, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
     runner.start("admin");
-    assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
+    assertTrue("Unexpectd state: " + runner.getState().getStatus(), runner.getState().getStatus().isOneOf(PipelineStatus.STARTING, PipelineStatus.RUNNING));
   }
 
   @Test
