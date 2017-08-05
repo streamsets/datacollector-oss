@@ -168,7 +168,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     ))
     .put(PipelineStatus.STARTING_ERROR, ImmutableSet.of(
       PipelineStatus.START_ERROR,
-      PipelineStatus.STOPPING_ERROR
+      PipelineStatus.STOPPING_ERROR,
+      PipelineStatus.RETRY
     ))
     .put(PipelineStatus.START_ERROR, ImmutableSet.of(
       PipelineStatus.STARTING
@@ -195,7 +196,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     .put(PipelineStatus.STOPPING_ERROR, ImmutableSet.of(
       PipelineStatus.START_ERROR,
       PipelineStatus.RUN_ERROR,
-      PipelineStatus.STOP_ERROR
+      PipelineStatus.STOP_ERROR,
+      PipelineStatus.RETRY
     ))
     .put(PipelineStatus.STOP_ERROR, ImmutableSet.of(
       PipelineStatus.STARTING
