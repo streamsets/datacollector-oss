@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,10 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.ext.json.Mode;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -209,6 +213,16 @@ public class HiveTarget extends BaseTarget {
         .build(new HiveRecordWriterLoader());
 
     recordWriterCacheCleaner = new CacheCleaner(recordWriterPool, "HiveTarget record writer pool", 10 * 60 * 1000);
+
+    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_WRITTEN);
+    if(hiveThriftUrl != null && !hiveThriftUrl.isEmpty()) {
+      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, hiveThriftUrl);
+    } else {
+      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION,hiveConfDir);
+    }
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.HIVE.name());
+    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, schema + " " + tableName);
+    getContext().publishLineageEvent(event);
 
     LOG.debug("Total issues: {}", issues.size());
     return issues;
