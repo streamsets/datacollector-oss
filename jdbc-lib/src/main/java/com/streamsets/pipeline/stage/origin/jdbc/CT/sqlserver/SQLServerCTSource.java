@@ -247,7 +247,8 @@ public class SQLServerCTSource extends BasePushSource {
         CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache = new SQLServerCTContextLoader(
             connectionManager,
             lastSourceOffset,
-            ctTableJdbcConfigBean.fetchSize
+            ctTableJdbcConfigBean.fetchSize,
+            ctTableJdbcConfigBean.includeJoin
         );
 
         TableJdbcConfigBean tableJdbcConfigBean = convertToTableJdbcConfigBean(ctTableJdbcConfigBean);

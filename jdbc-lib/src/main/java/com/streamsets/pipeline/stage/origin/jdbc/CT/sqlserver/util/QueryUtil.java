@@ -58,6 +58,8 @@ public final class QueryUtil {
           "%5$s\n" +
           "%6$s";
 
+  private static final String SELECT_CT_CLAUSE = "SELECT TOP %s * FROM CHANGETABLE(CHANGES %s, %s) AS CT %s %s";
+
   private static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
   private static final Joiner AND_JOINER = Joiner.on(" AND ");
 
@@ -78,12 +80,19 @@ public final class QueryUtil {
     return CHANGE_TRACKING_TABLE_QUERY;
   }
 
-  public static String buildQuery(Map<String, String> offsetMap, int maxBatchSize, String tableName, Collection<String> offsetColumns, Map<String, String> startOffset) {
+  public static String buildQuery(
+      Map<String, String> offsetMap,
+      int maxBatchSize, String tableName,
+      Collection<String> offsetColumns,
+      Map<String, String> startOffset,
+      boolean includeJoin
+  ) {
     boolean isInitial = true;
 
     List<String> greaterCondition = new ArrayList<>();
     List<String> equalCondition = new ArrayList<>();
     List<String> orderCondition = new ArrayList<>();
+    String greater = "";
 
     orderCondition.add(SYS_CHANGE_VERSION);
 
@@ -106,11 +115,37 @@ public final class QueryUtil {
       greaterCondition.add(String.format(COLUMN_EQUALS_VALUE, CT_TABLE_NAME + "." + SYS_CHANGE_VERSION, offsetMap.get(SYS_CHANGE_VERSION)));
       String condition1 = AND_JOINER.join(greaterCondition);
       String condition2 = String.format(COLUMN_GREATER_THAN_VALUE, CT_TABLE_NAME + "." + SYS_CHANGE_VERSION, offsetMap.get(SYS_CHANGE_VERSION));
-      String greater = String.format(WHERE_CLAUSE, String.format(OR_CLAUSE, condition1, condition2));
+      greater = String.format(WHERE_CLAUSE, String.format(OR_CLAUSE, condition1, condition2));
 
-      return String.format(CHANGE_TRACKING_QUERY, maxBatchSize, tableName, startOffset.get(SYS_CHANGE_VERSION), equal, greater, orderby);
+      if (includeJoin) {
+        return String.format(SELECT_CT_CLAUSE,
+            maxBatchSize,
+            tableName,
+            startOffset.get(SYS_CHANGE_VERSION),
+            greater,
+            orderby
+        );
+      }
     }
 
-    return String.format(INIT_CHANGE_TRACKING_QUERY, startOffset.get(SYS_CHANGE_VERSION), maxBatchSize, tableName, equal, orderby);
+    if (includeJoin) {
+      return String.format(
+          INIT_CHANGE_TRACKING_QUERY,
+          startOffset.get(SYS_CHANGE_VERSION),
+          maxBatchSize,
+          tableName,
+          equal,
+          orderby
+      );
+    } else {
+      return String.format(
+          SELECT_CT_CLAUSE,
+          maxBatchSize,
+          tableName,
+          startOffset.get(SYS_CHANGE_VERSION),
+          greater,
+          orderby
+      );
+    }
   }
 }

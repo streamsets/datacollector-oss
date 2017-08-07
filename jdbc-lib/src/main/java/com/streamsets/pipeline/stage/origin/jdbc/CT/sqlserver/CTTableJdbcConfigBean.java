@@ -42,6 +42,16 @@ public class CTTableJdbcConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Include the latest data in the record",
+      displayPosition = 30,
+      group = "TABLE"
+  )
+  public boolean includeJoin;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1",
       label = "Number of Threads",

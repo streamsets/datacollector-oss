@@ -33,15 +33,18 @@ public class SQLServerCTContextLoader extends CacheLoader<TableRuntimeContext, T
   private final ConnectionManager connectionManager;
   private final Map<String, String> offsets;
   private final int fetchSize;
+  private final boolean includeJoin;
 
   public SQLServerCTContextLoader(
       ConnectionManager connectionManager,
       Map<String, String> offsets,
-      int fetchSize
+      int fetchSize,
+      boolean includeJoin
   ) {
     this.connectionManager = connectionManager;
     this.offsets = offsets;
     this.fetchSize = fetchSize;
+    this.includeJoin = includeJoin;
   }
 
   @Override
@@ -50,7 +53,14 @@ public class SQLServerCTContextLoader extends CacheLoader<TableRuntimeContext, T
 
     final Map<String, String> offset = OffsetQueryUtil.getColumnsToOffsetMapFromOffsetFormat(offsets.get(tableRuntimeContext.getOffsetKey()));
 
-    String query = QueryUtil.buildQuery(offset, fetchSize, tableContext.getQualifiedName(), tableContext.getOffsetColumns(), tableContext.getOffsetColumnToStartOffset());
+    String query = QueryUtil.buildQuery(
+        offset,
+        fetchSize,
+        tableContext.getQualifiedName(),
+        tableContext.getOffsetColumns(),
+        tableContext.getOffsetColumnToStartOffset(),
+        includeJoin
+    );
 
     Pair<String, List<Pair<Integer, String>>> queryAndParamValToSet = Pair.of(query, new ArrayList<>());
 

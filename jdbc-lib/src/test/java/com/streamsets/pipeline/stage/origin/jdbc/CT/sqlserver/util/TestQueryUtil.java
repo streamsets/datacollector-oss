@@ -33,7 +33,8 @@ public class TestQueryUtil {
   public void testInitialQuery() throws Exception {
     Map<String, String> offsetMap = new HashMap<>();
     offsetMap.put(QueryUtil.SYS_CHANGE_VERSION, "0");
-    String query = QueryUtil.buildQuery(offsetMap, maxBatchSize, tableName, offsetColumns, offsetMap);
+    final boolean includeJoin = true;
+    String query = QueryUtil.buildQuery(offsetMap, maxBatchSize, tableName, offsetColumns, offsetMap, includeJoin);
 
     String expected = "SELECT TOP 1 * \nFROM " + tableName + " AS " + QueryUtil.TABLE_NAME +
         "\nRIGHT OUTER JOIN CHANGETABLE(CHANGES " + tableName + ", @synchronization_version) AS " +
