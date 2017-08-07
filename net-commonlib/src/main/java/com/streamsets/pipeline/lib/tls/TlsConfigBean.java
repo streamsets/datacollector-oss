@@ -208,6 +208,7 @@ public class TlsConfigBean {
       description = "The transport protocols to enable for connections (ex: TLSv1.2, TLSv1.1, etc.).",
       displayPosition = DISPLAY_POSITION_OFFSET + 310,
       group = "#0",
+      defaultValue = "[]",
       dependsOn = "useDefaultProtocols",
       triggeredByValue = "false"
   )
@@ -234,6 +235,7 @@ public class TlsConfigBean {
       description = "The cipher suites for connections (ex: TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, etc.).",
       displayPosition = DISPLAY_POSITION_OFFSET + 360,
       group = "#0",
+      defaultValue = "[]",
       dependsOn = "useDefaultCiperSuites",
       triggeredByValue = "false"
   )
