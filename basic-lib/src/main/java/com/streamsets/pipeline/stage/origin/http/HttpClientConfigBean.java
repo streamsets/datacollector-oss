@@ -16,6 +16,9 @@
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.config.TimeZoneChooserValues;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -89,13 +92,25 @@ public class HttpClientConfigBean {
   public HttpMethod httpMethod = HttpMethod.GET;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTC",
+      label = "Body Time Zone",
+      description = "Time zone to use for request body evaluation (if time or time now ELs are used)",
+      displayPosition = 35,
+      group = "HTTP"
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String timeZoneID = "UTC";
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.TEXT,
       label = "Request Body",
       description = "Data that should be included as the body of the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 40,
-      elDefs = VaultEL.class,
+      elDefs = {VaultEL.class, TimeEL.class, TimeNowEL.class},
       lines = 2,
       dependsOn = "httpMethod",
       triggeredByValue = { "POST", "PUT", "DELETE" },

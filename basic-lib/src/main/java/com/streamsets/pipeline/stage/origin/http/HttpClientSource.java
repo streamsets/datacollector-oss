@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.AuthenticationFailureException;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
@@ -65,11 +66,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
@@ -163,6 +166,8 @@ public class HttpClientSource extends BaseSource {
 
     bodyVars = getContext().createELVars();
     bodyEval = getContext().createELEval(REQUEST_BODY_CONFIG_NAME);
+    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(conf.timeZoneID));
+    TimeEL.setCalendarInContext(bodyVars, calendar);
 
     headerVars = getContext().createELVars();
     headerEval = getContext().createELEval(HEADER_CONFIG_NAME);
