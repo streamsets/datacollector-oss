@@ -44,6 +44,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
@@ -161,19 +164,19 @@ public class TestMultithreadedTableProvider {
     // suppose that "301" (in partition 4) was the last actual record... need to generate next 3 partitions in order
     // for provider to consider the table out of data since that's the max # active partitions
     // five iterations, because the first one gives part4 again
-    // then we cycle through part5, part6, part7, part8
-    for (int i=0; i<5; i++) {
+    // then we cycle through part4, part5, part6
+    for (int i=0; i<3; i++) {
       TableRuntimeContext nextPart = provider.nextTable(threadNumber);
       nextPart.setResultSetProduced(true);
       provider.reportDataOrNoMoreData(nextPart, 0, batchSize, true);
       provider.releaseOwnedTable(nextPart, threadNumber);
     }
-    // after part8 is marked no more data, we finally consider the table to be out of data, because the last partition
-    // seen with data was part4, so it has now been more than the max number of active partitions (3) since we have
-    // seen any data
+    // after part6 is marked no more data (last loop iteration above), we finally consider the table to be out of data,
+    // because the last partition seen with data was part4, so it has now been more than the max number of active
+    // partitions (3) since we have seen any data
 
-    TableRuntimeContext part8 = provider.nextTable(threadNumber);
-    validatePartition(part8, 8, table1, false, true, true, true, offsetCol, partitionSize);
+//    part4 = provider.nextTable(threadNumber);
+//    validatePartition(part4, 4, table1, false, true, true, true, offsetCol, partitionSize);
 
 
     assertThat(provider.getTablesWithNoMoreData(), hasSize(1));
@@ -500,8 +503,17 @@ public class TestMultithreadedTableProvider {
   ) {
     final SortedSetMultimap<TableContext, TableRuntimeContext> activePartitions = provider.getActiveRuntimeContexts();
 
+    Map<TableContext, Integer> maxPartitionSequenceWithData = new HashMap<>();
+    Map<TableContext, Integer> minPartitionSequenceSeen = new HashMap<>();
+
     for (Map.Entry<TableContext, TableRuntimeContext> partitionEntry : activePartitions.entries()) {
       TableRuntimeContext partition = partitionEntry.getValue();
+      int sequence = partition.getPartitionSequence();
+      TableContext table = partition.getSourceTableContext();
+      if (partition.isPartitioned()
+          && (!minPartitionSequenceSeen.containsKey(table) || minPartitionSequenceSeen.get(table) > sequence)) {
+        minPartitionSequenceSeen.put(table, sequence);
+      }
 
       assertThat(
           "partitionsAndOffsets did not contain a key seen in provider activeRuntimeContexts",
@@ -521,12 +533,29 @@ public class TestMultithreadedTableProvider {
             storedOffsets,
             equalTo(partition.getInitialStoredOffsets())
         );
+        if (partition.isPartitioned()) {
+          if (!maxPartitionSequenceWithData.containsKey(table)
+              || maxPartitionSequenceWithData.get(table) < sequence) {
+            maxPartitionSequenceWithData.put(table, sequence);
+          }
+        }
       }
     }
     assertThat(
         "randomly generated partition in partitionsAndOffsets did not appear in provider activeRuntimeContexts",
         partitionsAndOffsets.size(),
         equalTo(0)
+    );
+    for (Map.Entry<TableContext, Integer> minSequenceSeenEntry : minPartitionSequenceSeen.entrySet()) {
+      final TableContext table = minSequenceSeenEntry.getKey();
+      if (!maxPartitionSequenceWithData.containsKey(table) && table.isPartitionable()) {
+        maxPartitionSequenceWithData.put(table, minSequenceSeenEntry.getValue() - 1);
+      }
+    }
+    assertThat(
+      "",
+      provider.getMaxPartitionWithDataPerTable(),
+      equalTo(new ConcurrentHashMap<>(maxPartitionSequenceWithData))
     );
   }
 

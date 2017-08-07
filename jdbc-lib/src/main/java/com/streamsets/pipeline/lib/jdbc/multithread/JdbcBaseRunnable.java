@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -223,11 +224,11 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
           //If exception happened we do not report anything about no more data event
           //We report noMoreData if either evictTableReadContext is true (result set no more rows) / record count is 0.
           tableProvider.reportDataOrNoMoreData(
-          tableRuntimeContext,
+              tableRuntimeContext,
               recordCount,
               batchSize,
               resultSetEndReached
-        );
+          );
         } finally {
           handlePostBatchAsNeeded(new AtomicBoolean(resultSetEndReached), recordCount, batchContext);
         }
@@ -300,6 +301,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
       //Process And Commit offsets
       context.processBatch(batchContext, tableRuntimeContext.getOffsetKey(), offsets.get(tableRuntimeContext.getOffsetKey()));
     }
+
     //Make sure we close the result set only when there are no more rows in the result set
     if (shouldEvict.get()) {
       //Invalidate so as to fetch a new result set
@@ -312,6 +314,17 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
     } else if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
       //tableProvider.switchAwayFromTable(tableRuntimeContext, threadNumber);
       tableRuntimeContext = null;
+    }
+
+    final List<TableRuntimeContext> removedPartitions = tableProvider.getAndClearRemovedPartitions();
+    if (removedPartitions != null && removedPartitions.size() > 0) {
+      for (TableRuntimeContext partition : removedPartitions) {
+        LOG.debug(
+            "Removing offset entry for partition {} since it has been removed from the table provider",
+            partition.getDescription()
+        );
+        context.commitOffset(partition.getOffsetKey(), null);
+      }
     }
   }
 

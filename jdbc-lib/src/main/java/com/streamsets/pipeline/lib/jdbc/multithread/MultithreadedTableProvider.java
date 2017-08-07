@@ -22,6 +22,7 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.SortedSetMultimap;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcSource;
 import org.apache.commons.collections.CollectionUtils;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -72,6 +74,8 @@ public final class MultithreadedTableProvider {
 
   private final SortedSetMultimap<TableContext, TableRuntimeContext> activeRuntimeContexts = TableRuntimeContext.buildSortedPartitionMap();
   private final Object partitionStateLock = activeRuntimeContexts;
+
+  private final Set<TableRuntimeContext> removedPartitions = Sets.newConcurrentHashSet();
 
   private volatile boolean isNoMoreDataEventGeneratedAlready = false;
 
@@ -123,6 +127,8 @@ public final class MultithreadedTableProvider {
         offsetKeysToRemove
     );
     generateInitialPartitionsInSharedQueue(true, v1Offsets);
+
+    initializeMaxPartitionWithDataPerTable(offsets);
     return offsetKeysToRemove;
   }
 
@@ -133,6 +139,7 @@ public final class MultithreadedTableProvider {
     );
     handlePartitioningTurnedOffOrOn(v2Offsets);
     generateInitialPartitionsInSharedQueue(true, v2Offsets);
+    initializeMaxPartitionWithDataPerTable(offsets);
   }
 
   /**
@@ -249,6 +256,49 @@ public final class MultithreadedTableProvider {
       partitions.forEach(sharedAvailableTablesQueue::offer);
       activeRuntimeContexts.putAll(tableContext, partitions);
     }
+  }
+
+  @VisibleForTesting
+  void initializeMaxPartitionWithDataPerTable(Map<String, String> offsets) {
+
+    Map<TableContext, Integer> maxWithData = new HashMap<>();
+    for (TableContext table : activeRuntimeContexts.keySet()) {
+      final SortedSet<TableRuntimeContext> partitions = activeRuntimeContexts.get(table);
+      TableRuntimeContext firstPartition = partitions.first();
+      // as a baseline, the partition sequence one lower than the minimum reconstructed partition has had data
+      // since otherwise, it would still be part of the stored data
+      if (firstPartition.isPartitioned()) {
+        maxWithData.put(table, firstPartition.getPartitionSequence() - 1);
+      }
+      for (TableRuntimeContext partition : partitions) {
+        if (offsets.containsKey(partition.getOffsetKey())) {
+
+          final Map<String, String> storedOffsets = OffsetQueryUtil.getColumnsToOffsetMapFromOffsetFormat(
+              offsets.get(partition.getOffsetKey())
+          );
+
+          final Map<String, String> startOffsets = partition.getStartingPartitionOffsets();
+          for (Map.Entry<String, String> storedOffsetEntry : storedOffsets.entrySet()) {
+            String offsetCol = storedOffsetEntry.getKey();
+            String storedOffsetVal = storedOffsetEntry.getValue();
+            if (startOffsets.get(offsetCol) != null && !startOffsets.get(offsetCol).equals(storedOffsetVal)) {
+              // if the stored offset value is not equal to the starting offset value, it must necessarily be greater
+              // (since records are processed in increasing order w.r.t. the offset column)
+              // therefore, we know that progress has been made in this partition in a previous run
+
+              if (maxWithData.containsKey(table)) {
+                int partitionSequence = partition.getPartitionSequence();
+                if (maxWithData.get(table) < partitionSequence) {
+                  maxWithData.put(table, partitionSequence);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    maxPartitionWithDataPerTable.putAll(maxWithData);
   }
 
   @VisibleForTesting
@@ -386,8 +436,8 @@ public final class MultithreadedTableProvider {
     if (runtimeContexts.size() >= maxNumActivePartitions) {
       if (LOG.isDebugEnabled()) {
         LOG.debug(
-            "Cannot create new partition for ({}) because the table has already reached the maximum allowed number of" + " active partitions ({})",
-
+            "Cannot create new partition for ({}) because the table has already reached the maximum allowed number of" +
+                " active partitions ({})",
             partition.getDescription(),
             maxNumActivePartitions
         );
@@ -437,14 +487,19 @@ public final class MultithreadedTableProvider {
 
       final Iterator<TableRuntimeContext> activeContextIter = activeContexts.iterator();
       int numActivePartitions = 0;
+      int positionsFromEnd = activeContexts.size();
       while (activeContextIter.hasNext()) {
         final TableRuntimeContext thisPartition = activeContextIter.next();
 
         if (thisPartition.equals(partition)) {
           final int maxPartitionWithData = getMaxPartitionWithData(partition.getSourceTableContext());
-          final boolean lastPartition = numActivePartitions == 0 && partition.getPartitionSequence() -
-              maxPartitionWithData > maxNumActivePartitions(
-              partition.getSourceTableContext());
+          final boolean lastPartition =
+              // no currently active partitions for the table
+              numActivePartitions == 0
+              // and the number of partitions since we last saw data
+              && partition.getPartitionSequence() - maxPartitionWithData
+              // is greater than or equal to the max number of active partitions minus 1
+              >= (maxNumActivePartitions(partition.getSourceTableContext()) - 1);
           if (!activeContextIter.hasNext() && thisPartition.isMarkedNoMoreData()
               && (!partition.isPartitioned() || lastPartition)) {
             // this is the last partition, and was already marked no more data once
@@ -456,19 +511,25 @@ public final class MultithreadedTableProvider {
           // this partition has already been marked as no more data once, so it can be removed now
           // but only if there is at least one more after it, since we want to keep at least one for every table
 
-          activeContextIter.remove();
-          if (!sharedAvailableTablesQueue.remove(thisPartition)) {
-            if (LOG.isDebugEnabled()) {
-              LOG.debug(
-                  "Failed to remove partition {} from sharedAvailableTablesQueue; it may be owned by another thread",
-                  thisPartition.getDescription()
-              );
+          if (positionsFromEnd > maxNumActivePartitions(partition.getSourceTableContext())
+              || thisPartition.getPartitionSequence() < getMaxPartitionWithData(thisPartition.getSourceTableContext())) {
+
+            activeContextIter.remove();
+            removedPartitions.add(thisPartition);
+            if (!sharedAvailableTablesQueue.remove(thisPartition)) {
+              if (LOG.isDebugEnabled()) {
+                LOG.debug(
+                    "Failed to remove partition {} from sharedAvailableTablesQueue; it may be owned by another thread",
+                    thisPartition.getDescription()
+                );
+              }
             }
           }
           // else this partition will simply NOT be re-added to the shared queue in the releaseOwnedTable method
         } else {
           numActivePartitions++;
         }
+        positionsFromEnd--;
       }
       return tableExhausted;
     }
@@ -642,6 +703,14 @@ public final class MultithreadedTableProvider {
       isNoMoreDataEventGeneratedAlready = true;
     }
     return noMoreData;
+  }
+
+  public List<TableRuntimeContext> getAndClearRemovedPartitions() {
+    synchronized (partitionStateLock) {
+      final LinkedList<TableRuntimeContext> returnPartitions = new LinkedList<>(removedPartitions);
+      removedPartitions.clear();
+      return returnPartitions;
+    }
   }
 
   @VisibleForTesting
