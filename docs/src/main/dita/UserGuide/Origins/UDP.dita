@@ -28,6 +28,8 @@
         id="ul_fcp_mm4_4x">
         <li/>
       </ul></p>
-    <p>When you configure UDP Source, you specify the ports to use and the batch size and wait time. </p>
+        <p>The origin can also read binary or character-based raw data. </p>
+    <p>When you configure UDP Source, you specify the ports to use and the batch size and wait time.
+            You specify the data format for the data, then configure any related properties. </p>
  </conbody>
 </concept>

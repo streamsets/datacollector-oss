@@ -29,6 +29,54 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
                 <cmd/>
             </step>
+            <step>
+                <cmd>On the <wintitle>UDP</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_tqf_tfk_t1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>UDP Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-UDPport">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-EnableMultithreading">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ReceiverThreads">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>Data format passed by UDP:<ul id="ul-UDPDataFormat">
+                                            <li>collectd</li>
+                                            <li>NetFlow</li>
+                                            <li>syslog </li>
+                                            <li>Raw/separated data </li>
+                                        </ul></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-MaxBatchSize">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-BatchWaitTime">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-step-UDPprops">
                 <cmd/>
             </step>
@@ -37,6 +85,63 @@
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-UDP-collectd">
                 <cmd/>
+            </step>
+            <step>
+                <cmd>For raw data, on the <uicontrol>Raw/Separated Data</uicontrol> tab, define the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_zrr_jgk_t1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Raw/Separated Data property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Data Separator</entry>
+                                    <entry>Optional data separator to use to separate UDP packets to
+                                        multiple values. Specify byte literals using Java unicode
+                                        syntax, \u&lt;character code>. <p>For example, the default
+                                            line feed character is expressed as follows:
+                                                <codeph>\u000A</codeph>.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Raw Data Mode</entry>
+                                    <entry>Type of raw data to process: binary or string
+                                        data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Charset</entry>
+                                    <entry>Charset used by string data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Output Field Path</entry>
+                                    <entry>Optional output field for the raw data. When not used,
+                                        the origin writes the raw data to the root field. </entry>
+                                </row>
+                                <row>
+                                    <entry>Multiple Values Behavior</entry>
+                                    <entry>
+                                        <p>Action to take when the data in the data separator
+                                            generates multiple values from a UDP packet:<ul
+                                                id="ul_tpr_53k_t1b">
+                                                <li>First Value Only - Returns one record with the
+                                                  first value.</li>
+                                                <li>All Values as a List - Returns one record with
+                                                  all values in a List.</li>
+                                                <li>Split into Multiple Records - Returns multiple
+                                                  records, one record for each value. </li>
+                                            </ul></p>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>
