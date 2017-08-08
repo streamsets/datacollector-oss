@@ -32,14 +32,25 @@ import java.util.Map;
 /**
  * Credential store backed by Vault.
  */
-@CredentialStoreDef(label = "Vault KeyStore") public class VaultCredentialStore implements CredentialStore {
+@CredentialStoreDef(label = "Vault KeyStore")
+public class VaultCredentialStore implements CredentialStore {
   private static final Logger LOG = LoggerFactory.getLogger(VaultCredentialStore.class);
 
+  public static final String PATH_KEY_SEPARATOR_PROP = "pathKey.separator";
+  public static final String PATH_KEY_SEPARATOR_DEFAULT = "&";
+  public static final String SEPARATOR_OPTION = "separator";
+  public static final String DELAY_OPTION = "delay";
+
+  private String pathKeySeparator;
   private Vault vault;
 
   @Override
   public List<ConfigIssue> init(Context context) {
     List<ConfigIssue> issues = new ArrayList<>();
+    pathKeySeparator = context.getConfig(PATH_KEY_SEPARATOR_PROP);
+    if (pathKeySeparator == null) {
+      pathKeySeparator = PATH_KEY_SEPARATOR_DEFAULT;
+    }
     try {
       vault = createVault(context);
       vault.init();
@@ -85,13 +96,19 @@ import java.util.Map;
     Utils.checkNotNull(group, "group cannot be NULL");
     Utils.checkNotNull(name, "name cannot be NULL");
     try {
-      String[] splits = name.split("@", 2);
-      if (splits.length != 2) {
-        throw new IllegalArgumentException(Utils.format("Vault CredentialStore name '{}' should be <path>@<key>", name));
-      }
       Map<String, String> optionsMap =
           Splitter.on(",").omitEmptyStrings().trimResults().withKeyValueSeparator("=").split(credentialStoreOptions);
-      String delayStr = optionsMap.get("delay");
+      String separator = optionsMap.get(SEPARATOR_OPTION);
+      if (separator == null) {
+        separator = pathKeySeparator;
+      }
+      String[] splits = name.split(separator, 2);
+      if (splits.length != 2) {
+        throw new IllegalArgumentException(Utils.format("Vault CredentialStore name '{}' should be <path>{}<key>",
+            name, separator
+        ));
+      }
+      String delayStr = optionsMap.get(DELAY_OPTION);
       long delay = (delayStr == null) ? 0 : Long.parseLong(delayStr);
 
       CredentialValue credential = new VaultCredentialValue(splits[0], splits[1], delay);

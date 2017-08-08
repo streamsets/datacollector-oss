@@ -38,15 +38,19 @@ public class TestVaultCredentialStore {
 
     Mockito.when(vault.read(Mockito.eq("path"), Mockito.eq("key"), Mockito.eq(1L))).thenReturn("secret");
 
-    CredentialValue value = store.get("g", "path@key", "delay=1");
+    CredentialValue value = store.get("g", "path&key", "delay=1");
     Assert.assertNotNull(value);
     Mockito.verify(vault, Mockito.times(1)).read(Mockito.eq("path"), Mockito.eq("key"), Mockito.eq(1L));
     Assert.assertEquals("secret", value.get());
     Mockito.verify(vault, Mockito.times(2)).read(Mockito.eq("path"), Mockito.eq("key"), Mockito.eq(1L));
 
     Mockito.when(vault.read(Mockito.eq("path"), Mockito.eq("key"), Mockito.eq(0L))).thenReturn("secret");
-    value = store.get("g", "path@key", "");
+    value = store.get("g", "path&key", "");
     Mockito.verify(vault, Mockito.times(1)).read(Mockito.eq("path"), Mockito.eq("key"), Mockito.eq(0L));
+    Assert.assertEquals("secret", value.get());
+
+    value = store.get("g", "path@key", "separator=@");
+    Mockito.verify(vault, Mockito.times(3)).read(Mockito.eq("path"), Mockito.eq("key"), Mockito.eq(0L));
     Assert.assertEquals("secret", value.get());
 
     store.destroy();
