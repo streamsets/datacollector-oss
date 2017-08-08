@@ -74,7 +74,6 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
   private int batchRecordCount = 0;
   private long totalRecordCount = 0;
   private long lastChannelStart = 0;
-  private long lastBatchStart = 0;
   private BatchContext batchContext = null;
   private ScheduledFuture<?> maxWaitTimeFlush;
   private Record lastRecord;
@@ -114,7 +113,6 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     // client connection opened
     super.channelActive(ctx);
     lastChannelStart = getCurrentTime();
-    lastBatchStart = lastChannelStart;
     long delay = this.maxWaitTime;
     restartMaxWaitTimeTask(ctx, delay);
     batchRecordCount = 0;
@@ -131,11 +129,11 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
 
   private void restartMaxWaitTimeTask(ChannelHandlerContext ctx, long delay) {
     cancelMaxWaitTimeTask();
-    if (delay > 0) {
-      maxWaitTimeFlush = ctx.channel().eventLoop().schedule((() -> this.newBatch(ctx)), delay, TimeUnit.MILLISECONDS);
-    } else {
-      LOG.warn("Negative maxWaitTimeFlush task scheduled, so ignoring");
-    }
+    maxWaitTimeFlush = ctx.channel().eventLoop().schedule(
+        () -> this.newBatch(ctx),
+        Math.max(delay, 0),
+        TimeUnit.MILLISECONDS
+    );
   }
 
   private void cancelMaxWaitTimeTask() {
@@ -177,9 +175,6 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
           msg.getClass().getName()
       ));
     }
-
-    long waitTimeRemaining = this.maxWaitTime - (getCurrentTime() - lastBatchStart);
-    restartMaxWaitTimeTask(ctx, waitTimeRemaining);
   }
 
   private void addRecord(ChannelHandlerContext ctx, Record record) {
@@ -215,8 +210,8 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     );
 
     batchContext = context.startBatch();
-    lastBatchStart = getCurrentTime();
     batchRecordCount = 0;
+    restartMaxWaitTimeTask(ctx, this.maxWaitTime);
   }
 
   private void evaluateElAndSendResponse(
