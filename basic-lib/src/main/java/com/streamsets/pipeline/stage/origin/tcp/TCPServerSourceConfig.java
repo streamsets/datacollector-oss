@@ -160,7 +160,8 @@ public class TCPServerSourceConfig {
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTF-8",
       label = "Charset",
-      description = "The character encoding that the character-based length field messages use.",
+      description = "The character encoding that the character data with length prefix messages use. Note that the" +
+          " length digits themselves, plus space, must be in a single byte encoding.",
       displayPosition = 80,
       group = "TCP",
       dependsOn = "tcpMode",
