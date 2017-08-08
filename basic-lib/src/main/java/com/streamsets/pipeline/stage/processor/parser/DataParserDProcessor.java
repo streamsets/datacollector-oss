@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
     description = "Parses a field with data",
     // from http://www.flaticon.com/free-icon/coding_408290
     icon="coding.png",
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Processors/DataParser.html#task_cx3_2yk_r1b"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
