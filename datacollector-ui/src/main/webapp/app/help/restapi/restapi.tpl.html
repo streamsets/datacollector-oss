@@ -43,8 +43,6 @@ curl -X POST -d '{"userName":"DPMUserID", "password": "DPMUserPassword"}' https:
 sessionToken=$(cat cookie.txt | grep SSO | rev | grep -o '^\S*' | rev)
 echo "Generated session token : $sessionToken"
 
-touch /tmp/authToken.txt
-
 # Call SDC REST APIs using auth token
 curl -X GET http://localhost:18630/rest/v1/pipelines --header "Content-Type:application/json" --header "X-Requested-By:SDC" --header "X-SS-REST-CALL:true" --header "X-SS-User-Auth-Token:$sessionToken" -i
       </pre>
