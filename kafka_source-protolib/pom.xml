@@ -162,6 +162,11 @@
       <version>${protobuf.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>0.10.1.0</version>
+    </dependency>
   </dependencies>
 
   <build>
