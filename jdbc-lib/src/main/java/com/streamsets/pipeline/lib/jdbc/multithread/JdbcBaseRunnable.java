@@ -60,8 +60,8 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
   public static final String TABLE_METRICS = "Table Metrics for Thread - ";
   public static final String TABLE_JDBC_THREAD_PREFIX = "Table Jdbc Runner - ";
 
-  static final String PARTITION_ATTRIBUTE = "partition";
-  static final String THREAD_NUMBER_ATTRIBUTE = "threadNumber";
+  public static final String PARTITION_ATTRIBUTE = JDBC_NAMESPACE_HEADER + "partition";
+  public static final String THREAD_NUMBER_ATTRIBUTE = JDBC_NAMESPACE_HEADER + "threadNumber";
 
   protected final PushSource.Context context;
   protected final Map<String, String> offsets;

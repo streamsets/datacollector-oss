@@ -110,8 +110,9 @@ public final class TableConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Partitioning (Scale-up) Mode",
-      description = "Enables the scale-up feature for the table(s).  Please read the documentation for more details.",
+      label = "Multithreaded Partition Processing Mode",
+      description = "Multithreaded processing of partitions mode. Required (validation error if not possible), Best" +
+          " effort (use if possible, but don't fail validation if not), or disabled (no partitioning).",
       displayPosition = 80,
       defaultValue = PARTITIONING_MODE_DEFAULT_VALUE_STR,
       group = "TABLE"
@@ -122,9 +123,9 @@ public final class TableConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Partition Offset Adjustment",
-      description = "Offset adjustment for partitions.  This value represents the range of values" +
-          " (within the offset column) that will be covered by a single partition.",
+      label = "Partition Size",
+      description = "Controls the size of partitions.  This value represents the range of values that will be covered" +
+          " by a single partition.",
       displayPosition = 90,
       defaultValue = DEFAULT_PARTITION_SIZE,
       group = "TABLE",
@@ -136,9 +137,9 @@ public final class TableConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.NUMBER,
-      label = "Max Number of Active Partitions",
-      description = "The maximum number of active partitions that can be active at once for the individual table(s)." +
-          " Use -1 to indicate unconstrained number (in which case it will be the default value of 2 * num threads).",
+      label = "Max Partitions",
+      description = "The maximum number of partitions that can be processed at once. Includes active partitions with" +
+          " rows left to read and completed partitions before they are pruned.",
       displayPosition = 100,
       defaultValue = "" + DEFAULT_MAX_NUM_ACTIVE_PARTITIONS,
       group = "TABLE",
