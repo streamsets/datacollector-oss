@@ -20,10 +20,9 @@
 <concept id="concept_bqt_tl4_sz">
  <title>TCP Modes</title>
  <conbody>
-  <p><indexterm>TCP Server<indexterm>TCP modes</indexterm></indexterm>The TCP Server origin can
-            process NetFlow messages, syslog messages, and supported <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            data formats that are separated by specific characters.<dl>
+  <p><indexterm>TCP Server<indexterm>TCP modes</indexterm></indexterm>The TCP Server origin
+            processes data differently depending on the mode that you select. The origin provides
+            the following modes: <dl>
                 <dlentry>
                     <dt>NetFlow messages</dt>
                     <dd>The TCP Server origin can process Netflow Version 5 messages. The origin
@@ -64,15 +63,35 @@
                         </ul></dd>
                 </dlentry>
                 <dlentry>
-                    <dt>separated records</dt>
+                    <dt>Separated records</dt>
                     <dd>The TCP Server origin can process the supported <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> data formats that are separated by the specified record separator
+                        /> data formats when the data is separated by the specified record separator
                         characters. </dd>
                     <dd>To process supported data formats, set the TCP Mode property to Separated
                         Records and specify the record separator characters. Then, configure any
                         data format-related properties.<note type="important">All TCP clients must
                             use the same record separator characters.</note></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Character data with length prefix</dt>
+                    <dd>The TCP Server origin can process the supported <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> data formats when passed as character-based data with a length prefix. </dd>
+                    <dd>To process supported data formats, set the TCP Mode property to Character
+                        Data with Length Prefix and specify the character set of the data. </dd>
+                    <dd>A length prefix consists of the digits that indicate the length of the data,
+                        and a space character. The data to be converted to a record should
+                        immediately follow the space character. <note>The length prefix must be in a
+                            single-byte encoding, such as UTF-8. The data can be in any valid
+                            character set, which you specify in the origin.</note><p>For example,
+                            say a TCP client sends the following UTF-8 data:
+                        </p><codeblock>11 hello world</codeblock></dd>
+                    <dd>The length prefix is "11 ", which indicates that the data to be converted is
+                        11 bytes long. The origin then converts the following 11 bytes, "hello
+                        world" to a record.<p>You can use this TCP mode to capture raw syslog
+                            messages that are framed with octet counting into a string
+                        field.</p></dd>
                 </dlentry>
             </dl></p>
  </conbody>

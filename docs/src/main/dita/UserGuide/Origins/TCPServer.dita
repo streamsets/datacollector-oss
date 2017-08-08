@@ -25,9 +25,12 @@
                     Server</indexterm></indexterm>The TCP Server origin listens at the specified
             port numbers, establishes TCP sessions with clients that initiate TCP connections, and
             then processes the incoming data.</p>
-        <p>The origin can process NetFlow messages, syslog messages, and supported <ph
+        <p>The origin can operate in different modes. The modes determine the messages that it can
+            process. It can process NetFlow messages or syslog messages. It can also process
+            supported <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            data formats with records separated by specified characters.</p>
+            data formats passed as data separated by specified characters, or passed as
+            character-based data with length prefixes.</p>
         <p>The TCP Server can process data from can process data from multiple clients
             simultaneously, creating separate batches for each client, and sending acknowledgements
             to the originating client after parsing each record or committing each batch. You can
