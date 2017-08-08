@@ -75,6 +75,10 @@
       </exclusions>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-schema-registry-client</artifactId>
+    </dependency>
 
     <!-- Provided StreamSets Dependencies -->
     <dependency>
