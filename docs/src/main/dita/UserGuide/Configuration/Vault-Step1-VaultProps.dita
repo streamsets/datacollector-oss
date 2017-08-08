@@ -20,106 +20,40 @@
 <concept id="concept_c4b_5bb_mw">
  <title>Step 1. Configure Vault Properties</title>
  <conbody>
-        <p><indexterm>Vault<indexterm>properties file</indexterm></indexterm>To enable <ph
+        <p>To enable <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            connect to Vault, configure the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            Vault properties file, $SDC_CONF/vault.properties.</p>
-        <p>The Vault server URL and App ID are required properties. Configure other properties as
-            needed.</p>
-  <p>The file includes the following properties. Uncomment any properties that you want to
-                use:<table frame="all" rowsep="1" colsep="1" id="table_exr_mcb_mw">
-                <tgroup cols="2">
-                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                    <thead>
-                        <row>
-                            <entry>Vault Property</entry>
-                            <entry>Description</entry>
-                        </row>
-                    </thead>
-                    <tbody>
-                        <row>
-                            <entry>vault.addr</entry>
-                            <entry>Required. Vault server URL. Use HTTPS to avoid unencrypted
-                                communication.</entry>
-                        </row>
-                        <row>
-                            <entry>vault.app.id</entry>
-                            <entry>Required. App ID for <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                />. The App ID must exist in Vault and should be a UUID or a
-                                similarly complex string to ensure better security.</entry>
-                        </row>
-                        <row>
-                            <entry>vault.lease.renewal.interval.sec</entry>
-                            <entry>Seconds to wait before checking for leases that need renewal.
-                                    <p>Default is 60. </p></entry>
-                        </row>
-                        <row>
-                            <entry>vault.lease.expiration.buffer.sec</entry>
-                            <entry>Buffer for expiring leases. <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> renews leases that expire in less than the specified number of
-                                    seconds.<p>Default is 120. </p></entry>
-                        </row>
-                        <row>
-                            <entry>vault.proxy.address</entry>
-                            <entry>Optional proxy URL. Configure to use a proxy to access Vault.
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>vault.proxy.port</entry>
-                            <entry>Optional proxy port. Configure to use a proxy to access Vault.
-                            </entry>
-                        </row>
-                        <row>
-                            <entry>vault.proxy.username</entry>
-                            <entry>Optional proxy username. Configure to use a proxy to access
-                                Vault. </entry>
-                        </row>
-                        <row>
-                            <entry>vault.proxy.password</entry>
-                            <entry>Optional proxy password. Configure to use a proxy to access
-                                Vault. </entry>
-                        </row>
-                        <row>
-                            <entry>vault.read.timeout</entry>
-                            <entry>Milliseconds to wait for data before timing out. <p>Default is 0
-                                    for no limit. </p></entry>
-                        </row>
-                        <row>
-                            <entry>vault.ssl.enabled.protocols</entry>
-                            <entry>SSL/TLS-enabled protocols. Versions TLSv1.2 or later are
-                                recommended.</entry>
-                        </row>
-                        <row>
-                            <entry>vault.ssl.truststore.file</entry>
-                            <entry>Path to a Java TrustStore file. Required when using a private CA
-                                or certificates not trusted by the Java default TrustStore. </entry>
-                        </row>
-                        <row>
-                            <entry>vault.ssl.truststore.password</entry>
-                            <entry>Password for the TrustStore file. </entry>
-                        </row>
-                        <row>
-                            <entry>vault.ssl.verify</entry>
-                            <entry>Whether to verify that the Vault server hostname matches its
-                                    certificate.<p>Default is true. False is not
-                                recommended.</p></entry>
-                        </row>
-                        <row>
-                            <entry>vault.ssl.timeout</entry>
-                            <entry>Timeout for the SSL/TLS handshake in milliseconds. <p>Default is
-                                    0 for no limit. </p></entry>
-                        </row>
-                        <row>
-                            <entry>vault.open.timeout</entry>
-                            <entry>Connection timeout for requests to Vault in milliseconds.
-                                    <p>Default is 0 for no limit. </p></entry>
-                        </row>
-                    </tbody>
-                </tgroup>
-            </table></p>
+            connect to Vault, configure the following files located in the
+                <codeph>$SDC_CONF</codeph> directory:</p>
+        <dl>
+            <dlentry>
+                <dt>Vault properties file</dt>
+                <dd>The vault.properties file contains a single Vault EL property that you must
+                    uncomment to use the deprecated Vault functions.</dd>
+            </dlentry>
+            <dlentry>
+                <dt>Credential stores properties file</dt>
+                <dd>The credential-stores.properties file contains the remaining Vault properties.
+                    The Vault server URL, Role ID, and Secret ID are required properties. Configure
+                    other properties as needed.</dd>
+                <dd>The file includes the following properties. Uncomment any properties that you
+                    want to use:<p>
+                        <table
+                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/table_spl_ycl_r1b"
+                            id="table_u4y_p2v_51b">
+                            <tgroup cols="1">
+                                <tbody>
+                                    <row>
+                                        <entry/>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </p></dd>
+            </dlentry>
+        </dl>
+        <p>Restart <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            enable the changes to both files. </p>
+        
  </conbody>
 </concept>

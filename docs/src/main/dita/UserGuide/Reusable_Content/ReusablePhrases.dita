@@ -2713,51 +2713,39 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <note type="tip" id="Tip_Usernames">To secure sensitive information such as usernames
                   and passwords, you can use <xref
                         href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref>, <xref
+                        stores</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>, or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref>. </note>
+                        >runtime resources</xref>. </note>
             <note type="tip" id="Tip_AccessKeys">To secure sensitive information such as access key
                   pairs, you can use <xref
                         href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref>, <xref
+                        stores</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>, or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref>. </note>
+                        >runtime resources</xref>. </note>
             <note type="tip" id="Tip_Passwords">To secure sensitive information such as passwords,
                   you can use <xref
                         href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref>, <xref
+                        stores</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>, or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref>. </note>
+                        >runtime resources</xref>. </note>
             <note type="tip" id="Tip_ConsumerKey">To secure sensitive information such as the
                   consumer key and secret, you can use <xref
                         href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref>, <xref
+                        stores</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>, or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref>. </note>
+                        >runtime resources</xref>. </note>
             <note type="tip" id="Tip_ClientID">To secure sensitive information such as the client ID
                   and secret, you can use <xref
                         href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref>, <xref
+                        stores</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>, or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref>. </note>
+                        >runtime resources</xref>. </note>
             <note type="tip" id="Tip_JWTKey">To secure sensitive information such as the JWT signing
                   key, you can use <xref
                         href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref>, <xref
+                        stores</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>, or <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref>. </note>
+                        >runtime resources</xref>. </note>
             <p>
                   <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka (Yarn)
                         requirements:</draft-comment>

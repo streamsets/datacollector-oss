@@ -113,11 +113,16 @@
    </topicmeta>
    <topicref href="../Configuration/CredentialStores-Groups.dita"/>
    <topicref href="../Configuration/CredentialStores-JKS.dita">
-    <topicref href="../Configuration/CredentialStores-Step1-StageLib.dita"/>
-    <topicref href="../Configuration/CredentialStores-Step2-PropertiesFile.dita"/>
-    <topicref href="../Configuration/CredentialStores-Step3-JKSCmd.dita"/>
-    <topicref href="../Configuration/CredentialStores-Step4-Functions.dita"/>
+    <topicref href="../Configuration/CredentialStores-JKS-Step1-StageLib.dita"/>
+    <topicref href="../Configuration/CredentialStores-JKS-Step2-PropertiesFile.dita"/>
+    <topicref href="../Configuration/CredentialStores-JKS-Step3-JKSCmd.dita"/>
+    <topicref href="../Configuration/CredentialStores-JKS-Step4-Functions.dita"/>
     <topicref href="../Configuration/CredentialStores-jks-cs-Cmd.dita"/>
+   </topicref>
+   <topicref href="../Configuration/CredentialStores-Vault.dita">
+    <topicref href="../Configuration/CredentialStores-Vault-Step1-StageLib.dita"/>
+    <topicref href="../Configuration/CredentialStores-Vault-Step2-PropertiesFile.dita"/>
+    <topicref href="../Configuration/CredentialStores-Vault-Step3-Functions.dita"/>
    </topicref>
   </topicref>
   <topicref href="../Configuration/Vault-Overview.dita" chunk="to-content">
@@ -125,8 +130,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Configuration/Vault-Step1-VaultProps.dita"/>
-   <topicref href="../Configuration/Vault-Step2-AuthorizeDC.dita"/>
-   <topicref href="../Configuration/Vault-Step3-CallVault.dita"/>
+   <topicref href="../Configuration/Vault-Step2-CallVault.dita"/>
   </topicref>
   <topicref href="../Configuration/JMXMetrics-EnableExternalTools.dita" chunk="to-content">
    <topicmeta>

@@ -772,8 +772,8 @@ streamsets-datacollector-apache-kafka_0_8_1-lib</codeblock>Generally,
                                     /> configuration in the listed order. If the same configuration
                                     property is defined in multiple files, the value defined in the
                                     last loaded file takes precedence. </p><p>By default, the
-                                    dpm.properties and vault.properties files are included in the
-                                        <ph
+                                    dpm.properties, vault.properties, and
+                                    credential-stores.properties files are included in the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> configuration.</p></entry>
                         </row>

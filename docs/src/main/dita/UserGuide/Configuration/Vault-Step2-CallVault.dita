@@ -18,13 +18,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_h54_skb_mw">
-    <title>Step 3. Call Vault from the Pipeline</title>
+    <title>Step 2. Call Vault from the Pipeline</title>
     <conbody>
-        <p><indexterm>Vault<indexterm>functions</indexterm></indexterm>After enabling <ph
+        <p>After enabling <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            access Vault and authorizing <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            with Vault, you can use expressions in pipeline and stage properties to access Vault
+            access Vault, use the Vault functions in pipeline and stage properties to access Vault
             secrets.</p>
         <p>The expression language provides Vault functions to return Vault secrets. You can use
             Vault functions in <ph

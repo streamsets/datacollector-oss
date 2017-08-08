@@ -107,6 +107,8 @@
        <entry>
         <ul id="ul_gyz_xps_r1b">
          <li>credential:get(&lt;storeID>, &lt;group>, &lt;credential name>)</li>
+         <li>credential:getWithOptions(&lt;storeID>, &lt;group>, &lt;credential name>,
+          &lt;options>)</li>
         </ul>
        </entry>
       </row>
@@ -224,8 +226,8 @@
          <li>sdc:hostname()</li>
          <li>sdc:id()</li>
          <li>uuid:uuid()</li>
-         <li>vault:read(&lt;path>, &lt;key>)</li>
-         <li>vault:readWithDelay(&lt;path>, &lt;key>, &lt;delay>)</li>
+         <li>vault:read(&lt;path>, &lt;key>) <i>- Deprecated</i></li>
+         <li>vault:readWithDelay(&lt;path>, &lt;key>, &lt;delay>) <i>- Deprecated</i></li>
         </ul>
        </entry>
       </row>

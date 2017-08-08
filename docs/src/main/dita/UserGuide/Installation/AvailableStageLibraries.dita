@@ -609,6 +609,10 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-jks-credentialstore-lib</entry>
+                            <entry>For the Java keystore credential store system.</entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-jms-lib </entry>
                             <entry>For Java Messaging Services (JMS).<p>Includes the JMS Consumer
                                     origin and JMS Producer destination.</p></entry>
@@ -722,6 +726,10 @@
                                 registered <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                 />. </entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-vault-credentialstore-lib</entry>
+                            <entry>For the Hashicorp Vault credential store system.</entry>
                         </row>
                     </tbody>
                 </tgroup>
