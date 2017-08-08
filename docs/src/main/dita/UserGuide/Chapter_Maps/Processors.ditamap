@@ -31,6 +31,10 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/Base64Encoder-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/DataParser.dita" chunk="to-content">  <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/DataParser-DataFormats.dita"/>
+   <topicref href="../Processors/DataParser-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/Expression.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/Expression-OutputField.dita"/>
