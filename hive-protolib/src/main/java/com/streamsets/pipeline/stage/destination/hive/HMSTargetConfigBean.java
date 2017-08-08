@@ -23,13 +23,16 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.hive.Errors;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 import com.streamsets.pipeline.stage.lib.hive.HiveMetastoreUtil;
@@ -39,7 +42,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.PrivilegedExceptionAction;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HMSTargetConfigBean {
   private static final Logger LOG = LoggerFactory.getLogger(HMSTargetConfigBean.class.getCanonicalName());
@@ -94,9 +99,25 @@ public class HMSTargetConfigBean {
   )
   public String hdfsUser;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = "Header Attribute Expressions",
+      description = "Header attributes to insert into the event output",
+      displayPosition = 60,
+      group = "ADVANCED",
+      defaultValue = "{}",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class}
+  )
+  @ListBeanModel
+  public Map<String, String> headerAttributeConfigs = new LinkedHashMap<>();
+
   private UserGroupInformation userUgi;
   private FileSystem fs;
   private ELEval schemaFolderELEval;
+  private ELEval headerAttributeConfigsEL;
+  private boolean headersEmpty;
 
   public FileSystem getFileSystem() {
     return fs;
@@ -106,6 +127,25 @@ public class HMSTargetConfigBean {
     ELVars vars = context.createELVars();
     RecordEL.setRecordInContext(vars, metadataRecord);
     return HiveMetastoreUtil.resolveEL(schemaFolderELEval, vars, schemaFolderLocation);
+  }
+
+  public boolean isHeadersEmpty() { return headersEmpty; }
+
+  public Map<String, String> getResolvedHeaders(Stage.Context context, Record metadataRecord) throws ELEvalException {
+    Map<String, String> resultMap = new LinkedHashMap();
+    ELVars vars = context.createELVars();
+    RecordEL.setRecordInContext(vars, metadataRecord);
+    for (Map.Entry<String, String> entry : this.headerAttributeConfigs.entrySet()) {
+      String attributeNameExpression = entry.getKey();
+      String nameResult = HiveMetastoreUtil.resolveEL(headerAttributeConfigsEL, vars, attributeNameExpression);
+      if (nameResult.isEmpty()) {
+        continue;
+      }
+      String attributeValueExpression = entry.getValue();
+      String valueResult = HiveMetastoreUtil.resolveEL(headerAttributeConfigsEL, vars, attributeValueExpression);
+      resultMap.put(nameResult, valueResult);
+    }
+    return resultMap;
   }
 
   public UserGroupInformation getHDFSUgi() {
@@ -139,6 +179,38 @@ public class HMSTargetConfigBean {
       Groups.HIVE.name(),
       JOINER.join(prefix, HIVE_CONFIG_BEAN, "hdfsUser")
     );
+    headerAttributeConfigsEL = context.createELEval("headerAttributeConfigs");
+    if(!headerAttributeConfigs.isEmpty()) {
+      headersEmpty = false;
+      for (Map.Entry<String, String> entry : headerAttributeConfigs.entrySet()) {
+        String attributeNameExpression = entry.getKey();
+        String attributeValueExpression = entry.getValue();
+
+        ELUtils.validateExpression(
+                headerAttributeConfigsEL,
+                context.createELVars(),
+                attributeNameExpression,
+                context,
+                Groups.ADVANCED.getLabel(),
+                "headerAttributeConfigs",
+                Errors.HIVE_39,
+                Object.class,
+                issues);
+        ELUtils.validateExpression(
+                headerAttributeConfigsEL,
+                context.createELVars(),
+                attributeValueExpression,
+                context,
+                Groups.ADVANCED.getLabel(),
+                "headerAttributeConfigs",
+                Errors.HIVE_39,
+                Object.class,
+                issues);
+      }
+    } else {
+      headersEmpty = true;
+    }
+
     schemaFolderELEval = context.createELEval("schemaFolderLocation");
     if (storedAsAvro) {
       return;

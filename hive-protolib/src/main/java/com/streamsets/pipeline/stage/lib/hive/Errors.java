@@ -58,6 +58,7 @@ public enum Errors implements ErrorCode {
   HIVE_36("Can't parse partition location as URI: {}"),
   HIVE_37("Unsupported Data Format: {}"),
   HIVE_38("Unexpected authorization method {}, expected {}"),
+  HIVE_39("Cannot evaluate expression '{}' for record '{}': {}")
   ;
   private final String msg;
 
