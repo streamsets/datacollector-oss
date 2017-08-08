@@ -14,7 +14,7 @@
   <div ng-switch-when="CREDENTIAL"
        ng-click="onFieldSelectorFocus(detailPaneConfig)"
        class="expression-language">
-    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+    <ng-include src="'elCredentialComplexConfigurationTemplate'"></ng-include>
   </div>
 
   <div ng-switch-when="BOOLEAN">
@@ -28,7 +28,7 @@
 
   <div ng-switch-when="EL_CREDENTIAL" class="expression-language"
        ng-click="onFieldSelectorFocus(detailPaneConfig)">
-    <ng-include src="'elStringComplexConfigurationTemplate'"></ng-include>
+    <ng-include src="'elCredentialComplexConfigurationTemplate'"></ng-include>
   </div>
 
   <div ng-switch-when="EL_NUMBER" class="expression-language"

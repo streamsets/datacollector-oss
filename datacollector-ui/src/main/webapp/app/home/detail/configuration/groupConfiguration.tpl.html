@@ -16,7 +16,7 @@
 
   <div ng-switch-when="CREDENTIAL">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
-    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
+    <ng-include src="'elCredentialConfigurationTemplate'"></ng-include>
   </div>
 
   <div ng-switch-when="CHARACTER">
@@ -33,7 +33,7 @@
   <div ng-switch-when="EL_CREDENTIAL" class="expression-language"
        ng-click="onFieldSelectorFocus(detailPaneConfig)">
     <ng-include src="'labelConfigurationTemplate'"></ng-include>
-    <ng-include src="'elStringConfigurationTemplate'"></ng-include>
+    <ng-include src="'elCredentialConfigurationTemplate'"></ng-include>
   </div>
 
   <div ng-switch-when="EL_NUMBER" class="expression-language"

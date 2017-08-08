@@ -1,6 +1,10 @@
 <script type="text/ng-template" id="labelConfigurationTemplate">
   <label class="col-lg-3 col-md-4 control-label">{{configDefinition.label}}
     <i class="fa fa-info-circle help-icon"
+       ng-class="{
+       'fa-info-circle': configDefinition.type !== 'CREDENTIAL' && configDefinition.type !== 'EL_CREDENTIAL',
+       'fa-key': configDefinition.type === 'CREDENTIAL' || configDefinition.type === 'EL_CREDENTIAL'
+       }"
        tooltip-placement="right"
        tooltip-append-to-body="false"
        tooltip="{{configDefinition.description || configDefinition.label}}"
@@ -72,6 +76,51 @@
          field-paths="fieldPaths"
          d-field-paths="dFieldPaths"
          data-type="configDefinition.type">
+    </div>
+
+    <ng-include src="'configurationIssuesTemplate'"></ng-include>
+  </div>
+</script>
+
+<script type="text/ng-template" id="elCredentialConfigurationTemplate">
+  <div class="controls col-lg-7 col-md-8"
+       ng-init="showValue=(!detailPaneConfig.configuration[configIndex].value || detailPaneConfig.configuration[configIndex].value.indexOf('${') === 0)">
+
+    <div ui-codemirror
+         ng-if="showValue"
+         ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+         focus-me="{{autoFocusConfigName === configDefinition.name}}"
+         ng-model="detailPaneConfig.configuration[configIndex].value"
+         ui-refresh="refreshCodemirror"
+         ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: (isPipelineReadOnly || isPipelineRunning),
+                autofocus: autoFocusConfigName === configDefinition.name,
+                extraKeys: {
+                  'Tab': false,
+                  'Enter': common.ignoreCodeMirrorEnterKey,
+                  'Ctrl-Space': 'autocomplete'
+                }
+              }, configDefinition)"
+         codemirror-el
+         field-paths="fieldPaths"
+         d-field-paths="dFieldPaths"
+         data-type="configDefinition.type">
+    </div>
+
+    <input type="password" class="form-control"
+           ng-if="!showValue"
+           name="{{configDefinition.name}}"
+           focus-me="{{autoFocusConfigName === configDefinition.name}}"
+           ng-readonly="isPipelineReadOnly || isPipelineRunning"
+           ng-model="detailPaneConfig.configuration[configIndex].value"
+           ng-required="configDefinition.required">
+
+
+    <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
+      <button type="button" class="btn btn-link"
+              ng-click="showValue = !showValue">
+        {{showValue ? ('global.form.hideValue' | translate) : ('global.form.showValue' | translate)}}
+      </button>
     </div>
 
     <ng-include src="'configurationIssuesTemplate'"></ng-include>
@@ -491,6 +540,46 @@
        field-paths="fieldPaths"
        d-field-paths="dFieldPaths"
        data-type="customFieldConfigDefinition.type">
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="elCredentialComplexConfigurationTemplate">
+  <div ng-init="showValue=(!customFieldValue[customFieldConfigDefinition.name] || customFieldValue[customFieldConfigDefinition.name].indexOf('${') === 0)">
+    <div ui-codemirror
+         ng-if="showValue"
+         ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+         ng-model="customFieldValue[customFieldConfigDefinition.name]"
+         ui-refresh="refreshCodemirror"
+         ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: (isPipelineReadOnly || isPipelineRunning),
+                extraKeys: {
+                  'Tab': false,
+                  'Enter': common.ignoreCodeMirrorEnterKey,
+                  'Ctrl-Space': 'autocomplete'
+                }
+              }, customFieldConfigDefinition)"
+         codemirror-el="getCodeMirrorHints(customFieldConfigDefinition)"
+         field-paths="fieldPaths"
+         d-field-paths="dFieldPaths"
+         data-type="customFieldConfigDefinition.type">
+    </div>
+
+    <input type="password" class="form-control"
+           ng-if="!showValue"
+           name="{{customFieldConfigDefinition.name}}"
+           focus-me="{{autoFocusConfigName === customFieldConfigDefinition.name}}"
+           ng-readonly="isPipelineReadOnly || isPipelineRunning"
+           ng-model="customFieldValue[customFieldConfigDefinition.name]"
+           ng-required="customFieldConfigDefinition.required">
+
+
+    <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
+      <button type="button" class="btn btn-link"
+              ng-click="showValue = !showValue">
+        {{showValue ? ('global.form.hideValue' | translate) : ('global.form.showValue' | translate)}}
+      </button>
+    </div>
   </div>
 </script>
 
