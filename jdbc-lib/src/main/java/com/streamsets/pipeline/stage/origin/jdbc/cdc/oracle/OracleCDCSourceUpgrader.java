@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.time.ZoneId;
 import java.util.List;
 
 public class OracleCDCSourceUpgrader implements StageUpgrader {
@@ -51,6 +52,7 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
     configs.add(new Config("oracleCDCConfigBean.discardExpired", false));
     configs.add(new Config("oracleCDCConfigBean.unsupportedFieldOp", UnsupportedFieldTypeValues.TO_ERROR));
     configs.add(new Config("oracleCDCConfigBean.keepOriginalQuery", false));
+    configs.add(new Config("oracleCDCConfigBean.dbTimeZone", ZoneId.systemDefault().getId()));
     return configs;
   }
 }

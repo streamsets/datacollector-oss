@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Config;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class TestOracleCDCSourceUpgrader {
     List<Config> configs = new ArrayList<>(1);
 
     configs = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 2, 3, configs);
-    Assert.assertTrue(configs.size() == 4);
+    Assert.assertTrue(configs.size() == 5);
     Assert.assertEquals(configs.get(0).getName(), "oracleCDCConfigBean.bufferLocally");
     Assert.assertEquals(configs.get(0).getValue(), false);
     Assert.assertEquals(configs.get(1).getName(), "oracleCDCConfigBean.discardExpired");
@@ -49,6 +50,8 @@ public class TestOracleCDCSourceUpgrader {
     Assert.assertEquals(configs.get(2).getValue(), UnsupportedFieldTypeValues.TO_ERROR);
     Assert.assertEquals(configs.get(3).getName(), "oracleCDCConfigBean.keepOriginalQuery");
     Assert.assertEquals(configs.get(3).getValue(), false);
+    Assert.assertEquals(configs.get(4).getName(), "oracleCDCConfigBean.dbTimeZone");
+    Assert.assertEquals(configs.get(4).getValue(), ZoneId.systemDefault().getId());
   }
 
 }

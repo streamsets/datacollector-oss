@@ -183,4 +183,16 @@ public class OracleCDCConfigBean {
   )
   public boolean keepOriginalQuery;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "DB Time Zone",
+      description = "Time Zone that the DB is operating in",
+      displayPosition = 160,
+      group = "CDC",
+      defaultValue = "false"
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String dbTimeZone;
+
 }

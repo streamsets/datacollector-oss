@@ -41,6 +41,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import plsql.plsqlLexer;
@@ -205,6 +206,8 @@ public class OracleCDCSource extends BaseSource {
   private final Map<TransactionIdKey, HashQueue<RecordSequence>> bufferedRecords = new HashMap<>();
   private String startString;
   private String resumeString;
+
+  private ZoneId zoneId;
 
   private enum DDL_EVENT {
     CREATE,
@@ -421,7 +424,7 @@ public class OracleCDCSource extends BaseSource {
               if (configBean.startValue == StartValues.DATE) {
                 startDate = LocalDateTime.parse(configBean.startDate, dtFormatter);
               } else {
-                startDate = LocalDateTime.now();
+                startDate = nowAtDBTz();
               }
               closeResultSet = true;
             } else {
@@ -797,7 +800,7 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private long localDateTimeToEpoch(LocalDateTime date) {
-    return date.atZone(ZoneId.systemDefault()).toEpochSecond();
+    return date.atZone(zoneId).toEpochSecond();
   }
 
   private void closeResultSet(ResultSet resultSet) throws SQLException {
@@ -956,7 +959,7 @@ public class OracleCDCSource extends BaseSource {
 
   private LocalDateTime getEndTimeForStartTime(LocalDateTime startTime) {
     LocalDateTime sessionMax = startTime.plusSeconds(configBean.logminerWindow);
-    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime now = nowAtDBTz();
     return (sessionMax.isAfter(now) ? now : sessionMax);
   }
 
@@ -1034,6 +1037,7 @@ public class OracleCDCSource extends BaseSource {
       issues.add(getContext().createConfigIssue(
           Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
     }
+    zoneId = ZoneId.of(configBean.dbTimeZone);
     String commitScnField;
     BigDecimal scn = null;
     try {
@@ -1047,12 +1051,12 @@ public class OracleCDCSource extends BaseSource {
           break;
         case LATEST:
           // If LATEST is used, use now() as the startDate and proceed as if a startDate was specified
-          configBean.startDate = LocalDateTime.now().format(dtFormatter);
+          configBean.startDate = nowAtDBTz().format(dtFormatter);
           // fall-through
         case DATE:
           try {
             LocalDateTime startDate = getDate(configBean.startDate);
-            if (startDate.isAfter(LocalDateTime.now())) {
+            if (startDate.isAfter(nowAtDBTz())) {
               issues.add(getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startDate", JDBC_48));
             }
           } catch (ParseException ex) {
@@ -1189,7 +1193,7 @@ public class OracleCDCSource extends BaseSource {
         resumeCommitSCN = new BigDecimal(configBean.startSCN);
         break;
       case LATEST:
-        configBean.startDate = LocalDateTime.now().format(dtFormatter);
+        configBean.startDate = nowAtDBTz().format(dtFormatter);
         // fall through
       case DATE:
         startString = startString + " AND TIMESTAMP >= TO_DATE('" + configBean.startDate + "', 'DD-MM-YYYY HH24:MI:SS')";
@@ -1252,6 +1256,11 @@ public class OracleCDCSource extends BaseSource {
     }
 
     return issues;
+  }
+
+  @NotNull
+  private LocalDateTime nowAtDBTz() {
+    return LocalDateTime.now(zoneId);
   }
 
   private void startLogMnrForRedoDict() throws SQLException, StageException {
@@ -1589,7 +1598,7 @@ public class OracleCDCSource extends BaseSource {
       // We did not find TO_TIMESTAMP, so try TO_DATE
       Optional<String> dt = matchDateTimeString(toDatePattern.matcher(columnValue));
       return Field.create(Field.Type.DATE, dt.isPresent() ?
-          Date.from(getDate(dt.get()).atZone(ZoneId.systemDefault()).toInstant()) : null);
+          Date.from(getDate(dt.get()).atZone(zoneId).toInstant()) : null);
     }
   }
 
@@ -1766,7 +1775,7 @@ public class OracleCDCSource extends BaseSource {
       this.version = splits[index++];
       this.timestamp =
           version.equals("v3") ?
-              LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(splits[index++])), ZoneId.systemDefault()): null;
+              LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.parseLong(splits[index++])), zoneId): null;
       this.scn = splits[index++];
       this.sequence = Integer.parseInt(splits[index]);
     }
