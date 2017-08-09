@@ -960,8 +960,10 @@
    <draft-comment author="alisontaylor"><b>table-JDBCProps</b> - JDBC Query Consumer, Multi Table
     JDBC Consumer, JDBC Lookup, JDBC Producer, and JDBC Tee use most rows in this table. Oracle CDC
     is using a couple too. JDBC Query executor also uses some. – no one uses the whole table AFAI
-    can tell.&lt;lc>  multi-row insert - only phrases are used by JDBC Tee &amp; Producer to allow
+    can tell.&lt;lc> multi-row insert - only phrases are used by JDBC Tee &amp; Producer to allow
     for the xref.</draft-comment>
+   <draft-comment author="Loretta">SQL Change Tracking uses rows and the Multitable JDBC Consumer's
+    multithreaded entries. (rows used only by Multitable JDBC)</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_vwl_qcq_tw">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1001,9 +1003,51 @@
        <entry>Enables entering credentials on the Credentials tab. Use when you do not include
         credentials in the JDBC connection string.</entry>
       </row>
+      <row id="JDBC-NumThreads">
+       <entry>Number of Threads <xref href="../Origins/MultiTableJDBCConsumer-Multithread.dita"
+          ><image href="../Graphics/icon_moreInfo.png" scale="10" id="image_r2s_8lq_fs"/>
+        </xref></entry>
+       <entry id="entry-JDBCNumThreads">Number of threads the origin generates and uses for
+        multithreaded processing.<p>Configure the Maximum Pool Size property on the Advanced tab to
+         be equal to or greater than this value.</p></entry>
+      </row>
+      <row id="JDBC-perBatch">
+       <entry>Per Batch Strategy <xref href="../Origins/MultiTableJDBCConsumer-BatchStrategy.dita"
+          ><image href="../Graphics/icon_moreInfo.png" scale="10" id="image_r3s_7rq_ds"/>
+        </xref></entry>
+       <entry id="entry-JDBCperBatch">Strategy to create each batch of data:<ul id="ul_fk4_11f_py">
+         <li>Switch Tables - Each thread creates a batch of data from one table, and then switches
+          to the next available table to create the next batch. Define the Result Set Cache Size and
+          the Batches from Result Set properties when you configure a switch tables strategy.</li>
+         <li>Process All Available Rows from the Table - Each thread creates multiple batches of
+          data from one table, until all available rows are read from that table.</li>
+        </ul></entry>
+      </row>
       <row id="JDBCMaxBatch_row">
        <entry>Max Batch Size (records)</entry>
        <entry>Maximum number of records to include in a batch.</entry>
+      </row>
+      <row id="JDBC-BatchResultSet">
+       <entry>Batches from Result Set <xref
+         href="../Origins/MultiTableJDBCConsumer-BatchStrategy.dita"><image
+          href="../Graphics/icon_moreInfo.png" scale="10" id="image_h3m_wkh_hz"/>
+        </xref></entry>
+       <entry id="entry-BatchResultSet">Number of batches to create from the result set when using
+        the switch tables batch strategy. After a thread creates this number of batches, the
+        database closes the result set and then another thread can read from the same table.<p>Use a
+         positive integer to set a limit on the number of batches created from the result set. Use
+         -1 to opt out of this property.</p><p>By default, the origin creates an unlimited number of
+         batches from the result set, keeping the result set open as long as possible.</p></entry>
+      </row>
+      <row id="JDBC-ResultSetCache">
+       <entry>Result Set Cache Size <xref
+         href="../Origins/MultiTableJDBCConsumer-BatchStrategy.dita"><image
+          href="../Graphics/icon_moreInfo.png" scale="10" id="image_r9h_3rq_ds"/>
+        </xref></entry>
+       <entry id="entry-ResultSetCache">Number of result sets to cache in the database when using
+        the switch tables batch strategy. Use a positive integer to set a limit on the number of
+        cached result sets. Use -1 to opt out of this property.<p>By default, the origin caches an
+         unlimited number of result sets.</p></entry>
       </row>
       <row id="JDBCMaxClob_row">
        <entry>Max Clob Size (characters)</entry>
@@ -1016,6 +1060,36 @@
         <p>Maximum number of bytes to be read in a Blob field. </p>
        </entry>
       </row>
+      <row id="JDBC_NumRetries">
+       <entry>Number of Retries on SQL Error</entry>
+       <entry>Number of times a thread tries to read a batch of data after receiving an SQL error.
+        After a thread retries this number of times, the thread handles the error based on the error
+        handling configured for the origin.<p>Use to handle transient network or connection issues
+         that prevent a thread from reading a batch of data.</p><p>Default is 0. </p></entry>
+      </row>
+      <row id="JDBC-DataTimeZone">
+       <entry>Data Time Zone</entry>
+       <entry>Time zone to use to evaluate datetime-based offset column conditions. </entry>
+      </row>
+      <row id="JDBC-FetchSize">
+       <entry id="entry-FetchSize">Fetch Size</entry>
+       <entry><ph id="ph-FetchSize1">Maximum number of rows to fetch and store in memory on the <ph
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> machine.
+         The size cannot be zero.</ph><p><ph id="ph-FetchSize2">Default is 1,000.</ph></p><p>
+         <note>By default, MySQL fetches and stores the complete result set in memory on the <ph
+           conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          machine. If the result sets have a large number of rows or large values that exceed
+          available memory, specify a fetch size of <codeph>Integer.MIN_VALUE</codeph> so that MySQL
+          streams the results to the <ph
+           conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> machine
+          one row at a time.</note>
+        </p><p>For more information about configuring a fetch size, see your database
+         documentation.</p></entry>
+      </row>
+      <row>
+       <entry/>
+       <entry/>
+      </row>
       <row id="LogFormat_row">
        <entry>Change Log Format</entry>
        <entry>Format of change capture data. Use when processing change capture data. </entry>
@@ -1025,7 +1099,7 @@
        <entry>&lt;&lt; using conref to elasticsearch>></entry>
       </row>
       <row>
-       <entry>Unsupported Operation Handling  </entry>
+       <entry>Unsupported Operation Handling </entry>
        <entry>&lt;&lt; using conref to elasticsearch>></entry>
       </row>
       <row id="RollbackBatch_row">
@@ -1055,10 +1129,14 @@
      </tbody>
     </tgroup>
    </table>
+  </p>
+  <p/>
+  <p/>
+  <p>
    <draft-comment author="Loretta"><b>table-JDBCAdvProps</b> - JDBC Lookup uses rows in the whole
-    table. JDBC Consumer uses rows but has its own. JDBC Tee uses some rows. Producer uses a bunch
-    of rows. Oracle CDC uses most rows but Auto Commit. – note updated LC 2/9/17  – LC adding On
-    Unknown Type - so far just used by JDBC origins.</draft-comment>
+    table. JDBC Query Consumer uses rows but has its own. JDBC Tee uses some rows. Producer uses a
+    bunch of rows. Oracle CDC uses most rows but Auto Commit. – note updated LC 2/9/17 – LC adding
+    On Unknown Type - so far just used by JDBC origins.</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table-JDBCAdvProps">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1074,6 +1152,11 @@
        <entry>Maximum Pool Size </entry>
        <entry>The maximum number of connections to create. <p>Default is 1. The recommended value is
          1.</p></entry>
+      </row>
+      <row id="MaxPoolSize-Multithread">
+       <entry>Maximum Pool Size</entry>
+       <entry>The maximum number of connections to create. Must be equal to or greater than the
+        value of the Number of Threads property.<p>Default is 1.</p></entry>
       </row>
       <row id="row-MaxIdleConn">
        <entry>Minimum Idle Connections</entry>
@@ -1110,13 +1193,25 @@
       </row>
       <row id="row-TransactionIsolation">
        <entry>Transaction Isolation</entry>
-       <entry>Transaction isolation level used to connect to the database. <p>Default is the
-        default transaction isolation level set for the database. You can override the database
-        default by setting the level to any of the following:</p><ul id="ul_arc_mdf_2y">
+       <entry>Transaction isolation level used to connect to the database. <p>Default is the default
+         transaction isolation level set for the database. You can override the database default by
+         setting the level to any of the following:</p><ul id="ul_arc_mdf_2y">
          <li>Read committed </li>
          <li>Read uncommitted </li>
          <li>Repeatable read</li>
          <li>Serializable</li>
+        </ul></entry>
+      </row>
+      <row id="row-InitTableOrder">
+       <entry>Initial Table Order Strategy <xref href="../Origins/MultiTableJDBCConsumer-TableOrder.dita"
+          ><image href="../Graphics/icon_moreInfo.png" scale="10" id="image_r5t_0kq_ds"/>
+        </xref></entry>
+       <entry id="entry-InitTableOrder">Initial order used to read the tables:<ul id="ul_opw_1jf_py">
+         <li id="li-InitialOrder-None">None - Reads the tables in the order that they are listed in
+          the database.</li>
+         <li id="li-IniitalOrder-Alpha">Alphabetical - Reads the tables in alphabetical order.</li>
+         <li>Referential Constraints - Reads the tables based on the dependencies between the
+          tables.</li>
         </ul></entry>
       </row>
       <row id="row-JDBCunknownType">

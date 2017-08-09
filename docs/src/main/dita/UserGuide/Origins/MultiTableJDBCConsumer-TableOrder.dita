@@ -24,30 +24,23 @@
   <p><indexterm>JDBC Multitable Consumer origin<indexterm>initial table order
                 strategy</indexterm></indexterm><indexterm>initial table order
                     strategy<indexterm>JDBC Multitable Consumer origin</indexterm></indexterm>Define
-            one of the following initial table order strategies: </p>
-        <dl>
-            <dlentry>
-                <dt>None</dt>
-                <dd>Reads the tables in the order that they are listed in the database.</dd>
-            </dlentry>
-            <dlentry>
-                <dt>Alphabetical</dt>
-                <dd>Reads the tables in alphabetical order.</dd>
-            </dlentry>
-            <dlentry>
-                <dt>Referential Constraints</dt>
-                <dd>Reads the tables based on the dependencies between the tables. The origin reads
-                    the parent table first, and then reads the child tables that refer to the parent
-                    table with a foreign key.</dd>
-                <dd>You cannot use the referential constraints order when the tables to be read have
-                    a cyclic dependency. When the origin detects a cyclic dependency, the pipeline
-                    fails to validate with the following
-                    error:<codeblock>JDBC_68 Tables referring to each other in a cyclic fashion.</codeblock></dd>
-                <dd>Note that the referential constraints order can cause pipeline validation or
-                    initialization to slow down because the origin has to sort the tables before
-                    reading them.</dd>
-            </dlentry>
-        </dl>
+            one of the following initial table order strategies: <dl>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TableOrder_None-dlentry">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TableOrder-Alphabet-dlentry">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TableOrder-Constrants-dlentry">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+            </dl></p>
         <p>The origin uses this table order only for the initial reading of the tables. When threads
             switch back to previously read tables, they read from the next available table,
             regardless of the defined order.</p>

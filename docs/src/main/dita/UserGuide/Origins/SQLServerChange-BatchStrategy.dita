@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_qms_jns_r1b">
+ <title>Batch Strategy</title>
+ <conbody>
+        <p><indexterm>SQL Server Change Tracking origin<indexterm>batch
+                strategy</indexterm></indexterm><indexterm>batch strategy<indexterm>SQL Server
+                    Change Tracking origin</indexterm></indexterm><ph
+                conref="../Reusable_Content/Reusable_Topics/ReusableMultitable-BatchStrategy.dita#concept_n5t_zgx_4y/ph-BatchOverview"
+            /></p>
+        <p>
+            <dl>
+                <dlentry
+                    conref="../Reusable_Content/Reusable_Topics/ReusableMultitable-BatchStrategy.dita#concept_n5t_zgx_4y/dlentry-AllRows">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+                <dlentry
+                    conref="../Reusable_Content/Reusable_Topics/ReusableMultitable-BatchStrategy.dita#concept_n5t_zgx_4y/dlentry-SwitchTables">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+            </dl>
+        </p>
+ </conbody>
+</concept>

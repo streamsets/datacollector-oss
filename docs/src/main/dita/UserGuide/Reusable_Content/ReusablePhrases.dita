@@ -1182,6 +1182,9 @@ web-0011.log</codeblock></dd>
                               multiple tables through a JDBC connection.</li>
                         <li><xref href="../Origins/KinConsumer.dita#concept_anh_4y3_yr">Kinesis
                                     Consumer</xref> - Reads data from a Kinesis cluster.</li>
+                        <li><xref href="../Origins/SQLServerChange.dita#concept_ewq_b2s_r1b">SQL
+                                    Server Change Tracking</xref> - Processes data from Microsoft
+                              SQL Server change tracking tables. </li>
                         <li><xref href="../Origins/TCPServer.dita#concept_ppm_xb1_4z">TCP
                                     Server</xref> - Listens at the specified ports and processes
                               incoming data over TCP/IP connections.</li>
@@ -1247,7 +1250,39 @@ web-0011.log</codeblock></dd>
                         the database until you install the required driver. </ph></p>
             <p id="p-JDBCdriver-link">For more information about installing drivers, see <xref
                         href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p>
-            <p/>
+            <p>
+                  <draft-comment author="Loretta">JDBC Multitable Consumer uses all three DLentries,
+                        and SQL Server Change Tracking uses the first two DLentries in the
+                        respective Initial Table Order topics. – could not use dlentries and the
+                        entire DL - the pdf pub fails.</draft-comment>
+            </p>
+            <p>
+                  <dl id="DL-InitialTableOrder">
+                        <dlentry id="TableOrder_None-dlentry">
+                              <dt>None</dt>
+                              <dd>Reads the tables in the order that they are listed in the
+                                    database.</dd>
+                        </dlentry>
+                        <dlentry id="TableOrder-Alphabet-dlentry">
+                              <dt>Alphabetical</dt>
+                              <dd>Reads the tables in alphabetical order.</dd>
+                        </dlentry>
+                        <dlentry id="TableOrder-Constrants-dlentry">
+                              <dt>Referential Constraints</dt>
+                              <dd>Reads the tables based on the dependencies between the tables. The
+                                    origin reads the parent table first, and then reads the child
+                                    tables that refer to the parent table with a foreign key.</dd>
+                              <dd>You cannot use the referential constraints order when the tables
+                                    to be read have a cyclic dependency. When the origin detects a
+                                    cyclic dependency, the pipeline fails to validate with the
+                                    following
+                                    error:<codeblock>JDBC_68 Tables referring to each other in a cyclic fashion.</codeblock></dd>
+                              <dd>Note that the referential constraints order can cause pipeline
+                                    validation or initialization to slow down because the origin has
+                                    to sort the tables before reading them.</dd>
+                        </dlentry>
+                  </dl>
+            </p>
             <p>
                   <draft-comment author="Loretta">Oracle CDC Client uses this in Initial Change and
                         Configuring</draft-comment>
@@ -2802,6 +2837,18 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               of the pipeline and the complexity of the queries, the wait for query
                               completion can slow pipeline performance.</ph></note>
             </p>
+            <p>
+                  <draft-comment author="Loretta">Pipeline Finisher > Event Generating Stages and
+                        Case Study: Stop the Pipeline include this paragraph w/list.</draft-comment>
+            </p>
+            <p id="p-PFinisher-nomoredataOrigins">The following origins generate no-more-data
+                        events:<ul id="ul_l51_mvd_nx">
+                        <li>Directory origin</li>
+                        <li>JDBC Query Consumer origin</li>
+                        <li>JDBC Multitable Consumer origin</li>
+                        <li>Salesforce origin</li>
+                        <li>SQL Server Change Tracking origin</li>
+                  </ul></p>
             <p>
                   <draft-comment author="Loretta">Spark executor, Spark Evaluator, Cluster mode -
                         supported Spark version!</draft-comment>

@@ -23,7 +23,10 @@
   <p><indexterm>JDBC Query Consumer origin<indexterm>Microsoft SQL Server CDC
                 query</indexterm></indexterm><indexterm>Microsoft SQL Server<indexterm>change data
                     capture query</indexterm></indexterm>You can use the JDBC Query Consumer to
-            process change capture data from Microsoft SQL Server.</p>
+            process change capture data from Microsoft SQL Server. To process data from Microsoft
+            SQL Server change tracking tables, use the <xref
+                href="SQLServerChange.dita#concept_ewq_b2s_r1b">SQL Server Change Tracking
+                origin</xref>.</p>
         <p>To process Microsoft SQL Server changed capture data, perform the following tasks: <ol
                 id="ol_vkk_1nf_5y">
                 <li>In the JDBC Query Consumer origin, on the <wintitle>JDBC</wintitle> tab, make

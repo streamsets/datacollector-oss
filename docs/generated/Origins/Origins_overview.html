@@ -1,5 +1,14 @@
-<!--
 
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Origins" /><meta name="abstract" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline." /><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline." /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hpr_twm_jq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
     Copyright 2017 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,30 +22,6 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
--->
-
-<!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Origins" /><meta name="abstract" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline." /><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline." /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hpr_twm_jq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
-            
-            var prefix = "../index.html";
-            
-            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
-<!--
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
 -->
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
@@ -70,6 +55,9 @@
         <li class="li"><a class="xref" href="FileTail.html#concept_n1y_qyp_5q" title="The File Tail origin reads lines of data as they are written to an active file after reading related archived files in the same directory. File Tail generates a record for each line of data.">File Tail</a> - Reads lines of data
           from an active file after reading related archived files in the directory. </li>
 
+        <li class="li"><a class="xref" href="BigQuery.html#concept_cg3_y3v_q1b" title="The Google BigQuery origin executes a query job and reads the result from Google BigQuery.">Google BigQuery</a> - Executes a query
+          job and reads the result from Google BigQuery. </li>
+
         <li class="li"><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP Client</a> - Reads data from a
           streaming HTTP resource URL.</li>
 
@@ -94,7 +82,8 @@
           from Kafka.</li>
 
         <li class="li"><a class="xref" href="KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis Consumer</a> - Reads data
-          from Kinesis Streams.</li>
+          from Kinesis Streams. Creates multiple threads to enable parallel processing in a
+          multithreaded pipeline.</li>
 
         <li class="li"><a class="xref" href="MapRDBJSON.html#concept_ywh_k15_3y" title="The MapR DB JSON origin reads JSON documents from MapR DB JSON tables. The origin converts each document into a record.">MapR DB JSON</a> - Reads JSON documents from MapR DB
           JSON tables.</li>
@@ -120,6 +109,9 @@
         <li class="li"><a class="xref" href="Omniture.html#concept_dsr_xmw_1s" title="The Omniture origin processes JSON website usage reports generated by the Omniture reporting APIs. Omniture is also known as the Adobe Marketing Cloud.">Omniture</a> - Reads web usage reports
           from the Omniture reporting API.</li>
 
+        <li class="li"><a class="xref" href="OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client</a> - Reads data from
+          a OPC UA server.</li>
+
         <li class="li"><a class="xref" href="OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a> - Reads LogMiner
           redo logs to generate change data capture records.</li>
 
@@ -141,8 +133,14 @@
         <li class="li"><a class="xref" href="SDCRPCtoKafka.html#concept_tdk_slk_pw" title="The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline.">SFTP/FTP Client</a> - Reads files
           from an SFTP or FTP server.</li>
 
+        <li class="li"><a class="xref" href="SQLServerChange.html#concept_ewq_b2s_r1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server Change Tracking</a>
+          - Reads data from Microsoft SQL Server change tracking tables and generates the latest
+          version of each record. Creates multiple threads to enable parallel processing in a
+          multithreaded pipeline.</li>
+
         <li class="li"><a class="xref" href="TCPServer.html#concept_ppm_xb1_4z">TCP Server</a> - Listens at the
-          specified ports and processes incoming data over TCP/IP connections.</li>
+          specified ports and processes incoming data over TCP/IP connections. Creates multiple
+          threads to enable parallel processing in a multithreaded pipeline.</li>
 
         <li class="li"><a class="xref" href="UDP.html#concept_rst_2y5_1s">UDP Source</a> - Reads messages from one or
           more UDP ports. </li>
@@ -158,8 +156,9 @@
 </div>
 
     <div class="p">In cluster pipelines, you can use the following origins:<ul class="ul" id="concept_hpr_twm_jq__ul_unr_xhb_ws">
-        <li class="li"><a class="xref" href="HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). Use this origin only in pipelines configured for cluster execution mode.">Hadoop FS</a> - Reads data from
-          the Hadoop Distributed File System (HDFS). </li>
+        <li class="li"><a class="xref" href="HadoopFS-origin.html#concept_lw2_tnm_vs" title="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS) or from other file systems using the Hadoop FileSystem interface. Use this origin only in pipelines configured for cluster batch execution mode.">Hadoop FS</a> - Reads data from
+          the Hadoop Distributed File System (HDFS). Can read from other file systems using the
+          Hadoop FileSystem interface.</li>
 
         <li class="li"><a class="xref" href="KConsumer.html#concept_msz_wnr_5q" title="The Kafka Consumer origin reads data from an Apache Kafka cluster.">Kafka Consumer</a> - Reads messages
           from Kafka. Use the cluster version of the origin.</li>
@@ -201,9 +200,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="28.57142857142857%" id="d253687e404">Origin</th>
+                            <th class="entry" valign="top" width="28.57142857142857%" id="d271947e430">Origin</th>
 
-                            <th class="entry" valign="top" width="71.42857142857143%" id="d253687e407">Description</th>
+                            <th class="entry" valign="top" width="71.42857142857143%" id="d271947e433">Description</th>
 
                         </tr>
 
@@ -211,10 +210,10 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d253687e404 "><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d271947e430 "><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP
                                     Client</a></td>
 
-                            <td class="entry" valign="top" width="71.42857142857143%" headers="d253687e407 ">
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d271947e433 ">
                                 <ul class="ul" id="concept_rsz_cnw_qy__ul_ixb_t5v_qy">
                                     <li class="li">Initiates HTTP requests for an external system.</li>
 
@@ -236,10 +235,10 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d253687e404 "><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d271947e430 "><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
                                     Server</a></td>
 
-                            <td class="entry" valign="top" width="71.42857142857143%" headers="d253687e407 ">
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d271947e433 ">
                                 <ul class="ul" id="concept_rsz_cnw_qy__ul_vsb_x5v_qy">
                                     <li class="li">Listens for incoming HTTP requests and processes them while
                                         the sender waits for confirmation.</li>
@@ -261,10 +260,10 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d253687e404 "><a class="xref" href="HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d271947e430 "><a class="xref" href="HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to
                                     Kafka</a></td>
 
-                            <td class="entry" valign="top" width="71.42857142857143%" headers="d253687e407 ">
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d271947e433 ">
                                 <ul class="ul" id="concept_rsz_cnw_qy__ul_uj1_v5v_qy">
                                     <li class="li">Listens for incoming HTTP requests and writes them
                                         immediately to Kafka with no additional processing. </li>
@@ -373,9 +372,9 @@
           
           <thead class="thead" align="left">
             <tr>
-              <th class="entry" valign="top" width="30%" id="d253687e656">Compression Format</th>
+              <th class="entry" valign="top" width="30%" id="d271947e682">Compression Format</th>
 
-              <th class="entry" valign="top" width="70%" id="d253687e659">Description</th>
+              <th class="entry" valign="top" width="70%" id="d271947e685">Description</th>
 
             </tr>
 
@@ -383,16 +382,16 @@
 
           <tbody class="tbody">
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d253687e656 ">Uncompressed</td>
+              <td class="entry" valign="top" width="30%" headers="d271947e682 ">Uncompressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d253687e659 ">Processes uncompressed files of the configured data format.</td>
+              <td class="entry" valign="top" width="70%" headers="d271947e685 ">Processes uncompressed files of the configured data format.</td>
 
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d253687e656 ">Compressed</td>
+              <td class="entry" valign="top" width="30%" headers="d271947e682 ">Compressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d253687e659 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
+              <td class="entry" valign="top" width="70%" headers="d271947e685 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
                   <li class="li">gzip</li>
 
                   <li class="li">bgzip2</li>
@@ -413,9 +412,9 @@
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d253687e656 ">Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d271947e682 ">Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d253687e659 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
+              <td class="entry" valign="top" width="70%" headers="d271947e685 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
                   <li class="li">7z</li>
 
                   <li class="li">ar</li>
@@ -436,9 +435,9 @@
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d253687e656 ">Compressed Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d271947e682 ">Compressed Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d253687e659 ">Processes files in compressed archives created by supported compression and
+              <td class="entry" valign="top" width="70%" headers="d271947e685 ">Processes files in compressed archives created by supported compression and
                 archive formats.</td>
 
             </tr>
@@ -489,9 +488,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d253687e835">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d271947e861">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d253687e838">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d271947e864">Description</th>
 
                                 </tr>
 
@@ -499,38 +498,38 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d253687e835 ">Topic</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d271947e861 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d253687e838 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d253687e835 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d253687e838 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d271947e864 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d253687e835 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d271947e861 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d253687e838 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d271947e864 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d271947e861 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d271947e864 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d253687e835 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d271947e861 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d253687e838 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d271947e864 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d253687e835 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d271947e861 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d253687e838 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d271947e864 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>
@@ -554,7 +553,23 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

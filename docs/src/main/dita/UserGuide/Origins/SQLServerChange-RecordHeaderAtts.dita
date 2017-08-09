@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pc4_xts_r1b">
+ <title>Record Header Attributes</title>
+ <conbody>
+  <p><indexterm>SQL Server Change Tracking origin<indexterm>record header
+                attributes</indexterm></indexterm>The SQL Server Change Tracking origin generates
+            JDBC record header attributes that provide additional information about each record,
+            such as the original data type of a field or the source tables for the record. </p>
+        <p>The origin also includes the sdc.operation.type attribute and information from the SQL
+            Server change tracking table. The SQL Server Change Tracking header attributes are
+            prefixed with "jdbc". </p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>
+        <p>The origin provides the following header attributes:<table frame="all" rowsep="1"
+                colsep="1" id="table_ygr_kft_r1b">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="2.0*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Header Attribute Name</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>sdc.operation.type</entry>
+                            <entry>
+                                <p>The origin uses the following values to represent the operation
+                                    type: <ul id="ul_qnr_xmz_t1b">
+                                        <li>1 for INSERT</li>
+                                        <li>2 for DELETE</li>
+                                        <li>3 for UPDATE</li>
+                                    </ul></p>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.tables</entry>
+                            <entry
+                                conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCtables"/>
+                        </row>
+                        <row>
+                            <entry>jdbc.&lt;column name>.jdbcType</entry>
+                            <entry
+                                conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCType"
+                            />
+                        </row>
+                        <row>
+                            <entry>jdbc.&lt;column name>.jdbc.precision</entry>
+                            <entry
+                                conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCprecision"
+                            />
+                        </row>
+                        <row>
+                            <entry>jdbc.&lt;column name>.jdbc.scale</entry>
+                            <entry
+                                conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCscale"
+                            />
+                        </row>
+                        <row>
+                            <entry>jdbc.SYS_CHANGE_COLUMNS</entry>
+                            <entry>Lists the columns that have changed since the last
+                                    sync.<p>Returns NULL when column change tracking is not enabled,
+                                    when the operation is insert or delete, or when all non-primary
+                                    key columns were updated at once.</p></entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.SYS_CHANGE_CONTEXT</entry>
+                            <entry>Provides change context information when available.</entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.SYS_CHANGE_CREATION_VERSION</entry>
+                            <entry>Provides the version number associated with the last insert
+                                operation.</entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.SYS_CHANGE_OPERATION</entry>
+                            <entry>Indicates the type of change that occurred:<ul
+                                    id="ul_ml1_v5z_r1b">
+                                    <li>I for insert</li>
+                                    <li>D for delete</li>
+                                    <li>U for update</li>
+                                </ul></entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.SYS_CHANGE_VERSION</entry>
+                            <entry>Provides the version number of the most recent change to the
+                                row.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+        <p>For details about the SYS_CHANGE change tracking attributes, see the <xref
+                href="https://docs.microsoft.com/en-us/sql/relational-databases/system-functions/changetable-transact-sql"
+                format="html" scope="external">SQL Server documentation</xref>.</p>
+ </conbody>
+</concept>

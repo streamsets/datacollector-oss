@@ -1822,9 +1822,102 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">The following TLS-Destinations step should be
-                        used by destinations</draft-comment>
+                    <draft-comment author="Loretta">The following step is used by JDBC Multitable
+                        Consumer and certain rows are used by SQL Server Change
+                        Tracking.</draft-comment>
                 </cmd>
+            </step>
+            <step id="Step-JDBCTablestab">
+                <cmd>On the <wintitle>Tables</wintitle> tab, define one or more table
+                    configurations. Click the <uicontrol>Add</uicontrol> icon to define another
+                    table configuration.</cmd>
+                <info>Configure the following properties for each table configuration:<table
+                        frame="all" rowsep="1" colsep="1" id="table_cvl_qp5_qy">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Tables Property <xref
+                                            href="../Origins/MultiTableJDBCConsumer-TableConfiguration.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_hvl_qp2_qy"/>
+                                        </xref></entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="JDBC-SchemaName">
+                                    <entry>Schema Name</entry>
+                                    <entry>Name of the schema to use for this table
+                                        configuration.</entry>
+                                </row>
+                                <row>
+                                    <entry>Table Name Pattern <xref
+                                            href="../Origins/MultiTableJDBCConsumer-TableName.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_evl_qp5_qy"/>
+                                        </xref></entry>
+                                    <entry id="entry-TableNamePatt">Pattern of the table names to
+                                        read for this table configuration. Use the SQL LIKE syntax
+                                        to define the pattern. <p>Default is the percentage wildcard
+                                            (%) which matches all tables in the schema.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Table Exclusion Pattern <xref
+                                            href="../Origins/MultiTableJDBCConsumer-TableName.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_fvl_qp5_qy"/>
+                                        </xref></entry>
+                                    <entry id="entry-TableExclusionPatt">Pattern of the table names
+                                        to exclude from being read for this table configuration. Use
+                                        a Java-based regular expression, or regex, to define the
+                                            pattern.<p>Leave empty if you do not need to exclude any
+                                            tables.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Override Offset Columns <xref
+                                            href="../Origins/MultiTableJDBCConsumer-Offsets.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_gvl_qp5_qy"/>
+                                        </xref></entry>
+                                    <entry>Determines whether to use the primary key or other
+                                        columns as the offset columns for this table configuration.
+                                            <p>Select to override the primary key and define other
+                                            offset columns. Clear to use the primary key as the
+                                            offset column. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Initial Offset <xref
+                                            href="../Origins/MultiTableJDBCConsumer-Offsets.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_hvl_qp5_qy"/>
+                                        </xref></entry>
+                                    <entry id="entry-InitialOffset">Offset value to use for this
+                                        table configuration when the pipeline starts. Enter the
+                                        primary key name or offset column name and value. For
+                                        Datetime columns, enter a Long value.<p>When you define
+                                            multiple offset columns, you must define an initial
+                                            offset value for each column, in the same order that the
+                                            columns are defined.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Offset Column Conditions <xref
+                                            href="../Origins/MultiTableJDBCConsumer-Offsets.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_ivl_qp5_qy"/>
+                                        </xref></entry>
+                                    <entry>Additional conditions that the origin uses to determine
+                                        where to start reading data for this table configuration.
+                                        The origin adds the defined condition to the WHERE clause of
+                                        the SQL query. <p>Use the expression language to define the
+                                            conditions. For example, you can use the offset:column
+                                            function to compare the value of an offset
+                                        column.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
             </step>
             <step>
                 <cmd>

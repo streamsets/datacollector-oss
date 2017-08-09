@@ -29,9 +29,9 @@
             pipeline let you know when it has stopped. </p>
         <p>To do this, simply route the no-more-data event record to the Pipeline Finisher executor
             and configure notification.</p>
-        <p>The JDBC Query Consumer, JDBC Multitable Consumer, and Salesforce origins all generate
-            the no-more-data event when they finish processing queried data. We'll use the JDBC
-            Query Consumer to show a more complex scenario. </p>
+        <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-PFinisher-nomoredataOrigins"/>
+        <p>We'll use the JDBC Query Consumer to show a more complex scenario. </p>
         <p>Here's the basic pipeline that reads from a database, performs some processing, and
             writes to HDFS: </p>
         <p><image href="../Graphics/Event-StopPipe-Basic.png" id="image_zy1_kkw_lz" scale="60"/></p>

@@ -38,27 +38,27 @@
                     </row>
                 </thead>
                 <tbody>
+                    <row id="entry-JDBC.tables">
+                            <entry> &lt;JDBC prefix>.tables</entry>
+                            <entry id="entry_JDBCtables">Provides a comma-separated list of source
+                                tables for the fields in the record.<note>Not all JDBC drivers
+                                    provide this information.</note></entry>
+                        </row>
                     <row>
-                        <entry> &lt;JDBC prefix>.tables</entry>
-                        <entry id="entry_JDBCtables">Provides a comma-separated list of source tables for the fields in
-                            the record.<note>Not all JDBC drivers provide this
-                            information.</note></entry>
-                    </row>
+                            <entry>&lt;JDBC prefix>.&lt;column name>.jdbcType</entry>
+                            <entry id="entry_JDBCType">Provides the original SQL data type for each
+                                field in the record.</entry>
+                        </row>
                     <row>
-                        <entry>&lt;JDBC prefix>.&lt;column name>.jdbcType</entry>
-                        <entry id="entry_JDBCType">Provides the original SQL data type for each field in the
-                            record.</entry>
-                    </row>
+                            <entry>&lt;JDBC prefix>.&lt;column name>.precision</entry>
+                            <entry id="entry_JDBCprecision">Provides the original precision for all
+                                numeric and decimal fields. </entry>
+                        </row>
                     <row>
-                        <entry>&lt;JDBC prefix>.&lt;column name>.precision</entry>
-                        <entry id="entry_JDBCprecision">Provides the original precision for all numeric and decimal fields.
-                        </entry>
-                    </row>
-                    <row>
-                        <entry>&lt;JDBC prefix>.&lt;column name>.scale</entry>
-                        <entry id="entry_JDBCscale">Provides the original scale for all numeric and decimal fields.
-                        </entry>
-                    </row>
+                            <entry>&lt;JDBC prefix>.&lt;column name>.scale</entry>
+                            <entry id="entry_JDBCscale">Provides the original scale for all numeric
+                                and decimal fields. </entry>
+                        </row>
                 </tbody>
             </tgroup>
         </table>

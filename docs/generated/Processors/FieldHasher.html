@@ -1,5 +1,14 @@
-<!--
 
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Field Hasher" /><meta name="abstract" content="The Field Hasher uses an algorithm to encode data. Use Field Hasher to encode highly-sensitive data. For example, you might use Field Hasher to encode social security or credit card numbers." /><meta name="description" content="The Field Hasher uses an algorithm to encode data. Use Field Hasher to encode highly-sensitive data. For example, you might use Field Hasher to encode social security or credit card numbers." /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ivv_c3k_wq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Hasher</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
     Copyright 2017 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,30 +22,6 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
--->
-
-<!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Field Hasher" /><meta name="abstract" content="The Field Hasher uses an algorithm to encode data. Use Field Hasher to encode highly-sensitive data. For example, you might use Field Hasher to encode social security or credit card numbers." /><meta name="description" content="The Field Hasher uses an algorithm to encode data. Use Field Hasher to encode highly-sensitive data. For example, you might use Field Hasher to encode social security or credit card numbers." /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ivv_c3k_wq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Hasher</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
-            
-            var prefix = "../index.html";
-            
-            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
-<!--
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
 -->
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
@@ -129,14 +114,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xjd_dlk_wq__d57382e4141" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xjd_dlk_wq__d60915e4518" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d312697e154">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d334237e154">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d312697e157">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d334237e157">Description</th>
 
                                 </tr>
 
@@ -144,24 +129,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d312697e154 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d334237e154 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d312697e157 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d312697e154 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d312697e157 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d334237e157 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d312697e154 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_xjd_dlk_wq__d57382e4187" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d334237e154 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d312697e157 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d334237e157 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d334237e154 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_xjd_dlk_wq__d60915e4564" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d334237e157 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -173,10 +158,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d312697e154 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_xjd_dlk_wq__d57382e4203" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d334237e154 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_xjd_dlk_wq__d60915e4580" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d312697e157 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d334237e157 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -187,10 +172,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d312697e154 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_xjd_dlk_wq__d57382e4220" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d334237e154 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_xjd_dlk_wq__d60915e4597" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d312697e157 ">Error record handling for the stage: <ul class="ul" id="task_xjd_dlk_wq__d57382e4224">
+                                    <td class="entry" valign="top" width="70%" headers="d334237e157 ">Error record handling for the stage: <ul class="ul" id="task_xjd_dlk_wq__d60915e4601">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -225,10 +210,10 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d312697e286">Hash in Place Property <a class="xref" href="FieldHasher.html#concept_ssq_5jb_mv" title="Field Hasher provides several methods to hash data. When you hash a field more than once, Field Hasher uses the existing hash when generating the next hash.">
+                                    <th class="entry" valign="top" width="30%" id="d334237e280">Hash in Place Property <a class="xref" href="FieldHasher.html#concept_ssq_5jb_mv" title="Field Hasher provides several methods to hash data. When you hash a field more than once, Field Hasher uses the existing hash when generating the next hash.">
                                             <img class="image" id="task_xjd_dlk_wq__image_f3b_khp_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
 
-                                    <th class="entry" valign="top" width="70%" id="d312697e296">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d334237e290">Description</th>
 
                                 </tr>
 
@@ -236,17 +221,17 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d312697e286 ">Fields to Hash</td>
+                                    <td class="entry" valign="top" width="30%" headers="d334237e280 ">Fields to Hash</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d312697e296 ">One or more fields to hash with the same hash
+                                    <td class="entry" valign="top" width="70%" headers="d334237e290 ">One or more fields to hash with the same hash
                                         type.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d312697e286 ">Hash Type</td>
+       <td class="entry" valign="top" width="30%" headers="d334237e280 ">Hash Type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d312697e296 ">Algorithm to use to hash field values:<ul class="ul" id="task_xjd_dlk_wq__d57571e1296">
+       <td class="entry" valign="top" width="70%" headers="d334237e290 ">Algorithm to use to hash field values:<ul class="ul" id="task_xjd_dlk_wq__d61148e1342">
          <li class="li">MD5 - Produces a 128-bit (16-byte) hash value, typically expressed in text format as a
           32 digit hexadecimal number.</li>
 
@@ -281,10 +266,10 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d312697e365">Hash to Target Property  <a class="xref" href="FieldHasher.html#concept_ssq_5jb_mv" title="Field Hasher provides several methods to hash data. When you hash a field more than once, Field Hasher uses the existing hash when generating the next hash.">
+                                    <th class="entry" valign="top" width="30%" id="d334237e359">Hash to Target Property  <a class="xref" href="FieldHasher.html#concept_ssq_5jb_mv" title="Field Hasher provides several methods to hash data. When you hash a field more than once, Field Hasher uses the existing hash when generating the next hash.">
                                             <img class="image" id="task_xjd_dlk_wq__image_qvf_wvh_mv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
 
-                                    <th class="entry" valign="top" width="70%" id="d312697e375">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d334237e369">Description</th>
 
                                 </tr>
 
@@ -292,9 +277,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d312697e365 ">Fields to Hash</td>
+                                    <td class="entry" valign="top" width="30%" headers="d334237e359 ">Fields to Hash</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d312697e375 ">One or more fields to hash and write to a target field or
+                                    <td class="entry" valign="top" width="70%" headers="d334237e369 ">One or more fields to hash and write to a target field or
                                         header attribute.<p class="p">If you enter more than one field, the
                                             processor hashes them together.</p>
 </td>
@@ -302,9 +287,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d312697e365 ">Hash Type</td>
+       <td class="entry" valign="top" width="30%" headers="d334237e359 ">Hash Type</td>
 
-       <td class="entry" valign="top" width="70%" headers="d312697e375 ">Algorithm to use to hash field values:<ul class="ul" id="task_xjd_dlk_wq__d57571e1296">
+       <td class="entry" valign="top" width="70%" headers="d334237e369 ">Algorithm to use to hash field values:<ul class="ul" id="task_xjd_dlk_wq__d61148e1342">
          <li class="li">MD5 - Produces a 128-bit (16-byte) hash value, typically expressed in text format as a
           32 digit hexadecimal number.</li>
 
@@ -321,17 +306,17 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d312697e365 ">Target Field</td>
+       <td class="entry" valign="top" width="30%" headers="d334237e359 ">Target Field</td>
 
-       <td class="entry" valign="top" width="70%" headers="d312697e375 ">Field in the record to use for hashed data. If the field does not exist, Field Hasher
+       <td class="entry" valign="top" width="70%" headers="d334237e369 ">Field in the record to use for hashed data. If the field does not exist, Field Hasher
         creates the field. </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d312697e365 ">Header Attribute</td>
+       <td class="entry" valign="top" width="30%" headers="d334237e359 ">Header Attribute</td>
 
-       <td class="entry" valign="top" width="70%" headers="d312697e375 ">Attribute in the record header to use for hashed data. If the attribute does not
+       <td class="entry" valign="top" width="70%" headers="d334237e369 ">Attribute in the record header to use for hashed data. If the attribute does not
         exist, Field Hasher creates the attribute.</td>
 
       </tr>
@@ -353,9 +338,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d312697e461">Field Error Handling Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d334237e455">Field Error Handling Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d312697e464">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d334237e458">Description</th>
 
                                 </tr>
 
@@ -363,9 +348,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d312697e461 ">On Field Issue</td>
+                                    <td class="entry" valign="top" width="30%" headers="d334237e455 ">On Field Issue</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d312697e464 ">Determines the action to take if a specified field to
+                                    <td class="entry" valign="top" width="70%" headers="d334237e458 ">Determines the action to take if a specified field to
                                         hash is missing from the record, contains a null value, or
                                         is a List, Map, or List-Map data type:<ul class="ul" id="task_xjd_dlk_wq__ul_e4v_fz5_lv">
                                             <li class="li">Continue - Drops the target field from the record
@@ -396,10 +381,10 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d312697e516">Hash Record Property  <a class="xref" href="FieldHasher.html#concept_ssq_5jb_mv" title="Field Hasher provides several methods to hash data. When you hash a field more than once, Field Hasher uses the existing hash when generating the next hash.">
+                                    <th class="entry" valign="top" width="30%" id="d334237e510">Hash Record Property  <a class="xref" href="FieldHasher.html#concept_ssq_5jb_mv" title="Field Hasher provides several methods to hash data. When you hash a field more than once, Field Hasher uses the existing hash when generating the next hash.">
                                             <img class="image" id="task_xjd_dlk_wq__image_dlx_wvh_mv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
 
-                                    <th class="entry" valign="top" width="70%" id="d312697e526">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d334237e520">Description</th>
 
                                 </tr>
 
@@ -407,32 +392,32 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d312697e516 ">Hash Entire Record</td>
+                                    <td class="entry" valign="top" width="30%" headers="d334237e510 ">Hash Entire Record</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d312697e526 ">Hashes the entire record and writes it to a target field,
+                                    <td class="entry" valign="top" width="70%" headers="d334237e520 ">Hashes the entire record and writes it to a target field,
                                         attribute header, or both.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d312697e516 ">Include Record Header</td>
+                                    <td class="entry" valign="top" width="30%" headers="d334237e510 ">Include Record Header</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d312697e526 ">Includes the record header in the hash.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d334237e520 ">Includes the record header in the hash.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d312697e516 ">Target Field</td>
+       <td class="entry" valign="top" width="30%" headers="d334237e510 ">Target Field</td>
 
-       <td class="entry" valign="top" width="70%" headers="d312697e526 ">Field in the record to use for hashed data. If the field does not exist, Field Hasher
+       <td class="entry" valign="top" width="70%" headers="d334237e520 ">Field in the record to use for hashed data. If the field does not exist, Field Hasher
         creates the field. </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d312697e516 ">Header Attribute</td>
+       <td class="entry" valign="top" width="30%" headers="d334237e510 ">Header Attribute</td>
 
-       <td class="entry" valign="top" width="70%" headers="d312697e526 ">Attribute in the record header to use for hashed data. If the attribute does not
+       <td class="entry" valign="top" width="70%" headers="d334237e520 ">Attribute in the record header to use for hashed data. If the attribute does not
         exist, Field Hasher creates the attribute.</td>
 
       </tr>
@@ -451,7 +436,23 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

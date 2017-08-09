@@ -1,5 +1,13 @@
-<!--
 
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The MySQL Binary Log origin processes change data capture (CDC) information provided by MySQL server in binary logs. The origin produces records with a map of fields of CDC information. The MySQL ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MySQL Binary Log" /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kqg_1yh_xx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MySQL Binary Log</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
     Copyright 2017 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,29 +21,6 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
--->
-
-<!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The MySQL Binary Log origin processes change data capture (CDC) information provided by MySQL server in binary logs. The origin produces records with a map of fields of CDC information. The MySQL ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MySQL Binary Log" /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kqg_1yh_xx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MySQL Binary Log</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
-            
-            var prefix = "../index.html";
-            
-            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
-<!--
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
 -->
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
@@ -329,14 +314,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbt_kyh_xx__d31951e331" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_qbt_kyh_xx__d34178e331" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d248174e430">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d264742e430">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d248174e433">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d264742e433">Description</th>
 
                                 </tr>
 
@@ -344,24 +329,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d248174e430 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d264742e430 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d248174e433 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d248174e430 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d248174e433 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d264742e433 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d248174e430 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
-                                            <img class="image" id="task_qbt_kyh_xx__d31951e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d264742e430 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d248174e433 ">Error record handling for the stage: <ul class="ul" id="task_qbt_kyh_xx__d31951e381">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d264742e433 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d264742e430 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_qbt_kyh_xx__d34178e377" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d264742e433 ">Error record handling for the stage: <ul class="ul" id="task_qbt_kyh_xx__d34178e381">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -391,9 +376,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d248174e515">MySQL Binary Log Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d264742e509">MySQL Binary Log Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d248174e518">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d264742e512">Description</th>
 
                                 </tr>
 
@@ -401,23 +386,23 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e515 ">Hostname</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e509 ">Hostname</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e518 ">MySQL server hostname.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e515 ">Port</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e518 ">MySQL server port. </td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e512 ">MySQL server hostname.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e515 ">Server ID</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e509 ">Port</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e518 ">Replication server ID that the origin uses to connect to
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e512 ">MySQL server port. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e509 ">Server ID</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e512 ">Replication server ID that the origin uses to connect to
                                         the master MySQL server. Must be unique from the server ID
                                         of the replication master and of all the other replication
                                             slaves.<p class="p">When the MySQL server database is enabled for
@@ -427,22 +412,22 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e515 ">Start from Beginning
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e509 ">Start from Beginning
                                         <a class="xref" href="MySQLBinaryLog.html#concept_emp_1tl_dy" title="You can configure the origin to start reading the binary log file from the beginning of the file or from an initial offset in the file.">
                                             <img class="image" id="task_qbt_kyh_xx__image_k2w_rsd_3t" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e518 ">Specifies whether to start reading events from the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e512 ">Specifies whether to start reading events from the
                                         beginning of the binary log. When not selected, the origin
                                         begins reading events from the last saved offset.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e515 ">Initial Offset
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e509 ">Initial Offset
                                         <a class="xref" href="MongoDB.html#concept_kx3_zrs_ns">
                                             <img class="image" id="task_qbt_kyh_xx__image_k8w_rsd_6t" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e518 ">Read events starting at this offset in the binary
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e512 ">Read events starting at this offset in the binary
                                             log.<p class="p">If you configure an initial offset value and
                                             configure the origin to start from the beginning, then
                                             the origin starts reading from the initial
@@ -468,9 +453,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d248174e612">Credentials Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d264742e606">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d248174e615">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d264742e609">Description</th>
 
                                 </tr>
 
@@ -478,21 +463,20 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e612 ">Username</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e606 ">Username</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e615 ">MySQL username. <p class="p">The user must have the REPLICATION
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e609 ">MySQL username. <p class="p">The user must have the REPLICATION
                                             SLAVE MySQL privilege.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e612 ">Password</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e606 ">Password</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e615 ">MySQL password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
-                  and passwords, you can use runtime resources or Hashicorp Vault secrets. For more
-                  information, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Using Runtime Resources</a>
-                  or <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw" title="Data Collector can access information, a.k.a. secrets, stored in Hashicorp Vault.">Accessing Hashicorp Vault Secrets</a>.</div>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e609 ">MySQL password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                  and passwords, you can use <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names, passwords, or access keys - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential
+                        stores</a> or <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a>. </div>
 </td>
 
                                 </tr>
@@ -514,9 +498,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d248174e693">Advanced Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d264742e684">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d248174e696">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d264742e687">Description</th>
 
                                 </tr>
 
@@ -524,17 +508,17 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e693 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
-         <img class="image" id="task_qbt_kyh_xx__d31964e432" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e684 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_qbt_kyh_xx__d34191e478" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e696 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e687 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e693 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e684 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e696 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e687 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -544,37 +528,37 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e693 ">Connection Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e684 ">Connection Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e696 ">Maximum time in milliseconds to wait for a connection to
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e687 ">Maximum time in milliseconds to wait for a connection to
                                         the MySQL server. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e693 ">Use SSL</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e684 ">Use SSL</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e696 ">Specifies whether to use SSL/TLS to connect to the MySQL
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e687 ">Specifies whether to use SSL/TLS to connect to the MySQL
                                         server.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e693 ">Include Tables
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e684 ">Include Tables
                                         <a class="xref" href="MySQLBinaryLog.html#concept_lgb_nvl_dy" title="The binary log file captures all changes made to the MySQL database. If you want the MySQL Binary Log origin to capture changes from a subset of tables, you can configure the origin to include changes from specific tables or to ignore changes from specific tables.">
                                             <img class="image" id="task_qbt_kyh_xx__image_k5w_rsd_1t" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e696 ">List of tables to include when reading change events in
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e687 ">List of tables to include when reading change events in
                                         the binary log file. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d248174e693 ">Ignore Tables
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d264742e684 ">Ignore Tables
                                         <a class="xref" href="MySQLBinaryLog.html#concept_lgb_nvl_dy" title="The binary log file captures all changes made to the MySQL database. If you want the MySQL Binary Log origin to capture changes from a subset of tables, you can configure the origin to include changes from specific tables or to ignore changes from specific tables.">
                                             <img class="image" id="task_qbt_kyh_xx__image_h2w_rsd_0t" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d248174e696 ">List of tables to ignore when reading change events in
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d264742e687 ">List of tables to ignore when reading change events in
                                         the binary log file.</td>
 
                                 </tr>
@@ -593,7 +577,23 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

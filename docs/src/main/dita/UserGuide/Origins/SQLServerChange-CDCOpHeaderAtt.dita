@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_x4h_m42_5y">
+    <title>CRUD Operation Header Attributes</title>
+    <conbody>
+        <p><indexterm>SQL Server Change Tracking origin<indexterm>CRUD header
+                attributes</indexterm></indexterm>When generating records, the SQL Server Change
+            Tracking origin specifies the operation type in both of the following record header attributes:<dl>
+                <dlentry>
+                    <dt>sdc.operation.type</dt>
+                    <dd>The SQL Server Change Tracking origin writes the operation type to the
+                        sdc.operation.type record header attribute. </dd>
+                    <dd>The origin uses the following values in the sdc.operation.type record header
+                        attribute to represent the operation type: <ul id="ul_dkt_g5l_dy">
+                            <li>1 for INSERT</li>
+                            <li>2 for DELETE</li>
+                            <li>3 for UPDATE</li>
+                        </ul></dd>
+                    <dd>
+                        <p
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-UseCDCdest"
+                        />
+                    </dd>
+                    <dd>When using CRUD-enabled destinations, the destination looks for the
+                        operation type in the sdc.operation.type attribute only.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>jdbc.SYS_CHANGE_OPERATION</dt>
+                    <dd>The SQL Server Change Tracking origin also writes the CRUD operation type to
+                        the jdbc.SYS_CHANGE_OPERATION record header attribute. However note that
+                        CRUD-enabled stages only use the sdc.operation.type header attribute, they
+                        do not check the jdbc.SYS_CHANGE_OPERATION attribute.</dd>
+                </dlentry>
+            </dl></p>
+    </conbody>
+</concept>

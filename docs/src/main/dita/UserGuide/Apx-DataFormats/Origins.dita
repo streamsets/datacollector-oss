@@ -477,6 +477,10 @@
                 /></entry>
             </row>
             <row>
+              <entry>SQL Server Change Tracking</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
               <entry>TCP Server</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qll_dlk_tz"
                 /></entry>

@@ -118,6 +118,15 @@
                                 </ul>
                             </entry>
                         </row>
+                        <row>
+                            <entry>SQL Server Change Tracking</entry>
+                            <entry>
+                                <ul id="ul_qgj_4hv_s1b">
+                                    <li>Pipeline Finisher executor to stop the pipeline after
+                                        processing available data.</li>
+                                </ul>
+                            </entry>
+                        </row>
                     </tbody>
                 </tgroup>
             </table><table frame="all" rowsep="1" colsep="1" id="table_mc4_dfc_yz">

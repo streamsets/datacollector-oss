@@ -43,6 +43,7 @@
                 <li>MySQL Binary Log</li>
                 <li>Salesforce</li>
                 <li>SFTP/FTP Client</li>
+                <li>SQL Server Change Tracking</li>
             </ul><p>For these origins, when you stop the pipeline, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> notes where it stopped processing data. When you restart the pipeline, it

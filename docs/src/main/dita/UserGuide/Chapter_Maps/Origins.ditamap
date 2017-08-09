@@ -384,6 +384,25 @@
    <topicref href="../Origins/SFTPClient-DataFormats.dita"/>
    <topicref href="../Origins/SFTP-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/SQLServerChange.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Origins/SQLServerChange-Permissions.dita"/>
+   <topicref href="../Origins/SQLServerChange-DriverInstall.dita"/>
+   <topicref href="../Origins/SQLServerChange-Multithread.dita"/>
+   <topicref href="../Origins/SQLServerChange-BatchStrategy.dita"/>
+   <topicref href="../Origins/SQLServerChange-TableConfig.dita"/>
+   <topicref href="../Origins/SQLServerChange-TableOrder.dita"/>
+   <topicref href="../Origins/SQLServerChange-GeneratedRecord.dita">
+    <topicref href="../Origins/SQLServerChange-RecordHeaderAtts.dita"/>
+    <topicref href="../Origins/SQLServerChange-CDCOpHeaderAtt.dita"/>
+   </topicref>
+   <topicref href="../Origins/SQLServerChange-EventGeneration.dita">
+    <topicref href="../Origins/SQLServerChange-EventRecord.dita"/>
+   </topicref>
+   <topicref href="../Origins/SQLServerChange-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/TCPServer.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/TCPServer-MultithreadProc.dita"/>

@@ -1,5 +1,13 @@
-<!--
 
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Dataflow triggers are instructions for the pipeline to kick off tasks in response to events that occur in the pipeline. For example, you can use dataflow triggers to start a MapReduce job after the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Dataflow Triggers (a.k.a. Event Framework)" /><meta name="DC.Relation" scheme="URI" content="../DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" /><meta name="DC.Relation" scheme="URI" content="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_xxd_f5r_kx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Dataflow Triggers (a.k.a. Event Framework)</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
     Copyright 2017 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,29 +21,6 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
--->
-
-<!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Dataflow triggers are instructions for the pipeline to kick off tasks in response to events that occur in the pipeline. For example, you can use dataflow triggers to start a MapReduce job after the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Dataflow Triggers (a.k.a. Event Framework)" /><meta name="DC.Relation" scheme="URI" content="../DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" /><meta name="DC.Relation" scheme="URI" content="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_xxd_f5r_kx" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Dataflow Triggers (a.k.a. Event Framework)</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
-            
-            var prefix = "../index.html";
-            
-            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
-<!--
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
 -->
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
@@ -131,9 +116,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d133321e155">Stage</th>
+                            <th class="entry" valign="top" width="30%" id="d144715e155">Stage</th>
 
-                            <th class="entry" valign="top" width="70%" id="d133321e158">Generates event records when the stage...</th>
+                            <th class="entry" valign="top" width="70%" id="d144715e158">Generates event records when the stage...</th>
 
                         </tr>
 
@@ -141,13 +126,16 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Directory origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Directory origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_opf_5ck_px">
                                     <li class="li">Starts processing a file.</li>
 
                                     <li class="li">Completes processing a file. </li>
+
+                                    <li class="li">Completes processing all available files and the configured
+                                        batch wait time has elapsed.</li>
 
                                 </ul>
 
@@ -156,9 +144,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">File Tail origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">File Tail origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_as2_12n_qx">
                                     <li class="li">Starts processing a file.</li>
 
@@ -171,9 +159,22 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">JDBC Query Consumer origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Google BigQuery</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_rns_2jx_q1b">
+                                    <li class="li">Successfully completes a query.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">JDBC Query Consumer origin</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fsn_ct5_lz">
                                     <li class="li">Completes processing all data returned by a query. </li>
 
@@ -188,9 +189,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">JDBC Multitable Consumer origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">JDBC Multitable Consumer origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul">
                                     <li class="li">Completes processing the data returned by the queries for
                                         all tables.</li>
@@ -202,9 +203,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Oracle CDC Client origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Oracle CDC Client origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_brj_zv1_vy">
                                     <li class="li">Reads DDL statements in the redo log. </li>
 
@@ -215,9 +216,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Salesforce origin</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Salesforce origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_djn_rfb_mz">
                                     <li class="li">Completes processing all data returned by a query. </li>
 
@@ -228,9 +229,23 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Groovy Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">SQL Server Change Tracking origin</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
+                                <ul class="ul" id="concept_zrl_mhn_lx__ul_jmt_5gv_s1b">
+                                    <li class="li">Completes processing the data in all specified change
+                                        tracking tables.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Groovy Evaluator processor</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_cj5_tnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -241,9 +256,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">JavaScript Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">JavaScript Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_qtz_vnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -254,9 +269,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Jython Evaluator processor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Jython Evaluator processor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_ujt_wnp_1y">
                                     <li class="li">Runs a script that generates events.</li>
 
@@ -267,9 +282,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Amazon S3 destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Amazon S3 destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_lb3_zck_px">
                                     <li class="li">Completes writing to an object.</li>
 
@@ -282,9 +297,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Azure Data Lake Store destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Azure Data Lake Store destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_wny_nw4_vz">
                                     <li class="li">Closes a file.</li>
 
@@ -297,9 +312,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Hadoop FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Hadoop FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_x5c_cdk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -312,9 +327,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Hive Metastore destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Hive Metastore destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fgw_mt4_qx">
                                     <li class="li">Updates the Hive metastore by creating a table, adding
                                         columns, or creating a partition. </li>
@@ -328,9 +343,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Local FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Local FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_flq_ddk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -343,9 +358,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">MapR FS destination</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">MapR FS destination</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_m11_gdk_px">
                                     <li class="li">Closes a file.</li>
 
@@ -358,9 +373,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">HDFS File Metadata executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">HDFS File Metadata executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fmy_4t4_qx">
                                     <li class="li">Changes file metadata, such as the file name, location, or
                                         permissions.</li>
@@ -374,9 +389,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Hive Query executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Hive Query executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_qsl_bsk_my">
                                     <li class="li">Determines that the submitted query completed
                                         successfully.</li>
@@ -390,9 +405,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">MapReduce executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">MapReduce executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_fy2_qt4_qx">
                                     <li class="li">Starts a MapReduce job.</li>
 
@@ -403,9 +418,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e155 ">Spark executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e155 ">Spark executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e158 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e158 ">
                                 <ul class="ul" id="concept_zrl_mhn_lx__ul_xyc_hyg_gz">
                                     <li class="li">Starts a Spark application.</li>
 
@@ -432,6 +447,17 @@
             Executors perform
             tasks when they receive event records. You can use the following executor stages for
             event handling:<dl class="dl">
+                
+                    <dt class="dt dlterm">Amazon S3 executor</dt>
+
+                    <dd class="dd">Creates new Amazon S3 objects for the specified content or adds tags to
+                        existing Amazon S3 objects upon receiving an event. </dd>
+
+                    <dd class="dd"><span class="ph">You can use the executor in any logical way, such as writing
+                        information from an event record to an S3 object or tagging objects after
+                        they are written by the Amazon S3 destination.</span></dd>
+
+                
                 
                     <dt class="dt dlterm">Email executor</dt>
 
@@ -489,7 +515,7 @@
 
                     <dd class="dd"><span class="ph">You can use the Pipeline Finisher in any logical way, such as
                         stopping a pipeline upon receiving a no-more-data event from the JDBC Query
-                        Consumer, JDBC Multitable Consumer, or Salesforce origins.</span> This enables you to achieve "batch" processing - stopping the pipeline
+                        Consumer origin.</span> This enables you to achieve "batch" processing - stopping the pipeline
                         when all available data is processed rather than leaving the pipeline to sit
                         idle indefinitely. </dd>
 
@@ -555,9 +581,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d133321e666">Event Generating Origin</th>
+                            <th class="entry" valign="top" width="30%" id="d144715e712">Event Generating Origin</th>
 
-                            <th class="entry" valign="top" width="70%" id="d133321e669">Event Consumer</th>
+                            <th class="entry" valign="top" width="70%" id="d144715e715">Event Consumer</th>
 
                         </tr>
 
@@ -565,12 +591,15 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e666 ">Directory</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e712 ">Directory</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e669 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e715 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_wvy_h4p_1y">
                                     <li class="li">Email executor to send email each time the origin starts or
                                         completes processing a file. </li>
+
+                                    <li class="li">Pipeline Finisher executor to stop the pipeline after
+                                        processing all available files.</li>
 
                                     <li class="li">Any destination for event storage.</li>
 
@@ -581,9 +610,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e666 ">File Tail</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e712 ">File Tail</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e669 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e715 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_hgh_34p_1y">
                                     <li class="li">Email executor to send email each time the origin starts or
                                         completes processing a file. </li>
@@ -597,13 +626,28 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e666 ">JDBC Multitable Consumer</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e712 ">Google BigQuery</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e669 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e715 ">
+                                <ul class="ul">
+                                    <li class="li">Email executor to send email each time the origin
+                                        successfully completes a query.</li>
+
+                                    <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d144715e712 ">JDBC Multitable Consumer</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d144715e715 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_a1m_jx5_lz">
-                                    <li class="li">Pipeline Finisher executor to stop and transition the
-                                        pipeline to a Finished state after processing queried data
-                                        from all tables.</li>
+                                    <li class="li">Pipeline Finisher executor to stop the pipeline after
+                                        processing queried data from all tables.</li>
 
                                     <li class="li">Email executor to send email when the origin completes
                                         processing all data returned by queries.</li>
@@ -617,13 +661,13 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e666 ">JDBC Query Consumer</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e712 ">JDBC Query Consumer</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e669 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e715 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_pn2_csc_yz">
                                     <li class="li">Route the no-more-data event to the Pipeline Finisher
-                                        executor to stop and transition the pipeline to a Finished
-                                        state after processing queried data.</li>
+                                        executor to stop the pipeline after processing queried
+                                        data.</li>
 
                                     <li class="li">Email executor to send email each time the origin
                                         successfully completes a query, fails to complete a query,
@@ -638,9 +682,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e666 ">Oracle CDC Client</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e712 ">Oracle CDC Client</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e669 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e715 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_xdj_1x1_vy">
                                     <li class="li">Email executor to send email each time it reads DDL
                                         statements in the redo logs.</li>
@@ -654,18 +698,31 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e666 ">Salesforce</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e712 ">Salesforce</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e669 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e715 ">
                                 <ul class="ul">
-                                    <li class="li">Pipeline Finisher executor to stop and transition the
-                                        pipeline to a Finished state after processing queried
-                                        data.</li>
+                                    <li class="li">Pipeline Finisher executor to stop the pipeline after
+                                        processing queried data.</li>
 
                                     <li class="li">Email executor to send email when the origin completes
                                         processing all data returned by a query.</li>
 
                                     <li class="li">Any destination for event storage.</li>
+
+                                </ul>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="30%" headers="d144715e712 ">SQL Server Change Tracking</td>
+
+                            <td class="entry" valign="top" width="70%" headers="d144715e715 ">
+                                <ul class="ul" id="concept_scs_3hh_tx__ul_qgj_4hv_s1b">
+                                    <li class="li">Pipeline Finisher executor to stop the pipeline after
+                                        processing available data.</li>
 
                                 </ul>
 
@@ -683,9 +740,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d133321e808">Event Generating Processor</th>
+                            <th class="entry" valign="top" width="30%" id="d144715e890">Event Generating Processor</th>
 
-                            <th class="entry" valign="top" width="70%" id="d133321e811">Event Consumer</th>
+                            <th class="entry" valign="top" width="70%" id="d144715e893">Event Consumer</th>
 
                         </tr>
 
@@ -693,9 +750,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e808 ">Groovy Evaluator</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e890 ">Groovy Evaluator</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e811 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e893 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_qpx_jfc_yz">
                                     <li class="li">Any logical executor. </li>
 
@@ -708,9 +765,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e808 ">JavaScript Evaluator</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e890 ">JavaScript Evaluator</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e811 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e893 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_xsy_kfc_yz">
                                     <li class="li">Any logical executor. </li>
 
@@ -723,9 +780,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e808 ">Jython Evaluator</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e890 ">Jython Evaluator</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e811 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e893 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_gl1_lfc_yz">
                                     <li class="li">Any logical executor. </li>
 
@@ -747,9 +804,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d133321e886">Event Generating Destination</th>
+                            <th class="entry" valign="top" width="30%" id="d144715e968">Event Generating Destination</th>
 
-                            <th class="entry" valign="top" width="70%" id="d133321e889">Event Consumer</th>
+                            <th class="entry" valign="top" width="70%" id="d144715e971">Event Consumer</th>
 
                         </tr>
 
@@ -757,15 +814,18 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e886 ">Amazon S3 </td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e968 ">Amazon S3 </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e889 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e971 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_tyv_24p_1y">
-                                    <li class="li">Spark executor to run a Spark application after closing a
-                                        file. </li>
+                                    <li class="li">Amazon S3 executor to add tags to closed objects or whole
+                                        files.</li>
 
-                                    <li class="li">Email executor to send email each time the destination
-                                        completes writing to an object or streams a whole file. </li>
+                                    <li class="li">Spark executor to run a Spark application after closing an
+                                        object or whole file. </li>
+
+                                    <li class="li">Email executor to send email after closing an object or
+                                        whole file. </li>
 
                                     <li class="li">Any destination for event storage.</li>
 
@@ -776,9 +836,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e886 ">Azure Data Lake Store</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e968 ">Azure Data Lake Store</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e889 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e971 ">
                                 <ul class="ul">
                                     <li class="li">Email executor to send email each time the destination
                                         closes a file or streams a whole file. </li>
@@ -792,9 +852,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e886 ">Hadoop FS</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e968 ">Hadoop FS</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e889 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e971 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_hbx_blh_tx">
                                     <li class="li">HDFS File Metadata executor to change file metadata for
                                         closed files.</li>
@@ -822,9 +882,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e886 ">Hive Metastore </td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e968 ">Hive Metastore </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e889 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e971 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_kkj_dlh_tx">
                                     <li class="li">Hive Query executor to run Hive or Impala queries after
                                         changing table structures. <p class="p">Particularly useful when using
@@ -847,9 +907,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e886 ">Local FS</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e968 ">Local FS</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e889 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e971 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_p3l_glh_tx">
                                     <li class="li">HDFS File Metadata executor to change file metadata for
                                         closed files.</li>
@@ -866,9 +926,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e886 ">MapR FS</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e968 ">MapR FS</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e889 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e971 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_rvh_dsq_tx">
                                     <li class="li">HDFS File Metadata executor to change file metadata for
                                         closed files.</li>
@@ -900,9 +960,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d133321e1057">Event Generating Executor</th>
+                            <th class="entry" valign="top" width="30%" id="d144715e1142">Event Generating Executor</th>
 
-                            <th class="entry" valign="top" width="70%" id="d133321e1060">Event Consumer</th>
+                            <th class="entry" valign="top" width="70%" id="d144715e1145">Event Consumer</th>
 
                         </tr>
 
@@ -910,9 +970,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e1057 ">HDFS File Metadata executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e1142 ">HDFS File Metadata executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e1060 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e1145 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_i4j_wfc_yz">
                                     <li class="li">Email executor to send email each time the executor changes
                                         file metadata.</li>
@@ -926,9 +986,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e1057 ">Hive Query executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e1142 ">Hive Query executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e1060 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e1145 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_xmw_dk3_xz">
                                     <li class="li">Email executor to send email when a query succeeds or
                                         fails.</li>
@@ -942,9 +1002,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e1057 ">MapReduce executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e1142 ">MapReduce executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e1060 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e1145 ">
                                 <ul class="ul">
                                     <li class="li">Email executor to send email each time the executor starts a
                                         MapReduce job. </li>
@@ -958,9 +1018,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e1057 ">Spark executor</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e1142 ">Spark executor</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e1060 ">
+                            <td class="entry" valign="top" width="70%" headers="d144715e1145 ">
                                 <ul class="ul" id="concept_scs_3hh_tx__ul_hf4_sk3_xz">
                                     <li class="li">Email executor to send email each time the Spark executor
                                         starts a Spark application. </li>
@@ -1096,7 +1156,7 @@ You can, of course, configure an event stream to perform tasks and store events 
         <p class="p">Event records generated by the File Tail origin are the exception - they include all
             event information in record fields. </p>
 
-        <p class="p"><span class="ph"><span class="ph" id="concept_gvh_5wm_xx__d25196e3571">Event records differ from stage
+        <p class="p"><span class="ph"><span class="ph" id="concept_gvh_5wm_xx__d27092e3681">Event records differ from stage
                               to stage.</span> For a list of event header attributes and fields in an
                         event record, see "Event Record" in the documentation for the
                         event-generating stage.</span></p>
@@ -1128,9 +1188,9 @@ You can, of course, configure an event stream to perform tasks and store events 
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d133321e1345">Event Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d144715e1430">Event Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d133321e1348">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d144715e1433">Description</th>
 
                         </tr>
 
@@ -1138,9 +1198,9 @@ You can, of course, configure an event stream to perform tasks and store events 
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d133321e1345 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d144715e1430 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d133321e1348 ">Event type. Defined by the stage that generates the event. <p class="p">For
+                            <td class="entry" valign="top" width="70%" headers="d144715e1433 ">Event type. Defined by the stage that generates the event. <p class="p">For
                                     information about the event types available for an event
                                     generating stage, see the stage documentation.</p>
 </td>
@@ -1148,16 +1208,16 @@ You can, of course, configure an event stream to perform tasks and store events 
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d133321e1345 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d144715e1430 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d133321e1348 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d144715e1433 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d133321e1345 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d144715e1430 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_zft_rdq_tx__d25318e1642" valign="top" width="70%" headers="d133321e1348 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_zft_rdq_tx__d27224e1688" valign="top" width="70%" headers="d144715e1433 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -1168,7 +1228,7 @@ You can, of course, configure an event stream to perform tasks and store events 
 </div>
 </div>
 
-        <div class="note note"><span class="notetitle">Note:</span> <span class="ph"><span class="ph" id="concept_zft_rdq_tx__d25196e3571">Event records differ from stage
+        <div class="note note"><span class="notetitle">Note:</span> <span class="ph"><span class="ph" id="concept_zft_rdq_tx__d27092e3681">Event records differ from stage
                               to stage.</span> For a list of event header attributes and fields in an
                         event record, see "Event Record" in the documentation for the
                         event-generating stage.</span></div>
@@ -1300,7 +1360,7 @@ You can, of course, configure an event stream to perform tasks and store events 
                     table name required by the Hive Query executor, but it contains the table name
                     in the file path. So add an Expression Evaluator processor to the event stream.
                     Create a new Table field and use the following
-                        expression:<pre class="pre codeblock"><span class="ph" id="concept_szz_xwm_lx__d25196e3764">`${file:pathElement(record:value('/filepath'), -3)}`.`${file:pathElement(record:value('/filepath'), -2)}`</span></pre>
+                        expression:<pre class="pre codeblock"><span class="ph" id="concept_szz_xwm_lx__d27092e3874">`${file:pathElement(record:value('/filepath'), -3)}`.`${file:pathElement(record:value('/filepath'), -2)}`</span></pre>
 <div class="p">This
                         expression uses the path in the Filepath field of the event record and
                         performs the following calculations:<ul class="ul" id="concept_szz_xwm_lx__ul_umt_2sm_5x">
@@ -1419,9 +1479,22 @@ You can, of course, configure an event stream to perform tasks and store events 
         <p class="p">To do this, simply route the no-more-data event record to the Pipeline Finisher executor
             and configure notification.</p>
 
-        <p class="p">The JDBC Query Consumer, JDBC Multitable Consumer, and Salesforce origins all generate
-            the no-more-data event when they finish processing queried data. We'll use the JDBC
-            Query Consumer to show a more complex scenario. </p>
+        <div class="p">The following origins generate no-more-data
+                        events:<ul class="ul" id="concept_kff_ykv_lz__d27092e4272">
+                        <li class="li">Directory origin</li>
+
+                        <li class="li">JDBC Query Consumer origin</li>
+
+                        <li class="li">JDBC Multitable Consumer origin</li>
+
+                        <li class="li">Salesforce origin</li>
+
+                        <li class="li">SQL Server Change Tracking origin</li>
+
+                  </ul>
+</div>
+
+        <p class="p">We'll use the JDBC Query Consumer to show a more complex scenario. </p>
 
         <p class="p">Here's the basic pipeline that reads from a database, performs some processing, and
             writes to HDFS: </p>
@@ -1738,7 +1811,7 @@ Only the following number of rows were processed: ${record:value('/row-count')} 
 
                 <li class="li">When generating an event, the stage creates an <dfn class="term">event record</dfn> that
                     contains relevant information regarding the event, such as the path to the file
-                    that was closed. <p class="p"><span class="ph"><span class="ph" id="concept_azz_tq4_lx__d25196e3571">Event records differ from stage
+                    that was closed. <p class="p"><span class="ph"><span class="ph" id="concept_azz_tq4_lx__d27092e3681">Event records differ from stage
                               to stage.</span> For a list of event header attributes and fields in an
                         event record, see "Event Record" in the documentation for the
                         event-generating stage.</span></p>
@@ -1782,7 +1855,23 @@ Only the following number of rows were processed: ${record:value('/row-count')} 
 </div>
 <div class="navfooter"><!---->
 <span class="navprev"><a class="link" href="../DPM/UnregisterSDCwithDPM.html#concept_ldb_sr5_cx" title="Unregister Data Collector from DPM"><span class="navheader_label">Previous topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Unregister Data Collector from DPM</span></a></span>  
-<span class="navnext"><a class="link" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Drift Synchronization Solution (a.k.a. Hive Drift Solution)"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution (a.k.a. Hive Drift Solution)</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+<span class="navnext"><a class="link" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w" title="Drift Synchronization Solution (a.k.a. Hive Drift Solution)"><span class="navheader_label">Next topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Drift Synchronization Solution (a.k.a. Hive Drift Solution)</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ogj_tnz_t1b">
+ <title>Permission Requirements</title>
+ <conbody>
+  <p><indexterm>SQL Server Change Tracking origin<indexterm>permission
+                requirements</indexterm></indexterm>To use the SQL Server Change Tracking origin,
+            the user associated with the database credentials must have the following
+                permissions:<ul id="ul_zgy_vnz_t1b">
+                <li>VIEW CHANGE TRACKING permission on the database.</li>
+                <li>When using the default record generation to join change tracking data with the
+                    current version of the data, the user must have SELECT permission on at least
+                    the primary key columns for each associated data table.<p> If processing data
+                        only from the change tracking data, the user does not need this
+                        permission.</p></li>
+            </ul></p>
+ </conbody>
+</concept>

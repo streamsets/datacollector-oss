@@ -1,5 +1,13 @@
-<!--
 
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="When it receives an event, the Pipeline Finisher executor stops a pipeline and transitions it to a Finished state. This allows the pipeline to complete all expected processing before stopping. Use the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Pipeline Finisher Executor" /><meta name="DC.Relation" scheme="URI" content="../Executors/Executors-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_qzm_l4r_kz" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Finisher Executor</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
     Copyright 2017 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,29 +21,6 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
--->
-
-<!DOCTYPE html
-  SYSTEM "about:legacy-compat">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="When it receives an event, the Pipeline Finisher executor stops a pipeline and transitions it to a Finished state. This allows the pipeline to complete all expected processing before stopping. Use the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Pipeline Finisher Executor" /><meta name="DC.Relation" scheme="URI" content="../Executors/Executors-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_qzm_l4r_kz" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Finisher Executor</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
-            
-            var prefix = "../index.html";
-            
-            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
-<!--
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
 -->
 </head>
 <body onload="highlightSearchTerm()" class="frmBody">
@@ -51,7 +36,7 @@
 
         <p class="p">Use the Pipeline Finisher as part of an event stream. <span class="ph">You can use the Pipeline Finisher in any logical way, such as
                         stopping a pipeline upon receiving a no-more-data event from the JDBC Query
-                        Consumer, JDBC Multitable Consumer, or Salesforce origins.</span></p>
+                        Consumer origin.</span></p>
 
         <p class="p">For example, you might use the executor in a pipeline designed to migrate all existing
             data from Microsoft SQL Server to HDFS. And then use a separate pipeline to process
@@ -60,11 +45,12 @@
             indefinitely for more data. </p>
 
         <p class="p">When you restart a pipeline that was stopped by the Pipeline Finisher, the restart
-            behavior depends on how you configure the origin. If the origin is configured to use an
-            offset, when you restart the pipeline the origin begins at the last-saved offset. If you
-            configure the origin to process all data from an initial offset, when you restart the
-            pipeline, it does so. For more information, see "Event Record" in the origin
-            documentation.</p>
+            behavior depends on the origin. For example, if the origin stores an offset, when you
+            restart the pipeline the origin begins at the last-saved offset by default. That is, if
+            you run JDBC Query Consumer in incremental mode, the pipeline continues where it left
+            off when you restart the pipeline. However, if you configure the JDBC Query Consumer to
+            perform a full query, when you restart the pipeline, the origin performs the full query
+            again. For more information, see "Event Generation" in the origin documentation.</p>
 
         <p class="p">The Pipeline Finisher executor has no stage-specific properties, but you might use a
             precondition to limit the records that enter the stage. You might also set up
@@ -140,6 +126,31 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_dct_z3v_j1b">
+ <h2 class="title topictitle2">Related Event Generating Stages</h2>
+
+ <div class="body conbody">
+        <p class="p">Best practice is to use the Pipeline Finisher only
+            with origins that generate no-more-data events. </p>
+
+        <div class="p">The following origins generate no-more-data
+                        events:<ul class="ul" id="concept_dct_z3v_j1b__d27356e4272">
+                        <li class="li">Directory origin</li>
+
+                        <li class="li">JDBC Query Consumer origin</li>
+
+                        <li class="li">JDBC Multitable Consumer origin</li>
+
+                        <li class="li">Salesforce origin</li>
+
+                        <li class="li">SQL Server Change Tracking origin</li>
+
+                  </ul>
+</div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_tgf_2gv_xz">
  <h2 class="title topictitle2">Notification Options</h2>
 
@@ -198,9 +209,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d146316e226">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d159590e264">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d146316e229">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d159590e267">Description</th>
 
                                 </tr>
 
@@ -208,31 +219,31 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d146316e226 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d159590e264 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d146316e229 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d146316e226 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d146316e229 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d159590e267 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d146316e226 ">Stage Library</td>
+       <td class="entry" valign="top" width="30%" headers="d159590e264 ">Description</td>
 
-       <td class="entry" valign="top" width="70%" headers="d146316e229 ">Library version that you want to use. </td>
+       <td class="entry" valign="top" width="70%" headers="d159590e267 ">Optional description.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d146316e226 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-         <img class="image" id="task_lrm_pws_3z__d25533e1520" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d159590e264 ">Stage Library</td>
 
-       <td class="entry" valign="top" width="70%" headers="d146316e229 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+       <td class="entry" valign="top" width="70%" headers="d159590e267 ">Library version that you want to use. </td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d159590e264 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+         <img class="image" id="task_lrm_pws_3z__d27445e1566" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d159590e267 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
 <p class="p">Records
          that do not include all required fields are processed based on the error handling
          configured for the pipeline.</p>
@@ -241,10 +252,10 @@
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d146316e226 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                    <td class="entry" valign="top" width="30%" headers="d159590e264 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
                                             <img class="image" id="task_lrm_pws_3z__image_u33_lvm_nz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d146316e229 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d159590e267 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. All other records are
                                         handled based on the <span class="ph uicontrol">On Record Error</span>
                                         property. <p class="p">Click <span class="ph uicontrol">Add</span> to create
@@ -261,10 +272,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d146316e226 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r" title="Most stages include error record handling options. When an error occurs when processing a record, Data Collector processes records based on the On Record Error property for the stage.">
+                                    <td class="entry" valign="top" width="30%" headers="d159590e264 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
                                             <img class="image" id="task_lrm_pws_3z__image_v33_lvm_nz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d146316e229 ">Error record handling for the stage: <ul class="ul" id="task_lrm_pws_3z__ul_w33_lvm_nz">
+                                    <td class="entry" valign="top" width="70%" headers="d159590e267 ">Error record handling for the stage: <ul class="ul" id="task_lrm_pws_3z__ul_w33_lvm_nz">
                                             <li class="li">Discard - Discards the record. </li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -295,7 +306,23 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!-- SDC google analytics --><script>
+<span class="navparent"><a class="link" href="../Executors/Executors-title.html" title="Executors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Executors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

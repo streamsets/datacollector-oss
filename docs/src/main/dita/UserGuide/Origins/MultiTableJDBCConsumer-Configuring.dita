@@ -55,8 +55,7 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_plp_tp2_px"/></xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"
-                                    />
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Error">
@@ -93,69 +92,25 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCQueryInterval">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Number of Threads <xref
-                                            href="MultiTableJDBCConsumer-Multithread.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_r2s_8lq_fs"/>
-                                    </xref></entry>
-                                    <entry>Number of threads the origin generates and uses for
-                                        multithreaded processing.<p>Configure the Maximum Pool Size
-                                            property on the Advanced tab to be equal to or greater
-                                            than this value.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBC-NumThreads">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Per Batch Strategy <xref
-                                            href="MultiTableJDBCConsumer-BatchStrategy.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_r3s_7rq_ds"/>
-                                        </xref></entry>
-                                    <entry>Strategy to create each batch of data:<ul
-                                            id="ul_fk4_11f_py">
-                                            <li>Switch Tables - Each thread creates a batch of data
-                                                from one table, and then switches to the next
-                                                available table to create the next batch. Define the
-                                                Result Set Cache Size and the Batches from Result
-                                                Set properties when you configure a switch tables
-                                                strategy.</li>
-                                            <li>Process All Available Rows from the Table - Each
-                                                thread creates multiple batches of data from one
-                                                table, until all available rows are read from that
-                                                table.</li>
-                                        </ul></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBC-perBatch">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxBatch_row">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Batches from Result Set <xref
-                                            href="MultiTableJDBCConsumer-BatchStrategy.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_h3m_wkh_hz"/>
-                                        </xref></entry>
-                                    <entry>Number of batches to create from the result set when
-                                        using the switch tables batch strategy. After a thread
-                                        creates this number of batches, the database closes the
-                                        result set and then another thread can read from the same
-                                            table.<p>Use a positive integer to set a limit on the
-                                            number of batches created from the result set. Use -1 to
-                                            opt out of this property.</p><p>By default, the origin
-                                            creates an unlimited number of batches from the result
-                                            set, keeping the result set open as long as
-                                            possible.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBC-BatchResultSet">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Result Set Cache Size <xref
-                                            href="MultiTableJDBCConsumer-BatchStrategy.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_r9h_3rq_ds"/>
-                                        </xref></entry>
-                                    <entry>Number of result sets to cache in the database when using
-                                        the switch tables batch strategy. Use a positive integer to
-                                        set a limit on the number of cached result sets. Use -1 to
-                                        opt out of this property.<p>By default, the origin caches an
-                                            unlimited number of result sets.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBC-ResultSetCache">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxClob_row">
@@ -165,20 +120,13 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxBlob_row">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Number of Retries on SQL Error</entry>
-                                    <entry>Number of times a thread tries to read a batch of data
-                                        after receiving an SQL error. After a thread retries this
-                                        number of times, the thread handles the error based on the
-                                        error handling configured for the origin.<p>Use to handle
-                                            transient network or connection issues that prevent a
-                                            thread from reading a batch of data.</p><p>Default is 0.
-                                        </p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBC_NumRetries">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Data Time Zone</entry>
-                                    <entry>Time zone to use to evaluate datetime-based offset column
-                                        conditions. </entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBC-DataTimeZone">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Quote Character</entry>
@@ -200,24 +148,9 @@
                                                   "myOffsetColumn"</codeph>.</li>
                                         </ul></entry>
                                 </row>
-                                <row>
-                                    <entry>Fetch Size</entry>
-                                    <entry>Maximum number of rows to fetch for the JDBC statement
-                                        and store in memory on the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> machine. The size cannot be zero.<p>Default is 1,000.</p><p>
-                                            <note>By default, MySQL fetches and stores the complete
-                                                result set in memory on the <ph
-                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                                /> machine. If the result sets have a large number
-                                                of rows or large values that exceed available
-                                                memory, specify a fetch size of
-                                                  <codeph>Integer.MIN_VALUE</codeph> so that MySQL
-                                                streams the results to the <ph
-                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                                /> machine one row at a time.</note>
-                                        </p><p>For more information about configuring a fetch size,
-                                            see your database documentation.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBC-FetchSize">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCAddtitionalProps_row">
@@ -228,95 +161,8 @@
                     </table>
                 </info>
             </step>
-            <step>
-                <cmd>On the <wintitle>Tables</wintitle> tab, define one or more table
-                    configurations. Click the <uicontrol>Add</uicontrol> icon to define another
-                    table configuration.</cmd>
-                <info>Configure the following properties for each table configuration:<table
-                        frame="all" rowsep="1" colsep="1" id="table_cvl_qp5_qy">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Tables Property <xref
-                                            href="MultiTableJDBCConsumer-TableConfiguration.dita"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_hvl_qp2_qy"/>
-                                        </xref></entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Schema Name</entry>
-                                    <entry>Name of the schema to use for this table
-                                        configuration.</entry>
-                                </row>
-                                <row>
-                                    <entry>Table Name Pattern <xref
-                                            href="MultiTableJDBCConsumer-TableName.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_evl_qp5_qy"/>
-                                        </xref></entry>
-                                    <entry>Pattern of the table names to read for this table
-                                        configuration. Use the SQL LIKE syntax to define the
-                                        pattern. <p>Default is the percentage wildcard (%) which
-                                            matches all tables in the schema.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Table Exclusion Pattern <xref
-                                            href="MultiTableJDBCConsumer-TableName.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_fvl_qp5_qy"/>
-                                        </xref></entry>
-                                    <entry>Pattern of the table names to exclude from being read for
-                                        this table configuration. Use a Java-based regular
-                                        expression, or regex, to define the pattern.<p>Leave empty
-                                            if you do not need to exclude any tables.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Override Offset Columns <xref
-                                            href="MultiTableJDBCConsumer-Offsets.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_gvl_qp5_qy"/>
-                                        </xref></entry>
-                                    <entry>Determines whether to use the primary key or other
-                                        columns as the offset columns for this table configuration.
-                                            <p>Select to override the primary key and define other
-                                            offset columns. Clear to use the primary key as the
-                                            offset column. </p></entry>
-                                </row>
-                                <row>
-                                    <entry>Initial Offset <xref
-                                            href="MultiTableJDBCConsumer-Offsets.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_hvl_qp5_qy"/>
-                                        </xref></entry>
-                                    <entry>Offset value to use for this table configuration when the
-                                        pipeline starts. Enter the primary key name or offset column
-                                        name and value. For Datetime columns, enter a Long
-                                            value.<p>When you define multiple offset columns, you
-                                            must define an initial offset value for each column, in
-                                            the same order that the columns are defined.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Offset Column Conditions <xref
-                                            href="MultiTableJDBCConsumer-Offsets.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_ivl_qp5_qy"/>
-                                        </xref></entry>
-                                    <entry>Additional conditions that the origin uses to determine
-                                        where to start reading data for this table configuration.
-                                        The origin adds the defined condition to the WHERE clause of
-                                        the SQL query. <p>Use the expression language to define the
-                                            conditions. For example, you can use the offset:column
-                                            function to compare the value of an offset
-                                        column.</p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table></info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step-JDBCTablestab">
+                <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JDBC-Credentials">
                 <cmd/>
@@ -339,11 +185,9 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Maximum Pool Size</entry>
-                                    <entry>The maximum number of connections to create. Must be
-                                        equal to or greater than the value of the Number of Threads
-                                            property.<p>Default is 1.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxPoolSize-Multithread">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-MaxIdleConn">
@@ -373,21 +217,9 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-TransactionIsolation">
                                     <entry/>
                                 </row>
-                                <row>
-                                    <entry>Initial Table Order Strategy <xref
-                                            href="MultiTableJDBCConsumer-TableOrder.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_r5t_0kq_ds"/>
-                                        </xref></entry>
-                                    <entry>Initial order used to read the tables:<ul
-                                            id="ul_opw_1jf_py">
-                                            <li>None - Reads the tables in the order that they are
-                                                listed in the database.</li>
-                                            <li>Alphabetical - Reads the tables in alphabetical
-                                                order.</li>
-                                            <li>Referential Constraints - Reads the tables based on
-                                                the dependencies between the tables.</li>
-                                        </ul></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-InitTableOrder">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-JDBCunknownType">

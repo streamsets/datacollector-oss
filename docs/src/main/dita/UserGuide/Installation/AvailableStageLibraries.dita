@@ -601,6 +601,7 @@
                                         <li>JDBC Multitable Consumer origin</li>
                                         <li>JDBC Query Consumer origin</li>
                                         <li>Oracle CDC Client origin</li>
+                                        <li>SQL Server Change Tracking origin</li>
                                         <li>JDBC Lookup processor</li>
                                         <li>JDBC Tee processor</li>
                                         <li>JDBC Producer destination</li>

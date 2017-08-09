@@ -19,11 +19,7 @@
         <p><indexterm>Pipeline Finisher executor<indexterm>related event generating
                     stages</indexterm></indexterm>Best practice is to use the Pipeline Finisher only
             with origins that generate no-more-data events. </p>
-        <p>The following origins generate no-more-data events:<ul id="ul_l51_mvd_nx">
-                <li>Directory origin</li>
-                <li>JDBC Query Consumer origin</li>
-                <li>JDBC Multitable Consumer origin</li>
-                <li>Salesforce origin</li>
-            </ul></p>
+        <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-PFinisher-nomoredataOrigins"/>
  </conbody>
 </concept>
