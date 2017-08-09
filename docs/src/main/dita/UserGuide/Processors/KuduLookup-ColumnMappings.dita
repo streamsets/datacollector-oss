@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_cs4_vj1_s1b">
+ <title>Column Mappings</title>
+ <conbody>
+        <p><indexterm>Kudu Lookup processor<indexterm>column
+                mappings</indexterm></indexterm><indexterm>Kudu Lookup processor<indexterm>primary
+                    keys</indexterm></indexterm><indexterm>column mappings<indexterm>Kudu Lookup
+                    processor</indexterm></indexterm>When you configure the Kudu Lookup processor,
+            you define the following column mappings:</p>
+        <dl>
+            <dlentry>
+                <dt>Key Columns Mapping</dt>
+                <dd>Define the incoming fields in the record that map to the primary key column or
+                    columns in the Kudu table. The primary key for a Kudu table can be either a
+                    simple key consisting of a single column or a compound key consisting of
+                    multiple columns. Click the <uicontrol>Add</uicontrol> icon to add multiple
+                    columns for a compound primary key.</dd>
+                <dd>You must add the primary key columns in the Kudu table to the Key Columns
+                    Mapping. You can add additional columns that are not primary keys. However,
+                    adding non-primary keys to the Key Columns Mapping slows the performance of the
+                    lookup.</dd>
+            </dlentry>
+            <dlentry>
+                <dt>Columns to Output Fields Mapping</dt>
+                <dd>Define the columns to look up and the fields in the record to map the column
+                    values to. You can optionally define a default value to use when the lookup does
+                    not return a value for the field. </dd>
+            </dlentry>
+        </dl>
+        <p>For example, the following image shows a Kudu Lookup processor that looks up values in a
+                <codeph>clients</codeph> table that has a compound primary key consisting of
+                <codeph>id</codeph> and <codeph>name</codeph>. The processor maps the incoming
+                <codeph>client_id</codeph> and <codeph>client_name</codeph> record fields to the
+            primary keys in the table. The processor returns the values of the
+                <codeph>address</codeph> and <codeph>start_year</codeph> columns, and passes the
+            values to the new <codeph>client_address</codeph> and <codeph>client_start_year</codeph>
+            output fields in the record:</p>
+        <p><image href="../Graphics/KuduLookup_ColumnMappings.png" scale="70" id="image_ewc_vt1_s1b"/>
+        </p>
+ </conbody>
+</concept>

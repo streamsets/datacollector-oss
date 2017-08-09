@@ -79,6 +79,8 @@
           object embedded in a string field.</li>
         <li><xref href="Jython.dita#concept_a1h_lkf_lr">Jython Evaluator</xref> - Processes records
           based on custom Jython code.</li>
+        <li><xref href="KuduLookup.dita#concept_a1x_3wl_p1b">Kudu Lookup</xref> - Performs lookups
+          in Kudu to enrich records with data.</li>
         <li><xref href="LogParser.dita#concept_ulm_qdq_fs">Log Parser</xref> - Parses log data in a
           field based on the specified log format.</li>
         <li><xref href="RDeduplicator.dita#concept_z3m_v52_zq">Record Deduplicator</xref> - Removes

@@ -163,8 +163,8 @@
                   </ul>
             </p>
             <draft-comment author="Loretta">Core install includes all processors except... </draft-comment>
-            <p><ph id="CoreNotProcessor">except the Groovy Evaluator, Jython Evaluator, HBase
-                        Lookup, Redis Lookup, and Spark Evaluator.</ph></p>
+            <p><ph id="CoreNotProcessor">except the Groovy Evaluator, HBase Lookup, Jython
+                        Evaluator, Kudu Lookup, Redis Lookup, and Spark Evaluator.</ph></p>
             <p>
                   <draft-comment author="Loretta">List of destinations that are part of the Core
                         installation. Used in CoreInstall_Overview and Available Stage
@@ -2643,8 +2643,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   </dl></p>
             <p id="LookupCacheSummary">When you stop the pipeline, the processor clears the
                   cache.</p>
-            <draft-comment author="alisontaylor">Lookup Cache - used for JDBC Lookup and Salesforce
-                  Lookup processors</draft-comment>
+            <draft-comment author="alisontaylor">Lookup Cache - used for JDBC Lookup, Salesforce
+                  Lookup, and Kudu Lookup processors</draft-comment>
             <p id="JDBCLookupCacheOverview">The processor caches values until the cache reaches the
                   maximum size or the expiration time. When the first limit is reached, the
                   processor evicts values from the cache.</p>

@@ -1345,8 +1345,8 @@
     </tbody>
    </tgroup>
   </table>
-  <draft-comment author="alisontaylor">JDBC Lookup and Salesforce Lookup use rows in this
-   table</draft-comment>
+  <draft-comment author="alisontaylor">JDBC Lookup, Salesforce Lookup, and Kudu Lookup use rows in
+   this table</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table_ns3_p7s_zv">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -2254,6 +2254,44 @@
       <entry>credentialStore.vault.timeout</entry>
       <entry>Optional. Timeout to read from Vault in milliseconds, after a connection has been
         established.<p>Default is 0 for no limit. </p></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
+ <draft-comment author="alisontaylor">The following rows are used in Kudu Lookup processor and Kudu
+  destination</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_sqr_2qn_51b">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry>Kudu Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row id="row_KuduMasters">
+      <entry>Kudu Masters</entry>
+      <entry>Comma-separated list of connection information for the Kudu masters to use. Use the
+       following format: <codeblock>&lt;host>:&lt;port></codeblock></entry>
+     </row>
+     <row id="row_KuduTableName">
+      <entry>Table Name</entry>
+      <entry>Table to write to. Enter one of the following: <p>
+       <ul id="ul_KuduTableName">
+        <li>Name of an existing Kudu table. If the table doesn't exist, the pipeline fails to
+         start.</li>
+        <li>Expression that evaluates to the name of an existing Kudu table. For example, if the
+         table name is stored in the "tableName" record attribute, enter the following
+         expression:<codeblock>${record:attribute('tableName')}</codeblock>If the table doesn't
+         exist, the records are treated as error records.</li>
+       </ul>
+      </p><p id="p_KuduTableNote">
+       <note>Impala creates Kudu tables with the following naming convention:
+        <codeblock>impala::&lt;table name></codeblock><p>When using a table created by Impala, be
+         sure to use the entire table name. </p></note>
+      </p></entry>
      </row>
     </tbody>
    </tgroup>

@@ -2691,7 +2691,7 @@
             <step>
                 <cmd>
                     <draft-comment author="alisontaylor">Use this step for processors that include a
-                        Stage Library field - just Spark Evaluator at this point</draft-comment>
+                        Stage Library field </draft-comment>
                 </cmd>
             </step>
             <step id="1stStep-ReqField-StageLib">
