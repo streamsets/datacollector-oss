@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pqd_zyh_v1b">
+ <title>Multiple Tables, No Partition Processing</title>
+ <conbody>
+        <p>Say you have tables A, B, C and D that you configure for table processing. When you start
+            the pipeline, the origin adds all tables to the queue. If configured, the Initial Table
+            Order Strategy advanced property can affect the order. Let's assume we have no
+            referential constraints and use alphabetical order:<codeblock>A  B  C  D</codeblock>When
+            a thread becomes available, it processes data from the first table in the queue. The
+            number of batches is based on the Batches from Result Set property. The processing of
+            the tables depends on how you define the Per Batch Strategy property:<dl>
+                <dlentry>
+                    <dt>Process All Available Rows in the Table</dt>
+                    <dd>With this batch strategy, threads do not start processing data in the next
+                        table until all available data is processed for the preceding table. </dd>
+                    <dd>
+                        <p>That is, table A remains at the front of the queue until all available
+                            data is processed. Then processing begins on table B. Table A moves to
+                            the back, remaining in the queue in case more data appears, as
+                            follows:</p>
+                        <codeblock>B  C  D  A  </codeblock>
+                    </dd>
+                </dlentry>
+            </dl><dl>
+                <dlentry>
+                    <dt>Switch Tables</dt>
+                    <dd>With this batch strategy, the order of the queue remains the same, but each
+                        thread performs a SQL query to create a set of batches based on the Batches
+                        from Result Set property. When it completes processing, it performs the same
+                        process with the next table in the queue. </dd>
+                    <dd>
+                        <p>After a thread takes a set of batches from table A, table A moves to the
+                            back of the queue:</p>
+                        <codeblock>B  C  D  A</codeblock>
+                        <p>The next thread takes a set of batches from table B. Then B moves to the
+                            back of the queue:<codeblock>C  D  A  B  </codeblock></p>
+                        <p>So after processing 4 sets of batches, the queue looks like it did in the
+                            beginning: <codeblock>A  B  C  D</codeblock></p>
+                    </dd>
+                </dlentry>
+            </dl></p>
+ </conbody>
+</concept>

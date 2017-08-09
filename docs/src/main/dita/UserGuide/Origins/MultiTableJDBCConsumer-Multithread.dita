@@ -1,59 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-
-    Copyright 2017 StreamSets Inc.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_tz5_fw5_gz">
- <title>Multithreaded Processing</title>
- <shortdesc>The JDBC Multitable Consumer origin performs parallel processing and enables the
-        creation of a multithreaded pipeline. </shortdesc>
+<concept id="concept_nbk_xgt_p1b">
+ <title>Multithreaded Processing Modes</title>
  <conbody>
-  <p><indexterm>JDBC Multitable Consumer origin<indexterm>multithreaded
-                processing</indexterm></indexterm><indexterm>Number of Threads<indexterm>JDBC
-                    Multitable Consumer</indexterm></indexterm>When you start the pipeline, the JDBC
-            Multitable Consumer origin retrieves the list of tables defined in the table
-            configuration. The origin then uses multiple concurrent threads based on the Number of
-            Threads property. Each thread reads data from a single table. <note>The Maximum Pool
-                Size property on the Advanced tab defines the maximum number of connections the
-                origin can make to the database. It must be equal to or greater than the value
-                defined for the Number of Threads property.</note></p>
-        <p>As the pipeline runs, <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def1_JDBCModified"
-            /></p>
-        <p><ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def2"
-            /></p>
-        <p><ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-batchorder"
-            /></p>
-        <p>For more information about multithreaded pipelines, see <xref
-                href="../Multithreaded_Pipelines/MultithreadedPipelines_Overview.dita#concept_zpp_2xc_py"
-            />.</p>
-        <section id="section_fvq_bpw_hz">
-            <title>Example</title>
-            <p>Say you are reading from ten tables. You set the Number of Threads property to 5 and
-                the Maximum Pool Size property to 6. When you start the pipeline, the origin
-                retrieves the list of tables. The origin then creates five threads to read from the
-                first five tables, and by default <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> creates a matching number of pipeline runners. Upon receiving data, a thread
-                passes a batch to each of the pipeline runners for processing.</p>
-            <p
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HTTPServer-process-p"/>
-        </section>
+  <p><indexterm>JDBC Multitable Consumer origin<indexterm>multithreaded processing
+                types</indexterm></indexterm>The JDBC Multitable Consumer origin performs parallel
+            processing and enables the creation of a multithreaded pipeline. The origin can use
+            multiple threads to process entire tables or partitions within tables. </p>
+        <p>By default, the origin performs partition processing for the tables that fulfill the
+            partition processing requirements, and performs table processing for all other tables.
+            When using the default behavior, the origin notes the tables that allow partition
+            processing in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            log. When needed, you can configure the origin to require partition processing for all
+            tables or to perform only table processing.</p>
+        <p>The origin provides the following processing modes:<ul id="ul_trr_gxt_p1b">
+                <li>Multithreaded table processing - The origin can use up to one thread per table.
+                    Can process tables with multiple offset columns.</li>
+                <li>Multithreaded partition processing - The origin can use up to one thread per
+                    table partition. Use to process larger volumes of data than multithreaded table
+                        processing.<p>Multithreaded partition processing requires a single primary
+                        key or user-defined offset column of a supported data type, and additional
+                        details for partition creation. Tables with composite keys or a key or
+                        user-defined offset column of an unsupported data type cannot be
+                        partitioned.</p></li>
+            </ul></p>
+        <p>When you configure the origin, you specify the tables to process and the multithreaded
+            partition processing mode to use for each set of tables: <ul id="ul_qk1_g2j_t1b">
+                <li>Off - Use to perform multithreaded table processing. </li>
+                <li>On (Best Effort) - Use to perform partition processing where possible, and table
+                    processing for all other tables.</li>
+                <li>On (Required) - Use to perform partition processing for all specified tables.
+                </li>
+            </ul></p>
  </conbody>
 </concept>

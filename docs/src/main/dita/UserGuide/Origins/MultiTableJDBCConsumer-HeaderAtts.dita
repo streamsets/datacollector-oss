@@ -49,6 +49,16 @@
                                 conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCtables"/>
                         </row>
                         <row>
+                            <entry>jdbc.partition</entry>
+                            <entry>Provides the full offset key for the partition that produced the
+                                record</entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.threadNumber</entry>
+                            <entry>Provides the number of the thread that produced the record.
+                            </entry>
+                        </row>
+                        <row>
                             <entry>jdbc.&lt;column name>.jdbcType</entry>
                             <entry
                                 conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCType"/>

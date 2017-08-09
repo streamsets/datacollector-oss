@@ -45,7 +45,7 @@
             that start with "dept". You enter the following table name and table exclusion patterns:
                 <ul id="ul_z3z_h2r_qy">
                 <li>Table Name Pattern - %</li>
-                <li>Table Exclusion Pattern - dept.*</li>
+                <li>Table Exclusion Pattern - dept*</li>
             </ul></p>
         <p>If you do not need to exclude any tables, simply leave the table exclusion pattern
             empty.</p>
