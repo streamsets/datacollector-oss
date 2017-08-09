@@ -21,6 +21,7 @@ public enum AWSRegions implements Label {
   // Copied from com.amazonaws.regions.Region except for OTHER
   GovCloud("us-gov-west-1"),
   US_EAST_1("us-east-1"),
+  US_EAST_2("us-east-2"),
   US_WEST_1("us-west-1"),
   US_WEST_2("us-west-2"),
   EU_WEST_1("eu-west-1"),
