@@ -20,9 +20,10 @@
 <concept id="concept_bfd_31f_zx">
  <title>Event Storage Streams</title>
  <conbody>
-        <p><indexterm>event streams<indexterm>event storage</indexterm></indexterm>An event storage
-            stream routes event records from the event generating stage to a destination. The
-            destination writes the event record to a destination system.</p>
+        <p><indexterm>event streams<indexterm>event storage for event
+            stages</indexterm></indexterm>An event storage stream routes event records from the
+            event-generating stage to a destination. The destination writes the event record to a
+            destination system.</p>
         <p>Event records include information about the event in record header attributes and record
             fields. You can add processors to the event stream to enrich the event record before
             writing it to the destination. </p>

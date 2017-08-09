@@ -30,7 +30,7 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-D-E-EventHandling">
                 <cmd/>
             </step>
-            <step>
+            <step id="step-Hivetab">
                 <cmd>On the <uicontrol>Hive</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>

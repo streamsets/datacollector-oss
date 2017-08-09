@@ -54,6 +54,9 @@
     <topicref href="../Pipeline_Configuration/RuntimeResources-Defining.dita"/>
     <topicref href="../Pipeline_Configuration/RuntimeResources-Calling.dita"/>
    </topicref>  </topicref>
+  <topicref href="../Pipeline_Configuration/EventGeneration.dita">
+   <topicref href="../Pipeline_Configuration/EventRecords.dita"/>
+  </topicref>
    <topicref href="../Pipeline_Configuration/Webhooks.dita">
     <topicmeta>
      <shortdesc/>

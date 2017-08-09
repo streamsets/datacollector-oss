@@ -22,16 +22,36 @@
     <topicref href="../Event_Handling/EventFramework-Title.dita" chunk="to-content">
         <topicref href="../Event_Handling/EventFramework-Overview.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta>
-            <topicref href="../Event_Handling/EventGenerationStages.dita"/>
-            <topicref href="../Event_Handling/ExecutorStages.dita"/>
-            <topicref href="../Event_Handling/LogicalPairings.dita"/>
         </topicref>
-        <topicref href="../Event_Handling/EventStreams.dita" >
-            <topicmeta><shortdesc></shortdesc></topicmeta>
-            <topicref href="../Event_Handling/Streams-TaskExecution.dita"/>
-            <topicref href="../Event_Handling/Streams-EventStorage.dita"/>
+        <topicref href="../Event_Handling/StageEvents.dita">
+            <topicmeta>
+                <shortdesc/>
+            </topicmeta>
+            <topicref href="../Event_Handling/EventStreams.dita">            
+                <topicref href="../Event_Handling/Streams-TaskExecution.dita"/>
+                <topicref href="../Event_Handling/Streams-EventStorage.dita"/>
+            </topicref>
         </topicref>
-        <topicref href="../Event_Handling/EventRecords.dita" >
+        <topicref href="../Event_Handling/PipelineEvents.dita">
+            <topicmeta>
+                <shortdesc/>
+            </topicmeta>
+            <topicref href="../Event_Handling/PipelineEvents-TaskExecution.dita">
+                <topicref href="../Event_Handling/PEvents-PasstoExecutor.dita"/>
+                <topicref href="../Event_Handling/PEvents-PasstoPipeline.dita"/>
+            </topicref>
+        </topicref>
+        <topicref href="../Event_Handling/ExecutorStages.dita">
+        <topicmeta>
+            <shortdesc/>
+        </topicmeta>
+    </topicref>
+        <topicref href="../Event_Handling/LogicalPairings.dita">
+        <topicmeta>
+            <shortdesc/>
+        </topicmeta>
+        </topicref>
+        <topicref href="../Event_Handling/EventRecords.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Event_Handling/EventRecordHeaders.dita"/>
         </topicref>
@@ -49,6 +69,7 @@
             <topicref href="../Event_Handling/DataPreview.dita"/>
             <topicref href="../Event_Handling/MonitorMode.dita"/>
         </topicref>
+        <topicref href="../Event_Handling/DataPreview-PipelineEvents.dita"/>
         <topicref href="../Event_Handling/EventFramework-Summary.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
     </topicref>

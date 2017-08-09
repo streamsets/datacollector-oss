@@ -28,7 +28,7 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
                 <cmd/>
             </step>
-            <step>
+            <step id="step-ShellEnvtab">
                 <cmd>On the <wintitle>Environment</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>

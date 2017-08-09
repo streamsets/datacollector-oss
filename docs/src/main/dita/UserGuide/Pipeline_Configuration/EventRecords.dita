@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_cv3_nqt_51b">
+ <title>Pipeline Event Records</title>
+ <conbody>
+  <p>Pipeline event records have the following event-related record header attributes. Record header
+            attributes are stored as String values:</p>
+        <p>
+            <table frame="all" rowsep="1" colsep="1" id="table_brz_3gp_qx">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                    <thead>
+                        <row>
+                            <entry>Record Header Attribute</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry
+                                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-eventType"/>
+                            <entry>Event type. Uses one of the following types:<ul
+                                    id="ul_m12_mgp_qx">
+                                    <li>start - Generated as the pipeline starts. </li>
+                                    <li>stop - Generated as the pipeline stops.</li>
+                                </ul></entry>
+                        </row>
+                        <row
+                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-eventVersion">
+                            <entry/>
+                        </row>
+                        <row
+                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-eventTimestamp">
+                            <entry/>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </p>
+        <p>The event framework generates the following types of pipeline events:<dl>
+                <dlentry>
+                    <dt>Start</dt>
+                    <dd>The event framework generates start events <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-StartEvent"
+                        />.</dd>
+                    <dd>The start event record has the sdc.event.type set to "start", and the
+                        following fields:<table frame="all" rowsep="1" colsep="1"
+                            id="table_vmc_l42_px">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Pipeline Start Event Field</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>pipelineId</entry>
+                                        <entry>The ID of the pipeline that started.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>pipelineName</entry>
+                                        <entry>The user-defined name of the pipeline that
+                                            started.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>user</entry>
+                                        <entry>The user who started the pipeline.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>parameters</entry>
+                                        <entry>Any parameters used when starting the
+                                            pipeline.</entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Stop</dt>
+                    <dd>The event framework generates stop events <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/phStopEvent"
+                        /></dd>
+                    <dd>The stop event record has the sdc.event.type set to "stop", and the
+                        following fields:</dd>
+                    <dd>
+                        <table frame="all" rowsep="1" colsep="1" id="table_uyd_4wy_t1b">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Pipeline Stop Event Field</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>pipelineId</entry>
+                                        <entry>The ID of the pipeline that stopped.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>pipelineName</entry>
+                                        <entry>The user-defined name of the pipeline that
+                                            stopped.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>reason</entry>
+                                        <entry>The reason why the pipeline stopped. Can be set to
+                                            the following reasons:<ul id="ul_iwt_fxy_t1b">
+                                                <li>Error - An error occurred as the pipeline was
+                                                  running.</li>
+                                                <li>Finished - The pipeline finished all expected
+                                                  processing. </li>
+                                                <li>User - A user stopped the pipeline.</li>
+                                            </ul></entry>
+                                    </row>
+                                    <row>
+                                        <entry>user</entry>
+                                        <entry>The user who stopped the pipeline, when
+                                            relevant.</entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </dd>
+                </dlentry>
+            </dl></p>
+ </conbody>
+</concept>

@@ -33,7 +33,7 @@
                 Synchronization Solution for Hive</xref>. </p>
         <p>Other stages include processing-related information in record header attributes for
             general use. For example, <xref
-                href="../Event_Handling/EventGenerationStages.dita#concept_zrl_mhn_lx"
+                href="../Event_Handling/StageEvents.dita#concept_zrl_mhn_lx"
                 >event-generating stages</xref> include the event type in record header attributes
             in case you want to process the event based on that information. And several origins
             include information such as the originating file name, location, or partition for each
