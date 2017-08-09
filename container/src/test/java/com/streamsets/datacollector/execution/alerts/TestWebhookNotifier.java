@@ -108,7 +108,8 @@ public class TestWebhookNotifier {
         "x",
         "0",
         pipelineConfigBean,
-        runtimeInfo
+        runtimeInfo,
+        null
     );
 
     PipelineState runningState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUNNING, "Running",
