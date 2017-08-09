@@ -28,7 +28,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     version = 1,
     label = "SQL Server CDC Client",
     description = "Origin that an read change events from an MS SQL Server Database",
-    icon = "sql-server.png",
+    icon = "sql-server-multithreaded.png",
     resetOffset = true,
     onlineHelpRefUrl = "index.html#Origins/SQLServerCDC.html#task_nsg_fxc_v1b"
 )
