@@ -42,7 +42,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -144,7 +143,8 @@ public abstract  class AbstractRunner implements Runner {
           pipelineTitle,
           rev,
           pipelineConfigBean,
-          runtimeInfo
+          runtimeInfo,
+          runtimeParameters
       );
       eventListenerManager.addStateEventListener(webHookNotifier);
     }

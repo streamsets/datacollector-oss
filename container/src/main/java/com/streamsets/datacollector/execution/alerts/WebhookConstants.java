@@ -16,15 +16,21 @@
 package com.streamsets.datacollector.execution.alerts;
 
 
-public class WebhookConstants {
+class WebhookConstants {
 
-  public static final String PIPELINE_TITLE_KEY = "{{PIPELINE_TITLE}}";
-  public static final String PIPELINE_URL_KEY = "{{PIPELINE_URL}}";
-  public static final String PIPELINE_STATE_KEY = "{{PIPELINE_STATE}}";
-  public static final String TIME_KEY = "{{TIME}}";
-  public static final String ALERT_TEXT_KEY = "{{ALERT_TEXT}}";
-  public static final String ALERT_NAME_KEY = "{{ALERT_NAME}}";
-  public static final String ALERT_VALUE_KEY = "{{ALERT_VALUE}}";
-  public static final String ALERT_CONDITION_KEY = "{{ALERT_CONDITION}}";
-
+  static final String PIPELINE_TITLE_KEY = "{{PIPELINE_TITLE}}";
+  static final String PIPELINE_URL_KEY = "{{PIPELINE_URL}}";
+  static final String PIPELINE_STATE_KEY = "{{PIPELINE_STATE}}";
+  static final String PIPELINE_STATE_MESSAGE_KEY = "{{PIPELINE_STATE_MESSAGE}}";
+  static final String PIPELINE_RUNTIME_PARAMETERS_KEY = "{{PIPELINE_RUNTIME_PARAMETERS}}";
+  static final String TIME_KEY = "{{TIME}}";
+  static final String ALERT_TEXT_KEY = "{{ALERT_TEXT}}";
+  static final String ALERT_NAME_KEY = "{{ALERT_NAME}}";
+  static final String ALERT_VALUE_KEY = "{{ALERT_VALUE}}";
+  static final String ALERT_CONDITION_KEY = "{{ALERT_CONDITION}}";
+  static final String PIPELINE_INPUT_RECORDS_COUNT_KEY = "{{PIPELINE_INPUT_RECORDS_COUNT}}";
+  static final String PIPELINE_OUTPUT_RECORDS_COUNT_KEY = "{{PIPELINE_OUTPUT_RECORDS_COUNT}}";
+  static final String PIPELINE_ERROR_RECORDS_COUNT_KEY = "{{PIPELINE_ERROR_RECORDS_COUNT}}";
+  static final String PIPELINE_ERROR_MESSAGES_COUNT_KEY = "{{PIPELINE_ERROR_MESSAGES_COUNT}}";
+  static final String PIPELINE_METRICS_KEY = "{{PIPELINE_METRICS}}";
 }

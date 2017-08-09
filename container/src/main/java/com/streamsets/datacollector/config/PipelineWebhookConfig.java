@@ -22,8 +22,28 @@ public class PipelineWebhookConfig extends WebhookCommonConfig {
       required = false,
       type = ConfigDef.Type.TEXT,
       label = "Payload",
-      defaultValue = "{\n  \"text\" : \"Pipeline '{{PIPELINE_TITLE}}' state changed to {{PIPELINE_STATE}} at " +
-          "{{TIME}}. \\n <{{PIPELINE_URL}}|Click here> for details!\"\n}",
+      defaultValue = "{\n  " +
+          "\"text\" : \"Pipeline '{{PIPELINE_TITLE}}' state changed to {{PIPELINE_STATE}} at {{TIME}}. " +
+          "\\n <{{PIPELINE_URL}}|Click here> for details!\",\n " +
+          " \"fields\": [\n    " +
+          "\t{\n\t\t\t\"title\": \"Pipeline Status Message\"," +
+          " \n\t\t\t\"value\": \"{{PIPELINE_STATE_MESSAGE}}\",\n      " +
+          "\t\t\"short\": true\n\t\t}," +
+          "\n\t\t{\n\t\t\t\"title\": \"Pipeline Input Records Count\", " +
+          "\n\t\t\t\"value\": \"{{PIPELINE_INPUT_RECORDS_COUNT}}\",\n            " +
+          "\"short\": true\n\t\t}," +
+          "\n\t\t{\n\t\t\t\"title\": \"Pipeline Output Records Count\", " +
+          "\n\t\t\t\"value\": \"{{PIPELINE_OUTPUT_RECORDS_COUNT}}\",\n            " +
+          "\"short\": true\n\t\t}," +
+          "\n\t\t{\n\t\t\t\"title\": \"Pipeline Error Records Count\", " +
+          "\n\t\t\t\"value\": \"{{PIPELINE_ERROR_RECORDS_COUNT}}\",\n            " +
+          "\"short\": true\n\t\t}," +
+          "\n\t\t{\n\t\t\t\"title\": \"Pipeline Error Messages Count\", " +
+          "\n\t\t\t\"value\": \"{{PIPELINE_ERROR_MESSAGES_COUNT}}\",\n            " +
+          "\"short\": true\n\t\t}," +
+          "\n\t\t{\n\t\t\t\"title\": \"Pipeline Runtime Parameters\", " +
+          "\n\t\t\t\"value\": \"{{PIPELINE_RUNTIME_PARAMETERS}}\",\n          " +
+          "\t\"short\": true\n\t\t}\n\t]\n}",
       description = "Data that should be included as a part of the Webhook request",
       displayPosition = 240,
       lines = 2,

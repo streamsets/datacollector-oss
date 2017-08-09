@@ -119,7 +119,10 @@ public class EventListenerManager {
   }
 
   public void broadcastStateChange(
-      PipelineState fromState, PipelineState toState, ThreadUsage threadUsage, Map<String, String> offset
+      PipelineState fromState,
+      PipelineState toState,
+      ThreadUsage threadUsage,
+      Map<String, String> offset
   ) {
     if(stateEventListenerList.size() > 0) {
       List<StateEventListener> stateEventListenerListCopy;
