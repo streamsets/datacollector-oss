@@ -127,6 +127,42 @@
                                         </ul><p>Default is At Least Once.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Start Event</entry>
+                                    <entry>Determines how the start event is handled. Select one of
+                                        the following options:<ul id="ul_jmt_hht_51b">
+                                            <li>Discard - Use when you don't want to use the
+                                                event.</li>
+                                            <li>An executor - To use the event to trigger a task,
+                                                select the executor that you want to use. For more
+                                                information about the executors, see <xref
+                                                  href="../Executors/Executors-overview.dita#concept_stt_2lk_fx"
+                                                />.</li>
+                                            <li>Write to Another Pipeline - Use to pass the event to
+                                                another pipeline for more complex processing. </li>
+                                        </ul><p>For more information about pipeline events, see
+                                                <xref
+                                                href="../Event_Handling/PipelineEvents.dita#concept_amg_2qr_t1b"
+                                            />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Stop Event</entry>
+                                    <entry>Determines how the stop event is handled. Select one of
+                                        the following options:<ul id="ul_gcx_5ht_51b">
+                                            <li>Discard - Use when you don't want to use the
+                                                event.</li>
+                                            <li>An executor - To use the event to trigger a task,
+                                                select the executor that you want to use. For more
+                                                information about the executors, see <xref
+                                                  href="../Executors/Executors-overview.dita#concept_stt_2lk_fx"
+                                                />.</li>
+                                            <li>Write to Another Pipeline - Use to pass the event to
+                                                another pipeline for more complex processing. </li>
+                                        </ul><p>For more information about pipeline events, see
+                                                <xref
+                                                href="../Event_Handling/PipelineEvents.dita#concept_amg_2qr_t1b"
+                                            />.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Retry Pipeline on Error <xref
                                             href="Retry.dita"
                                                 ><image href="../Graphics/icon_moreInfo.png"
@@ -775,6 +811,38 @@
                         />, see <xref href="../DPM/AggregatedStatistics.dita#concept_h2q_mb5_xw"
                         />.</p>
                 </info>
+            </step>
+            <step>
+                <cmd>If you are using the pipeline start or stop events, configure the related event
+                    consumer properties on the <uicontrol>&lt;event type> - &lt;event
+                        consumer></uicontrol> tab.</cmd>
+                <info>For details on the Amazon S3 executor, see <xref
+                        href="../Executors/AmazonS3-Configuring.dita#task_nky_cnm_f1b/step-S3tab"
+                        >Configuring an Amazon S3 Executor</xref>.<p>For details on the Email
+                        executor, see <xref
+                            href="../Executors/Email-Configuring.dita#task_pyx_tfp_qz/step-Emailtab"
+                            >Configuring an Email Executor</xref>.</p><p>For details on the HDFS
+                        File Metadata executor, see <xref
+                            href="../Executors/HDFSFileMeta-Configuring.dita#task_m3v_5lk_fx/step-HDFSFiletab"
+                            >Configuring an HDFS File Metadata Executor</xref>.</p><p>For details on
+                        the Hive Query executor, see <xref
+                            href="../Executors/HiveQuery-Configuring.dita#task_mgm_4lk_fx/step-Hivetab"
+                            >Configuring a Hive Query Executor</xref>.</p><p>For details on the JDBC
+                        Query executor, see <xref
+                            href="../Executors/JDBCQuery-Configuring.dita#task_ym2_3cv_sx/step-JDBCQuerytab"
+                            >Configuring a JDBC Query Executor</xref>.</p><p>For details on the
+                        MapReduce executor, see <xref
+                            href="../Executors/MapReduce-Configuring.dita#task_olh_bmk_fx/step-MapReducetab"
+                            >Configuring a MapReduce Executor</xref>.</p><p>For details on the Shell
+                        executor, see <xref
+                            href="../Executors/Shell-Configuring.dita#task_hyc_3zw_tz/step-ShellEnvtab"
+                            >Configuring a Shell Executor</xref>.</p><p>For details on the Spark
+                        executor, see <xref
+                            href="../Executors/Spark-Configuring.dita#task_cdw_wxb_1z/step-Sparktab"
+                            >Configuring a Spark Executor</xref>. </p><p>For details on writing to
+                        another pipeline, see <xref
+                            href="../Destinations/RPCdest-Configuring.dita#task_nbl_r2x_dt/step-SDCRPCdesttab"
+                            >Configuring an SDC RPC Destination</xref>.</p></info>
             </step>
             <step>
                 <cmd>Use the <uicontrol>Stage Library</uicontrol> to add an origin stage. In the

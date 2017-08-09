@@ -814,7 +814,7 @@
        <entry>Library version that you want to use. </entry>
       </row>
       <row>
-       <entry>Produce Events <xref href="../Event_Handling/EventGenerationStages.dita">
+       <entry>Produce Events <xref href="../Event_Handling/StageEvents.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wrq_mrx_mx"
         /></xref></entry>
        <entry id="D-1stStep-entry-Events">Generates event records when events occur. Use for event

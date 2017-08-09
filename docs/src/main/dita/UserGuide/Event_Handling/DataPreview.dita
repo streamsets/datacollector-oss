@@ -18,14 +18,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hfy_ryv_cy">
- <title>Event Records in Data Preview and Snapshot</title>
+ <title>Viewing Stage Events in Data Preview and Snapshot</title>
  <conbody>
   <p><indexterm>event records<indexterm>in data preview and
                 snapshot</indexterm></indexterm><indexterm>data preview<indexterm>event
                     records</indexterm></indexterm><indexterm>snapshot<indexterm>event
                     records</indexterm></indexterm>In data preview and when reviewing snapshots of
-            data, event records display in the event-generating stage marked as "event records," and
-            they appear below the batch of standard records.</p>
+            data, stage-related event records display in the event-generating stage marked as "event
+            records," and they appear below the batch of standard records.</p>
         <p>After leaving the event-generating stage, the record displays like any other record. </p>
         <p>For example, the Directory origin below generates an event record as it starts reading a
             file for data preview:</p>

@@ -25,7 +25,7 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
                 <cmd/>
             </step>
-            <step>
+            <step id="step-S3tab">
                 <cmd>On the <wintitle>Amazon S3</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
@@ -46,7 +46,8 @@
                                                 id="image_v94_wcr_yv"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_AccessKeyID"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_AccessKeyID"
+                                    />
                                 </row>
                                 <row>
                                     <entry>Secret Access Key <xref
@@ -55,7 +56,8 @@
                                                 id="image_v64_wcr_yv"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_SecretAccessKey"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/AWSOrigin_SecretAccessKey"
+                                    />
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3-Region">

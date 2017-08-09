@@ -18,19 +18,21 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_sjr_nrx_4x">
- <title>Event Streams</title>
+ <title>Using Stage Events</title>
  <conbody>
-        <p><indexterm>event streams<indexterm>description</indexterm></indexterm>You can use the
-            event framework in any pipeline where the event handling logic suits your needs. When
-            configuring the event stream, you can add additional stages as needed, but you cannot
-            merge the event stream with a data stream. </p>
+        <p><indexterm>stage events<indexterm>using</indexterm></indexterm><indexterm>dataflow
+                    triggers<indexterm>using stage events</indexterm></indexterm>You can use
+            stage-related events in any way that suits your needs. When configuring the event stream
+            for stage events, you can add additional stages to the stream. For example, you might
+            use a Stream Selector to route different types of events to different executors. But you
+            cannot merge the event stream with a data stream. </p>
         <p>There are two general types of event streams that you might create: <ul
                 id="ul_pr4_qz2_zx">
-                <li>Task execution streams that route data to an executor to perform a task. </li>
-                <li>Event storage streams that route data to a destination to store event
+                <li>Task execution streams that route events to an executor to perform a task. </li>
+                <li>Event storage streams that route events to a destination to store event
                     information.</li>
-            </ul>You can, of course, configure an event stream to perform tasks and store events by
-            routing event records to both an executor and a destination. You can also configure
-            event streams to route data to multiple executors and destinations, as needed.</p>
+            </ul>You can, of course, configure an event stream that performs both tasks by routing
+            event records to both an executor and a destination. You can also configure event
+            streams to route data to multiple executors and destinations, as needed.</p>
  </conbody>
 </concept>

@@ -18,13 +18,13 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zrl_mhn_lx">
- <title>Event Generating Stages</title>
+ <title>Stage Event Generation</title>
  <conbody>
-  <p><indexterm>event framework<indexterm>event generating
-                stages</indexterm></indexterm><indexterm>event generating
+  <p><indexterm>event framework<indexterm>stage event
+                generation</indexterm></indexterm><indexterm>event generating
                     stages<indexterm>overview</indexterm></indexterm>You can configure certain
-            stages to generate events. Event generation differs from stage to stage, based on how
-            the stage processes data. </p>
+            stages to generate events. Event generation differs from stage to stage, based on the
+            way the stage processes data. </p>
         <p>The following table lists event-generating stages and when they can generate events:
                 <table frame="all" rowsep="1" colsep="1" id="table_pzz_thf_lx">
                 <tgroup cols="2">
@@ -33,7 +33,7 @@
                     <thead>
                         <row>
                             <entry>Stage</entry>
-                            <entry>Generates event records when the stage...</entry>
+                            <entry>Generates events when the stage...</entry>
                         </row>
                     </thead>
                     <tbody>

@@ -2469,13 +2469,29 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   </dl>
             </p>
             <p>
+                  <draft-comment author="Loretta">Start event description - used in Pipeline Events
+                        and Pipeline Event Records</draft-comment>
+            </p>
+            <p><ph id="ph-StartEvent">as the pipeline initializes, immediately after it starts, and
+                        before before individual stages are initialized</ph></p>
+            <p>
+                  <draft-comment author="Loretta">Stop event description - used in Pipeline Events
+                        and Pipeline Event Records</draft-comment>
+            </p>
+            <p><ph id="phStopEvent">as the pipeline stops, either manually, programmatically, or due
+                        to a failure. The stop event is generated after all stages have completed
+                        processing and cleaning up temporary resources, such as removing temporary
+                        files.</ph></p>
+            <p>
                   <draft-comment author="Loretta"><uicontrol>ph-Erecord-Fields</uicontrol> - used in
                         Event Handing > Event Records and Event Record Headers</draft-comment>
             </p>
-            <p><ph id="ph-ERecord-Fields"><ph id="ph-Event-RFields">Event records differ from stage
-                              to stage.</ph> For a list of event header attributes and fields in an
-                        event record, see "Event Record" in the documentation for the
-                        event-generating stage.</ph>
+            <p><ph id="ph-ERecord-Fields"><ph id="ph-Event-RFields">Stage-generated event records
+                              differ from stage to stage.</ph> For a description of stage events,
+                        see "Event Record" in the documentation for the event-generating stage. For
+                        a description of pipeline events, see <xref
+                              href="../Pipeline_Configuration/EventRecords.dita#concept_cv3_nqt_51b"
+                        />.</ph>
             </p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>D-DL-EventRecords</uicontrol> - Event

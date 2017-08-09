@@ -113,6 +113,13 @@
                                             to destination or executor stages.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Execute Pipeline Lifecycle Events</entry>
+                                    <entry>Triggers the generation of any appropriate pipeline
+                                        events, typically the Start event. If the event is
+                                        configured to be used, event consumption is also
+                                        triggered.</entry>
+                                </row>
+                                <row>
                                     <entry>Show Record/Field Header</entry>
                                     <entry>Displays record header attributes and field attributes
                                         when in List view. Attributes do not display in Table
@@ -3095,7 +3102,7 @@
                                 </row>
                                 <row>
                                     <entry>Produce Events <xref
-                                            href="../Event_Handling/EventGenerationStages.dita">
+                                            href="../Event_Handling/StageEvents.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_wrq_mrx_mx"/></xref></entry>
                                     <entry>Generates event records when events occur. Use for event
@@ -4647,7 +4654,7 @@
             <step id="RPCdest">
                 <cmd>On the <wintitle>RPC</wintitle> tab, configure the following properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_pcc_mgx_dt">
+                    <table frame="all" rowsep="1" colsep="1" id="sdcrpcDest-table">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -4680,8 +4687,8 @@
                                 </row>
                                 <row id="row-verifyHost">
                                     <entry>Verify Host in Server Certificate</entry>
-                                    <entry id="entry-verifyHost">Verifies the host in the SDC RPC origin keystore
-                                        file.</entry>
+                                    <entry id="entry-verifyHost">Verifies the host in the SDC RPC
+                                        origin keystore file.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -75,7 +75,7 @@
                     </table>
                 </info>
             </step>
-            <step>
+            <step id="step-HDFSFiletab">
                 <cmd>On the <uicontrol>HDFS</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>
@@ -140,7 +140,8 @@
                                 </row>
                                 <row>
                                     <entry>
-                                        <p>Kerberos Authentication <xref href="HDFSFileMeta-Kerberos.dita">
+                                        <p>Kerberos Authentication <xref
+                                                href="HDFSFileMeta-Kerberos.dita">
                                                 <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" placement="inline"
                                                   id="image_kqm_3fj_fv"/></xref></p>
@@ -185,7 +186,8 @@
                                         <p>Additional HDFS properties to use. </p>
                                         <p>To add properties, click <uicontrol>Add</uicontrol> and
                                             define the property name and value. Use the property
-                                            names and values as expected by the external system. </p>
+                                            names and values as expected by the external system.
+                                        </p>
                                     </entry>
                                 </row>
                             </tbody>

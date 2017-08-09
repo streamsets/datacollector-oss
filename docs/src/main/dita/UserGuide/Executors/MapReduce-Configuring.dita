@@ -75,7 +75,7 @@
                     </table>
                 </info>
             </step>
-            <step>
+            <step id="step-MapReducetab">
                 <cmd>On the <uicontrol>MapReduce</uicontrol> tab, configure the following
                     properties: </cmd>
                 <info>
