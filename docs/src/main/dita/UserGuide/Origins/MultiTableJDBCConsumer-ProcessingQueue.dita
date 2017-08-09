@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_czt_ql2_r1b">
+ <title>Understanding the Processing Queue</title>
+ <conbody>
+  <p><indexterm>JDBC Multitable Consumer origin<indexterm>understanding the processing
+                    queue</indexterm></indexterm><indexterm>processing queue<indexterm>JDBC
+                    Multitable Consumer</indexterm></indexterm>The JDBC Multitable Consumer origin
+            maintains a virtual queue to determine the data to process from different tables. The
+            queue includes each table defined in the origin. When a table is to be processed by
+            partition, multiple partitions for the table are added to the queue, limited by the Max
+            Partitions property. </p>
+        <p>The origin rotates and reorganizes the queue based on the Per Batch Strategy property.
+            And it processes data from the queue with the threads specified in the Number of Threads
+            property and the Batches from Result Set property.</p>
+        <p>Below are some scenarios to help clarify how the queue works.</p>
+ </conbody>
+</concept>

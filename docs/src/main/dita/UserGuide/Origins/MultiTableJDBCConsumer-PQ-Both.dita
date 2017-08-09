@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_tfm_513_v1b">
+ <title>Both Partition and Table Processing</title>
+ <conbody>
+  <p>When processing a mix of full tables and partitioned tables, the queue basically behaves the
+            same as when processing only partitions, with full tables being processed as partitioned
+            tables with a single partition. Let's walk through it. </p>
+        <p>Say we have table A being processed without partitions, and table B configured with a
+            maximum of 3 partitions, and table C with no limit. As in the example above, the
+            pipeline has 4 threads to work with which allows 8 partitions to table C. Using the
+            alphabetical initial table ordering, the initial queue looks like
+            this:<codeblock>A  B1  B2  B3  C1  C2  C3  C4  C5  C6  C7  C8 </codeblock>When a thread
+            becomes available, it processes a set of batches from the first table or partition in
+            the queue. The number of batches is based on the Batches from Result Set property. The
+            order of the queue depends on how you define the Per Batch Strategy, as follows:<dl>
+                <dlentry>
+                    <dt>Process All Available Rows in the Table</dt>
+                    <dd>With this batch strategy, the queue remains in the basic initial order and
+                        rotates as each thread claims a set of batches from the next table or
+                        partition. The unpartitioned table A is processed like a table with a single
+                        partition. <p>Note that unpartitioned tables are not processed in full when
+                            they move to the front of the queue. For this behavior, configure all
+                            tables to be processed without partitions. Or, set the Batches from
+                            Result Set property to -1. </p><p>When the pipeline starts, the 4
+                            threads process a set of batches from the A table and from partitions
+                            B1, B2, and B3. Since the table and partitions all still contain data,
+                            they then move to the end of the queue as follows:
+                            </p><codeblock>C1  C2  C3  C4  C5  C6  C7  C8  A  B1  B2  B3 </codeblock><p>As
+                            each thread completes processing, it processes a set of batches from the
+                            front of the queue. After each of the 4 threads takes another set of
+                            batches, the queue looks like
+                            this:<codeblock>C5  C6  C7  C8  A  B1  B2  B3  C1  C2  C3  C4 </codeblock></p></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Switch Tables</dt>
+                    <dd>When processing tables and partitions, this batch strategy forces all
+                        subsequent, consecutive partitions from the same table to the end of the
+                        queue. And it treats unpartitioned tables as a table with a single
+                        partition. As a result, the queue rotation is a simplified version of
+                        processing only partitioned tables. <p>So we have this initial order:</p><p>
+                            <codeblock>A  B1  B2  B3  C1  C2  C3  C4  C5  C6  C7  C8 </codeblock>
+                        </p><p>The first thread processes a set of batches from table A, and since
+                            there are no related partitions, it simply goes to the end of the queue:
+                            <codeblock>B1  B2  B3  C1  C2  C3  C4  C5  C6  C7  C8  A</codeblock></p><p>The
+                            second thread processes a set of batches from B1, pushes the rest of the
+                            table B partitions to the end of the queue, and B1 lands at the end
+                            because it contains more data to be
+                            processed:<codeblock>C1  C2  C3  C4  C5  C6  C7  C8  A  B2  B3  B1</codeblock></p><p>The
+                            third thread processes a set of batches from C1, pushes the rest of the
+                            table C partitions to the end, and C1 takes the last slot:
+                            <codeblock>A  B2  B3  B1  C2  C3  C4  C5  C6  C7  C8  C1</codeblock></p><p>And
+                            then the fourth thread processes another set of batches from table A and
+                            moves A to the end of the
+                            queue:<codeblock>B2  B3  B1  C2  C3  C4  C5  C6  C7  C8  C1  A</codeblock></p></dd>
+                </dlentry>
+            </dl></p>
+ </conbody>
+</concept>

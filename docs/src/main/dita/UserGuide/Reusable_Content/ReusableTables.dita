@@ -1032,22 +1032,22 @@
          href="../Origins/MultiTableJDBCConsumer-BatchStrategy.dita"><image
           href="../Graphics/icon_moreInfo.png" scale="10" id="image_h3m_wkh_hz"/>
         </xref></entry>
-       <entry id="entry-BatchResultSet">Number of batches to create from the result set when using
-        the switch tables batch strategy. After a thread creates this number of batches, the
-        database closes the result set and then another thread can read from the same table.<p>Use a
-         positive integer to set a limit on the number of batches created from the result set. Use
-         -1 to opt out of this property.</p><p>By default, the origin creates an unlimited number of
-         batches from the result set, keeping the result set open as long as possible.</p></entry>
+       <entry id="entry-BatchResultSet">Number of batches to create from the result set. After a
+        thread creates this number of batches, the database closes the result set and then another
+        thread can read from the same table or partition.<p>Use a positive integer to set a limit on
+         the number of batches created from the result set. Use -1 to opt out of this
+         property.</p><p>By default, the origin creates an unlimited number of batches from the
+         result set, keeping the result set open as long as possible.</p></entry>
       </row>
       <row id="JDBC-ResultSetCache">
        <entry>Result Set Cache Size <xref
          href="../Origins/MultiTableJDBCConsumer-BatchStrategy.dita"><image
           href="../Graphics/icon_moreInfo.png" scale="10" id="image_r9h_3rq_ds"/>
         </xref></entry>
-       <entry id="entry-ResultSetCache">Number of result sets to cache in the database when using
-        the switch tables batch strategy. Use a positive integer to set a limit on the number of
-        cached result sets. Use -1 to opt out of this property.<p>By default, the origin caches an
-         unlimited number of result sets.</p></entry>
+       <entry id="entry-ResultSetCache">Number of result sets to cache in the database. Use a
+        positive integer to set a limit on the number of cached result sets. Use -1 to opt out of
+        this property.<p>By default, the origin caches an unlimited number of result
+        sets.</p></entry>
       </row>
       <row id="JDBCMaxClob_row">
        <entry>Max Clob Size (characters)</entry>

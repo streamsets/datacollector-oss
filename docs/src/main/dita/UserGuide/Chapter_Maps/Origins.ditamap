@@ -159,13 +159,26 @@
    <topicref href="../Origins/MultiTableJDBCConsumer-DriverInstall.dita">
     <topicref href="../Origins/MultiTableJDBCConsumer-MySQLDriver.dita"/>
    </topicref>
-   <topicref href="../Origins/MultiTableJDBCConsumer-Multithread.dita"/>
-   <topicref href="../Origins/MultiTableJDBCConsumer-BatchStrategy.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-TableConfiguration.dita">
     <topicref href="../Origins/MultiTableJDBCConsumer-TableName.dita"/>
     <topicref href="../Origins/MultiTableJDBCConsumer-Offsets.dita"/>
    </topicref>
+   <topicref href="../Origins/MultiTableJDBCConsumer-Multithread.dita"/>
+   <topicref href="../Origins/MultiTableJDBCConsumer-MultithreadTable.dita"/>
+   <topicref href="../Origins/MultiTableJDBCConsumer-MultithreadPartition.dita">
+    <topicref href="../Origins/MultiTableJDBCConsumer-PartitionOffsetTypes.dita"/>
+    <topicref href="../Origins/MultiTableJDBCConsumer-MultiOffsetHandling.dita"/>
+   </topicref>
+   <topicref href="../Origins/MultiTableJDBCConsumer-BatchStrategy.dita">
+    <topicref href="../Origins/MultiTableJDBCConsumer-BStrategy-AllRows.dita"/>
+    <topicref href="../Origins/MultiTableJDBCConsumer-BStrategy-SwitchTables.dita"/>
+   </topicref>
    <topicref href="../Origins/MultiTableJDBCConsumer-TableOrder.dita"/>
+   <topicref href="../Origins/MultiTableJDBCConsumer-ProcessingQueue.dita">
+    <topicref href="../Origins/MultiTableJDBCConsumer-PQ-TablesOnly.dita"/>
+    <topicref href="../Origins/MultiTableJDBCConsumer-PQ-PartitionsOnly.dita"/>
+    <topicref href="../Origins/MultiTableJDBCConsumer-PQ-Both.dita"/>
+   </topicref>
    <topicref href="../Origins/MultiTableJDBCConsumer-HeaderAtts.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-EventGen.dita">
     <topicref href="../Origins/MultitableJDBCConsumer-EventRecord.dita"/>

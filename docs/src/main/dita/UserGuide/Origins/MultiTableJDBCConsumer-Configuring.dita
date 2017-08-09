@@ -92,13 +92,43 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCQueryInterval">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBC-NumThreads">
-                                    <entry/>
+                                <row>
+                                    <entry>Number of Threads <xref
+                                            href="MultiTableJDBCConsumer-MultithreadTable.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_r2s_8lq_fs"/>
+                                    </xref></entry>
+                                    <entry>Number of threads the origin generates and uses for
+                                        multithreaded processing.<p>Configure the Maximum Pool Size
+                                            property on the Advanced tab to be equal to or greater
+                                            than this value.</p></entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBC-perBatch">
-                                    <entry/>
+                                <row>
+                                    <entry>Per Batch Strategy <xref
+                                            href="MultiTableJDBCConsumer-BatchStrategy.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_r3s_7rq_ds"/>
+                                        </xref></entry>
+                                    <entry>Strategy to create each batch of data:<ul
+                                            id="ul_fk4_11f_py">
+                                            <li>Switch Tables - When performing only multithreaded
+                                                table processing, each thread creates a batch of
+                                                data from one table, and then switches to the next
+                                                available table to create the next batch. Define the
+                                                Result Set Cache Size and the Batches from Result
+                                                Set properties when you configure a switch tables
+                                                strategy.</li>
+                                            <li>Process All Available Rows from the Table - When
+                                                performing only multithreaded table processing, each
+                                                thread creates multiple batches of data from one
+                                                table, until all available rows are read from that
+                                                table.</li>
+                                        </ul><p>When performing multithreaded partition processing
+                                            or a mix of table and partition processing, the behavior
+                                            for each batch strategy is more complicated. For
+                                            details, see <xref
+                                                href="MultiTableJDBCConsumer-ProcessingQueue.dita#concept_czt_ql2_r1b"
+                                            />.</p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxBatch_row">
@@ -161,8 +191,148 @@
                     </table>
                 </info>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step-JDBCTablestab">
-                <cmd/>
+            <step>
+                <cmd>On the <wintitle>Tables</wintitle> tab, define one or more table
+                    configurations. Click the <uicontrol>Add</uicontrol> icon to define another
+                    table configuration.</cmd>
+                <info>Configure the following properties for each table configuration:<table
+                        frame="all" rowsep="1" colsep="1" id="table_cvl_qp5_qy">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Tables Property <xref
+                                            href="MultiTableJDBCConsumer-TableConfiguration.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_hvl_qp2_qy"/>
+                                        </xref></entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Schema Name</entry>
+                                    <entry>Name of the schema to use for this table
+                                        configuration.</entry>
+                                </row>
+                                <row>
+                                    <entry>Table Name Pattern <xref
+                                            href="MultiTableJDBCConsumer-TableName.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_evl_qp5_qy"/>
+                                        </xref></entry>
+                                    <entry>Pattern of the table names to read for this table
+                                        configuration. Use the SQL LIKE syntax to define the
+                                        pattern. <p>Default is the percentage wildcard (%) which
+                                            matches all tables in the schema.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Table Exclusion Pattern <xref
+                                            href="MultiTableJDBCConsumer-TableName.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_fvl_qp5_qy"/>
+                                        </xref></entry>
+                                    <entry>Pattern of the table names to exclude from being read for
+                                        this table configuration. Use a Java-based regular
+                                        expression, or regex, to define the pattern.<p>Leave empty
+                                            if you do not need to exclude any tables.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Override Offset Columns <xref
+                                            href="MultiTableJDBCConsumer-Offsets.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_gvl_qp5_qy"/>
+                                        </xref></entry>
+                                    <entry>Determines whether to use the primary keys or other
+                                        columns as the offset columns for this table configuration.
+                                            <p>Select to override the primary keys and define other
+                                            offset columns. Clear to use existing primary keys as
+                                            the offset columns. </p><p>To perform multithreaded
+                                            partition processing on a table with multiple key
+                                            columns or a key column with unsupported data types,
+                                            select this option and specify a valid offset column.
+                                            For more information about partition processing
+                                            requirements, see <xref
+                                                href="MultiTableJDBCConsumer-PartitionOffsetTypes.dita#concept_c54_hj1_q1b"
+                                            />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Offset Columns</entry>
+                                    <entry>The offset columns to use. <p>As a best practice, an
+                                            offset column should be an incremental and unique
+                                            column. Having an index on this column is strongly
+                                            encouraged since the underlying query uses an ORDER BY
+                                            and inequality operators on this column.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Initial Offset <xref
+                                            href="MultiTableJDBCConsumer-Offsets.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_hvl_qp5_qy"/>
+                                        </xref></entry>
+                                    <entry>Offset value to use for this table configuration when the
+                                        pipeline starts. Enter the primary key name or offset column
+                                        name and value. For Datetime columns, enter a Long
+                                            value.<p>When you define multiple offset columns, you
+                                            must define an initial offset value for each column, in
+                                            the same order that the columns are defined.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Multithreaded Partition Processing Mode</entry>
+                                    <entry>Determines how the origin performs multithreaded
+                                        processing. Select one of the following options:<ul
+                                            id="ul_btn_wfj_t1b">
+                                            <li>Off - The origin performs multithreaded table
+                                                processing.</li>
+                                            <li>On (Best Effort) - The origin performs multithreaded
+                                                partition processing for all tables that meet the
+                                                requirements and performs multithreaded table
+                                                partitioning for all other tables.</li>
+                                            <li>On (Required) - The origin performs multithreaded
+                                                partition processing for all tables. </li>
+                                        </ul> For more information, see <xref
+                                            href="MultiTableJDBCConsumer-Multithread.dita#concept_nbk_xgt_p1b"
+                                        />.</entry>
+                                </row>
+                                <row>
+                                    <entry>Partition Size</entry>
+                                    <entry>The range of values in the offset column to use to create
+                                        partitions. </entry>
+                                </row>
+                                <row>
+                                    <entry>Max Partitions</entry>
+                                    <entry>The maximum number of partitions to be maintained or
+                                        processed at one time for a single table. Adjusting this
+                                        value can increase throughput depending on various factors,
+                                        including the machine running <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> and the database server type and capacity.<p>The minimum
+                                            positive value is 2, to ensure the origin can make
+                                            progress through the partitions.</p><p>Enter -1 to use
+                                            the default behavior, allowing the origin to create up
+                                            to twice as many partitions for each table as threads
+                                            used by the origin. Best practice is to start with the
+                                            default behavior and adjust to tune
+                                        performance.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Offset Column Conditions <xref
+                                            href="MultiTableJDBCConsumer-Offsets.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ivl_qp5_qy"/>
+                                        </xref></entry>
+                                    <entry>Additional conditions that the origin uses to determine
+                                        where to start reading data for this table configuration.
+                                        The origin adds the defined condition to the WHERE clause of
+                                        the SQL query. <p>Use the expression language to define the
+                                            conditions. For example, you can use the offset:column
+                                            function to compare the value of an offset
+                                        column.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JDBC-Credentials">
                 <cmd/>

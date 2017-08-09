@@ -22,7 +22,7 @@
  <shortdesc>When you configure JDBC Multitable Consumer, you define a table configuration for each
         group of tables that you want to read. A table configuration defines a group of tables from
         the same schema, that have the same table name pattern, and that have proper primary keys or
-        have the same defined offset columns.</shortdesc>
+        have the same user-defined offset columns.</shortdesc>
  <conbody>
         <p><indexterm>JDBC Multitable Consumer origin<indexterm>table
                 configuration</indexterm></indexterm><indexterm>table configuration<indexterm>JDBC
@@ -47,7 +47,8 @@
         <p>You define the following two table configurations for the origin so that the origin can
             read all four tables:</p>
         <p><image href="../Graphics/MultiTableJDBC_TableConfig.png" scale="70" id="image_fwt_nfd_py"
-            /></p>
+                /><draft-comment author="Loretta">Need to update this screenshot again after labels
+                updated.</draft-comment></p>
         <p>Let's take a closer look at the table name pattern and offset properties that you define
             in a table configuration.</p>
  </conbody>

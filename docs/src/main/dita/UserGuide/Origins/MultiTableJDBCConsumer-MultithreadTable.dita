@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_tz5_fw5_gz">
+ <title>Multithreaded Table Processing</title>
+ <conbody>
+  <p><indexterm>JDBC Multitable Consumer origin<indexterm>multithreaded processing for
+                    tables</indexterm></indexterm><indexterm>Number of Threads<indexterm>JDBC
+                    Multitable Consumer</indexterm></indexterm>When performing multithreaded table
+            processing, the JDBC Multitable Consumer origin retrieves the list of tables defined in
+            the table configuration when you start the pipeline. The origin then uses multiple
+            concurrent threads based on the Number of Threads property. Each thread reads data from
+            a single table, and each table can have a maximum of one thread read from it at a
+                time.<note>The Maximum Pool Size property on the Advanced tab defines the maximum
+                number of connections the origin can make to the database. It must be equal to or
+                greater than the value defined for the Number of Threads property.</note></p>
+        <p>As the pipeline runs, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def1_JDBCModified"
+            /></p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def2"
+            /></p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-batchorder"
+            /></p>
+        <p>The order of batch processing depends on many factors. For more information, see <xref
+                href="MultiTableJDBCConsumer-ProcessingQueue.dita#concept_czt_ql2_r1b"/>.</p>
+        <p>For more information about multithreaded pipelines, see <xref
+                href="../Multithreaded_Pipelines/MultithreadedPipelines_Overview.dita#concept_zpp_2xc_py"
+            />.</p>
+        <section id="section_fvq_bpw_hz">
+            <title>Example</title>
+            <p>Say you are reading from ten tables. You set the Number of Threads property to 5 and
+                the Maximum Pool Size property to 6. When you start the pipeline, the origin
+                retrieves the list of tables. The origin then creates five threads to read from the
+                first five tables, and by default <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> creates a matching number of pipeline runners. Upon receiving data, a thread
+                passes a batch to each of the pipeline runners for processing.</p>
+            <p
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HTTPServer-process-p"/>
+        </section>
+ </conbody>
+</concept>

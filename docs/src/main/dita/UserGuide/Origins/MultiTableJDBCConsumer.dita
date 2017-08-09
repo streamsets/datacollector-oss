@@ -19,34 +19,41 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zp3_wnw_4y">
  <title>JDBC Multitable Consumer</title>
- <shortdesc>The JDBC Multitable Consumer origin reads database data from multiple tables through a
-        JDBC connection. The origin returns data as a map with column names and field
-        values.</shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>JDBC Multitable Consumer</indexterm></indexterm><indexterm>JDBC
                 Multitable Consumer
                 origin<indexterm>overview</indexterm></indexterm><indexterm>multithreaded
-                    origins<indexterm>JDBC Multitable Consumer</indexterm></indexterm>When you
-            configure the origin, you define groups of database tables to read. The origin generates
-            SQL queries based on the table configurations that you define. The origin uses multiple
-            threads to enable parallel processing of data. Use the JDBC Multitable Consumer origin
-            to read multiple tables in the same database. For example, you might want to use the
-            origin for database replication. </p>
+                    origins<indexterm>JDBC Multitable Consumer</indexterm></indexterm>The JDBC
+            Multitable Consumer origin reads database data from multiple tables through a JDBC
+            connection. The origin returns data as a map with column names and field values. </p>
+        <p>The origin uses multiple threads to enable parallel processing of tables and partitions.
+            Use the JDBC Multitable Consumer origin to read multiple tables in the same database.
+            For example, you might use the origin to perform database replication. </p>
+        <p>When you configure the JDBC Multitable Consumer origin, you define groups of database
+            tables to read. The origin generates SQL queries based on the table configurations that
+            you define. </p>
         <note>To configure your own SQL query to read database data from a single table or from a
             join of tables, use the <xref href="JDBCConsumer.dita#concept_qhf_hjr_bs"/>
             origin.</note>
-        <p>When you configure JDBC Multitable Consumer, you specify connection information, a query
-            interval, and custom JDBC configuration properties to determine how the origin connects
-            to the database. <ph
+        <p>When you configure the origin, you specify connection information, a query interval, and
+            custom JDBC configuration properties to determine how the origin connects to the
+            database. You also configure the number of threads to use.</p>
+        <p>When you define the table configuration for the groups of tables that you want to
+            process, you can optionally override the default key column and specify the initial
+            offset to use. You can configure the origin to perform multithreaded partition
+            processing, multithreaded table processing, or use the default - a mix of both. When
+            configuring partitions, you can configure the offset size, number of active partitions,
+            and offset conditions.</p>
+        <p>You define the strategy that the origin uses to create each batch of data and the number
+            of batches to create from each result set. You can configure advanced properties, such
+            as the initial order to read from tables, connection related properties, and transaction
+            isolation. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-unsupportedType"
             /></p>
-        <p>You define a table configuration for each group of tables that you want to read. You
-            define the number of threads that the origin uses to read from the tables and the
-            strategy that the origin uses to create each batch of data. You also define the initial
-            order that the origin uses to read the tables.</p>
         <p>When the pipeline stops, JDBC Multitable Consumer notes where it stops reading. When the
             pipeline starts again, JDBC Multitable Consumer continues processing from where it
-            stopped by default. You can reset the origin to process all available data.</p>
+            stopped by default. You can reset the origin to process all available data, using any
+            initial offsets that you defined.</p>
         <p><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-JDBC-legacyInfo"
             /></p>
