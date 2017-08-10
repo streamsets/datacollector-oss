@@ -280,6 +280,11 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-apache-kudu_1_4-lib</artifactId>
+        <version>2.7.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-apache-kafka_0_8_1-lib</artifactId>
         <version>2.7.0.0</version>
       </dependency>
