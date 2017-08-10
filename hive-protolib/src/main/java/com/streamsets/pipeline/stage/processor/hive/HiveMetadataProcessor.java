@@ -477,6 +477,15 @@ public class HiveMetadataProcessor extends RecordProcessor {
             );
           }
         }
+        // Validate that the columns from record itself does not clash with partition columns
+        for(String columnName : recordStructure.keySet()) {
+          if(cachedPartitionTypeInfoMap.containsKey(columnName)) {
+             throw new HiveStageCheckedException(
+                com.streamsets.pipeline.stage.lib.hive.Errors.HIVE_40,
+                columnName
+            );
+          }
+        }
       }
 
       AvroSchemaInfoCacheSupport.AvroSchemaInfo schemaCache = HiveMetastoreUtil.getCacheInfo(
