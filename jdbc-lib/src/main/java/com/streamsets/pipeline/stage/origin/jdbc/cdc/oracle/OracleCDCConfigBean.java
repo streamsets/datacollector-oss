@@ -174,6 +174,19 @@ public class OracleCDCConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Query Timeout",
+      description = "Time to wait before timing out a LogMiner query and returning the batch.",
+      displayPosition = 140,
+      group = "CDC",
+      elDefs = TimeEL.class,
+      defaultValue = "${5 * MINUTES}"
+  )
+  public int queryTimeout;
+
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Send Redo Query",
       description = "Send the actual redo query returned by LogMiner in record headers",

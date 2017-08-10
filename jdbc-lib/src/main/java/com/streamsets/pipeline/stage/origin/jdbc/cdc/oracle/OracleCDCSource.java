@@ -184,8 +184,6 @@ public class OracleCDCSource extends BaseSource {
   public static final String REDO_SELECT_QUERY_FOR_START = "Redo select query for start = {}";
   public static final String REDO_SELECT_QUERY_FOR_RESUME = "Redo select query for resume = {}";
   public static final String CURRENT_LATEST_SCN_IS = "Current latest SCN is: {}";
-  private static final int QUERY_TIMEOUT =
-      Integer.parseInt(System.getProperty("streamsets.oracle.cdc.query.timeout", "300"));
 
   private boolean sentInitialSchemaEvent = false;
   private Optional<ResultSet> currentResultSet = Optional.empty(); //NOSONAR
@@ -199,6 +197,7 @@ public class OracleCDCSource extends BaseSource {
   private PreparedStatement resume;
   private PreparedStatement start;
   private static final int MISSING_LOG_FILE = 1291;
+  private static final int QUERY_TIMEOUT = 1013;
 
   private final Lock bufferedRecordsLock = new ReentrantLock();
 
@@ -502,7 +501,7 @@ public class OracleCDCSource extends BaseSource {
     int countToCheck = 0;
     boolean recordsProduced = false;
     if (!currentResultSet.isPresent()) {
-      selectChanges.setQueryTimeout(QUERY_TIMEOUT);
+      selectChanges.setQueryTimeout(configBean.queryTimeout);
       resultSet = selectChanges.executeQuery();
       currentResultSet = Optional.of(resultSet);
     } else {
@@ -693,13 +692,13 @@ public class OracleCDCSource extends BaseSource {
       }
     } catch (SQLException ex) {
       if (ex.getErrorCode() == MISSING_LOG_FILE) {
+        LOG.warn("SQL Exception while retrieving records", ex);
       } else if (ex.getErrorCode() != RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED) {
         LOG.warn("SQL Exception while retrieving records", ex);
+      } else if (ex.getErrorCode() == QUERY_TIMEOUT) {
+        LOG.warn("LogMiner select query timed out");
       }
-      if (!resultSet.isClosed()) {
-        resultSet.close();
-      }
-      currentResultSet = Optional.empty();
+      closeResultSet(resultSet);
     } finally {
       if (configBean.bufferLocally) {
         closeResultSet(resultSet);
@@ -804,7 +803,9 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private void closeResultSet(ResultSet resultSet) throws SQLException {
-    resultSet.close();
+    if (resultSet != null && !resultSet.isClosed()) {
+      resultSet.close();
+    }
     currentResultSet = Optional.empty();
   }
 
