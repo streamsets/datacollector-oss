@@ -184,6 +184,8 @@ public class OracleCDCSource extends BaseSource {
   public static final String REDO_SELECT_QUERY_FOR_START = "Redo select query for start = {}";
   public static final String REDO_SELECT_QUERY_FOR_RESUME = "Redo select query for resume = {}";
   public static final String CURRENT_LATEST_SCN_IS = "Current latest SCN is: {}";
+  private static final int QUERY_TIMEOUT =
+      Integer.parseInt(System.getProperty("streamsets.oracle.cdc.query.timeout", "300"));
 
   private boolean sentInitialSchemaEvent = false;
   private Optional<ResultSet> currentResultSet = Optional.empty(); //NOSONAR
@@ -388,7 +390,6 @@ public class OracleCDCSource extends BaseSource {
             } else {
               if (lastEndTime != null) {
                 startDate = refreshStartDate(BigDecimal.ZERO);
-                refreshed = false;
               } else {
                 // So this is starting from shutdown/failure, which means the start date is derived from the offset
                 // Since that is the timestamp of the last commit we saw, we must look at the txn_window before that
@@ -501,6 +502,7 @@ public class OracleCDCSource extends BaseSource {
     int countToCheck = 0;
     boolean recordsProduced = false;
     if (!currentResultSet.isPresent()) {
+      selectChanges.setQueryTimeout(QUERY_TIMEOUT);
       resultSet = selectChanges.executeQuery();
       currentResultSet = Optional.of(resultSet);
     } else {
@@ -920,6 +922,11 @@ public class OracleCDCSource extends BaseSource {
     refreshed = true;
     if (incompleteBatch) {
       lastRefresh = System.currentTimeMillis();
+      if (configBean.bufferLocally) {
+        // If we are buffering locally, we don't need to re-read any data, since it is all buffered, so
+        // act as if we did not refresh and we simply use the last end time as start of interval.
+        refreshed = false;
+      }
       return lastEndTime;
     }
 
