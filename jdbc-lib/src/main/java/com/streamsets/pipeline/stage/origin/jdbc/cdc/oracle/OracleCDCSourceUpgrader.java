@@ -53,6 +53,7 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
     configs.add(new Config("oracleCDCConfigBean.unsupportedFieldOp", UnsupportedFieldTypeValues.TO_ERROR));
     configs.add(new Config("oracleCDCConfigBean.keepOriginalQuery", false));
     configs.add(new Config("oracleCDCConfigBean.dbTimeZone", ZoneId.systemDefault().getId()));
+    configs.add(new Config("oracleCDCConfigBean.queryTimeout", "${5 * MINUTES}"));
     return configs;
   }
 }
