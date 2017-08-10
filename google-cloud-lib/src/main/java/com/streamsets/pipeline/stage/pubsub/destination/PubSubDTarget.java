@@ -26,10 +26,10 @@ import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 
 @StageDef(
     version = 1,
-    label = "Google PubSub Publisher",
-    description = "Publishes messages to Google Cloud PubSub",
+    label = "Google Pub/Sub Publisher",
+    description = "Publishes messages to Google Pub/Sub",
     icon = "pubsub.png",
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Destinations/PubSubPublisher.html#task_n1k_sk1_v1b"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

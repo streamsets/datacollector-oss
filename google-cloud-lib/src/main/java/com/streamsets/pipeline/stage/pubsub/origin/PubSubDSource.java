@@ -26,8 +26,8 @@ import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 
 @StageDef(
     version = 1,
-    label = "Google PubSub Subscriber",
-    description = "Consumes messages from a Google PubSub subscription",
+    label = "Google Pub/Sub Subscriber",
+    description = "Consumes messages from a Google Pub/Sub subscription",
     icon = "pubsub.png",
     execution = ExecutionMode.STANDALONE,
     onlineHelpRefUrl = "index.html#Origins/PubSub.html#task_jvp_f5l_r1b"
