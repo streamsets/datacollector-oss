@@ -173,6 +173,7 @@ public class PubSubTarget extends BaseTarget {
       generator.write(record);
     } catch (IOException | DataGeneratorException e) {
       errorRecordHandler.onError(new OnRecordErrorException(record, Errors.PUBSUB_06, e.toString(), e));
+      return;
     }
 
     ByteString data = ByteString.copyFrom(os.toByteArray());
