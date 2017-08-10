@@ -47,7 +47,7 @@ public class PubSubAdvancedConfig {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Custom Endpoint",
-      description = "Optional <host>:<port> formatted endpoint, for example to test against a PubSub emulator.",
+      description = "Optional <host>:<port> formatted endpoint, for example to test against a Pub/Sub emulator.",
       displayPosition = 30,
       group = "#0"
   )
