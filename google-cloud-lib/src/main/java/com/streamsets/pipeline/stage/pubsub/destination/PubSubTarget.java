@@ -41,8 +41,10 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class PubSubTarget extends BaseTarget {
@@ -175,7 +177,12 @@ public class PubSubTarget extends BaseTarget {
     }
 
     ByteString data = ByteString.copyFrom(os.toByteArray());
-    PubsubMessage message = PubsubMessage.newBuilder().setData(data).build();
+
+    Map<String, String> attributes = new HashMap<>();
+    Record.Header header = record.getHeader();
+    header.getAttributeNames().forEach(k -> attributes.put(k, header.getAttribute(k)));
+
+    PubsubMessage message = PubsubMessage.newBuilder().setData(data).putAllAttributes(attributes).build();
 
     ApiFuture<String> messageIdFuture = publisher.publish(message);
     pendingMessages.add(new PendingMessage(record, messageIdFuture));
