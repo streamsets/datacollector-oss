@@ -107,7 +107,7 @@ public class HikariPoolConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "",
+      defaultValue = "[]",
       label = "Additional JDBC Configuration Properties",
       description = "Additional properties to pass to the underlying JDBC driver.",
       displayPosition = 999,
