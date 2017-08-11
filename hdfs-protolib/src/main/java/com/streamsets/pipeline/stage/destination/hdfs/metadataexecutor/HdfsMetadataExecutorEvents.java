@@ -28,4 +28,9 @@ public class HdfsMetadataExecutorEvents {
     .withRequiredField("filepath")
     .withRequiredField("filename")
     .build();
+
+  public static EventCreator FILE_REMOVED = new EventCreator.Builder("file-removed", 1)
+    .withRequiredField("filepath")
+    .withRequiredField("filename")
+    .build();
 }
