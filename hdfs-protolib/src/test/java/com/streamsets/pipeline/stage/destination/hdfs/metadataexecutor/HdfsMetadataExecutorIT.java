@@ -69,7 +69,6 @@ public class HdfsMetadataExecutorIT {
   private static final String INPUT_FILE = "input.file";
 
   private static MiniDFSCluster miniDFS;
-  private static UserGroupInformation fooUgi;
   private static FileSystem fs;
 
   private static String baseDir = "target/" + HdfsMetadataExecutorIT.class.getCanonicalName() + "/";
@@ -103,7 +102,7 @@ public class HdfsMetadataExecutorIT {
     conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
     conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
     conf.set("dfs.namenode.acls.enabled", "true");
-    fooUgi = UserGroupInformation.createUserForTesting("foo", new String[]{ "all"});
+    UserGroupInformation fooUgi = UserGroupInformation.createUserForTesting("foo", new String[]{"all"});
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
     FileSystem.closeAll();
     miniDFS = new MiniDFSCluster.Builder(conf).build();
@@ -147,6 +146,13 @@ public class HdfsMetadataExecutorIT {
     IOUtils.copy(stream, writer, "UTF-8");
 
     Assert.assertEquals(content, writer.toString());
+  }
+
+  /**
+   * Validate that given file does not exists.
+   */
+  private void assertFileDoNotExists(Path outputPath) throws IOException {
+    Assert.assertFalse("File exists: " + outputPath, fs.exists(outputPath));
   }
 
   /**
@@ -284,6 +290,29 @@ public class HdfsMetadataExecutorIT {
   }
 
   @Test
+  public void testRemoveFile() throws Exception {
+    HdfsConnectionConfig conn = new HdfsConnectionConfig();
+    conn.hdfsConfDir = confDir;
+
+    HdfsActionsConfig actions = new HdfsActionsConfig();
+    actions.filePath = "${record:value('/path')}";
+    actions.taskType = TaskType.REMOVE_FILE;
+
+    HdfsMetadataExecutor executor = new HdfsMetadataExecutor(conn, actions);
+
+    ExecutorRunner runner = new ExecutorRunner.Builder(HdfsMetadataDExecutor.class, executor)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+    runner.runInit();
+
+    runner.runWrite(ImmutableList.of(getTestRecord()));
+    assertEvent(HdfsMetadataExecutorEvents.FILE_REMOVED.getName(), runner.getEventRecords(), inputPath);
+    runner.runDestroy();
+
+    assertFileDoNotExists(inputPath);
+  }
+
+  @Test
   public void testMoveFile() throws Exception {
     Path outputPath = new Path(outputDir, INPUT_FILE);
 
@@ -306,6 +335,7 @@ public class HdfsMetadataExecutorIT {
     assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), outputPath);
     runner.runDestroy();
 
+    assertFileDoNotExists(inputPath);
     assertFile(outputPath, CONTENT);
   }
 
@@ -332,6 +362,7 @@ public class HdfsMetadataExecutorIT {
     assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), outputPath);
     runner.runDestroy();
 
+    assertFileDoNotExists(inputPath);
     assertFile(outputPath, CONTENT);
   }
 
@@ -360,6 +391,7 @@ public class HdfsMetadataExecutorIT {
     assertEvent(HdfsMetadataExecutorEvents.FILE_CHANGED.getName(), runner.getEventRecords(), outputPath);
     runner.runDestroy();
 
+    assertFileDoNotExists(inputPath);
     assertFile(outputPath, CONTENT);
   }
 

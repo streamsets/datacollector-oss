@@ -118,7 +118,10 @@ public class HdfsActionsConfig {
     label = "Set Ownership",
     description = "Set to change owner and group of the file.",
     displayPosition = 130,
-    group = "TASKS"
+    group = "TASKS",
+    dependencies = {
+      @Dependency(configName = "taskType", triggeredByValues = {"CHANGE_EXISTING_FILE", "CREATE_EMPTY_FILE"})
+    }
   )
   public boolean shouldChangeOwnership;
 
@@ -157,7 +160,10 @@ public class HdfsActionsConfig {
     label = "Set Permissions",
     description = "Set to override files permissions.",
     displayPosition = 145,
-    group = "TASKS"
+    group = "TASKS",
+    dependencies = {
+      @Dependency(configName = "taskType", triggeredByValues = {"CHANGE_EXISTING_FILE", "CREATE_EMPTY_FILE"})
+    }
   )
   public boolean shouldSetPermissions;
 
@@ -183,7 +189,10 @@ public class HdfsActionsConfig {
     label = "Set ACLs",
     description = "Set to set extended access attributes.",
     displayPosition = 155,
-    group = "TASKS"
+    group = "TASKS",
+    dependencies = {
+      @Dependency(configName = "taskType", triggeredByValues = {"CHANGE_EXISTING_FILE", "CREATE_EMPTY_FILE"})
+    }
   )
   public boolean shouldSetAcls;
 

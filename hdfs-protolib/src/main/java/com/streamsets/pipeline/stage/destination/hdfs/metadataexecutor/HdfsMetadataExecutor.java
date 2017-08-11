@@ -112,78 +112,73 @@ public class HdfsMetadataExecutor extends BaseExecutor {
 
       // Execute all configured HDFS metadata operations as target user
       try {
-        hdfsConnection.getUGI().doAs(new PrivilegedExceptionAction<Void>() {
-          @Override
-          public Void run() throws Exception {
-            Path workingFile = new Path(evaluate(variables, "filePath", actions.filePath));
-            LOG.info("Working on file: " + workingFile);
+        hdfsConnection.getUGI().doAs((PrivilegedExceptionAction<Void>) () -> {
+          Path workingFile = new Path(evaluate(variables, "filePath", actions.filePath));
+          LOG.info("Working on file: " + workingFile);
 
-            // Create empty file if configured
-            if(actions.taskType == TaskType.CREATE_EMPTY_FILE) {
-              ensureDirectoryExists(fs, workingFile.getParent());
-              if(!fs.createNewFile(workingFile)) {
-                throw new IOException("Can't create file (probably already exists): " + workingFile);
-              }
+          // Create empty file if configured
+          if(actions.taskType == TaskType.CREATE_EMPTY_FILE) {
+            ensureDirectoryExists(fs, workingFile.getParent());
+            if(!fs.createNewFile(workingFile)) {
+              throw new IOException("Can't create file (probably already exists): " + workingFile);
+            }
+          }
+
+          if(actions.taskType == TaskType.CHANGE_EXISTING_FILE && (actions.shouldMoveFile || actions.shouldRename)) {
+            Path newPath = workingFile.getParent();
+            String newName = workingFile.getName();
+            if(actions.shouldMoveFile) {
+              newPath = new Path(evaluate(variables, "newLocation", actions.newLocation));
+            }
+            if(actions.shouldRename) {
+              newName = evaluate(variables, "newName", actions.newName);
             }
 
-            if(actions.taskType == TaskType.CHANGE_EXISTING_FILE && (actions.shouldMoveFile || actions.shouldRename)) {
-              Path newPath = workingFile.getParent();
-              String newName = workingFile.getName();
-              if(actions.shouldMoveFile) {
-                newPath = new Path(evaluate(variables, "newLocation", actions.newLocation));
-              }
-              if(actions.shouldRename) {
-                newName = evaluate(variables, "newName", actions.newName);
-              }
+            Path destinationFile = new Path(newPath, newName);
+            ensureDirectoryExists(fs, newPath);
 
-              Path destinationFile = new Path(newPath, newName);
-              ensureDirectoryExists(fs, newPath);
-
-              LOG.debug("Renaming to: {}", destinationFile);
-              if(!fs.rename(workingFile, destinationFile)) {
-                throw new IOException("Can't rename file to: " + destinationFile);
-              }
-              workingFile = destinationFile;
+            LOG.debug("Renaming to: {}", destinationFile);
+            if(!fs.rename(workingFile, destinationFile)) {
+              throw new IOException("Can't rename file to: " + destinationFile);
             }
+            workingFile = destinationFile;
+          }
 
-            if(actions.shouldChangeOwnership) {
+          if(actions.taskType.isOneOf(TaskType.CHANGE_EXISTING_FILE, TaskType.CREATE_EMPTY_FILE)) {
+            if (actions.shouldChangeOwnership) {
               String newOwner = evaluate(variables, "newOwner", actions.newOwner);
               String newGroup = evaluate(variables, "newGroup", actions.newGroup);
               LOG.debug("Applying ownership: user={} and group={}", newOwner, newGroup);
               fs.setOwner(workingFile, newOwner, newGroup);
             }
 
-            if(actions.shouldSetPermissions) {
+            if (actions.shouldSetPermissions) {
               String stringPerms = evaluate(variables, "newPermissions", actions.newPermissions);
               FsPermission fsPerms = HdfsUtils.parseFsPermission(stringPerms);
               LOG.debug("Applying permissions: {} loaded from value '{}'", fsPerms, stringPerms);
               fs.setPermission(workingFile, fsPerms);
             }
 
-            if(actions.shouldSetAcls) {
+            if (actions.shouldSetAcls) {
               String stringAcls = evaluate(variables, "newAcls", actions.newAcls);
               List<AclEntry> acls = AclEntry.parseAclSpec(stringAcls, true);
               LOG.debug("Applying ACLs: {}", stringAcls);
               fs.setAcl(workingFile, acls);
             }
-
-            // Pick the right event based on our main action
-            EventCreator event;
-            if(actions.taskType == TaskType.CREATE_EMPTY_FILE) {
-              event = HdfsMetadataExecutorEvents.FILE_CREATED;
-            } else {
-              event = HdfsMetadataExecutorEvents.FILE_CHANGED;
-            }
-
-            // Issue event with the final file name (e.g. the renamed one if applicable)
-            event.create(getContext())
-              .with("filepath", workingFile.toString())
-              .with("filename", workingFile.getName())
-              .createAndSend();
-
-            LOG.debug("Done changing metadata on file: {}", workingFile);
-            return null;
           }
+
+          if(actions.taskType == TaskType.REMOVE_FILE) {
+            fs.delete(workingFile, true);
+          }
+
+          // Issue event with the final file name (e.g. the renamed one if applicable)
+          actions.taskType.getEventCreator().create(getContext())
+            .with("filepath", workingFile.toString())
+            .with("filename", workingFile.getName())
+            .createAndSend();
+
+          LOG.debug("Done changing metadata on file: {}", workingFile);
+          return null;
         });
       } catch (Throwable e) {
         // Hadoop libraries will wrap any non InterruptedException, RuntimeException, Error or IOException to UndeclaredThrowableException,
