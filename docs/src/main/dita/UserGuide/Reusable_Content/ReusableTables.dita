@@ -2140,6 +2140,80 @@
     </tbody>
    </tgroup>
   </table>
+  <draft-comment author="alisontaylor">Table below is conref'd in full in the Configuring Data
+   Collector topic. All rows except for the first two are conref'd in the Configuring SDC to Publish
+   Metadata topic</draft-comment>
+  <table frame="all" rowsep="1" colsep="1" id="table_uhx_g25_p1b">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="2.8*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.2*"/>
+    <thead>
+     <row>
+      <entry>Metadata Publisher Property</entry>
+      <entry>Description</entry>
+     </row>
+    </thead>
+    <tbody>
+     <row>
+      <entry>lineage.publishers</entry>
+      <entry>Application to publish metadata to. Do not change the default value of
+       <codeph>navigator</codeph>.<p>Uncomment the property to enable metadata
+        publishing.</p></entry>
+     </row>
+     <row>
+      <entry>lineage.publisher.navigator.def</entry>
+      <entry>Stage library name used to connect to Cloudera Navigator, entered in the following
+        format:<codeblock>&lt;stage library name>::
+com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codeblock><p>Uncomment
+        the property and define the appropriate Cloudera CDH stage library version to enable
+        metadata publishing. <ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
+        use the Cloudera CDH stage library version 5.10 or higher to connect to Cloudera Navigator.
+        Do not modify the second half of the property value.</p><p>Default is
+         <codeph>streamsets-datacollector-cdh_5_11-lib</codeph>.</p></entry>
+     </row>
+     <row id="row_navAppURL">
+      <entry>lineage.publisher.navigator.config.application_url</entry>
+      <entry>URL to <ph conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. For
+       example:<codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCBaseURL"/></entry>
+     </row>
+     <row id="row_navURL">
+      <entry>lineage.publisher.navigator.config.navigator_url</entry>
+      <entry>URL to the Cloudera Navigator UI. For example:<p>
+        <codeblock>http://&lt;Navigator Metadata Server host>:&lt;port number>/</codeblock>
+       </p><p>
+        <codeph>&lt;Navigator Metadata Server host></codeph> is the name of the host on which you
+        are running the Navigator Metadata Server role. <codeph>&lt;port number></codeph> is the
+        port configured for the role. The default port number is 7187.</p></entry>
+     </row>
+     <row id="row_NavParentURI">
+      <entry>lineage.publisher.navigator.config.metadata_parent_uri</entry>
+      <entry>Navigator Metadata Parent URI. For example:<p>
+        <codeblock>http://&lt;Navigator Metadata Server host>:&lt;port number>/</codeblock>
+       </p></entry>
+     </row>
+     <row id="row_NavNamespace">
+      <entry>lineage.publisher.navigator.config.namespace</entry>
+      <entry>Namespace that Cloudera Navigator uses to uniquely identify <ph
+       conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> properties.<p>Default is
+        <codeph>sdc</codeph>.</p></entry>
+     </row>
+     <row id="row_NavUserName">
+      <entry>lineage.publisher.navigator.config.username</entry>
+      <entry>User name to connect to Cloudera Navigator. </entry>
+     </row>
+     <row id="row_NavPassword">
+      <entry>lineage.publisher.navigator.config.password</entry>
+      <entry>Password for the Cloudera Navigator account.</entry>
+     </row>
+     <row id="row_NavAutoCommit">
+      <entry>lineage.publisher.navigator.config.autocommit</entry>
+      <entry>Enables Cloudera Navigator to immediately process the published metadata.<p>Setting to
+       true can use a large number of resources on the Cloudera Navigator machine. Set to true only
+       in a development or test environment.</p><p>Default is false. </p></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
   <draft-comment author="alisontaylor">The following table is conref'd in the Vault Credential
    Stores and the Accessing Hashicorp Vault Secrets topics</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table_spl_ycl_r1b">
