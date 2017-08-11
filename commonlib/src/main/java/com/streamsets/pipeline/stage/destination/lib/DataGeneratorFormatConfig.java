@@ -578,6 +578,16 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
   )
   public String xmlSchema = "";
 
+  /**
+   * Indicates whether delimiter must be written after each protobuf message.
+   * By default messages are always written with a delimiter.
+   *
+   * Not writing a delimiter should be supported only in case of destinations that write one record as one message.
+   * For example, in Kafka (with multiple messages per batch) & google pub/sub. Therefore this option must be exposed
+   * to the user only in those destinations.
+   */
+  public boolean isDelimited = true;
+
   /** End Config Defs **/
 
   private DataGeneratorFactory dataGeneratorFactory;
@@ -679,7 +689,8 @@ public class DataGeneratorFormatConfig implements DataFormatConfig{
         break;
       case PROTOBUF:
         builder.setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
-          .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType);
+          .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
+          .setConfig(ProtobufConstants.DELIMITED_KEY, isDelimited);
         break;
       case WHOLE_FILE:
         builder.setConfig(WholeFileDataGeneratorFactory.INCLUDE_CHECKSUM_IN_THE_EVENTS_KEY, includeChecksumInTheEvents);

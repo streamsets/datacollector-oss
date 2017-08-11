@@ -50,7 +50,7 @@ public class TestProtobufDataGenerator {
   public void writeWithOneOfAndMap() throws Exception {
     ByteArrayOutputStream bOut = new ByteArrayOutputStream();
     byte[] expected = FileUtils.readFileToByteArray(new File(Resources.getResource("TestProtobuf3.ser").getPath()));
-    DataGenerator dataGenerator = getDataGenerator(bOut, "TestRecordProtobuf3.desc", "TestRecord");
+    DataGenerator dataGenerator = getDataGenerator(bOut, "TestRecordProtobuf3.desc", "TestRecord", true);
 
     Record record = getContext().createRecord("");
     Map<String, Field> rootField = new HashMap<>();
@@ -79,7 +79,7 @@ public class TestProtobufDataGenerator {
     List<Record> records = ProtobufTestUtil.getProtobufRecords();
 
     // write these records using the protobuf generator
-    DataGenerator gen = getDataGenerator(bOut, "Employee.desc", "util.Employee");
+    DataGenerator gen = getDataGenerator(bOut, "Employee.desc", "util.Employee", true);
     for(Record r : records) {
       gen.write(r);
     }
@@ -92,9 +92,25 @@ public class TestProtobufDataGenerator {
     ProtobufTestUtil.checkProtobufDataUnknownFields(bOut.toByteArray());
   }
 
-  public DataGenerator getDataGenerator(OutputStream os, String protoFile, String messageType)
+  @Test
+  public void testProtobufDataGeneratorNonDelimited() throws Exception {
+
+    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+
+    // create mock sdc records that mimic records parsed from protobuf represented by Employee.desc file.
+    List<Record> records = ProtobufTestUtil.getProtobufRecords();
+
+    // write these records using the protobuf generator
+    DataGenerator gen = getDataGenerator(bOut, "Employee.desc", "util.Employee", false);
+    gen.write(records.get(0));
+
+    ProtobufTestUtil.checkSingleNonDelimitedMessage(bOut.toByteArray());
+
+  }
+
+  public DataGenerator getDataGenerator(OutputStream os, String protoFile, String messageType, boolean isDelimited)
       throws IOException, DataParserException {
-    return getDataGeneratorFactory(protoFile, messageType).getGenerator(os);
+    return getDataGeneratorFactory(protoFile, messageType, isDelimited).getGenerator(os);
   }
 
   private Stage.Context getContext() {
@@ -102,12 +118,13 @@ public class TestProtobufDataGenerator {
       Collections.<String>emptyList());
   }
 
-  public DataGeneratorFactory getDataGeneratorFactory(String protoFile, String messageType) {
+  public DataGeneratorFactory getDataGeneratorFactory(String protoFile, String messageType, boolean isDelimited) {
     DataGeneratorFactoryBuilder dataGenFactoryBuilder = new DataGeneratorFactoryBuilder(getContext(),
       DataGeneratorFormat.PROTOBUF);
     DataGeneratorFactory factory = dataGenFactoryBuilder
       .setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, Resources.getResource(protoFile).getPath())
       .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
+      .setConfig(ProtobufConstants.DELIMITED_KEY, isDelimited)
       .build();
     return factory;
   }
