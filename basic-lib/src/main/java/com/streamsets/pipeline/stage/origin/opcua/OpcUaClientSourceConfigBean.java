@@ -30,7 +30,6 @@ public class OpcUaClientSourceConfigBean {
       label = "Resource URL",
       defaultValue = "opc.tcp://localhost:12686/example",
       description = "Specify the OPC UA resource URL",
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
       group = "OPC_UA"
   )
@@ -42,7 +41,6 @@ public class OpcUaClientSourceConfigBean {
       label = "Application Name",
       defaultValue = "SDC OPC UA Client",
       description = "Specify the OPC UA client application name",
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 20,
       group = "OPC_UA"
   )
@@ -55,7 +53,6 @@ public class OpcUaClientSourceConfigBean {
       label = "Application URI",
       defaultValue = "urn:sdc:pipeline:${pipeline:id()}",
       description = "Specify the OPC UA resource URL",
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 30,
       group = "OPC_UA"
   )
