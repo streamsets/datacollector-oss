@@ -47,6 +47,20 @@ public class PubSubTargetConfig {
   )
   public String topicId;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Write Delimiter",
+      description = "Should be checked when a delimiter must be written between messages. When unchecked " +
+          "only a single message must be written to the destination file/Kafka message, etc.",
+      displayPosition = 445,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat",
+      triggeredByValue = "PROTOBUF"
+  )
+  public boolean isDelimited;
+
   @ConfigDefBean(groups = "CREDENTIALS")
   public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();
 }

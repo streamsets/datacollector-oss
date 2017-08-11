@@ -39,6 +39,7 @@ public class PubSubDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
+    conf.dataFormatConfig.isDelimited = conf.isDelimited;
     return new PubSubTarget(conf);
   }
 }

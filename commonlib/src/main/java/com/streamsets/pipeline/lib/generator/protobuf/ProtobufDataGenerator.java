@@ -31,6 +31,7 @@ public class ProtobufDataGenerator implements DataGenerator {
 
   private final OutputStream outputStream;
   private final Descriptors.Descriptor descriptor;
+  private final boolean isDelimited;
   private boolean closed;
   private final Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap;
   private final Map<String, Object> defaultValueMap;
@@ -39,12 +40,14 @@ public class ProtobufDataGenerator implements DataGenerator {
       OutputStream outputStream,
       Descriptors.Descriptor descriptor,
       Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,
-      Map<String, Object> defaultValueMap
+      Map<String, Object> defaultValueMap,
+      boolean isDelimited
   ) {
     this.outputStream = outputStream;
     this.descriptor = descriptor;
     this.messageTypeToExtensionMap = messageTypeToExtensionMap;
     this.defaultValueMap = defaultValueMap;
+    this.isDelimited = isDelimited;
   }
 
   @Override
@@ -58,7 +61,11 @@ public class ProtobufDataGenerator implements DataGenerator {
         messageTypeToExtensionMap,
         defaultValueMap
     );
-    message.writeDelimitedTo(outputStream);
+    if (isDelimited) {
+      message.writeDelimitedTo(outputStream);
+    } else {
+      message.writeTo(outputStream);
+    }
   }
 
   @Override

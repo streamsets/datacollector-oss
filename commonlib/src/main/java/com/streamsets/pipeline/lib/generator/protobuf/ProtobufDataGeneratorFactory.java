@@ -38,6 +38,7 @@ public class ProtobufDataGeneratorFactory extends DataGeneratorFactory {
     Map<String, Object> configs = new HashMap<>();
     configs.put(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, ProtobufConstants.PROTO_FILE_LOCATION_DEFAULT);
     configs.put(ProtobufConstants.MESSAGE_TYPE_KEY, ProtobufConstants.MESSAGE_TYPE_DEFAULT);
+    configs.put(ProtobufConstants.DELIMITED_KEY, ProtobufConstants.DELIMITED_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 
@@ -46,6 +47,7 @@ public class ProtobufDataGeneratorFactory extends DataGeneratorFactory {
 
   private final String protoDescriptorFile;
   private final String messageType;
+  private final boolean isDelimited;
   private final Descriptors.Descriptor descriptor;
   // this map holds extensions that are defined for each of the message types present in the all the file descriptors
   // that is accessible via the configured Protobuf descriptor file
@@ -56,6 +58,7 @@ public class ProtobufDataGeneratorFactory extends DataGeneratorFactory {
     super(settings);
     this.protoDescriptorFile = settings.getConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY);
     this.messageType = settings.getConfig(ProtobufConstants.MESSAGE_TYPE_KEY);
+    this.isDelimited = settings.getConfig(ProtobufConstants.DELIMITED_KEY);
     messageTypeToExtensionMap = new HashMap<>();
     defaultValueMap = new HashMap<>();
     // Get the descriptor for the expected message type
@@ -74,7 +77,8 @@ public class ProtobufDataGeneratorFactory extends DataGeneratorFactory {
         os,
         descriptor,
         messageTypeToExtensionMap,
-        defaultValueMap
+        defaultValueMap,
+        isDelimited
     );
   }
 
