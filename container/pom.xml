@@ -398,13 +398,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!-- Include current Jersey artifacts -->
-    <dependency>
-      <groupId>org.glassfish.jersey.media</groupId>
-      <artifactId>jersey-media-multipart</artifactId>
-      <version>${jersey.version}</version>
-    </dependency>
-    <!-- End Jersey artifacts -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-pool2</artifactId>

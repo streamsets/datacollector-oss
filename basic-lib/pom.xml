@@ -132,19 +132,16 @@
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-client</artifactId>
-      <version>${jersey.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.connectors</groupId>
       <artifactId>jersey-grizzly-connector</artifactId>
-      <version>${jersey.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.security</groupId>
       <artifactId>oauth1-client</artifactId>
-      <version>${jersey.version}</version>
       <scope>compile</scope>
     </dependency>
 
@@ -332,13 +329,11 @@
      <dependency>
       <groupId>org.glassfish.jersey.test-framework.providers</groupId>
       <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
-      <version>${jersey.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.glassfish.jersey.media</groupId>
       <artifactId>jersey-media-json-jackson</artifactId>
-      <version>${jersey.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
