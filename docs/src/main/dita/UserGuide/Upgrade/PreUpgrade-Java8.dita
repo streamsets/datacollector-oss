@@ -29,9 +29,9 @@
         <p>All services that use Data Collector JAR files also must run on Java 8. This means that
             your Hadoop cluster must run on Java 8 if you are using cluster pipelines, the Spark
             Executor, or the MapReduce Executor. </p>
-        <p>To migrate to Java 8, complete the following steps before upgrading to <ph
+        <p>To migrate to Java 8, complete the following steps before upgrading to the latest <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            version 2.5.0.0:</p>
+            version:</p>
         <ol id="ol_h33_fhp_hz">
             <li>Shut down <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

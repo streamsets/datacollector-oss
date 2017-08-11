@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_iz5_ptt_p1b">
+ <title>Prerequisites</title>
+ <conbody>
+        <p><indexterm>Cloudera Navigator<indexterm>prerequisites</indexterm></indexterm>Before you
+            enable <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            publish pipeline metadata to Cloudera Navigator, you must complete the following
+            prerequisites:</p>
+        <dl>
+            <dlentry>
+                <dt>Verify that <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> has the Cloudera CDH stage library version 5.10 or 5.11 installed. </dt>
+                <dd><ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> requires the Cloudera CDH stage library version 5.10 or 5.11 to connect to
+                    and publish metadata to Cloudera Navigator. </dd>
+                <dd>To verify that a <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> has a valid Cloudera CDH stage library installed, click the Package Manager
+                    icon (<image href="../Graphics/icon_PackageManager.png" scale="70"
+                        id="image_hgv_t1q_rx"/>) to display the list of installed stage libraries.
+                    If the required library version is not installed, <xref
+                        href="../Installation/AddtionalStageLibs.dita#concept_fb2_qmn_bz">install
+                        the library</xref> before configuring <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to publish pipeline metadata to Cloudera Navigator.</dd>
+            </dlentry>
+            <dlentry>
+                <dt>Add the Cloudera Navigator data management roles to your Cloudera Manager
+                    cluster. </dt>
+                <dd>Add the following Navigator roles to the Cloudera Management Service:<ul
+                        id="ul_jml_dwt_p1b">
+                        <li>Cloudera Navigator Audit Server role</li>
+                        <li>Cloudera Navigator Metadata Server role</li>
+                    </ul></dd>
+                <dd>For instructions, see the Cloudera Manager documentation. </dd>
+            </dlentry>
+        </dl>
+    </conbody>
+</concept>
