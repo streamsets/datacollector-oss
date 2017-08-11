@@ -53,7 +53,7 @@ public class PreviewApi {
   /**
    * Run Pipeline preview
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param stageOutputsToOverrideJson
    * @param rev
    * @param batchSize
@@ -63,23 +63,26 @@ public class PreviewApi {
    * @param timeout
    * @return PreviewInfoJson
    */
-  public PreviewInfoJson previewWithOverride (String pipelineName, List<StageOutputJson> stageOutputsToOverrideJson, String rev, Integer batchSize, Integer batches, Boolean skipTargets, String endStage, Long timeout) throws ApiException {
+  public PreviewInfoJson previewWithOverride (String pipelineId, List<StageOutputJson> stageOutputsToOverrideJson,
+                                              String rev, Integer batchSize, Integer batches, Boolean skipTargets,
+                                              String endStage, Long timeout) throws ApiException {
     Object postBody = stageOutputsToOverrideJson;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling previewWithOverride");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling previewWithOverride");
     }
 
     // verify the required parameter 'stageOutputsToOverrideJson' is set
     if (stageOutputsToOverrideJson == null) {
-      throw new ApiException(400, "Missing the required parameter 'stageOutputsToOverrideJson' when calling previewWithOverride");
+      throw new ApiException(400,
+          "Missing the required parameter 'stageOutputsToOverrideJson' when calling previewWithOverride");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/preview".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/preview".replaceAll("\\{format\\}","json")
+      .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -131,17 +134,17 @@ public class PreviewApi {
   /**
    * Return Preview Data by previewer ID
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param previewerId
    * @return PreviewOutputJson
    */
-  public PreviewOutputJson getPreviewData (String pipelineName, String previewerId) throws ApiException {
+  public PreviewOutputJson getPreviewData (String pipelineId, String previewerId) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getPreviewData");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getPreviewData");
     }
 
     // verify the required parameter 'previewerId' is set
@@ -150,8 +153,8 @@ public class PreviewApi {
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/preview/{previewerId}".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+    String path = "/v1/pipeline/{pipelineId}/preview/{previewerId}".replaceAll("\\{format\\}","json")
+      .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()))
       .replaceAll("\\{" + "previewerId" + "\\}", apiClient.escapeString(previewerId.toString()));
 
     // query params
@@ -192,17 +195,17 @@ public class PreviewApi {
   /**
    * Stop Preview by previewer ID
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param previewerId
    * @return PreviewInfoJson
    */
-  public PreviewInfoJson stopPreview (String pipelineName, String previewerId) throws ApiException {
+  public PreviewInfoJson stopPreview (String pipelineId, String previewerId) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling stopPreview");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling stopPreview");
     }
 
     // verify the required parameter 'previewerId' is set
@@ -211,8 +214,8 @@ public class PreviewApi {
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/preview/{previewerId}".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+    String path = "/v1/pipeline/{pipelineId}/preview/{previewerId}".replaceAll("\\{format\\}","json")
+      .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()))
       .replaceAll("\\{" + "previewerId" + "\\}", apiClient.escapeString(previewerId.toString()));
 
     // query params
@@ -253,17 +256,17 @@ public class PreviewApi {
   /**
    * Return Preview status by previewer ID
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param previewerId
    * @return PreviewInfoJson
    */
-  public PreviewInfoJson getPreviewStatus (String pipelineName, String previewerId) throws ApiException {
+  public PreviewInfoJson getPreviewStatus (String pipelineId, String previewerId) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getPreviewStatus");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getPreviewStatus");
     }
 
     // verify the required parameter 'previewerId' is set
@@ -272,8 +275,8 @@ public class PreviewApi {
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/preview/{previewerId}/status".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+    String path = "/v1/pipeline/{pipelineId}/preview/{previewerId}/status".replaceAll("\\{format\\}","json")
+      .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()))
       .replaceAll("\\{" + "previewerId" + "\\}", apiClient.escapeString(previewerId.toString()));
 
     // query params
@@ -314,22 +317,22 @@ public class PreviewApi {
   /**
    * Get raw source preview data for pipeline name and revision
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @return RawPreview
    */
-  public RawPreview rawSourcePreview (String pipelineName, String rev) throws ApiException {
+  public RawPreview rawSourcePreview (String pipelineId, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling rawSourcePreview");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling rawSourcePreview");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/rawSourcePreview".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/rawSourcePreview".replaceAll("\\{format\\}","json")
+      .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -371,23 +374,23 @@ public class PreviewApi {
   /**
    * Validate pipeline configuration and return validation status and issues
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param timeout
    * @return PreviewInfoJson
    */
-  public PreviewInfoJson validateConfigs (String pipelineName, String rev, Long timeout) throws ApiException {
+  public PreviewInfoJson validateConfigs (String pipelineId, String rev, Long timeout) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling validateConfigs");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling validateConfigs");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/validate".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/validate".replaceAll("\\{format\\}","json")
+      .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();

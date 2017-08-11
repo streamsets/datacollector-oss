@@ -56,25 +56,25 @@ public class StoreApi {
   /**
    * Find Pipeline Configuration by name and revision
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param get
    * @param attachment
    * @return PipelineConfigurationJson
    */
-  public PipelineConfigurationJson getPipelineInfo (String pipelineName, String rev, String get, Boolean attachment)
+  public PipelineConfigurationJson getPipelineInfo (String pipelineId, String rev, String get, Boolean attachment)
       throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getPipelineInfo");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getPipelineInfo");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -109,27 +109,27 @@ public class StoreApi {
   /**
    * Add a new Pipeline Configuration to the store
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param description
    * @param autoGeneratePipelineId
    * @return PipelineConfigurationJson
    */
   public PipelineConfigurationJson createPipeline (
-      String pipelineName,
+      String pipelineId,
       String description,
       boolean autoGeneratePipelineId
   ) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling createPipeline");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling createPipeline");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -160,14 +160,14 @@ public class StoreApi {
   /**
    * Update an existing Pipeline Configuration by name
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param pipeline
    * @param rev
    * @param description
    * @return PipelineConfigurationJson
    */
   public PipelineConfigurationJson savePipeline (
-      String pipelineName,
+      String pipelineId,
       PipelineConfigurationJson pipeline,
       String rev,
       String description
@@ -175,9 +175,9 @@ public class StoreApi {
     Object postBody = pipeline;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling savePipeline");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling savePipeline");
     }
 
     // verify the required parameter 'pipeline' is set
@@ -186,8 +186,8 @@ public class StoreApi {
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -220,21 +220,21 @@ public class StoreApi {
   /**
    * Delete Pipeline Configuration by name
    *
-   * @param pipelineName
+   * @param pipelineId
    * @return void
    */
-  public void deletePipeline (String pipelineName) throws ApiException {
+  public void deletePipeline (String pipelineId) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling deletePipeline");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling deletePipeline");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -260,22 +260,22 @@ public class StoreApi {
   /**
    * Find Pipeline Rules by name and revision
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @return RuleDefinitionsJson
    */
-  public RuleDefinitionsJson getPipelineRules (String pipelineName, String rev) throws ApiException {
+  public RuleDefinitionsJson getPipelineRules (String pipelineId, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getPipelineRules");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getPipelineRules");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/rules".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/rules".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -304,22 +304,22 @@ public class StoreApi {
   /**
    * Update an existing Pipeline Rules by name
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param pipeline
    * @param rev
    * @return RuleDefinitionsJson
    */
   public RuleDefinitionsJson savePipelineRules (
-      String pipelineName,
+      String pipelineId,
       RuleDefinitionsJson pipeline,
       String rev
   ) throws ApiException {
     Object postBody = pipeline;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling savePipelineRules");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling savePipelineRules");
     }
 
     // verify the required parameter 'pipeline' is set
@@ -328,8 +328,8 @@ public class StoreApi {
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/rules".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/rules".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -408,14 +408,14 @@ public class StoreApi {
   /**
    * Export Pipeline Configuration & Rules by name and revision
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param attachment
    * @param includeLibraryDefinitions
    * @return PipelineEnvelopeJson
    */
   public PipelineEnvelopeJson exportPipeline (
-      String pipelineName,
+      String pipelineId,
       String rev,
       Boolean attachment,
       Boolean includeLibraryDefinitions
@@ -423,15 +423,15 @@ public class StoreApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getPipelineInfo");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getPipelineInfo");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/export"
+    String path = "/v1/pipeline/{pipelineId}/export"
         .replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -463,14 +463,14 @@ public class StoreApi {
   /**
    * Import Pipeline Configuration & Rules
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param overwrite
    * @param autoGeneratePipelineId
    * @return PipelineEnvelopeJson
    */
   public PipelineEnvelopeJson importPipeline (
-      String pipelineName,
+      String pipelineId,
       String rev,
       Boolean overwrite,
       Boolean autoGeneratePipelineId,
@@ -479,9 +479,9 @@ public class StoreApi {
     Object postBody = pipelineEnvelope;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling importPipeline");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling importPipeline");
     }
 
     // verify the required parameter 'pipeline' is set
@@ -490,8 +490,8 @@ public class StoreApi {
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/import".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/import".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();

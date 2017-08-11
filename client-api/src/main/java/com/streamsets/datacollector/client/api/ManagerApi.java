@@ -58,23 +58,23 @@ public class ManagerApi {
   /**
    * Delete alert by Pipeline name, revision and Alert ID
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param alertId
    * @return Boolean
    */
-  public Boolean deleteAlert (String pipelineName, String rev, String alertId) throws ApiException {
+  public Boolean deleteAlert (String pipelineId, String rev, String alertId) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling deleteAlert");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling deleteAlert");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/alerts".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/alerts".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -118,24 +118,24 @@ public class ManagerApi {
   /**
    * Returns error messages by stage instance name and size
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param stageInstanceName
    * @param size
    * @return List<ErrorMessageJson>
    */
-  public List<ErrorMessageJson> getErrorMessages (String pipelineName, String rev, String stageInstanceName, Integer size) throws ApiException {
+  public List<ErrorMessageJson> getErrorMessages (String pipelineId, String rev, String stageInstanceName, Integer size) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getErrorMessages");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getErrorMessages");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/errorMessages".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/errorMessages".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -182,25 +182,25 @@ public class ManagerApi {
   /**
    * Returns error records by stage instance name and size
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param stageInstanceName
    * @param size
    * @return List<RecordJson>
    */
-  public List<RecordJson> getErrorRecords (String pipelineName, String rev, String stageInstanceName, Integer size)
+  public List<RecordJson> getErrorRecords (String pipelineId, String rev, String stageInstanceName, Integer size)
       throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getErrorRecords");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getErrorRecords");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/errorRecords".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/errorRecords".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -247,23 +247,23 @@ public class ManagerApi {
   /**
    * Find history by pipeline name
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param fromBeginning
    * @return List<PipelineStateJson>
    */
-  public List<PipelineStateJson> getHistory (String pipelineName, String rev, Boolean fromBeginning) throws ApiException {
+  public List<PipelineStateJson> getHistory (String pipelineId, String rev, Boolean fromBeginning) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getHistory");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getHistory");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/history".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/history".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -308,22 +308,22 @@ public class ManagerApi {
   /**
    * Delete history by pipeline name
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @return void
    */
-  public void deleteHistory (String pipelineName, String rev) throws ApiException {
+  public void deleteHistory (String pipelineId, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling deleteHistory");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling deleteHistory");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/history".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/history".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -365,22 +365,22 @@ public class ManagerApi {
   /**
    * Return Pipeline Metrics
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @return MetricRegistryJson
    */
-  public MetricRegistryJson getMetrics (String pipelineName, String rev) throws ApiException {
+  public MetricRegistryJson getMetrics (String pipelineId, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getMetrics");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getMetrics");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/metrics".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/metrics".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -423,22 +423,22 @@ public class ManagerApi {
   /**
    * Reset Origin Offset
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @return void
    */
-  public void resetOffset (String pipelineName, String rev) throws ApiException {
+  public void resetOffset (String pipelineId, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling resetOffset");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling resetOffset");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/resetOffset".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/resetOffset".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -480,25 +480,25 @@ public class ManagerApi {
   /**
    * Returns Sampled records by sample ID and size
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param sampleId
    * @param sampleSize
    * @return List<SampledRecordJson>
    */
-  public List<SampledRecordJson> getSampledRecords (String pipelineName, String rev, String sampleId,
+  public List<SampledRecordJson> getSampledRecords (String pipelineId, String rev, String sampleId,
                                                     Integer sampleSize) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSampledRecords");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getSampledRecords");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/sampledRecords".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/sampledRecords".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -545,18 +545,18 @@ public class ManagerApi {
   /**
    * Return Snapshot data
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param snapshotName
    * @param rev
    * @return SnapshotDataJson
    */
-  public SnapshotDataJson getSnapshot (String pipelineName, String snapshotName, String rev) throws ApiException {
+  public SnapshotDataJson getSnapshot (String pipelineId, String snapshotName, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSnapshot");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getSnapshot");
     }
 
     // verify the required parameter 'snapshotName' is set
@@ -565,8 +565,8 @@ public class ManagerApi {
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/snapshot/{snapshotName}".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+    String path = "/v1/pipeline/{pipelineId}/snapshot/{snapshotName}".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()))
         .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
 
     // query params
@@ -610,7 +610,7 @@ public class ManagerApi {
   /**
    * Capture Snapshot
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param snapshotName
    * @param snapshotLabel
    * @param rev
@@ -618,14 +618,14 @@ public class ManagerApi {
    * @param batchSize
    * @return void
    */
-  public void captureSnapshot (String pipelineName, String snapshotName, String snapshotLabel, String rev,
+  public void captureSnapshot (String pipelineId, String snapshotName, String snapshotLabel, String rev,
                                Integer batches, Integer batchSize) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling captureSnapshot");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling captureSnapshot");
     }
 
     // verify the required parameter 'snapshotName' is set
@@ -634,8 +634,8 @@ public class ManagerApi {
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/snapshot/{snapshotName}".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+    String path = "/v1/pipeline/{pipelineId}/snapshot/{snapshotName}".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()))
         .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
 
     // query params
@@ -684,18 +684,18 @@ public class ManagerApi {
   /**
    * Delete Snapshot data
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param snapshotName
    * @param rev
    * @return void
    */
-  public void deleteSnapshot (String pipelineName, String snapshotName, String rev) throws ApiException {
+  public void deleteSnapshot (String pipelineId, String snapshotName, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling deleteSnapshot");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling deleteSnapshot");
     }
 
     // verify the required parameter 'snapshotName' is set
@@ -704,8 +704,8 @@ public class ManagerApi {
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/snapshot/{snapshotName}".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+    String path = "/v1/pipeline/{pipelineId}/snapshot/{snapshotName}".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()))
         .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
 
     // query params
@@ -748,18 +748,18 @@ public class ManagerApi {
   /**
    * Return Snapshot status
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param snapshotName
    * @param rev
    * @return SnapshotInfoJson
    */
-  public SnapshotInfoJson getSnapshotStatus (String pipelineName, String snapshotName, String rev) throws ApiException {
+  public SnapshotInfoJson getSnapshotStatus (String pipelineId, String snapshotName, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSnapshotStatus");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getSnapshotStatus");
     }
 
     // verify the required parameter 'snapshotName' is set
@@ -768,8 +768,8 @@ public class ManagerApi {
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/snapshot/{snapshotName}/status".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+    String path = "/v1/pipeline/{pipelineId}/snapshot/{snapshotName}/status".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()))
         .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
 
     // query params
@@ -813,22 +813,22 @@ public class ManagerApi {
   /**
    * Returns Snapshot Info for the given pipeline
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @return List<SnapshotInfoJson>
    */
-  public List<SnapshotInfoJson> getSnapshotsInfo (String pipelineName, String rev) throws ApiException {
+  public List<SnapshotInfoJson> getSnapshotsInfo (String pipelineId, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSnapshotsInfo");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getSnapshotsInfo");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/snapshots".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/snapshots".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -871,27 +871,27 @@ public class ManagerApi {
   /**
    * Start Pipeline
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param runtimeParameters
    * @return PipelineStateJson
    */
   public PipelineStateJson startPipeline (
-      String pipelineName,
+      String pipelineId,
       String rev,
       Map<String, Object> runtimeParameters
   ) throws ApiException {
     Object postBody = runtimeParameters;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling startPipeline");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling startPipeline");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/start".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/start".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -929,22 +929,22 @@ public class ManagerApi {
   /**
    * Returns Pipeline Status for the given pipeline
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @return PipelineStateJson
    */
-  public PipelineStateJson getPipelineStatus (String pipelineName, String rev) throws ApiException {
+  public PipelineStateJson getPipelineStatus (String pipelineId, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getPipelineStatus");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getPipelineStatus");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/status".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/status".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -987,22 +987,22 @@ public class ManagerApi {
   /**
    * Stop Pipeline
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @return PipelineStateJson
    */
-  public PipelineStateJson stopPipeline (String pipelineName, String rev) throws ApiException {
+  public PipelineStateJson stopPipeline (String pipelineId, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling stopPipeline");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling stopPipeline");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/stop".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/stop".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -1033,22 +1033,22 @@ public class ManagerApi {
   /**
    * Force Stop Pipeline
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @return PipelineStateJson
    */
-  public PipelineStateJson forceStopPipeline (String pipelineName, String rev) throws ApiException {
+  public PipelineStateJson forceStopPipeline (String pipelineId, String rev) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
-    if (pipelineName == null) {
-      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling stopPipeline");
+    // verify the required parameter 'pipelineId' is set
+    if (pipelineId == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling stopPipeline");
     }
 
     // create path and map variables
-    String path = "/v1/pipeline/{pipelineName}/forceStop".replaceAll("\\{format\\}","json")
-        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+    String path = "/v1/pipeline/{pipelineId}/forceStop".replaceAll("\\{format\\}","json")
+        .replaceAll("\\{" + "pipelineId" + "\\}", apiClient.escapeString(pipelineId.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -1215,7 +1215,7 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
+    // verify the required parameter 'pipelineId' is set
     if (pipelineId == null) {
       throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling getCommittedOffsets");
     }
@@ -1251,7 +1251,7 @@ public class ManagerApi {
   /**
    * Update Pipeline Committed Offsets.
    *
-   * @param pipelineName
+   * @param pipelineId
    * @param rev
    * @param sourceOffset
    */
@@ -1263,7 +1263,7 @@ public class ManagerApi {
     Object postBody = sourceOffset;
     byte[] postBinaryBody = null;
 
-    // verify the required parameter 'pipelineName' is set
+    // verify the required parameter 'pipelineId' is set
     if (pipelineId == null) {
       throw new ApiException(400, "Missing the required parameter 'pipelineId' when calling updateCommittedOffsets");
     }
