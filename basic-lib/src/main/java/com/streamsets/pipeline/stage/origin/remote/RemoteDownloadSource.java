@@ -433,6 +433,10 @@ public class RemoteDownloadSource extends BaseSource {
   }
 
   private void moveFileToError(RemoteFile fileToMove) {
+    if (fileToMove == null) {
+      LOG.warn("No file to move to error, since no file is currently in-process");
+      return;
+    }
     if (errorArchive != null) {
       int read;
       File errorFile = new File(errorArchive, fileToMove.filename);
@@ -454,7 +458,7 @@ public class RemoteDownloadSource extends BaseSource {
 
   private void handleFatalException(Exception ex, RemoteFile next) throws StageException {
     if (ex instanceof FileNotFoundException) {
-      LOG.warn("File: " + next.filename + " was found in listing, but is not downloadable", ex);
+      LOG.warn("File: {} was found in listing, but is not downloadable", next != null ? next.filename : "(null)", ex);
     }
     if (ex instanceof ClosedByInterruptException || ex.getCause() instanceof ClosedByInterruptException) {
       //If the pipeline was stopped, we may get a ClosedByInterruptException while reading avro data.
