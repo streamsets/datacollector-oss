@@ -28,6 +28,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.h2.tools.SimpleResultSet;
@@ -848,6 +849,10 @@ public class TestJdbcSource {
       assertEquals("2", parsedRecord.getHeader().getAttribute("jdbc.DEC.precision"));
       assertEquals(String.valueOf(Types.DECIMAL), parsedRecord.getHeader().getAttribute("jdbc.DEC.jdbcType"));
       assertEquals("TEST_JDBC_NS_HEADERS", parsedRecord.getHeader().getAttribute("jdbc.tables"));
+
+      Field decimalField = parsedRecord.get("/DEC");
+      assertEquals("1", decimalField.getAttribute(HeaderAttributeConstants.ATTR_SCALE));
+      assertEquals("2", decimalField.getAttribute(HeaderAttributeConstants.ATTR_PRECISION));
     } finally {
       runner.runDestroy();
     }

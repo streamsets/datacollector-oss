@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.avro.Errors;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.avro.AvroRuntimeException;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
@@ -180,8 +181,8 @@ public class AvroTypeUtil {
             value = new BigDecimal(unscaledBigInteger, scale);
           }
           returnField = Field.create(Field.Type.DECIMAL, value);
-          returnField.setAttribute(SCALE, String.valueOf(scale));
-          returnField.setAttribute(PRECISION, String.valueOf(precision));
+          returnField.setAttribute(HeaderAttributeConstants.ATTR_SCALE, String.valueOf(scale));
+          returnField.setAttribute(HeaderAttributeConstants.ATTR_PRECISION, String.valueOf(precision));
           break;
         case LOGICAL_TYPE_DATE:
           if(schema.getType() != Schema.Type.INT) {
