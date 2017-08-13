@@ -22,6 +22,16 @@ package com.streamsets.pipeline.stage.common;
 public class HeaderAttributeConstants {
 
   /**
+   * Field attribute for Decimal's scale.
+   */
+  public static final String ATTR_SCALE = "scale";
+
+  /**
+   * Field attribute for Decimal's precision.
+   */
+  public static final String ATTR_PRECISION = "precision";
+
+  /**
    * Full file path to the source file.
    *
    * Applicable for LogTail, Directory spooling, ...

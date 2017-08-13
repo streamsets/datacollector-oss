@@ -33,6 +33,7 @@ import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -228,8 +229,7 @@ public class RandomDataGeneratorSource extends BasePushSource {
     // Generate random data per configuration
     LinkedHashMap<String, Field> map = new LinkedHashMap<>();
     for(DataGeneratorConfig dataGeneratorConfig : dataGenConfigs) {
-      map.put(dataGeneratorConfig.field, Field.create(getFieldType(dataGeneratorConfig.type),
-        generateRandomData(dataGeneratorConfig)));
+      map.put(dataGeneratorConfig.field, generateRandomData(dataGeneratorConfig));
     }
 
     // Sent normal record
@@ -262,62 +262,36 @@ public class RandomDataGeneratorSource extends BasePushSource {
     }
   }
 
-  private Field.Type getFieldType(Type type) {
-    switch(type) {
-      case LONG:
-        return Field.Type.LONG;
-      case BOOLEAN:
-        return Field.Type.BOOLEAN;
-      case DOUBLE:
-        return Field.Type.DOUBLE;
-      case DATE:
-        return Field.Type.DATE;
-      case DATETIME:
-        return Field.Type.DATETIME;
-      case TIME:
-        return Field.Type.TIME;
-      case STRING:
-        return Field.Type.STRING;
-      case INTEGER:
-        return Field.Type.INTEGER;
-      case FLOAT:
-        return Field.Type.FLOAT;
-      case DECIMAL:
-        return Field.Type.DECIMAL;
-      case BYTE_ARRAY:
-        return Field.Type.BYTE_ARRAY;
-      case LONG_SEQUENCE:
-        return Field.Type.LONG;
-    }
-    return Field.Type.STRING;
-  }
-
-  private Object generateRandomData(DataGeneratorConfig config) {
+  private Field generateRandomData(DataGeneratorConfig config) {
     switch(config.type) {
       case BOOLEAN :
-        return random.nextBoolean();
+        return Field.create(Field.Type.BOOLEAN, random.nextBoolean());
       case DATE:
-        return getRandomDate();
+        return Field.create(Field.Type.DATE, getRandomDate());
       case DATETIME:
-        return getRandomDateTime();
+        return Field.create(Field.Type.DATETIME, getRandomDateTime());
       case TIME:
-        return getRandomTime();
+        return Field.create(Field.Type.TIME, getRandomTime());
       case DOUBLE:
-        return random.nextDouble();
+        return Field.create(Field.Type.DOUBLE, random.nextDouble());
       case FLOAT:
-        return random.nextFloat();
+        return Field.create(Field.Type.FLOAT, random.nextFloat());
       case INTEGER:
-        return random.nextInt();
+        return Field.create(Field.Type.INTEGER, random.nextInt());
       case LONG:
-        return random.nextLong();
+        return Field.create(Field.Type.LONG, random.nextLong());
       case STRING:
-        return UUID.randomUUID().toString();
+        return Field.create(Field.Type.STRING, UUID.randomUUID().toString());
       case DECIMAL:
-        return new BigDecimal(BigInteger.valueOf(random.nextLong() % (long)Math.pow(10, config.precision)), config.scale);
+        BigDecimal decimal = new BigDecimal(BigInteger.valueOf(random.nextLong() % (long)Math.pow(10, config.precision)), config.scale);
+        Field decimalField = Field.create(Field.Type.DECIMAL, decimal);
+        decimalField.setAttribute(HeaderAttributeConstants.ATTR_SCALE, String.valueOf(config.scale));
+        decimalField.setAttribute(HeaderAttributeConstants.ATTR_PRECISION, String.valueOf(config.precision));
+        return decimalField;
       case BYTE_ARRAY:
-        return "StreamSets Inc, San Francisco".getBytes(StandardCharsets.UTF_8);
+        return Field.create(Field.Type.BYTE_ARRAY, "StreamSets Inc, San Francisco".getBytes(StandardCharsets.UTF_8));
       case LONG_SEQUENCE:
-        return counter++;
+        return Field.create(Field.Type.LONG, counter++);
     }
     return null;
   }

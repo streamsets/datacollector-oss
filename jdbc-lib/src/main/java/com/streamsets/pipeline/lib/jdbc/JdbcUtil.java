@@ -36,6 +36,7 @@ import com.streamsets.pipeline.lib.event.CommonEvents;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.zaxxer.hikari.HikariConfig;
@@ -476,6 +477,8 @@ public class JdbcUtil {
           case Types.DECIMAL:
           case Types.NUMERIC:
             field = Field.create(Field.Type.DECIMAL, rs.getBigDecimal(columnIndex));
+            field.setAttribute(HeaderAttributeConstants.ATTR_SCALE, String.valueOf(rs.getMetaData().getScale(columnIndex)));
+            field.setAttribute(HeaderAttributeConstants.ATTR_PRECISION, String.valueOf(rs.getMetaData().getPrecision(columnIndex)));
             break;
           case Types.DOUBLE:
             field = Field.create(Field.Type.DOUBLE, rs.getObject(columnIndex));
