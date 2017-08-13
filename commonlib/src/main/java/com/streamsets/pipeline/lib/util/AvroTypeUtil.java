@@ -59,16 +59,16 @@ public class AvroTypeUtil {
 
   public static final String SCHEMA_PATH_SEPARATOR = ".";
 
-  static final String SCALE = "scale";
-  static final String PRECISION = "precision";
+  public static final String LOGICAL_TYPE_ATTR_SCALE = "scale";
+  public static final String LOGICAL_TYPE_ATTR_PRECISION = "precision";
 
-  private static final String LOGICAL_TYPE = "logicalType";
-  private static final String LOGICAL_TYPE_DECIMAL = "decimal";
-  private static final String LOGICAL_TYPE_DATE = "date";
-  private static final String LOGICAL_TYPE_TIME_MILLIS = "time-millis";
-  private static final String LOGICAL_TYPE_TIME_MICROS = "time-micros";
-  private static final String LOGICAL_TYPE_TIMESTAMP_MILLIS = "timestamp-millis";
-  private static final String LOGICAL_TYPE_TIMESTAMP_MICROS = "timestamp-micros";
+  public static final String LOGICAL_TYPE = "logicalType";
+  public static final String LOGICAL_TYPE_DECIMAL = "decimal";
+  public static final String LOGICAL_TYPE_DATE = "date";
+  public static final String LOGICAL_TYPE_TIME_MILLIS = "time-millis";
+  public static final String LOGICAL_TYPE_TIME_MICROS = "time-micros";
+  public static final String LOGICAL_TYPE_TIMESTAMP_MILLIS = "timestamp-millis";
+  public static final String LOGICAL_TYPE_TIMESTAMP_MICROS = "timestamp-micros";
 
   @VisibleForTesting
   static final String AVRO_UNION_TYPE_INDEX_PREFIX = "avro.union.typeIndex.";
@@ -171,8 +171,8 @@ public class AvroTypeUtil {
           if(schema.getType() != Schema.Type.BYTES) {
             throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
           }
-          int scale = schema.getJsonProp(SCALE).asInt();
-          int precision = schema.getJsonProp(PRECISION).asInt();
+          int scale = schema.getJsonProp(LOGICAL_TYPE_ATTR_SCALE).asInt();
+          int precision = schema.getJsonProp(LOGICAL_TYPE_ATTR_PRECISION).asInt();
           if (value instanceof ByteBuffer) {
             byte[] decimalBytes = ((ByteBuffer)value).array();
             //Unscaled value
