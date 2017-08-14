@@ -26,7 +26,7 @@ import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 
 @StageDef(
     version = 1,
-    label = "Google Pub/Sub Subscriber",
+    label = "Google Pub Sub Subscriber",
     description = "Consumes messages from a Google Pub/Sub subscription",
     icon = "pubsub.png",
     execution = ExecutionMode.STANDALONE,
