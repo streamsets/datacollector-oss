@@ -300,7 +300,7 @@
                                 <row>
                                     <entry>Password</entry>
                                     <entry>Password for the account.<note
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames_JDBC"
                                         /></entry>
                                 </row>
                             </tbody>
