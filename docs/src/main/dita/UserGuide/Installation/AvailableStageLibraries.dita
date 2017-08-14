@@ -93,6 +93,11 @@
                                     Kudu destination.</p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-apache-kudu_1_4-lib</entry>
+                            <entry>For Kudu version 1.4.x.<p>Includes the Kudu Lookup processor and
+                                    Kudu destination.</p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-apache-solr_6_1_0-lib</entry>
                             <entry>For Apache Solr version 6.1<p>Includes the Solr
                                 destination.</p></entry>
