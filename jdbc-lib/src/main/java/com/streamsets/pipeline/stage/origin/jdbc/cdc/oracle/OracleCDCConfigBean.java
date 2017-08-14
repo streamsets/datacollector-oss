@@ -202,8 +202,7 @@ public class OracleCDCConfigBean {
       label = "DB Time Zone",
       description = "Time Zone that the DB is operating in",
       displayPosition = 160,
-      group = "CDC",
-      defaultValue = "false"
+      group = "CDC"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
   public String dbTimeZone;
