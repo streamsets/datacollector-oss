@@ -2215,7 +2215,8 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
    </tgroup>
   </table>
   <draft-comment author="alisontaylor">The following table is conref'd in the Vault Credential
-   Stores and the Accessing Hashicorp Vault Secrets topics</draft-comment>
+   Stores topic. All rows but the first are conref'd in the Accessing Hashicorp Vault Secrets
+   topic.</draft-comment>
   <table frame="all" rowsep="1" colsep="1" id="table_spl_ycl_r1b">
    <tgroup cols="2">
     <colspec colname="c1" colnum="1" colwidth="2.3*"/>
@@ -2228,12 +2229,21 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
     </thead>
     <tbody>
      <row>
+      <entry>credentialStore.vault.pathKey.separator</entry>
+      <entry>Optional. Separator to use for the path and key values in the credential name argument
+       used by the <xref href="../Expression_Language/CredentialFunctions.dita#concept_yvc_3qs_r1b"
+        >credential functions</xref>.<p>You use the following format for the name
+        argument:<codeblock>&lt;path>&lt;separator>&lt;key></codeblock></p><p>For example, if you
+        keep the default of &amp;, the format for the name argument
+        is:<codeblock>&lt;path>&amp;&lt;key></codeblock></p></entry>
+     </row>
+     <row id="row_VaultAddr">
       <entry>credentialStore.vault.addr</entry>
       <entry>Required. Vault server URL entered in the following
         format:<codeblock>https://&lt;host name>:&lt;port number></codeblock><p>Use HTTPS to avoid
         unencrypted communication.</p></entry>
      </row>
-     <row>
+     <row id="row_VaultRoleID">
       <entry>credentialStore.vault.role.id</entry>
       <entry>Required. Vault Role ID that <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses to
@@ -2245,7 +2255,7 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
           <codeph>credentialStore.vault.app.id</codeph> property for new
        installations.</note></p></entry>
      </row>
-     <row>
+      <row id="row_VaultSecretID">
       <entry>credentialStore.vault.secret.id</entry>
       <entry>Required. Vault Secret ID that <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses to
@@ -2262,69 +2272,69 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
            />.</p></li>
         </ul></p></entry>
      </row>
-     <row>
+     <row id="row_VaultRenewal">
       <entry>credentialStore.vault.lease.renewal.interval.sec</entry>
       <entry>Optional. Seconds to wait before checking for leases that need renewal. <p>Default is
         60. </p></entry>
      </row>
-     <row>
+     <row id="row_VaultExpire">
       <entry>credentialStore.vault.lease.expiration.buffer.sec</entry>
       <entry>Optional. Buffer for expiring leases. <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> renews
        leases that expire in less than the specified number of seconds.<p>Default is 120.
        </p></entry>
      </row>
-     <row>
+     <row id="row_VaultOpenTimeout">
       <entry>credentialStore.vault.open.timeout</entry>
       <entry>Optional. Timeout to establish an HTTP connection to Vault in milliseconds. <p>Default
         is 0 for no limit. </p></entry>
      </row>
-     <row>
+     <row id="row_VaultProxyAddr">
       <entry>credentialStore.vault.proxy.address</entry>
       <entry>Optional. Proxy URL. Configure to use a proxy to access Vault. </entry>
      </row>
-     <row>
+     <row id="row_VaultProxyPort">
       <entry>credentialStore.vault.proxy.port</entry>
       <entry>Optional. Proxy port. Configure to use a proxy to access Vault. </entry>
      </row>
-     <row>
+     <row id="row_VaultProxyUser">
       <entry>credentialStore.vault.proxy.username</entry>
       <entry>Optional. Proxy username. Configure to use a proxy to access Vault. </entry>
      </row>
-     <row>
+     <row id="row_VaultProxyPwd">
       <entry>credentialStore.vault.proxy.password</entry>
       <entry>Optional. Proxy password. Configure to use a proxy to access Vault. </entry>
      </row>
-     <row>
+     <row id="row_VaultReadTimeout">
       <entry>credentialStore.vault.read.timeout</entry>
       <entry>Optional. Milliseconds to wait for data before timing out. <p>Default is 0 for no
         limit. </p></entry>
      </row>
-     <row>
+     <row id="row_VaultSSL">
       <entry>credentialStore.vault.ssl.enabled.protocols</entry>
       <entry>Optional. SSL/TLS-enabled protocols. Versions TLSv1.2 or later are
         recommended.<p>Default is TLSv1.2,TLSv1.3.</p></entry>
      </row>
-     <row>
+     <row id="row_VaultTruststore">
       <entry>credentialStore.vault.ssl.truststore.file</entry>
       <entry>Optional. Path to a Java truststore file. Required when using a private CA or
        certificates not trusted by the Java default truststore. </entry>
      </row>
-     <row>
+     <row id="row_VaultTruststorePwd">
       <entry>credentialStore.vault.ssl.truststore.password</entry>
       <entry>Optional. Password for the truststore file. </entry>
      </row>
-     <row>
+     <row id="row_VaultSSLVerify">
       <entry>credentialStore.vault.ssl.verify</entry>
       <entry>Optional. Whether to verify that the Vault server hostname matches its
         certificate.<p>Default is true. False is not recommended.</p></entry>
      </row>
-     <row>
+     <row id="row_VaultSSLTimeout">
       <entry>credentialStore.vault.ssl.timeout</entry>
       <entry>Optional. Timeout for the SSL/TLS handshake in milliseconds. <p>Default is 0 for no
         limit. </p></entry>
      </row>
-     <row>
+     <row id="row_VaultTimeout">
       <entry>credentialStore.vault.timeout</entry>
       <entry>Optional. Timeout to read from Vault in milliseconds, after a connection has been
         established.<p>Default is 0 for no limit. </p></entry>

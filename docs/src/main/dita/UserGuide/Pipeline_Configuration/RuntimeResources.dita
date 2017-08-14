@@ -30,8 +30,8 @@
             define sensitive values for stage and pipeline properties. You can, for example, use
             runtime resources to represent user names and passwords, or OAuth authentication
             information. </p>
-        <note type="tip">To more securely define sensitive values for stage and pipeline properties,
-            use <xref href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
+        <note type="tip">To more securely define sensitive values for JDBC stages, use <xref
+                href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
                 stores</xref>.</note>
   <p>To implement runtime resources, perform the following steps: <ol id="ol_jzr_4sm_2s">
     <li>Define each runtime resource. </li>

@@ -35,20 +35,28 @@
                 <dd>The credential-stores.properties file contains the remaining Vault properties.
                     The Vault server URL, Role ID, and Secret ID are required properties. Configure
                     other properties as needed.</dd>
-                <dd>The file includes the following properties. Uncomment any properties that you
-                    want to use:<p>
-                        <table
-                            conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/table_spl_ycl_r1b"
-                            id="table_u4y_p2v_51b">
-                            <tgroup cols="1">
-                                <tbody>
-                                    <row>
-                                        <entry/>
-                                    </row>
-                                </tbody>
-                            </tgroup>
-                        </table>
-                    </p></dd>
+                <dd>The file includes the following properties:<note>The
+                            <codeph>credentialStore.vault.pathKey.separator</codeph> property is not
+                        used by the Vault functions. You can ignore this property.</note><table
+                        frame="all" rowsep="1" colsep="1" id="table_tdn_zkx_v1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="2.3*"/>
+                            <colspec colname="c2" colnum="2" colwidth="2.7*"/>
+                            <thead>
+                                <row>
+                                    <entry>Vault Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row_VaultAddr"
+                                    conrefend="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row_VaultTimeout">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></dd>
             </dlentry>
         </dl>
         <p>Restart <ph

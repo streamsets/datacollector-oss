@@ -2757,44 +2757,50 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                               properties in the origin.</dd>
                   </dlentry>
             </dl>
-            <draft-comment author="alisontaylor"><uicontrol>Tip_Usernames</uicontrol> Used in
-                  username/password properties for all stages. <uicontrol>Tip_AccessKeys</uicontrol>
-                  used in AWS Credentials topic for AWS stages. <uicontrol>Tip_Passwords</uicontrol>
-                  used in keystore/truststore password properties for all stages.</draft-comment>
+            <draft-comment author="alisontaylor"><uicontrol>Tip_Usernames_JDBC</uicontrol> used in
+                  username/password properties for JDBC stages. <uicontrol>Tip_Usernames</uicontrol>
+                  Used in username/password properties for all other stages.
+                        <uicontrol>Tip_AccessKeys</uicontrol> used in AWS Credentials topic for AWS
+                  stages. <uicontrol>Tip_Passwords</uicontrol> used in keystore/truststore password
+                  properties for all stages.</draft-comment>
+            <note type="tip" id="Tip_Usernames_JDBC">To secure sensitive information such as usernames and passwords, you
+                  can use <xref href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b"
+                        >credential stores</xref> or <xref
+                        href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
+                        >runtime resources</xref>. </note>
             <note type="tip" id="Tip_Usernames">To secure sensitive information such as usernames
                   and passwords, you can use <xref
-                        href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref> or <xref
+                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
+                        Vault secrets</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
                         >runtime resources</xref>. </note>
             <note type="tip" id="Tip_AccessKeys">To secure sensitive information such as access key
                   pairs, you can use <xref
-                        href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref> or <xref
+                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
+                        Vault secrets</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
                         >runtime resources</xref>. </note>
             <note type="tip" id="Tip_Passwords">To secure sensitive information such as passwords,
-                  you can use <xref
-                        href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref> or <xref
+                  you can use <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
+                        >Hashicorp Vault secrets</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
                         >runtime resources</xref>. </note>
             <note type="tip" id="Tip_ConsumerKey">To secure sensitive information such as the
                   consumer key and secret, you can use <xref
-                        href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref> or <xref
+                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
+                        Vault secrets</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
                         >runtime resources</xref>. </note>
             <note type="tip" id="Tip_ClientID">To secure sensitive information such as the client ID
                   and secret, you can use <xref
-                        href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref> or <xref
+                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
+                        Vault secrets</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
                         >runtime resources</xref>. </note>
             <note type="tip" id="Tip_JWTKey">To secure sensitive information such as the JWT signing
                   key, you can use <xref
-                        href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-                        stores</xref> or <xref
+                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
+                        Vault secrets</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
                         >runtime resources</xref>. </note>
             <p>
