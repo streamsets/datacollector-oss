@@ -458,10 +458,6 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
               RuleDefinitionsJson ruleDefinitionsJsonBean =
                   ObjectMapperFactory.get().readValue(is, RuleDefinitionsJson.class);
               ruleDefinitions = ruleDefinitionsJsonBean.getRuleDefinitions();
-
-              if (ruleDefinitions.getConfiguration() == null) {
-                ruleDefinitions.setConfiguration(stageLibrary.getPipelineRules().getPipelineRulesDefaultConfigs());
-              }
             }
           }
         } catch (IOException ex) {
