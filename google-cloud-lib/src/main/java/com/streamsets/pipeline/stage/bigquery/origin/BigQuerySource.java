@@ -27,12 +27,14 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
 import com.streamsets.pipeline.stage.bigquery.lib.Groups;
+import com.streamsets.pipeline.stage.lib.GoogleCloudCredentialsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,51 +85,16 @@ public class BigQuerySource extends BaseSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    getCredentials(issues).ifPresent(c -> delegate = new BigQueryDelegate(getBigQuery(c), conf.useLegacySql));
+    BigQueryDelegate.getCredentials(getContext(), issues, conf.credentials).ifPresent(
+        c -> delegate = new BigQueryDelegate(getBigQuery(c), conf.useLegacySql)
+    );
 
     return issues;
   }
 
-  private Optional<Credentials> getCredentials(List<ConfigIssue> issues) {
-    Credentials credentials = null;
-
-    File credentialsFile;
-    if (Paths.get(conf.credentials.path).isAbsolute()) {
-      credentialsFile = new File(conf.credentials.path);
-    } else {
-      credentialsFile = new File(getContext().getResourcesDirectory(), conf.credentials.path);
-    }
-
-    try (InputStream in = new FileInputStream(credentialsFile)) {
-      credentials = ServiceAccountCredentials.fromStream(in);
-    } catch (FileNotFoundException e) {
-      LOG.error(BIGQUERY_04.getMessage(), credentialsFile.getPath(), e);
-      issues.add(getContext().createConfigIssue(
-          Groups.CREDENTIALS.name(),
-          "conf.credentials.path",
-          BIGQUERY_04,
-          credentialsFile.getPath()
-      ));
-    } catch (IOException | IllegalArgumentException e) {
-      LOG.error(BIGQUERY_05.getMessage(), e);
-      issues.add(getContext().createConfigIssue(
-          Groups.CREDENTIALS.name(),
-          "conf.credentials.path",
-          BIGQUERY_05
-      ));
-    }
-
-    return Optional.ofNullable(credentials);
-  }
-
   @VisibleForTesting
   BigQuery getBigQuery(Credentials credentials) {
-    BigQueryOptions options = BigQueryOptions.newBuilder()
-        .setCredentials(credentials)
-        .setProjectId(conf.credentials.projectId)
-        .build();
-
-    return options.getService();
+    return BigQueryDelegate.getBigquery(credentials, conf.credentials.projectId);
   }
 
   @Override
