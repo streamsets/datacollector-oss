@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.fieldorder;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.streamsets.datacollector.util.EscapeUtil;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -122,7 +123,9 @@ public class FieldOrderProcessor extends SingleLaneRecordProcessor {
 
   // Remove initial "/", replace all other slashes with dots
   private String toFieldName(String fieldPath) {
-    return fieldPath.substring(1).replace("/", ".");
+    String path = fieldPath.substring(1).replaceAll("/", ".");
+    path = "/" + path;
+    return EscapeUtil.getLastFieldNameFromPath(path);
   }
 
 }
