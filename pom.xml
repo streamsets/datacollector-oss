@@ -311,9 +311,31 @@
       </plugin>
     </plugins>
   </build>
-
   <reporting>
     <plugins>
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>2.1.1</version>
+        <inherited>false</inherited>
+        <configuration>
+          <!-- skip non-bundled jars -->
+          <skipProvidedScope>true</skipProvidedScope>
+          <skipRuntimeScope>true</skipRuntimeScope>
+          <!-- We want HTML for easy viewing, but XML for reporting via SonarQube -->
+          <format>ALL</format>
+          <suppressionFile>${basedir}/dependency-check-suppression.xml</suppressionFile>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <id>aggregate</id>
+            <inherited>false</inherited>
+            <reports>
+              <report>aggregate</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>

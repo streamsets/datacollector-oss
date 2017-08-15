@@ -212,26 +212,6 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.owasp</groupId>
-          <artifactId>dependency-check-maven</artifactId>
-          <version>1.4.5</version>
-          <configuration>
-            <!-- skip non-bundled jars -->
-            <skipProvidedScope>true</skipProvidedScope>
-            <skipRuntimeScope>true</skipRuntimeScope>
-            <!-- We want HTML for easy viewing, but XML for reporting via SonarQube -->
-            <format>ALL</format>
-            <suppressionFile>${basedir}/../dependency-check-suppression.xml</suppressionFile>
-          </configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>2.6</version>
@@ -560,43 +540,6 @@
                 </goals>
               </execution>
             </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>dependency-check</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>release</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.owasp</groupId>
-            <artifactId>dependency-check-maven</artifactId>
-            <configuration>
-              <skip>false</skip>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>dependency-check-disabled</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.owasp</groupId>
-            <artifactId>dependency-check-maven</artifactId>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
           </plugin>
         </plugins>
       </build>
