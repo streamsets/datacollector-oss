@@ -16,9 +16,20 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pjw_qtl_r1b">
- <title>Google Pub/Sub</title>
- <shortdesc></shortdesc>
+ <title>Google Pub/Sub Subscriber</title>
+ <shortdesc>The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub
+        subscription. </shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>Google Pub/Sub Subscriber
+                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Google
+                    Pub/Sub Subscriber</indexterm></indexterm>When you configure the origin, you
+            define the Google Pub/Sub subscription ID to receive messages from. You also define the
+            project and credentials provider to use to connect to Google Pub/Sub. The origin can
+            retrieve credentials from the Google Application Default Credentials or from a Google
+            Cloud service account credentials file.</p>
+        <p>The Google Pub/Sub Subscriber origin can use multiple threads to enable parallel
+            processing of data from a Google Pub/Sub subscription.</p>
+        <p>When available, the Google Pub/Sub Subscriber origin includes user-defined message
+            attributes in record header attributes.</p>
  </conbody>
 </concept>

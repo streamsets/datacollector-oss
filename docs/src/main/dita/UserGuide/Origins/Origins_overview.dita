@@ -39,6 +39,9 @@
           from an active file after reading related archived files in the directory. </li>
         <li><xref href="BigQuery.dita#concept_cg3_y3v_q1b">Google BigQuery</xref> - Executes a query
           job and reads the result from Google BigQuery. </li>
+        <li><xref href="PubSub.dita#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</xref> - Consumes
+          messages from a Google Pub/Sub subscription. Creates multiple threads to enable parallel
+          processing in a multithreaded pipeline.</li>
         <li><xref href="HTTPClient.dita#concept_wk4_bjz_5r">HTTP Client</xref> - Reads data from a
           streaming HTTP resource URL.</li>
         <li><xref href="HTTPServer.dita#concept_s2p_5hb_4y">HTTP Server</xref> - Listens on an HTTP

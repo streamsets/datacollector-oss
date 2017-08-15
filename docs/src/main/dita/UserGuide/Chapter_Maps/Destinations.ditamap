@@ -105,6 +105,17 @@
    <topicref href="../Destinations/Bigtable-TimeBasis.dita"/>
    <topicref href="../Destinations/Bigtable-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/PubSubPublisher.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/PubSubPublisher-Credentials.dita">
+    <topicref href="../Destinations/PubSubPublisher-CredentialsDefault.dita"/>
+    <topicref href="../Destinations/PubSubPublisher-CredentialsFile.dita"/>
+   </topicref>
+   <topicref href="../Destinations/PubSubPublisher-DataFormats.dita"/>
+   <topicref href="../Destinations/PubSubPublisher-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/HadoopFS-destination.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

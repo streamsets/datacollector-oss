@@ -1174,6 +1174,9 @@ web-0011.log</codeblock></dd>
                         <li><xref href="../Origins/Elasticsearch.dita#concept_f1q_vpm_2z"
                                     >Elasticsearch</xref> - Reads data from an Elasticsearch
                               cluster.</li>
+                        <li><xref href="../Origins/PubSub.dita#concept_pjw_qtl_r1b">Google Pub/Sub
+                                    Subscriber</xref> - Consumes messages from a Google Pub/Sub
+                              subscription.</li>
                         <li><xref href="../Origins/HTTPServer.dita#concept_s2p_5hb_4y">HTTP
                                     Server</xref> - Listens on a HTTP endpoint and processes the
                               contents of all authorized HTTP POST requests. </li>
@@ -3180,5 +3183,84 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   format:<codeblock>&lt;label1>/&lt;label2>/&lt;label3></codeblock>For example, you
                   might want to group pipelines in the test environment by the origin system. You
                   add the labels Test/HDFS and Test/Elasticsearch to the appropriate pipelines.</p>
+            <draft-comment author="alisontaylor">The following dl is used in the Credentials topic
+                  for Google BigQuery origin, Google Pub/Sub Publisher origin, and Google Pub/Sub
+                  Subscriber destination</draft-comment>
+            <dl id="dl_GoogleCredentials">
+                  <dlentry>
+                        <dt>Default credentials provider</dt>
+                        <dd>Use the Google Application Default Credentials. The stage checks for the
+                              credentials file defined in the
+                                    <codeph>GOOGLE_APPLICATION_CREDENTIALS</codeph> environment
+                              variable. If the environment variable doesn't exist and <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> is running as an image in Google Cloud, the stage uses the built-in
+                              service account associated with the virtual machine instance. </dd>
+                        <dd>
+                              <p>For more information about the default credentials, see <xref
+                                          href="https://developers.google.com/identity/protocols/application-default-credentials"
+                                          format="html" scope="external">Google Application Default
+                                          Credentials</xref> in the Google Developer
+                                    documentation.</p>
+                        </dd>
+                        <dd>Complete the following steps to define the credentials file in the
+                              environment variable:<ol id="ol_cvy_djq_v1b">
+                                    <li>Use the Google Cloud Platform Console or the
+                                                <codeph>gcloud</codeph> command-line tool to create
+                                          a Google service account and have your application use it
+                                          for API access.<p>For example, to use the command line
+                                                tool, run the following
+                                                commands:<codeblock>gcloud iam service-accounts create my-account
+gcloud iam service-accounts keys create key.json --iam-account=my-account@my-project.iam.gserviceaccount.com</codeblock></p></li>
+                                    <li>Store the generated credentials file on the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                          /> machine. </li>
+                                    <li>In the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                          /> environment configuration file, add the
+                                                <codeph>GOOGLE_APPLICATION_CREDENTIALS</codeph>
+                                          environment variable and point it to the credentials
+                                                file.<p
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"
+                                                /><p>Set the environment variable as
+                                          follows:</p><codeblock>export GOOGLE_APPLICATION_CREDENTIALS="/var/lib/sdc-resources/keyfile.json"</codeblock></li>
+                                    <li>Restart <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                          /> to enable the changes.</li>
+                                    <li>On the <uicontrol>Credentials</uicontrol> tab for the stage,
+                                          select <uicontrol>Default Credentials Provider</uicontrol>
+                                          for the credentials provider. </li>
+                              </ol></dd>
+                  </dlentry>
+                  <dlentry>
+                        <dt>Service account credentials file (JSON)</dt>
+                        <dd>Use the Google Cloud service account credentials file and define the
+                              path to the file in the stage properties. Complete the following steps
+                              to use the service account credentials file:</dd>
+                        <dd>
+                              <ol id="ol_GoogleCredentialsFile">
+                                    <li>Generate a service account credentials file in JSON
+                                                format.<p>Use the Google Cloud Platform Console or
+                                                the <codeph>gcloud</codeph> command-line tool to
+                                                generate and download the credentials file. For more
+                                                information, see <xref
+                                                  href="https://cloud.google.com/storage/docs/authentication#generating-a-private-key"
+                                                  format="html" scope="external">generating a
+                                                  service account credential</xref> in the Google
+                                                Cloud Platform documentation.</p></li>
+                                    <li>Store the generated credentials file on the <ph
+                                          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> machine. <p>As a best practice, store the file in the <ph
+                                          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
+                                    </p></li>
+                                    <li>On the <uicontrol>Credentials</uicontrol> tab for the stage,
+                                          select <uicontrol>Service Account Credentials
+                                                File</uicontrol> for the credentials provider and
+                                          enter the path to the credentials file.</li>
+                              </ol>
+                        </dd>
+                  </dlentry>
+            </dl>
       </conbody>
 </concept>

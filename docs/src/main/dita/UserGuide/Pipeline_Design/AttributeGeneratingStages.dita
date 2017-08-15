@@ -73,6 +73,14 @@
                                             id="image_tqw_k2v_2z"/></xref></p></entry>
                         </row>
                         <row>
+                            <entry>Google Pub/Sub Subscriber origin</entry>
+                            <entry>When available, includes user-defined message attributes in
+                                record header attributes. <xref
+                                    href="../Origins/PubSub-RecordHeaderAtts.dita#concept_qvl_y4q_v1b">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_wsz_k4w_9s"/></xref></entry>
+                        </row>
+                        <row>
                             <entry>HTTP Client origin</entry>
                             <entry>Includes response header fields in record header attributes.<xref
                                     href="../Origins/HTTPClient-ResponseHeaderFields.dita#concept_ccn_jzt_zw">
