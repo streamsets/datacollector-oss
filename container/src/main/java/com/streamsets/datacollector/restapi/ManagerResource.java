@@ -141,12 +141,9 @@ public class ManagerResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     if(pipelineId != null) {
-      Runner runner = manager.getRunner(pipelineId, rev);
-      if(runner != null) {
-        return Response.ok()
-            .type(MediaType.APPLICATION_JSON)
-            .entity(BeanHelper.wrapPipelineState(runner.getState())).build();
-      }
+      return Response.ok()
+          .type(MediaType.APPLICATION_JSON)
+          .entity(BeanHelper.wrapPipelineState(manager.getPipelineState(pipelineId, rev))).build();
     }
     return Response.noContent().build();
   }
@@ -509,14 +506,17 @@ public class ManagerResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     if(pipelineId != null) {
-      Runner runner = manager.getRunner(pipelineId, rev);
-      if (runner != null && runner.getState().getStatus().isActive()) {
-        return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getMetrics()).build();
-      }
-      if (runner != null) {
-        LOG.debug("Status is " + runner.getState().getStatus());
-      } else {
-        LOG.debug("Runner is null");
+      PipelineState pipelineState = manager.getPipelineState(pipelineId, rev);
+      if (pipelineState.getExecutionMode() != ExecutionMode.EDGE) {
+        Runner runner = manager.getRunner(pipelineId, rev);
+        if (runner != null && runner.getState().getStatus().isActive()) {
+          return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getMetrics()).build();
+        }
+        if (runner != null) {
+          LOG.debug("Status is " + runner.getState().getStatus());
+        } else {
+          LOG.debug("Runner is null");
+        }
       }
     }
     return Response.noContent().build();
@@ -838,9 +838,11 @@ public class ManagerResource {
     if (store.getPipelines().size() < 100) {
       // get alerts for all pipelines only if number of pipelines is less than 100
       for(PipelineState pipelineState: manager.getPipelines()) {
-        Runner runner = manager.getRunner(pipelineState.getPipelineId(), pipelineState.getRev());
-        if(runner != null && runner.getState().getStatus().isActive()) {
-          alertInfoList.addAll(runner.getAlerts());
+        if (pipelineState.getExecutionMode() != ExecutionMode.EDGE) {
+          Runner runner = manager.getRunner(pipelineState.getPipelineId(), pipelineState.getRev());
+          if(runner != null && runner.getState().getStatus().isActive()) {
+            alertInfoList.addAll(runner.getAlerts());
+          }
         }
       }
     }

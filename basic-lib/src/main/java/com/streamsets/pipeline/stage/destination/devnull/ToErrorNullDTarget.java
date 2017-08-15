@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.destination.devnull;
 
 import com.streamsets.pipeline.api.ErrorStage;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PipelineLifecycleStage;
@@ -26,6 +27,13 @@ import com.streamsets.pipeline.api.StageDef;
     label = "Discard",
     description = "Discards records and events",
     icon="",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE
+    },
     onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)

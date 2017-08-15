@@ -34,7 +34,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     label = "Directory",
     description = "Reads files from a directory",
     icon="directory.png",
-    execution = ExecutionMode.STANDALONE,
+    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
     upgrader = SpoolDirSourceUpgrader.class,
     resetOffset = true,

@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.devnull;
 
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
@@ -25,6 +26,13 @@ import com.streamsets.pipeline.api.StageDef;
     label = "Discard",
     description = "Discards Pipeline Statistic Records",
     icon="",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE
+    },
     onlineHelpRefUrl = ""
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)

@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.processor.identity;
 
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
@@ -27,6 +28,13 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
     label = "Dev Identity",
     description = "It echoes every record it receives without changing, other than stage header information",
     icon="dev.png",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE
+    },
     onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
 )
 public class IdentityProcessor extends SingleLaneRecordProcessor {

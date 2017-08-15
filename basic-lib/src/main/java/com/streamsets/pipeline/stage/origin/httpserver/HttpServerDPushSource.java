@@ -36,7 +36,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     label = "HTTP Server",
     description = "Listens for requests on an HTTP endpoint",
     icon="httpserver_multithreaded.png",
-    execution = ExecutionMode.STANDALONE,
+    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
     onlineHelpRefUrl = "index.html#Origins/HTTPServer.html#task_pgw_b3b_4y",
     upgrader = HttpServerPushSourceUpgrader.class

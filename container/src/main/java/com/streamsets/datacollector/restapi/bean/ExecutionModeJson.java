@@ -21,6 +21,7 @@ public enum ExecutionModeJson {
   CLUSTER_BATCH,
   CLUSTER_YARN_STREAMING,
   CLUSTER_MESOS_STREAMING,
-  SLAVE
+  SLAVE,
+  EDGE,
   ;
 }

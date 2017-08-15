@@ -30,7 +30,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     label = "File Tail",
     description = "Tails a file. It handles rolling files within the same directory",
     icon = "fileTail.png",
-    execution = ExecutionMode.STANDALONE,
+    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     outputStreams = FileTailOutputStreams.class,
     recordsByRef = true,
     upgrader = FileTailSourceUpgrader.class,

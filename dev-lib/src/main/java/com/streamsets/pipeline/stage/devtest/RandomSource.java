@@ -26,21 +26,20 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @GenerateResourceBundle
 @StageDef(
   version = 1,
   label = "Dev Random Record Source",
   description = "Generates records with the specified field names, using Long data. For development only.",
-  execution = ExecutionMode.STANDALONE,
+  execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
   icon = "dev.png",
   onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
 )

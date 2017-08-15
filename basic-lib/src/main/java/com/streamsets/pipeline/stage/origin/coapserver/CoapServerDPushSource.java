@@ -34,7 +34,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
     label = "CoAP Server",
     description = "Listens for requests on a CoAP endpoint",
     icon="coap_multithreaded.png",
-    execution = ExecutionMode.STANDALONE,
+    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
     onlineHelpRefUrl = "index.html#Origins/CoAPServer.html#task_hsb_l3n_sz"
 )

@@ -77,7 +77,9 @@ public class PipelineStateJson   {
     CLUSTER_BATCH("CLUSTER_BATCH"),
     CLUSTER_YARN_STREAMING("CLUSTER_YARN_STREAMING"),
     CLUSTER_MESOS_STREAMING("CLUSTER_MESOS_STREAMING"),
-    SLAVE("SLAVE");
+    SLAVE("SLAVE"),
+    EDGE("EDGE"),
+    ;
 
     private final String value;
 
