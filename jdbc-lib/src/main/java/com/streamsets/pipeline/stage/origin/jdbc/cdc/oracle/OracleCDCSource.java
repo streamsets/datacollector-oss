@@ -497,22 +497,23 @@ public class OracleCDCSource extends BaseSource {
       boolean forceNewResultSet
   ) throws SQLException, StageException, ParseException {
     StringBuilder query = new StringBuilder();
-    ResultSet resultSet;
+    ResultSet resultSet = null;
     int countToCheck = 0;
     boolean recordsProduced = false;
-    if (!currentResultSet.isPresent()) {
-      selectChanges.setQueryTimeout(configBean.queryTimeout);
-      resultSet = selectChanges.executeQuery();
-      currentResultSet = Optional.of(resultSet);
-    } else {
-      resultSet = currentResultSet.get();
-    }
-
-    int count = 0;
-    int recordsSent = 0;
-    boolean incompleteRedoStatement;
-    incompleteBatch = !resultSet.next();
+    incompleteBatch = true;
     try {
+      if (!currentResultSet.isPresent()) {
+        selectChanges.setQueryTimeout(configBean.queryTimeout);
+        resultSet = selectChanges.executeQuery();
+        currentResultSet = Optional.of(resultSet);
+      } else {
+        resultSet = currentResultSet.get();
+      }
+
+      int count = 0;
+      int recordsSent = 0;
+      boolean incompleteRedoStatement;
+      incompleteBatch = !resultSet.next();
       while (!incompleteBatch) {
         query.append(resultSet.getString(5));
         // CSF is 1 if the query is incomplete, so read the next row before parsing
