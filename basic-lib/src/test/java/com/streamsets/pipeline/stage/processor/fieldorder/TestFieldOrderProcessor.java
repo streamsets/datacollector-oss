@@ -103,6 +103,65 @@ public class TestFieldOrderProcessor {
   }
 
   @Test
+  public void testListMapWithQuotesAndSpacesInFieldNames() throws Exception {
+
+    OrderConfigBean config = new OrderConfigBean();
+
+    String field1 = "first field";
+    String field1Path = String.format("/'%s'", field1);
+    String field2 = "'second field'";
+    String field2Path = String.format("/'%s'", field2.replaceAll("'", "\\\\\\\\'"));
+    String field3 = "third field";
+    String field3Path = String.format("/'%s'", field3);
+
+    config.fields = ImmutableList.of(field1Path, field2Path, field3Path);
+    config.outputType = OutputType.LIST_MAP;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldOrderDProcessor.class, new FieldOrderProcessor(config))
+        .addOutputLane("a")
+        .build();
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put(field2, Field.create(field2));
+    map.put(field3, Field.create(field3));
+    map.put(field1, Field.create(field1));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(Field.Type.MAP, map));
+
+    StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    assertEquals(1, output.getRecords().get("a").size());
+
+    Record r = output.getRecords().get("a").get(0);
+    assertEquals(Field.Type.LIST_MAP, r.get().getType());
+
+    LinkedHashMap<String, Field> m = r.get().getValueAsListMap();
+    Iterator<Map.Entry<String, Field>> it =  m.entrySet().iterator();
+
+    Map.Entry<String, Field> entry = it.next();
+    assertEquals(field1, entry.getKey());
+    assertEquals(field1, entry.getValue().getValueAsString());
+
+    entry = it.next();
+    assertEquals(field2, entry.getKey());
+    assertEquals(field2, entry.getValue().getValueAsString());
+
+    entry = it.next();
+    assertEquals(field3, entry.getKey());
+    assertEquals(field3, entry.getValue().getValueAsString());
+
+    assertFalse(it.hasNext());
+
+    List<Field> list = r.get().getValueAsList();
+    assertEquals(3, list.size());
+    assertEquals(field1, list.get(0).getValueAsString());
+    assertEquals(field2, list.get(1).getValueAsString());
+    assertEquals(field3, list.get(2).getValueAsString());
+
+    runner.runDestroy();
+  }
+
+  @Test
   public void testList() throws Exception {
     OrderConfigBean config = new OrderConfigBean();
     config.fields = ImmutableList.of("/a", "/b", "/c");

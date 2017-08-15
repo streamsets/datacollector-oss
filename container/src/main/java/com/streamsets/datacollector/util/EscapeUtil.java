@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 public class EscapeUtil {
   public static final Pattern pattern = Pattern.compile("\\W+?", Pattern.CASE_INSENSITIVE);
+  public static final char QUOTE_CHAR = '\'';
 
   private EscapeUtil() {}
 
@@ -71,17 +72,23 @@ public class EscapeUtil {
       String lastFieldName = pathSplit[pathSplit.length - 1];
 
       //handle special case field name containing slash eg. /'foo/bar'
-      if(lastFieldName.contains("'") &&
-        !(lastFieldName.charAt(0) == '\'' && lastFieldName.charAt(lastFieldName.length() - 1) == '\'')) {
+      boolean singleQuoted = lastFieldName.charAt(0) == QUOTE_CHAR
+          && lastFieldName.charAt(lastFieldName.length() - 1) == QUOTE_CHAR;
 
+      if(lastFieldName.contains("'") && !singleQuoted) {
         //If path contains slash inside name, split it by "/'"
         pathSplit = path.split("/'");
         if(pathSplit.length > 0) {
           lastFieldName = "'" + pathSplit[pathSplit.length - 1];
+          singleQuoted = true;
         }
       }
 
-      return EscapeUtil.singleQuoteUnescape(lastFieldName);
+      if (singleQuoted) {
+        return singleQuoteUnescape(lastFieldName);
+      } else {
+        return lastFieldName;
+      }
     }
     return path;
   }
