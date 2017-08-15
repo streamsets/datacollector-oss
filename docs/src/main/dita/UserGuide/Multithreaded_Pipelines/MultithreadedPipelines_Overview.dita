@@ -35,6 +35,7 @@
                 id="ul_oql_bym_3z">
                 <li>CoAP Server origin</li>
                 <li>Elasticsearch origin</li>
+                <li>Google Pub/Sub Subscriber origin</li>
                 <li>HTTP Server origin</li>
                 <li>JDBC Multitable Consumer origin</li>
                 <li>Kinesis Consumer origin</li>

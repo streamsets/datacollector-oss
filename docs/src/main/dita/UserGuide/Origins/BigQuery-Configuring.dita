@@ -143,14 +143,22 @@
                                     <entry>Google BigQuery project ID to connect to.</entry>
                                 </row>
                                 <row>
-                                    <entry>Credentials File Path (JSON)
-                                        <xref href="BigQuery-Prereqs.dita">
+                                    <entry>Credentials Provider <xref
+                                            href="BigQuery-Credentials.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_pls_tp4_hj"/></xref></entry>
-                                    <entry>Path to the Google Cloud service account credentials file
-                                        that the origin uses to connect to Google BigQuery. The
-                                        credentials file must be a JSON file.<p>Enter a path
-                                            relative to the <ph
+                                    <entry>Credentials provider to use to connect to Google
+                                            BigQuery:<ul id="ul_tmm_2rp_v1b">
+                                            <li>Default credentials provider</li>
+                                            <li>Service account credentials file (JSON) </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Credentials File Path (JSON) </entry>
+                                    <entry>When using a Google Cloud service account credentials
+                                        file, path to the file that the origin uses to connect to
+                                        Google BigQuery. The credentials file must be a JSON
+                                            file.<p>Enter a path relative to the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> resources directory, <codeph>$SDC_RESOURCES</codeph>,
                                             or enter an absolute path. </p></entry>

@@ -97,12 +97,26 @@
   </topicref>
   <topicref href="../Origins/BigQuery.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/BigQuery-Prereqs.dita"/>
+   <topicref href="../Origins/BigQuery-Credentials.dita">
+    <topicref href="../Origins/BigQuery-CredentialsDefault.dita"/>
+    <topicref href="../Origins/BigQuery-CredentialsFile.dita"/>
+   </topicref>
    <topicref href="../Origins/BigQuery-Datatypes.dita"/>
    <topicref href="../Origins/BigQuery-EventGen.dita">
     <topicref href="../Origins/BigQuery-EventRecord.dita"/>
    </topicref>
    <topicref href="../Origins/BigQuery-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Origins/PubSub.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/PubSub-Credentials.dita">
+    <topicref href="../Origins/PubSub-CredentialsDefault.dita"/>
+    <topicref href="../Origins/PubSub-CredentialsFile.dita"/>
+   </topicref>
+   <topicref href="../Origins/PubSub-MultithreadProcessing.dita"/>
+   <topicref href="../Origins/PubSub-RecordHeaderAtts.dita"/>
+   <topicref href="../Origins/PubSub-DataFormats.dita"/>
+   <topicref href="../Origins/PubSub-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/HadoopFS-origin.dita" chunk="to-content">   
    <topicmeta><shortdesc></shortdesc></topicmeta>

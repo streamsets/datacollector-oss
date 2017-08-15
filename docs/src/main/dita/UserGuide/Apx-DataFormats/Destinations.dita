@@ -136,6 +136,26 @@
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
             <row>
+              <entry>Google Pub/Sub Publisher</entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_wz1_5cq_v1b"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_xz1_5cq_v1b"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_yz1_5cq_v1b"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_zz1_5cq_v1b"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_a1b_5cq_v1b"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_b1b_5cq_v1b"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_c1b_5cq_v1b"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_pn5_vcq_v1b"
+                /></entry>
+            </row>
+            <row>
               <entry>Hadoop FS</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_wgl_bxc_kv"
                 /></entry>

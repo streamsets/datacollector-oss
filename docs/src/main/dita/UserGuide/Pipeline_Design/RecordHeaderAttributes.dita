@@ -46,9 +46,10 @@
             pipeline. You can, for example, use the CDC-enabled Salesforce origin in a non-CDC
             pipeline and ignore the CDC record header attributes that are automatically
             generated.</p>
-        <p>When writing data to destinations, record header attributes are preserved with the record
-            only when you write data using the SDC Record data format. To preserve the information
-            when using other data formats, use the Expression Evaluator to copy information from
-            record header attributes to record fields.</p>
+        <p>When writing data to destination systems, record header attributes are preserved with the
+            record only when using the Google Pub/Sub Publisher destination or when using another
+            destination with the SDC Record data format. To preserve the information when using
+            other data formats, use the Expression Evaluator to copy information from record header
+            attributes to record fields.</p>
     </conbody>
 </concept>

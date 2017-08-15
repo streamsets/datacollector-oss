@@ -493,8 +493,11 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-google-cloud-lib</entry>
-                            <entry>For Google Cloud.<p>Includes the Google BigQuery
-                                origin.</p></entry>
+                            <entry>For Google Cloud.<p>Includes: <ul id="ul_dzd_5rq_v1b">
+                                        <li>Google BigQuery origin</li>
+                                        <li>Google Pub/Sub Subscriber origin</li>
+                                        <li>Google Pub/Sub Publisher destination</li>
+                                    </ul></p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-groovy_2_4-lib</entry>

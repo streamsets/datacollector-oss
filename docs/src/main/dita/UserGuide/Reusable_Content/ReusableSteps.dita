@@ -3709,8 +3709,9 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><b>D-PROTO-props</b> - used by all protobuf
-                            destinations<p>NOTE: when making changes, make sure to make any related
-                            ones to BOTH origin tables.</p></draft-comment>
+                        destinations EXCEPT for Google Pub/Sub Publisher which as one additional
+                        property....that table is below.<p>NOTE: when making changes, make sure to
+                            make any related ones to BOTH origin tables.</p></draft-comment>
                 </cmd>
             </step>
             <step id="D-PROTO-props">
@@ -3745,10 +3746,63 @@
                                 <row>
                                     <entry>Message Type</entry>
                                     <entry>The fully-qualified name for the message type to use when
-                                        reading data.<p>Use the following format:
+                                        writing data.<p>Use the following format:
                                                 <codeph>&lt;package name>.&lt;message
                                             type></codeph>. </p>Use a message type defined in the
                                         descriptor file.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="alisontaylor"><b>D-PROTO-props-PubSub</b> used by the
+                        Google Pub/Sub Publisher destination only, it has one additional
+                        property</draft-comment>
+                </cmd>
+            </step>
+            <step id="D-PROTO-props-PubSub">
+                <cmd>For protobuf data, on the <wintitle>Data Format</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_vmt_jds_38">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Protobuf Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Protobuf Descriptor File </entry>
+                                    <entry>Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <ph
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
+                                        <p>For more information about environment variables, see
+                                            <xref
+                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                                            />. For information about generating the descriptor
+                                            file, see <xref
+                                                href="../Data_Formats/Protobuf-Prerequisites.dita"
+                                            />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Message Type</entry>
+                                    <entry>The fully-qualified name for the message type to use when
+                                        writing data.<p>Use the following format:
+                                                <codeph>&lt;package name>.&lt;message
+                                            type></codeph>. </p>Use a message type defined in the
+                                        descriptor file.</entry>
+                                </row>
+                                <row>
+                                    <entry>Write Delimiter</entry>
+                                    <entry>Writes a delimiter after each message. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

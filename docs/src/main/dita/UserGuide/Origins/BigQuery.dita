@@ -27,14 +27,13 @@
             complete, the origin reads the query results to generate records. The origin runs the
             query once and then the pipeline stops when it finishes reading all query results. If
             you start the pipeline again, the origin submits the query again.</p>
-        <p>Before you use the Google BigQuery origin, generate a Google Cloud service account
-            credential that the origin uses to connect to Google BigQuery. </p>
         <p>When you configure the origin, you define the query to run using valid BigQuery standard
             SQL or legacy SQL syntax. By default, BigQuery writes all query results to a temporary,
             cached results table. You can choose to disable retrieving cached results and force
             BigQuery to compute the query result.</p>
-        <p>You also define the project and credentials file to use to connect to Google
-            BigQuery.</p>
+        <p>You also define the project and credentials provider to use to connect to Google
+            BigQuery. The origin can retrieve credentials from the Google Application Default
+            Credentials or from a Google Cloud service account credentials file.</p>
      <p
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventHandling-overview"/>
  </conbody>
