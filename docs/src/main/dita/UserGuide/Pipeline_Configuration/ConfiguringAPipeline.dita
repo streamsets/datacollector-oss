@@ -28,6 +28,7 @@
                     <li>A single origin stage</li>
                     <li>Multiple processor stages</li>
                     <li>Multiple destination stages</li>
+                    <li>Multiple executor stages</li>
                 </ul></p>
         </context>
         <steps id="steps_tsx_d2w_kq">

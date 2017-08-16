@@ -17,7 +17,7 @@
  <title>Pass to an Executor</title>
  <conbody>
   <p><indexterm>pipeline events<indexterm>passing to an executor</indexterm></indexterm>You can
-            configure a pipeline to pass each event type an executor stage. This allows you to
+            configure a pipeline to pass each event type to an executor stage. This allows you to
             trigger a task when the pipeline starts or stops. You configure the behavior for each
             event type separately. And you can discard any event that you do not want to use.</p>
         <p>
@@ -35,11 +35,11 @@
             <title>Example</title>
             <p>Say you want to send an email when the pipeline starts. First, you configure the
                 pipeline to use the Email executor for the pipeline start event. Since you don't
-                need the Stop event, you leave the default to discard it: </p>
+                need the Stop event, you can simply use the default discard option: </p>
             <p><image href="../Graphics/PEvent-Executor.png" id="image_ftv_kjy_t1b" scale="65"/></p>
-            <p>Then, also in pipeline properties, you configure the Email executor. You can
-                configure a condition for the email to be sent, but if you omit the condition, the
-                executor send the email each time it receives an event:</p>
+            <p>Then, also in the pipeline properties, you configure the Email executor. You can
+                configure a condition for the email to be sent. If you omit the condition, the
+                executor sends the email each time it receives an event:</p>
             <p><image href="../Graphics/PEvent-ConfigConsumer.png" id="image_x4y_3my_t1b" scale="60"
                 /></p>
         </section>
