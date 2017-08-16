@@ -119,7 +119,7 @@ public class RemoteDownloadConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
+      defaultValue = "true",
       label = "Strict Host Checking",
       description = "If enabled, this client will only connect to the host if the host is in the known hosts file.",
       displayPosition = 50,
