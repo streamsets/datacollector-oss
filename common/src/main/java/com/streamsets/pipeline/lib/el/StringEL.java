@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.el;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
@@ -30,6 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -407,6 +409,25 @@ public class StringEL {
   )
   public static String uuid() throws InterruptedException {
     return uuidQueue.take();
+  }
+
+  @ElFunction(
+      prefix = "str",
+      name = "splitKV",
+      description = "Splits key value pairs into a map"
+  )
+  public static Map<String, Field> splitKV(
+      @ElParam("string") String string,
+      @ElParam("pairSeparator") String separator,
+      @ElParam("kvSeparator") String kvSeparator) {
+    if (Strings.isNullOrEmpty(string)) {
+      return Collections.emptyMap();
+    }
+
+    Splitter.MapSplitter splitter = Splitter.on(separator).trimResults().omitEmptyStrings().withKeyValueSeparator(kvSeparator);
+
+    return splitter.split(string).entrySet().stream()
+        .collect(Collectors.toMap(Map.Entry::getKey, e -> Field.create(e.getValue())));
   }
 
 }

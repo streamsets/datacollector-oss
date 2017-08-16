@@ -435,4 +435,19 @@ public class TestStringEL {
     Assert.assertTrue(eval.eval(vars, "${str:isNullOrEmpty('')}", Boolean.class));
     Assert.assertTrue(eval.eval(vars, "${str:isNullOrEmpty(NULL)}", Boolean.class));
   }
+
+  @Test
+  public void testKVSplitter() throws Exception {
+    ELEvaluator eval = new ELEvaluator("kvSplitter", StringEL.class);
+    ELVariables vars = new ELVariables();
+
+    Map<String, Field> result = eval.eval(vars, "${str:splitKV('key1=val1&key2=val2&key3=val3', '&', '=')}", Map.class);
+
+    Assert.assertEquals(3, result.size());
+    for (int i = 1; i <= 3; i++) {
+      Assert.assertTrue(result.containsKey("key" + i));
+      Assert.assertEquals("val" + i, result.get("key" + i).getValueAsString());
+    }
+  }
+
 }
