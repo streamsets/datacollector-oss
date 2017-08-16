@@ -47,6 +47,7 @@ import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +67,8 @@ public final class TableContextUtil {
   private static final String COLUMN_METADATA_COLUMN_TYPE = "DATA_TYPE";
   private static final Joiner COMMA_JOINER = Joiner.on(",");
   public static final String GENERIC_PARTITION_SIZE_GT_ZERO_MSG = "partition size must be greater than zero";
+
+  public static final String OFFSET_VALUE_NANO_SEPARATOR = "<n>";
 
   public static final Set<Integer> PARTITIONABLE_TYPES = ImmutableSet.<Integer>builder()
     .add(Types.TINYINT)
@@ -509,11 +512,15 @@ public final class TableContextUtil {
         final int int1 = Integer.parseInt(offset);
         final int int2 = Integer.parseInt(partitionSize);
         return String.valueOf(int1 + int2);
+      case Types.TIMESTAMP:
+        final Timestamp timestamp1 = getTimestampForOffsetValue(offset);
+        final long timestampAdj = Long.parseLong(partitionSize);
+        final Timestamp timestamp2 = Timestamp.from(timestamp1.toInstant().plusMillis(timestampAdj));
+        return getOffsetValueForTimestamp(timestamp2);
       case Types.BIGINT:
-      // TIME, DATE, and TIMESTAMP are represented as long (epoch)
+      // TIME, DATE are represented as long (epoch)
       case Types.TIME:
       case Types.DATE:
-      case Types.TIMESTAMP:
         final long long1 = Long.parseLong(offset);
         final long long2 = Long.parseLong(partitionSize);
         return String.valueOf(long1 + long2);
@@ -533,6 +540,41 @@ public final class TableContextUtil {
         return decimal1.add(decimal2).toString();
     }
     return null;
+  }
+
+  public static String getOffsetValueForTimestamp(Timestamp timestamp) {
+    return getOffsetValueForTimestampParts(timestamp.getTime(), timestamp.getNanos());
+  }
+
+  public static String getOffsetValueForTimestampParts(long millis, int nanos) {
+    // keep only nanos beyond the millisecond precision
+    final int nanosAdjusted = nanos % JdbcUtil.NANOS_TO_MILLIS_ADJUSTMENT;
+    String nanosStr = nanosAdjusted > 0 ? String.valueOf(nanosAdjusted) : "";
+    return String.format("%d%s%s", millis, OFFSET_VALUE_NANO_SEPARATOR, nanosStr);
+  }
+
+  public static Timestamp getTimestampForOffsetValue(String offsetValue) {
+    final String[] parts = StringUtils.splitByWholeSeparator(offsetValue, OFFSET_VALUE_NANO_SEPARATOR);
+    Utils.checkState(parts.length <= 2, String.format(
+        "offsetValue of %s invalid; should contain at most one occurence of nanos separator %s",
+        offsetValue,
+        OFFSET_VALUE_NANO_SEPARATOR
+    ));
+
+    final long millis = Long.parseLong(parts[0]);
+    Timestamp timestamp = new Timestamp(millis);
+
+    if (parts.length == 2) {
+      final String nanosStr = parts[1];
+      if (StringUtils.isNotBlank(nanosStr) && StringUtils.isNumeric(nanosStr)) {
+        final int nanos = Integer.parseInt(nanosStr) % JdbcUtil.NANOS_TO_MILLIS_ADJUSTMENT;
+        // in a Timestamp, nanos also includes the millisecond portion, so we need to incorporate that
+        final long nanosFromMillis = millis % 1000;
+        timestamp.setNanos(((int)nanosFromMillis * JdbcUtil.NANOS_TO_MILLIS_ADJUSTMENT) + nanos);
+      }
+    }
+
+    return timestamp;
   }
 
   public static Map<String, TableContext> listCTTablesForConfig(

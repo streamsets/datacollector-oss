@@ -71,7 +71,7 @@ public class TableRuntimeContext {
     }
   }
 
-  TableRuntimeContext(
+  public TableRuntimeContext(
       TableContext sourceTableContext,
       boolean partitioned,
       int partitionSequence,

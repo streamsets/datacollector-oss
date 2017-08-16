@@ -28,6 +28,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.List;
 
@@ -87,9 +88,10 @@ public final class TableReadContext {
         );
         break;
       case Types.TIMESTAMP:
+        Timestamp ts = TableContextUtil.getTimestampForOffsetValue(paramVal);
         ps.setTimestamp(
             paramIdx,
-            new java.sql.Timestamp(Long.valueOf(paramVal))
+            ts
         );
         break;
       default:

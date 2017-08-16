@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
@@ -360,10 +361,24 @@ public final class OffsetQueryUtil {
     final Map<String, String> offsets = new HashMap<>();
     for (String offsetColumn : tableContext.getSourceTableContext().getOffsetColumns()) {
       Field field = fields.get(offsetColumn);
-      String value = field.getType().isOneOf(Field.Type.DATETIME, Field.Type.DATE, Field.Type.TIME)?
-          //For DATE/TIME fields store the long in string format and convert back to date when using offset
-          //in query
-          String.valueOf(field.getValueAsDatetime().getTime()) : field.getValueAsString();
+      String value;
+      if (field.getType().isOneOf(Field.Type.DATE, Field.Type.TIME)) {
+        //For DATE/TIME fields store the long in string format and convert back to date when using offset
+        //in query
+        value = String.valueOf(field.getValueAsDatetime().getTime());
+      } else if (field.getType() == Field.Type.DATETIME) {
+        //DATETIME is similar to above, but there may also be a nanosecond portion (stored in field attr)
+        String nanosAttr = field.getAttribute(JdbcUtil.FIELD_ATTRIBUTE_NANOSECONDS);
+        int nanos;
+        if (StringUtils.isNotBlank(nanosAttr) && StringUtils.isNumeric(nanosAttr)) {
+          nanos = Integer.parseInt(nanosAttr);
+        } else {
+          nanos = 0;
+        }
+        value = TableContextUtil.getOffsetValueForTimestampParts(field.getValueAsDatetime().getTime(), nanos);
+      } else {
+        value = field.getValueAsString();
+      }
       offsets.put(offsetColumn, value);
     }
     return offsets;
