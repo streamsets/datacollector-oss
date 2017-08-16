@@ -28,9 +28,6 @@ import com.streamsets.pipeline.api.StatsAggregatorStage;
     icon="",
     execution = {
         ExecutionMode.STANDALONE,
-        ExecutionMode.CLUSTER_BATCH,
-        ExecutionMode.CLUSTER_YARN_STREAMING,
-        ExecutionMode.CLUSTER_MESOS_STREAMING,
         ExecutionMode.EDGE
     },
     onlineHelpRefUrl = ""
