@@ -54,7 +54,6 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -760,8 +759,10 @@ public class OracleCDCSource extends BaseSource {
     Joiner errorStringJoiner = Joiner.on(",");
     List<String> errorColumns = Collections.emptyList();
     if (!fieldTypeExceptions.isEmpty()) {
-      errorColumns = fieldTypeExceptions.stream().map(ex ->
-          "Column = " + ex.column + ", Type = " + JDBCType.valueOf(ex.fieldType) + ", Value = " + ex.columnVal
+      errorColumns = fieldTypeExceptions.stream().map(ex -> {
+            String fieldTypeName = JDBCTypeNames.getOrDefault(ex.fieldType, "unknown");
+            return "Column = " + ex.column + ", Type = " + fieldTypeName + ", Value = " + ex.columnVal;
+          }
       ).collect(Collectors.toList());
     }
     if (!fieldTypeExceptions.isEmpty()) {
@@ -826,7 +827,7 @@ public class OracleCDCSource extends BaseSource {
           }
           RuleContextAndOpCode ctxOp = getRuleContextAndCode(r.sqlString, r.opCode);
           Record record = generateRecord(r.headers, ctxOp.operationCode, ctxOp.context);
-          if (record != null) {
+          if (record != null && record.getEscapedFieldPaths().size() > 0) {
             batchMaker.addRecord(record);
           }
         } catch (UnparseableSQLException ex) {
