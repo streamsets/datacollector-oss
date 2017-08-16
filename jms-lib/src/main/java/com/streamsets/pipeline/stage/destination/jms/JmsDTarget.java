@@ -35,7 +35,7 @@ import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
     icon = "jms.png",
     upgrader = JmsTargetUpgrader.class,
     recordsByRef = true,
-    onlineHelpRefUrl = "dunno"
+    onlineHelpRefUrl = "index.html#Destinations/JMSProducer.html#task_udk_yw5_n1b\n"
 )
 @ConfigGroups(JmsTargetGroups.class)
 @GenerateResourceBundle
