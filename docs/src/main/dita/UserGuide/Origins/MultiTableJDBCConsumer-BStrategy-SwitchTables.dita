@@ -17,7 +17,8 @@
  <title>Switch Tables</title>
  <conbody>
   <p>The Switch Tables batch strategy differs greatly depending on whether the origin performs full
-            table or partition processing. <dl>
+            table or partition processing. The number of batches created and processed at one time
+            is based on the Batches from Result Set property. <dl>
                 <dlentry>
                     <dt>Multithreaded table processing</dt>
                     <dd>
@@ -73,7 +74,7 @@
                     <dt>Multithreaded partition processing</dt>
                     <dd>
                         <p>Multithreaded partition processing is similar to multithreaded table
-                            processing, with a twist - each thread creates a batch of data from one
+                            processing, with a twist - each thread creates a set of batches from one
                             partition for a table, then all partitions from the same table are moved
                             to the end of the processing queue. This allows the origin to switch to
                             the next available table.</p>

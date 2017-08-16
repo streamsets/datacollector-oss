@@ -26,9 +26,15 @@
                 records can be dropped if you stop the pipeline when the origin is processing a
                 series of records with the same offset value.</note>
         </p>
-        <p>When you stop the pipeline as origin is processing a series of records with the same
+        <p>When you stop the pipeline as the origin is processing a series of records with the same
             offset value, the origin notes the offset. Then, when you restart the pipeline, it
             starts with a record with the next logical offset value, skipping any unprocessed
             records that use the same last-saved offset. </p>
+        <p>For example, say you specified a datetime column as a user-defined offset column, and
+            five records in the table share the same datetime value. Now say you happen to stop the
+            pipeline after it processes the second record. The pipeline stores the datetime value as
+            the offset where it stopped. When you restart the pipeline, processing begins with the
+            next datetime value, skipping the three unprocessed records with the last-saved offset
+            value. </p>
  </conbody>
 </concept>
