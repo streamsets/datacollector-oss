@@ -19,9 +19,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
+import com.streamsets.pipeline.stage.processor.schemagen.config.AvroDefaultConfig;
+import com.streamsets.pipeline.stage.processor.schemagen.config.AvroType;
 import com.streamsets.pipeline.stage.processor.schemagen.config.SchemaGeneratorConfig;
 import org.apache.avro.Schema;
 import org.junit.Assert;
@@ -30,6 +33,8 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class TestAvroSchemaGenerator {
 
@@ -41,7 +46,7 @@ public class TestAvroSchemaGenerator {
     config = new SchemaGeneratorConfig();
     config.schemaName = "test_schema";
     generator = new AvroSchemaGenerator();
-    generator.setConfig(config);
+    generator.init(config, mock(Stage.Context.class));
   }
 
   public void generateAndValidateSchema(Record record, String fieldFragment) throws OnRecordErrorException {
@@ -82,6 +87,54 @@ public class TestAvroSchemaGenerator {
     );
   }
 
+  @Test
+  public void testGenerateSimpleNullableSchemaDefaultToNull() throws OnRecordErrorException {
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.of(
+      "name", Field.create(Field.Type.STRING, "Bryan"),
+      "salary", Field.create(Field.Type.INTEGER, 10)
+    )));
+
+    this.config.avroNullableFields = true;
+    this.config.avroDefaultNullable = true;
+
+    generateAndValidateSchema(
+      record,
+      "{\"name\":\"name\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"salary\",\"type\":[\"null\",\"int\"],\"default\":null}"
+    );
+  }
+
+  @Test
+  public void testGenerateSchemaDefaultForString() throws OnRecordErrorException {
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.of(
+      "name", Field.create(Field.Type.STRING, "Bryan")
+    )));
+
+    this.config.avroDefaultTypes = ImmutableList.of(new AvroDefaultConfig(AvroType.STRING, "defaultValue"));
+    this.generator.init(config, mock(Stage.Context.class));
+
+    generateAndValidateSchema(
+      record,
+      "{\"name\":\"name\",\"type\":\"string\",\"default\":\"defaultValue\"}"
+    );
+  }
+
+  @Test
+  public void testGenerateSchemaDefaultForFloat() throws OnRecordErrorException {
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.of(
+      "float", Field.create(Field.Type.FLOAT, 1.0f)
+    )));
+
+    this.config.avroDefaultTypes = ImmutableList.of(new AvroDefaultConfig(AvroType.FLOAT, "666.0"));
+    this.generator.init(config, mock(Stage.Context.class));
+
+    generateAndValidateSchema(
+      record,
+      "{\"name\":\"float\",\"type\":\"float\",\"default\":666.0}"
+    );
+  }
   @Test
   public void testGenerateDecimal() throws OnRecordErrorException {
     Field decimal = Field.create(Field.Type.DECIMAL, new BigDecimal("10.2"));
@@ -167,6 +220,25 @@ public class TestAvroSchemaGenerator {
     generateAndValidateSchema(
       record,
       "{\"name\":\"map\",\"type\":{\"type\":\"map\",\"values\":\"string\"}}"
+    );
+  }
+
+  @Test
+  public void testGenerateMapWithDefaultValues() throws OnRecordErrorException {
+    Record record = RecordCreator.create();
+    record.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.of(
+      "map", Field.create(Field.Type.MAP, ImmutableMap.of(
+          "Doer", Field.create(Field.Type.STRING, "Arvind"),
+          "Talker", Field.create(Field.Type.STRING, "Girish")
+      )
+    ))));
+
+    this.config.avroDefaultTypes = ImmutableList.of(new AvroDefaultConfig(AvroType.STRING, "defaultValue"));
+    this.generator.init(config, mock(Stage.Context.class));
+
+    generateAndValidateSchema(
+      record,
+      "{\"name\":\"map\",\"type\":{\"type\":\"map\",\"values\":{\"type\":\"string\",\"defaultValue\":\"defaultValue\"}}}"
     );
   }
 
