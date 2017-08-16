@@ -44,7 +44,7 @@ public class TableContext {
   private final String extraOffsetColumnConditions;
   private final boolean partitionable;
 
-  TableContext(
+  public TableContext(
       String schema,
       String tableName,
       LinkedHashMap<String, Integer> offsetColumnToType,

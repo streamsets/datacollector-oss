@@ -37,6 +37,7 @@
     <guava.version>18.0</guava.version>
     <commons-lang.version>3.4</commons-lang.version>
     <antlr.version>4.5.3</antlr.version>
+    <mockrunner-jdbc.version>1.1.2</mockrunner-jdbc.version>
   </properties>
 
   <dependencies>
@@ -109,6 +110,12 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.mockrunner</groupId>
+      <artifactId>mockrunner-jdbc</artifactId>
+      <version>${mockrunner-jdbc.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

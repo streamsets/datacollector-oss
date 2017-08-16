@@ -59,7 +59,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
@@ -122,6 +124,9 @@ public class JdbcUtil {
    * The index within the result set for the MIN_OFFSET_VALUE_QUERY that contains the min offset value
    */
   private static final int MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX = 1;
+
+  public static final int NANOS_TO_MILLIS_ADJUSTMENT = 1_000_000;
+  public static final String FIELD_ATTRIBUTE_NANOSECONDS = "nanoSeconds";
 
   private JdbcUtil() {
   }
@@ -288,7 +293,26 @@ public class JdbcUtil {
         ResultSet rs = st.executeQuery(minOffsetQuery)
       ) {
         if (rs.next()) {
-          String minValue = rs.getString(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+          String minValue;
+          final int colType = rs.getMetaData().getColumnType(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+          switch (colType) {
+            case Types.DATE:
+              java.sql.Date date = rs.getDate(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+              minValue = String.valueOf(date.toInstant().toEpochMilli());
+              break;
+            case Types.TIME:
+              java.sql.Time time = rs.getTime(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+              minValue = String.valueOf(time.toInstant().toEpochMilli());
+              break;
+            case Types.TIMESTAMP:
+              Timestamp timestamp = rs.getTimestamp(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+              final Instant instant = timestamp.toInstant();
+              minValue = String.valueOf(instant.toEpochMilli());
+              break;
+            default:
+              minValue = rs.getString(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
+              break;
+          }
           minOffsetValues.put(offsetColumn, minValue);
         } else {
           LOG.warn("Unable to get minimum offset value using query {}; result set had no rows", minOffsetQuery);
@@ -501,7 +525,12 @@ public class JdbcUtil {
             field = Field.create(Field.Type.TIME, rs.getObject(columnIndex));
             break;
           case Types.TIMESTAMP:
-            field = Field.create(Field.Type.DATETIME, rs.getTimestamp(columnIndex));
+            final Timestamp timestamp = rs.getTimestamp(columnIndex);
+            field = Field.create(Field.Type.DATETIME, timestamp);
+            final long actualNanos = timestamp.getNanos() % NANOS_TO_MILLIS_ADJUSTMENT;
+            if (actualNanos > 0) {
+              field.setAttribute(FIELD_ATTRIBUTE_NANOSECONDS, String.valueOf(actualNanos));
+            }
             break;
           // Ugly hack until we can support LocalTime, LocalDate, LocalDateTime, etc.
           case Types.TIME_WITH_TIMEZONE:
