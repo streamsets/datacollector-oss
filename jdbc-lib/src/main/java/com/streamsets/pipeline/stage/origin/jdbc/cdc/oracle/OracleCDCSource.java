@@ -383,8 +383,6 @@ public class OracleCDCSource extends BaseSource {
                     "Starting Logminer from SCN: {} and end date: {}", lastSCN.toPlainString(), endTime));
               }
               startDate = lastSCNTimestamp;
-              startLogMnrForResume.setBigDecimal(1, lastSCN);
-              startLogMnrForResume.setString(2, endTime);
             } else {
               if (lastEndTime != null) {
                 startDate = refreshStartDate(BigDecimal.ZERO);
@@ -443,6 +441,8 @@ public class OracleCDCSource extends BaseSource {
           if (lastSCN == null || !configBean.bufferLocally || getContext().isPreview()) {
             startLogMinerUsingGivenDates(startDate.format(dtFormatter), endTime.format(dtFormatter));
           } else {
+            startLogMnrForResume.setBigDecimal(1, lastSCN);
+            startLogMnrForResume.setString(2, endTime.format(dtFormatter));
             startLogMnrForResume.execute();
           }
           LOG.debug(START_TIME_END_TIME, startDate, endTime);
