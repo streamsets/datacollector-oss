@@ -16,25 +16,35 @@
 package com.streamsets.pipeline.stage.processor.schemagen.generators;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.stage.processor.schemagen.config.SchemaGeneratorConfig;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Abstract class for generating schema where each schema type will be a subclass.
  */
 public abstract class SchemaGenerator {
-
   /**
    * Configuration of the generator.
    */
   private SchemaGeneratorConfig config;
-
-  public void setConfig(SchemaGeneratorConfig config) {
-    this.config = config;
-  }
-
   public SchemaGeneratorConfig getConfig() {
     return this.config;
+  }
+
+  /**
+   * Initialize the schema generator
+   *
+   * @param config User configuration
+   * @param context Stage context
+   * @return Any validation issues this generator might have encounter
+   */
+  public List<Stage.ConfigIssue> init(SchemaGeneratorConfig config, Stage.Context context) {
+    this.config = config;
+    return Collections.emptyList();
   }
 
   /**

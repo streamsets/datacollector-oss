@@ -39,7 +39,7 @@ public class SchemaGeneratorProcessor extends SingleLaneRecordProcessor {
     // Instantiate configured generator
     try {
       this.generator = config.schemaType.getGenerator().newInstance();
-      this.generator.setConfig(config);
+      issues.addAll(generator.init(config, getContext()));
     } catch (InstantiationException|IllegalAccessException e) {
       issues.add(getContext().createConfigIssue("SCHEMA", "config.schemaType", Errors.SCHEMA_GEN_0001, e.toString()));
     }

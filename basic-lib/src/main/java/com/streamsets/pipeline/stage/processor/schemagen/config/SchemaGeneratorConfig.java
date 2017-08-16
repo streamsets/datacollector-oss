@@ -17,8 +17,12 @@ package com.streamsets.pipeline.stage.processor.schemagen.config;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SchemaGeneratorConfig {
 
@@ -87,7 +91,7 @@ public class SchemaGeneratorConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "true",
+    defaultValue = "false",
     label = "Nullable fields",
     description = "If set to true all schema fields will be created as unions allowing null values.",
     group = "AVRO",
@@ -96,7 +100,21 @@ public class SchemaGeneratorConfig {
     },
     displayPosition = 30
   )
-  public boolean avroNullableFields;
+  public boolean avroNullableFields = false;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Default to Nullable",
+    description = "Set default values to Null.",
+    group = "AVRO",
+    dependencies = {
+      @Dependency(configName = "avroNullableFields", triggeredByValues = "true")
+    },
+    displayPosition = 31
+  )
+  public boolean avroDefaultNullable;
 
   @ConfigDef(
     required = true,
@@ -111,6 +129,21 @@ public class SchemaGeneratorConfig {
     displayPosition = 40
   )
   public boolean avroExpandTypes;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "[]",
+    label = "Default Values for Types",
+    description = "Enables to configure different default value for each type.",
+    group = "AVRO",
+    dependencies = {
+      @Dependency(configName = "schemaType", triggeredByValues = "AVRO")
+    },
+    displayPosition = 50
+  )
+  @ListBeanModel
+  public List<AvroDefaultConfig> avroDefaultTypes = new ArrayList<>();
 
   // Specific type configs
 

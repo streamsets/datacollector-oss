@@ -18,14 +18,24 @@ package com.streamsets.pipeline.stage.processor.schemagen.generators;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import com.streamsets.pipeline.stage.processor.schemagen.Errors;
+import com.streamsets.pipeline.stage.processor.schemagen.config.AvroDefaultConfig;
+import com.streamsets.pipeline.stage.processor.schemagen.config.SchemaGeneratorConfig;
 import org.apache.avro.Schema;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.node.BooleanNode;
+import org.codehaus.jackson.node.DoubleNode;
 import org.codehaus.jackson.node.IntNode;
+import org.codehaus.jackson.node.LongNode;
+import org.codehaus.jackson.node.NullNode;
+import org.codehaus.jackson.node.TextNode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +43,31 @@ import java.util.Map;
  * Avro schema generator.
  */
 public class AvroSchemaGenerator extends SchemaGenerator {
+
+  private Map<Schema.Type, JsonNode> defaultValuesForTypes;
+
+  @Override
+  public List<Stage.ConfigIssue> init(SchemaGeneratorConfig config, Stage.Context context) {
+    List<Stage.ConfigIssue> issues = super.init(config, context);
+
+    // Initialize default values for types
+    defaultValuesForTypes = new HashMap<>();
+    for(AvroDefaultConfig defaultConfig : config.avroDefaultTypes) {
+      // UI Allows duplicates that we don't accept
+      if(defaultValuesForTypes.containsKey(defaultConfig.avroType.getType())) {
+        issues.add(context.createConfigIssue("AVRO", "config.avroDefaultTypes", Errors.SCHEMA_GEN_0009, defaultConfig.avroType.getLabel()));
+        break;
+      }
+
+      defaultValuesForTypes.put(
+        defaultConfig.avroType.getType(),
+        convertToJsonNode(defaultConfig)
+      );
+    }
+
+    return issues;
+  }
+
   @Override
   public String generateSchema(Record record) throws OnRecordErrorException {
     // Currently we expect that root field is MAP or LIST_MAP
@@ -43,19 +78,17 @@ public class AvroSchemaGenerator extends SchemaGenerator {
 
     List<Schema.Field> recordFields = new ArrayList<>();
     for(Map.Entry<String, Field> entry : record.get().getValueAsMap().entrySet()) {
-      Schema fieldSchema = schemaForTypeNullable(record, entry.getValue());
-
-      recordFields.add(new Schema.Field(
-          entry.getKey(),
-          fieldSchema,
-          null,
-          fieldSchema.getJsonProp("default")
+      recordFields.add(schemaFieldForType(
+        record,
+        entry.getKey(),
+        entry.getValue()
       ));
+
     }
 
     Schema recordSchema = Schema.createRecord(
       getConfig().schemaName,
-      null,
+      getConfig().avroDoc,
       getConfig().avroNamespace,
       false
     );
@@ -66,22 +99,55 @@ public class AvroSchemaGenerator extends SchemaGenerator {
   /**
    * Generate schema for given field and optionally wrap it in union with null if configured.
    */
-  private Schema schemaForTypeNullable(Record record, Field field) throws OnRecordErrorException {
-    Schema schema = schemaForTypeSimple(record, field);
+  private Schema.Field schemaFieldForType(Record record, String fieldName, Field field) throws OnRecordErrorException {
+    Schema simpleSchema = simpleSchemaForType(record, field);
+    Schema finalSchema = simpleSchema;
+
+    // If Nullable check box was selected, wrap the whole schema in union with null
     if(getConfig().avroNullableFields) {
-      return Schema.createUnion(ImmutableList.of(
+      finalSchema = Schema.createUnion(ImmutableList.of(
         Schema.create(Schema.Type.NULL),
-        schema
+        simpleSchema
       ));
-    } else {
-      return schema;
     }
+
+    return new Schema.Field(
+      fieldName,
+      finalSchema,
+      null,
+      getDefaultValue(simpleSchema)
+    );
   }
 
   /**
-   * Generate schema for given field.
+   * Generates complex schema for given field that will include optional union with null and potentially default value
+   * as well. Particularly useful to generate nested structures.
    */
-  private Schema schemaForTypeSimple(Record record, Field field) throws OnRecordErrorException {
+  private Schema complexSchemaForType(Record record, Field field) throws OnRecordErrorException {
+    Schema simpleSchema = simpleSchemaForType(record, field);
+    Schema finalSchema = simpleSchema;
+
+    if(getConfig().avroNullableFields) {
+      finalSchema = Schema.createUnion(ImmutableList.of(
+        Schema.create(Schema.Type.NULL),
+        simpleSchema
+      ));
+    }
+
+    JsonNode defaultValue = getDefaultValue(simpleSchema);
+    if(defaultValue != null) {
+      finalSchema.addProp("defaultValue", defaultValue);
+    }
+
+    return finalSchema;
+  }
+
+  /**
+   * Generate simple schema for given field - it will never contain union nor a default value. Particularly useful
+   * for generating Schema.Field as this will not convert simple "string" to "{type:string, defaultValue:something}"
+   * which is hard to undo.
+   */
+  private Schema simpleSchemaForType(Record record, Field field) throws OnRecordErrorException {
     switch (field.getType()) {
       // Primitive types
       case BOOLEAN:
@@ -133,7 +199,7 @@ public class AvroSchemaGenerator extends SchemaGenerator {
         // And all items in the list must have the same schema
         Schema itemSchema = null;
         for(Field listItem : field.getValueAsList()) {
-          Schema currentListItemSchema = schemaForTypeNullable(record, listItem);
+          Schema currentListItemSchema = complexSchemaForType(record, listItem);
           if(itemSchema == null) {
             itemSchema = currentListItemSchema;
           } else if (!itemSchema.equals(currentListItemSchema)) {
@@ -154,7 +220,7 @@ public class AvroSchemaGenerator extends SchemaGenerator {
         // And all values in the map must be the same
         Schema mapSchema = null;
         for(Field listItem : field.getValueAsMap().values()) {
-          Schema currentListItemSchema = schemaForTypeNullable(record, listItem);
+          Schema currentListItemSchema = complexSchemaForType(record, listItem);
           if(mapSchema == null) {
             mapSchema = currentListItemSchema;
           } else if (!mapSchema.equals(currentListItemSchema)) {
@@ -213,4 +279,40 @@ public class AvroSchemaGenerator extends SchemaGenerator {
 
     return finalValue;
   }
+
+  /**
+   * Returns default value for given field or null if no default value should be used.
+   */
+  private JsonNode getDefaultValue(Schema schema) {
+    if(defaultValuesForTypes.containsKey(schema.getType())) {
+      return defaultValuesForTypes.get(schema.getType());
+    }
+
+    if(getConfig().avroNullableFields && getConfig().avroDefaultNullable) {
+      return NullNode.getInstance();
+    }
+
+    return null;
+  }
+
+  private JsonNode convertToJsonNode(AvroDefaultConfig defaultConfig) {
+    switch (defaultConfig.avroType) {
+      case BOOLEAN:
+        return Boolean.parseBoolean(defaultConfig.defaultValue) ? BooleanNode.TRUE : BooleanNode.FALSE;
+      case INTEGER:
+        return new IntNode(Integer.parseInt(defaultConfig.defaultValue));
+      case LONG:
+        return new LongNode(Long.parseLong(defaultConfig.defaultValue));
+      case FLOAT:
+        // FloatNode is fairly recent and our Jackson version does not have it yet
+        return new DoubleNode(Float.parseFloat(defaultConfig.defaultValue));
+      case DOUBLE:
+        return new DoubleNode(Double.parseDouble(defaultConfig.defaultValue));
+      case STRING:
+        return new TextNode(defaultConfig.defaultValue);
+      default:
+        throw new IllegalArgumentException("Unknown type: " + defaultConfig.avroType);
+    }
+  }
+
 }
