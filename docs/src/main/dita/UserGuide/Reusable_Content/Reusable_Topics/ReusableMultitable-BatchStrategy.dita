@@ -46,9 +46,10 @@
                 </dlentry>
                 <dlentry id="dlentry-SwitchTables">
                     <dt>Switch Tables</dt>
-                    <dd>Each thread creates a batch of data from one table, and then switches to the
-                        next available table to create the next batch. The thread runs an initial
-                        SQL query to create the first batch from the table. The database caches the
+                    <dd>Each thread creates a set of batches from one table based on the Batches
+                        from Result Set property, and then switches to the next available table to
+                        create the next set of batches. The thread runs an initial SQL query to
+                        create the first set of batches from the table. The database caches the
                         remaining rows in a result set in the database for the same thread to access
                         again, and then the thread switches to the next available table. A table is
                         available in the following situations:<ul id="ul_et1_zg4_lz">

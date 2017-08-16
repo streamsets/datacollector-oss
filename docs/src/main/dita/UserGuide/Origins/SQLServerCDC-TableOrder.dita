@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_nff_2hx_4y">
+ <title>Initial Table Order Strategy</title>
+ <shortdesc>You can define the initial order that the origin uses to read the tables.</shortdesc>
+ <conbody>
+  <p><indexterm>SQL Server CDC Client origin<indexterm>initial table order
+                strategy</indexterm></indexterm><indexterm>initial table order
+                    strategy<indexterm>SQL Server CDC Client origin</indexterm></indexterm>Define
+            one of the following initial table order strategies: <dl>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TableOrder_None-dlentry">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TableOrder-Alphabet-dlentry">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+            </dl></p>
+        <p>The origin uses the table order strategy only for the initial reading of the tables. When
+            threads switch back to previously read tables, they read from the next available table,
+            regardless of the defined order.</p>
+ </conbody>
+</concept>

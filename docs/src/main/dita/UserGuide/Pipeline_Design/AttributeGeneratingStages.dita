@@ -177,6 +177,39 @@
                                             id="image_pw4_vq1_j1b"/></xref></p></entry>
                         </row>
                         <row>
+                            <entry>SQL Server CDC Client origin</entry>
+                            <entry>Includes CRUD and change tracking information in record header
+                                attributes. <xref
+                                    href="../Origins/SQLServerCDC-RecordHeaderAtts.dita">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_d1y_c2h_x1b"/></xref>
+                                <p>Includes the CRUD operation type in the sdc.operation.type header
+                                    attribute. <xref
+                                        href="../Origins/SQLServerCDC-CDCOpHeaderAtt.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        /></xref></p><p>Includes event header attributes when
+                                    generating events. <xref
+                                        href="../Origins/SQLServerCDC-EventRecord.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_zj3_d2h_x1b"/></xref></p></entry>
+                        </row>
+                        <row>
+                            <entry>SQL Server Change Tracking origin</entry>
+                            <entry>Includes CRUD and CDC information in record header attributes.
+                                    <xref
+                                    href="../Origins/SQLServerChange-RecordHeaderAtts.dita">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_l3n_4dh_x1b"/></xref><p>Includes the CRUD
+                                    operation type in the sdc.operation.type header attribute. <xref
+                                        href="../Origins/SQLServerChange-CDCOpHeaderAtt.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_i3z_f2h_x1b"/></xref></p><p>Includes event
+                                    header attributes when generating events. <xref
+                                        href="../Origins/SQLServerChange-EventRecord.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_wg4_tdh_x1b"/></xref></p></entry>
+                        </row>
+                        <row>
                             <entry>Expression Evaluator processor</entry>
                             <entry>Can be configured to create or update record header attributes.
                                     <xref

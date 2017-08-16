@@ -13,18 +13,18 @@
   limitations under the License.
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
-<task id="task_vsh_22s_r1b">
-    <title>Configuring a SQL Server Change Tracking Origin</title>
+<task id="task_nsg_fxc_v1b">
+    <title>Configuring a SQL Server CDC Origin</title>
     <taskbody>
-        <context><indexterm>SQL Server Change Tracking
-                origin<indexterm>configuring</indexterm></indexterm>Configure a SQL Server Change
-            Tracking origin to process records from change tables. </context>
+        <context><indexterm>SQL Server CDC Client
+                origin<indexterm>configuring</indexterm></indexterm>Configure a SQL Server CDC
+            Client origin to process data in Microsoft SQL Server CDC tables.</context>
         <steps>
             <step>
                 <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_znb_nbc_x1b">
+                    <table frame="all" rowsep="1" colsep="1" id="table_vnk_4bc_x1b">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -45,9 +45,9 @@
                                 </row>
                                 <row>
                                     <entry>Produce Events <xref
-                                            href="SQLServerChange-EventGeneration.dita">
+                                            href="SQLServerCDC-EventGeneration.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_a4b_nbc_x1b"/></xref></entry>
+                                                id="image_wnk_4bc_x1b"/></xref></entry>
                                     <entry
                                         conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"
                                     />
@@ -88,33 +88,26 @@
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCQueryInterval">
                                     <entry/>
-                                </row> <row>
-                                    <entry>Include the Latest Data in the Record</entry>
-                                    <entry>Includes the current version of the data in the record,
-                                        when available. <p>When disabled, the origin includes only
-                                            the change tracking table information in the record. For
-                                            more information, see <xref
-                                                href="SQLServerChange-GeneratedRecord.dita#concept_yqg_sts_r1b"
-                                            />.</p><p>Enabled by default. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Number of Threads <xref
-                                            href="SQLServerChange-Multithread.dita"><image
+                                            href="SQLServerCDC-Multithread.dita"><image
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_r2s_8lq_fs"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCNumThreads"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCNumThreads"
+                                    />
                                 </row>
-                               
                                 <row>
                                     <entry>Per Batch Strategy <xref
-                                            href="SQLServerChange-BatchStrategy.dita"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_r3s_7rq_ds"/>
+                                            href="SQLServerCDC-BatchStrategy.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_r3s_7rq_ds"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCperBatch"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-JDBCperBatch"
+                                    />
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxBatch_row">
@@ -122,21 +115,23 @@
                                 </row>
                                 <row>
                                     <entry>Batches from Result Set <xref
-                                            href="SQLServerChange-BatchStrategy.dita"><image
+                                            href="SQLServerCDC-BatchStrategy.dita"><image
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h3m_wkh_hz"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-BatchResultSet"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-BatchResultSet"
+                                    />
                                 </row>
                                 <row>
                                     <entry>Result Set Cache Size <xref
-                                        href="SQLServerChange-BatchStrategy.dita"><image
+                                        href="SQLServerCDC-BatchStrategy.dita"><image
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_r9h_3rq_ds"/>
                                         </xref></entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-ResultSetCache"/>
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-ResultSetCache"
+                                    />
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCMaxClob_row">
@@ -169,9 +164,9 @@
                 </info>
             </step>
             <step>
-                <cmd>On the <wintitle>Change Tracking</wintitle> tab, define one or more table
-                    configurations. Click the <uicontrol>Add</uicontrol> icon to define another
-                    table configuration.</cmd>
+                <cmd>On the <wintitle>CDC</wintitle> tab, define one or more table configurations.
+                    Click the <uicontrol>Add</uicontrol> icon to define another table
+                    configuration.</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_c11_hl5_s1b">
                         <tgroup cols="2">
@@ -179,10 +174,10 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Change Tracking Property <xref
-                                            href="SQLServerChange-TableConfig.dita"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_hvl_qp5_qy"/>
+                                    <entry>CDC Property <xref
+                                            href="SQLServerCDC-TableConfig.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_hvl_qp5_qy"/>
                                         </xref></entry>
                                     <entry>Description</entry>
                                 </row>
@@ -193,16 +188,26 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Table Name Pattern</entry>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TableNamePatt"
-                                    />
+                                    <entry>Table Name Pattern <xref
+                                            href="SQLServerCDC-TableConfig.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_pyb_2cc_x1b"/>
+                                        </xref></entry>
+                                    <entry>
+                                        <p
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/p-TableNamePatt-1"/>
+                                        <p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SpecifyDataTables"
+                                            /></p>
+                                        <p
+                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/p-TableNamePat-2"
+                                        />
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>Table Exclusion Pattern</entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TableExclusionPatt"
-                                    />
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TableExclusionPatt"/>
                                 </row>
                                 <row>
                                     <entry>Initial Offset</entry>
@@ -274,7 +279,7 @@
                                 </row>
                                 <row>
                                     <entry>Initial Table Order Strategy <xref
-                                            href="SQLServerChange-TableOrder.dita"><image
+                                            href="SQLServerCDC-TableOrder.dita"><image
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_r5t_0kq_ds"/>
                                         </xref></entry>

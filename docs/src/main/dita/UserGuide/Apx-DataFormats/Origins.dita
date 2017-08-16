@@ -503,6 +503,10 @@
                 /></entry>
             </row>
             <row>
+              <entry>SQL Server CDC Client</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
               <entry>SQL Server Change Tracking</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>

@@ -411,6 +411,24 @@
    <topicref href="../Origins/SFTPClient-DataFormats.dita"/>
    <topicref href="../Origins/SFTP-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/SQLServerCDC.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Origins/SQLServerCDC-DriverInstall.dita"/>
+   <topicref href="../Origins/SQLServerCDC-Multithread.dita"/>
+   <topicref href="../Origins/SQLServerCDC-BatchStrategy.dita"/>
+   <topicref href="../Origins/SQLServerCDC-TableConfig.dita"/>
+   <topicref href="../Origins/SQLServerCDC-TableOrder.dita"/>
+   <topicref href="../Origins/SQLServerCDC-GeneratedRecord.dita">
+    <topicref href="../Origins/SQLServerCDC-RecordHeaderAtts.dita"/>
+    <topicref href="../Origins/SQLServerCDC-CDCOpHeaderAtt.dita"/>
+   </topicref>
+   <topicref href="../Origins/SQLServerCDC-EventGeneration.dita">
+    <topicref href="../Origins/SQLServerCDC-EventRecord.dita"/>
+   </topicref>
+   <topicref href="../Origins/SQLServerCDC-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/SQLServerChange.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

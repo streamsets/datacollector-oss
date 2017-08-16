@@ -24,15 +24,14 @@
             change tracking information. The origin uses multiple threads to enable parallel
             processing of data. </p>
         <p>Use the SQL Server Change Tracking origin to generate records from change tracking
-            tables. To read data  from Microsoft SQL Server change data capture (CDC) tables, use
-            the SQL Server CDC origin or the <xref
+            tables. To read data from Microsoft SQL Server change data capture (CDC) tables, use the
+                <xref href="SQLServerCDC.dita#concept_ut3_ywc_v1b">SQL Server CDC Client
+                origin</xref> or the <xref
                 href="JDBCConsumer-CDCMSSQLOverview.dita#concept_tyd_gbf_5y">JDBC Query Consumer
                 origin</xref>. For more information about the differences between change tracking
             and CDC data, see the <xref
                 href="https://docs.microsoft.com/en-us/sql/relational-databases/track-changes/track-data-changes-sql-server"
-                format="html" scope="external">Microsoft SQL Server documentation</xref>.
-                <draft-comment author="Loretta">add link to SQL Server CDC when
-                available.</draft-comment></p>
+                format="html" scope="external">Microsoft SQL Server documentation</xref>. </p>
         <p>The SQL Server Change Tracking origin includes the CRUD operation type in a record header
             attribute so generated records can be easily processed by CRUD-enabled destinations. For
             an overview of Data Collector changed data processing and a list of CRUD-enabled

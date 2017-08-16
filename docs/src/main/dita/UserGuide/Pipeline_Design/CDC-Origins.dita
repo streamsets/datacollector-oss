@@ -82,6 +82,14 @@
                                     />.</p></entry>
                         </row>
                         <row>
+                            <entry>SQL Server CDC Client</entry>
+                            <entry>Includes the CRUD operation type in the sdc.operation.type record
+                                header attribute. <p>Includes CDC information in header attributes
+                                    named jdbc.&lt;CDC column name>. For more information, see <xref
+                                        href="../Origins/SQLServerCDC-RecordHeaderAtts.dita#concept_pc4_xts_r1b"
+                                    />.</p></entry>
+                        </row>
+                        <row>
                             <entry>SQL Server Change Tracking</entry>
                             <entry>Includes the CRUD operation type in the sdc.operation.type record
                                 header attribute. <p>Includes additional information from change

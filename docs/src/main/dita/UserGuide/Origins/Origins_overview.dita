@@ -93,6 +93,9 @@
           from an SDC RPC destination in an SDC RPC pipeline and writes it to Kafka.</li>
         <li><xref href="SDCRPCtoKafka.dita#concept_tdk_slk_pw">SFTP/FTP Client</xref> - Reads files
           from an SFTP or FTP server.</li>
+        <li><xref href="SQLServerCDC.dita#concept_ut3_ywc_v1b">SQL Server CDC Client</xref> - Reads
+          data from Microsoft SQL Server CDC tables. Creates multiple threads to enable parallel
+          processing in a multithreaded pipeline.</li>
         <li><xref href="SQLServerChange.dita#concept_ewq_b2s_r1b">SQL Server Change Tracking</xref>
           - Reads data from Microsoft SQL Server change tracking tables and generates the latest
           version of each record. Creates multiple threads to enable parallel processing in a

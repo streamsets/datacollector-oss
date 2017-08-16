@@ -1186,6 +1186,9 @@ web-0011.log</codeblock></dd>
                               multiple tables through a JDBC connection.</li>
                         <li><xref href="../Origins/KinConsumer.dita#concept_anh_4y3_yr">Kinesis
                                     Consumer</xref> - Reads data from a Kinesis cluster.</li>
+                        <li><xref href="../Origins/SQLServerCDC.dita#concept_ut3_ywc_v1b">SQL Server
+                                    CDC Client</xref> - Reads data from Microsoft SQL Server CDC
+                              tables.</li>
                         <li><xref href="../Origins/SQLServerChange.dita#concept_ewq_b2s_r1b">SQL
                                     Server Change Tracking</xref> - Processes data from Microsoft
                               SQL Server change tracking tables. </li>
@@ -1300,6 +1303,14 @@ web-0011.log</codeblock></dd>
             <p><ph><ph id="OracleCDC-fulldata"><ph>use the JDBC Consumer origin in a separate
                                     pipeline to read the existing data before you start the pipeline
                                     with Oracle CDC Client</ph></ph></ph></p>
+            <p>
+                  <draft-comment author="Loretta">The following ph is used by SQL Server CDC Client
+                        - Table Config and Configuring the origin</draft-comment>
+            </p>
+            <p><ph id="ph-SpecifyDataTables">When specifying the table names, use the names for the
+                        source tables that contain the data, not the names of the CDC tables. For
+                        example, specify the dbo.customer source table, not the associated CDC
+                        table, cdc.dbo_customer_CT. </ph></p>
             <p>
                   <draft-comment author="Loretta">UDP Source and UDP to Kafka use the following ph
                         and ul:</draft-comment>
@@ -2873,6 +2884,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         <li>JDBC Query Consumer origin</li>
                         <li>JDBC Multitable Consumer origin</li>
                         <li>Salesforce origin</li>
+                        <li>SQL Server CDC Client origin</li>
                         <li>SQL Server Change Tracking origin</li>
                   </ul></p>
             <p>
