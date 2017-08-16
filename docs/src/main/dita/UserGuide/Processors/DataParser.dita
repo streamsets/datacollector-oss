@@ -18,8 +18,9 @@
  <conbody>
   <p><indexterm>processors<indexterm>Data Parser</indexterm></indexterm><indexterm>Data Parser
                     processor<indexterm>overview</indexterm></indexterm>The Data Parser processor
-            allows you to parse NetFlow or syslog messages embedded in a field. NetFlow messages
-            must be embedded in a byte array field and syslog messages embedded in a string field. </p>
+            allows you to parse supported Data Collector data formats embedded in a field. You can
+            parse NetFlow embedded in a byte array field or syslog messages embedded in a string
+            field. </p>
         <p>When you configure the processor, you specify the field to process and the target field
             for the parsed data. You indicate the type of data to be processed. </p>
         <p>You also determine the multiple values behavior. When a field includes more than one

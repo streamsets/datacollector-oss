@@ -19,10 +19,35 @@
         <p><indexterm>Data Parser processor<indexterm>data formats</indexterm></indexterm>The Data
             Parser processor processes data differently based on the data format that you select.
             The processor processes the following types of data: <dl>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-DELIM">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-JSON">
+                    <dt/>
+                    <dd/>
+                </dlentry>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-LOG">
+                    <dt/>
+                    <dd/>
+                </dlentry>
                 <dlentry>
                     <dt>NetFlow messages</dt>
                     <dd>The Data Parser processor can process Netflow Version 5 messages embedded in
                         a byte array field.</dd>
+                </dlentry>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-ProtoMessage">
+                    <dt/>
+                    <dd/>
                 </dlentry>
                 <dlentry>
                     <dt>syslog messages</dt>
@@ -36,6 +61,11 @@
                             id="ul_fcp_mm4_4x">
                             <li/>
                         </ul></dd>
+                </dlentry>
+                <dlentry
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XML">
+                    <dt/>
+                    <dd/>
                 </dlentry>
             </dl></p>
  </conbody>
