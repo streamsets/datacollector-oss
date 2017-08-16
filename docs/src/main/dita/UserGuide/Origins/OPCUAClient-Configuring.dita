@@ -18,8 +18,9 @@
     <shortdesc/>
     <taskbody>
         <context>
-            <p><indexterm>OPC UA Client origin<indexterm>configuring</indexterm></indexterm>Configue
-                an OPC UA Client origin to process data from an OPC UA server. </p>
+            <p><indexterm>OPC UA Client
+                origin<indexterm>configuring</indexterm></indexterm>Configure an OPC UA Client
+                origin to process data from an OPC UA server. </p>
         </context>
         <steps>
             <step

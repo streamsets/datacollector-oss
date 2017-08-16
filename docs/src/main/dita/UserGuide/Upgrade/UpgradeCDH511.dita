@@ -18,20 +18,18 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_spf_2gq_vz">
- <title>Working with a Cloudera CDH 5.11 System</title>
+ <title>Working with Cloudera CDH 5.11 or Later</title>
  <conbody>
-  <p>When you upgrade to Cloudera CDH version 5.11 from a previous version, you must update
+  <p>When you upgrade to Cloudera CDH version 5.11 or later from a previous version, you must update
             pipelines that set permissions on HDFS or Hive by modifying file mode bits with the
-            minus or equals operators.<draft-comment author="Loretta">Update this when we support
-                additional > 5.11 versions - to say something like... when upgrading from versions
-                "earlier to 5.11 to version 5.11 or later"  5/9/2017.</draft-comment></p>
+            minus or equals operators.</p>
         <p>Pipelines can modify file mode bits on HDFS or Hive with the following stage
                 properties:<ul id="ul_xgb_ygq_vz">
-                <li>The HDFS File Metadata executor Set Permissions property</li>
+                <li>The HDFS File Metadata executor Set Permissions property.</li>
                 <li>The Hadoop FS destination whole file Permissions Expression whole file
-                    property</li>
-            </ul>CDH 5.11 changes how the minus and equals operators are evaluated as follows:<ul
-                id="ul_j5b_vgq_vz">
+                    property.</li>
+            </ul>As of CDH 5.11, Cloudera changed how the minus and equals operators are evaluated
+            as follows:<ul id="ul_j5b_vgq_vz">
                 <li dir="ltr">
                     <p>In previous CDH releases, the minus operator (-) grants the specified
                         permissions. In the current release, it removes the specified permissions. </p>

@@ -23,7 +23,7 @@
         <p>When processing data, you can configure the Oracle CDC Client to use change numbers or
             datetime values to determine where to begin processing. In both cases, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            must use the same time zone as the Oracle database to ensure that the the origin
-            processes the expected data.</p>
+            must use the same time zone as the Oracle database to ensure that the origin processes
+            the expected data.</p>
  </conbody>
 </concept>
