@@ -58,6 +58,10 @@
         <li class="li"><a class="xref" href="BigQuery.html#concept_cg3_y3v_q1b" title="The Google BigQuery origin executes a query job and reads the result from Google BigQuery.">Google BigQuery</a> - Executes a query
           job and reads the result from Google BigQuery. </li>
 
+        <li class="li"><a class="xref" href="PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub Subscriber</a> - Consumes
+          messages from a Google Pub/Sub subscription. Creates multiple threads to enable parallel
+          processing in a multithreaded pipeline.</li>
+
         <li class="li"><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP Client</a> - Reads data from a
           streaming HTTP resource URL.</li>
 
@@ -69,7 +73,7 @@
           HTTP endpoint and writes the contents of all authorized HTTP POST requests directly to
           Kafka.</li>
 
-        <li class="li"><a class="xref" href="MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC Multitable
+        <li class="li"><a class="xref" href="MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="When you configure JDBC Multitable Consumer, you define a table configuration for each group of tables that you want to read. A table configuration defines a group of tables from the same schema, that have the same table name pattern, and that have proper primary keys or have the same user-defined offset columns.You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.You can define the initial order that the origin uses to read the tables.">JDBC Multitable
             Consumer</a> - Reads database data from multiple tables through a JDBC connection.
           Creates multiple threads to enable parallel processing in a multithreaded pipeline.</li>
 
@@ -132,6 +136,10 @@
 
         <li class="li"><a class="xref" href="SDCRPCtoKafka.html#concept_tdk_slk_pw" title="The SDC RPC to Kafka origin reads data from one or more SDC RPC destinations and writes it immediately to Kafka. Use the SDC RPC to Kafka origin in an SDC RPC destination pipeline.">SFTP/FTP Client</a> - Reads files
           from an SFTP or FTP server.</li>
+
+        <li class="li"><a class="xref" href="SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server CDC Client</a> - Reads
+          data from Microsoft SQL Server CDC tables. Creates multiple threads to enable parallel
+          processing in a multithreaded pipeline.</li>
 
         <li class="li"><a class="xref" href="SQLServerChange.html#concept_ewq_b2s_r1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server Change Tracking</a>
           - Reads data from Microsoft SQL Server change tracking tables and generates the latest
@@ -200,9 +208,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="28.57142857142857%" id="d271947e430">Origin</th>
+                            <th class="entry" valign="top" width="28.57142857142857%" id="d279115e449">Origin</th>
 
-                            <th class="entry" valign="top" width="71.42857142857143%" id="d271947e433">Description</th>
+                            <th class="entry" valign="top" width="71.42857142857143%" id="d279115e452">Description</th>
 
                         </tr>
 
@@ -210,10 +218,10 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d271947e430 "><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d279115e449 "><a class="xref" href="HTTPClient.html#concept_wk4_bjz_5r" title="You can configure the HTTP Client origin to use the OAuth 2 protocol to connect to an HTTP service that uses basic, digest, or universal authentication, OAuth 2 client credentials, OAuth 2 username and password, or OAuth 2 JSON Web Tokens (JWT).To use OAuth 2 authorization to read from Twitter, configure HTTP Client to use basic authentication and the client credentials grant.To use OAuth 2 authorization to read from Microsoft Azure AD, configure HTTP Client to use no authentication and the client credentials grant.To use OAuth 2 authorization to read from Google service accounts, configure HTTP Client to use no authentication and the JSON Web Tokens grant.The HTTP Client origin processes data differently based on the data format. The origin processes the following types of data:">HTTP
                                     Client</a></td>
 
-                            <td class="entry" valign="top" width="71.42857142857143%" headers="d271947e433 ">
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d279115e452 ">
                                 <ul class="ul" id="concept_rsz_cnw_qy__ul_ixb_t5v_qy">
                                     <li class="li">Initiates HTTP requests for an external system.</li>
 
@@ -235,10 +243,10 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d271947e430 "><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d279115e449 "><a class="xref" href="HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
                                     Server</a></td>
 
-                            <td class="entry" valign="top" width="71.42857142857143%" headers="d271947e433 ">
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d279115e452 ">
                                 <ul class="ul" id="concept_rsz_cnw_qy__ul_vsb_x5v_qy">
                                     <li class="li">Listens for incoming HTTP requests and processes them while
                                         the sender waits for confirmation.</li>
@@ -260,10 +268,10 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="28.57142857142857%" headers="d271947e430 "><a class="xref" href="HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to
+                            <td class="entry" valign="top" width="28.57142857142857%" headers="d279115e449 "><a class="xref" href="HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to
                                     Kafka</a></td>
 
-                            <td class="entry" valign="top" width="71.42857142857143%" headers="d271947e433 ">
+                            <td class="entry" valign="top" width="71.42857142857143%" headers="d279115e452 ">
                                 <ul class="ul" id="concept_rsz_cnw_qy__ul_uj1_v5v_qy">
                                     <li class="li">Listens for incoming HTTP requests and writes them
                                         immediately to Kafka with no additional processing. </li>
@@ -372,9 +380,9 @@
           
           <thead class="thead" align="left">
             <tr>
-              <th class="entry" valign="top" width="30%" id="d271947e682">Compression Format</th>
+              <th class="entry" valign="top" width="30%" id="d279115e701">Compression Format</th>
 
-              <th class="entry" valign="top" width="70%" id="d271947e685">Description</th>
+              <th class="entry" valign="top" width="70%" id="d279115e704">Description</th>
 
             </tr>
 
@@ -382,16 +390,16 @@
 
           <tbody class="tbody">
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d271947e682 ">Uncompressed</td>
+              <td class="entry" valign="top" width="30%" headers="d279115e701 ">Uncompressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d271947e685 ">Processes uncompressed files of the configured data format.</td>
+              <td class="entry" valign="top" width="70%" headers="d279115e704 ">Processes uncompressed files of the configured data format.</td>
 
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d271947e682 ">Compressed</td>
+              <td class="entry" valign="top" width="30%" headers="d279115e701 ">Compressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d271947e685 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
+              <td class="entry" valign="top" width="70%" headers="d279115e704 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
                   <li class="li">gzip</li>
 
                   <li class="li">bgzip2</li>
@@ -412,9 +420,9 @@
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d271947e682 ">Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d279115e701 ">Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d271947e685 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
+              <td class="entry" valign="top" width="70%" headers="d279115e704 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
                   <li class="li">7z</li>
 
                   <li class="li">ar</li>
@@ -435,9 +443,9 @@
             </tr>
 
             <tr>
-              <td class="entry" valign="top" width="30%" headers="d271947e682 ">Compressed Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d279115e701 ">Compressed Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d271947e685 ">Processes files in compressed archives created by supported compression and
+              <td class="entry" valign="top" width="70%" headers="d279115e704 ">Processes files in compressed archives created by supported compression and
                 archive formats.</td>
 
             </tr>
@@ -488,9 +496,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d271947e861">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d279115e880">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d271947e864">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d279115e883">Description</th>
 
                                 </tr>
 
@@ -498,38 +506,38 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d271947e861 ">Topic</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d279115e880 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d271947e864 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d271947e861 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d271947e864 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d279115e883 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d271947e861 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d279115e880 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d271947e864 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d279115e883 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d279115e880 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d279115e883 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d271947e861 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d279115e880 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d271947e864 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d279115e883 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d271947e861 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d279115e880 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d271947e864 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d279115e883 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>
