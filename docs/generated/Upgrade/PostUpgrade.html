@@ -38,13 +38,37 @@
 <div class="topic concept nested1" id="concept_yyv_v45_zw">
  <h2 class="title topictitle2">Update Vault Pipelines</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">With version 2.7.0.0, <span class="ph">Data
+ <div class="body conbody">
+        <p class="p">With version 2.7.0.0, <span class="ph">Data
                   Collector</span>
-        introduces a credential store API and credential expression language functions to access
-        Hashicorp Vault secrets. In addition, the <span class="ph">Data
-                  Collector</span> Vault
-        integration now relies on Vault's App Role authentication backend. </p>
+            introduces a credential store API and credential expression language functions to access
+            Hashicorp Vault secrets. At this time, the following JDBC stages can use the credential
+            functions:</p>
+
+        <ul class="ul" id="concept_yyv_v45_zw__ul_u5f_1wx_v1b">
+         <li class="li">JDBC Multitable Consumer origin</li>
+
+         <li class="li">JDBC Query Consumer origin</li>
+
+         <li class="li">Oracle CDC Client origin</li>
+
+                <li class="li">SQL Server CDC Client origin</li>
+
+         <li class="li">SQL Server Change Tracking origin</li>
+
+         <li class="li">JDBC Lookup processor</li>
+
+         <li class="li">JDBC Tee processor</li>
+
+         <li class="li">JDBC Producer destination</li>
+
+         <li class="li">JDBC Query executor</li>
+
+     </ul>
+
+        <p class="p">In addition, the <span class="ph">Data
+                  Collector</span>
+            Vault integration now relies on Vault's App Role authentication backend. </p>
 
         <p class="p">Previously, <span class="ph">Data
                   Collector</span>
@@ -57,12 +81,13 @@
 
         <dl class="dl">
             
-                <dt class="dt dlterm">Use the new credential store expression language functions (recommended)</dt>
+                <dt class="dt dlterm">Use the new credential store expression language functions in pipelines that
+                    include JDBC stages (recommended)</dt>
 
                 <dd class="dd">To use the new credential functions, install the Vault credential store stage
                     library and define the configuration properties used to connect to Vault. Then,
-                    update each upgraded pipeline that uses Vault functions to use the new
-                    credential functions to retrieve the credential values.</dd>
+                    update each upgraded pipeline that includes JDBC stages using Vault functions to
+                    use the new credential functions to retrieve the credential values.</dd>
 
                 <dd class="dd">For details on using the Vault credential store system, see <a class="xref" href="../Configuration/CredentialStores.html#concept_s3y_dps_51b" title="By default, a full Data Collector installation includes the Vault keystore credential store stage library. The core installation does not include the library.Use the credential:get() or credential:getWithOptions() function in pipeline stage properties to retrieve credential values from Vault.">Vault Credential Store</a>.</dd>
 

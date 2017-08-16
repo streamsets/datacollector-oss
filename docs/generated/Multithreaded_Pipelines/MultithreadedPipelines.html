@@ -52,6 +52,8 @@
 
                 <li class="li">Elasticsearch origin</li>
 
+                <li class="li">Google Pub/Sub Subscriber origin</li>
+
                 <li class="li">HTTP Server origin</li>
 
                 <li class="li">JDBC Multitable Consumer origin</li>
@@ -96,7 +98,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data
                   Collector</span> creates a number of pipeline runners based on the pipeline Max Runners
-                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d33847e1783">Each
+                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d34745e1787">Each
                               thread connects to the origin system and creates a batch of data, and
                               passes the batch to an available pipeline runner.</span></span></p>
 
@@ -157,15 +159,23 @@
                         <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch
                               cluster.</li>
 
+                        <li class="li"><a class="xref" href="../Origins/PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub
+                                    Subscriber</a> - Consumes messages from a Google Pub/Sub
+                              subscription.</li>
+
                         <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
                                     Server</a> - Listens on a HTTP endpoint and processes the
                               contents of all authorized HTTP POST requests. </li>
 
-                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC Multitable Consumer</a> - Reads database data from
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="When you configure JDBC Multitable Consumer, you define a table configuration for each group of tables that you want to read. A table configuration defines a group of tables from the same schema, that have the same table name pattern, and that have proper primary keys or have the same user-defined offset columns.You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer</a> - Reads database data from
                               multiple tables through a JDBC connection.</li>
 
                         <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis
                                     Consumer</a> - Reads data from a Kinesis cluster.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server
+                                    CDC Client</a> - Reads data from Microsoft SQL Server CDC
+                              tables.</li>
 
                         <li class="li"><a class="xref" href="../Origins/SQLServerChange.html#concept_ewq_b2s_r1b" title="You can define the initial order that the origin uses to read the tables.">SQL
                                     Server Change Tracking</a> - Processes data from Microsoft
@@ -361,15 +371,23 @@
                         <li class="li"><a class="xref" href="../Origins/Elasticsearch.html#concept_f1q_vpm_2z" title="The Elasticsearch origin is a multithreaded origin that reads data from an Elasticsearch cluster, including Elastic Cloud clusters (formerly Found clusters). The origin generates a record for each Elasticsearch document.">Elasticsearch</a> - Reads data from an Elasticsearch
                               cluster.</li>
 
+                        <li class="li"><a class="xref" href="../Origins/PubSub.html#concept_pjw_qtl_r1b" title="The Google Pub/Sub Subscriber origin consumes messages from a Google Pub/Sub subscription.">Google Pub/Sub
+                                    Subscriber</a> - Consumes messages from a Google Pub/Sub
+                              subscription.</li>
+
                         <li class="li"><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y" title="The HTTP Server origin is a multithreaded origin that listens on an HTTP endpoint and processes the contents of all authorized HTTP POST requests. Use the HTTP Server origin to read high volumes of HTTP POST requests using multiple threads.">HTTP
                                     Server</a> - Listens on a HTTP endpoint and processes the
                               contents of all authorized HTTP POST requests. </li>
 
-                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="The JDBC Multitable Consumer origin reads database data from multiple tables through a JDBC connection. The origin returns data as a map with column names and field values.">JDBC Multitable Consumer</a> - Reads database data from
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="When you configure JDBC Multitable Consumer, you define a table configuration for each group of tables that you want to read. A table configuration defines a group of tables from the same schema, that have the same table name pattern, and that have proper primary keys or have the same user-defined offset columns.You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer</a> - Reads database data from
                               multiple tables through a JDBC connection.</li>
 
                         <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis
                                     Consumer</a> - Reads data from a Kinesis cluster.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">SQL Server
+                                    CDC Client</a> - Reads data from Microsoft SQL Server CDC
+                              tables.</li>
 
                         <li class="li"><a class="xref" href="../Origins/SQLServerChange.html#concept_ewq_b2s_r1b" title="You can define the initial order that the origin uses to read the tables.">SQL
                                     Server Change Tracking</a> - Processes data from Microsoft

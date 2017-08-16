@@ -40,16 +40,14 @@
             query once and then the pipeline stops when it finishes reading all query results. If
             you start the pipeline again, the origin submits the query again.</p>
 
-        <p class="p">Before you use the Google BigQuery origin, generate a Google Cloud service account
-            credential that the origin uses to connect to Google BigQuery. </p>
-
         <p class="p">When you configure the origin, you define the query to run using valid BigQuery standard
             SQL or legacy SQL syntax. By default, BigQuery writes all query results to a temporary,
             cached results table. You can choose to disable retrieving cached results and force
             BigQuery to compute the query result.</p>
 
-        <p class="p">You also define the project and credentials file to use to connect to Google
-            BigQuery.</p>
+        <p class="p">You also define the project and credentials provider to use to connect to Google
+            BigQuery. The origin can retrieve credentials from the Google Application Default
+            Credentials or from a Google Cloud service account credentials file.</p>
 
      <p class="p">The origin can also generate events for an event
                   stream. For more information about dataflow triggers and the event framework, see
@@ -59,32 +57,108 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_vl2_bbx_q1b">
- <h2 class="title topictitle2">Prerequisites</h2>
+ <h2 class="title topictitle2">Credentials</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">Before you can read from Google BigQuery, you must generate a Google Cloud service
-        account credentials file that the origin uses to connect to Google BigQuery. </p>
-
-        <div class="p">
-            <ol class="ol" id="concept_vl2_bbx_q1b__ol_kwj_sbx_q1b">
-                <li class="li">Generate a service account credentials file in JSON format.<p class="p">Use the Google
-                        Cloud Platform Console to generate and download the credentials
-                        file.</p>
-<p class="p">For more information, see <a class="xref" href="https://cloud.google.com/storage/docs/authentication#generating-a-private-key" target="_blank">generating a service account
-                            credential</a> in the Google Cloud Platform documentation.</p>
-</li>
-
-                <li class="li">Store the generated credentials file on the <span class="ph">Data
-                  Collector</span> machine. <p class="p">As a best practice, store the file in the <span class="ph">Data
-                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>. </p>
-</li>
-
-            </ol>
-
-        </div>
+ <div class="body conbody">
+        <p class="p">When the Google BigQuery origin executes
+            a query job and reads the result from Google BigQuery, it must pass credentials to
+            Google BigQuery. Configure the origin to retrieve the credentials from the Google
+            Application Default Credentials or from a Google Cloud service account credentials
+            file.</p>
 
     </div>
 
+<div class="topic concept nested2" id="concept_rdh_ggr_v1b">
+ <h3 class="title topictitle3">Default Credentials Provider</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When configured to use the Google Application Default Credentials, the origin checks for
+        the credentials file defined in the <samp class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</samp>
+        environment variable. If the environment variable doesn't exist and <span class="ph">Data
+                  Collector</span> is
+        running on a virtual machine (VM) in Google Cloud, the origin uses the built-in service
+        account associated with the virtual machine instance. </p>
+
+     <p class="p">For more information about the default credentials, see <a class="xref" href="https://developers.google.com/identity/protocols/application-default-credentials" target="_blank">Google Application Default Credentials</a> in the
+         Google Developer documentation.</p>
+
+     <p class="p">Complete the following steps to define the credentials file in the environment
+         variable:</p>
+
+     <ol class="ol" id="concept_rdh_ggr_v1b__ol_o51_ttq_v1b">
+                                    <li class="li">Use the Google Cloud Platform Console or the
+                                                <samp class="ph codeph">gcloud</samp> command-line tool to create
+                                          a Google service account and have your application use it
+                                          for API access.<div class="p">For example, to use the command line
+                                                tool, run the following
+                                                commands:<pre class="pre codeblock">gcloud iam service-accounts create my-account
+gcloud iam service-accounts keys create key.json --iam-account=my-account@my-project.iam.gserviceaccount.com</pre>
+</div>
+</li>
+
+                                    <li class="li">Store the generated credentials file on the <span class="ph">Data
+                  Collector</span> machine. </li>
+
+                                    <li class="li">In the <span class="ph">Data
+                  Collector</span> environment configuration file, add the
+                                                <samp class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</samp>
+                                          environment variable and point it to the credentials
+                                                file.<p class="p">If you start Data Collector as a service, set the environment
+                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
+                  If you start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+<p class="p">Set the environment variable as
+                                          follows:</p>
+<pre class="pre codeblock">export GOOGLE_APPLICATION_CREDENTIALS="/var/lib/sdc-resources/keyfile.json"</pre>
+</li>
+
+                                    <li class="li">Restart <span class="ph">Data
+                  Collector</span> to enable the changes.</li>
+
+                                    <li class="li">On the <span class="ph uicontrol">Credentials</span> tab for the stage,
+                                          select <span class="ph uicontrol">Default Credentials Provider</span>
+                                          for the credentials provider. </li>
+
+                              </ol>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_xxg_lgr_v1b">
+ <h3 class="title topictitle3">Service Account Credentials File (JSON)</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When configured to use the Google Cloud service account credentials file, the origin
+        checks for the file defined in the origin properties. </p>
+
+     <p class="p">Complete the following steps to use the service account credentials file:</p>
+
+     <ol class="ol" id="concept_xxg_lgr_v1b__ol_ztr_wtq_v1b">
+                                    <li class="li">Generate a service account credentials file in JSON
+                                                format.<p class="p">Use the Google Cloud Platform Console or
+                                                the <samp class="ph codeph">gcloud</samp> command-line tool to
+                                                generate and download the credentials file. For more
+                                                information, see <a class="xref" href="https://cloud.google.com/storage/docs/authentication#generating-a-private-key" target="_blank">generating a
+                                                  service account credential</a> in the Google
+                                                Cloud Platform documentation.</p>
+</li>
+
+                                    <li class="li">Store the generated credentials file on the <span class="ph">Data
+                  Collector</span> machine. <p class="p">As a best practice, store the file in the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
+                                    </p>
+</li>
+
+                                    <li class="li">On the <span class="ph uicontrol">Credentials</span> tab for the stage,
+                                          select <span class="ph uicontrol">Service Account Credentials
+                                                File</span> for the credentials provider and
+                                          enter the path to the credentials file.</li>
+
+                              </ol>
+
+ </div>
+
+</div>
 </div>
 <div class="topic concept nested1" id="concept_ypg_qdx_q1b">
  <h2 class="title topictitle2">BigQuery Data Types</h2>
@@ -111,9 +185,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="50%" id="d191567e151">BigQuery Standard SQL Data Type</th>
+                                    <th class="entry" valign="top" width="50%" id="d197547e266">BigQuery Standard SQL Data Type</th>
 
-                                    <th class="entry" valign="top" width="50%" id="d191567e154">Data Collector Data Type</th>
+                                    <th class="entry" valign="top" width="50%" id="d197547e269">Data Collector Data Type</th>
 
                                 </tr>
 
@@ -121,79 +195,79 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">Array</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">Array</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">List</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">Boolean</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">Boolean</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">List</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">Bytes</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">Boolean</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">Byte Array</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">Date</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">Date</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">Boolean</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">Bytes</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">Datetime</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">Float</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">Double</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">Byte Array</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">Integer</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">Date</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">Long</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">String</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">String</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">Date</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">Struct</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">Datetime</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">List-Map</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">Time</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">Datetime</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e151 ">Timestamp</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">Float</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e154 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">Double</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">Integer</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">Long</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">String</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">String</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">Struct</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">List-Map</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">Time</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">Datetime</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e266 ">Timestamp</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d197547e269 ">Datetime</td>
 
                                 </tr>
 
@@ -220,9 +294,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="50%" id="d191567e293">BigQuery Legacy SQL Data Type</th>
+                                    <th class="entry" valign="top" width="50%" id="d197547e408">BigQuery Legacy SQL Data Type</th>
 
-                                    <th class="entry" valign="top" width="50%" id="d191567e296">Data Collector Data Type</th>
+                                    <th class="entry" valign="top" width="50%" id="d197547e411">Data Collector Data Type</th>
 
                                 </tr>
 
@@ -230,72 +304,72 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e293 ">Boolean</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e408 ">Boolean</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e296 ">Boolean</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e293 ">Bytes</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d191567e296 ">Byte Array</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e411 ">Boolean</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e293 ">Date</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e408 ">Bytes</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e296 ">Date</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e293 ">Datetime</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d191567e296 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e411 ">Byte Array</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e293 ">Float</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e408 ">Date</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e296 ">Double</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e293 ">Integer</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d191567e296 ">Long</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e411 ">Date</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e293 ">Record</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e408 ">Datetime</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e296 ">List-Map</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e293 ">String</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d191567e296 ">String</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e411 ">Datetime</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e293 ">Time</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e408 ">Float</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e296 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e411 ">Double</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d191567e293 ">Timestamp</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e408 ">Integer</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d191567e296 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e411 ">Long</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e408 ">Record</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d197547e411 ">List-Map</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e408 ">String</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d197547e411 ">String</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e408 ">Time</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d197547e411 ">Datetime</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d197547e408 ">Timestamp</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d197547e411 ">Datetime</td>
 
                                 </tr>
 
@@ -354,9 +428,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d191567e494">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d197547e609">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d191567e497">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d197547e612">Description</th>
 
                         </tr>
 
@@ -364,9 +438,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d191567e494 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d197547e609 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d191567e497 ">Event type. Uses the following type:<ul class="ul" id="concept_zrl_p3x_q1b__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d197547e612 ">Event type. Uses the following type:<ul class="ul" id="concept_zrl_p3x_q1b__ul_m12_mgp_qx">
                                     <li class="li">big-query-success - Generated when the origin successfully
                                         completes a query.</li>
 
@@ -376,16 +450,16 @@
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d191567e494 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d197547e609 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d191567e497 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d197547e612 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d191567e494 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d197547e609 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_zrl_p3x_q1b__d34191e1688" valign="top" width="70%" headers="d191567e497 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_zrl_p3x_q1b__d35089e1688" valign="top" width="70%" headers="d197547e612 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -412,9 +486,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d191567e572">Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d197547e687">Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d191567e575">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d197547e690">Description</th>
 
                                     </tr>
 
@@ -422,30 +496,30 @@
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d191567e572 ">query</td>
+                                        <td class="entry" valign="top" width="30%" headers="d197547e687 ">query</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d191567e575 ">Query that completed successfully.</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d191567e572 ">timestamp</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d191567e575 ">Timestamp when the query completed.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d197547e690 ">Query that completed successfully.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d191567e572 ">row-count</td>
+                                        <td class="entry" valign="top" width="30%" headers="d197547e687 ">timestamp</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d191567e575 ">Number of processed rows.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d197547e690 ">Timestamp when the query completed.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d191567e572 ">source-offset</td>
+                                        <td class="entry" valign="top" width="30%" headers="d197547e687 ">row-count</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d191567e575 ">Offset after the query completed.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d197547e690 ">Number of processed rows.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d197547e687 ">source-offset</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d197547e690 ">Offset after the query completed.</td>
 
                                     </tr>
 
@@ -483,9 +557,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d191567e669">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d197547e784">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d191567e672">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d197547e787">Description</th>
 
                                 </tr>
 
@@ -493,34 +567,34 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d191567e669 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d197547e784 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d191567e672 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d191567e669 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d191567e672 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d197547e787 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d191567e669 ">Produce Events <a class="xref" href="BigQuery.html#concept_vsm_khx_q1b">
+       <td class="entry" valign="top" width="30%" headers="d197547e784 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d197547e787 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d197547e784 ">Produce Events <a class="xref" href="BigQuery.html#concept_vsm_khx_q1b">
                                             <img class="image" id="task_n5w_ykv_q1b__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d191567e672 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d197547e787 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_n5w_ykv_q1b__d34191e382" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_n5w_ykv_q1b__d35089e382" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d191567e669 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-         <img class="image" id="task_n5w_ykv_q1b__d34191e391" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d197547e784 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_n5w_ykv_q1b__d35089e391" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d191567e672 ">Error record handling for the stage: <ul class="ul" id="task_n5w_ykv_q1b__d34191e395">
+       <td class="entry" valign="top" width="70%" headers="d197547e787 ">Error record handling for the stage: <ul class="ul" id="task_n5w_ykv_q1b__d35089e395">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -549,9 +623,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d191567e765">BigQuery Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d197547e880">BigQuery Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d191567e768">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d197547e883">Description</th>
 
                                 </tr>
 
@@ -559,9 +633,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d191567e765 ">Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197547e880 ">Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d191567e768 ">SQL query to use for the query job. Write the query using
+                                    <td class="entry" valign="top" width="70%" headers="d197547e883 ">SQL query to use for the query job. Write the query using
                                         valid BigQuery standard SQL or legacy SQL syntax. <p class="p">Do not
                                             include the <samp class="ph codeph">#legacySql</samp> or
                                                 <samp class="ph codeph">#standardSql</samp> prefix in the query.
@@ -573,9 +647,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d191567e765 ">Use Legacy SQL</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197547e880 ">Use Legacy SQL</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d191567e768 ">Specifies whether the query uses standard SQL or legacy
+                                    <td class="entry" valign="top" width="70%" headers="d197547e883 ">Specifies whether the query uses standard SQL or legacy
                                         SQL syntax. <p class="p">Clear to use standard SQL. Select to use
                                             legacy SQL. </p>
 </td>
@@ -583,9 +657,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d191567e765 ">Use Query Cache</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197547e880 ">Use Query Cache</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d191567e768 ">Determines whether Google BigQuery retrieves cached
+                                    <td class="entry" valign="top" width="70%" headers="d197547e883 ">Determines whether Google BigQuery retrieves cached
                                         results if they are present.<p class="p">Select to retrieve cached
                                             results. Clear to disable retrieving cached
                                         results.</p>
@@ -594,9 +668,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d191567e765 ">Query Timeout (sec)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197547e880 ">Query Timeout (sec)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d191567e768 ">Maximum number of seconds to wait for the query to
+                                    <td class="entry" valign="top" width="70%" headers="d197547e883 ">Maximum number of seconds to wait for the query to
                                         finish. If the query fails to complete within the timeout,
                                         the origin aborts the query and the pipeline fails. <p class="p">Enter
                                             a time in seconds or use the
@@ -611,9 +685,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d191567e765 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="30%" headers="d197547e880 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d191567e768 ">Maximum number of records to include in a batch.</td>
+       <td class="entry" valign="top" width="70%" headers="d197547e883 ">Maximum number of records to include in a batch.</td>
 
       </tr>
 
@@ -634,9 +708,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d191567e875">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d197547e990">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d191567e878">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d197547e993">Description</th>
 
                                 </tr>
 
@@ -644,21 +718,34 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d191567e875 ">Project ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d197547e990 ">Project ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d191567e878 ">Google BigQuery project ID to connect to.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d197547e993 ">Google BigQuery project ID to connect to.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d191567e875 ">Credentials File Path (JSON)
-                                        <a class="xref" href="BigQuery.html#concept_vl2_bbx_q1b" title="Before you can read from Google BigQuery, you must generate a Google Cloud service account credentials file that the origin uses to connect to Google BigQuery.">
+                                    <td class="entry" valign="top" width="30%" headers="d197547e990 ">Credentials Provider <a class="xref" href="BigQuery.html#concept_vl2_bbx_q1b" title="When configured to use the Google Application Default Credentials, the origin checks for the credentials file defined in the GOOGLE_APPLICATION_CREDENTIALS environment variable. If the environment variable doesn't exist and Data Collector is running on a virtual machine (VM) in Google Cloud, the origin uses the built-in service account associated with the virtual machine instance. When configured to use the Google Cloud service account credentials file, the origin checks for the file defined in the origin properties.">
                                             <img class="image" id="task_n5w_ykv_q1b__image_pls_tp4_hj" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d191567e878 ">Path to the Google Cloud service account credentials file
-                                        that the origin uses to connect to Google BigQuery. The
-                                        credentials file must be a JSON file.<p class="p">Enter a path
-                                            relative to the <span class="ph">Data
+                                    <td class="entry" valign="top" width="70%" headers="d197547e993 ">Credentials provider to use to connect to Google
+                                            BigQuery:<ul class="ul" id="task_n5w_ykv_q1b__ul_tmm_2rp_v1b">
+                                            <li class="li">Default credentials provider</li>
+
+                                            <li class="li">Service account credentials file (JSON) </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d197547e990 ">Credentials File Path (JSON) </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d197547e993 ">When using a Google Cloud service account credentials
+                                        file, path to the file that the origin uses to connect to
+                                        Google BigQuery. The credentials file must be a JSON
+                                            file.<p class="p">Enter a path relative to the <span class="ph">Data
                   Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>,
                                             or enter an absolute path. </p>
 </td>

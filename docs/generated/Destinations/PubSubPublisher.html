@@ -1,0 +1,1108 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Google Pub/Sub Publisher" /><meta name="abstract" content="The Google Pub/Sub Publisher destination publishes messages to a Google Pub/Sub topic." /><meta name="description" content="The Google Pub/Sub Publisher destination publishes messages to a Google Pub/Sub topic." /><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_qsj_hk1_v1b" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Google Pub/Sub Publisher</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_qsj_hk1_v1b">
+ <h1 class="title topictitle1">Google Pub/Sub Publisher</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Google Pub/Sub Publisher destination publishes messages to a Google Pub/Sub
+        topic.</p>
+
+  <p class="p">When you configure the destination, you
+            define the Google Pub/Sub topic ID to write messages to. You also define the project and
+            credentials provider to use to connect to Google Pub/Sub. The destination can retrieve
+            credentials from the Google Application Default Credentials or from a Google Cloud
+            service account credentials file.</p>
+
+        <p class="p">A Google Pub/Sub message contains a payload and optional user-defined attributes that
+            describe the payload content. When records include record header attributes, the Google
+            Pub/Sub Publisher destination includes the record header attributes in message
+            attributes. The destination does not include internal record header attributes in
+            message attributes.</p>
+
+        <p class="p">For more information about record header attributes, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_snf_1wq_v1b">
+ <h2 class="title topictitle2">Credentials</h2>
+
+ <div class="body conbody">
+  <p class="p">When the Google Pub/Sub
+            Publisher destination publishes messages to a Google Pub/Sub topic, it must pass
+            credentials to Google Pub/Sub. Configure the destination to retrieve the credentials
+            from the Google Application Default Credentials or from a Google Cloud service account
+            credentials file.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_e1w_mwq_v1b">
+ <h3 class="title topictitle3">Default Credentials Provider</h3>
+
+ 
+        <div class="body conbody"><p class="shortdesc">When configured to use the Google Application Default Credentials, the destination
+        checks for the credentials file defined in the
+            <samp class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</samp> environment variable. If the environment
+        variable doesn't exist and <span class="ph">Data
+                  Collector</span> is
+        running on a virtual machine (VM) in Google Cloud, the destination uses the built-in service
+        account associated with the virtual machine instance. </p>
+
+            <p class="p">For more information about the default credentials, see <a class="xref" href="https://developers.google.com/identity/protocols/application-default-credentials" target="_blank">Google Application Default Credentials</a> in
+                the Google Developer documentation.</p>
+
+            <p class="p">Complete the following steps to define the credentials file in the environment
+                variable:</p>
+
+            <ol class="ol" id="concept_e1w_mwq_v1b__ol_o51_ttq_v1b">
+                                    <li class="li">Use the Google Cloud Platform Console or the
+                                                <samp class="ph codeph">gcloud</samp> command-line tool to create
+                                          a Google service account and have your application use it
+                                          for API access.<div class="p">For example, to use the command line
+                                                tool, run the following
+                                                commands:<pre class="pre codeblock">gcloud iam service-accounts create my-account
+gcloud iam service-accounts keys create key.json --iam-account=my-account@my-project.iam.gserviceaccount.com</pre>
+</div>
+</li>
+
+                                    <li class="li">Store the generated credentials file on the <span class="ph">Data
+                  Collector</span> machine. </li>
+
+                                    <li class="li">In the <span class="ph">Data
+                  Collector</span> environment configuration file, add the
+                                                <samp class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</samp>
+                                          environment variable and point it to the credentials
+                                                file.<p class="p">If you start Data Collector as a service, set the environment
+                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
+                  If you start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+<p class="p">Set the environment variable as
+                                          follows:</p>
+<pre class="pre codeblock">export GOOGLE_APPLICATION_CREDENTIALS="/var/lib/sdc-resources/keyfile.json"</pre>
+</li>
+
+                                    <li class="li">Restart <span class="ph">Data
+                  Collector</span> to enable the changes.</li>
+
+                                    <li class="li">On the <span class="ph uicontrol">Credentials</span> tab for the stage,
+                                          select <span class="ph uicontrol">Default Credentials Provider</span>
+                                          for the credentials provider. </li>
+
+                              </ol>
+
+        </div>
+
+</div>
+<div class="topic concept nested2" id="concept_wbh_twq_v1b">
+ <h3 class="title topictitle3">Service Account Credentials File (JSON)</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When configured to use the Google Cloud service account credentials file, the
+        destination checks for the file defined in the destination properties. </p>
+
+        <p class="p">Complete the following steps to use the service account credentials file:</p>
+
+        <ol class="ol" id="concept_wbh_twq_v1b__ol_ztr_wtq_v1b">
+                                    <li class="li">Generate a service account credentials file in JSON
+                                                format.<p class="p">Use the Google Cloud Platform Console or
+                                                the <samp class="ph codeph">gcloud</samp> command-line tool to
+                                                generate and download the credentials file. For more
+                                                information, see <a class="xref" href="https://cloud.google.com/storage/docs/authentication#generating-a-private-key" target="_blank">generating a
+                                                  service account credential</a> in the Google
+                                                Cloud Platform documentation.</p>
+</li>
+
+                                    <li class="li">Store the generated credentials file on the <span class="ph">Data
+                  Collector</span> machine. <p class="p">As a best practice, store the file in the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
+                                    </p>
+</li>
+
+                                    <li class="li">On the <span class="ph uicontrol">Credentials</span> tab for the stage,
+                                          select <span class="ph uicontrol">Service Account Credentials
+                                                File</span> for the credentials provider and
+                                          enter the path to the credentials file.</li>
+
+                              </ol>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_qwl_lyq_v1b">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <p class="p">Google Pub/Sub Publisher writes
+            data to Google Pub/Sub based on the data format that you select. You can use the
+            following data formats:</p>
+
+     <dl class="dl">
+         
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">The destination writes records based on the Avro schema. </dd>
+
+                              <dd class="dd">You can use one of the following methods to specify the location
+                                    of the Avro schema definition:</dd>
+
+                              <dd class="dd">
+                                    <ul class="ul" id="concept_qwl_lyq_v1b__d15192e2537">
+                                          <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+
+                                          <li class="li"><span class="ph uicontrol">In Record Header</span> - Use the
+                                                schema included in the avroSchema record header
+                                                attribute.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Confluent Schema Registry</span> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the destination to look up the schema in the
+                                                Confluent Schema Registry by the schema ID or
+                                                subject. <p class="p">You must specify the method that the
+                                                  Kafka Producer uses to serialize the messages in
+                                                  the Avro format. To embed the Avro schema ID in
+                                                  each message that the destination writes, set the
+                                                  key and value serializers to Confluent on the
+                                                  <span class="ph uicontrol">Kafka</span> tab.</p>
+<p class="p">If using
+                                                  the Avro schema in the stage or in the record
+                                                  header attribute, you can optionally configure the
+                                                  destination to register the Avro schema with the
+                                                  Confluent Schema Registry. You can also optionally
+                                                  include the schema definition in the
+                                                message.</p>
+</li>
+
+                                    </ul>
+
+                              </dd>
+
+                              <dd class="dd">You can compress data with an Avro-supported compression codec.
+                                    When using Avro compression, avoid using other compression
+                                    available in the destination. </dd>
+
+                        
+         
+                              <dt class="dt dlterm">Binary</dt>
+
+                              <dd class="dd">The destination writes binary data from a single field in the
+                                    record. </dd>
+
+                        
+         
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, the root field must be list or list-map.</dd>
+
+                        
+         
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_qwl_lyq_v1b__d15192e2641">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+         
+                        <dt class="dt dlterm">Protobuf</dt>
+
+                        <dd class="dd">Writes one record in a message. Uses the user-defined message type and
+                              the definition of the message type in the descriptor file to generate
+                              the message. </dd>
+
+                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                  
+         
+                        <dt class="dt dlterm">SDC Record</dt>
+
+                        <dd class="dd">The destination writes records in the SDC Record data format. </dd>
+
+                  
+         
+                        <dt class="dt dlterm">Text</dt>
+
+                        <dd class="dd">The destination writes data from a single text field to the destination
+                              system. When you configure the stage, you select the field to use.
+                              When necessary, merge record data into the field earlier in the
+                              pipeline. </dd>
+
+                        <dd class="dd">You can configure the characters to use as record separators. By
+                              default, the destination uses a Unix-style line ending (\n) to
+                              separate records.</dd>
+
+                        <dd class="dd">When a record contains no data in the text field, you can configure the
+                              destination to write the record separator characters, creating an
+                              empty line. By default, the destination discards the record.</dd>
+
+                  
+         
+                              <dt class="dt dlterm">XML</dt>
+
+                              <dd class="dd">The destination creates a valid XML document for each record. The
+                                    destination requires the record to have a single root field that
+                                    contains the rest of the record data. For details and
+                                    suggestions for how to accomplish this, see <a class="xref" href="../Data_Formats/WritingXML.html#concept_cmn_hml_r1b">Record Structure Requirement</a>.<p class="p">The destination can include indentation to produce
+                                          human-readable documents. It can also validate <span class="ph" id="concept_qwl_lyq_v1b__d15192e2862">that the generated
+                                                XML conforms to the specified schema definition.
+                                                Records with invalid schemas are handled based on
+                                                the error handling configured for the
+                                                destination.</span></p>
+</dd>
+
+                        
+     </dl>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_n1k_sk1_v1b">
+    <h2 class="title topictitle2">Configuring a Google Pub/Sub Publisher Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a Google
+                Pub/Sub Publisher destination to write messages to a Google Pub/Sub topic.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15402e4531" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e420">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e423">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e420 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e423 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e420 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e423 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e420 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_n1k_sk1_v1b__d15402e4577" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e423 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e420 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_n1k_sk1_v1b__d15402e4593" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e423 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e420 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_n1k_sk1_v1b__d15402e4610" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e423 ">Error record handling for the stage: <ul class="ul" id="task_n1k_sk1_v1b__d15402e4614">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Pub/Sub</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__table_ypc_bzq_v1b" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e534">Pub/Sub Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e537">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e534 ">Topic ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e537 ">Google Pub/Sub topic ID to write messages to.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Credentials</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__table_ffd_w3p_v1b" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e580">Credentials Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e583">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e580 ">Project ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e583 ">Google Pub/Sub project ID to connect to.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e580 ">Credentials Provider
+                                        <a class="xref" href="PubSubPublisher.html#concept_snf_1wq_v1b" title="When configured to use the Google Application Default Credentials, the destination checks for the credentials file defined in the GOOGLE_APPLICATION_CREDENTIALS environment variable. If the environment variable doesn't exist and Data Collector is running on a virtual machine (VM) in Google Cloud, the destination uses the built-in service account associated with the virtual machine instance. When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">
+                                            <img class="image" id="task_n1k_sk1_v1b__image_d3x_vhk_lz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e583 ">Credentials provider to use to connect to Google
+                                        Pub/Sub:<ul class="ul" id="task_n1k_sk1_v1b__ul_tmm_2rp_v1b">
+                                            <li class="li">Default credentials provider</li>
+
+                                            <li class="li">Service account credentials file (JSON)
+                                            </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e580 ">Credentials File Path (JSON)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e583 ">When using a Google Cloud service account credentials
+                                        file, path to the file that the destination uses to connect
+                                        to Google Pub/Sub. The credentials file must be a JSON
+                                            file.<p class="p">Enter a path relative to the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>,
+                                            or enter an absolute path. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Format</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e673">Data Format Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e676">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e673 ">Data Format <a class="xref" href="PubSubPublisher.html#concept_qwl_lyq_v1b">
+                                        <img class="image" id="task_n1k_sk1_v1b__image_ahh_tgj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e676 ">Format of data to be written. Use one of the following
+                                        options:<ul class="ul" id="task_n1k_sk1_v1b__ul_un2_cqd_br">
+                                            <li class="li">Avro</li>
+
+                                            <li class="li">Binary</li>
+
+                                            <li class="li">Delimited</li>
+
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">Protobuf</li>
+
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
+                                                <img class="image" id="task_n1k_sk1_v1b__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+
+                                            <li class="li">Text</li>
+
+                                            <li class="li">XML</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15402e5754" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e763">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e766">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e763 ">Avro Schema Location</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e766 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_n1k_sk1_v1b__d15402e5783">
+                                            <li class="li">In Pipeline Configuration - Use the schema that you
+                                                provide in the stage configuration. </li>
+
+                                            <li class="li">In Record Header - Use the schema in the avroSchema
+                                                record header attribute. Use only when the
+                                                avroSchema attribute is defined for all records.
+                                                  <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
+                                                  <img class="image" id="task_n1k_sk1_v1b__d15402e5792" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+
+                                            <li class="li">Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e763 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e766 ">Avro schema definition used to write the data. <p class="p">You can
+                                            optionally use the runtime:loadResource function to use
+                                            a schema definition stored in a runtime resource file.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e763 ">Register Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e766 ">Select to register a new Avro schema with the Confluent
+                                        Schema Registry.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e763 ">Schema Registry URLs</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e766 ">Confluent Schema Registry URLs used to look up the schema
+                                        or to register a new schema. To add a URL, click
+                                            <span class="ph uicontrol">Add</span>. Use the following format to
+                                        enter the
+                                        URL:<pre class="pre codeblock">http://&lt;host name&gt;:&lt;port number&gt;</pre>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e763 ">Look Up Schema By</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e766 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_n1k_sk1_v1b__d15402e5840">
+                                            <li class="li">Subject - Look up the specified Avro schema
+                                                subject.</li>
+
+                                            <li class="li">Schema ID - Look up the specified Avro schema ID.
+                                            </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e763 ">Schema Subject</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e766 ">Avro schema subject to look up or to register in the
+                                        Confluent Schema Registry.<p class="p">If the specified subject to
+                                            look up has multiple schema versions, the origin uses
+                                            the latest schema version for that subject. To use an
+                                            older version, find the corresponding schema ID, and
+                                            then set the <span class="ph uicontrol">Look Up Schema By</span>
+                                            property to Schema ID.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e763 ">Schema ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e766 ">Avro schema ID to look up in the Confluent Schema
+                                        Registry.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e763 ">Include Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e766 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                            schema definition can improve performance, but requires
+                                            the appropriate schema management to avoid losing track
+                                            of the schema associated with the data.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e763 ">Avro Compression Codec</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e766 ">The Avro compression type to use. <p class="p">When using Avro
+                                            compression, do not enable other compression available
+                                            in the destination. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For binary data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15402e6091" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e922">Binary Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e925">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e922 ">Binary Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e925 ">Field that contains the binary data.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15402e6148" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e968">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e971">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e968 ">Delimiter Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e971 ">Format for delimited data:<ul class="ul" id="task_n1k_sk1_v1b__ul_k3j_vvf_jr">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e968 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e971 ">Indicates whether to create a header line.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e968 ">Replace New Line Characters</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e971 ">Replaces new line characters with the configured
+                                            string.<p class="p">Recommended when writing data as a single line
+                                            of text.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e968 ">New Line Character Replacement</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e971 ">String to replace each new line character. For example,
+                                        enter a space to replace each new line character with a
+                                        space. <p class="p">Leave empty to remove the new line
+                                        characters.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e968 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e971 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">You can enter a Unicode control character
+                                            using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
+                                            hexadecimal digit from the numbers 0-9 or the letters
+                                            A-F. For example, enter \u0000 to use the null character
+                                            as the delimiter or \u2028 to use a line separator as
+                                            the delimiter.</p>
+<p class="p">Default is the pipe character ( |
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e968 ">Escape Character </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e971 ">Escape character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the backslash character ( \
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e968 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e971 ">Quote character for a custom delimiter format. Select one
+                                        of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the quotation mark character ( "
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d133596e968 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d133596e971 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15402e6287" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e1129">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e1132">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e1129 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e1132 ">Determines how JSON data is written:<ul class="ul" id="task_n1k_sk1_v1b__d15402e6316">
+                                            <li class="li">JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+
+                                            <li class="li">Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d133596e1129 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d133596e1132 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For protobuf data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15402e6443" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e1192">Protobuf Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e1195">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e1192 ">Protobuf Descriptor File </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e1195 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
+                                        <p class="p">For more information about environment variables, see
+                                            <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>. For information about generating the descriptor
+                                            file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e1192 ">Message Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e1195 ">The fully-qualified name for the message type to use when
+                                        writing data.<p class="p">Use the following format:
+                                                <samp class="ph codeph">&lt;package name&gt;.&lt;message
+                                            type&gt;</samp>. </p>
+Use a message type defined in the
+                                        descriptor file.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e1192 ">Write Delimiter</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e1195 ">Writes a delimiter after each message. </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15402e6594" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e1312">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e1315">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e1312 ">Text Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e1315 ">Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e1312 ">Record Separator</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e1315 ">Characters to use to separate records. Use any valid Java
+                                        string literal. For example, when writing to Windows, you
+                                        might use \r\n to separate records. <p class="p">By default, the
+                                            destination uses \n.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e1312 ">Insert Record Separator if No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e1315 ">When a record does not include the text field, inserts
+                                        the configured record separator string to create an empty
+                                            line.<p class="p">When not selected, records without the text
+                                            field are discarded.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d133596e1312 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d133596e1315 ">Character set to use when writing data. </td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For XML data, on the <span class="keyword wintitle">XML</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15402e6801" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d133596e1389">XML Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d133596e1392">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e1389 ">Pretty Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e1392 ">Adds indentation to make the resulting XML document
+                                        easier to read. Increases the record size
+                                        accordingly.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e1389 ">Validate Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e1392 ">Validates <span class="ph">that the generated
+                                                XML conforms to the specified schema definition.
+                                                Records with invalid schemas are handled based on
+                                                the error handling configured for the
+                                                destination.</span><div class="p">
+                                            <div class="note important"><span class="importanttitle">Important:</span> Regardless of whether you
+                                                validate the XML schema, the destination requires
+                                                the record in a specific format. For more
+                                                information, see <a class="xref" href="../Data_Formats/WritingXML.html#concept_cmn_hml_r1b">Record Structure Requirement</a>.</div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d133596e1389 ">XML Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d133596e1392 ">The XML schema to use to validate records.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>
