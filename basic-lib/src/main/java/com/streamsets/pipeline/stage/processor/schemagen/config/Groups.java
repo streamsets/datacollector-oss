@@ -21,6 +21,7 @@ public enum Groups implements Label {
   SCHEMA("Schema"),
   AVRO("Avro"),
   TYPES("Types"),
+  ADVANCED("Advanced"),
   ;
 
   private final String label;
