@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DPushSource;
     icon = "opcua.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "TODO"
+    onlineHelpRefUrl = "index.html#Origins/OPCUAClient.html#task_bqt_mx3_h1b"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({
