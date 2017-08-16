@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.devnull;
 
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
@@ -24,6 +25,7 @@ import com.streamsets.pipeline.api.StatsAggregatorStage;
     version = 1,
     label = "Write to DPM directly",
     description = "Writes pipeline statistics to DPM directly without any aggregation",
+    execution = ExecutionMode.STANDALONE,
     icon="",
     onlineHelpRefUrl = ""
 )
