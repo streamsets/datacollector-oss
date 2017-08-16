@@ -69,8 +69,8 @@
                         are sent to the back, and since B1 still contains data, it takes the last
                         spot as follows:
                         <codeblock>C1  C2  C3  C4  C5  C6  C7  C8  A2  A3  A1  B2  B3  B1</codeblock>And
-                        as the third thread takes a set of batches from the the C1, the rest of the
-                        C partitions are pushed to the back, so the queue looks like
+                        as the third thread takes a set of batches from C1, the rest of the C
+                        partitions are pushed to the back, so the queue looks like
                         this:<codeblock>A2  A3  A1  B2  B3  B1  C2  C3  C4  C5  C6  C7  C8  C1</codeblock></dd>
                 </dlentry>
             </dl></p>

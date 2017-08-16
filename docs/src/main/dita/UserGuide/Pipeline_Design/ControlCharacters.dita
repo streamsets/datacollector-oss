@@ -39,6 +39,7 @@
         <li>CoAP Server origin</li>
         <li>Directory origin</li>
         <li>File Tail origin</li>
+        <li>Google Pub/Sub Subscriber origin</li>
         <li>Hadoop FS origin</li>
         <li>HTTP Client origin</li>
         <li>HTTP Server origin</li>
@@ -51,7 +52,9 @@
         <li>RabbitMQ Consumer origin</li>
         <li>Redis Consumer origin</li>
         <li>SFTP/FTP Client origin</li>
+        <li>TCP Server origin</li>
         <li>WebSocket Server origin</li>
+        <li>Data Parser processor</li>
         <li>HTTP Client processor</li>
         <li>JSON Parser processor</li>
         <li>Log Parser processor</li>

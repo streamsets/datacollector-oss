@@ -155,6 +155,7 @@
                         <li>HTTP Client</li>
                         <li>HTTP Server</li>
                         <li>MQTT Subscriber</li>
+                        <li>OPC UA Client</li>
                         <li>SDC RPC</li>
                         <li>SFTP/FTP Client</li>
                         <li>TCP Server</li>
@@ -3131,6 +3132,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   <li>JMS Consumer origin</li>
                   <li>MySQL Binary Log origin</li>
                   <li>Oracle CDC Client origin</li>
+                  <li>SQL Server CDC Client origin</li>
+                  <li>SQL Server Change Tracking origin</li>
                   <li>JDBC Lookup processor</li>
                   <li>JDBC Tee processor</li>
                   <li>JDBC Producer destination</li>
