@@ -1016,9 +1016,10 @@
           ><image href="../Graphics/icon_moreInfo.png" scale="10" id="image_r3s_7rq_ds"/>
         </xref></entry>
        <entry id="entry-JDBCperBatch">Strategy to create each batch of data:<ul id="ul_fk4_11f_py">
-         <li>Switch Tables - Each thread creates a batch of data from one table, and then switches
-          to the next available table to create the next batch. Define the Result Set Cache Size and
-          the Batches from Result Set properties when you configure a switch tables strategy.</li>
+         <li>Switch Tables - Each thread creates a set of batches from one table, and then switches
+          to the next available table to create the next set of batches. Define the Result Set Cache
+          Size and the Batches from Result Set properties when you configure a switch tables
+          strategy.</li>
          <li>Process All Available Rows from the Table - Each thread creates multiple batches of
           data from one table, until all available rows are read from that table.</li>
         </ul></entry>
@@ -1034,10 +1035,10 @@
         </xref></entry>
        <entry id="entry-BatchResultSet">Number of batches to create from the result set. After a
         thread creates this number of batches, the database closes the result set and then another
-        thread can read from the same table or partition.<p>Use a positive integer to set a limit on
-         the number of batches created from the result set. Use -1 to opt out of this
-         property.</p><p>By default, the origin creates an unlimited number of batches from the
-         result set, keeping the result set open as long as possible.</p></entry>
+        thread can read from the same table.<p>Use a positive integer to set a limit on the number
+         of batches created from the result set. Use -1 to opt out of this property.</p><p>By
+         default, the origin creates an unlimited number of batches from the result set, keeping the
+         result set open as long as possible.</p></entry>
       </row>
       <row id="JDBC-ResultSetCache">
        <entry>Result Set Cache Size <xref

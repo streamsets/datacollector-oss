@@ -101,6 +101,15 @@
                             </entry>
                         </row>
                         <row>
+                            <entry>SQL Server CDC Client origin</entry>
+                            <entry>
+                                <ul id="ul_dfr_cxg_x1b">
+                                    <li>Completes processing the data in the associated CDC
+                                        tables.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
                             <entry>SQL Server Change Tracking origin</entry>
                             <entry>
                                 <ul id="ul_jmt_5gv_s1b">

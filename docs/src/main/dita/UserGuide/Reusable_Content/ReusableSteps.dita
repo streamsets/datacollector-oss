@@ -1865,10 +1865,13 @@
                                                 ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="10" id="image_evl_qp5_qy"/>
                                         </xref></entry>
-                                    <entry id="entry-TableNamePatt">Pattern of the table names to
-                                        read for this table configuration. Use the SQL LIKE syntax
-                                        to define the pattern. <p>Default is the percentage wildcard
-                                            (%) which matches all tables in the schema.</p></entry>
+                                    <entry id="entry-TableNamePatt">
+                                        <p id="p-TableNamePatt-1">Pattern of the table names to read
+                                            for this table configuration. Use the SQL LIKE syntax to
+                                            define the pattern. </p>
+                                        <p id="p-TableNamePat-2">Default is the percentage wildcard
+                                            (%) which matches all tables in the schema.</p>
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>Table Exclusion Pattern <xref

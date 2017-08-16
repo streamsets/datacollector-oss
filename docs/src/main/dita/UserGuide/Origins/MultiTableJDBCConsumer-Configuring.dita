@@ -298,7 +298,10 @@
                                 <row>
                                     <entry>Partition Size</entry>
                                     <entry>The range of values in the offset column to use to create
-                                        partitions. </entry>
+                                        partitions. <p>If the offset column is a Datetime column,
+                                            provide the partition size in millseconds. For example,
+                                            to create a partition for every hour, enter
+                                        3600000.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Max Partitions</entry>

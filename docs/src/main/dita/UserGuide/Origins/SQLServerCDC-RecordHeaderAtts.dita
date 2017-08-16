@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pc4_xts_r1b">
+ <title>Record Header Attributes</title>
+ <conbody>
+  <p><indexterm>SQL Server CDC Client origin<indexterm>record header
+                attributes</indexterm></indexterm>The SQL Server CDC Client origin generates JDBC
+            record header attributes that provide the SQL Server CDC data for each record, such as
+            the start or end log sequence numbers (LSN). </p>
+        <p>The origin also includes the sdc.operation.type attribute and information from the SQL
+            Server CDC tables. The SQL Server CDC Client header attributes are prefixed with "jdbc".
+            The names of the SQL Server CDC column names are included in the header attribute name,
+            as follows: <codeph>jdbc.&lt;CDC column name></codeph>. </p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>
+        <p>The origin provides the following header attributes:<table frame="all" rowsep="1"
+                colsep="1" id="table_ygr_kft_r1b">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="2.0*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Header Attribute Name</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>sdc.operation.type</entry>
+                            <entry>
+                                <p>The origin uses the following values to represent the operation
+                                    type: <ul id="ul_qnr_xmz_t1b">
+                                        <li>1 for Insert</li>
+                                        <li>2 for Delete</li>
+                                        <li>3 for Update, including updates captured after the
+                                            update operation</li>
+                                        <li>5 for unsupported operations, including updates captured
+                                            before the update operation</li>
+                                    </ul></p>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.tables</entry>
+                            <entry
+                                conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCtables"/>
+                        </row>
+                        <row>
+                            <entry>jdbc.&lt;column name>.jdbcType</entry>
+                            <entry>Provides the original SQL data type for each field in the record.
+                                    <p>Because the record read from the SQL Server CDC table
+                                    includes CDC columns, the generated record also includes
+                                    corresponding jdbc.&lt;column name>.jdbcType header attributes
+                                    for those columns.</p><p>For example, since the original data
+                                    includes a __$start_lsn column, the resulting record has a
+                                    jdbc.__$start_lsn.jdbc.Type header attribute. It also has a
+                                    jdbc.__$start_lsn attribute that is generated separately by the
+                                    origin, as described below.</p></entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.&lt;column name>.jdbc.precision</entry>
+                            <entry
+                                conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCprecision"
+                            />
+                        </row>
+                        <row>
+                            <entry>jdbc.&lt;column name>.jdbc.scale</entry>
+                            <entry
+                                conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/entry_JDBCscale"
+                            />
+                        </row>
+                        <row>
+                            <entry>jdbc.__$end_lsn</entry>
+                            <entry>Data from the SQL Server CDC __$end_lsn column.</entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.__$operation</entry>
+                            <entry>The CRUD operation type using SQL Server codes, as defined in the
+                                SQL Server CDC __$operation column.</entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.__$seqval</entry>
+                            <entry>Data from the SQL Server CDC __$seqval column.</entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.__$start_lsn</entry>
+                            <entry>Data from the SQL Server CDC __$start_lsn column.</entry>
+                        </row>
+                        <row>
+                            <entry>jdbc.__$update_mask</entry>
+                            <entry>Data from the SQL Server CDC __$update_mask column.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+        <p>For details about the CDC attributes, see the <xref
+                href="https://docs.microsoft.com/en-us/sql/relational-databases/system-functions/cdc-fn-cdc-get-all-changes-capture-instance-transact-sql"
+                format="html" scope="external">SQL Server documentation</xref>.</p>
+ </conbody>
+</concept>

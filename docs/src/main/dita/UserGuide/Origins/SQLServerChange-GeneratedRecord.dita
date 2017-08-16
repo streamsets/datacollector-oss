@@ -16,8 +16,8 @@
 <concept id="concept_yqg_sts_r1b">
  <title>Generated Record</title>
  <conbody>
-  <p><indexterm>SQL Server Change Tracking</indexterm>The SQL Server Change Tracking origin can
-            generate a record in the following ways:<dl>
+  <p><indexterm>SQL Server Change Tracking origin</indexterm>The SQL Server Change Tracking origin
+            can generate a record in the following ways:<dl>
                 <dlentry>
                     <dt>Change tracking and current data</dt>
                     <dd>

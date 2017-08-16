@@ -16,11 +16,14 @@
 <concept id="concept_sx3_d11_s1b">
  <title>Table Configuration</title>
  <conbody>
-  <p><indexterm>SQL Server Change Tracking<indexterm>table configuration</indexterm></indexterm>When
-            you configure SQL Server Change Tracking, you define multiple tables using a single set
-            of table configuration properties and you can define multiple table configurations to
-            process multiple groups of change tables. When you define table configurations you can
-            define the following properties for each set of tables:<ul id="ul_nrw_s21_s1b">
+  <p><indexterm>SQL Server Change Tracking origin<indexterm>table
+                configuration</indexterm></indexterm><draft-comment author="Loretta">Note: any
+                changes here should probably also go into the SQL Server CDC Client version of this
+                topic.</draft-comment>When you configure the SQL Server Change Tracking origin, you
+            define multiple tables using a single set of table configuration properties and you can
+            define multiple table configurations to process multiple groups of change tables. When
+            you define table configurations you can define the following properties for each set of
+                tables:<ul id="ul_nrw_s21_s1b">
                 <li>Schema - The schema where the tables reside.</li>
             </ul><ul id="ul_gkr_r21_s1b">
                 <li>Table name pattern - Use SQL-like syntax to define a set of tables to process.
@@ -36,11 +39,12 @@
                         pattern, and enter dept* for the table exclusion pattern.</p><p>For more
                         information about using regular expressions with Data Collector, see <xref
                             href="../Apx-RegEx/RegEx-Overview.dita#concept_vd4_nsc_gs"/>. </p></li>
-                <li>Initial offset - When necessary, define the offset to use to process any
-                    existing rows in the change tables. The offset is used for all tables included
-                    in the table configuration. <p>When not set, the origin processes only incoming
-                        data. </p><note type="important">When processing an offset, the origin
-                        starts with the first value greater than the specified offset. </note></li>
+                <li>Initial offset - The SQL Server Change Tracking origin uses the
+                    SYS_CHANGE_VERSION column as the offset column. To process existing data, define
+                    the offset value to use. The offset is used for all tables included in the table
+                    configuration. <p>When not set, the origin processes only incoming data.
+                        </p><note type="important">When processing an offset, the origin starts with
+                        the first value greater than the specified offset. </note></li>
             </ul></p>
  </conbody>
 </concept>

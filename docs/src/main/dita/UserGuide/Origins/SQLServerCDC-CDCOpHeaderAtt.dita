@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_x4h_m42_5y">
+    <title>CRUD Operation Header Attributes</title>
+    <conbody>
+        <p><indexterm>SQL Server CDC Client origin<indexterm>CRUD header
+                attributes</indexterm></indexterm>When generating records, the SQL Server CDC Client
+            origin specifies the operation type in both of the following record header attributes:<dl>
+                <dlentry>
+                    <dt>sdc.operation.type</dt>
+                    <dd>The SQL Server CDC Client origin writes the operation type to the
+                        sdc.operation.type record header attribute. </dd>
+                    <dd>The origin uses the following values in the sdc.operation.type record header
+                        attribute to represent the operation type: <ul id="ul_dkt_g5l_dy">
+                            <li>1 for Insert</li>
+                            <li>2 for Delete</li>
+                            <li>3 for Update, including updates captured after the update
+                                operation</li>
+                            <li>5 for unsupported operations, including updates captured before the
+                                update operation</li>
+                        </ul></dd>
+                    <dd>
+                        <p
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-UseCDCdest"
+                        />
+                    </dd>
+                    <dd>When using CRUD-enabled destinations, the destination looks for the
+                        operation type in the sdc.operation.type attribute only.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>jdbc.__$operation</dt>
+                    <dd>The SQL Server CDC Client origin places the values from the SQL Server
+                        __$operation column in the jdbc.__$operation record header attribute. As a
+                        result, the jdbc.__$operation record header attribute contains the CRUD
+                        operation type as defined using SQL Server CDC codes.</dd>
+                    <dd>Note that CRUD-enabled stages only use the sdc.operation.type header
+                        attribute, they do not check the jdbc.__$operation header attribute.</dd>
+                    <dd>SQL Server CDC uses the following codes to define the operation type: <ul
+                            id="ul_crf_hv1_x1b">
+                            <li>1 for delete</li>
+                            <li>2 for insert</li>
+                            <li>3 for updates captured before the update operation</li>
+                            <li>4 for updates captured after the update operation</li>
+                        </ul></dd>
+                </dlentry>
+            </dl></p>
+    </conbody>
+</concept>
