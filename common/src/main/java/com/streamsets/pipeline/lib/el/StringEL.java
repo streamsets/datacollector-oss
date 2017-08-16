@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.el;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.Field;
@@ -91,6 +92,15 @@ public class StringEL {
   public static String trim(
     @ElParam("string") String string) {
     return string.trim();
+  }
+
+  @ElFunction(
+      prefix = "str",
+      name = "isNullOrEmpty",
+      description = "Returns true if the string is null or empty"
+  )
+  public static boolean isNullOrEmpty(@ElParam("string") String string) {
+    return Strings.isNullOrEmpty(string);
   }
 
   @ElFunction(

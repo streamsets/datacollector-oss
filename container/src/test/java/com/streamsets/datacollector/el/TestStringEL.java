@@ -426,4 +426,13 @@ public class TestStringEL {
 
     Assert.assertNotEquals(uuid, uuid2);
   }
+
+  @Test
+  public void testEmptyStringFunctions() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testEmptyStringFunctions", StringEL.class);
+    ELVariables vars = new ELVariables();
+
+    Assert.assertTrue(eval.eval(vars, "${str:isNullOrEmpty('')}", Boolean.class));
+    Assert.assertTrue(eval.eval(vars, "${str:isNullOrEmpty(NULL)}", Boolean.class));
+  }
 }
