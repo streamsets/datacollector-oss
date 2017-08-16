@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 
 import java.util.ArrayList;
@@ -191,4 +192,46 @@ public class SchemaGeneratorConfig {
   )
   public int defaultScale;
 
+  // Advanced configs
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Enable Cache",
+    description = "Rather then calculating schema for each individual record, cache schema and re-use it for the logically" +
+      "same records.",
+    group = "ADVANCED",
+    displayPosition = 10
+  )
+  public boolean enableCache;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "50",
+    label = "Cache Size",
+    description = "Number of schemas that will be held at memory at one time.",
+    group = "ADVANCED",
+    dependencies = {
+      @Dependency(configName = "enableCache", triggeredByValues = "true")
+    },
+    displayPosition = 20
+  )
+  public int cacheSize = 50;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "Cache Key Expression",
+    description = "Expression used to create cache key. Generator assumes that records with the same evaluated key will always share the same schema.",
+    group = "ADVANCED",
+    dependencies = {
+      @Dependency(configName = "enableCache", triggeredByValues = "true")
+    },
+    elDefs = RecordEL.class,
+    evaluation = ConfigDef.Evaluation.EXPLICIT,
+    displayPosition = 30
+  )
+  public String cacheKeyExpression;
 }

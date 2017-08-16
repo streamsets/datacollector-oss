@@ -15,18 +15,35 @@
  */
 package com.streamsets.pipeline.stage.processor.schemagen;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.processor.schemagen.config.SchemaGeneratorConfig;
 import com.streamsets.pipeline.stage.processor.schemagen.generators.SchemaGenerator;
 
 import java.util.List;
+import java.util.Map;
 
 public class SchemaGeneratorProcessor extends SingleLaneRecordProcessor {
 
+  @VisibleForTesting
+  static final String CACHE_KEY = "stageRunnerCacheKey";
+
   private final SchemaGeneratorConfig config;
   private SchemaGenerator generator;
+
+  /**
+   * Optional cache for schemas.
+   */
+  private Cache<String, String> cache;
+  private ELVars cacheKeyExpressionVars;
+  private ELEval cacheKeyExpressionEval;
 
   public SchemaGeneratorProcessor(SchemaGeneratorConfig config) {
     this.config = config;
@@ -44,16 +61,44 @@ public class SchemaGeneratorProcessor extends SingleLaneRecordProcessor {
       issues.add(getContext().createConfigIssue("SCHEMA", "config.schemaType", Errors.SCHEMA_GEN_0001, e.toString()));
     }
 
+    // Instantiate cache if needed
+    if(config.enableCache) {
+      Map<String, Object> runnerSharedMap = getContext().getStageRunnerSharedMap();
+      synchronized (runnerSharedMap) {
+        cache = (Cache<String, String>) runnerSharedMap.computeIfAbsent(CACHE_KEY,
+          key -> CacheBuilder.newBuilder()
+            .maximumSize(config.cacheSize)
+            .build()
+        );
+      }
+
+      cacheKeyExpressionEval = getContext().createELEval("cacheKeyExpression");
+      cacheKeyExpressionVars = getContext().createELVars();
+    }
+
     return issues;
   }
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    // We're currently not caching schemas as that turns out to be non-trivial task. Proper cache needs to take into
-    // account all field paths and all types of those field paths. Hence calculating cache key can easily be in the
-    // same ballpark as calculating the schema itself.
-    String schema = generator.generateSchema(record);
+    String schema = null;
+
+    // If caching is enabled, try to resolve cache first
+    if(config.enableCache) {
+      RecordEL.setRecordInContext(cacheKeyExpressionVars, record);
+      String cacheKey = cacheKeyExpressionEval.eval(cacheKeyExpressionVars, config.cacheKeyExpression, String.class);
+
+      if((schema = cache.getIfPresent(cacheKey)) == null) {
+        schema = generator.generateSchema(record);
+        cache.put(cacheKey, schema);
+      }
+    } else {
+      // Otherwise simply calculate the schema each time
+      schema = generator.generateSchema(record);
+    }
+
     record.getHeader().setAttribute(config.attributeName, schema);
     batchMaker.addRecord(record);
   }
+
 }
