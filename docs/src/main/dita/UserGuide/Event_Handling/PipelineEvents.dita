@@ -18,12 +18,12 @@
     <conbody>
         <p><indexterm>pipelines<indexterm>event generation</indexterm></indexterm><indexterm>event
                     framework<indexterm>pipeline event generation</indexterm></indexterm>The event
-            framework generates events at specific points in the pipeline lifecycle. You can
-            configure the pipeline properties to pass each event to an executor or to another
-            pipeline for more complex processing. By default, pipeline events are discarded. </p>
+            framework generates pipeline events at specific points in the pipeline lifecycle. You
+            can configure the pipeline properties to pass each event to an executor or to another
+            pipeline for more complex processing.</p>
         <p>The event framework generates the following pipeline-related events:<dl>
                 <dlentry>
-                    <dt>Start</dt>
+                    <dt>Pipeline Start</dt>
                     <dd>The pipeline start event is generated <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-StartEvent"
                         />. This can allow time for an executor to perform a task before stages
@@ -34,18 +34,18 @@
                         to truncate a table before the pipeline begins, the pipeline waits until the
                         task is complete before processing any data. </dd>
                     <dd>
-                        <p>The MapReduce executor and Spark executor kick off a jobs and do not wait
-                            for task completion. When you use one of these executors, the pipeline
-                            does not wait for the task to complete before continuing with stage
-                            initialization.</p>
+                        <p>The MapReduce executor and Spark executor kick off jobs and do not wait
+                            for the submitted jobs to complete. When you use one of these executors,
+                            the pipeline waits only for successful job submission before continuing
+                            with stage initialization.</p>
                         <p>If the executor fails to process the event, for example if a Hive Query
                             Executor fails to execute the specified query or if the query fails,
-                            then the initialization phase fails and pipeline does not start. Instead
-                            the pipeline transitions to a failure state.</p>
+                            then the initialization phase fails and the pipeline does not start.
+                            Instead the pipeline transitions to a failure state.</p>
                     </dd>
                 </dlentry>
                 <dlentry>
-                    <dt>Stop</dt>
+                    <dt>Pipeline Stop</dt>
                     <dd>The pipeline stop event is generated <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/phStopEvent"
                         /> This allows an executor to perform a task after pipeline processing is
@@ -54,9 +54,9 @@
                         <p>Similar to start event consumers, the behavior of the executor that
                             consumes the event determines whether the pipeline waits for the
                             executor task to complete before allowing the pipeline to stop. Also, if
-                            processing of pipeline stop event fails from any reason, the pipeline
-                            transitions to failed state even though the data processing was
-                            successful.</p>
+                            the processing of the pipeline stop event fails for any reason, the
+                            pipeline transitions to a failed state even though the data processing
+                            was successful.</p>
                     </dd>
                 </dlentry>
             </dl></p>

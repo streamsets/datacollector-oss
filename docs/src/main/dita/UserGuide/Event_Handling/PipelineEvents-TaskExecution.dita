@@ -18,8 +18,8 @@
  <conbody>
   <p><indexterm>pipeline events<indexterm>using</indexterm></indexterm>You can configure pipeline
             events to be consumed by an executor or another pipeline. </p>
-        <p>Pass an event to an executor when the executor can perform all of the tasks you need. You
-            can configure one executor for each event type.</p>
+        <p>Pass an event to an executor when the executor can perform all of the tasks that you
+            need. You can configure one executor for each event type.</p>
         <p>Pass an event to another pipeline when you need to perform more complex tasks in the
             consuming pipeline, such as passing the event to multiple executors or to an executor
             and destination for storage. </p>

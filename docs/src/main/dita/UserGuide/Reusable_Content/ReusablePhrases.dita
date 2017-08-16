@@ -2476,8 +2476,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   <draft-comment author="Loretta">Start event description - used in Pipeline Events
                         and Pipeline Event Records</draft-comment>
             </p>
-            <p><ph id="ph-StartEvent">as the pipeline initializes, immediately after it starts, and
-                        before before individual stages are initialized</ph></p>
+            <p><ph id="ph-StartEvent">as the pipeline initializes, immediately after it starts and
+                        before individual stages are initialized</ph></p>
             <p>
                   <draft-comment author="Loretta">Stop event description - used in Pipeline Events
                         and Pipeline Event Records</draft-comment>

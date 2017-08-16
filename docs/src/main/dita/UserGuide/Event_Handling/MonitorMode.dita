@@ -22,9 +22,9 @@
  <conbody>
   <p><indexterm>event records<indexterm>in Monitor mode</indexterm></indexterm><indexterm>Monitor
                     mode<indexterm>event records</indexterm></indexterm>In Monitor mode, the
-            event-generating stage provides statistics about stage event records. Once the event
-            records leave the event-generating stage, Monitor mode treats event records like any
-            other record.</p>
+            event-generating stage provides statistics about stage-related event records. Once the
+            event records leave the stage, Monitor mode treats event records like any other
+            record.</p>
         <p>For example, when you run and monitor the pipeline featured above, the Directory origin
             information displays event records in its statistics:</p>
         <p><image href="../Graphics/Event-Monitor-Origin.png" id="image_s1s_g5q_cy" scale="65"/></p>

@@ -17,17 +17,11 @@
  <title>Executing Pipeline Events in Data Preview</title>
  <conbody>
   <p>You can enable pipeline event execution in data preview to test event processing.</p>
-        <p>When you enable data preview pipeline event generation, the event framework typically
-            generates only the pipeline start event. If the pipeline start event is configured to
-            pass the event to an executor or to another pipeline, the event is passed and triggers
-            the additional processing associated with the executor or pipeline.</p>
-        <p>Data preview only generates the pipeline stop event if the pipeline hits a stopping point
-            within the data preview batch size. For example, say you have a pipeline where the
-            origin is configured to pass a no-more-data event to a Pipeline Finisher executor, so
-            that the pipeline stops when all available data is processed. If the origin contains
-            only 15 records, you can set the preview batch size is 20 records and enable the
-            pipeline event execution for data preview. When you start the data preview, it generates
-            both the pipeline start and stop events. </p>
+        <p>When you enable pipeline event generation while previewing data, the event framework
+            generates the pipeline start event when you start data preview and the stop event when
+            you stop data preview. If you configured the pipeline to pass the events to executors or
+            to event-consuming pipelines, the events are passed and trigger the additional
+            processing.</p>
         <p>To enable generating pipeline event execution during data preview, use the Enable
             Pipeline Execution data preview property. </p>
  </conbody>

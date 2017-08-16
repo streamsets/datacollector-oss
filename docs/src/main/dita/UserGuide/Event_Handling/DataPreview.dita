@@ -26,7 +26,7 @@
                     records</indexterm></indexterm>In data preview and when reviewing snapshots of
             data, stage-related event records display in the event-generating stage marked as "event
             records," and they appear below the batch of standard records.</p>
-        <p>After leaving the event-generating stage, the record displays like any other record. </p>
+        <p>After leaving the stage, the record displays like any other record. </p>
         <p>For example, the Directory origin below generates an event record as it starts reading a
             file for data preview:</p>
         <p><image href="../Graphics/Event-DataPreview.png" id="image_jcz_5qq_cy" scale="60"/></p>
