@@ -162,7 +162,7 @@ angular.module('dataCollectorApp.common')
      */
     this.getInputRecordsFromPreview = function(pipelineName, stageInstance, batchSize) {
       var deferred = $q.defer();
-      api.pipelineAgent.createPreview(pipelineName, 0, batchSize, 0, true, [], stageInstance.instanceName)
+      api.pipelineAgent.createPreview(pipelineName, 0, batchSize, 0, true, true, [], stageInstance.instanceName)
         .then(
           function (res) {
             var checkStatusDefer = $q.defer();
@@ -197,7 +197,7 @@ angular.module('dataCollectorApp.common')
      */
     this.getEdgeInputRecordsFromPreview = function(pipelineName, edge, batchSize) {
       var deferred = $q.defer();
-      api.pipelineAgent.createPreview(pipelineName, 0, batchSize, 0, true, [], edge.target.instanceName)
+      api.pipelineAgent.createPreview(pipelineName, 0, batchSize, 0, true, true, [], edge.target.instanceName)
         .then(
         function (res) {
           var checkStatusDefer = $q.defer();
