@@ -17,9 +17,9 @@ package com.streamsets.datacollector.stage;
 
 import com.streamsets.pipeline.api.Executor;
 
-public class HadoopConfigurationSynchronizedExecutor extends HadoopConfigurationSynchronizedTarget implements Executor {
+public class StageLockSynchronizedHadoopExecutor extends StageLockSynchronizedHadoopTarget implements Executor {
 
-  public HadoopConfigurationSynchronizedExecutor(Executor executor) {
+  public StageLockSynchronizedHadoopExecutor(Executor executor) {
     super(executor);
   }
 }

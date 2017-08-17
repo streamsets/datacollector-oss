@@ -32,14 +32,14 @@ import java.util.List;
 
 import static org.mockito.Mockito.withSettings;
 
-public class TestHadoopConfigurationSynchronizedStage {
+public class TestStageLockSynchronizedHadoopStage {
 
 
   @Test
   public void testHadoopConfSynchronizedClusterSource() throws Exception {
     Source source = Mockito.mock(ClusterSource.class, withSettings().extraInterfaces(OffsetCommitter.class,
         ErrorListener.class));
-    HadoopConfigurationSynchronizedClusterSource syncSource = new HadoopConfigurationSynchronizedClusterSource(source);
+    StageLockSynchronizedHadoopClusterSource syncSource = new StageLockSynchronizedHadoopClusterSource(source);
     syncSource.init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
     Mockito.verify(source, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
     syncSource.produce(Mockito.anyString(), Mockito.anyInt(), Mockito.any(BatchMaker.class));
@@ -86,7 +86,7 @@ public class TestHadoopConfigurationSynchronizedStage {
   @Test
   public void testHadoopConfSynchronizedProcessor() throws Exception {
     Processor processor = Mockito.mock(Processor.class);
-    Processor syncProcessor = new HadoopConfigurationSynchronizedProcessor(processor);
+    Processor syncProcessor = new StageLockSynchronizedHadoopProcessor(processor);
     syncProcessor.init(Mockito.any(Stage.Info.class), Mockito.any(Processor.Context.class));
     Mockito.verify(processor, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Processor.Context.class));
     syncProcessor.process(Mockito.any(Batch.class), Mockito.any(BatchMaker.class));
@@ -96,7 +96,7 @@ public class TestHadoopConfigurationSynchronizedStage {
   @Test
   public void testHadoopConfSynchronizedTarget() throws Exception {
     Target target = Mockito.mock(Target.class);
-    Target syncTarget = new HadoopConfigurationSynchronizedTarget(target);
+    Target syncTarget = new StageLockSynchronizedHadoopTarget(target);
     syncTarget.init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
     Mockito.verify(target, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
     syncTarget.write(Mockito.any(Batch.class));
@@ -106,7 +106,7 @@ public class TestHadoopConfigurationSynchronizedStage {
   @Test
   public void testHadoopConfSynchronizedExecutor() throws Exception {
     Executor executor = Mockito.mock(Executor.class);
-    Executor syncExecutor = new HadoopConfigurationSynchronizedExecutor(executor);
+    Executor syncExecutor = new StageLockSynchronizedHadoopExecutor(executor);
     syncExecutor.init(Mockito.any(Stage.Info.class), Mockito.any(Executor.Context.class));
     Mockito.verify(executor, Mockito.times(1)).init(Mockito.any(Stage.Info.class), Mockito.any(Executor.Context.class));
     syncExecutor.write(Mockito.any(Batch.class));

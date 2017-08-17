@@ -27,10 +27,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class HadoopConfigurationSynchronizedClusterSource extends HadoopConfigurationSynchronizedStage<Source.Context>
+public class StageLockSynchronizedHadoopClusterSource extends StageLockSynchronizedHadoopStage<Source.Context>
     implements ClusterSource, OffsetCommitter, ErrorListener {
 
-  public HadoopConfigurationSynchronizedClusterSource(Source source) {
+  public StageLockSynchronizedHadoopClusterSource(Source source) {
     super(source);
     Utils.checkState(
         source instanceof OffsetCommitter,

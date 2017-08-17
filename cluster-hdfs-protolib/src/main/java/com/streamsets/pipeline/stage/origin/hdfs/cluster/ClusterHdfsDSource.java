@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
-import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedClusterSource;
+import com.streamsets.datacollector.stage.StageLockSynchronizedHadoopClusterSource;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -49,7 +49,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
 
   @Override
   protected Source createSource() {
-    clusterHDFSSource = new HadoopConfigurationSynchronizedClusterSource(new ClusterHdfsSource(clusterHDFSConfigBean));
+    clusterHDFSSource = new StageLockSynchronizedHadoopClusterSource(new ClusterHdfsSource(clusterHDFSConfigBean));
     return clusterHDFSSource;
   }
 
