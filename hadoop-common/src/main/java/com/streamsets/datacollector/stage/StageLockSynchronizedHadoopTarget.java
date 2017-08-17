@@ -15,28 +15,19 @@
  */
 package com.streamsets.datacollector.stage;
 
-import com.streamsets.pipeline.api.Stage;
-import org.apache.hadoop.conf.Configuration;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 
-import java.util.List;
+public class StageLockSynchronizedHadoopTarget extends StageLockSynchronizedHadoopStage<Target.Context>
+    implements Target {
 
-public class HadoopConfigurationSynchronizedStage<C extends Stage.Context> implements Stage<C> {
-
-  protected final Stage stage;
-
-  protected HadoopConfigurationSynchronizedStage(Stage stage) {
-    this.stage = stage;
+  public StageLockSynchronizedHadoopTarget(Target target) {
+    super(target);
   }
 
   @Override
-  public List<ConfigIssue> init(Info info, C context) {
-    synchronized (Configuration.class) {
-      return stage.init(info, context);
-    }
-  }
-
-  @Override
-  public void destroy() {
-    stage.destroy();
+  public void write(Batch batch) throws StageException {
+    ((Target) stage).write(batch);
   }
 }

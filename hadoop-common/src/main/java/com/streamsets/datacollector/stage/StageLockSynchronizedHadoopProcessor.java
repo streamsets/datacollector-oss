@@ -16,18 +16,19 @@
 package com.streamsets.datacollector.stage;
 
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.Target;
 
-public class HadoopConfigurationSynchronizedTarget extends HadoopConfigurationSynchronizedStage<Target.Context>
-    implements Target {
+public class StageLockSynchronizedHadoopProcessor extends StageLockSynchronizedHadoopStage<Processor.Context>
+    implements Processor {
 
-  public HadoopConfigurationSynchronizedTarget(Target target) {
-    super(target);
+  public StageLockSynchronizedHadoopProcessor(Processor processor) {
+    super(processor);
   }
 
   @Override
-  public void write(Batch batch) throws StageException {
-    ((Target) stage).write(batch);
+  public void process(Batch batch, BatchMaker batchMaker) throws StageException {
+    ((Processor) stage).process(batch, batchMaker);
   }
 }

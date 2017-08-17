@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hbase;
 
-import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedTarget;
+import com.streamsets.datacollector.stage.StageLockSynchronizedHadoopTarget;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -126,7 +126,7 @@ public class HBaseDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new HadoopConfigurationSynchronizedTarget(new HBaseTarget(
+    return new StageLockSynchronizedHadoopTarget(new HBaseTarget(
         hBaseConnectionConfig,
         hbaseRowKey,
         rowKeyStorageType,

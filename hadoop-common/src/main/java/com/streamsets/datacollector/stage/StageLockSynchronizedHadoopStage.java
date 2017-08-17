@@ -15,20 +15,28 @@
  */
 package com.streamsets.datacollector.stage;
 
-import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Stage;
+import org.apache.hadoop.conf.Configuration;
 
-public class HadoopConfigurationSynchronizedProcessor extends HadoopConfigurationSynchronizedStage<Processor.Context>
-    implements Processor {
+import java.util.List;
 
-  public HadoopConfigurationSynchronizedProcessor(Processor processor) {
-    super(processor);
+public class StageLockSynchronizedHadoopStage<C extends Stage.Context> implements Stage<C> {
+
+  protected final Stage stage;
+
+  protected StageLockSynchronizedHadoopStage(Stage stage) {
+    this.stage = stage;
   }
 
   @Override
-  public void process(Batch batch, BatchMaker batchMaker) throws StageException {
-    ((Processor) stage).process(batch, batchMaker);
+  public List<ConfigIssue> init(Info info, C context) {
+    synchronized (Stage.class) {
+      return stage.init(info, context);
+    }
+  }
+
+  @Override
+  public void destroy() {
+    stage.destroy();
   }
 }

@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hive;
 
-import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedTarget;
+import com.streamsets.datacollector.stage.StageLockSynchronizedHadoopTarget;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -140,7 +140,7 @@ public class HiveDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new HadoopConfigurationSynchronizedTarget(new HiveTarget(
+    return new StageLockSynchronizedHadoopTarget(new HiveTarget(
         hiveUrl,
         schema,
         table,

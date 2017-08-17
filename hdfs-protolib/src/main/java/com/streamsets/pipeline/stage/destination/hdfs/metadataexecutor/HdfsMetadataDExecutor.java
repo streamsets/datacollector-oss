@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs.metadataexecutor;
 
-import com.streamsets.datacollector.stage.HadoopConfigurationSynchronizedExecutor;
+import com.streamsets.datacollector.stage.StageLockSynchronizedHadoopExecutor;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Executor;
@@ -46,6 +46,6 @@ public class HdfsMetadataDExecutor extends DExecutor {
 
   @Override
   protected Executor createExecutor() {
-    return new HadoopConfigurationSynchronizedExecutor(new HdfsMetadataExecutor(connection, actions));
+    return new StageLockSynchronizedHadoopExecutor(new HdfsMetadataExecutor(connection, actions));
   }
 }
