@@ -85,7 +85,7 @@ public class AvroSchemaGenerator extends SchemaGenerator {
     switch (field.getType()) {
       // Primitive types
       case BOOLEAN:
-        return Schema.create(Schema.Type.STRING);
+        return Schema.create(Schema.Type.BOOLEAN);
       case INTEGER:
         return Schema.create(Schema.Type.INT);
       case LONG:
