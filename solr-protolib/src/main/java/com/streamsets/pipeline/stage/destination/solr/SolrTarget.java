@@ -51,13 +51,14 @@ public class SolrTarget extends BaseTarget {
   private final List<SolrFieldMappingConfig> fieldNamesMap;
   private final boolean kerberosAuth;
   private final MissingFieldAction missingFieldAction;
+  private final boolean skipValidation;
 
   private ErrorRecordHandler errorRecordHandler;
   private SdcSolrTarget sdcSolrTarget;
 
   public SolrTarget(final InstanceTypeOptions instanceType, final String solrURI, final String zookeeperConnect,
                     final ProcessingMode indexingMode, final List<SolrFieldMappingConfig> fieldNamesMap,
-                    String defaultCollection, boolean kerberosAuth, MissingFieldAction missingFieldAction) {
+                    String defaultCollection, boolean kerberosAuth, MissingFieldAction missingFieldAction, boolean skipValidation) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
     this.zookeeperConnect = zookeeperConnect;
@@ -66,6 +67,7 @@ public class SolrTarget extends BaseTarget {
     this.fieldNamesMap = fieldNamesMap;
     this.kerberosAuth = kerberosAuth;
     this.missingFieldAction = missingFieldAction;
+    this.skipValidation = skipValidation;
   }
 
   @Override
@@ -94,7 +96,8 @@ public class SolrTarget extends BaseTarget {
           solrURI,
           zookeeperConnect,
           defaultCollection,
-          kerberosAuth
+          kerberosAuth,
+          skipValidation
       );
       sdcSolrTarget = SdcSolrTargetFactory.create(settings).create();
       try {

@@ -37,7 +37,8 @@ public class Solr04TargetFactory extends SdcSolrTargetFactory {
         settings.getSolrURI(),
         settings.getZookeeperConnect(),
         settings.getDefaultCollection(),
-        settings.getKerberosAuth()
+        settings.getKerberosAuth(),
+        settings.getSkipValidation()
     );
   }
 

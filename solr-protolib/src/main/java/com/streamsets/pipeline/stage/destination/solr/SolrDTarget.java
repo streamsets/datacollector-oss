@@ -129,7 +129,8 @@ public class SolrDTarget extends DTarget {
   @ValueChooserModel(MissingFieldActionChooserValues.class)
   public MissingFieldAction missingFieldAction = MissingFieldAction.TO_ERROR;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Kerberos Authentication",
@@ -137,6 +138,16 @@ public class SolrDTarget extends DTarget {
       group = "SOLR"
   )
   public boolean kerberosAuth;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Skip Validation",
+      displayPosition = 80,
+      group = "SOLR"
+  )
+  public boolean skipValidation;
 
   @Override
   protected Target createTarget() {
@@ -148,7 +159,8 @@ public class SolrDTarget extends DTarget {
         fieldNamesMap,
         defaultCollection,
         kerberosAuth,
-        missingFieldAction
+        missingFieldAction,
+        skipValidation
     );
   }
 

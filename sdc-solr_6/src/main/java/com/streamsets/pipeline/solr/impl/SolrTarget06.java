@@ -44,24 +44,29 @@ public class SolrTarget06 implements SdcSolrTarget {
   private String instanceType;
   private boolean kerberosAuth;
   private static final String VERSION ="6.1.0";
+  private boolean skipValidation;
 
   public SolrTarget06(
       String instanceType,
       String solrURI,
       String zookeeperConnect,
       String defaultCollection,
-      boolean kerberosAuth
+      boolean kerberosAuth,
+      boolean skipValidation
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
     this.zookeeperConnect = zookeeperConnect;
     this.defaultCollection = defaultCollection;
     this.kerberosAuth = kerberosAuth;
+    this.skipValidation = skipValidation;
   }
 
   public void init() throws Exception {
     solrClient = getSolrClient();
-    solrClient.ping();
+    if (!skipValidation) {
+      solrClient.ping();
+    }
   }
 
   private SolrClient getSolrClient() throws MalformedURLException {
