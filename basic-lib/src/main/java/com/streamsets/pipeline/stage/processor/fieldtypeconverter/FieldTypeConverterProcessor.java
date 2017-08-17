@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DecimalScaleRoundingStrategy;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -241,7 +242,10 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       case DECIMAL:
         Number decimal = NumberFormat.getInstance(dataLocale).parse(stringValue);
         BigDecimal bigDecimal = adjustScaleIfNeededForDecimalConversion(new BigDecimal(decimal.toString()), scale, decimalScaleRoundingStrategy);
-        return Field.create(bigDecimal);
+        Field decimalField = Field.create(Field.Type.DECIMAL, bigDecimal);
+        decimalField.setAttribute(HeaderAttributeConstants.ATTR_PRECISION, String.valueOf(bigDecimal.precision()));
+        decimalField.setAttribute(HeaderAttributeConstants.ATTR_SCALE, String.valueOf(bigDecimal.scale()));
+        return decimalField;
       case DOUBLE:
         return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).doubleValue());
       case FLOAT:

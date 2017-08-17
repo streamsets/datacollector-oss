@@ -30,6 +30,7 @@ import com.streamsets.pipeline.config.DecimalScaleRoundingStrategy;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -302,6 +303,8 @@ public class TestFieldTypeConverterProcessorFields {
       Assert.assertTrue(result.size() == 6);
       Assert.assertTrue(result.containsKey("beginner"));
       Assert.assertEquals(BigDecimal.valueOf(1234.56789), result.get("beginner").getValue());
+      Assert.assertEquals("9", result.get("beginner").getAttribute(HeaderAttributeConstants.ATTR_PRECISION));
+      Assert.assertEquals("5", result.get("beginner").getAttribute(HeaderAttributeConstants.ATTR_SCALE));
       Assert.assertTrue(result.containsKey("intermediate"));
       Assert.assertEquals(BigDecimal.valueOf(1.234), result.get("intermediate").getValue());
       Assert.assertTrue(result.containsKey("null"));
