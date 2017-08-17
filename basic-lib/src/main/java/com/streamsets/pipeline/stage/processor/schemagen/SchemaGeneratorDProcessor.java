@@ -28,7 +28,7 @@ import com.streamsets.pipeline.stage.processor.schemagen.config.SchemaGeneratorC
   version = 1,
   label = "Schema Generator",
   description = "Generate schema based on incoming records.",
-  icon = "order.png", // TBD
+  icon = "schemagen.png",
   onlineHelpRefUrl =  "index.html#Processors/SchemaGenerator.html#task_szj_ms3_x1b"
 )
 @ConfigGroups(Groups.class)
