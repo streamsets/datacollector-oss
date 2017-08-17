@@ -151,7 +151,7 @@ public class RandomDataGeneratorSource extends BasePushSource {
     event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, getContext().getStageInfo().getName());
     List<String> names = new ArrayList<>();
     for(DataGeneratorConfig con : dataGenConfigs) {
-      names.add(con.field);
+      names.add(con.field.isEmpty() ? "<empty field name>" : con.field);
     }
     event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, names.isEmpty() ? "No fields" : StringUtils.join(names, ", "));
     getContext().publishLineageEvent(event);
