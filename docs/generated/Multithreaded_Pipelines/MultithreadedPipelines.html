@@ -48,17 +48,21 @@
                   Collector</span>.</p>
 
         <div class="p">At this time, you can use the following origins to create a multithreaded pipeline:<ul class="ul" id="concept_zpp_2xc_py__ul_oql_bym_3z">
-                <li class="li">CoAP Server origin</li>
+                <li class="li">CoAP Server</li>
 
-                <li class="li">Elasticsearch origin</li>
+                <li class="li">Elasticsearch</li>
 
-                <li class="li">Google Pub/Sub Subscriber origin</li>
+                <li class="li">Google Pub/Sub Subscriber</li>
 
-                <li class="li">HTTP Server origin</li>
+                <li class="li">HTTP Server</li>
 
-                <li class="li">JDBC Multitable Consumer origin</li>
+                <li class="li">JDBC Multitable Consumer</li>
 
-                <li class="li">Kinesis Consumer origin</li>
+                <li class="li">Kinesis Consumer</li>
+
+                <li class="li">SQL Server CDC Client</li>
+
+                <li class="li">SQL Server Change Tracking</li>
 
                 <li class="li">TCP Server origin</li>
 
@@ -98,7 +102,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data
                   Collector</span> creates a number of pipeline runners based on the pipeline Max Runners
-                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d34745e1787">Each
+                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d34746e1787">Each
                               thread connects to the origin system and creates a batch of data, and
                               passes the batch to an available pipeline runner.</span></span></p>
 

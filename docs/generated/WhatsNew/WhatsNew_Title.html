@@ -208,10 +208,10 @@
 
                         <li class="li"><a class="xref" href="../Origins/SQLServerCDC.html#concept_ut3_ywc_v1b" title="You can define the initial order that the origin uses to read the tables.">New SQL
                                 Server CDC Client origin</a> - A multithreaded origin that reads
-                            data from CDC tables. </li>
+                            data from Microsoft SQL Server CDC tables. </li>
 
                         <li class="li"><a class="xref" href="../Origins/SQLServerChange.html#concept_ewq_b2s_r1b" title="You can define the initial order that the origin uses to read the tables.">New SQL
-                                Server Change Tracking origin</a> - An multithreaded origin that
+                                Server Change Tracking origin</a> - A multithreaded origin that
                             reads data from Microsoft SQL Server change tracking tables and
                             generates the latest version of each record.</li>
 
@@ -363,6 +363,12 @@
 
                         <li class="li"><a class="xref" href="../Destinations/KProducer.html#concept_lww_3b3_kr">Kafka Producer destination enhancement</a> - The destination can
                             now write XML documents.</li>
+
+                        <li class="li"><a class="xref" href="../Destinations/Solr.html#task_ld1_phr_wr">Solr
+                                destination enhancement</a> - You can now configure the
+                            destination to skip connection validation when the Solr configuration
+                            file, <samp class="ph codeph">solrconfig.xml</samp>, does not define the default
+                            search field (“df”) parameter.</li>
 
                     </ul>
 
