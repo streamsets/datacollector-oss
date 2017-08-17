@@ -645,7 +645,7 @@
       "fileUploadPlaceholder": "No file chosen",
       "browse": "Browse",
       "overwritePipeline": "Overwrite Pipeline",
-      "createPipelineAndImport": "Create New Pipeline & Import"
+      "createPipelineAndImport": "Create New Pipeline And Import"
     },
     "publish": {
       "headerLabel" : "Publish Pipeline",
