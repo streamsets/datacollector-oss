@@ -252,7 +252,8 @@ public class HiveMetastoreTarget extends BaseTarget {
           location,
           databaseName,
           tableName,
-          qualifiedTableName
+          qualifiedTableName,
+          headers
         );
       }
       //Create Table
@@ -300,7 +301,8 @@ public class HiveMetastoreTarget extends BaseTarget {
             location,
             databaseName,
             tableName,
-            qualifiedTableName
+            qualifiedTableName,
+            headers
           );
         }
 
@@ -332,7 +334,8 @@ public class HiveMetastoreTarget extends BaseTarget {
     String location,
     String databaseName,
     String tableName,
-    String qualifiedTableName
+    String qualifiedTableName,
+    Map<String, String> headers
   ) throws StageException {
     String schemaPath = HiveMetastoreUtil.serializeSchemaToHDFS(
       conf.getHDFSUgi(),
@@ -343,11 +346,17 @@ public class HiveMetastoreTarget extends BaseTarget {
       tableName,
       avroSchema
     );
-    HiveMetastoreEvents.AVRO_SCHEMA_STORED.create(getContext())
+    EventRecord event = HiveMetastoreEvents.AVRO_SCHEMA_STORED.create(getContext())
       .with("table", qualifiedTableName)
       .with("avro_schema", avroSchema)
       .with("schema_location", schemaPath)
-      .createAndSend();
+      .create();
+    if (!conf.isHeadersEmpty()) {
+      for ( Map.Entry<String, String> entry : headers.entrySet()) {
+        event.getHeader().setAttribute(entry.getKey(), entry.getValue());
+      }
+    }
+    getContext().toEvent(event);
     return schemaPath;
   }
 
