@@ -396,8 +396,10 @@
                                 specified character sequence.</li>
                             <li>list:joinSkipNulls() - Returns each element of a List field joined
                                 on the specified character sequence, skipping null values.</li>
-                            <li>str:indexOf() - Returns the index within a string of the first
-                                occurrence of the specified substring.</li>
+                            <li><xref
+                                    href="../Expression_Language/StringFunctions.dita#concept_ahp_f4v_1r"
+                                    >str:indexOf()</xref> - Returns the index within a string of the
+                                first occurrence of the specified subset of characters.</li>
                         </ul></p>
                 </dd>
             </dlentry>

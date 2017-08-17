@@ -83,6 +83,17 @@
               ${str:escapeXML11(record:value('/XMLdata'))}</codeph></dd>
         </dlentry>
         <dlentry>
+          <dt>str:indexOf(&lt;string>, &lt;subset>)</dt>
+          <dd>Returns the index within a string of the first occurrence of the specified subset of
+            characters.</dd>
+          <dd>Return type: Integer.</dd>
+          <dd>Uses the following arguments:<ul id="ul_jlp_y44_x1b">
+              <li>string - The string to return the index of.</li>
+              <li>subset - The subset of characters to look for.</li>
+            </ul></dd>
+          <dd>For example, ${str:indexOf("tomorrow", "row")} returns: 5.</dd>
+        </dlentry>
+        <dlentry>
           <dt>str:length(&lt;string>)</dt>
           <dd>Returns the length of a string.</dd>
           <dd>Return type: Integer.</dd>
