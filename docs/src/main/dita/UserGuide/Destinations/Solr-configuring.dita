@@ -111,6 +111,14 @@
                                             /> configuration file,
                                                 <codeph>$SDC_CONF/sdc.properties</codeph>.</p></entry>
                                 </row>
+                                <row>
+                                    <entry>Skip Validation</entry>
+                                    <entry>Determines whether the destination validates the
+                                        connection to Solr.<p>Configure the destination to skip
+                                            validation when the Solr configuration file,
+                                                <codeph>solrconfig.xml</codeph>, does not define the
+                                            default search field ("df") parameter.</p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

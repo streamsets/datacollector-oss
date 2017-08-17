@@ -151,9 +151,9 @@
                             server.</li>
                         <li><xref href="../Origins/SQLServerCDC.dita#concept_ut3_ywc_v1b">New SQL
                                 Server CDC Client origin</xref> - A multithreaded origin that reads
-                            data from CDC tables. </li>
+                            data from Microsoft SQL Server CDC tables. </li>
                         <li><xref href="../Origins/SQLServerChange.dita#concept_ewq_b2s_r1b">New SQL
-                                Server Change Tracking origin</xref> - An multithreaded origin that
+                                Server Change Tracking origin</xref> - A multithreaded origin that
                             reads data from Microsoft SQL Server change tracking tables and
                             generates the latest version of each record.</li>
                         <li><xref
@@ -283,6 +283,11 @@
                                 href="../Destinations/KProducer-DataFormat.dita#concept_lww_3b3_kr"
                                 >Kafka Producer destination enhancement</xref> - The destination can
                             now write XML documents.</li>
+                        <li><xref href="../Destinations/Solr-configuring.dita#task_ld1_phr_wr">Solr
+                                destination enhancement</xref> - You can now configure the
+                            destination to skip connection validation when the Solr configuration
+                            file, <codeph>solrconfig.xml</codeph>, does not define the default
+                            search field (“df”) parameter.</li>
                     </ul>
                 </dd>
             </dlentry>
