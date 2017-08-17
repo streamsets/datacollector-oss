@@ -21,19 +21,22 @@ public class TargetFactorySettings {
   private String zookeeperConnect;
   private String defaultCollection;
   private boolean kerberosAuth;
+  private boolean skipValidation;
 
   public TargetFactorySettings (
       String instanceType,
       String solrURI,
       String zookeeperConnect,
       String defaultCollection,
-      boolean kerberosAuth
+      boolean kerberosAuth,
+      boolean skipValidation
   ) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
     this.zookeeperConnect = zookeeperConnect;
     this.defaultCollection = defaultCollection;
     this.kerberosAuth = kerberosAuth;
+    this.skipValidation = skipValidation;
   }
 
   public String getInstanceType() {
@@ -54,5 +57,9 @@ public class TargetFactorySettings {
 
   public boolean getKerberosAuth() {
     return kerberosAuth;
+  }
+
+  public boolean getSkipValidation() {
+    return skipValidation;
   }
 }
