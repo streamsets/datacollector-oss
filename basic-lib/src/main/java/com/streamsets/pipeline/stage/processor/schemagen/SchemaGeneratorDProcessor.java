@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.processor.schemagen.config.SchemaGeneratorC
   label = "Schema Generator",
   description = "Generate schema based on incoming records.",
   icon = "order.png", // TBD
-  onlineHelpRefUrl =  "index.html#Processors/FieldOrder.html#task_myf_wfv_vy" // TBD
+  onlineHelpRefUrl =  "index.html#Processors/SchemaGenerator.html#task_szj_ms3_x1b"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
