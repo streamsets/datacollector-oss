@@ -56,12 +56,13 @@ public class TestAvroSchemaGenerator {
     Record record = RecordCreator.create();
     record.set(Field.create(Field.Type.LIST_MAP, ImmutableMap.of(
       "a", Field.create(Field.Type.STRING, "Arvind"),
-      "b", Field.create(Field.Type.INTEGER, 0)
+      "b", Field.create(Field.Type.BOOLEAN, true),
+      "c", Field.create(Field.Type.INTEGER, 0)
     )));
 
     generateAndValidateSchema(
         record,
-        "{\"name\":\"a\",\"type\":\"string\"},{\"name\":\"b\",\"type\":\"int\"}"
+        "{\"name\":\"a\",\"type\":\"string\"},{\"name\":\"b\",\"type\":\"boolean\"},{\"name\":\"c\",\"type\":\"int\"}"
     );
   }
 
