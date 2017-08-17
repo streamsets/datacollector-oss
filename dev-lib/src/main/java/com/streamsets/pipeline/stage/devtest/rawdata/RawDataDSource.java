@@ -68,8 +68,18 @@ public class RawDataDSource extends DSource {
   )
   public String rawData;
 
+  @ConfigDef(
+    required = true,
+    defaultValue = "false",
+    type = ConfigDef.Type.BOOLEAN,
+    label = "Stop After First Batch",
+    displayPosition = 30,
+    group = "RAW"
+  )
+  public boolean stopAfterFirstBatch = false;
+
   @Override
   protected Source createSource() {
-    return new RawDataSource(dataFormat, dataFormatConfig, rawData);
+    return new RawDataSource(dataFormat, dataFormatConfig, rawData, stopAfterFirstBatch);
   }
 }

@@ -30,10 +30,17 @@ import java.util.List;
 public class RawDataSource extends BaseSource  {
   private final DataFormatParser parser;
   private final String rawData;
+  private final boolean stopAfterFirstBatch;
 
-  public RawDataSource(DataFormat dataFormat, DataParserFormatConfig dataFormatConfig, String rawData) {
+  public RawDataSource(
+      DataFormat dataFormat,
+      DataParserFormatConfig dataFormatConfig,
+      String rawData,
+      boolean stopAfterFirstBatch
+  ) {
     this.rawData = rawData;
     this.parser = new DataFormatParser(RawDataSourceGroups.RAW.name(), dataFormat, dataFormatConfig, null);
+    this.stopAfterFirstBatch = stopAfterFirstBatch;
   }
 
   @Override
@@ -49,7 +56,12 @@ public class RawDataSource extends BaseSource  {
     for(Record record: records) {
       batchMaker.addRecord(record);
     }
-    return "rawData";
+
+    if(stopAfterFirstBatch) {
+      return null;
+    } else {
+      return "rawData";
+    }
   }
 
 }

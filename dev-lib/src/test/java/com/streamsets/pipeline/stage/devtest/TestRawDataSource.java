@@ -40,13 +40,33 @@ public class TestRawDataSource {
   String gbk = "GBK: japanese 天気の良い日 trad chinese 傳統 simplified chinese 中国是美丽的 data.";
 
   @Test
-  public void testRawDataSourceUtf8OK() throws StageException {
-
-
+  public void testStopAfterFirstBatch() throws StageException {
     DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
     dataFormatConfig.charset = "UTF-8";
 
-    RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, utf8);
+    RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, "text", true);
+
+    SourceRunner runner = new SourceRunner.Builder(RawDataSource.class, origin)
+        .addOutputLane("a")
+        .build();
+
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1);
+      // New offset should be null since stopAfterFirstBatch is selected
+      Assert.assertNull(output.getNewOffset());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testRawDataSourceUtf8OK() throws StageException {
+    DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
+    dataFormatConfig.charset = "UTF-8";
+
+    RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, utf8, false);
 
     SourceRunner runner = new SourceRunner.Builder(RawDataSource.class, origin)
         .addOutputLane("a")
@@ -67,12 +87,10 @@ public class TestRawDataSource {
 
   @Test
   public void testRawDataSourceGBK5OK() throws StageException {
-
-
     DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
     dataFormatConfig.charset = "GBK";
 
-    RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, gbk);
+    RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, gbk, false);
 
     SourceRunner runner = new SourceRunner.Builder(RawDataSource.class, origin)
         .addOutputLane("a")
@@ -93,12 +111,10 @@ public class TestRawDataSource {
 
   @Test
   public void testRawDataSourceBig5NotOK() throws StageException {
-
-
     DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
     dataFormatConfig.charset = "GBK";
 
-    RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, utf8);
+    RawDataSource origin = new RawDataSource(DataFormat.TEXT, dataFormatConfig, utf8, false);
 
     SourceRunner runner = new SourceRunner.Builder(RawDataSource.class, origin)
         .addOutputLane("a")
@@ -124,7 +140,7 @@ public class TestRawDataSource {
 
     String data = "a,b,c\n1,2,3\n4,5,6,7\n8,9,10";
 
-    RawDataSource origin = new RawDataSource(DataFormat.DELIMITED, dataFormatConfig, data);
+    RawDataSource origin = new RawDataSource(DataFormat.DELIMITED, dataFormatConfig, data, false);
 
     SourceRunner runner = new SourceRunner.Builder(RawDataSource.class, origin)
         .addOutputLane("a")
