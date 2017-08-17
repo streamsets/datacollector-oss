@@ -797,12 +797,23 @@ angular.module('dataCollectorApp.common')
        * @param batchSize
        * @param rev
        * @param skipTargets
+       * @param skipLifecycleEvents
        * @param stageOutputList
        * @param endStage
        * @param timeout
        * @returns {*}
        */
-      createPreview: function(name, sourceOffset, batchSize, rev, skipTargets, skipLifecycleEvents, stageOutputList, endStage, timeout) {
+      createPreview: function(
+        name,
+        sourceOffset,
+        batchSize,
+        rev,
+        skipTargets,
+        skipLifecycleEvents,
+        stageOutputList,
+        endStage,
+        timeout
+      ) {
         var url;
 
         if (!batchSize) {
