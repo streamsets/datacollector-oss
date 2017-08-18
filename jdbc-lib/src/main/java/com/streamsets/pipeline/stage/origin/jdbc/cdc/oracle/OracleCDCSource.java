@@ -76,9 +76,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
@@ -257,8 +255,6 @@ public class OracleCDCSource extends BaseSource {
   private String logMinerProcedure;
   private ErrorRecordHandler errorRecordHandler;
   private boolean containerized = false;
-  private long lastRefresh = 0;
-  private BigDecimal scnAtLastRefresh = BigDecimal.ZERO;
   private BigDecimal lastSCN = null;
   private LocalDateTime lastSCNTimestamp = null;
   private LocalDateTime startDate;
@@ -332,8 +328,6 @@ public class OracleCDCSource extends BaseSource {
       // because the view gets materialized only on calling the SELECT - so the executeQuery may not return anything.
       // To avoid missing data in such cases, we return the new SCN only when we actually read data.
       PreparedStatement selectChanges = null;
-      final Semaphore generationSema = new Semaphore(0);
-      final AtomicBoolean generationStarted = new AtomicBoolean(false);
       try {
         if (dataSource == null || dataSource.isClosed()) {
           connection = null; // Force re-init without checking validity which takes time.
@@ -385,7 +379,7 @@ public class OracleCDCSource extends BaseSource {
               startDate = lastSCNTimestamp;
             } else {
               if (lastEndTime != null) {
-                startDate = refreshStartDate(BigDecimal.ZERO);
+                startDate = refreshStartDate();
               } else {
                 // So this is starting from shutdown/failure, which means the start date is derived from the offset
                 // Since that is the timestamp of the last commit we saw, we must look at the txn_window before that
@@ -401,7 +395,7 @@ public class OracleCDCSource extends BaseSource {
             lastOffset = offset.scn;
             rowsRead = offset.sequence;
             BigDecimal startCommitSCN = new BigDecimal(lastOffset);
-            startDate = refreshStartDate(startCommitSCN);
+            startDate = getDateForSCN(startCommitSCN);
             selectChanges.setBigDecimal(1, startCommitSCN);
             long rowsToSkip = unversioned ? 0 : rowsRead;
             selectChanges.setLong(2, rowsToSkip);
@@ -425,11 +419,11 @@ public class OracleCDCSource extends BaseSource {
               closeResultSet = true;
             } else {
               BigDecimal startCommitSCN = new BigDecimal(configBean.startSCN);
-              startDate = refreshStartDate(startCommitSCN);
+              startDate = getDateForSCN(startCommitSCN);
             }
           }
           if (lastEndTime != null) {
-            startDate = refreshStartDate(BigDecimal.ZERO);
+            startDate = refreshStartDate();
           }
         }
 
@@ -456,6 +450,7 @@ public class OracleCDCSource extends BaseSource {
         final boolean closeRS = closeResultSet;
         recordsProduced = generateRecords(batchSize, select, batchMaker, closeRS);
       } catch (Exception ex) {
+        incompleteBatch = false;
         // In preview, destroy gets called after timeout which can cause a SQLException
         if (getContext().isPreview() && ex instanceof SQLException) {
           LOG.warn("Exception while previewing", ex);
@@ -691,8 +686,11 @@ public class OracleCDCSource extends BaseSource {
         advanceResultSet(resultSet);
       }
     } catch (SQLException ex) {
+      // force a restart from the same timestamp.
+      incompleteBatch = false;
       if (ex.getErrorCode() == MISSING_LOG_FILE) {
         LOG.warn("SQL Exception while retrieving records", ex);
+        throw ex;
       } else if (ex.getErrorCode() != RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED) {
         LOG.warn("SQL Exception while retrieving records", ex);
       } else if (ex.getErrorCode() == QUERY_TIMEOUT) {
@@ -919,36 +917,25 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private LocalDateTime refreshStartDate(BigDecimal commitSCN) throws SQLException {
+  private LocalDateTime refreshStartDate() throws SQLException {
 
     // If an incomplete batch was sent, use the ending time of the last session for starting a new one.
-    refreshed = true;
+    refreshed = false;
     if (incompleteBatch) {
-      lastRefresh = System.currentTimeMillis();
-      if (configBean.bufferLocally) {
-        // If we are buffering locally, we don't need to re-read any data, since it is all buffered, so
-        // act as if we did not refresh and we simply use the last end time as start of interval.
-        refreshed = false;
-      }
+      // refreshed = true will set the start date to nextStartDate minus txnWindow. In local buffering, this is
+      // not required, since the uncommitted data is all buffered in SDC.
+      refreshed = !configBean.bufferLocally;
       return lastEndTime;
     }
+    return startDate;
+  }
 
-    // Either it is an hour since the last refresh, or the last commit scn is the same as now (middle of a txn)
-    // or resultset was closed due to error, don't refresh
-    if ((System.currentTimeMillis() - lastRefresh <= ONE_HOUR)
-        || (commitSCN.equals(scnAtLastRefresh))
-        || (currentResultSet.isPresent() && !currentResultSet.get().isClosed())) {
-      LOG.debug(START_DATE_REFRESH_NOT_REQUIRED);
-      refreshed = false;
-      return startDate;
-    }
-
+  private LocalDateTime getDateForSCN(BigDecimal commitSCN) throws SQLException {
+    refreshed = true; // start commit window before the given time
     startLogMinerUsingGivenSCNs(commitSCN, commitSCN);
     try (ResultSet rs = getCommitTimestamp.executeQuery()) {
       if (rs.next()) {
         LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
-        lastRefresh = System.currentTimeMillis();
-        scnAtLastRefresh = commitSCN;
         if (currentResultSet.isPresent()) {
           currentResultSet.get().close();
         }
