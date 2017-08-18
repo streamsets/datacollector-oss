@@ -46,8 +46,8 @@ public class Vault {
   private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
   private static final String VAULT_ADDR = "addr";
   private static final Splitter mapSplitter = Splitter.on('/').trimResults().omitEmptyStrings();
-  private final ConcurrentMap<String, Secret> SECRETS = new ConcurrentHashMap<>();
-  private final ConcurrentMap<String, Long> LEASES = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, Secret> secrets = new ConcurrentHashMap<>();
+  private final ConcurrentMap<String, Long> leases = new ConcurrentHashMap<>();
 
   private static class Configuration  {
     private final CredentialStore.Context context;
@@ -114,7 +114,7 @@ public class Vault {
     config = parseVaultConfigs(configuration);
     LOG.debug("CredentialStore '{}' Vault, scheduling renewal every '{}' seconds", csId, renewalInterval);
     scheduledFuture = EXECUTOR.scheduleWithFixedDelay(
-        new VaultRenewalTask(LEASES, SECRETS),
+        new VaultRenewalTask(leases, secrets),
         renewalInterval,
         renewalInterval,
         TimeUnit.SECONDS
@@ -227,7 +227,7 @@ public class Vault {
      * that the pipeline will simply fail at some point and will have to be restarted
      * either manually or via the built-in retry feature.
      *
-     * This means that as long as we simply evict the expired LEASES they should be
+     * This means that as long as we simply evict the expired leases they should be
      * renewed automatically when they are requested.
      */
     private void purgeExpiredLeases() {
@@ -330,7 +330,7 @@ public class Vault {
    * @return value of the specified key for the requested secret.
    */
   public String read(String path, String key, long delay) {
-    if (!SECRETS.containsKey(path)) {
+    if (!secrets.containsKey(path)) {
       VaultClient vault = new VaultClient(getConfig());
       Secret secret;
 
@@ -350,9 +350,9 @@ public class Vault {
         // So for non-renewable secrets we'll store the path with an extra / so that we can purge them correctly.
         leaseId = path + "/";
       }
-      LEASES.put(leaseId, System.currentTimeMillis() + (secret.getLeaseDuration() * 1000));
+      leases.put(leaseId, System.currentTimeMillis() + (secret.getLeaseDuration() * 1000));
 
-      SECRETS.put(path, secret);
+      secrets.put(path, secret);
 
       try {
         Thread.sleep(delay);
@@ -361,7 +361,7 @@ public class Vault {
       }
     }
 
-    Map<String, Object> data = SECRETS.get(path).getData();
+    Map<String, Object> data = secrets.get(path).getData();
     String value = getSecretValue(data, key).orElseThrow(() -> new VaultRuntimeException("Value not found for key"));
     LOG.trace("CredentialStore '{}' Vault, retrieved value for key '{}'", csId, key);
     return value;

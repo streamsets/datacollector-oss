@@ -67,7 +67,7 @@ public class JavaKeyStoreCredentialStore implements CredentialStore {
 
   static final String KEYSTORE_TYPE_KEY = "keystore.type";
   static final String KEYSTORE_FILE_KEY = "keystore.file";
-  static final String KEYSTORE_PASSWORD_KEY = "keystore.storePassword";
+  static final String KEYSTORE_PASSWORD_KEY = "keystore.storePassword"; // NOSONAR
 
   static {
     VALID_KEYSTORE_TYPES.add("JCEKS");
