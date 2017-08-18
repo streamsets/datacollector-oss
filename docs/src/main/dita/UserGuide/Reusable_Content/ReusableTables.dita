@@ -2374,8 +2374,8 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
        </ul>
       </p><p id="p_KuduTableNote">
        <note>Impala creates Kudu tables with the following naming convention:
-        <codeblock>impala::&lt;table name></codeblock><p>When using a table created by Impala, be
-         sure to use the entire table name. </p></note>
+          <codeblock>impala:&lt;database name>.&lt;table name></codeblock><p>When using a table
+          created by Impala, be sure to use the entire table name. </p></note>
       </p></entry>
      </row>
     </tbody>
