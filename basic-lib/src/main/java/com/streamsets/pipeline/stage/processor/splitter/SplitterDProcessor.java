@@ -79,7 +79,7 @@ public class SplitterDProcessor extends DProcessor {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "TO_ERROR",
-      label = "Not Enough Splits ",
+      label = "Not Enough Splits",
       description="Action for data that has fewer splits than configured field paths",
       displayPosition = 40,
       group = "FIELD_SPLITTER"
@@ -92,7 +92,7 @@ public class SplitterDProcessor extends DProcessor {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "TO_LAST_FIELD",
-      label = "Too Many Splits ",
+      label = "Too Many Splits",
       description="Action for data that more splits than configured field paths",
       displayPosition = 50,
       group = "FIELD_SPLITTER"

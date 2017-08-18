@@ -277,7 +277,7 @@ public class YarnConfigBean {
       required = true,
       defaultValue = "0",
       min = 0,
-      label = "Maximum Time to Wait (ms).",
+      label = "Maximum Time to Wait (ms)",
       description = "Time to wait for the app to complete. 0 to wait forever.",
       elDefs = TimeEL.class,
       dependsOn = "waitForCompletion",

@@ -45,7 +45,7 @@ public class BigQuerySourceConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Use cached query results.",
+      label = "Use cached query results",
       defaultValue = "true",
       displayPosition = 30,
       group = "BIGQUERY"
