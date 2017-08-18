@@ -265,9 +265,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d407524e568">Environment Variable</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d407611e568">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d407524e571">Value</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d407611e571">Value</th>
 
                                 </tr>
 
@@ -275,9 +275,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d407524e568 ">SDC_CONF</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d407611e568 ">SDC_CONF</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d407524e571 ">New location outside of the base <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d407611e571 ">New location outside of the base <span class="ph">Data
                   Collector</span> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
                                         configuration directory to <samp class="ph codeph">/etc/sdc2600</samp>,
@@ -286,23 +286,23 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d407524e568 ">SDC_DATA</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d407611e568 ">SDC_DATA</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d407524e571 ">Same directory that the previous version used.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d407524e568 ">SDC_LOG</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d407524e571 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d407611e571 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d407524e568 ">SDC_RESOURCES</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d407611e568 ">SDC_LOG</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d407524e571 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d407611e571 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d407611e568 ">SDC_RESOURCES</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d407611e571 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
@@ -437,9 +437,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                         <li class="li">Vault properties file<p class="p">As of version 2.7.0.0, most of the Vault
                                 configuration properties have been moved to the new credential
                                 stores properties file. The properties use the same name, with an
-                                added "credentialStore." prefix. Copy any values that you customized
-                                in the previous Vault properties file into the same property names
-                                in the credential stores properties file.</p>
+                                added "credentialStore.vault.config" prefix. Copy any values that
+                                you customized in the previous Vault properties file into the same
+                                property names in the credential stores properties file.</p>
 </li>
 
                     </ul>

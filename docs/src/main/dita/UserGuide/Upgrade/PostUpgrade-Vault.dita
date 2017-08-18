@@ -65,10 +65,11 @@
                                 <codeph>$SDC_CONF/vault.properties</codeph> file.</li>
                         <li>The remaining Vault configuration properties have been moved to the
                                 <systemoutput>$SDC_CONF/credential-stores.properties</systemoutput>
-                            file. The properties use the same name, with an added "credentialStore."
-                            prefix. Copy any values that you customized in the previous
-                                <codeph>vault.properties</codeph> file into the same property names
-                            in the <codeph>credential-stores.properties</codeph> file.</li>
+                            file. The properties use the same name, with an added
+                            "credentialStore.vault.config" prefix. Copy any values that you
+                            customized in the previous <codeph>vault.properties</codeph> file into
+                            the same property names in the
+                                <codeph>credential-stores.properties</codeph> file.</li>
                         <li>Define the Vault Role ID and Secret ID that <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             /> uses to authenticate with Vault in the
