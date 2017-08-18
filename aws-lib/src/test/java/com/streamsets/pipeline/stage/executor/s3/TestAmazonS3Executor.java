@@ -232,8 +232,8 @@ public class TestAmazonS3Executor {
     config.s3Config.endpoint = "http://localhost:" + port;
     config.s3Config.bucketTemplate = "${record:attribute('bucket')}";
     config.s3Config.awsConfig = new AWSConfig();
-    config.s3Config.awsConfig.awsAccessKeyId = "foo";
-    config.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    config.s3Config.awsConfig.awsAccessKeyId = () -> "foo";
+    config.s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
     config.s3Config.awsConfig.disableChunkedEncoding = true;
 
     config.taskConfig.taskType = TaskType.CHANGE_EXISTING_OBJECT;

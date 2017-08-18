@@ -18,6 +18,8 @@ package com.streamsets.pipeline.stage.origin.s3;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.AbstractFileRef;
 
@@ -28,16 +30,16 @@ public final class S3FileRef extends AbstractFileRef {
   private final AmazonS3 s3Client;
   private final S3ObjectSummary s3ObjectSummary;
   private final boolean useSSE;
-  private final String customerKey;
-  private final String customerKeyMd5;
+  private final CredentialValue customerKey;
+  private final CredentialValue customerKeyMd5;
 
   @SuppressWarnings("unchecked")
   public S3FileRef(
       AmazonS3 s3Client,
       S3ObjectSummary s3ObjectSummary,
       boolean useSSE,
-      String customerKey,
-      String customerKeyMd5,
+      CredentialValue customerKey,
+      CredentialValue customerKeyMd5,
       int bufferSize,
       boolean createMetrics,
       long totalSizeInBytes,
@@ -65,14 +67,18 @@ public final class S3FileRef extends AbstractFileRef {
   @SuppressWarnings("unchecked")
   public <T extends AutoCloseable> T createInputStream(Class<T> streamClassType) throws IOException {
     //The object is fetched every time a stream needs to be opened.
-    return (T) AmazonS3Util.getObject(
-        s3Client,
-        s3ObjectSummary.getBucketName(),
-        s3ObjectSummary.getKey(),
-        useSSE,
-        customerKey,
-        customerKeyMd5
-    ).getObjectContent();
+    try {
+      return (T) AmazonS3Util.getObject(
+          s3Client,
+          s3ObjectSummary.getBucketName(),
+          s3ObjectSummary.getKey(),
+          useSSE,
+          customerKey,
+          customerKeyMd5
+      ).getObjectContent();
+    } catch (StageException e) {
+      throw new IOException(e);
+    }
   }
 
 
@@ -88,8 +94,8 @@ public final class S3FileRef extends AbstractFileRef {
     private S3ObjectSummary s3ObjectSummary;
     private AmazonS3 s3Client;
     private boolean useSSE;
-    private String customerKey;
-    private String customerKeyMd5;
+    private CredentialValue customerKey;
+    private CredentialValue customerKeyMd5;
 
     public Builder s3Client(AmazonS3 s3Client) {
       this.s3Client = s3Client;
@@ -106,12 +112,12 @@ public final class S3FileRef extends AbstractFileRef {
       return this;
     }
 
-    public Builder customerKey(String customerKey) {
+    public Builder customerKey(CredentialValue customerKey) {
       this.customerKey = customerKey;
       return this;
     }
 
-    public Builder customerKeyMd5(String customerKeyMd5) {
+    public Builder customerKeyMd5(CredentialValue customerKeyMd5) {
       this.customerKeyMd5 = customerKeyMd5;
       return this;
     }

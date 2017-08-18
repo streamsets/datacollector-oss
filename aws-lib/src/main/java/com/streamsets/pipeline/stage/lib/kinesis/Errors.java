@@ -33,6 +33,7 @@ public enum Errors implements ErrorCode {
   KINESIS_09("Endpoint cannot be empty"),
   KINESIS_10("Error fetching preview data: '{}'"),
   KINESIS_11("Unable to delete DynamoDB table '{}'. Please verify that you have sufficient privileges"),
+  KINESIS_12("Can't resolve credentials: {}"),
   ;
   private final String msg;
 

@@ -302,6 +302,8 @@ public class KinesisSourceIT {
     KinesisConsumerConfigBean conf = new KinesisConsumerConfigBean();
     conf.dataFormatConfig = new DataParserFormatConfig();
     conf.awsConfig = new AWSConfig();
+    conf.awsConfig.awsAccessKeyId = () -> "foo";
+    conf.awsConfig.awsSecretAccessKey = () -> "boo";
 
     conf.region = AWSRegions.OTHER;
     conf.endpoint = getKinesisEndpoint();

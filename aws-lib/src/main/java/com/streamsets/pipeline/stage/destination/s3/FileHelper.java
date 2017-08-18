@@ -60,7 +60,7 @@ abstract class FileHelper {
 
   abstract List<UploadMetadata> handle(Iterator<Record> recordIterator, String bucket, String keyPrefix) throws IOException, StageException;
 
-  protected ObjectMetadata getObjectMetadata() {
+  protected ObjectMetadata getObjectMetadata() throws StageException {
     ObjectMetadata metadata = null;
     if (s3TargetConfigBean.sseConfig.useSSE) {
       metadata = new ObjectMetadata();
@@ -72,12 +72,12 @@ abstract class FileHelper {
           metadata.setSSEAlgorithm(SSEAlgorithm.KMS.getAlgorithm());
           metadata.setHeader(
               Headers.SERVER_SIDE_ENCRYPTION_AWS_KMS_KEYID,
-              s3TargetConfigBean.sseConfig.kmsKeyId
+              s3TargetConfigBean.sseConfig.kmsKeyId.get()
           );
           if (!s3TargetConfigBean.sseConfig.encryptionContext.isEmpty()) {
             metadata.setHeader(
                 "x-amz-server-side-encryption-context",
-                s3TargetConfigBean.sseConfig.encryptionContext
+                s3TargetConfigBean.sseConfig.resolveEncryptionContext()
             );
           }
           break;
@@ -85,11 +85,11 @@ abstract class FileHelper {
           metadata.setSSECustomerAlgorithm(SSEAlgorithm.AES256.getAlgorithm());
           metadata.setHeader(
               Headers.SERVER_SIDE_ENCRYPTION_CUSTOMER_KEY,
-              s3TargetConfigBean.sseConfig.customerKey
+              s3TargetConfigBean.sseConfig.customerKey.get()
           );
           metadata.setHeader(
               Headers.COPY_SOURCE_SERVER_SIDE_ENCRYPTION_CUSTOMER_KEY_MD5,
-              s3TargetConfigBean.sseConfig.customerKeyMd5
+              s3TargetConfigBean.sseConfig.customerKeyMd5.get()
           );
           break;
         default:

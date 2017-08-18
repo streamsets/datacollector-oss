@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -128,20 +129,29 @@ public class KinesisTarget extends BaseTarget {
           issues
       );
       generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
+      try {
+        KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration
+            .fromProperties(additionalConfigs)
+            .setCredentialsProvider(AWSUtil.getCredentialsProvider(conf.awsConfig));
 
-      KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration
-          .fromProperties(additionalConfigs)
-          .setCredentialsProvider(AWSUtil.getCredentialsProvider(conf.awsConfig));
+        if (conf.region == AWSRegions.OTHER) {
+          producerConfig.setKinesisEndpoint(conf.endpoint);
+        } else {
+          producerConfig.setRegion(conf.region.getLabel());
+        }
 
-      if (conf.region == AWSRegions.OTHER) {
-        producerConfig.setKinesisEndpoint(conf.endpoint);
-      } else {
-        producerConfig.setRegion(conf.region.getLabel());
-      }
-
-      // Mock injected during testing, we shouldn't clobber it.
-      if (kinesisProducer == null) {
-        kinesisProducer = new KinesisProducer(producerConfig);
+        // Mock injected during testing, we shouldn't clobber it.
+        if (kinesisProducer == null) {
+          kinesisProducer = new KinesisProducer(producerConfig);
+        }
+      } catch (StageException ex) {
+        LOG.error(Utils.format(Errors.KINESIS_12.getMessage(), ex.toString()), ex);
+        issues.add(getContext().createConfigIssue(
+            Groups.KINESIS.name(),
+            KINESIS_CONFIG_BEAN + ".awsConfig.awsAccessKeyId",
+            Errors.KINESIS_12,
+            ex.toString()
+        ));
       }
     }
 

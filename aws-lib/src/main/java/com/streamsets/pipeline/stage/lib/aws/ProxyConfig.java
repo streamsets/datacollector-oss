@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.lib.aws;
 
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.common.InterfaceAudience;
@@ -61,7 +62,7 @@ public class ProxyConfig {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Proxy User",
       description = "Optional proxy user name to use if connecting through a proxy",
       displayPosition = 5030,
@@ -70,11 +71,11 @@ public class ProxyConfig {
       elDefs = VaultEL.class,
       group = "ADVANCED"
   )
-  public String proxyUser;
+  public CredentialValue proxyUser;
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Proxy Password",
       description = "Optional proxy password to use when connecting through a proxy",
       displayPosition = 5040,
@@ -83,5 +84,5 @@ public class ProxyConfig {
       elDefs = VaultEL.class,
       group = "ADVANCED"
   )
-  public String proxyPassword;
+  public CredentialValue proxyPassword;
 }

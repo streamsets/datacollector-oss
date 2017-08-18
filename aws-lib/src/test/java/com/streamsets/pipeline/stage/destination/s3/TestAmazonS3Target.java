@@ -300,8 +300,8 @@ public class TestAmazonS3Target {
     s3Config.endpoint = "http://localhost:" + port;
     s3Config.bucketTemplate = "${record:attribute('bucket')}";
     s3Config.awsConfig = new AWSConfig();
-    s3Config.awsConfig.awsAccessKeyId = "foo";
-    s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3Config.awsConfig.awsAccessKeyId = () -> "foo";
+    s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
     s3Config.awsConfig.disableChunkedEncoding = true;
     s3Config.commonPrefix = commonPrefix;
     s3Config.delimiter = DELIMITER;

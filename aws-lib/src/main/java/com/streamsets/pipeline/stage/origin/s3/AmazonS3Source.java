@@ -249,7 +249,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
 
   //For whole file we do not care whether it is a preview or not,
   //as the record is just the metadata along with file ref.
-  private void handleWholeFileDataFormat(S3ObjectSummary s3ObjectSummary, String recordId) throws ELEvalException, DataParserException, IOException {
+  private void handleWholeFileDataFormat(S3ObjectSummary s3ObjectSummary, String recordId) throws StageException, IOException {
     S3Object partialS3ObjectForMetadata = null;
     //partialObject with fetchSize 1 byte.
     //This is mostly used for extracting metadata and such.

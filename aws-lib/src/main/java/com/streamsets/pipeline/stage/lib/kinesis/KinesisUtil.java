@@ -29,6 +29,7 @@ import com.amazonaws.services.kinesis.model.Record;
 import com.amazonaws.services.kinesis.model.Shard;
 import com.amazonaws.services.kinesis.model.StreamDescription;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -72,7 +73,7 @@ public class KinesisUtil {
 
     try {
       numShards = getShardCount(awsClientConfig, conf, streamName);
-    } catch (AmazonClientException e) {
+    } catch (AmazonClientException|StageException e) {
       LOG.error(Errors.KINESIS_01.getMessage(), e.toString(), e);
       issues.add(context.createConfigIssue(
           Groups.KINESIS.name(),
@@ -82,7 +83,10 @@ public class KinesisUtil {
     return numShards;
   }
 
-  public static long getShardCount(ClientConfiguration awsClientConfig, KinesisConfigBean conf, String streamName) {
+  public static long getShardCount(
+    ClientConfiguration awsClientConfig,
+    KinesisConfigBean conf, String streamName
+  ) throws StageException {
     AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf);
 
     try {
@@ -117,7 +121,7 @@ public class KinesisUtil {
     }
   }
 
-  private static AmazonKinesis getKinesisClient(ClientConfiguration awsClientConfig, KinesisConfigBean conf) {
+  private static AmazonKinesis getKinesisClient(ClientConfiguration awsClientConfig, KinesisConfigBean conf) throws StageException {
 
     AmazonKinesisClientBuilder builder = AmazonKinesisClientBuilder
         .standard()
@@ -144,7 +148,7 @@ public class KinesisUtil {
       ClientConfiguration awsClientConfig,
       KinesisConfigBean conf,
       String streamName
-  ) {
+  ) throws StageException {
     AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf);
 
     String lastShardId = null;
@@ -174,7 +178,7 @@ public class KinesisUtil {
       KinesisConfigBean conf,
       int maxBatchSize,
       GetShardIteratorRequest getShardIteratorRequest
-  ) {
+  ) throws StageException {
     AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf);
 
     GetShardIteratorResult getShardIteratorResult = kinesisClient.getShardIterator(getShardIteratorRequest);

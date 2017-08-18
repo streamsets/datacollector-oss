@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -75,16 +76,27 @@ public class FirehoseTarget extends BaseTarget {
     }
 
     generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
-    AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder
+    try {
+      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder
         .standard()
         .withCredentials(AWSUtil.getCredentialsProvider(conf.awsConfig));
-    if (conf.region == AWSRegions.OTHER) {
-      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
-    } else {
-      builder.withRegion(conf.region.getLabel());
-    }
 
-    firehoseClient = builder.build();
+      if (conf.region == AWSRegions.OTHER) {
+        builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
+      } else {
+        builder.withRegion(conf.region.getLabel());
+      }
+
+      firehoseClient = builder.build();
+    } catch (StageException ex) {
+      LOG.error(Utils.format(Errors.KINESIS_12.getMessage(), ex.toString()), ex);
+      issues.add(getContext().createConfigIssue(
+          Groups.KINESIS.name(),
+          "kinesisConfig.awsConfig.awsAccessKeyId",
+          Errors.KINESIS_12,
+          ex.toString()
+      ));
+    }
 
     return issues;
   }

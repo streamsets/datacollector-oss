@@ -187,8 +187,8 @@ public class TestKinesisTarget {
     conf.dataFormatConfig = new DataGeneratorFormatConfig();
     conf.awsConfig = new AWSConfig();
 
-    conf.awsConfig.awsAccessKeyId = "AKIAAAAAAAAAAAAAAAAA";
-    conf.awsConfig.awsSecretAccessKey = StringUtils.repeat("a", 40);
+    conf.awsConfig.awsAccessKeyId = () -> "AKIAAAAAAAAAAAAAAAAA";
+    conf.awsConfig.awsSecretAccessKey = () -> StringUtils.repeat("a", 40);
     conf.region = AWSRegions.US_WEST_1;
     conf.streamName = STREAM_NAME;
 

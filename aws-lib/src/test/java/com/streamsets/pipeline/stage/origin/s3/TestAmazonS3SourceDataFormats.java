@@ -423,8 +423,8 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
-    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
-    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = () -> "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
     s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
@@ -465,8 +465,8 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
-    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
-    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = () -> "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
     s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
@@ -503,8 +503,8 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
-    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
-    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = () -> "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
     s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
@@ -543,8 +543,8 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
-    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
-    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = () -> "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
     s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
@@ -583,8 +583,8 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
-    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
-    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = () -> "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
     s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
@@ -623,8 +623,8 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
-    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
-    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = () -> "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
     s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";
@@ -662,8 +662,8 @@ public class TestAmazonS3SourceDataFormats extends AmazonS3TestSuite{
     s3ConfigBean.s3Config.endpoint = "http://localhost:" + port;
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
     s3ConfigBean.s3Config.awsConfig = new AWSConfig();
-    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
-    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = () -> "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
     s3ConfigBean.s3Config.awsConfig.disableChunkedEncoding = true;
     s3ConfigBean.s3Config.commonPrefix = "";
     s3ConfigBean.s3Config.delimiter = "/";

@@ -39,6 +39,7 @@ import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegions;
@@ -102,13 +103,24 @@ public class KinesisSource extends BasePushSource {
       return issues;
     }
 
-    KinesisUtil.checkStreamExists(
-        AWSUtil.getClientConfiguration(conf.proxyConfig),
-        conf,
-        conf.streamName,
-        issues,
-        getContext()
-    );
+    try {
+      KinesisUtil.checkStreamExists(
+          AWSUtil.getClientConfiguration(conf.proxyConfig),
+          conf,
+          conf.streamName,
+          issues,
+          getContext()
+      );
+    } catch (StageException ex) {
+      LOG.error(Utils.format(Errors.KINESIS_12.getMessage(), ex.toString()), ex);
+      issues.add(getContext().createConfigIssue(
+          Groups.KINESIS.name(),
+          KINESIS_CONFIG_BEAN + ".awsConfig.awsAccessKeyId",
+          Errors.KINESIS_12,
+          ex.toString()
+      ));
+    }
+
     conf.dataFormatConfig.stringBuilderPoolSize = getNumberOfThreads();
 
     if (issues.isEmpty()) {
@@ -124,8 +136,18 @@ public class KinesisSource extends BasePushSource {
       parserFactory = conf.dataFormatConfig.getParserFactory();
     }
 
-    clientConfiguration = AWSUtil.getClientConfiguration(conf.proxyConfig);
-    credentials = AWSUtil.getCredentialsProvider(conf.awsConfig);
+    try {
+      clientConfiguration = AWSUtil.getClientConfiguration(conf.proxyConfig);
+      credentials = AWSUtil.getCredentialsProvider(conf.awsConfig);
+    } catch (StageException ex) {
+      LOG.error(Utils.format(Errors.KINESIS_12.getMessage(), ex.toString()), ex);
+      issues.add(getContext().createConfigIssue(
+          Groups.KINESIS.name(),
+          KINESIS_CONFIG_BEAN + ".awsConfig.awsAccessKeyId",
+          Errors.KINESIS_12,
+          ex.toString()
+      ));
+    }
 
     // KCL currently requires a mutable client
     dynamoDBClient = new AmazonDynamoDBClient(credentials, clientConfiguration);
@@ -196,7 +218,10 @@ public class KinesisSource extends BasePushSource {
     return hostname + ":" + UUID.randomUUID();
   }
 
-  private void previewProcess(int maxBatchSize, BatchMaker batchMaker) throws IOException, DataParserException {
+  private void previewProcess(
+    int maxBatchSize,
+    BatchMaker batchMaker
+  ) throws IOException, StageException {
     ClientConfiguration awsClientConfig = AWSUtil.getClientConfiguration(conf.proxyConfig);
 
     String shardId = KinesisUtil.getLastShardId(awsClientConfig, conf, conf.streamName);

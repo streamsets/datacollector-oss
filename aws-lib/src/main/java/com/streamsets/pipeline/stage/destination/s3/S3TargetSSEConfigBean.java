@@ -15,13 +15,18 @@
  */
 package com.streamsets.pipeline.stage.destination.s3;
 
+import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.lib.aws.SSEChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.SSEOption;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class S3TargetSSEConfigBean {
@@ -53,22 +58,21 @@ public class S3TargetSSEConfigBean {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "AWS KMS Key ARN",
       description = "AWS KMS master encryption key that was used for the object. " +
           "The KMS key you specify in the policy must use the \"arn:aws:kms:region:acct-id:key/key-id\" format.",
-      defaultValue = "",
       displayPosition = 30,
       elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "KMS",
       group = "#0"
   )
-  public String kmsKeyId;
+  public CredentialValue kmsKeyId;
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.MAP,
+      type = ConfigDef.Type.MODEL,
       label = "Encryption Context",
       description = "Set of key-value pairs that you can pass to AWS KMS",
       displayPosition = 40,
@@ -77,33 +81,40 @@ public class S3TargetSSEConfigBean {
       triggeredByValue = "KMS",
       group = "#0"
   )
-  public Map<String, String> encryptionContext = new HashMap<>();
+  @ListBeanModel
+  public List<EncryptionContextBean> encryptionContext = new ArrayList<>();
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Customer Encryption Key",
       description = "256-bit, base64-encoded encryption key for Amazon S3 to use to encrypt or decrypt your data",
-      defaultValue = "",
       displayPosition = 50,
       elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "CUSTOMER",
       group = "#0"
   )
-  public String customerKey;
+  public CredentialValue customerKey;
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Customer Encryption Key MD5",
       description = "Base64-encoded 128-bit MD5 digest of the encryption key according to RFC 1321",
-      defaultValue = "",
       displayPosition = 60,
       elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "CUSTOMER",
       group = "#0"
   )
-  public String customerKeyMd5;
+  public CredentialValue customerKeyMd5;
+
+  public Map<String, String> resolveEncryptionContext() throws StageException {
+    Map<String, String> encryptionContext = new HashMap<>();
+    for(EncryptionContextBean bean : this.encryptionContext) {
+      encryptionContext.put(bean.key, bean.value.get());
+    }
+    return encryptionContext;
+  }
 }

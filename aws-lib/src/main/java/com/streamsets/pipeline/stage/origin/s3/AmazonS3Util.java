@@ -27,6 +27,8 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.SSECustomerKey;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
 
@@ -203,13 +205,13 @@ public class AmazonS3Util {
       String bucket,
       String objectKey,
       boolean useSSE,
-      String customerKey,
-      String customerKeyMd5
-  ) {
+      CredentialValue customerKey,
+      CredentialValue customerKeyMd5
+  ) throws StageException {
     GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, objectKey);
     if (useSSE) {
-      SSECustomerKey sseCustomerKey = new SSECustomerKey(customerKey);
-      sseCustomerKey.setMd5(customerKeyMd5);
+      SSECustomerKey sseCustomerKey = new SSECustomerKey(customerKey.get());
+      sseCustomerKey.setMd5(customerKeyMd5.get());
       getObjectRequest.setSSECustomerKey(sseCustomerKey);
     }
     return s3Client.getObject(getObjectRequest);
@@ -248,13 +250,13 @@ public class AmazonS3Util {
       String objectKey,
       long range,
       boolean useSSE,
-      String customerKey,
-      String customerKeyMd5
-  ) {
+      CredentialValue customerKey,
+      CredentialValue customerKeyMd5
+  ) throws StageException {
     GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, objectKey).withRange(0, range);
     if (useSSE) {
-      SSECustomerKey sseCustomerKey = new SSECustomerKey(customerKey);
-      sseCustomerKey.setMd5(customerKeyMd5);
+      SSECustomerKey sseCustomerKey = new SSECustomerKey(customerKey.get());
+      sseCustomerKey.setMd5(customerKeyMd5.get());
       getObjectRequest.setSSECustomerKey(sseCustomerKey);
     }
     return s3Client.getObject(getObjectRequest);

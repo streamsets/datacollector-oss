@@ -23,6 +23,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
@@ -103,7 +104,19 @@ public abstract class S3ConnectionBaseConfig {
       int maxErrorRetries
   ) {
     commonPrefix = AWSUtil.normalizePrefix(commonPrefix, delimiter);
-    createConnection(context, configPrefix, proxyConfig, issues, maxErrorRetries);
+    try {
+      createConnection(context, configPrefix, proxyConfig, issues, maxErrorRetries);
+    } catch (StageException ex) {
+      LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), ex.toString(), ex);
+      issues.add(
+          context.createConfigIssue(
+              Groups.S3.name(),
+              configPrefix + S3ConnectionBaseConfig.AWS_CONFIG_PREFIX + "awsAccessKeyId",
+              Errors.S3_SPOOLDIR_20,
+              ex.toString()
+          )
+      );
+    }
   }
 
   public void destroy() {
@@ -124,7 +137,7 @@ public abstract class S3ConnectionBaseConfig {
       ProxyConfig proxyConfig,
       List<Stage.ConfigIssue> issues,
       int maxErrorRetries
-  ) {
+  ) throws StageException {
     AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(awsConfig);
     ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(proxyConfig);
 
