@@ -119,6 +119,7 @@
                                         /></xref></entry>
                                     <entry>Type of data to be processed. Use one of the following
                                             options:<ul id="ul_c52_h4g_sy">
+                                            <li>Avro</li>
                                             <li>Binary</li>
                                             <li>Datagram</li>
                                             <li>Delimited</li>
