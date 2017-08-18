@@ -360,6 +360,27 @@
                         buffer size. For more information, see <xref
                               href="../Origins/MaxRecordSize.dita#concept_svg_2zl_d1b"/>.</ph></p>
             <p>
+                  <draft-comment author="Loretta">Avro for Directory and HTTP Server - with no extra
+                        configs.</draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry id="O-AvroFile-NoConfigs">
+                              <dt>Avro</dt>
+                              <dd>Generates a record for every Avro record. Includes a "precision"
+                                    and "scale" field attribute for each Decimal field. For more
+                                    information about field attributes, see <xref
+                                          href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
+                                    />.</dd>
+                              <dd>The origin expects each file to contain the Avro schema and uses
+                                    the schema to process the Avro data.</dd>
+                              <dd>The origin reads files compressed by Avro-supported compression
+                                    codecs without requiring additional configuration.</dd>
+                              <dd/>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
                   <draft-comment author="Loretta">AVRO - Used by Kafka Consumer </draft-comment>
                   <dl>
                         <dlentry id="OriginDF-AVRO-Kafka">

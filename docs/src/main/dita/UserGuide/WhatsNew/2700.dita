@@ -170,8 +170,9 @@
                         <li>HTTP Client origin enhancement - The HTTP Client origin now allows time
                             functions and datetime variables in the URL query parameters and request
                             body. </li>
-                        <li>HTTP Server origin enhancement - The HTTP Server origin can now process
-                            Avro files.</li>
+                        <li><xref href="../Origins/HTTPServer-DataFormat.dita#concept_anf_ss4_qy"
+                                >HTTP Server origin enhancement</xref> - The HTTP Server origin can
+                            now process Avro files.</li>
                         <li><xref href="../Origins/JDBCConsumer-Configuring.dita#task_ryz_tkr_bs"
                                 >JDBC Query Consumer origin enhancement</xref> - You can now
                             configure the behavior for the origin when it encounters data of an
