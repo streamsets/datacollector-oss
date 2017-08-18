@@ -94,10 +94,11 @@
                                                 existing field or a new field. If the field does not
                                                 exist, Kudu Lookup creates the field.</li>
                                             <li>Default Value - Optional default value to use when
-                                                the lookup does not return a value for the field. If
-                                                the lookup returns no value, a default value is not
-                                                defined, and Ignore Missing Value is cleared, the
-                                                processor sends the record to error.</li>
+                                                the lookup does not return a value for the field and
+                                                Ignore Missing Value is selected. <p>If Ignore
+                                                  Missing Value is cleared, the processor sends the
+                                                  record to error when a lookup returns no value -
+                                                  even if you define a default value.</p></li>
                                         </ul><p>Use the <uicontrol>Add</uicontrol> icon to create
                                             additional field mappings.</p></entry>
                                 </row>
@@ -111,12 +112,13 @@
                                     <entry>Ignore Missing Value</entry>
                                     <entry>Determines whether the processor ignores missing lookup
                                             values.<p>When cleared, the processor sends the record
-                                            to error if a lookup returns no value and the Columns to
-                                            Output Fields Mapping does not have a default value
-                                            defined. When selected, the processor continues to
-                                            process the record if a lookup returns no value and the
-                                            Columns to Output Fields Mapping does have a default
-                                            value defined. </p></entry>
+                                            to error if a lookup returns no value. </p><p>When
+                                            selected, the processor continues to process the record
+                                            if a lookup returns no value and the Columns to Output
+                                            Fields Mapping defines a default value. The processor
+                                            sends the record to error if the Columns to Output
+                                            Fields Mapping does not define a default
+                                        value.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -173,9 +175,25 @@
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>Cache Kudu Table
+                                        <xref
+                                            href="KuduLookup-CacheTableInfo.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_h3p_p9g_kj"/></xref></entry>
+                                    <entry>Specifies whether to locally cache the name and schema of
+                                        the Kudu tables to look up.</entry>
+                                </row>
+                                <row>
+                                    <entry>Maximum Entries to Cache Table Objects</entry>
+                                    <entry>Maximum number of table entries to cache. When the
+                                        maximum number is reached, the processor evicts the oldest
+                                        values from the cache.<p>Default is -1, which means
+                                            unlimited.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Enable Local Caching
                                         <xref
-                                            href="KuduLookup-Cache.dita">
+                                            href="KuduLookup-CacheValues.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h2p_p7v_uh"/></xref></entry>
                                     <entry

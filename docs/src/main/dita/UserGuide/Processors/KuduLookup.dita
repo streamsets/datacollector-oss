@@ -30,7 +30,7 @@
             define the output fields to write the lookup values to.</p>
         <p>When a lookup results in multiple matches, the Kudu Lookup processor can return the first
             matching value or return all matching values in separate records. </p>
-        <p>You can configure the processor to locally cache the lookup values to improve
-            performance.</p>
- </conbody>
+        <p>To improve pipeline performance, you can configure the Kudu Lookup processor to locally
+            cache the Kudu table information and the lookup values returned from a Kudu table. </p>
+    </conbody>
 </concept>

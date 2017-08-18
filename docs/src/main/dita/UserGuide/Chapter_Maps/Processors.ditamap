@@ -231,7 +231,10 @@
   <topicref href="../Processors/KuduLookup.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/KuduLookup-ColumnMappings.dita"/>
-   <topicref href="../Processors/KuduLookup-Cache.dita"/>
+   <topicref href="../Processors/KuduLookup-Cache.dita">
+    <topicref href="../Processors/KuduLookup-CacheTableInfo.dita"/>
+    <topicref href="../Processors/KuduLookup-CacheValues.dita"/>
+   </topicref>
    <topicref href="../Processors/KuduLookup-Configuring.dita"/>
   </topicref>
   <topicref href="../Processors/LogParser.dita" chunk="to-content">

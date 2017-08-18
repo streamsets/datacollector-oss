@@ -21,14 +21,8 @@
             <p><indexterm>Kudu Lookup
                     processor<indexterm>cache</indexterm></indexterm><indexterm>cache<indexterm>Kudu
                     Lookup processor</indexterm></indexterm>To improve pipeline performance, you can
-            configure the Kudu Lookup processor to locally cache the values returned from a Kudu
-            table.</p>
-            <p
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/JDBCLookupCacheOverview"/>
-            <p
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/JDBCLookupCacheOptions"/>
-            <p
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/JDBCLookupCacheSummary"
-            />
+            configure the Kudu Lookup processor to locally cache Kudu table information and the
+            lookup values returned from a Kudu table. </p>
+        <p>When you stop the pipeline, the processor clears both caches.</p>        
         </conbody>
     </concept>
