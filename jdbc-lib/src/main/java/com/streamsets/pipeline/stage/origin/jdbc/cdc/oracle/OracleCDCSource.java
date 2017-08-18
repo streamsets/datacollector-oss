@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
+import com.codahale.metrics.Gauge;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
@@ -205,6 +206,8 @@ public class OracleCDCSource extends BaseSource {
   private String resumeString;
 
   private ZoneId zoneId;
+
+  private Gauge<Map<String, Object>> delay;
 
   private enum DDL_EVENT {
     CREATE,
@@ -468,6 +471,11 @@ public class OracleCDCSource extends BaseSource {
         errorRecordHandler.onError(JDBC_44, Throwables.getStackTraceAsString(ex));
       }
     }
+    if (incompleteBatch) {
+      delay.getValue().put("delay", getDelay(lastEndTime));
+    } else {
+      delay.getValue().put("delay", getDelay(lastSCNTimestamp));
+    }
     if (offsetReference.get() != null) {
       String offset = offsetReference.get().toString();
       LOG.debug("Returning offset: {}", offset);
@@ -490,6 +498,10 @@ public class OracleCDCSource extends BaseSource {
       LOG.debug(RETURNING_EMPTY_OFFSET);
       return lastSourceOffset == null ? "" : lastSourceOffset;
     }
+  }
+
+  private long getDelay(LocalDateTime lastEndTime) {
+    return localDateTimeToEpoch(nowAtDBTz()) - localDateTimeToEpoch(lastEndTime);
   }
 
   private boolean generateRecords(
@@ -530,10 +542,8 @@ public class OracleCDCSource extends BaseSource {
           short op = resultSet.getShort(3);
           String timestamp = resultSet.getString(4);
           LocalDateTime tsDate = Timestamp.valueOf(timestamp).toLocalDateTime();
-          if (configBean.bufferLocally) {
-            this.lastSCN = scnDecimal;
-            this.lastSCNTimestamp = tsDate;
-          }
+          this.lastSCN = scnDecimal;
+          this.lastSCNTimestamp = tsDate;
           String table = resultSet.getString(6);
           BigDecimal commitSCN = resultSet.getBigDecimal(7);
           String queryString = query.toString();
@@ -542,7 +552,6 @@ public class OracleCDCSource extends BaseSource {
           String xidUsn = String.valueOf(resultSet.getLong(10));
           String xidSlt = String.valueOf(resultSet.getString(11));
           String xidSqn = String.valueOf(resultSet.getString(12));
-          lastSCN = scnDecimal;
           String rsId = resultSet.getString(13);
           Object ssn = resultSet.getObject(14);
           String xid = xidUsn + "." + xidSlt + "." + xidSqn;
@@ -1258,7 +1267,7 @@ public class OracleCDCSource extends BaseSource {
     if (configBean.bufferLocally) {
       discardExecutor.schedule(this::discardOldUncommitted, configBean.txnWindow, TimeUnit.SECONDS);
     }
-
+    delay = getContext().createGauge("Read Lag (seconds)");
     return issues;
   }
 
