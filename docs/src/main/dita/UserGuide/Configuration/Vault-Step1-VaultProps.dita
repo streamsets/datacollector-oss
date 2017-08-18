@@ -27,18 +27,19 @@
         <dl>
             <dlentry>
                 <dt>Vault properties file</dt>
-                <dd>The vault.properties file contains a single Vault EL property that you must
-                    uncomment to use the deprecated Vault functions.</dd>
+                <dd>The <codeph>vault.properties</codeph> file contains a single Vault EL property
+                    that you must uncomment to use the deprecated Vault functions.</dd>
             </dlentry>
             <dlentry>
                 <dt>Credential stores properties file</dt>
-                <dd>The credential-stores.properties file contains the remaining Vault properties.
-                    The Vault server URL, Role ID, and Secret ID are required properties. Configure
-                    other properties as needed.</dd>
-                <dd>The file includes the following properties:<note>The
-                            <codeph>credentialStore.vault.pathKey.separator</codeph> property is not
-                        used by the Vault functions. You can ignore this property.</note><table
-                        frame="all" rowsep="1" colsep="1" id="table_tdn_zkx_v1b">
+                <dd>The <codeph>credential-stores.properties</codeph> file contains the remaining
+                    Vault properties. The Vault server URL, Role ID, and Secret ID are required
+                    properties. Configure other properties as needed.<note>The
+                            <codeph>credentialStore.vault.config.pathKey.separator</codeph> property
+                        is not used by the Vault functions. You can ignore this
+                    property.</note></dd>
+                <dd>Configure the following properties in the file:<table frame="all" rowsep="1"
+                        colsep="1" id="table_tdn_zkx_v1b">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="2.3*"/>
                             <colspec colname="c2" colnum="2" colwidth="2.7*"/>

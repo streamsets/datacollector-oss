@@ -188,7 +188,7 @@
               href="CredentialFunctions.dita#concept_yvc_3qs_r1b">credential functions</xref>
             available with the Vault <xref
               href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-              store</xref> integration.</note></dd>
+              store</xref> integration in pipelines that include JDBC stages.</note></dd>
         <dd>Return type: String.</dd>
         <dd>Uses the following arguments:<ul id="ul_yd1_4gc_mw">
             <li>path - The path in Vault to read.</li>
@@ -204,7 +204,8 @@
               href="CredentialFunctions.dita#concept_yvc_3qs_r1b">credential functions</xref>
             available with the Vault <xref
               href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b">credential
-              store</xref> integration.</note><p>You can use the function in <ph
+              store</xref> integration in pipelines that include JDBC stages.</note><p>You can use
+            the function in <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-VaultOneFunction-Usage"
             /></p></dd>
         <dd>Return type: String.</dd>
