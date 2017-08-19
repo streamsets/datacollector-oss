@@ -79,6 +79,7 @@ public class AvroSchemaGenerator extends SchemaGenerator {
     List<Schema.Field> recordFields = new ArrayList<>();
     for(Map.Entry<String, Field> entry : record.get().getValueAsMap().entrySet()) {
       recordFields.add(schemaFieldForType(
+        "/" + entry.getKey(),
         record,
         entry.getKey(),
         entry.getValue()
@@ -99,8 +100,13 @@ public class AvroSchemaGenerator extends SchemaGenerator {
   /**
    * Generate schema for given field and optionally wrap it in union with null if configured.
    */
-  private Schema.Field schemaFieldForType(Record record, String fieldName, Field field) throws OnRecordErrorException {
-    Schema simpleSchema = simpleSchemaForType(record, field);
+  private Schema.Field schemaFieldForType(
+      String fieldPath,
+      Record record,
+      String fieldName,
+      Field field
+  ) throws OnRecordErrorException {
+    Schema simpleSchema = simpleSchemaForType(fieldPath, record, field);
     Schema finalSchema = simpleSchema;
 
     // If Nullable check box was selected, wrap the whole schema in union with null
@@ -123,8 +129,12 @@ public class AvroSchemaGenerator extends SchemaGenerator {
    * Generates complex schema for given field that will include optional union with null and potentially default value
    * as well. Particularly useful to generate nested structures.
    */
-  private Schema complexSchemaForType(Record record, Field field) throws OnRecordErrorException {
-    Schema simpleSchema = simpleSchemaForType(record, field);
+  private Schema complexSchemaForType(
+      String fieldPath,
+      Record record,
+      Field field
+  ) throws OnRecordErrorException {
+    Schema simpleSchema = simpleSchemaForType(fieldPath, record, field);
     Schema finalSchema = simpleSchema;
 
     if(getConfig().avroNullableFields) {
@@ -147,7 +157,7 @@ public class AvroSchemaGenerator extends SchemaGenerator {
    * for generating Schema.Field as this will not convert simple "string" to "{type:string, defaultValue:something}"
    * which is hard to undo.
    */
-  private Schema simpleSchemaForType(Record record, Field field) throws OnRecordErrorException {
+  private Schema simpleSchemaForType(String fieldPath, Record record, Field field) throws OnRecordErrorException {
     switch (field.getType()) {
       // Primitive types
       case BOOLEAN:
@@ -193,18 +203,20 @@ public class AvroSchemaGenerator extends SchemaGenerator {
 
         // We can't generate the list type from empty list
         if(field.getValueAsList().isEmpty()) {
-          throw new OnRecordErrorException(record, Errors.SCHEMA_GEN_0006);
+          throw new OnRecordErrorException(record, Errors.SCHEMA_GEN_0006, fieldPath);
         }
 
         // And all items in the list must have the same schema
         Schema itemSchema = null;
+        int index = 0;
         for(Field listItem : field.getValueAsList()) {
-          Schema currentListItemSchema = complexSchemaForType(record, listItem);
+          Schema currentListItemSchema = complexSchemaForType(fieldPath + "[" + index + "]", record, listItem);
           if(itemSchema == null) {
             itemSchema = currentListItemSchema;
           } else if (!itemSchema.equals(currentListItemSchema)) {
-            throw new OnRecordErrorException(record, Errors.SCHEMA_GEN_0005, itemSchema, currentListItemSchema);
+            throw new OnRecordErrorException(record, Errors.SCHEMA_GEN_0005, fieldPath, itemSchema, currentListItemSchema);
           }
+          index++;
         }
         return Schema.createArray(itemSchema);
       case MAP:
@@ -214,17 +226,17 @@ public class AvroSchemaGenerator extends SchemaGenerator {
 
         // We can't generate the map value type from empty map
         if(field.getValueAsMap().isEmpty()) {
-          throw new OnRecordErrorException(record, Errors.SCHEMA_GEN_0008);
+          throw new OnRecordErrorException(record, Errors.SCHEMA_GEN_0008, fieldPath);
         }
 
         // And all values in the map must be the same
         Schema mapSchema = null;
-        for(Field listItem : field.getValueAsMap().values()) {
-          Schema currentListItemSchema = complexSchemaForType(record, listItem);
+        for(Map.Entry<String, Field> item : field.getValueAsMap().entrySet()) {
+          Schema currentListItemSchema = complexSchemaForType(fieldPath + "/" + item.getKey(), record, item.getValue());
           if(mapSchema == null) {
             mapSchema = currentListItemSchema;
           } else if (!mapSchema.equals(currentListItemSchema)) {
-            throw new OnRecordErrorException(record, Errors.SCHEMA_GEN_0007, mapSchema, currentListItemSchema);
+            throw new OnRecordErrorException(record, Errors.SCHEMA_GEN_0007, fieldPath, mapSchema, currentListItemSchema);
           }
         }
         return Schema.createMap(mapSchema);
