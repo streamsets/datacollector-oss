@@ -24,10 +24,10 @@ public enum Errors implements ErrorCode {
   SCHEMA_GEN_0002("Unsupported type: {}"),
   SCHEMA_GEN_0003("Unsupported type {} for root field."),
   SCHEMA_GEN_0004("Invalid scale or precision of value {} for field {}"),
-  SCHEMA_GEN_0005("Detected list with different schemas for items. First schema: '{}', Second schema: '{}'"),
-  SCHEMA_GEN_0006("Can't generate Avro schema for empty list"),
-  SCHEMA_GEN_0007("Detected map with different schemas for items. First schema: '{}', Second schema: '{}'"),
-  SCHEMA_GEN_0008("Can't generate Avro schema for empty map"),
+  SCHEMA_GEN_0005("List '{}' have different schemas for items. First schema: '{}', Second schema: '{}'"),
+  SCHEMA_GEN_0006("Can't generate Avro schema for empty list '{}'"),
+  SCHEMA_GEN_0007("Map '{}' have different schemas for items. First schema: '{}', Second schema: '{}'"),
+  SCHEMA_GEN_0008("Can't generate Avro schema for empty map '{}'"),
   SCHEMA_GEN_0009("Multiple default values for type: {}"),
   ;
 
