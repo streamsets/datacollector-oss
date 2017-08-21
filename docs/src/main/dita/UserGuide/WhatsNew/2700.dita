@@ -273,9 +273,11 @@
                             ID and Client Key properties have been renamed Application ID and
                             Application Key to align with the updated property names in the new
                             Azure portal.</li>
-                        <li>Cassandra destination enhancement - The destination now supports
-                            Kerberos authentication if you have installed the DataStax Enterprise
-                            Java driver. </li>
+                        <li><xref
+                                href="../Destinations/Cassandra-Authentication.dita#concept_ajh_vhp_x1b"
+                                >Cassandra destination enhancement</xref> - The destination now
+                            supports Kerberos authentication if you have installed the DataStax
+                            Enterprise Java driver. </li>
                         <li>Elasticsearch destination enhancement - The destination can now create
                             parent-child relationships between documents in the same index.</li>
                         <li>Hive Metastore destination - You can now configure the destination to

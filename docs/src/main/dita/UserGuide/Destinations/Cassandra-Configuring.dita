@@ -54,6 +54,25 @@
                                     <entry>The port number for the Cassandra nodes.</entry>
                                 </row>
                                 <row>
+                                    <entry>Authentication Provider
+                                        <xref
+                                            href="Cassandra-Authentication.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_a2h_bfn_vs"
+                                            /></xref></entry>
+                                    <entry>Determines the authentication provider used to access the
+                                            cluster:<ul id="ul_ols_kgp_x1b">
+                                            <li>None - Performs no authentication.</li>
+                                            <li>Username/Password - Uses Cassandra username and
+                                                password authentication.</li>
+                                            <li>Username/Password (DSE) - Uses DataStax Enterprise
+                                                username and password authentication. Requires that
+                                                you install the DSE Java driver.</li>
+                                            <li>Kerberos (DSE) - Uses Kerberos authentication.
+                                                Requires that you install the DSE Java driver.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
                                     <entry>Protocol Version</entry>
                                     <entry>Native protocol version that defines the format of the
                                         binary messages exchanged between the driver and Cassandra.
@@ -67,11 +86,6 @@
                                     <entry>Compression</entry>
                                     <entry>Optional compression type for transport-level requests
                                         and responses.</entry>
-                                </row>
-                                <row>
-                                    <entry>Use Credentials</entry>
-                                    <entry>Indicates whether to use credentials to access the
-                                        cluster.</entry>
                                 </row>
                                 <row>
                                     <entry>Fully-Qualified Table Name</entry>
@@ -91,8 +105,9 @@
                     </table>
                 </info></step>
             <step>
-                <cmd>To use Cassandra credentials, click the <wintitle>Credentials</wintitle> tab,
-                    and then enter a user name and password.</cmd>
+                <cmd>To use username/password authentication, click the
+                        <wintitle>Credentials</wintitle> tab, and then enter a user name and
+                    password.</cmd>
                 <info>
                     <note
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
