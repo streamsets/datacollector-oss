@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -480,18 +480,18 @@ public final class EmployeeProto {
       public final boolean isInitialized() {
         if (hasEngineer()) {
           if (!getEngineer().isInitialized()) {
-            
+
             return false;
           }
         }
         if (hasExec()) {
           if (!getExec().isInitialized()) {
-            
+
             return false;
           }
         }
         if (!extensionsAreInitialized()) {
-          
+
           return false;
         }
         return true;
@@ -620,7 +620,7 @@ public final class EmployeeProto {
        * <code>optional .util.Engineer engineer = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          com.streamsets.pipeline.lib.util.EngineerProto.Engineer, com.streamsets.pipeline.lib.util.EngineerProto.Engineer.Builder, com.streamsets.pipeline.lib.util.EngineerProto.EngineerOrBuilder> 
+          com.streamsets.pipeline.lib.util.EngineerProto.Engineer, com.streamsets.pipeline.lib.util.EngineerProto.Engineer.Builder, com.streamsets.pipeline.lib.util.EngineerProto.EngineerOrBuilder>
           getEngineerFieldBuilder() {
         if (engineerBuilder_ == null) {
           engineerBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -737,7 +737,7 @@ public final class EmployeeProto {
        * <code>optional .util.Executive exec = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          com.streamsets.pipeline.lib.util.ExecutiveProto.Executive, com.streamsets.pipeline.lib.util.ExecutiveProto.Executive.Builder, com.streamsets.pipeline.lib.util.ExecutiveProto.ExecutiveOrBuilder> 
+          com.streamsets.pipeline.lib.util.ExecutiveProto.Executive, com.streamsets.pipeline.lib.util.ExecutiveProto.Executive.Builder, com.streamsets.pipeline.lib.util.ExecutiveProto.ExecutiveOrBuilder>
           getExecFieldBuilder() {
         if (execBuilder_ == null) {
           execBuilder_ = new com.google.protobuf.SingleFieldBuilder<

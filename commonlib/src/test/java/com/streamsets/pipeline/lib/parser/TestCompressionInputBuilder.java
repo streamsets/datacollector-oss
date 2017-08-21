@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,7 +51,7 @@ public class TestCompressionInputBuilder {
   public static void setUpClass() {
     DataCollectorServicesUtils.loadDefaultServices();
   }
-  
+
   @Test
   public void testCompressionInput() throws Exception {
 

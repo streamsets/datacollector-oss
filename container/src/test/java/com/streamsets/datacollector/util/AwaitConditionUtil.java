@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,7 +56,7 @@ public class AwaitConditionUtil {
       }
     };
   }
-  
+
   public static void waitForStart(final WebServerTask ws) {
     given().ignoreExceptions()
         .await()

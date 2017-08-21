@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -81,7 +81,7 @@ public class ListFieldBuilder extends BaseFieldBuilder<ListFieldBuilder> {
     fields.add(Field.create(value));
     return this;
   }
-  
+
   @Override
   public ListFieldBuilder startList(String name) {
     return super.startList(name);

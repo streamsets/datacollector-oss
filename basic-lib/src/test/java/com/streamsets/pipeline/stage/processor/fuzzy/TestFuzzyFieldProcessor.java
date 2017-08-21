@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -405,7 +405,7 @@ public class TestFuzzyFieldProcessor {
       Record record = RecordCreator.create("s", "s:1");
 
       record.set(Field.create(csvWithHeader));
-      
+
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
       Assert.assertEquals(0, runner.getErrorRecords().size());
       Assert.assertEquals(1, output.getRecords().get("a").size());

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -76,7 +76,7 @@ public final class PersonProto {
     /**
      * <code>repeated .util.Person.PhoneNumber phone = 4;</code>
      */
-    java.util.List<com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumber> 
+    java.util.List<com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumber>
         getPhoneList();
     /**
      * <code>repeated .util.Person.PhoneNumber phone = 4;</code>
@@ -89,7 +89,7 @@ public final class PersonProto {
     /**
      * <code>repeated .util.Person.PhoneNumber phone = 4;</code>
      */
-    java.util.List<? extends com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumberOrBuilder> 
+    java.util.List<? extends com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumberOrBuilder>
         getPhoneOrBuilderList();
     /**
      * <code>repeated .util.Person.PhoneNumber phone = 4;</code>
@@ -462,7 +462,7 @@ public final class PersonProto {
         if (ref instanceof java.lang.String) {
           return (java.lang.String) ref;
         } else {
-          com.google.protobuf.ByteString bs = 
+          com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
@@ -478,7 +478,7 @@ public final class PersonProto {
           getNumberBytes() {
         java.lang.Object ref = number_;
         if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           number_ = b;
@@ -733,7 +733,7 @@ public final class PersonProto {
 
         public final boolean isInitialized() {
           if (!hasNumber()) {
-            
+
             return false;
           }
           return true;
@@ -787,7 +787,7 @@ public final class PersonProto {
             getNumberBytes() {
           java.lang.Object ref = number_;
           if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString b =
                 com.google.protobuf.ByteString.copyFromUtf8(
                     (java.lang.String) ref);
             number_ = b;
@@ -897,7 +897,7 @@ public final class PersonProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -913,7 +913,7 @@ public final class PersonProto {
         getNameBytes() {
       java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         name_ = b;
@@ -981,7 +981,7 @@ public final class PersonProto {
     /**
      * <code>repeated .util.Person.PhoneNumber phone = 4;</code>
      */
-    public java.util.List<? extends com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumberOrBuilder> 
+    public java.util.List<? extends com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumberOrBuilder>
         getPhoneOrBuilderList() {
       return phone_;
     }
@@ -1320,7 +1320,7 @@ public final class PersonProto {
               phoneBuilder_ = null;
               phone_ = other.phone_;
               bitField0_ = (bitField0_ & ~0x00000008);
-              phoneBuilder_ = 
+              phoneBuilder_ =
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getPhoneFieldBuilder() : null;
             } else {
@@ -1335,21 +1335,21 @@ public final class PersonProto {
 
       public final boolean isInitialized() {
         if (!hasName()) {
-          
+
           return false;
         }
         if (!hasId()) {
-          
+
           return false;
         }
         for (int i = 0; i < getPhoneCount(); i++) {
           if (!getPhone(i).isInitialized()) {
-            
+
             return false;
           }
         }
         if (!extensionsAreInitialized()) {
-          
+
           return false;
         }
         return true;
@@ -1403,7 +1403,7 @@ public final class PersonProto {
           getNameBytes() {
         java.lang.Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           name_ = b;
@@ -1769,7 +1769,7 @@ public final class PersonProto {
       /**
        * <code>repeated .util.Person.PhoneNumber phone = 4;</code>
        */
-      public java.util.List<? extends com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumberOrBuilder> 
+      public java.util.List<? extends com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumberOrBuilder>
            getPhoneOrBuilderList() {
         if (phoneBuilder_ != null) {
           return phoneBuilder_.getMessageOrBuilderList();
@@ -1795,12 +1795,12 @@ public final class PersonProto {
       /**
        * <code>repeated .util.Person.PhoneNumber phone = 4;</code>
        */
-      public java.util.List<com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumber.Builder> 
+      public java.util.List<com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumber.Builder>
            getPhoneBuilderList() {
         return getPhoneFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumber, com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumber.Builder, com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumberOrBuilder> 
+          com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumber, com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumber.Builder, com.streamsets.pipeline.lib.util.PersonProto.Person.PhoneNumberOrBuilder>
           getPhoneFieldBuilder() {
         if (phoneBuilder_ == null) {
           phoneBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<

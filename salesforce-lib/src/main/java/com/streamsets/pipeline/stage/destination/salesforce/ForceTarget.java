@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -70,7 +70,7 @@ public class ForceTarget extends BaseTarget {
   private BulkConnection bulkConnection;
   private ELVars sObjectNameVars;
   private ELEval sObjectNameEval;
-  
+
   public ForceTarget(
       ForceTargetConfigBean conf, boolean useCompression, boolean showTrace
   ) {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -144,7 +144,7 @@ public class DatabricksConfigBean {
     for (String arg : jarParams) {
       evaluatedArgs.add(elEval.eval(elVars, arg, String.class));
     }
-    
+
     return evaluatedArgs;
   }
 

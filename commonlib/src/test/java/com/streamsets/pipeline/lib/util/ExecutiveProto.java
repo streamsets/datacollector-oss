@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -204,7 +204,7 @@ public final class ExecutiveProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -220,7 +220,7 @@ public final class ExecutiveProto {
         getEmployeeIdBytes() {
       java.lang.Object ref = employeeId_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         employeeId_ = b;
@@ -486,19 +486,19 @@ public final class ExecutiveProto {
 
       public final boolean isInitialized() {
         if (!hasPerson()) {
-          
+
           return false;
         }
         if (!hasEmployeeId()) {
-          
+
           return false;
         }
         if (!getPerson().isInitialized()) {
-          
+
           return false;
         }
         if (!extensionsAreInitialized()) {
-          
+
           return false;
         }
         return true;
@@ -627,7 +627,7 @@ public final class ExecutiveProto {
        * <code>required .util.Person person = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          com.streamsets.pipeline.lib.util.PersonProto.Person, com.streamsets.pipeline.lib.util.PersonProto.Person.Builder, com.streamsets.pipeline.lib.util.PersonProto.PersonOrBuilder> 
+          com.streamsets.pipeline.lib.util.PersonProto.Person, com.streamsets.pipeline.lib.util.PersonProto.Person.Builder, com.streamsets.pipeline.lib.util.PersonProto.PersonOrBuilder>
           getPersonFieldBuilder() {
         if (personBuilder_ == null) {
           personBuilder_ = new com.google.protobuf.SingleFieldBuilder<
@@ -669,7 +669,7 @@ public final class ExecutiveProto {
           getEmployeeIdBytes() {
         java.lang.Object ref = employeeId_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           employeeId_ = b;
