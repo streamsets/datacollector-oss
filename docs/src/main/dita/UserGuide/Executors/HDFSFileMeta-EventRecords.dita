@@ -45,6 +45,8 @@
                                         ACLs.</li>
                                     <li>file-created - Generated when the executor creates an empty
                                         file.</li>
+                                    <li>file-removed - Generated when the executor removes a file or
+                                        directory.</li>
                                 </ul></entry>
                         </row>
                         <row
@@ -95,7 +97,7 @@
                     <dt>File created</dt>
                     <dd>
                         <p>The executor generates a file created event record when it creates an
-                            empty file</p>
+                            empty file.</p>
                         <p>File created event records have the sdc.event.type record header
                             attribute set to file-created and include the following fields: <table
                                 frame="all" rowsep="1" colsep="1" id="table_jtk_zd2_pz">
@@ -111,11 +113,46 @@
                                     <tbody>
                                         <row>
                                             <entry>filepath</entry>
-                                            <entry>Location where the file was created</entry>
+                                            <entry>Location where the file was created.</entry>
                                         </row>
                                         <row>
                                             <entry>filename</entry>
                                             <entry>Name of the file.</entry>
+                                        </row>
+                                    </tbody>
+                                </tgroup>
+                            </table></p>
+                    </dd>
+                </dlentry>
+            </dl><dl>
+                <dlentry>
+                    <dt>File removed</dt>
+                    <dd>
+                        <p>The executor generates a file removed event record when it removes a file
+                            or directory.</p>
+                        <p>File removed event records have the sdc.event.type record header
+                            attribute set to file-removed and include the following fields: <table
+                                frame="all" rowsep="1" colsep="1" id="table_fgd_y2w_x1b">
+                                <tgroup cols="2">
+                                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                    <thead>
+                                        <row>
+                                            <entry>Event Field Name</entry>
+                                            <entry>Description</entry>
+                                        </row>
+                                    </thead>
+                                    <tbody>
+                                        <row>
+                                            <entry>filepath</entry>
+                                            <entry>Location of the directory that was removed, or
+                                                the directory where the removed file was
+                                                located.</entry>
+                                        </row>
+                                        <row>
+                                            <entry>filename</entry>
+                                            <entry>Name of the file that was removed, when
+                                                applicable.</entry>
                                         </row>
                                     </tbody>
                                 </tgroup>

@@ -36,6 +36,7 @@
                 <li>STOPPED - The pipeline was manually stopped. </li>
                 <li>START_ERROR - The pipeline encountered an error while starting and failed to
                     start. </li>
+                <li>STOP_ERROR - The pipeline encountered an error while stopping.</li>
             </ul></p>
         <p>The following pipeline states are transient and rarely display in the All Pipelines list.
             These states can display in the <ph
@@ -56,8 +57,10 @@
                     This occurs only when the pipeline is configured for a retry upon error. </li>
                 <li>RUNNING_ERROR - The pipeline encounters errors while running.</li>
                 <li>STARTING - The pipeline is initializing, but hasn't started yet. </li>
+                <li>STARTING_ERROR - The pipeline encounters errors while starting.</li>
                 <li>STOPPING - The pipeline is in the process of stopping after a manual request to
                     stop.</li>
+                <li>STOPPING_ERROR - The pipeline encounters errors while stopping.</li>
             </ul></p>
  </conbody>
 </concept>

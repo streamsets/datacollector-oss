@@ -22,26 +22,19 @@
  <conbody>
   <p><indexterm>executors<indexterm>HDFS File Metadata</indexterm></indexterm><indexterm>HDFS File
                 Metadata executor<indexterm>overview</indexterm></indexterm>The HDFS File Metadata
-            executor changes file metadata or creates an empty file each time it receives an event.
-            You cannot perform both types of tasks in the same executor. To perform both types, use
-            an additional executor. </p>
+            executor changes file metadata, creates an empty file, or removes a file or directory
+            each time it receives an event. You cannot perform multiple tasks in the same executor.
+            To perform more than one task, use additional executors. </p>
         <p>Use the HDFS File Metadata executor as part of an event stream. For example, you might
             use the executor to move a file or change file permissions after it receives a file
             closure event from the Hadoop FS destination.</p>
         <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FileMetadata-Use"
             /></p>
-        <p>When changing file metadata, the HDFS File Metadata executor can change the following
-            file metadata at the same time:<ul id="ul_gym_xw3_rx">
-                <li>File name</li>
-                <li>File location</li>
-                <li>File owner and group</li>
-                <li>File permissions</li>
-                <li>Access control lists (ACLs)</li>
-            </ul></p>
         <p>When changing metadata, you configure an expression that represents the location and name
             of the file to process, and then specify the changes you want to perform. When creating
             an empty file, you specify the output location for the file, and can optionally specify
-            the owner, permissions, and ACLs for the file. </p>
+            the owner, permissions, and ACLs for the file. When removing a file or directory, you
+            specify the location of the file or directory.</p>
      <p>When necessary, you can enable Kerberos authentication and specify an HDFS user. You can
          also use HDFS configuration files and add other HDFS configuration properties as needed. </p>
      <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-Executor-EventXref"/>

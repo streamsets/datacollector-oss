@@ -21,8 +21,8 @@
     <title>Changing the File Name or Location</title>
     <conbody>
         <p><indexterm>HDFS File Metadata executor<indexterm>changing file names and
-                    locations</indexterm></indexterm>When changing file metadata, you can use the
-            HDFS File Metadata executor to change the name or location of files after they close.
+                    locations</indexterm></indexterm>When using the HDFS File Metadata executor to
+            change file metadata, you can change the name or location of files after they close.
             When you specify new file names and locations, you can enter constants or expressions.
             Use any expression that evaluates to the values that you want to use. </p>
         <p>When needed, you can use the file functions in expressions to use part of the existing

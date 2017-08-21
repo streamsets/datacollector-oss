@@ -24,8 +24,8 @@
                 generation</indexterm></indexterm><indexterm>event generation<indexterm>HDFS File
                     Metadata executor</indexterm></indexterm>The HDFS File Metadata executor can
             generate events that you can use in an event stream. When you enable event generation,
-            the executor generates events each time it changes file metadata or creates an empty
-            file.</p>
+            the executor generates events each time it changes file metadata,  creates an empty
+            file, or removes a file or directory.</p>
         <p>HDFS File Metadata events can be used in any logical way. For example: <ul>
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"/>

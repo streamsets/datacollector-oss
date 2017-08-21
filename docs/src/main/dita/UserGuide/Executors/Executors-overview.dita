@@ -34,8 +34,8 @@
                 <li><xref href="Email.dita#concept_sjs_sfp_qz">Email</xref> - Sends custom email to
                     the configured recipients upon receiving an event.</li>
                 <li><xref href="HDFSMetadata.dita#concept_wgj_slk_fx">HDFS File Metadata</xref> -
-                    Changes file metadata or creates an empty file upon receiving an event
-                    record.</li>
+                    Changes file metadata, creates an empty file, or removes a file or directory
+                    upon receiving an event record.</li>
                 <li><xref href="HiveQuery.dita#concept_kjw_llk_fx">Hive Query</xref> - Runs
                     user-defined Hive or Impala queries upon receiving an event record. </li>
                 <li><xref href="JDBCQuery.dita#concept_j3r_gcv_sx">JDBC Query</xref> - Runs a

@@ -40,9 +40,13 @@
         <topicref href="../Executors/HDFSMetadata.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Executors/HDFSFileMeta-EventStages.dita"/>
-            <topicref href="../Executors/HDFSFileMeta-FilePath.dita"/>
-            <topicref href="../Executors/HDFSFileMeta-Location.dita"/>
-            <topicref href="../Executors/HDFSFileMeta-Permissions.dita"/>
+            <topicref href="../Executors/HDFSFileMeta-ChangeMetadata.dita">
+                <topicref href="../Executors/HDFSFileMeta-FilePath.dita"/>
+                <topicref href="../Executors/HDFSFileMeta-Location.dita"/>
+                <topicref href="../Executors/HDFSFileMeta-Permissions.dita"/>
+            </topicref>
+            <topicref href="../Executors/HDFSFileMeta-EmptyFile.dita"/>
+            <topicref href="../Executors/HDFSFileMeta-RemovingFileDir.dita"/>
             <topicref href="../Executors/HDFSFileMeta-EventGeneration.dita">
                 <topicref href="../Executors/HDFSFileMeta-EventRecords.dita"/>
             </topicref>

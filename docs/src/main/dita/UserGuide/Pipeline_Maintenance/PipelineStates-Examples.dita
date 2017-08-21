@@ -19,9 +19,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ijz_5s5_nz">
  <title>State Transition Examples</title>
- <shortdesc></shortdesc>
  <conbody>
-  <p>Here are some examples of how pipelines can move through states:<dl>
+  <p><indexterm>pipeline states<indexterm>transition examples</indexterm></indexterm>Here are some
+            examples of how pipelines can move through states:<dl>
                 <dlentry>
                     <dt>Starting a pipeline</dt>
                     <dd>When you successfully start a pipeline for the first time, a pipeline
@@ -29,7 +29,7 @@
                         states:<codeblock>(EDITED)... STARTING... RUNNING</codeblock></dd>
                     <dd>When you start a pipeline for the first time but it cannot start, the
                         pipeline transitions through the following
-                        states:<codeblock>(EDITED)... STARTING... START_ERROR</codeblock></dd>
+                        states:<codeblock>(EDITED)... STARTING... STARTING_ERROR... START_ERROR</codeblock></dd>
                 </dlentry>
                 <dlentry>
                     <dt>Stopping or restarting <ph
@@ -63,6 +63,15 @@
                     <dd>When performing a final retry and unable to return to a Running state, a
                         pipeline transitions through the following states:
                         <codeblock>(RUNNING)... RUNNING_ERROR... RUN_ERROR</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Stopping a pipeline</dt>
+                    <dd>When you successfully stop a pipeline, a pipeline transitions through the
+                        following
+                        states:<codeblock>(RUNNING)... STOPPING... STOPPED</codeblock></dd>
+                    <dd>When you stop a pipeline and the pipeline encounters errors, the pipeline
+                        transitions through the following
+                        states:<codeblock>(RUNNING)... STOPPING... STOPPING_ERROR... STOP_ERROR</codeblock></dd>
                 </dlentry>
             </dl></p>
  </conbody>
