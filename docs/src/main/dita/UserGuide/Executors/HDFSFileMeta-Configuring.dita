@@ -212,9 +212,10 @@
                                 <row>
                                     <entry>Task</entry>
                                     <entry>Determines the type of task that the executor performs.
-                                        You can either create an empty file or change file metadata.
-                                            <p>To do both, use an additional HDFS File Metadata
-                                            executor.</p></entry>
+                                        You can  create an empty file, change file metadata, or
+                                        remove a file or directory.<p>To do more than one type of
+                                            task, add additional executors to the
+                                        pipeline.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -376,6 +377,37 @@
                                         details, see <xref
                                             href="HDFSFileMeta-Permissions.dita#concept_zr1_5ck_rx"
                                         />.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To remove a file or directory, configure the following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_cnj_kp4_x1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Task Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>File Path</entry>
+                                    <entry>Expression that represents the full path to the file or
+                                        directory that you want to remove. <p>The executor removes
+                                            directories recursively, removing all subdirectories as
+                                            well. Use with caution. For more information, see <xref
+                                                href="HDFSFileMeta-RemovingFileDir.dita#concept_yf2_hc4_x1b"
+                                            />.</p><p>By default, the property uses
+                                                <codeph>${record:value('/filepath')}</codeph>. <note
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FileMetadataEx-BadDefault"
+                                            /></p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

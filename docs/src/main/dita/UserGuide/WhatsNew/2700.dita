@@ -302,8 +302,10 @@
                                 S3 executor</xref> - Use the Amazon S3 executor to create new Amazon
                             S3 objects for the specified content or add tags to existing objects
                             each time it receives an event.</li>
-                        <li>HDFS File Metadata executor enhancement - The executor can now remove a
-                            file when it receives an event.</li>
+                        <li><xref
+                                href="../Executors/HDFSFileMeta-RemovingFileDir.dita#concept_yf2_hc4_x1b"
+                                >HDFS File Metadata executor enhancement</xref> - The executor can
+                            now remove a file or directory when it receives an event.</li>
                     </ul>
                 </dd>
             </dlentry>
@@ -335,8 +337,11 @@
                                 href="../Pipeline_Design/InternalAttributes.dita#concept_itf_55z_dz"
                                 >Error records enhancement</xref> - Error records now include the
                             user-defined stage label in the errorStageLabel header attribute.</li>
-                        <li>Pipeline state enhancements - Pipelines can now display the following
-                            new states: STARTING_ERROR, STOPPING_ERROR, and STOP_ERROR.</li>
+                        <li><xref
+                                href="../Pipeline_Maintenance/PipelineStates-Understanding.dita#concept_s4p_ns5_nz"
+                                >Pipeline state enhancements</xref> - Pipelines can now display the
+                            following new states: STARTING_ERROR, STOPPING_ERROR, and
+                            STOP_ERROR.</li>
                     </ul>
                 </dd>
             </dlentry>

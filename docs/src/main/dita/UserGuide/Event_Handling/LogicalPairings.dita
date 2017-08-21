@@ -248,8 +248,8 @@
                                 <entry>Azure Data Lake Store</entry>
                                 <entry>
                                     <ul id="ul_swb_lng_x1b">
-                                        <li>Email executor to send email each time the destination
-                                            closes a file or streams a whole file. </li>
+                                        <li>Email executor to send email after closing a file or
+                                            streaming a whole file. </li>
                                         <li>Any destination for event storage.</li>
                                     </ul>
                                 </entry>
@@ -258,8 +258,9 @@
                                 <entry>Hadoop FS</entry>
                                 <entry>
                                     <ul id="ul_hbx_blh_tx">
-                                        <li>HDFS File Metadata executor to change file metadata for
-                                            closed files.</li>
+                                        <li>HDFS File Metadata executor to change file metadata,
+                                            create an empty file, or remove a file or directory
+                                            after closing a file.</li>
                                         <li>Hive Query executor to run Hive or Impala queries after
                                             closing a file. <p>Particularly useful when using the
                                                 Drift Synchronization Solution for Hive with Impala.
@@ -268,8 +269,8 @@
                                             a file.</li>
                                         <li>Spark executor to run a Spark application after closing
                                             a file. </li>
-                                        <li>Email executor to send email each time the destination
-                                            closes a file or streams a whole file. </li>
+                                        <li>Email executor to send email after closing a file or
+                                            streaming a whole file. </li>
                                         <li>Any destination for event storage.</li>
                                     </ul>
                                 </entry>
@@ -279,11 +280,13 @@
                                 <entry>
                                     <ul id="ul_kkj_dlh_tx">
                                         <li>Hive Query executor to run Hive or Impala queries after
-                                            changing table structures. <p>Particularly useful when
-                                                using the Drift Synchronization Solution for Hive
-                                                with Impala. </p></li>
-                                        <li>HDFS File Metadata executor to move or update
-                                            permissions on Avro schema files. </li>
+                                            the destination changes table structures.
+                                                <p>Particularly useful when using the Drift
+                                                Synchronization Solution for Hive with Impala.
+                                            </p></li>
+                                        <li>HDFS File Metadata executor to change file metadata,
+                                            create an empty file, or remove a file or directory
+                                            after writing an Avro schema file.</li>
                                         <li>Email executor to send email each time the destination
                                             changes the Hive metastore.</li>
                                         <li>Any destination for event storage.</li>
@@ -294,9 +297,10 @@
                                 <entry>Local FS</entry>
                                 <entry>
                                     <ul id="ul_p3l_glh_tx">
-                                        <li>HDFS File Metadata executor to change file metadata for
-                                            closed files.</li>
-                                        <li>Email executor to send email each time the destination
+                                        <li>HDFS File Metadata executor to change file metadata,
+                                            create an empty file, or remove a file or directory
+                                            after closing a file.</li>
+                                        <li>Email executor to send email after the destination
                                             closes a file or streams a whole file. </li>
                                         <li>Any destination for event storage.</li>
                                     </ul>
@@ -306,8 +310,9 @@
                                 <entry>MapR FS</entry>
                                 <entry>
                                     <ul id="ul_rvh_dsq_tx">
-                                        <li>HDFS File Metadata executor to change file metadata for
-                                            closed files.</li>
+                                        <li>HDFS File Metadata executor to change file metadata,
+                                            create an empty file, or remove a file or directory
+                                            after closing a file.</li>
                                         <li>MapReduce executor to run a MapReduce job after closing
                                             a file.</li>
                                         <li>Spark executor to run a Spark application after closing
