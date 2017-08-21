@@ -65,6 +65,9 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/Cassandra-Authentication.dita">
+    <topicref href="../Destinations/Cassandra-Kerberos.dita"/>
+   </topicref>
    <topicref href="../Destinations/Cassandra-DataTypes.dita"/>
    <topicref href="../Destinations/Cassandra-Configuring.dita"/>
   </topicref>

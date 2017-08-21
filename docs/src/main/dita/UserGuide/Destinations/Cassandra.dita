@@ -22,9 +22,13 @@
  <shortdesc>The Cassandra destination writes data to a Cassandra cluster.</shortdesc>
  <conbody>
   <p><indexterm>Cassandra
-     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Cassandra</indexterm></indexterm>When
-   you configure the Cassandra destination, you define connection information, optional user
-   credentials, and map incoming fields to columns in the Cassandra table.</p>
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Cassandra</indexterm></indexterm>When
+            you configure the Cassandra destination, you define connection information and map
+            incoming fields to columns in the Cassandra table.</p>
+        <p>You configure whether the destination uses no authentication or username and password
+            authentication to access the Cassandra cluster. If you install the DataStax Enterprise
+            (DSE) Java driver, you can also configure the destination to use DSE username and
+            password authentication or Kerberos authentication.</p>
     <p>Batches written to Cassandra are atomic - this means you can only write entire batches of
       records to Cassandra. If an error occurs with one or more records in a batch, Cassandra fails
       the entire batch. When a batch fails, all records are sent to the stage for error handling. </p>

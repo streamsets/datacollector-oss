@@ -42,6 +42,8 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/></li>
         <li>HBase Lookup processor</li>
         <li>Hive Metadata processor</li>
+                <li>Cassandra destination, when the DataStax Enterprise Java driver is
+                    installed</li>
         <li>Hadoop FS destination</li>
         <li>HBase destination</li>
         <li>Hive Metastore destination</li>
