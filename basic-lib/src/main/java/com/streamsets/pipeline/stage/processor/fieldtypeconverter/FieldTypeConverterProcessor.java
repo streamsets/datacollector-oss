@@ -105,7 +105,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
         for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToConvert, fieldPaths)) {
           Field field = record.get(matchingField);
           if(field == null) {
-            LOG.warn("Record does not have field {}. Ignoring conversion.", matchingField);
+            LOG.trace("Record does not have field {}. Ignoring conversion.", matchingField);
           } else {
             record.set(matchingField, convertField(matchingField, field, fieldTypeConverterConfig));
           }
