@@ -69,6 +69,7 @@
    </topicref>
    <topicref href="../Configuration/HadoopImpersonationMode.dita">
     <topicref href="../Configuration/HadoopImpersonationMode-Lowercase.dita"/>
+    <topicref href="../Configuration/HadoopImpersonationMode-EncryptionZones.dita"/>
    </topicref>
    <topicref href="../Configuration/BlacklistWhitelist.dita"/>
    <topicref href="../Configuration/ConfiguringDataCollector.dita"/>
