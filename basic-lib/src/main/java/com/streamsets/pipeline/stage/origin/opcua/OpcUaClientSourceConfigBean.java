@@ -109,7 +109,8 @@ public class OpcUaClientSourceConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Client Private Key Alias",
       defaultValue = "client-ai",
-      description = "An alias is specified when you add an entity to the keystore using the -genseckey command to generate a secret key, -genkeypair command to generate a key pair (public and private key).",
+      description = "An alias is specified when you add an entity to the keystore using the -genseckey command to " +
+          "generate a secret key, -genkeypair command to generate a key pair (public and private key).",
       displayPosition = 80,
       group = "SECURITY"
   )
@@ -119,18 +120,43 @@ public class OpcUaClientSourceConfigBean {
   public TlsConfigBean tlsConfig = new TlsConfigBean();
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "NodeId Fetch Mode",
+      defaultValue = "MANUAL",
+      displayPosition = 200,
+      group = "NODE_IDS"
+  )
+  @ValueChooserModel(NodeIdFetchModeChooserValues.class)
+  public NodeIdFetchMode nodeIdFetchMode = NodeIdFetchMode.MANUAL;
+
+  @ConfigDef(
       label = "",
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue="",
       description="Fields to generate of the indicated Node Id",
-      group = "NODE_IDS"
+      displayPosition = 210,
+      group = "NODE_IDS",
+      dependsOn = "nodeIdFetchMode",
+      triggeredByValue = "MANUAL"
   )
   @ListBeanModel
   public List<NodeIdConfig> nodeIdConfigs;
 
 
-  // SecurityPolicy
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Node Id Configs File Path",
+      defaultValue = "${runtime:loadResource('nodeIdConfigs.json', false)}",
+      description = "Specify the OPC UA resource URL",
+      displayPosition = 220,
+      group = "NODE_IDS",
+      dependsOn = "nodeIdFetchMode",
+      triggeredByValue = "FILE"
+  )
+  public String nodeIdConfigsFilePath;
 
 
 

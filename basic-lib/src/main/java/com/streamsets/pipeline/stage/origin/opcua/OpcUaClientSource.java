@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.opcua;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.Field;
@@ -100,6 +101,7 @@ public class OpcUaClientSource implements PushSource {
   private OpcUaClient opcUaClient;
   private List<NodeId> nodeIds;
   private boolean destroyed = false;
+  private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   OpcUaClientSource(OpcUaClientSourceConfigBean conf) {
     this.conf = conf;
@@ -153,34 +155,7 @@ public class OpcUaClientSource implements PushSource {
       );
     }
 
-    try {
-      nodeIds = new ArrayList<>();
-      conf.nodeIdConfigs.forEach(nodeIdConfig -> {
-        switch (nodeIdConfig.identifierType) {
-          case NUMERIC:
-            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, Integer.parseInt(nodeIdConfig.identifier)));
-            break;
-          case STRING:
-            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, nodeIdConfig.identifier));
-            break;
-          case UUID:
-            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, UUID.fromString(nodeIdConfig.identifier)));
-            break;
-          case OPAQUE:
-            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, new ByteString(nodeIdConfig.identifier.getBytes())));
-            break;
-        }
-      });
-    } catch (Exception ex) {
-      issues.add(
-          context.createConfigIssue(
-              Groups.NODE_IDS.name(),
-              "conf.nodeIdConfigs",
-              Errors.OPC_UA_04,
-              ex.getLocalizedMessage()
-          )
-      );
-    }
+    initializeNodeIds(issues);
 
     if (conf.nodeIdConfigs.isEmpty() && conf.readMode != OpcUaReadMode.BROWSE_NODES) {
       issues.add(
@@ -250,6 +225,54 @@ public class OpcUaClientSource implements PushSource {
 
     } catch(Exception me) {
       throw new StageException(Errors.OPC_UA_02, me, me);
+    }
+  }
+
+  private void initializeNodeIds(List<ConfigIssue> issues) {
+    try {
+      nodeIds = new ArrayList<>();
+
+      if (this.conf.nodeIdFetchMode.equals(NodeIdFetchMode.FILE)) {
+        try {
+          conf.nodeIdConfigs = Arrays.asList(
+              OBJECT_MAPPER.readValue(this.conf.nodeIdConfigsFilePath,NodeIdConfig[].class)
+          );
+        } catch (Exception ex) {
+          issues.add(context.createConfigIssue(
+              Groups.NODE_IDS.name(),
+              "conf.nodeIdConfigsFilePath",
+              Errors.OPC_UA_04,
+              ex.getLocalizedMessage()
+          ));
+          return;
+        }
+      }
+
+      conf.nodeIdConfigs.forEach(nodeIdConfig -> {
+        switch (nodeIdConfig.identifierType) {
+          case NUMERIC:
+            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, Integer.parseInt(nodeIdConfig.identifier)));
+            break;
+          case STRING:
+            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, nodeIdConfig.identifier));
+            break;
+          case UUID:
+            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, UUID.fromString(nodeIdConfig.identifier)));
+            break;
+          case OPAQUE:
+            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, new ByteString(nodeIdConfig.identifier.getBytes())));
+            break;
+        }
+      });
+    } catch (Exception ex) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.NODE_IDS.name(),
+              "conf.nodeIdConfigs",
+              Errors.OPC_UA_04,
+              ex.getLocalizedMessage()
+          )
+      );
     }
   }
 
