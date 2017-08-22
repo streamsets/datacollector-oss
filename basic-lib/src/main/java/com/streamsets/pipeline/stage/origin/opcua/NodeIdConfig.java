@@ -50,7 +50,7 @@ public class NodeIdConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
-      label = "NamespaceIndex",
+      label = "Namespace Index",
       description = "The index an OPC UA server uses for a namespace URI",
       min = 0
   )

@@ -158,6 +158,58 @@ public class OpcUaClientSourceConfigBean {
   )
   public String nodeIdConfigsFilePath;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Root Node Identifier",
+      defaultValue = "",
+      description = "The identifier for a root node in the address space of an OPC UA server",
+      displayPosition = 220,
+      group = "NODE_IDS",
+      dependsOn = "nodeIdFetchMode",
+      triggeredByValue = "BROWSE"
+  )
+  public String rootIdentifier = "";
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Root Node Identifier Type",
+      description = "The format and data type of the identifier",
+      defaultValue = "NUMERIC",
+      displayPosition = 230,
+      group = "NODE_IDS",
+      dependsOn = "nodeIdFetchMode",
+      triggeredByValue = "BROWSE"
+  )
+  @ValueChooserModel(IdentifierTypeChooserValues.class)
+  public IdentifierType rootIdentifierType = IdentifierType.NUMERIC;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Root Node Namespace Index",
+      description = "The index an OPC UA server uses for a namespace URI",
+      min = 0,
+      displayPosition = 240,
+      group = "NODE_IDS",
+      dependsOn = "nodeIdFetchMode",
+      triggeredByValue = "BROWSE"
+  )
+  public int rootNamespaceIndex = 0;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Refresh Node IDs Interval (s)",
+      description = "Refresh interval for updating Node IDs by browsing root Node ID.",
+      defaultValue = "3600",
+      displayPosition = 240,
+      group = "NODE_IDS",
+      dependsOn = "nodeIdFetchMode",
+      triggeredByValue = "BROWSE"
+  )
+  public long refreshNodeIdsInterval = 3600;
 
 }
