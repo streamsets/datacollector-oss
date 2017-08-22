@@ -330,7 +330,6 @@
     <topicref href="../Origins/OracleCDC-T4-ExtractDict.dita"/>
     <topicref href="../Origins/OracleCDC-T5-InstallDriver.dita"/>
    </topicref>
-   <topicref href="../Origins/OracleCDC-Req.dita"/>
    <topicref href="../Origins/OracleCDC-InitialChange.dita"/>
    <topicref href="../Origins/OracleCDC-ChoosingBuffers.dita">
     <topicref href="../Origins/OracleCDC-LocalBuffers.dita"/>
