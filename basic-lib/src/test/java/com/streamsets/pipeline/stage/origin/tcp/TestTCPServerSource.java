@@ -197,23 +197,25 @@ public class TestTCPServerSource {
   @Test
   public void runTextRecordsWithAck() throws StageException, IOException, ExecutionException, InterruptedException {
 
+    final String recordSeparatorStr = "\n";
+    final String[] expectedRecords = TEN_DELIMITED_RECORDS.split(recordSeparatorStr);
+    final int batchSize = expectedRecords.length;
+
     final Charset charset = Charsets.ISO_8859_1;
     final TCPServerSourceConfig configBean = createConfigBean(charset);
     configBean.dataFormat = DataFormat.TEXT;
     configBean.tcpMode = TCPMode.DELIMITED_RECORDS;
-    configBean.recordSeparatorStr = "\n";
+    configBean.recordSeparatorStr = recordSeparatorStr;
     configBean.ports = NetworkUtils.getRandomPorts(1);
     configBean.recordProcessedAckMessage = "record_ack_${record:id()}";
     configBean.batchCompletedAckMessage = "batch_ack_${batchSize}";
+    configBean.batchSize = batchSize;
 
     final TCPServerSource source = new TCPServerSource(configBean);
     final String outputLane = "lane";
     final PushSourceRunner runner = new PushSourceRunner.Builder(TCPServerDSource.class, source)
         .addOutputLane(outputLane)
         .build();
-
-    final String[] expectedRecords = TEN_DELIMITED_RECORDS.split(configBean.recordSeparatorStr);
-    final int batchSize = expectedRecords.length;
 
     final List<Record> records = new LinkedList<>();
     runner.runInit();
@@ -487,6 +489,7 @@ public class TestTCPServerSource {
     config.nonTransparentFramingSeparatorCharStr = "\n";
     config.maxMessageSize = 4096;
     config.ports = Arrays.asList("9876");
+    config.maxWaitTime = 1000;
     return config;
   }
 }
