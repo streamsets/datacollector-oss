@@ -25,13 +25,14 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DPushSource;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "OPC UA Client",
     description = "Uses an OPC UA Client to read data from an OPC UA Server.",
     icon = "opcua.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/OPCUAClient.html#task_bqt_mx3_h1b"
+    onlineHelpRefUrl = "index.html#Origins/OPCUAClient.html#task_bqt_mx3_h1b",
+    upgrader = OpcUaClientSourceUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({
