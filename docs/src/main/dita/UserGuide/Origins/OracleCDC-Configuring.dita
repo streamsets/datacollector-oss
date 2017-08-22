@@ -146,6 +146,58 @@
                                         </ul></entry>
                                 </row>
                                 <row>
+                                    <entry>Buffer Changes Locally <xref
+                                            href="OracleCDC-ChoosingBuffers.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            /></xref></entry>
+                                    <entry>Determines the buffers that the origin uses. Select to
+                                        use local <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> buffers. By default, the Oracle LogMiner buffers the
+                                        data. </entry>
+                                </row>
+                                <row>
+                                    <entry>Buffer Location</entry>
+                                    <entry>Determines which local buffers are used:<ul>
+                                            <li>In memory</li>
+                                            <li>To disk</li>
+                                        </ul><p>Before running the pipeline, note the local buffer
+                                            resource requirements. For more information, see <xref
+                                                href="OracleCDC-LocalBuffers.dita#concept_atl_ytf_p1b"
+                                            />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Discard Old Uncommitted Transactions <xref
+                                            href="OracleCDC-UncommittedTransactions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_q13_plm_p1b"/></xref></entry>
+                                    <entry>Discards older uncommitted transactions rather than
+                                        processing them into error records. </entry>
+                                </row>
+                                <row>
+                                    <entry>Unsupported Field Type</entry>
+                                    <entry>Determines the behavior when the origin encounters
+                                        unsupported data types in the record:<ul id="ul_ufl_lzp_x1b">
+                                            <li>Ignore and Send Record to Pipeline - The origin
+                                                ignores unsupported data types and passes the record
+                                                with only supported data types to the pipeline.</li>
+                                            <li>Send Record to Error - The origin handles the record
+                                                based on the error record handling configured for
+                                                the stage. The error record contains only the
+                                                supported data types.</li>
+                                            <li>Discard Record - The origin discards the record.
+                                            </li>
+                                        </ul><p>For a list of unsupported data types, see <xref
+                                                href="OracleCDC-UnsupportedTypes.dita#concept_gwp_d4n_n1b"
+                                            />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Include Nulls</entry>
+                                    <entry>Includes null values in records generated from full
+                                        supplemental logging that include null values. By default,
+                                        the origin generates a record without null values. </entry>
+                                </row>
+                                <row>
                                     <entry>Maximum Transaction Length </entry>
                                     <entry>Time in seconds to wait for changes for a transaction.
                                         Enter the longest period of time that you expect a
@@ -161,57 +213,22 @@
                                             seconds.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Buffer Changes Locally <xref
-                                            href="OracleCDC-ChoosingBuffers.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_dkt_55n_n1b"/></xref></entry>
-                                    <entry>Determines the buffers that the origin uses. Select to
-                                        use local <ph
+                                    <entry>Query Timeout</entry>
+                                    <entry>Time to wait before timing out a LogMiner query.
+                                            <p>Default is ${ 5 * MINUTES } which is 300
+                                        seconds.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Send Redo Query</entry>
+                                    <entry>Includes the LogMiner redo query in the oracle.cdc.query
+                                        record header attribute.</entry>
+                                </row>
+                                <row>
+                                    <entry>DB Time Zone</entry>
+                                    <entry>Time zone of the database. Specify when the database
+                                        operates in a different time zone from <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> buffers. By default, the Oracle LogMiner buffers the
-                                        data. </entry>
-                                </row>
-                                <row>
-                                    <entry>Buffer Location</entry>
-                                    <entry>Determines which local buffers are used:<ul
-                                            id="ul_qwg_kq5_n1b">
-                                            <li>In memory</li>
-                                            <li>To disk</li>
-                                        </ul><p>Before running the pipeline, note the local buffer
-                                            resource requirements. For more information, see <xref
-                                                href="OracleCDC-LocalBuffers.dita#concept_atl_ytf_p1b"
-                                            />.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>Discard Uncommitted Transactions  <xref
-                                            href="OracleCDC-UncommittedTransactions.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_q13_plm_p1b"/></xref></entry>
-                                    <entry>Discards older uncommitted transactions rather than
-                                        processing them into error records. </entry>
-                                </row>
-                                <row>
-                                    <entry>Include Nulls</entry>
-                                    <entry>Includes null values in records generated from full
-                                        supplemental logging that include null values. By default,
-                                        the origin generates a record without null values. </entry>
-                                </row>
-                                <row>
-                                    <entry>Unsupported Field Type</entry>
-                                    <entry>Determines the behavior when the origin encounters
-                                        unsupported data types in the record:<ul id="ul_rxg_xrm_n1b">
-                                            <li>Ignore and Send Record to Pipeline - The origin
-                                                ignores unsupported data types and passes the record
-                                                with only supported data types to the pipeline.</li>
-                                            <li>Send Record to Error - The origin handles the record
-                                                based on the error record handling configured for
-                                                the stage. The error record contains only the
-                                                supported data types.</li>
-                                            <li>Discard Record - The origin discards the record.
-                                            </li>
-                                        </ul><p>For a list of unsupported data types, see <xref
-                                                href="OracleCDC-UnsupportedTypes.dita#concept_gwp_d4n_n1b"
-                                            />.</p></entry>
+                                        />.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

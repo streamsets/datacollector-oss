@@ -24,6 +24,7 @@
                 attributes</indexterm></indexterm>The Oracle CDC Client origin provides the
             following CDC record header attributes for each record:<ul id="ul_j3y_yxd_dx">
                 <li>oracle.cdc.operation</li>
+                <li>oracle.cdc.query</li>
                 <li>oracle.cdc.rowId</li>
                 <li>oracle.cdc.scn</li>
                 <li>oracle.cdc.timestamp</li>
@@ -35,5 +36,7 @@
                 <li>oracle.cdc.&lt;fieldname>.precision</li>
                 <li>oracle.cdc.&lt;fieldname>.scale</li>
             </ul></p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>
  </conbody>
 </concept>
