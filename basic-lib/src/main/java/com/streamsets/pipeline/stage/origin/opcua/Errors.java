@@ -26,6 +26,8 @@ public enum Errors implements ErrorCode {
   OPC_UA_04("Failed to initialize Node IDs : {}"),
   OPC_UA_05("Failed to create Monitoring item for nodeId={} (status={})"),
   OPC_UA_06("Enable TLS for security policy: {}"),
+  OPC_UA_07("No variable Node IDs found from provided root Node ID"),
+  OPC_UA_08("Failed to refresh Node IDs: {})"),
   ;
 
   private final String msg;

@@ -16,7 +16,9 @@
 package com.streamsets.pipeline.stage.origin.opcua;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.util.EscapeUtil;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
@@ -75,6 +77,7 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 
@@ -100,8 +103,10 @@ public class OpcUaClientSource implements PushSource {
   private final AtomicLong clientHandles = new AtomicLong(1L);
   private OpcUaClient opcUaClient;
   private List<NodeId> nodeIds;
+  private NodeId rootNodeId;
   private boolean destroyed = false;
   private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+  private Stopwatch stopwatch = null;
 
   OpcUaClientSource(OpcUaClientSourceConfigBean conf) {
     this.conf = conf;
@@ -155,7 +160,9 @@ public class OpcUaClientSource implements PushSource {
       );
     }
 
-    initializeNodeIds(issues);
+    if (conf.readMode != OpcUaReadMode.BROWSE_NODES) {
+      initializeNodeIds(issues);
+    }
 
     if (conf.nodeIdConfigs.isEmpty() && conf.readMode != OpcUaReadMode.BROWSE_NODES) {
       issues.add(
@@ -232,38 +239,67 @@ public class OpcUaClientSource implements PushSource {
     try {
       nodeIds = new ArrayList<>();
 
-      if (this.conf.nodeIdFetchMode.equals(NodeIdFetchMode.FILE)) {
-        try {
-          conf.nodeIdConfigs = Arrays.asList(
-              OBJECT_MAPPER.readValue(this.conf.nodeIdConfigsFilePath,NodeIdConfig[].class)
-          );
-        } catch (Exception ex) {
-          issues.add(context.createConfigIssue(
-              Groups.NODE_IDS.name(),
-              "conf.nodeIdConfigsFilePath",
-              Errors.OPC_UA_04,
-              ex.getLocalizedMessage()
-          ));
-          return;
-        }
-      }
-
-      conf.nodeIdConfigs.forEach(nodeIdConfig -> {
-        switch (nodeIdConfig.identifierType) {
+      if (this.conf.nodeIdFetchMode.equals(NodeIdFetchMode.BROWSE)) {
+        rootNodeId = Identifiers.RootFolder;
+        switch (conf.rootIdentifierType) {
           case NUMERIC:
-            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, Integer.parseInt(nodeIdConfig.identifier)));
+            rootNodeId = new NodeId(conf.rootNamespaceIndex, Integer.parseInt(conf.rootIdentifier));
             break;
           case STRING:
-            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, nodeIdConfig.identifier));
+            rootNodeId = new NodeId(conf.rootNamespaceIndex, conf.rootIdentifier);
             break;
           case UUID:
-            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, UUID.fromString(nodeIdConfig.identifier)));
+            rootNodeId = new NodeId(conf.rootNamespaceIndex, UUID.fromString(conf.rootIdentifier));
             break;
           case OPAQUE:
-            nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, new ByteString(nodeIdConfig.identifier.getBytes())));
+            rootNodeId = new NodeId(conf.rootNamespaceIndex, new ByteString(conf.rootIdentifier.getBytes()));
             break;
         }
-      });
+        browseNode(rootNodeId, nodeIds);
+        if (nodeIds.isEmpty()) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.NODE_IDS.name(),
+                  "conf.rootIdentifier",
+                  Errors.OPC_UA_07
+              )
+          );
+        }
+
+      } else {
+        if (this.conf.nodeIdFetchMode.equals(NodeIdFetchMode.FILE)) {
+          try {
+            conf.nodeIdConfigs = Arrays.asList(
+                OBJECT_MAPPER.readValue(this.conf.nodeIdConfigsFilePath,NodeIdConfig[].class)
+            );
+          } catch (Exception ex) {
+            issues.add(context.createConfigIssue(
+                Groups.NODE_IDS.name(),
+                "conf.nodeIdConfigsFilePath",
+                Errors.OPC_UA_04,
+                ex.getLocalizedMessage()
+            ));
+            return;
+          }
+        }
+
+        conf.nodeIdConfigs.forEach(nodeIdConfig -> {
+          switch (nodeIdConfig.identifierType) {
+            case NUMERIC:
+              nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, Integer.parseInt(nodeIdConfig.identifier)));
+              break;
+            case STRING:
+              nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, nodeIdConfig.identifier));
+              break;
+            case UUID:
+              nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, UUID.fromString(nodeIdConfig.identifier)));
+              break;
+            case OPAQUE:
+              nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, new ByteString(nodeIdConfig.identifier.getBytes())));
+              break;
+          }
+        });
+      }
     } catch (Exception ex) {
       issues.add(
           context.createConfigIssue(
@@ -276,10 +312,35 @@ public class OpcUaClientSource implements PushSource {
     }
   }
 
+  private void refreshNodeIds() {
+    if (this.conf.nodeIdFetchMode.equals(NodeIdFetchMode.BROWSE)) {
+      if (stopwatch == null) {
+        stopwatch = Stopwatch.createStarted();
+      } else if (stopwatch.elapsed(TimeUnit.SECONDS) > conf.refreshNodeIdsInterval) {
+        try {
+          opcUaClient.disconnect().get();
+          opcUaClient = createClient();
+          opcUaClient.connect().get();
+          List<NodeId> newNodeIds = new ArrayList<>();
+          browseNode(rootNodeId, newNodeIds);
+          if (!newNodeIds.isEmpty()) {
+            nodeIds = newNodeIds;
+          }
+        } catch (Exception ex) {
+          errorQueue.offer(new StageException(Errors.OPC_UA_08, ex.getMessage(), ex));
+        } finally {
+          stopwatch.reset()
+              .start();
+        }
+      }
+    }
+  }
+
   private void pollForData() {
     if (destroyed) {
       return;
     }
+    refreshNodeIds();
     opcUaClient.readValues(0.0, TimestampsToReturn.Both, nodeIds)
         .thenAccept(values -> {
           try {
@@ -360,8 +421,16 @@ public class OpcUaClientSource implements PushSource {
 
     int[] idx = { 0 };
     dataValues.forEach((dataValue) -> {
-      NodeIdConfig nodeIdConfig = conf.nodeIdConfigs.get(idx[0]++);
-      String fieldName = nodeIdConfig.field;
+      String fieldName;
+
+      if (conf.nodeIdFetchMode.equals(NodeIdFetchMode.BROWSE)) {
+        NodeId nodeId = nodeIds.get(idx[0]++);
+        fieldName = EscapeUtil.singleQuoteEscape(nodeId.getIdentifier().toString());
+      } else {
+        NodeIdConfig nodeIdConfig = conf.nodeIdConfigs.get(idx[0]++);
+        fieldName = nodeIdConfig.field;
+      }
+
       if (!fieldName.startsWith("/")) {
         fieldName = "/" + fieldName;
       }
@@ -673,6 +742,38 @@ public class OpcUaClientSource implements PushSource {
       context.reportError(exception);
     }
   }
+
+  private void browseNode(NodeId browseRoot, List<NodeId> nodeIdList) {
+    BrowseDescription browse = new BrowseDescription(
+        browseRoot,
+        BrowseDirection.Forward,
+        Identifiers.References,
+        true,
+        uint(NodeClass.Object.getValue() | NodeClass.Variable.getValue()),
+        uint(BrowseResultMask.All.getValue())
+    );
+    try {
+      BrowseResult browseResult = opcUaClient.browse(browse).get();
+      List<ReferenceDescription> references = toList(browseResult.getReferences());
+
+      for (ReferenceDescription rd : references) {
+        if (rd.getNodeClass().equals(NodeClass.Variable)) {
+          nodeIdList.add(new NodeId(
+              rd.getNodeId().getNamespaceIndex().intValue(),
+              rd.getNodeId().getIdentifier().toString()
+          ));
+        }
+
+        rd.getNodeId().local().ifPresent(nodeId -> {
+          browseNode(nodeId, nodeIdList);
+        });
+      }
+    } catch (InterruptedException | ExecutionException ex) {
+      LOG.error("Browsing nodeId={} failed: {}", this.nodeIds.get(0), ex.getMessage(), ex);
+      errorQueue.offer(new StageException(Errors.OPC_UA_08, ex.getMessage(), ex));
+    }
+  }
+
 
   private void browseNodes() {
     LinkedHashMap<String, Field> rootFieldMap = new LinkedHashMap<>();

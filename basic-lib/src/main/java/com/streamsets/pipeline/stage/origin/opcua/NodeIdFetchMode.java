@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Label;
 public enum NodeIdFetchMode implements Label {
   MANUAL("Manual"),
   FILE("File"),
+  BROWSE("Browse")
   ;
 
   private final String label;
