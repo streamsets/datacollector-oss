@@ -42,9 +42,6 @@ public class MultiKafkaBeanConfig {
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
-  @ConfigDefBean(groups = {"KAFKA"})
-  public MessageConfig messageConfig;
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
