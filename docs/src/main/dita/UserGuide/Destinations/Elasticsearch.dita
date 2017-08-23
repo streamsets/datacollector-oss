@@ -31,8 +31,8 @@
             enter one or more node URI and automatically detect additional Elasticsearch nodes on
             the cluster. </p>
     <p>The Elasticsearch destination <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"/><ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/></p>
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Dest-CRUDoverview"/>
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-xref"/></p>
     <p>You can also add advanced Elasticsearch properties as needed. </p>
  </conbody>
 </concept>

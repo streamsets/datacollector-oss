@@ -28,5 +28,7 @@
         <p>For example, to perform updates for documents with IDs based on the EmployeeID field,
             define the write operation as update and define the Document ID as follows:
                 <codeph>${record:value('/EmployeeID')}</codeph>.</p>
+        <p>You can also optionally define a parent ID for each document to define a parent/child
+            relationship between documents in the same index. </p>
  </conbody>
 </concept>
