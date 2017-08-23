@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.SdcEL;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
@@ -35,11 +36,16 @@ import java.util.List;
 
 public class DataLakeConfigBean {
   public static final String ADLS_CONFIG_BEAN_PREFIX = "dataLakeConfig.";
+  public static final String ADLS_CONFIG_ACCOUNT_FQDN = ADLS_CONFIG_BEAN_PREFIX + "accountFQDN";
+  public static final String ADLS_CONFIG_CLIENT_KEY = ADLS_CONFIG_BEAN_PREFIX + "clientKey";
+  public static final String ADLS_CONFIG_CLIENT_ID = ADLS_CONFIG_BEAN_PREFIX + "clientId";
+  public static final String ADLS_CONFIG_AUTH_ENDPOINT = ADLS_CONFIG_BEAN_PREFIX + "authTokenEndpoint";
+
   private static final String ADLS_DATA_FORMAT_CONFIG_PREFIX = ADLS_CONFIG_BEAN_PREFIX + "dataFormatConfig";
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "",
       label = "Application ID",
       description = "Azure Application ID.",
@@ -47,11 +53,11 @@ public class DataLakeConfigBean {
       elDefs = VaultEL.class,
       group = "#0"
   )
-  public String clientId;
+  public CredentialValue clientId;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "https://login.microsoftonline.com/example-example",
       label = "Auth Token Endpoint",
       description = "Azure Auth Token Endpoint.",
@@ -59,11 +65,11 @@ public class DataLakeConfigBean {
       elDefs = VaultEL.class,
       group = "#0"
   )
-  public String authTokenEndpoint;
+  public CredentialValue authTokenEndpoint;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "example.azuredatalakestore.net",
       label = "Account FQDN",
       description = "full account FQDN, not just the account name.",
@@ -71,11 +77,11 @@ public class DataLakeConfigBean {
       elDefs = VaultEL.class,
       group = "#0"
   )
-  public String accountFQDN;
+  public CredentialValue accountFQDN;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "",
       label = "Application Key",
       description = "Azure Application Key.",
@@ -83,7 +89,7 @@ public class DataLakeConfigBean {
       elDefs = VaultEL.class,
       group = "#0"
   )
-  public String clientKey;
+  public CredentialValue clientKey;
 
   @ConfigDef(
       required = false,

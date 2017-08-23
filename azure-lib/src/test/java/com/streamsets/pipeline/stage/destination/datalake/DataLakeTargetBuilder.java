@@ -22,9 +22,8 @@ public class DataLakeTargetBuilder {
 
   public DataLakeTargetBuilder() {
     conf = new DataLakeConfigBean();
-    conf.clientId = "1";
-    final String dummyKey = "dummy";
-    conf.clientKey = dummyKey;
+    conf.clientId = () -> "1";
+    conf.clientKey = () -> "dummy";
     conf.dirPathTemplate = "/tmp/out/";
     conf.uniquePrefix = "test";
     conf.fileNameSuffix = "";
@@ -35,12 +34,12 @@ public class DataLakeTargetBuilder {
   }
 
   public DataLakeTargetBuilder accountFQDN(String accountFQDN) {
-    conf.accountFQDN = accountFQDN;
+    conf.accountFQDN = () -> accountFQDN;
     return this;
   }
 
   public DataLakeTargetBuilder authTokenEndpoint(String authTokenEndpoint) {
-    conf.authTokenEndpoint = authTokenEndpoint;
+    conf.authTokenEndpoint = () -> authTokenEndpoint;
     return this;
   }
 
