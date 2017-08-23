@@ -22,22 +22,23 @@
     <conbody>
         <p><indexterm>SFTP/FTP Client origin<indexterm>record header
                 attributes</indexterm></indexterm>The SFTP/FTP Client origin <ph
-                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/1st-ph"/>
-            <ph
-                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/functions-ph"/>
-            <ph
-                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/Crossref-ph"
+                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/1st-ph"
+            /> When the origin <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-Avro-HeaderAttribute"
             /></p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>
         <p>The SFTP/FTP Client origin <ph
                 conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/leadin-ph"
                 /><ul id="ul_dxf_jz1_j1b">
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li-avroSchema"/>
                 <li
                     conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/li-filename"/>
                 <li
                     conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/li-file"/>
                 <li
-                    conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/li-mtime"
-                />
+                    conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/li-mtime"/>
                 <li>remoteUri - Provides the resource URL used by the stage.</li>
             </ul></p>
     </conbody>

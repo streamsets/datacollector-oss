@@ -38,8 +38,7 @@
                     data and the configured batch wait time has elapsed.<p>When you restart a
                         pipeline stopped by the Pipeline Finisher executor, the origin continues
                         processing from the last-saved offset unless you reset the origin.
-                            <draft-comment author="Loretta">Bob to test.</draft-comment>For an
-                        example of how to use the Pipeline Finisher, see <xref
+                        </p><p>For an example of how to use the Pipeline Finisher, see <xref
                             href="../Event_Handling/CaseStudy-StopPipeline.dita#concept_kff_ykv_lz"
                         />.</p></li>
             </ul></p>

@@ -22,15 +22,17 @@
  <conbody>
         <p><indexterm>Directory origin<indexterm>record header attributes</indexterm></indexterm>The
             Directory origin <ph
-                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/1st-ph"/>
-            <ph
-                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/functions-ph"/>
-            <ph
-                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/Crossref-ph"
+                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/1st-ph"
+            /> When the origin <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-Avro-HeaderAttribute"
             /></p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>
         <p>The Directory origin <ph
                 conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/leadin-ph"
                 /><ul id="ul_nsd_xfb_j1b">
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li-avroSchema"/>
                 <li>baseDir - Base directory containing the file where the record originated.</li>
             </ul><ul
                 conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/ul-DirFileTail-list"

@@ -22,8 +22,10 @@
  <conbody>
         <p><indexterm>Oracle CDC Client origin<indexterm>generated
             records</indexterm></indexterm>The origin generates records differently based on the
-            Oplog operation type and the logging enabled for the database and tables. <table
-                frame="all" rowsep="1" colsep="1" id="table_zpr_2j5_gx">
+            Oplog operation type and the logging enabled for the database and tables. It also
+            includes CDC and CRUD information in record header attributes.</p>
+        <p>The following table describes how the origin generates record data: <table frame="all"
+                rowsep="1" colsep="1" id="table_zpr_2j5_gx">
                 <tgroup cols="3">
                     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                     <colspec colname="c2" colnum="2" colwidth="3.5*"/>

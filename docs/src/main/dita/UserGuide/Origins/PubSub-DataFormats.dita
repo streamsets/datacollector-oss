@@ -24,7 +24,7 @@
             Subscriber origin processes data differently based on the data format. Google Pub/Sub
             Subscriber can process the following types of data:</p>
      <dl>
-         <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO-Kafka">
+         <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO">
              <dt/>
              <dd/>
          </dlentry>

@@ -33,8 +33,8 @@
             </ul></p>
         <p>And it includes the following record header attributes for each decimal field in the
                 record:<ul id="ul_jvj_p1j_fx">
-                <li>oracle.cdc.&lt;fieldname>.precision</li>
-                <li>oracle.cdc.&lt;fieldname>.scale</li>
+                <li>jdbc.&lt;fieldname>.precision</li>
+                <li>jdbc.&lt;fieldname>.scale</li>
             </ul></p>
         <p
             conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>

@@ -372,16 +372,21 @@
                                     information about field attributes, see <xref
                                           href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
                                     />.</dd>
+                              <dd>The origin writes the Avro schema to an avroSchema record header
+                                    attribute. For more information about record header attributes,
+                                    see <xref
+                                          href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"
+                                    />. </dd>
                               <dd>The origin expects each file to contain the Avro schema and uses
                                     the schema to process the Avro data.</dd>
                               <dd>The origin reads files compressed by Avro-supported compression
-                                    codecs without requiring additional configuration.</dd>
-                              <dd/>
+                                    codecs without requiring additional configuration. </dd>
                         </dlentry>
                   </dl>
             </p>
             <p>
-                  <draft-comment author="Loretta">AVRO - Used by Kafka Consumer </draft-comment>
+                  <draft-comment author="Loretta">Avro-Kafka - ONLY FOR KAFKA CONSUMER because of
+                        the Kafka property.</draft-comment>
                   <dl>
                         <dlentry id="OriginDF-AVRO-Kafka">
                               <dt>Avro</dt>
@@ -390,6 +395,11 @@
                                     information about field attributes, see <xref
                                           href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
                                     />.</dd>
+                              <dd>The origin writes the Avro schema to an avroSchema record header
+                                    attribute. For more information about record header attributes,
+                                    see <xref
+                                          href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"
+                                    />. </dd>
                               <dd>You can use one of the following methods to specify the location
                                     of the Avro schema definition:<ul id="ul_npz_4lz_gx">
                                           <li><uicontrol>Message/Data Includes Schema</uicontrol> -
@@ -428,7 +438,12 @@
                                     "scale" field attribute for each Decimal field. For more
                                     information about field attributes, see <xref
                                           href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
-                                    />.</dd>
+                                    />. </dd>
+                              <dd>The origin writes the Avro schema to an avroSchema record header
+                                    attribute. For more information about record header attributes,
+                                    see <xref
+                                          href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"
+                                    />. </dd>
                               <dd>You can use one of the following methods to specify the location
                                     of the Avro schema definition:<ul id="ul_npz_1lz_kx">
                                           <li><uicontrol>Message/Data Includes Schema</uicontrol> -
@@ -464,7 +479,12 @@
                                     and "scale" field attribute for each Decimal field. For more
                                     information about field attributes, see <xref
                                           href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
-                                    />.</dd>
+                                    />. </dd>
+                              <dd>The origin writes the Avro schema to an avroSchema record header
+                                    attribute. For more information about record header attributes,
+                                    see <xref
+                                          href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"
+                                    />. </dd>
                               <dd>You can use one of the following methods to specify the location
                                     of the Avro schema definition:<ul id="ul_ykg_g5z_kx">
                                           <li><uicontrol>Message/Data Includes Schema</uicontrol> -
@@ -503,6 +523,11 @@
                                     information about field attributes, see <xref
                                           href="../Pipeline_Design/FieldAttributes.dita#concept_xfm_wtp_1z"
                                     />.</dd>
+                              <dd>The origin writes the Avro schema to an avroSchema record header
+                                    attribute. For more information about record header attributes,
+                                    see <xref
+                                          href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"
+                                    />. </dd>
                               <dd>You can use one of the following methods to specify the location
                                     of the Avro schema definition:<ul id="ul_v5j_gvz_kx">
                                           <li><uicontrol>Message/Data Includes Schema</uicontrol> -
@@ -1045,6 +1070,24 @@ web-0011.log</codeblock></dd>
                         comparison chart to help you choose the right one, see <xref
                               href="../Origins/Origins-HTTPComparison.dita#concept_rsz_cnw_qy"
                         />.</note>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">Avro-HeaderAttribute - Used in Record Header
+                        Attribute type topics for origins with the topic (that process Avro
+                        data!).</draft-comment>
+            </p>
+            <p><ph id="ph-Avro-HeaderAttribute">processes Avro data, it includes the Avro schema in
+                        an avroSchema record header attribute.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">li-avroSchema used in bulletted lists in record
+                        header attribute topics for origins with the topic (that process Avro
+                        data!).</draft-comment>
+            </p>
+            <p>
+                  <ul id="ul_mbp_4dg_z1b">
+                        <li id="li-avroSchema">avroSchema - When processing Avro data, provides the
+                              Avro schema.</li>
+                  </ul>
             </p>
             <p>
                   <draft-comment author="Loretta"><uicontrol>O-EventHandling-overview</uicontrol> -
