@@ -33,10 +33,16 @@
                     </thead>
                     <tbody>
                         <row>
+                            <entry>Origins that process Avro data and the Data Parser
+                                processor</entry>
+                            <entry>Includes the Avro schema in an avroSchema record header
+                                attribute.</entry>
+                        </row>
+                        <row>
                             <entry>Amazon S3 origin</entry>
                             <entry>Can be configured to include system-defined and user-defined
-                                    object metadata in record header attributes.
-                                <xref href="../Origins/AmazonS3-RecordHeaderAttrs.dita#concept_inh_qjx_yw">
+                                object metadata in record header attributes. <xref
+                                    href="../Origins/AmazonS3-RecordHeaderAttrs-ObjectMeta.dita#concept_inh_qjx_yw">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_kjt_3m4_2z"/></xref></entry>
                         </row>

@@ -417,7 +417,7 @@
          ).</p></entry>
       </row>
       <row id="S3IncludeMetadata-row">
-       <entry>Include Metadata <xref href="../Origins/AmazonS3-RecordHeaderAttrs.dita">
+       <entry>Include Metadata <xref href="../Origins/AmazonS3-RecordHeaderAttrs-ObjectMeta.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_sw3_wjx_yw"/>
         </xref></entry>
        <entry>Includes system-defined and user-defined metadata in record header attributes.

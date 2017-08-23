@@ -25,12 +25,9 @@
                 overview and some bullets. The ph-def is used in Attribute-Generating
                 Stages</draft-comment>The File Tail origin <ph id="1st-ph">creates record header
                 attributes that include <ph id="ph-def">information about the originating file for
-                    the record</ph>.</ph>
-            <ph id="functions-ph">You can use record:attribute functions to use the attribute
-                information in pipeline processing.</ph>
-            <ph id="Crossref-ph">For more information about record header attributes, see <xref
-                    href="../../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"
-                />.</ph></p>
+                    the record</ph>.</ph></p>
+        <p
+            conref="../Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>
         <p>The File Tail origin <ph id="leadin-ph">creates the following record header
                 attributes:</ph><ul id="ul-DirFileTail-list">
                 <li id="li-filename">filename - Provides the name of the file where the record

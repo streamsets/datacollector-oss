@@ -22,12 +22,11 @@
  <conbody>
         <p><indexterm>File Tail origin<indexterm>record header attributes</indexterm></indexterm>The
             File Tail origin <ph
-                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/1st-ph"/>
-            <ph
-                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/functions-ph"/>
-            <ph
-                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/Crossref-ph"
-            /></p>
+                conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/1st-ph"
+            />
+        </p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>
         <p>The File Tail origin <ph
                 conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/leadin-ph"
                 /><ul

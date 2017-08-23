@@ -17,8 +17,10 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qvl_y4q_v1b">
  <title>Record Header Attributes</title>
- <shortdesc>When available, the Google Pub/Sub Subscriber origin includes user-defined message
-        attributes in record header attributes.</shortdesc>
+ <shortdesc>The Google Pub/Sub Subscriber origin includes user-defined message attributes in record
+        header attributes when they are available. When the origin <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-Avro-HeaderAttribute"
+        /></shortdesc>
  <conbody>
         <p><indexterm>Google Pub/Sub Subscriber origin<indexterm>record header
                     attributes</indexterm></indexterm><indexterm>record header
@@ -27,7 +29,7 @@
             payload content. If the Google Pub/Sub Subscriber origin consumes a message with
             optional attributes, the origin includes the message attributes in record header
             attributes.</p>
-        <p>For more information about record header attributes, see <xref
-                href="../Pipeline_Design/RecordHeaderAttributes.dita#concept_wn2_jcz_dz"/>.</p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>
  </conbody>
 </concept>
