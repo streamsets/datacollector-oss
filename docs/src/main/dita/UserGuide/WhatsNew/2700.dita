@@ -109,13 +109,18 @@
                             writing to Hadoop, you can now also configure Data Collector to make the
                             username lowercase. This can be helpful with case-sensitive
                             implementations of LDAP.</li>
-                        <li>New Java security properties - The Data Collector configuration file now
-                            includes properties with a "java.security." prefix, which you can use to
-                            configure Java security properties.</li>
-                        <li>New property to define the amount of time to cache DNS lookups - By
-                            default, the java.security.networkaddress.cache.ttl property is set to 0
-                            so that the JVM uses the Domain Name Service (DNS) time to live value,
-                            instead of caching the lookups for the lifetime of the JVM.</li>
+                        <li><xref
+                                href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"
+                                >New Java security properties</xref> - The Data Collector
+                            configuration file now includes properties with a "java.security."
+                            prefix, which you can use to configure Java security properties.</li>
+                        <li><xref
+                                href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"
+                                >New property to define the amount of time to cache DNS
+                                lookups</xref> - By default, the
+                            java.security.networkaddress.cache.ttl property is set to 0 so that the
+                            JVM uses the Domain Name Service (DNS) time to live value, instead of
+                            caching the lookups for the lifetime of the JVM.</li>
                         <li>SDC_HEAPDUMP_PATH enhancement - The new default file name,
                                 <codeph>$SDC_LOG/sdc_heapdump_${timestamp}.hprof</codeph>, includes
                             a timestamp so you can write multiple heap dump files to the specified
@@ -279,8 +284,11 @@
                                 >Cassandra destination enhancement</xref> - The destination now
                             supports Kerberos authentication if you have installed the DataStax
                             Enterprise Java driver. </li>
-                        <li>Elasticsearch destination enhancement - The destination can now create
-                            parent-child relationships between documents in the same index.</li>
+                        <li><xref
+                                href="../Destinations/Elasticsearch-Configuring.dita#task_uns_gtv_4r"
+                                >Elasticsearch destination enhancement</xref> - The destination can
+                            now create parent-child relationships between documents in the same
+                            index.</li>
                         <li>Hive Metastore destination - You can now configure the destination to
                             create custom record header attributes.</li>
                         <li><xref

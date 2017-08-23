@@ -4318,11 +4318,10 @@
                                 </row>
                                 <row id="row_ElasticIndex">
                                     <entry>Index</entry>
-                                    <entry>Index for the generated documents. Enter an index name,
-                                        an expression that evaluates to the index name, or a field
-                                        that includes the index name. <p>For example, if you enter
-                                                <codeph>customer</codeph> as the index, the
-                                            destination writes the document within the
+                                    <entry>Index for the generated documents. Enter an index name or
+                                        an expression that evaluates to the index name. <p>For
+                                            example, if you enter <codeph>customer</codeph> as the
+                                            index, the destination writes the document within the
                                                 <codeph>customer</codeph> index. </p><p>If you use
                                             datetime variables in the expression, make sure to
                                             configure the time basis appropriately. For details
@@ -4345,11 +4344,30 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_r1f_gfg_z3"/>
                                         </xref></entry>
-                                    <entry>ID for the record. Use to specify the ID for the
-                                        generated documents. When you do not specify an ID,
-                                        Elasticsearch creates an ID for each document.<p>By default,
-                                            the destination allows Elasticsearch to create the
-                                            ID.</p></entry>
+                                    <entry>Expression that evaluates to the ID for the generated
+                                        documents. When you do not specify an ID, Elasticsearch
+                                        creates an ID for each document.<p>By default, the
+                                            destination allows Elasticsearch to create the
+                                        ID.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Parent ID</entry>
+                                    <entry>Optional parent ID for the generated documents. Enter a
+                                        parent ID or an expression that evaluates to the parent ID.
+                                            <p>Use to establish a parent-child relationship between
+                                            documents in the same index.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Routing</entry>
+                                    <entry>Optional custom routing value for the generated
+                                        documents. Enter a routing value or an expression that
+                                        evaluates to the routing value.<p>Elasticsearch routes a
+                                            document to a particular shard in an index based on the
+                                            routing value defined for the document. You can define a
+                                            custom value for each document. If you don’t define a
+                                            custom routing value, Elasticsearch uses the parent ID
+                                            (if defined) or the document ID as the routing
+                                            value.</p></entry>
                                 </row>
                                 <row id="row_ElasticCharset">
                                     <entry>Data Charset</entry>
