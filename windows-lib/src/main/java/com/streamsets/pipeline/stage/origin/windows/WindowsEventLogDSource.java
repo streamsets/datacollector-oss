@@ -30,9 +30,8 @@ import com.streamsets.pipeline.configurablestage.DSource;
     label = "Windows Event Log",
     description = "Reads data from Windows Event Log",
     execution = {ExecutionMode.EDGE},
-    //TODO SDC-7119
-    icon = "",
-    onlineHelpRefUrl = ""
+    icon = "winlogo.png",
+    onlineHelpRefUrl = "" // TODO SDC-7119
 )
 
 @ConfigGroups(Groups.class)
