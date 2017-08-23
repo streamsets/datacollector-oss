@@ -114,7 +114,7 @@ public class TestJdbcSource {
       );
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.TEST_NULL " +
-              "(p_id INT NOT NULL, name VARCHAR(255), number int);"
+              "(p_id INT NOT NULL, name VARCHAR(255), number int, ts TIMESTAMP);"
       );
       statement.addBatch(
         "CREATE TABLE IF NOT EXISTS TEST.TEST_TIMES " +
@@ -139,7 +139,7 @@ public class TestJdbcSource {
           RandomStringUtils.randomAlphanumeric(CLOB_SIZE) + "', RAWTOHEX('blob_val" +
           RandomStringUtils.randomAlphanumeric(CLOB_SIZE) + "'))");
       statement.addBatch("INSERT INTO TEST.TEST_JDBC_NS_HEADERS VALUES  (1, 1.5)");
-      statement.addBatch("INSERT INTO TEST.TEST_NULL VALUES  (1, NULL, NULL)");
+      statement.addBatch("INSERT INTO TEST.TEST_NULL VALUES  (1, NULL, NULL, NULL)");
       statement.addBatch("INSERT INTO TEST.TEST_TIMES VALUES  (1, '1993-09-01', '15:09:02', '1960-01-01 23:03:20')");
       statement.addBatch("CREATE ALIAS STOREDPROC FOR \"" + TestJdbcSource.class.getCanonicalName() + ".simpleResultSet\"");
       statement.addBatch("INSERT INTO TEST.TEST_UUID VALUES  (1, '80d00b8a-ffa3-45c2-93ba-d4278408552f')");
@@ -900,6 +900,10 @@ public class TestJdbcSource {
       assertTrue(parsedRecord.has("/NUMBER"));
       assertEquals(Field.Type.INTEGER, parsedRecord.get("/NUMBER").getType());
       assertNull(parsedRecord.get("/NUMBER").getValue());
+
+      assertTrue(parsedRecord.has("/TS"));
+      assertEquals(Field.Type.DATETIME, parsedRecord.get("/TS").getType());
+      assertNull(parsedRecord.get("/TS").getValue());
     } finally {
       runner.runDestroy();
     }

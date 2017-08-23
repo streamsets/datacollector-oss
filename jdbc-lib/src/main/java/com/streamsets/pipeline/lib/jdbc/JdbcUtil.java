@@ -527,10 +527,12 @@ public class JdbcUtil {
           case Types.TIMESTAMP:
             final Timestamp timestamp = rs.getTimestamp(columnIndex);
             field = Field.create(Field.Type.DATETIME, timestamp);
-            final long actualNanos = timestamp.getNanos() % NANOS_TO_MILLIS_ADJUSTMENT;
-            if (actualNanos > 0) {
-              field.setAttribute(FIELD_ATTRIBUTE_NANOSECONDS, String.valueOf(actualNanos));
-            }
+            if (timestamp != null) {
+              final long actualNanos = timestamp.getNanos() % NANOS_TO_MILLIS_ADJUSTMENT;
+              if (actualNanos > 0) {
+                field.setAttribute(FIELD_ATTRIBUTE_NANOSECONDS, String.valueOf(actualNanos));
+              }
+        }
             break;
           // Ugly hack until we can support LocalTime, LocalDate, LocalDateTime, etc.
           case Types.TIME_WITH_TIMEZONE:
