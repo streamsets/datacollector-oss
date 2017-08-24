@@ -24,8 +24,11 @@
             <draft-comment author="alisontaylor">Text is used in topics with the same name for Query
                 JDBC Consumer and JDBC Multitable Consumer origins</draft-comment>
         </p>
-        <p id="functions">You can use the record:attribute or record:attributeOrDefault functions to access the
-            information in the attributes. </p>
+        <p id="functions">You can use the record:attribute or record:attributeOrDefault functions to
+            access the information in the attributes. For more information about working with record
+            header attributes, see <xref
+                href="../../Pipeline_Design/RecordHeaderAttributes-WorkingWith.dita#concept_rd2_ghz_dz"
+            />.</p>
         <p id="table">The origin can provide the following JDBC header attributes:
         <table frame="all" rowsep="1" colsep="1" id="table_p1c_q5c_kw">
             <tgroup cols="2">

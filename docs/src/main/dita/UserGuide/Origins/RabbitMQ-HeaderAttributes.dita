@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_rg5_yts_y1b">
+ <title>Record Header Attributes</title>
+ <conbody>
+  <p><indexterm>RabbitMQ Consumer origin<indexterm>record header
+                attributes</indexterm></indexterm><indexterm>record header
+                    attributes<indexterm>RabbitMQ Consumer</indexterm></indexterm>The RabbitMQ
+            Consumer origin includes information from RabbitMQ basic properties in the record header
+            attributes of the generated record. When the origin <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-Avro-HeaderAttribute"
+            /></p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/ReusableJDBCHeaderAttributes.dita#concept_fbf_rk2_py/functions"/>
+        <p>The origin includes information in the following record header attributes when
+                available:<ul id="ul_tsp_q5s_y1b">
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li-avroSchema"/>
+                <li>appId - Provides information from the RabbitMQ app-id property.</li>
+                <li>contentType - Provides information from the RabbitMQ content-type property.</li>
+                <li>contentEncoding - Provides information from the RabbitMQ content-encoding
+                    property.</li>
+                <li>correlationId - Provides information from the RabbitMQ correlation-id
+                    property.</li>
+                <li>deliveryMode - Provides information from the RabbitMQ delivery-mode
+                    property.</li>
+                <li>deliveryTag - Provides information from the RabbitMQ delivery-tag property.</li>
+                <li>exchange - Provides information from the RabbitMQ exchange-name property.</li>
+                <li>expiration - Provides information from the RabbitMQ expiration property.</li>
+                <li>messageId - Provides information from the RabbitMQ message-id property.</li>
+                <li>messageType - Provides information from the RabbitMQ type property.</li>
+                <li>priority - Provides information from the RabbitMQ priority property.</li>
+                <li>redelivered - Provides information from the RabbitMQ redelivered property.</li>
+                <li>replyTo - Provides information from the RabbitMQ reply-to property.</li>
+                <li>routingKey - Provides information from the RabbitMQ routing-key property.</li>
+                <li>timestamp - Provides information from the RabbitMQ timestamp property.</li>
+                <li>userId - Provides information from the RabbitMQ user-id property.</li>
+            </ul></p>
+ </conbody>
+</concept>
