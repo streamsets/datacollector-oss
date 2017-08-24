@@ -27,7 +27,6 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-defaultProtocol-ph"
             /> by default. You can specify one or more other protocols, but versions prior to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-defaultProtocol-ph"
-            /> are not as secure. <draft-comment author="Loretta">Jeff: Is this what we should say?
-                Anything else? </draft-comment></p>
+            /> are not as secure. </p>
  </conbody>
 </concept>

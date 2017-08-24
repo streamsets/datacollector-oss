@@ -136,6 +136,77 @@
                     </table>
                 </info>
             </step>
+            <step>
+                <cmd>On the <wintitle>Security</wintitle> tab, optionally configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_tkj_lfr_y1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Security Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Security Policy</entry>
+                                    <entry>The security policy to use. Select one of the following
+                                            policies:<ul id="ul_lnw_jhr_y1b">
+                                            <li>Basic128Rsa15</li>
+                                            <li>Basic 256</li>
+                                            <li>Basic256Sha256</li>
+                                            <li>None</li>
+                                        </ul><p>When using a security policy, enable TLS and
+                                            configure the associated properties. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Client Private Key Alias</entry>
+                                    <entry>Optional private key alias to use.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-EnableTLS-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-KeystoreFile-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-KeystoreType-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-KeystorePassword-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-KeystoreKeyAlgo-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-DefaultProtocols-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-TransportProtocols-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-DefaultCipherSuites-Row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TLS-CipherSuites-row">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
         </steps>
     </taskbody>
 </task>
