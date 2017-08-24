@@ -40,6 +40,8 @@ public class PipelineInfoJson   {
   private String uuid = null;
   private Boolean valid = null;
   private Map<String, Object> metadata = new HashMap<String, Object>();
+  private String sdcVersion = null;
+  private String sdcId = null;
 
   /**
    **/
@@ -180,6 +182,28 @@ public class PipelineInfoJson   {
     this.metadata = metadata;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("sdcVersion")
+  public String getSdcVersion() {
+    return sdcVersion;
+  }
+  public void setSdcVersion(String sdcVersion) {
+    this.sdcVersion = sdcVersion;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("sdcId")
+  public String getSdcId() {
+    return sdcId;
+  }
+  public void setSdcId(String sdcId) {
+    this.sdcId = sdcId;
+  }
+
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
@@ -195,6 +219,8 @@ public class PipelineInfoJson   {
     sb.append("    uuid: ").append(StringUtil.toIndentedString(uuid)).append("\n");
     sb.append("    valid: ").append(StringUtil.toIndentedString(valid)).append("\n");
     sb.append("    metadata: ").append(StringUtil.toIndentedString(metadata)).append("\n");
+    sb.append("    sdcVersion: ").append(StringUtil.toIndentedString(sdcVersion)).append("\n");
+    sb.append("    sdcId: ").append(StringUtil.toIndentedString(sdcId)).append("\n");
     sb.append("}");
     return sb.toString();
   }
