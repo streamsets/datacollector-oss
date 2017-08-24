@@ -25,7 +25,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -154,20 +153,10 @@ public class DataLakeTarget extends BaseTarget {
       }
     }
 
-    String authEndPoint = resolveCredentialValue(conf.authTokenEndpoint, DataLakeConfigBean.ADLS_CONFIG_AUTH_ENDPOINT, issues);
-    String clientId = resolveCredentialValue(conf.clientId, DataLakeConfigBean.ADLS_CONFIG_CLIENT_ID, issues);
-    String clientKey = resolveCredentialValue(conf.clientKey, DataLakeConfigBean.ADLS_CONFIG_CLIENT_KEY, issues);
-    String accountFQDN = resolveCredentialValue(conf.accountFQDN, DataLakeConfigBean.ADLS_CONFIG_ACCOUNT_FQDN, issues);
-
     if (issues.isEmpty()) {
       // connect to ADLS
       try {
-        client = createClient(
-          authEndPoint,
-          clientId,
-          clientKey,
-          accountFQDN
-        );
+        client = createClient(conf.authTokenEndpoint, conf.clientId, conf.clientKey, conf.accountFQDN);
 
         if (conf.checkPermission && !conf.dirPathTemplateInHeader) {
           validatePermission();
@@ -213,30 +202,14 @@ public class DataLakeTarget extends BaseTarget {
           conf.maxRecordsPerFile,
           conf.maxFileSize * MEGA_BYTE,
           conf.dataFormatConfig.wholeFileExistsAction,
-          authEndPoint,
-          clientId,
-          clientKey,
+          conf.authTokenEndpoint,
+          conf.clientId,
+          conf.clientKey,
           idleTimeSecs
       );
     }
 
     return issues;
-  }
-
-  private String resolveCredentialValue(CredentialValue credentialValue, String configName, List<ConfigIssue> issues) {
-    try {
-      return credentialValue.get();
-    } catch (StageException e) {
-      LOG.error(Errors.ADLS_15.getMessage(), e.toString(), e);
-      issues.add(getContext().createConfigIssue(
-          Groups.DATALAKE.name(),
-          configName,
-          Errors.ADLS_15,
-          e.toString()
-      ));
-    }
-
-    return null;
   }
 
   ADLStoreClient createClient(String authTokenEndpoint, String clientId, String clientKey, String accountFQDN)

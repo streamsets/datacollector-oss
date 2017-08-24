@@ -35,7 +35,6 @@ public enum Errors implements ErrorCode {
   ADLS_12("Error while writing to ADLS: {}"),
   ADLS_13("Error while renaming _tmp_ files: {}"),
   ADLS_14("ADLException was thrown with requestID: {}, httpResponsecode: {}, httpResponseMessage: {}, remoteExceptionMessage: {}, remoteExceptionName: {}, remoteExceptionJavaClassName: {}"),
-  ADLS_15("Can't resolve credential: {}"),
   ;
   private final String msg;
 
