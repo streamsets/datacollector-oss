@@ -145,6 +145,13 @@
                                         id="image_orv_l2v_2z"/></xref></entry>
                         </row>
                         <row>
+                            <entry>RabbitMQ Consumer origin</entry>
+                            <entry>Includes RabbitMQ attributes in record header attributes. <xref
+                                    href="../Origins/RabbitMQ-HeaderAttributes.dita#concept_tlj_3g1_2z">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_gy5_dvs_y1b"/></xref></entry>
+                        </row>
+                        <row>
                             <entry>SFTP/FTP Client origin</entry>
                             <entry>Includes <ph
                                     conref="../Reusable_Content/Reusable_Topics/Reusable-RecordHeaderAtts.dita#concept_tlj_3g1_2z/ph-def"
