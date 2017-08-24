@@ -25,6 +25,8 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,6 +65,8 @@ public class TestKuduRecordConverter {
     record.set("/bytes", Field.create("ABC".getBytes(StandardCharsets.UTF_8)));
     record.set("/str", Field.create("ABC"));
     record.set("/bool", Field.create(true));
+    DateTime dt = new DateTime(2017, 8, 24, 9, 15, 30, DateTimeZone.UTC); // 2017/8/24 9:15:30
+    record.set("/unixtime", Field.create(dt.getMillis() * 1000L));
     Map<String, Field.Type> columnsToFieldTypes = ImmutableMap.<String, Field.Type>builder()
       .put("byte1", Field.Type.BYTE)
       .put("short1", Field.Type.SHORT)
@@ -73,6 +77,7 @@ public class TestKuduRecordConverter {
       .put("bytes", Field.Type.BYTE_ARRAY)
       .put("str", Field.Type.STRING)
       .put("bool1", Field.Type.BOOLEAN)
+      .put("unixtime_micro", Field.Type.LONG)
       .build();
     Map<String, String> fieldsToColumns = ImmutableMap.<String, String>builder()
       .put("/byte", "byte1")
@@ -84,6 +89,7 @@ public class TestKuduRecordConverter {
       .put("/bytes", "bytes")
       .put("/str", "str")
       .put("/bool", "bool1")
+      .put("/unixtime", "unixtime_micro")
       .build();
     Schema schema = new Schema(Arrays.asList(
       new ColumnSchema.ColumnSchemaBuilder("str", Type.STRING).key(true).build(),
@@ -94,7 +100,8 @@ public class TestKuduRecordConverter {
       new ColumnSchema.ColumnSchemaBuilder("float1", Type.FLOAT).build(),
       new ColumnSchema.ColumnSchemaBuilder("double1", Type.DOUBLE).build(),
       new ColumnSchema.ColumnSchemaBuilder("bytes", Type.BINARY).build(),
-      new ColumnSchema.ColumnSchemaBuilder("bool1", Type.BOOL).build()
+      new ColumnSchema.ColumnSchemaBuilder("bool1", Type.BOOL).build(),
+      new ColumnSchema.ColumnSchemaBuilder("unixtime_micro", Type.UNIXTIME_MICROS).build()
       ));
     partialRow = new PartialRow(schema);
     kuduRecordConverter = new KuduRecordConverter(columnsToFieldTypes, fieldsToColumns, schema);
@@ -111,10 +118,10 @@ public class TestKuduRecordConverter {
     kuduRecordConverter.convert(record, partialRow, KuduOperationType.INSERT.code);
     Assert.assertEquals(
       "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 123, 0, 123, 0, 0, 0, 123, 0, 0, 0, 0, 0, 0, 0, 0, 0, -10, " +
-        "66, 0, 0, 0, 0, 0, -64, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0]",
+        "66, 0, 0, 0, 0, 0, -64, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -128, 48, 19, 69, 124, 87, 5, 0, 0, 0]",
       PartialRowHelper.toString(partialRow));
     List<ByteBuffer> varLengthData = PartialRowHelper.getVarLengthData(partialRow);
-    Assert.assertEquals(9, varLengthData.size());
+    Assert.assertEquals(10, varLengthData.size());
     Assert.assertEquals("ABC", toString(varLengthData.get(7)));
     Assert.assertNull(varLengthData.get(1));
     Assert.assertNull(varLengthData.get(2));
