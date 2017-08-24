@@ -103,7 +103,7 @@
       </row>
       <row>
        <entry id="WH-Payload-entry">Payload <xref
-         href="../Pipeline_Configuration/Webhooks-RequestPayload.dita">
+         href="../Pipeline_Configuration/Webhooks-Payload_Parameters.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_er2_33t_rz"
         /></xref></entry>
        <entry>Optional payload to include. Available for PUT, POST, and DELETE methods. <p>Use any

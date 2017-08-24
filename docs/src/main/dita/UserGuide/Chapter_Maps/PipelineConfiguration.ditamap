@@ -62,7 +62,7 @@
      <shortdesc/>
     </topicmeta>
     <topicref href="../Pipeline_Configuration/Webhooks-RequestMethod.dita"/>
-    <topicref href="../Pipeline_Configuration/Webhooks-RequestPayload.dita"/>
+    <topicref href="../Pipeline_Configuration/Webhooks-Payload_Parameters.dita"/>
    <topicref href="../Pipeline_Configuration/Webhooks-Examples.dita"/>
    </topicref>
   <topicref href="../Pipeline_Configuration/Notifications.dita">

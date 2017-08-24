@@ -27,5 +27,7 @@
         <p>When you configure the OPC UA Client origin, you specify connection information and tag
             information to associate with each client request. You also select the origin mode and
             the node IDs to use. </p>
+        <p>You can optionally configure the security policy that you want to use, related TLS
+            properties, and an optional client private key alias. </p>
     </conbody>
 </concept>

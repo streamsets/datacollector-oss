@@ -44,6 +44,15 @@
                             <li>PIPELINE_URL - The direct URL to the pipeline.</li>
                             <li>PIPELINE_STATE - The current state of the pipeline.</li>
                             <li>TIME - The time of the triggered request.</li>
+                            <li>PIPELINE_STATE_MESSAGE - The pipeline state and any related
+                                information, such as the last-saved offset or the error message for
+                                error states.</li>
+                            <li>PIPELINE_INPUT_RECORDS_COUNT - The number of records read.</li>
+                            <li>PIPELINE_OUTPUT_RECORDS_COUNT - The number of records written. </li>
+                            <li>PIPELINE_ERROR_RECORDS_COUNT - The number of error records. </li>
+                            <li>PIPELINE_ERROR_MESSAGES_COUNT - The number of error messages.</li>
+                            <li>PIPELINE_RUNTIME_PARAMETERS - The number of pipeline parameters. </li>
+                            <li>PIPELINE_METRICS - Metrics data for the pipeline.</li>
                         </ul></dd>
                     <dd>For example, say you configure the pipeline to send a webhook only when the
                         pipeline transitions to the Stopped state - that is, when someone stops the
@@ -55,7 +64,7 @@
                         changes to several different states, you might use a more generic message
                         and include the pipeline state in the message. For
                         example:<codeblock>{  
-   "text":"The '{{PIPELINE_TITLE}}' pipeline changed state to {{PIPELINE_STATE}} at {{TIME}}. \n &lt;{{PIPELINE_URL}}|Click here for details.>"
+   "text":"The '{{PIPELINE_TITLE}}' pipeline changed state to {{PIPELINE_STATE}} at {{TIME}}. \n Pipeline status message: {{PIPELINE_STATE_MESSAGE}} \n &lt;{{PIPELINE_URL}}|Click here for details.>"
 }</codeblock></dd>
                 </dlentry>
                 <dlentry>

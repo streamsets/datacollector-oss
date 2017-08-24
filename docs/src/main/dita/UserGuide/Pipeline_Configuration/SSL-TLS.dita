@@ -24,8 +24,8 @@
                     stages</indexterm></indexterm><indexterm>TLS<indexterm>configuring in
                     stages</indexterm></indexterm>Some stages allow you use SSL/TLS to connect to
             the external system. </p>
-        <p>When you enable TLS, you can generally configure the following properties:<ul
-                id="ul_pkh_mqf_5z">
+        <p>When you enable TLS, you can generally configure the following properties on the TLS tab
+            of the stage:<ul id="ul_pkh_mqf_5z">
                 <li>Keystore or Truststore properties</li>
                 <li>TLS protocols</li>
                 <li>Cipher suites</li>
@@ -34,13 +34,20 @@
         <p>You can enable SSL/TLS type properties in the following stages and locations:<ul
                 id="ul_pfh_3mf_5z">
                 <li>HTTP Client origin, processor, and destination</li>
-                <li>HTTP to Kafka origin</li>
                 <li>HTTP Server origin</li>
+                <li>HTTP to Kafka origin</li>
+                <li>MongoDB Oplog origin</li>
                 <li>MQTT Subscriber origin and MQTT Producer destination</li>
+                <li>OPC UA Client origin</li>
                 <li>SDC RPC origin and SDC RPC destination</li>
                 <li>SDC RPC to Kafka origin</li>
-                <li>Websocket destination</li>
+                <li>Spark executor</li>
+                <li>TCP Server origin</li>
+                <li>Websocket Server origin and Websocket Client destination</li>
                 <li>Pipeline error handling, when writing error records to another pipeline</li>
             </ul></p>
+        <p>The MongoDB and MongoDB Oplog origins and the MongoDB destination allow you to enable SSL
+            on the Advanced tab of the stage. For more information, see "Enabling SSL/TLS" in the
+            stage documentation.</p>
  </conbody>
 </concept>

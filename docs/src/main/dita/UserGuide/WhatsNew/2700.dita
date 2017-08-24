@@ -432,8 +432,10 @@
                             edit mode to enter a list of configurations in JSON format.</li>
                         <li>Snapshot enhancement - Snapshots no longer produce empty batches when
                             waiting for data.</li>
-                        <li>Webhooks enhancement - You can use several new pipeline state
-                            notification parameters in webhooks.</li>
+                        <li><xref
+                                href="../Pipeline_Configuration/Webhooks-Payload_Parameters.dita#concept_rby_1rl_rz"
+                                >Webhooks enhancement</xref> - You can use several new pipeline
+                            state notification parameters in webhooks.</li>
                     </ul>
                 </dd>
             </dlentry>
