@@ -21,7 +21,7 @@ import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
@@ -71,7 +71,7 @@ import java.util.concurrent.TimeUnit;
 public class KuduTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(KuduTarget.class);
 
-  private static final ImmutableBiMap<Type, Field.Type> TYPE_MAP = ImmutableBiMap.<Type, Field.Type> builder()
+  private static final Map<Type, Field.Type> TYPE_MAP = ImmutableMap.<Type, Field.Type> builder()
     .put(Type.INT8, Field.Type.BYTE)
     .put(Type.INT16, Field.Type.SHORT)
     .put(Type.INT32, Field.Type.INTEGER)
@@ -81,6 +81,7 @@ public class KuduTarget extends BaseTarget {
     .put(Type.BINARY, Field.Type.BYTE_ARRAY)
     .put(Type.STRING, Field.Type.STRING)
     .put(Type.BOOL, Field.Type.BOOLEAN)
+    .put(Type.UNIXTIME_MICROS, Field.Type.LONG)
     .build();
 
   private static final String EL_PREFIX = "${";
