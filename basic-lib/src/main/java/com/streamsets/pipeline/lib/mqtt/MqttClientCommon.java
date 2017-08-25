@@ -78,7 +78,9 @@ public class MqttClientCommon {
       URI vURI = new URI(commonConf.brokerUrl);
       if (vURI.getScheme().equals("ssl")) {
         SSLContext sslContext = conf.getSslContext();
-        connOpts.setSocketFactory(sslContext.getSocketFactory());
+        if (sslContext != null) {
+          connOpts.setSocketFactory(sslContext.getSocketFactory());
+        }
       }
     } catch (URISyntaxException e) {
       throw new IllegalArgumentException(commonConf.brokerUrl);
