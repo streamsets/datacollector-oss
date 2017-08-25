@@ -90,6 +90,36 @@
           <codeblock>${jvm:maxMemoryMB() * 0.65}</codeblock></dd>
       </dlentry>
       <dlentry>
+        <dt>list:join(&lt;list field>, &lt;separator>)</dt>
+        <dd>Merges elements in a List field into a String field, using the specified separator
+          between elements. </dd>
+        <dd>Uses the following arguments:<ul id="ul_srh_pzn_z1b">
+            <li>list field - The List field that you want to merge. </li>
+            <li>separator - The string to use to separate the elements in the merged field.</li>
+          </ul></dd>
+        <dd>For example, to merge the list in a colors field using a semicolon as a separator
+          character, you can use the following
+          expression:<codeblock>${list:join(record:value('/colors'), ";")}</codeblock></dd>
+        <dd>And if the list field includes "red", "blue", and "yellow" as elements, the expression
+          produces the following string data: <codeblock>red;blue;yellow</codeblock></dd>
+        <dd>Return type: String.</dd>
+      </dlentry>
+      <dlentry>
+        <dt>list:joinSkipNulls(&lt;list field>, &lt;separator>)</dt>
+        <dd>Merges elements in a List field into a String field, using the specified separator
+          between elements and skipping null values.</dd>
+        <dd>Uses the following arguments:<ul id="ul_or1_wzn_z1b">
+            <li>list field - The List field that you want to merge. </li>
+            <li>separator - The string to use to separate the elements in the merged field.</li>
+          </ul></dd>
+        <dd>For example, say you use the following expression to merge the list in the colors
+          field:<codeblock>${list:join(record:value('/colors'), ";")}</codeblock></dd>
+        <dd>And if the list field includes "red", "blue, null, "yellow", the expression ignores the
+          null value and produces the following string
+          data:<codeblock>red;blue;yellow</codeblock></dd>
+        <dd>Return type: String.</dd>
+      </dlentry>
+      <dlentry>
         <dt>offset:column(&lt;position>)</dt>
         <dd>Returns the value of the positioned offset column for the current table. Available only
           in the additional offset column conditions of the JDBC Multitable Consumer origin. </dd>

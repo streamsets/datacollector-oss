@@ -123,8 +123,7 @@
    </dlentry>
    <dlentry>
     <dt>record:id()</dt>
-    <dd>Returns the ID of the stage that created the record, typically an origin stage. Data is
-     stored in the sourceId field of a record. </dd>
+    <dd>Returns the record ID. The record ID is also stored in the sourceId record header attribute. </dd>
     <dd>Return type: String.</dd>
    </dlentry>
    <dlentry>

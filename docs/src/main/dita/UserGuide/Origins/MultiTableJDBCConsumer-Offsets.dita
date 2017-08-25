@@ -100,7 +100,7 @@
                         rows with the current timestamp. You can enter the following offset column
                         condition to ensure that the origin reads from all offset columns with a
                         timestamp less than the current
-                        time:<codeblock>${offset:column(0)} &lt; ${time:now}</codeblock></dd>
+                        time:<codeblock>${offset:column(0)} &lt; ${time:now()}</codeblock></dd>
                 </dlentry>
             </dl></p>
     </conbody>
