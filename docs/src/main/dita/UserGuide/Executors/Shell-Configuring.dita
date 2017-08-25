@@ -47,9 +47,9 @@
                                     <entry>Environment Variables</entry>
                                     <entry>Environment variables to use when executing the shell
                                         script. Click the <uicontrol>Add</uicontrol> icon to add
-                                        environment variables.<p>You can include <ph
+                                        environment variables.<p>You can use <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> expressions in the variables as needed.</p></entry>
+                                            /> expressions as needed.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Timeout (ms)</entry>
@@ -64,8 +64,10 @@
             <step>
                 <cmd>On the <wintitle>Script</wintitle> tab, enter the script that you want to
                     run.</cmd>
-                <info>You cannot use expressions, but you can use environment variables defined on
-                    the Environment tab.</info>
+                <info>You cannot use expressions in the script, but you can use environment
+                    variables defined on the Environment tab.<note>Ensure that the script returns
+                        zero (0) to indicate successful execution. For more information, see <xref
+                            href="Shell-ScriptConfig.dita#concept_av4_pnm_z1b"/>.</note></info>
             </step>
         </steps>
     </taskbody>

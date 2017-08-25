@@ -412,15 +412,26 @@
                                     href="../Expression_Language/ErrorFunctions.dita#concept_ndj_43v_1r"
                                     >record:errorStageLabel()</xref> - Returns the user-defined name
                                 of the stage that generated the error record.</li>
-                            <li>list:join() - Returns each element of a List field joined on the
-                                specified character sequence.</li>
-                            <li>list:joinSkipNulls() - Returns each element of a List field joined
-                                on the specified character sequence, skipping null values.</li>
+                            <li><xref
+                                    href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"
+                                    >list:join()</xref>  - Merges elements in a List field into a
+                                String field, using the specified separator between elements. </li>
+                            <li><xref
+                                    href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"
+                                    >list:joinSkipNulls()</xref> - Merges elements in a List field
+                                into a String field, using the specified separator between elements
+                                and skipping null values.</li>
+                        </ul></p>
+                </dd>
+                <dd>
+                    <p>
+                        <ul id="ul_k5c_rg4_z1b">
                             <li><xref
                                     href="../Expression_Language/StringFunctions.dita#concept_ahp_f4v_1r"
                                     >str:indexOf()</xref> - Returns the index within a string of the
                                 first occurrence of the specified subset of characters.</li>
-                        </ul></p>
+                        </ul>
+                    </p>
                 </dd>
             </dlentry>
             <dlentry>

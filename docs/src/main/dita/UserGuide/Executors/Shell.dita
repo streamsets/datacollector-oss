@@ -23,24 +23,16 @@
   <p><indexterm>executors<indexterm>Shell</indexterm></indexterm><indexterm>Shell
                     executor<indexterm>overview</indexterm></indexterm>The Shell executor executes a
             shell script every time it receives an event. Use the Shell executor as part of an event
-            stream. When using Shell executors in pipelines, you should configure <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            use Shell executor impersonation mode. </p>
-        <p>When you configure the Shell executor, you define the shell script that you want to
-            execute. You cannot use <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            expressions directly in the shell script, but you can use them to declare environment
-            variables for script execution. Use the environment variables to propagate configuration
-            for the script. </p>
-        <p>For example, say you want to perform an action on a file that was closed by a Hadoop FS
-            destination, one that you cannot perform with the HDFS File Metadata executor. You want
-            to use the event record filepath field to specify the absolute path to the closed file.
-            So you use an environment variable in the script, then you define the environment
-            variable using the following expression:
-            <codeph>${record:value('/filepath')}</codeph>.</p>
-        <p>When you configure the executor, you also specify the maximum amount of time for the
-            shell script to run. After the specified time elapses, the executor stops the
-            script.</p>
+            stream. </p>
+        <p>When you configure the executor, you define the shell script that you want to execute and
+            environment variables to propagate configuration for the script. You also specify the
+            maximum amount of time for the shell script to run. After the specified time elapses,
+            the executor stops the script.</p>
+        <p>
+            <note>When using Shell executors in pipelines, you should configure <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> to use Shell executor impersonation mode. </note>
+        </p>
         <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
             /></p>
  </conbody>

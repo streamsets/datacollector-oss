@@ -94,6 +94,7 @@
         <topicref href="../Executors/Shell.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Executors/Shell-Impersonation.dita"/>
+            <topicref href="../Executors/Shell-ScriptConfig.dita"/>
             <topicref href="../Executors/Shell-Configuring.dita"/>
         </topicref>
         <topicref href="../Executors/Spark.dita" chunk="to-content">

@@ -18,11 +18,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_n2w_txv_vz">
- <title>Enabling Shell Impersonation Mode</title>
+ <title>Data Collector Shell Impersonation Mode</title>
  <conbody>
         <p><indexterm>impersonation mode<indexterm>enabling for the Shell
-                executor</indexterm></indexterm><indexterm>Shell executor<indexterm>enabling shell
-                    impersonation mode</indexterm></indexterm>Enable the <ph
+                executor</indexterm></indexterm><indexterm>Shell executor<indexterm>enabling Data
+                    Collector shell impersonation mode</indexterm></indexterm>Enable the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             shell impersonation mode to enable the secure use of shell scripts. You enable the
             impersonation mode by configuring the shell impersonation mode property in the <ph

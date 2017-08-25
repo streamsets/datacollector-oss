@@ -220,6 +220,8 @@
          <li>every(&lt;interval>, &lt;mm() | ss()>)</li>
          <li>field:field()</li>
          <li>jvm:maxMemoryMB()</li>
+         <li>list:join(&lt;list field>, &lt;separator>)</li>
+         <li>list:joinSkipNulls(&lt;list field>, &lt;separator>)</li>
          <li>offset:column(&lt;position>)</li>
          <li>runtime:availableProcessors()</li>
          <li>runtime:conf(&lt;runtime property>)</li>
