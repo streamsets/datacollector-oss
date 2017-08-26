@@ -17,6 +17,7 @@ package com.streamsets.datacollector.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.datacollector.record.FieldDeserializer;
 import com.streamsets.datacollector.restapi.bean.FieldJson;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -33,6 +34,7 @@ public class ObjectMapperFactory {
     SimpleModule module = new SimpleModule();
     module.addDeserializer(FieldJson.class, new FieldDeserializer());
     module.addDeserializer(ErrorMessage.class, new ErrorMessageDeserializer());
+    module.addSerializer(ClearCredentialValue.class, new ClearCredentialValueSerializer());
     objectMapper.registerModule(module);
     return objectMapper;
   }
