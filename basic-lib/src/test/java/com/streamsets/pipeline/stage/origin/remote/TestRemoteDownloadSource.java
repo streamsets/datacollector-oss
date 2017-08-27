@@ -1831,10 +1831,10 @@ public class TestRemoteDownloadSource {
     RemoteDownloadConfigBean configBean = new RemoteDownloadConfigBean();
     configBean.remoteAddress = remoteHost;
     configBean.userDirIsRoot = userDirIsRoot;
-    configBean.username = username;
-    configBean.password = password;
+    configBean.username = () -> username;
+    configBean.password = () -> password;
     configBean.privateKey = privateKey;
-    configBean.privateKeyPassphrase = passphrase;
+    configBean.privateKeyPassphrase = () -> passphrase;
     configBean.knownHosts = knownHostsFile;
     configBean.strictHostChecking = !noHostChecking;
     configBean.dataFormat = dataFormat;

@@ -20,9 +20,11 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.ext.io.ObjectLengthException;
@@ -181,7 +183,8 @@ public class RemoteDownloadSource extends BaseSource {
       switch (conf.auth) {
         case PRIVATE_KEY:
           String schemeBase = remoteURI.getScheme() + "://";
-          remoteURI = new URI(schemeBase + conf.username + "@" + remoteURI.toString().substring(schemeBase.length()));
+          String usernamne = resolveCredential(conf.username, "username", issues);
+          remoteURI = new URI(schemeBase + usernamne + "@" + remoteURI.toString().substring(schemeBase.length()));
           File privateKeyFile = new File(conf.privateKey);
           if (!privateKeyFile.exists() || !privateKeyFile.isFile() || !privateKeyFile.canRead()) {
             issues.add(getContext().createConfigIssue(
@@ -193,16 +196,24 @@ public class RemoteDownloadSource extends BaseSource {
             } else {
               SftpFileSystemConfigBuilder.getInstance().setPreferredAuthentications(options, "publickey");
               SftpFileSystemConfigBuilder.getInstance().setIdentities(options, new File[]{privateKeyFile});
-              if (conf.privateKeyPassphrase != null && !conf.privateKeyPassphrase.isEmpty()) {
+              String privateKeyPassphrase = resolveCredential(
+                conf.privateKeyPassphrase,
+                CONF_PREFIX + "privateKeyPassphrase",
+                issues
+              );
+              if (privateKeyPassphrase != null && !privateKeyPassphrase.isEmpty()) {
                 SftpFileSystemConfigBuilder.getInstance()
-                    .setUserInfo(options, new SDCUserInfo(conf.privateKeyPassphrase));
+                    .setUserInfo(options, new SDCUserInfo(privateKeyPassphrase));
               }
             }
           }
           break;
         case PASSWORD:
           StaticUserAuthenticator auth = new StaticUserAuthenticator(
-              remoteURI.getHost(), conf.username, conf.password);
+            remoteURI.getHost(),
+            resolveCredential(conf.username, "username", issues),
+            resolveCredential(conf.password, "password", issues)
+          );
           SftpFileSystemConfigBuilder.getInstance().setPreferredAuthentications(options, "password");
           DefaultFileSystemConfigBuilder.getInstance().setUserAuthenticator(options, auth);
           break;
@@ -256,6 +267,21 @@ public class RemoteDownloadSource extends BaseSource {
       rateLimitElVars = getContext().createELVars();
     }
     return issues;
+  }
+
+  private String resolveCredential(CredentialValue credentialValue, String config, List<ConfigIssue> issues) {
+    try {
+      return credentialValue.get();
+    } catch (StageException e) {
+      issues.add(getContext().createConfigIssue(
+        Groups.CREDENTIALS.getLabel(),
+        config,
+        Errors.REMOTE_17,
+        e.toString()
+      ));
+    }
+
+    return null;
   }
 
   private void validateFilePattern(List<ConfigIssue> issues) {
