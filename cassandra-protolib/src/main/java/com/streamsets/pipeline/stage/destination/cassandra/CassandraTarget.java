@@ -117,7 +117,7 @@ public class CassandraTarget extends BaseTarget {
     // Verify that we can load DSE classes if DSE auth modes are selected
     try {
       getAuthProvider();
-    } catch (NoClassDefFoundError e) {
+    } catch (NoClassDefFoundError | StageException e) {
       LOG.error(Errors.CASSANDRA_10.getMessage(), conf.authProviderOption, e);
       issues.add(context.createConfigIssue(
           "CASSANDRA",
@@ -154,24 +154,35 @@ public class CassandraTarget extends BaseTarget {
       issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), "qualifiedTableName", Errors.CASSANDRA_02));
     } else {
       if (checkCassandraReachable(issues)) {
-        List<String> invalidColumns = checkColumnMappings();
-        if (!invalidColumns.isEmpty()) {
+        try {
+          List<String> invalidColumns = checkColumnMappings();
+          if (!invalidColumns.isEmpty()) {
+            issues.add(
+                context.createConfigIssue(
+                    Groups.CASSANDRA.name(),
+                    "columnNames",
+                    Errors.CASSANDRA_08,
+                    Joiner.on(", ").join(invalidColumns)
+                )
+            );
+          }
+        } catch (StageException e) {
           issues.add(
-              context.createConfigIssue(
-                  Groups.CASSANDRA.name(),
-                  "columnNames",
-                  Errors.CASSANDRA_08,
-                  Joiner.on(", ").join(invalidColumns)
-              )
-          );
+          context.createConfigIssue(
+              Groups.CASSANDRA.name(),
+              "columnNames",
+              Errors.CASSANDRA_03,
+              e.toString()
+          ));
         }
+
       }
     }
 
     if (issues.isEmpty()) {
-      cluster = getCluster();
 
       try {
+        cluster = getCluster();
         session = cluster.connect();
 
         statementCache = CacheBuilder.newBuilder()
@@ -199,7 +210,7 @@ public class CassandraTarget extends BaseTarget {
                   }
                 }
             );
-      } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
+      } catch (NoHostAvailableException | AuthenticationException | IllegalStateException | StageException e) {
         LOG.error(Errors.CASSANDRA_03.getMessage(), e.toString(), e);
         issues.add(context.createConfigIssue(null, null, Errors.CASSANDRA_03, e.toString()));
       }
@@ -214,7 +225,7 @@ public class CassandraTarget extends BaseTarget {
     super.destroy();
   }
 
-  private List<String> checkColumnMappings() {
+  private List<String> checkColumnMappings() throws StageException {
     List<String> invalidColumnMappings = new ArrayList<>();
 
     columnMappings = new TreeMap<>();
@@ -255,7 +266,7 @@ public class CassandraTarget extends BaseTarget {
     try (Cluster validationCluster = getCluster()) {
       Session validationSession = validationCluster.connect();
       validationSession.close();
-    } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
+    } catch (NoHostAvailableException | AuthenticationException | IllegalStateException | StageException e) {
       isReachable = false;
       Target.Context context = getContext();
       LOG.error(Errors.CASSANDRA_05.getMessage(), e.toString(), e);
@@ -365,7 +376,7 @@ public class CassandraTarget extends BaseTarget {
     return boundStmt;
   }
 
-  private Cluster getCluster() {
+  private Cluster getCluster() throws StageException {
     return Cluster.builder()
         .addContactPoints(contactPoints)
         // If authentication is disabled on the C* cluster, this method has no effect.
@@ -376,14 +387,14 @@ public class CassandraTarget extends BaseTarget {
         .build();
   }
 
-  private AuthProvider getAuthProvider() {
+  private AuthProvider getAuthProvider() throws StageException {
     switch (conf.authProviderOption) {
       case NONE:
         return AuthProvider.NONE;
       case PLAINTEXT:
-        return new PlainTextAuthProvider(conf.username, conf.password);
+        return new PlainTextAuthProvider(conf.username.get(), conf.password.get());
       case DSE_PLAINTEXT:
-        return new DsePlainTextAuthProvider(conf.username, conf.password);
+        return new DsePlainTextAuthProvider(conf.username.get(), conf.password.get());
       case KERBEROS:
         AccessControlContext accessContext = AccessController.getContext();
         Subject subject = Subject.getSubject(accessContext);

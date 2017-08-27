@@ -20,6 +20,7 @@ import com.datastax.driver.core.ProtocolVersion;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.VaultEL;
 
 import java.util.ArrayList;
@@ -130,26 +131,24 @@ public class CassandraTargetConfig {
   /** Credentials group **/
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       displayPosition = 10,
-      elDefs = VaultEL.class,
       group = "CREDENTIALS",
       dependsOn = "authProviderOption",
       triggeredByValue = {"PLAINTEXT", "DSE_PLAINTEXT"}
   )
-  public String username;
+  public CredentialValue username;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       defaultValue = "",
       displayPosition = 20,
-      elDefs = VaultEL.class,
       group = "CREDENTIALS",
       dependsOn = "authProviderOption",
       triggeredByValue = {"PLAINTEXT", "DSE_PLAINTEXT"}
   )
-  public String password;
+  public CredentialValue password;
 }
