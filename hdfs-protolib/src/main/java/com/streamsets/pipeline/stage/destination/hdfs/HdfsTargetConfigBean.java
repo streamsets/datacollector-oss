@@ -38,7 +38,6 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
@@ -63,6 +62,7 @@ import java.security.PrivilegedExceptionAction;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -126,10 +126,9 @@ public class HdfsTargetConfigBean {
     description = "Additional Hadoop properties to pass to the underlying Hadoop FileSystem. These properties " +
       "have precedence over properties loaded via the 'Hadoop FS Configuration Directory' property.",
     displayPosition = 60,
-    elDefs = VaultEL.class,
     group = "HADOOP_FS"
   )
-  public Map<String, String> hdfsConfigs;
+  public List<HadoopConfigBean> hdfsConfigs;
 
   @ConfigDef(
     required = false,
@@ -900,9 +899,13 @@ public class HdfsTargetConfigBean {
       try {
         conf.set(DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY, "hdfs/_HOST@" + HadoopSecurityUtil.getDefaultRealm());
       } catch (Exception ex) {
-        if (!hdfsConfigs.containsKey(DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY)) {
-          issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_28,
-            ex.toString()));
+        if (!hdfsConfigs.stream().anyMatch(i -> DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY.equals(i.key))) {
+          issues.add(context.createConfigIssue(
+              Groups.HADOOP_FS.name(),
+              null,
+              Errors.HADOOPFS_28,
+              ex.toString())
+          );
         }
       }
     }
@@ -976,8 +979,10 @@ public class HdfsTargetConfigBean {
         }
       }
     } else {
-      String fsDefaultFS = hdfsConfigs.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
-      if (StringUtils.isEmpty(hdfsUri) && StringUtils.isEmpty(fsDefaultFS)) {
+      Optional<HadoopConfigBean> fsDefaultFS = hdfsConfigs.stream()
+        .filter(item -> CommonConfigurationKeys.FS_DEFAULT_NAME_KEY.equals(item.key))
+        .findFirst();
+      if (StringUtils.isEmpty(hdfsUri) && !fsDefaultFS.isPresent()) {
         // No URI, no config dir, and no fs.defaultFS config param
         // Avoid defaulting to writing to file:/// (SDC-5143)
         issues.add(
@@ -989,9 +994,25 @@ public class HdfsTargetConfigBean {
         );
       }
     }
-    for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
-      conf.set(config.getKey(), config.getValue());
+
+    for(HadoopConfigBean configBean : hdfsConfigs) {
+      try {
+        conf.set(
+          configBean.key,
+          configBean.value.get()
+        );
+      } catch (StageException e) {
+         issues.add(
+            context.createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                getTargetConfigBeanPrefix() + "hdfsConfigs",
+                Errors.HADOOPFS_62,
+                e.toString()
+            )
+        );
+      }
     }
+
     return conf;
   }
 

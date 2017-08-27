@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hdfs;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
@@ -514,8 +515,9 @@ public class BaseHdfsTargetIT {
 
     HdfsTargetConfigBean hdfsTargetConfigBean = new HdfsTargetConfigBean();
     hdfsTargetConfigBean.hdfsUri = miniDFS.getURI().toString();
-    hdfsTargetConfigBean.hdfsConfigs = new HashMap<>();
-    hdfsTargetConfigBean.hdfsConfigs.put("x", "X");
+    hdfsTargetConfigBean.hdfsConfigs = ImmutableList.of(
+      new HadoopConfigBean("x", "X")
+    );
     hdfsTargetConfigBean.timeZoneID = "UTC";
     hdfsTargetConfigBean.dirPathTemplate = "/${YYYY()}";
     hdfsTargetConfigBean.lateRecordsDirPathTemplate = "";

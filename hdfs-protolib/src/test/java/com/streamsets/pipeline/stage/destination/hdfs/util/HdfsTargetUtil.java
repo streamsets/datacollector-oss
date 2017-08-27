@@ -20,6 +20,7 @@ import com.streamsets.pipeline.config.ChecksumAlgorithm;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.stage.destination.hdfs.CompressionMode;
+import com.streamsets.pipeline.stage.destination.hdfs.HadoopConfigBean;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsFileType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsSequenceFileCompressionType;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsTarget;
@@ -28,6 +29,8 @@ import com.streamsets.pipeline.stage.destination.hdfs.LateRecordsAction;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class HdfsTargetUtil {
@@ -41,7 +44,7 @@ public class HdfsTargetUtil {
     String hdfsUser = "foo";
     boolean hdfsKerberos = false;
     String hdfsConfDir = null;
-    Map<String, String> hdfsConfigs = new HashMap<>();
+    List<HadoopConfigBean> hdfsConfigs = new LinkedList<>();
     String uniquePrefix = "foo";
     String timeZoneID = "UTC";
     boolean dirPathTemplateInHeader = false;
@@ -126,7 +129,7 @@ public class HdfsTargetUtil {
     }
 
     public Builder addHdfsConfig(String key, String value) {
-      this.hdfsConfigs.put(key, value);
+      this.hdfsConfigs.add(new HadoopConfigBean(key, value));
       return this;
     }
 
