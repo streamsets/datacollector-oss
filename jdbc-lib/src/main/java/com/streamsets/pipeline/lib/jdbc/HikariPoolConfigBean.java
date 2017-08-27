@@ -87,7 +87,6 @@ public class HikariPoolConfigBean {
       triggeredByValue = "true",
       label = "Username",
       displayPosition = 110,
-      elDefs = VaultEL.class,
       group = "CREDENTIALS"
   )
   public CredentialValue username;
@@ -99,7 +98,6 @@ public class HikariPoolConfigBean {
       triggeredByValue = "true",
       label = "Password",
       displayPosition = 120,
-      elDefs = VaultEL.class,
       group = "CREDENTIALS"
   )
   public CredentialValue password;
@@ -111,7 +109,6 @@ public class HikariPoolConfigBean {
       label = "Additional JDBC Configuration Properties",
       description = "Additional properties to pass to the underlying JDBC driver.",
       displayPosition = 999,
-      elDefs = VaultEL.class,
       group = "JDBC"
   )
   @ListBeanModel

@@ -34,6 +34,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.el.VaultEL;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
@@ -589,7 +590,11 @@ public abstract class ConfigDefinitionExtractor {
         (annotation.type() == ConfigDef.Type.MODEL && MODELS_SUPPORTING_ELS.contains(model.getModelType()))) {
       List<Class> elClasses = ImmutableList.copyOf(annotation.elDefs());
       if (annotation.type() == ConfigDef.Type.CREDENTIAL) {
-        elClasses = ImmutableList.<Class>builder().addAll(elClasses).add(CredentialEL.class).build();
+        elClasses = ImmutableList.<Class>builder()
+          .addAll(elClasses)
+          .add(CredentialEL.class)
+          .add(VaultEL.class)
+          .build();
       }
       functions = ELDefinitionExtractor.get().extractFunctions(elClasses.toArray(new Class[elClasses.size()]), contextMsg);
     }
