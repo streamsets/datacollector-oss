@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,29 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.datalake;
+
+package com.streamsets.pipeline.stage.origin.eventhubs;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.sdk.PushSourceRunner;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestDataLakeTarget {
+public class TestEventHubConsumerSource {
+
   @Test
-  public void testInvalidHostName() throws Exception {
-    DataLakeTarget target = new DataLakeTargetBuilder()
-        .accountFQDN("dummy:9000")
-        .authTokenEndpoint("dummy:9500")
+  public void testInvalidConf() throws Exception {
+    EventHubConsumerSource eventHubConsumerSource = new EventHubConsumerSourceBuilder()
+        .namespaceName("inValidNamspaceName")
+        .eventHubName("inValidSampleEventHub")
+        .sasKeyName("inValidSasKeyName")
+        .sasKey("inValidSasKey")
         .build();
 
-    TargetRunner targetRunner = new TargetRunner.Builder(DataLakeDTarget.class, target)
-        .build();
+    PushSourceRunner sourceRunner = new PushSourceRunner
+        .Builder(EventHubConsumerSource.class, eventHubConsumerSource)
+        .addOutputLane("a").build();
 
-    List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
-
+    List<Stage.ConfigIssue> issues = sourceRunner.runValidateConfigs();
     assertEquals(1, issues.size());
   }
+
 }
