@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.mqtt;
 
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -51,7 +52,7 @@ public class MqttClientCommon {
     }
   }
 
-  public MqttClient createMqttClient(MqttCallback mqttCallback) throws MqttException {
+  public MqttClient createMqttClient(MqttCallback mqttCallback) throws MqttException, StageException {
     MqttClientPersistence clientPersistence;
     if (commonConf.persistenceMechanism == MqttPersistenceMechanism.MEMORY) {
       clientPersistence = new MemoryPersistence();
@@ -64,8 +65,8 @@ public class MqttClientCommon {
     connOpts.setCleanSession(false);
     connOpts.setKeepAliveInterval(commonConf.keepAlive);
     if (commonConf.useAuth) {
-      connOpts.setUserName(commonConf.username);
-      connOpts.setPassword(commonConf.password.toCharArray());
+      connOpts.setUserName(commonConf.username.get());
+      connOpts.setPassword(commonConf.password.get().toCharArray());
     }
     configureSslContext(commonConf.tlsConfig, connOpts);
     mqttClient.connect(connOpts);
