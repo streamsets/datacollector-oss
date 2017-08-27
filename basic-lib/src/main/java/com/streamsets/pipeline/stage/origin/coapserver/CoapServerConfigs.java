@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.coapserver;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.VaultEL;
 
 import java.util.Collections;
@@ -52,15 +53,14 @@ public class CoapServerConfigs {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "sdc",
       label = "Resource Name",
       description = "CoAP Resource Name",
       displayPosition = 20,
-      elDefs = VaultEL.class,
       group = "COAP"
   )
-  public String resourceName;
+  public CredentialValue resourceName;
 
   @ConfigDef(
       required = false,

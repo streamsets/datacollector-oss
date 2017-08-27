@@ -38,7 +38,7 @@ public class TestCoapServerPushSource {
   @Test
   public void testSource() throws Exception {
     CoapServerConfigs coapServerConfigs = new CoapServerConfigs();
-    coapServerConfigs.resourceName = "sdc";
+    coapServerConfigs.resourceName = () -> "sdc";
     coapServerConfigs.port = NetworkUtils.getRandomPort();
     coapServerConfigs.maxConcurrentRequests = 1;
     CoapServerPushSource source =
@@ -57,7 +57,7 @@ public class TestCoapServerPushSource {
         }
       });
 
-      URI coapURI = new URI("coap://localhost:" + coapServerConfigs.port + "/" + coapServerConfigs.resourceName);
+      URI coapURI = new URI("coap://localhost:" + coapServerConfigs.port + "/" + coapServerConfigs.resourceName.get());
       CoapClient client = new CoapClient(coapURI);
       CoapResponse response = client.post("Hello", MediaTypeRegistry.TEXT_PLAIN);
       Assert.assertNotNull(response);

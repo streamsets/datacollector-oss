@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -62,7 +63,11 @@ public class PushCoapReceiver implements CoapReceiver {
 
   @Override
   public String getResourceName() {
-    return coAPServerConfigs.resourceName;
+    try {
+      return coAPServerConfigs.resourceName.get();
+    } catch (StageException e) {
+      throw new RuntimeException("Can't resolve resource name", e);
+    }
   }
 
   @Override
