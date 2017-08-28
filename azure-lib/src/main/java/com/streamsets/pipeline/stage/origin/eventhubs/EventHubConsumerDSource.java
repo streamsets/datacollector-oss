@@ -30,10 +30,10 @@ import com.streamsets.pipeline.lib.eventhubs.Groups;
     version = 1,
     label = "Azure Event Hub Consumer",
     description = "Reads data from Azure Event Hub",
-    icon = "event-hubs.png",
+    icon = "event-hubs-multithreaded.png",
     execution = {ExecutionMode.STANDALONE},
     recordsByRef = true,
-    onlineHelpRefUrl = "TODO"
+    onlineHelpRefUrl = "index.html#Origins/AzureEventHub.html#task_t14_c5q_1bb"
 )
 @HideConfigs({
     "consumerConfigBean.dataFormatConfig.jsonContent"
@@ -47,7 +47,6 @@ public class EventHubConsumerDSource extends DPushSource {
 
   @ConfigDefBean
   public EventHubConsumerConfigBean consumerConfigBean;
-
 
   @Override
   protected PushSource createPushSource() {

@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     description = "Writes data to Azure IoT Hub",
     icon = "azure-iot-hub.png",
     recordsByRef = true,
-    onlineHelpRefUrl = "TODO"
+    onlineHelpRefUrl = "index.html#Destinations/AzureIoTHub.html#task_tqc_vkq_1bb"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
