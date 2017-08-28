@@ -64,8 +64,6 @@
    <topicref href="../Configuration/HTTP_protocols.dita">
     <topicref href="../Configuration/HTTP_protocolsStandalone.dita"/>
     <topicref href="../Configuration/HTTP_protocolsCluster.dita"/>
-    <topicref href="../Configuration/HTTP_protocolsClusterKeystore.dita"/>
-    <topicref href="../Configuration/HTTP_protocolsClusterTruststore.dita"/>
    </topicref>
    <topicref href="../Configuration/HadoopImpersonationMode.dita">
     <topicref href="../Configuration/HadoopImpersonationMode-Lowercase.dita"/>
