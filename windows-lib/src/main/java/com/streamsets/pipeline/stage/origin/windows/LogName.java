@@ -20,8 +20,9 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum LogName implements Label {
-  APPLICATION("Application"),
-  SYSTEM("System"),
+  Application("Application"),
+  System("System"),
+  Security("Security"),
   ;
 
   private final String label;

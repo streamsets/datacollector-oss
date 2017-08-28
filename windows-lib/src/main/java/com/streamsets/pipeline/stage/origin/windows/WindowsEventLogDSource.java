@@ -39,14 +39,14 @@ public class WindowsEventLogDSource extends DSource {
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "APPLICATION",
+      defaultValue = "Application",
       label = "Log Name",
       description = "Log Name",
       displayPosition = 10,
       group = "WINDOWS"
   )
   @ValueChooserModel(LogNameChooserValues.class)
-  public LogName logName = LogName.APPLICATION;
+  public LogName logName = LogName.Application;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
