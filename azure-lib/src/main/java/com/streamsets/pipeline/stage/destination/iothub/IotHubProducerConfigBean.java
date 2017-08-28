@@ -19,7 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.eventhubs.DataFormatChooserValues;
+import com.streamsets.pipeline.lib.eventhubs.DestinationDataFormatChooserValues;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 public class IotHubProducerConfigBean {
@@ -29,11 +29,11 @@ public class IotHubProducerConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "JSON",
       label = "Data Format",
-      description = "Event Hub payload data format",
+      description = "Data format to use when writing records to Azure IoT Hub",
       displayPosition = 1,
       group = "DATA_FORMAT"
   )
-  @ValueChooserModel(DataFormatChooserValues.class)
+  @ValueChooserModel(DestinationDataFormatChooserValues.class)
   public DataFormat dataFormat = DataFormat.JSON;
 
   @ConfigDefBean(groups = {"IOT_HUB"})
