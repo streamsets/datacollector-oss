@@ -292,6 +292,13 @@
                                         /></xref></p></entry>
                         </row>
                         <row>
+                            <entry>Schema Generator processor</entry>
+                            <entry>Generates schemas and write them to a user-defined record header
+                                attribute. <xref href="../Processors/SchemaGenerator.dita">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_aj4_3tp_1bb"/></xref></entry>
+                        </row>
+                        <row>
                             <entry>Amazon S3 destination</entry>
                             <entry>
                                 <p>Includes event header attributes when generating events. <xref

@@ -268,6 +268,15 @@
    <topicref href="../Processors/SalesforceLookup-APIVersion.dita"/>
    <topicref href="../Processors/SalesforceLookup-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/SchemaGenerator.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Processors/SchemaGenerator-AvroSchemas.dita"/>
+   <topicref href="../Processors/SchemaGenerator-GeneratedSchema.dita"/>
+   <topicref href="../Processors/SchemaGenerating-Caching.dita"/>
+   <topicref href="../Processors/SchemaGenerator-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/Spark.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

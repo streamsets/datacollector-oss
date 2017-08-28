@@ -89,6 +89,8 @@
           key-value lookups in Redis to enrich records with data.</li>
         <li><xref href="SalesforceLookup.dita#concept_k23_3rk_yx">Salesforce Lookup</xref> -
           Performs lookups in Salesforce to enrich records with data.</li>
+        <li><xref href="SchemaGenerator.dita#concept_rfz_ks3_x1b">Schema Generator</xref> -
+          Generates a schema for each record and writes the schema to a record header attribute. </li>
         <li><xref href="Spark.dita#concept_cpx_1lm_zx">Spark Evaluator</xref> - Processes data based
           on a custom Spark application.</li>
         <li><xref href="StaticLookup.dita#concept_aqz_t4r_pv">Static Lookup</xref> - Performs

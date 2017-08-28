@@ -24,7 +24,7 @@
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Jython
                     Evaluator</indexterm></indexterm>The Jython Evaluator processes data based on
             custom Jython code. Use the Jython Evaluator to incorporate custom Jython code in a
-            pipeline. The Jython Evaluator supports Jython version 2.7.</p>
+            pipeline. The Jython Evaluator supports Jython version 2.7.x.</p>
         <p
             conref="../Reusable_Content/Reusable_Topics/ScriptingProcessorContent.dita#concept_oxj_vbh_cy/OverviewScriptTypes"/>
   <p>When you use a Jython Evaluator in a pipeline, the <ph

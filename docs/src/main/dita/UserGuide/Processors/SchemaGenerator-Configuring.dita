@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_szj_ms3_x1b">
+    <title>Configuring a Schema Generator</title>
+    <taskbody>
+        <context><indexterm>Schema Generator
+            processor<indexterm>configuring</indexterm></indexterm>Configure a Schema Generator
+            processor to generate a schema for each record and write the schema to a record header
+            attribute.</context>
+        <steps>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Schema</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_c2k_wpp_1bb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Schema Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Schema Type</entry>
+                                    <entry>Type of schema to generate. The processor generates Avro
+                                        schemas at this time.</entry>
+                                </row>
+                                <row>
+                                    <entry>Schema Name</entry>
+                                    <entry>The name to use for the resulting schema.</entry>
+                                </row>
+                                <row>
+                                    <entry>Header Attribute <xref
+                                            href="SchemaGenerator-AvroSchemas.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_f3b_khp_fs"/></xref></entry>
+                                    <entry>The header attribute to contain the resulting schema.
+                                            <p>Default is avroSchema. </p><p>Destinations can use
+                                            the avroSchema header attribute to write Avro data when
+                                            you configure the destination's Avro Schema Location
+                                            property to use the In Record Header option.
+                                        </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Avro</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_kws_rqp_1bb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Namespace</entry>
+                                    <entry>Namespace to use in the Avro schema.</entry>
+                                </row>
+                                <row>
+                                    <entry>Doc</entry>
+                                    <entry>Optional description for the Avro schema.</entry>
+                                </row>
+                                <row>
+                                    <entry>Nullable Fields</entry>
+                                    <entry>
+                                        <p>Allows fields to include null values by creating a union
+                                            of the field type and null type.</p>
+                                        <p>By default, fields cannot include null values.</p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Default to Nullable</entry>
+                                    <entry>When allowing null values in schema fields, uses null as
+                                        a default value for all fields.</entry>
+                                </row>
+                                <row>
+                                    <entry>Expand Types</entry>
+                                    <entry>Allow using a larger <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> data type for an Avro data type when an exact equivalent
+                                        is not available.</entry>
+                                </row>
+                                <row>
+                                    <entry>Default Values for Types</entry>
+                                    <entry>Optionally specify default values for Avro data types.
+                                        Click <uicontrol>Add</uicontrol> to configure a default
+                                        value. <p>The default value applies to all fields of the
+                                            specified data type.</p><p>You can specify default
+                                            values for the following Avro types:<ul
+                                                id="ul_r3f_vcq_1bb">
+                                                <li>Boolean</li>
+                                                <li>Integer</li>
+                                                <li>Long</li>
+                                                <li>Float</li>
+                                                <li>Double</li>
+                                                <li>String</li>
+                                            </ul></p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Types</wintitle> tab, optionally configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_spp_ycq_1bb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Type Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Precision Field Attribute</entry>
+                                    <entry>Name of the schema attribute that stores the precision
+                                        for a  decimal field.</entry>
+                                </row>
+                                <row>
+                                    <entry>Scale Field Attribute</entry>
+                                    <entry>Name of the schema attribute that stores the scale for a
+                                        decimal field.</entry>
+                                </row>
+                                <row>
+                                    <entry>Default Precision</entry>
+                                    <entry>Default precision to use for decimal fields when the
+                                        precision is not specified or is invalid. <p>Use -1 to opt
+                                            out of this option.</p><p>
+                                            <note>When decimal fields do not have a valid precision
+                                                and scale, the stage sends the record to
+                                                error.</note>
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Default Scale</entry>
+                                    <entry>Default scale to use for decimal fields when the
+                                        precision is not specified or is invalid. <p>Use -1 to opt
+                                            out of this option.</p><note>When decimal fields do not
+                                            have a valid precision and scale, the stage sends the
+                                            record to error.</note></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_b44_grq_1bb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Advanced Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Enable Cache</entry>
+                                    <entry>Enables caching schemas. Can improve performance under
+                                        specific conditions. For more information, see <xref
+                                            href="SchemaGenerating-Caching.dita#concept_rjk_y1q_1bb"
+                                        />.</entry>
+                                </row>
+                                <row>
+                                    <entry>Cache Size</entry>
+                                    <entry>Maximum number of schemas to cache.</entry>
+                                </row>
+                                <row>
+                                    <entry>Cache Key Expression</entry>
+                                    <entry>Expression that evaluates to a valid cache key.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

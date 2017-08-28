@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kss_hgq_1bb">
+ <title>Generated Avro Schema</title>
+ <conbody>
+  <p>The Avro schema that the Schema Generator creates includes the following information:<ul
+                id="ul_pqr_mgq_1bb">
+                <li>Schema type set to "record".</li>
+                <li>Schema name based on the Schema Name property.</li>
+                <li>Namespace based on the Namespace property, when configured.</li>
+                <li>Schema description in the doc field based on the Doc property, when
+                    configured.</li>
+                <li>A map of field names with related attributes based on the record schema and
+                    related properties defined in the stage, such as whether fields can include null
+                    values.</li>
+            </ul></p>
+        <p>For example, the following Avro schema is generated when you set the Name property to
+            MyAvroSchema, and omit the optional Namespace and Doc properties:</p>
+        <p>
+            <codeblock>{"type":"record","name":"MyAvroSchema","namespace":"","doc":"","fields":[{"name":"name","type":["null","string"],"default":null},{"name":"id","type":["null","int"],"default":null},{"name":"instock","type":["null","boolean"],"default":false},{"name":"cost","type":["null",{"type":"bytes","logicalType":"decimal","precision":10,"scale":2}],"default":null}]}</codeblock>
+        </p>
+        <p>The record described by this schema includes the following fields:<ul id="ul_ftj_5hq_1bb">
+                <li>name - A string field.</li>
+                <li>id - An integer field.</li>
+                <li>instock - A boolean field.</li>
+                <li>cost - A decimal field.</li>
+            </ul></p>
+        <p>The processor is configured to allow nulls in schema fields and to use null as the
+            default value.</p>
+ </conbody>
+</concept>

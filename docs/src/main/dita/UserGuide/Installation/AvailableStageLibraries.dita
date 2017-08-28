@@ -660,7 +660,7 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jython_2_7-lib</entry>
-                            <entry>For Jython version 2.7. <p>Includes the Jython Evaluator
+                            <entry>For Jython version 2.7.x. <p>Includes the Jython Evaluator
                                     processor.</p></entry>
                         </row>
                         <row>

@@ -1,0 +1,553 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Schema Generator processor generates a schema based on the structure of a record and writes the schema into a record header attribute. The Schema Generator generates Avro schemas at this time. You ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Schema Generator" /><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_rfz_ks3_x1b" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Schema Generator</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_rfz_ks3_x1b">
+ <h1 class="title topictitle1">Schema Generator</h1>
+
+ <div class="body conbody">
+  <p class="p">The Schema Generator processor generates a
+            schema based on the structure of a record and writes the schema into a record header
+            attribute. The Schema Generator generates Avro schemas at this time. </p>
+
+        <p class="p">You might use the Schema Generator in a pipeline to generate the latest version of the
+            Avro schema before writing records to destination systems. </p>
+
+        <p class="p">When you configure a Schema Generator processor, you can specify the namespace and
+            description for the Avro schema. You can specify whether schema fields should allow
+            nulls and whether schema fields should default to null. You can specify default values
+            for most Avro primitive types, and you can allow the processor to use a larger data
+            types for Avro types without a direct equivalent.</p>
+
+        <p class="p">You can specify the names for precision and scale attributes for decimal values. And you
+            can configure a default precision and scale for any decimal fields without that
+            information or with an invalid precision or scale.</p>
+
+        <p class="p">When appropriate, you can configure the Schema Generator to cache a number of schemas,
+            and to apply the schemas to records based on the expression defined in the Cache Key
+            Expression property. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_zm3_ttp_1bb">
+ <h2 class="title topictitle2">Using the avroSchema Header Attribute</h2>
+
+ <div class="body conbody">
+  <p class="p">The Schema Generator processor writes Avro schemas
+            to an avroSchema record header attribute by default. All Avro-processing origins also
+            write the Avro schema of incoming records to the avroSchema header attribute. Also, any
+            destination that writes Avro data can use the schema in the avroSchema header attribute. </p>
+
+        <p class="p">When processing Avro data, one logical workflow is to add the Schema Generator
+            immediately before the destination in a pipeline. This allows the processor to generate
+            a new Avro schema before writing the data to destination systems.</p>
+
+        <p class="p">If you want retain an earlier version of the avroSchema, you might use an Expression
+            Evaluator processor before the Schema Generator to move the existing schema in the
+            avroSchema header attribute to a different header attribute, such as
+            avroSchema_previous.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_kss_hgq_1bb">
+ <h2 class="title topictitle2">Generated Avro Schema</h2>
+
+ <div class="body conbody">
+  <div class="p">The Avro schema that the Schema Generator creates includes the following information:<ul class="ul" id="concept_kss_hgq_1bb__ul_pqr_mgq_1bb">
+                <li class="li">Schema type set to "record".</li>
+
+                <li class="li">Schema name based on the Schema Name property.</li>
+
+                <li class="li">Namespace based on the Namespace property, when configured.</li>
+
+                <li class="li">Schema description in the doc field based on the Doc property, when
+                    configured.</li>
+
+                <li class="li">A map of field names with related attributes based on the record schema and
+                    related properties defined in the stage, such as whether fields can include null
+                    values.</li>
+
+            </ul>
+</div>
+
+        <p class="p">For example, the following Avro schema is generated when you set the Name property to
+            MyAvroSchema, and omit the optional Namespace and Doc properties:</p>
+
+        <div class="p">
+            <pre class="pre codeblock">{"type":"record","name":"MyAvroSchema","namespace":"","doc":"","fields":[{"name":"name","type":["null","string"],"default":null},{"name":"id","type":["null","int"],"default":null},{"name":"instock","type":["null","boolean"],"default":false},{"name":"cost","type":["null",{"type":"bytes","logicalType":"decimal","precision":10,"scale":2}],"default":null}]}</pre>
+
+        </div>
+
+        <div class="p">The record described by this schema includes the following fields:<ul class="ul" id="concept_kss_hgq_1bb__ul_ftj_5hq_1bb">
+                <li class="li">name - A string field.</li>
+
+                <li class="li">id - An integer field.</li>
+
+                <li class="li">instock - A boolean field.</li>
+
+                <li class="li">cost - A decimal field.</li>
+
+            </ul>
+</div>
+
+        <p class="p">The processor is configured to allow nulls in schema fields and to use null as the
+            default value.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rjk_y1q_1bb">
+ <h2 class="title topictitle2">Caching Schemas</h2>
+
+ <div class="body conbody">
+  <p class="p">You can configure the Schema Generator to cache
+            a number of schemas, and to apply the schemas to records based on the expression defined
+            in the Cache Key Expression property.</p>
+
+        <p class="p">Caching schemas can improve performance when a set of records can logically use the exact
+            same schema, and when the records include a value that can be used to determine the
+            schema to use.</p>
+
+        <p class="p">For example, say your pipeline uses the JDBC Multitable Consumer to read from multiple
+            database tables. The origin writes the names of the table used to generate each record
+            to a jdbc.tables record header attribute. Let's assume that all data from each record
+            comes from a single table. </p>
+
+        <p class="p">To use the schema associated with each record, you can configure the Cache Key Expression
+            property as follows: <samp class="ph codeph">${record:attribute(jdbc.tables)}</samp>. </p>
+
+        <div class="p">
+            <div class="note warning"><span class="warningtitle">Warning:</span> Use schema caching with care - applying an incorrect schema to a
+                record can cause errors when writing to destination systems.</div>
+
+        </div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_szj_ms3_x1b">
+    <h2 class="title topictitle2">Configuring a Schema Generator</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure a Schema Generator
+            processor to generate a schema for each record and write the schema to a record header
+            attribute.</div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_szj_ms3_x1b__d64044e4531" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d394366e213">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d394366e216">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e213 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e216 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e213 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e216 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e213 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_szj_ms3_x1b__d64044e4577" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e216 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e213 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_szj_ms3_x1b__d64044e4593" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e216 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e213 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_szj_ms3_x1b__d64044e4610" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e216 ">Error record handling for the stage: <ul class="ul" id="task_szj_ms3_x1b__d64044e4614">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Schema</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_szj_ms3_x1b__table_c2k_wpp_1bb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d394366e327">Schema Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d394366e330">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e327 ">Schema Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e330 ">Type of schema to generate. The processor generates Avro
+                                        schemas at this time.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e327 ">Schema Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e330 ">The name to use for the resulting schema.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e327 ">Header Attribute <a class="xref" href="SchemaGenerator.html#concept_zm3_ttp_1bb">
+                                            <img class="image" id="task_szj_ms3_x1b__image_f3b_khp_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e330 ">The header attribute to contain the resulting schema.
+                                            <p class="p">Default is avroSchema. </p>
+<p class="p">Destinations can use
+                                            the avroSchema header attribute to write Avro data when
+                                            you configure the destination's Avro Schema Location
+                                            property to use the In Record Header option.
+                                        </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Avro</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_szj_ms3_x1b__table_kws_rqp_1bb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d394366e399">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d394366e402">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e399 ">Namespace</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e402 ">Namespace to use in the Avro schema.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e399 ">Doc</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e402 ">Optional description for the Avro schema.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e399 ">Nullable Fields</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e402 ">
+                                        <p class="p">Allows fields to include null values by creating a union
+                                            of the field type and null type.</p>
+
+                                        <p class="p">By default, fields cannot include null values.</p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e399 ">Default to Nullable</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e402 ">When allowing null values in schema fields, uses null as
+                                        a default value for all fields.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e399 ">Expand Types</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e402 ">Allow using a larger <span class="ph">Data
+                  Collector</span> data type for an Avro data type when an exact equivalent
+                                        is not available.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e399 ">Default Values for Types</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e402 ">Optionally specify default values for Avro data types.
+                                        Click <span class="ph uicontrol">Add</span> to configure a default
+                                        value. <p class="p">The default value applies to all fields of the
+                                            specified data type.</p>
+<div class="p">You can specify default
+                                            values for the following Avro types:<ul class="ul" id="task_szj_ms3_x1b__ul_r3f_vcq_1bb">
+                                                <li class="li">Boolean</li>
+
+                                                <li class="li">Integer</li>
+
+                                                <li class="li">Long</li>
+
+                                                <li class="li">Float</li>
+
+                                                <li class="li">Double</li>
+
+                                                <li class="li">String</li>
+
+                                            </ul>
+</div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Types</span> tab, optionally configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_szj_ms3_x1b__table_spp_ycq_1bb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d394366e528">Type Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d394366e531">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e528 ">Precision Field Attribute</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e531 ">Name of the schema attribute that stores the precision
+                                        for a  decimal field.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e528 ">Scale Field Attribute</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e531 ">Name of the schema attribute that stores the scale for a
+                                        decimal field.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e528 ">Default Precision</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e531 ">Default precision to use for decimal fields when the
+                                        precision is not specified or is invalid. <p class="p">Use -1 to opt
+                                            out of this option.</p>
+<div class="p">
+                                            <div class="note note"><span class="notetitle">Note:</span> When decimal fields do not have a valid precision
+                                                and scale, the stage sends the record to
+                                                error.</div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e528 ">Default Scale</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e531 ">Default scale to use for decimal fields when the
+                                        precision is not specified or is invalid. <p class="p">Use -1 to opt
+                                            out of this option.</p>
+<div class="note note"><span class="notetitle">Note:</span> When decimal fields do not
+                                            have a valid precision and scale, the stage sends the
+                                            record to error.</div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, optionally configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_szj_ms3_x1b__table_b44_grq_1bb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d394366e612">Advanced Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d394366e615">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e612 ">Enable Cache</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e615 ">Enables caching schemas. Can improve performance under
+                                        specific conditions. For more information, see <a class="xref" href="SchemaGenerator.html#concept_rjk_y1q_1bb">Caching Schemas</a>.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e612 ">Cache Size</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e615 ">Maximum number of schemas to cache.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d394366e612 ">Cache Key Expression</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d394366e615 ">Expression that evaluates to a valid cache key.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>
