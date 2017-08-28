@@ -54,6 +54,7 @@
         <li>Java configuration options</li>
         <li>Java Security Manager that restricts the runtime permissions of user libraries</li>
         <li>Path to JAR files to be added to the root classloader</li>
+        <li>Heap dump creation and file location</li>
       </ul></p>
     <p> </p>
   </conbody>

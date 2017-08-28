@@ -85,6 +85,7 @@
    </topicref>
    <topicref href="../Configuration/JavaSecurityManager.dita"/>
    <topicref href="../Configuration/RootClassloader.dita"/>
+   <topicref href="../Configuration/HeapDumpCreation.dita"/>
   </topicref>
   <topicref href="../Configuration/ExternalLibs.dita" chunk="to-content">
    <topicmeta>

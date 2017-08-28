@@ -121,7 +121,8 @@
                             java.security.networkaddress.cache.ttl property is set to 0 so that the
                             JVM uses the Domain Name Service (DNS) time to live value, instead of
                             caching the lookups for the lifetime of the JVM.</li>
-                        <li>SDC_HEAPDUMP_PATH enhancement - The new default file name,
+                        <li><xref href="../Configuration/HeapDumpCreation.dita#concept_cy3_r44_z1b"
+                                >SDC_HEAPDUMP_PATH enhancement</xref> - The new default file name,
                                 <codeph>$SDC_LOG/sdc_heapdump_${timestamp}.hprof</codeph>, includes
                             a timestamp so you can write multiple heap dump files to the specified
                             directory.</li>

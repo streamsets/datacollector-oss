@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_cy3_r44_z1b">
+ <title>Heap Dump Creation</title>
+ <conbody>
+        <p><indexterm>Java Security Manager<indexterm>Data
+                Collector</indexterm></indexterm><indexterm>Data Collector<indexterm>Java Security
+                    Manager</indexterm></indexterm>By default, when <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            encounters an out of memory error (OOME), it creates a heap dump. </p>
+        <p>By default, heap dump files are written to the file defined in the SDC_LOG environment
+            variable and use a naming convention that allows generating multiple heap dump files, as
+            follows: <codeph>$SDC_LOG/sdc_heapdump_${timestamp}.hprof</codeph>.</p>
+        <p>You can change the name of the heap dump files, but we recommend using the
+                <codeph>${timestamp}</codeph> or similar variable to ensure that the heap dump name
+            is unique. </p>
+        <p>Note that Java Virtual Machine, and therefore <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+            does not overwrite existing heap dump files. For example, if you use
+                <codeph>$SDC_LOG/sdc_heapdump.hprof</codeph> as the file name, after <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            creates the first heap dump file, it will not create another until you remove the
+            existing file. </p>
+        <p>
+            <note>Depending on the number and size of the generated heap dump files, you might want
+                to increase the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                <xref href="JavaHeapSize.dita#concept_mdc_shg_qr">Java heap size</xref>. </note>
+        </p>
+        <p>You can configure the following heap dump properties in the environment configuration
+                files:<table frame="all" rowsep="1" colsep="1" id="table_rn4_tq4_z1b">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                    <thead>
+                        <row>
+                            <entry>Heap Dump Property</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>SDC_HEAPDUMP_ON_OOM </entry>
+                            <entry>Specifies whether <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> generates a heap dump upon encountering an out of memory error.
+                                    <p>Default is true.</p></entry>
+                        </row>
+                        <row>
+                            <entry>SDC_HEAPDUMP_PATH</entry>
+                            <entry>Specifies the file name and location to use for heap dump files.
+                                    <p>By default, heap dumps are written to
+                                        <codeph>$SDC_LOG/sdc_heapdump_${timestamp}.hprof</codeph>.
+                                    </p><p>To specify a different file name or location, uncomment
+                                    the property and enter the location and file name to use. </p><p>
+                                    <note type="tip">To write multiple heap dump files to a
+                                        directory, use a function or variable to ensure that the
+                                        file name is unique. If a file of the same name exists in
+                                        the directory, <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> does not create a new heap dump file.</note>
+                                </p></entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+    </conbody>
+</concept>
