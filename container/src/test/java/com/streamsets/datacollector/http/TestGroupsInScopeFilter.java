@@ -22,12 +22,12 @@ import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.restapi.configuration.RuntimeInfoInjector;
 import com.streamsets.datacollector.restapi.configuration.UserGroupManagerInjector;
+import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import javax.security.auth.Subject;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -37,11 +37,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.AccessController;
 import java.security.Principal;
-import java.util.Set;
 
-public class TestSubjectInContextFilter {
+public class TestGroupsInScopeFilter {
 
   @Test
   public void testLifecyleNoDPM() throws ServletException {
@@ -58,7 +56,7 @@ public class TestSubjectInContextFilter {
 
     Mockito.when(config.getServletContext()).thenReturn(context);
 
-    SubjectInContextFilter filter = new SubjectInContextFilter();
+    GroupsInScopeFilter filter = new GroupsInScopeFilter();
 
     filter.init(config);
     Assert.assertEquals(userGroupManager, filter.getUserGroupManager());
@@ -82,7 +80,7 @@ public class TestSubjectInContextFilter {
 
     Mockito.when(config.getServletContext()).thenReturn(context);
 
-    SubjectInContextFilter filter = new SubjectInContextFilter();
+    GroupsInScopeFilter filter = new GroupsInScopeFilter();
 
     filter.init(config);
     Assert.assertNull(filter.getUserGroupManager());
@@ -93,7 +91,7 @@ public class TestSubjectInContextFilter {
 
   @Test
   public void testNoPrincipalInRequest() throws ServletException, IOException {
-    SubjectInContextFilter filter = new SubjectInContextFilter();
+    GroupsInScopeFilter filter = new GroupsInScopeFilter();
     filter = Mockito.spy(filter);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -101,9 +99,7 @@ public class TestSubjectInContextFilter {
     FilterChain chain = new FilterChain() {
       @Override
       public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-        Subject subject = Subject.getSubject(AccessController.getContext());
-        Set<SSOPrincipal> principals = subject.getPrincipals(SSOPrincipal.class);
-        Assert.assertTrue(principals.isEmpty());
+        Assert.assertTrue(GroupsInScope.isUserGroupInScope("all"));
       }
     };
 
@@ -115,19 +111,19 @@ public class TestSubjectInContextFilter {
 
   @Test
   public void testDoFilterSSOPrincipalInRequest() throws ServletException, IOException {
-    SubjectInContextFilter filter = new SubjectInContextFilter();
+    GroupsInScopeFilter filter = new GroupsInScopeFilter();
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     SSOPrincipal principal = Mockito.mock(SSOPrincipal.class);
+    Mockito.when(principal.getGroups()).thenReturn(ImmutableSet.of("all", "g"));
     Mockito.when(req.getUserPrincipal()).thenReturn(principal);
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
     FilterChain chain = new FilterChain() {
       @Override
       public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-        Subject subject = Subject.getSubject(AccessController.getContext());
-        Set<SSOPrincipal> principals = subject.getPrincipals(SSOPrincipal.class);
-        Assert.assertEquals(1, principals.size());
-        Assert.assertEquals(principal, principals.iterator().next());
+        Assert.assertTrue(GroupsInScope.isUserGroupInScope("all"));
+        Assert.assertTrue(GroupsInScope.isUserGroupInScope("g"));
+        Assert.assertFalse(GroupsInScope.isUserGroupInScope("x"));
       }
     };
 
@@ -139,7 +135,7 @@ public class TestSubjectInContextFilter {
 
   @Test
   public void testDoFilterWithUserGroupManagerWithMissingUser() throws ServletException, IOException {
-    SubjectInContextFilter filter = new SubjectInContextFilter();
+    GroupsInScopeFilter filter = new GroupsInScopeFilter();
     filter = Mockito.spy(filter);
 
     UserGroupManager userGroupManager = Mockito.mock(UserGroupManager.class);
@@ -153,12 +149,8 @@ public class TestSubjectInContextFilter {
     FilterChain chain = new FilterChain() {
       @Override
       public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-        Subject subject = Subject.getSubject(AccessController.getContext());
-        Set<SSOPrincipal> principals = subject.getPrincipals(SSOPrincipal.class);
-        Assert.assertEquals(1, principals.size());
-        Assert.assertEquals("user", principals.iterator().next().getName());
-        Assert.assertEquals(ImmutableSet.of("all"), principals.iterator().next().getGroups());
-        Assert.assertEquals(ImmutableSet.of("user"), principals.iterator().next().getRoles());
+        Assert.assertTrue(GroupsInScope.isUserGroupInScope("all"));
+        Assert.assertFalse(GroupsInScope.isUserGroupInScope("x"));
       }
     };
 
@@ -172,7 +164,7 @@ public class TestSubjectInContextFilter {
 
   @Test
   public void testDoFilterWithUserGroupManagerWithUser() throws ServletException, IOException {
-    SubjectInContextFilter filter = new SubjectInContextFilter();
+    GroupsInScopeFilter filter = new GroupsInScopeFilter();
     filter = Mockito.spy(filter);
 
     Principal principal = Mockito.mock(Principal.class);
@@ -192,12 +184,8 @@ public class TestSubjectInContextFilter {
     FilterChain chain = new FilterChain() {
       @Override
       public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-        Subject subject = Subject.getSubject(AccessController.getContext());
-        Set<SSOPrincipal> principals = subject.getPrincipals(SSOPrincipal.class);
-        Assert.assertEquals(1, principals.size());
-        Assert.assertEquals("user", principals.iterator().next().getName());
-        Assert.assertEquals(ImmutableSet.of("g"), principals.iterator().next().getGroups());
-        Assert.assertEquals(ImmutableSet.of("r"), principals.iterator().next().getRoles());
+        Assert.assertTrue(GroupsInScope.isUserGroupInScope("g"));
+        Assert.assertFalse(GroupsInScope.isUserGroupInScope("x"));
       }
     };
 

@@ -33,17 +33,14 @@ import com.streamsets.datacollector.main.ShutdownHandler;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.security.SecurityContext;
+import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.lib.security.SubjectUtils;
-import com.streamsets.lib.security.http.HeadlessSSOPrincipal;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.impl.DataCollector;
-
 import com.streamsets.pipeline.validation.ValidationIssue;
 import dagger.ObjectGraph;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,14 +97,12 @@ public class EmbeddedDataCollector implements DataCollector {
         String pipelineUser = Utils.checkNotNull(properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_USER), "Pipeline user");
         String pipelineRev = Utils.checkNotNull(properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_REV), "Pipeline revision");
 
-        // we need to start the pipeline within the context of a Subject with a headless recovery principal for the user
-        Subject subject = SubjectUtils.createSubject(HeadlessSSOPrincipal.createRecoveryPrincipal(pipelineUser));
-        Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> {
+        // we need to skip enforcement user groups in scope.
+        GroupsInScope.executeIgnoreGroups(() -> {
           runner = pipelineManager.getRunner(pipelineName, pipelineRev);
           runner.start(pipelineUser);
           return null;
         });
-
         return null;
       }
     });

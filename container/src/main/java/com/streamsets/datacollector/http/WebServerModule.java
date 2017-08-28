@@ -376,7 +376,7 @@ public class WebServerModule {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
-        FilterHolder filter = new FilterHolder(new SubjectInContextFilter());
+        FilterHolder filter = new FilterHolder(new GroupsInScopeFilter());
         context.addFilter(filter, "/*", EnumSet.of(DispatcherType.REQUEST));
       }
     };

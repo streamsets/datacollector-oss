@@ -1,12 +1,12 @@
 /*
  * Copyright 2017 StreamSets Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,17 +16,13 @@
 package com.streamsets.datacollector.credential;
 
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.lib.security.http.HeadlessSSOPrincipal;
-import com.streamsets.lib.security.http.SSOPrincipal;
+import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-
-import javax.security.auth.Subject;
-import java.security.PrivilegedExceptionAction;
 
 public class TestGroupEnforcerCredentialStore {
 
@@ -51,11 +47,7 @@ public class TestGroupEnforcerCredentialStore {
     Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
     GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore(store);
 
-    SSOPrincipal principal = HeadlessSSOPrincipal.createRecoveryPrincipal("uid");
-    Subject subject = new Subject();
-    subject.getPrincipals().add(principal);
-    CredentialValue value = Subject.doAs(subject, (PrivilegedExceptionAction<CredentialValue>) () -> enforcerStore.get("g", "n", "o"));
-
+    CredentialValue value = GroupsInScope.executeIgnoreGroups(() -> enforcerStore.get("g", "n", "o"));
     Assert.assertEquals(CREDENTIAL_VALUE, value);
   }
 
@@ -65,11 +57,7 @@ public class TestGroupEnforcerCredentialStore {
     Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
     GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore(store);
 
-    SSOPrincipal principal = new HeadlessSSOPrincipal("uid", ImmutableSet.of("g"));
-    Subject subject = new Subject();
-    subject.getPrincipals().add(principal);
-    CredentialValue value = Subject.doAs(subject, (PrivilegedExceptionAction<CredentialValue>) () -> enforcerStore.get("g", "n", "o"));
-
+    CredentialValue value = GroupsInScope.execute(ImmutableSet.of("g"), () -> enforcerStore.get("g", "n", "o"));
     Assert.assertEquals(CREDENTIAL_VALUE, value);
   }
 
@@ -79,14 +67,7 @@ public class TestGroupEnforcerCredentialStore {
     Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
     GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore(store);
 
-    SSOPrincipal principal = new HeadlessSSOPrincipal("uid", ImmutableSet.of("g"));
-    Subject subject = new Subject();
-    subject.getPrincipals().add(principal);
-    try {
-      Subject.doAs(subject, (PrivilegedExceptionAction<CredentialValue>) () -> enforcerStore.get("h", "n", "o"));
-    } catch (Exception ex) {
-      throw ex.getCause();
-    }
+    GroupsInScope.execute(ImmutableSet.of("h"), () -> enforcerStore.get("g", "n", "o"));
   }
 
 }
