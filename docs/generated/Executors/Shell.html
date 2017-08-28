@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Shell executor executes a shell script every time it receives an event. Use the Shell executor as part of an event stream. When using Shell executors in pipelines, you should configure Data ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Shell Executor" /><meta name="DC.Relation" scheme="URI" content="../Executors/Executors-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_jsr_zpw_tz" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Shell Executor</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Shell executor executes a shell script every time it receives an event. Use the Shell executor as part of an event stream. When you configure the executor, you define the shell script that you ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Shell Executor" /><meta name="DC.Relation" scheme="URI" content="../Executors/Executors-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_jsr_zpw_tz" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Shell Executor</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -32,27 +32,18 @@
  <div class="body conbody">
   <p class="p">The Shell executor executes a
             shell script every time it receives an event. Use the Shell executor as part of an event
-            stream. When using Shell executors in pipelines, you should configure <span class="ph">Data
-                  Collector</span> to
-            use Shell executor impersonation mode. </p>
+            stream. </p>
 
-        <p class="p">When you configure the Shell executor, you define the shell script that you want to
-            execute. You cannot use <span class="ph">Data
-                  Collector</span>
-            expressions directly in the shell script, but you can use them to declare environment
-            variables for script execution. Use the environment variables to propagate configuration
-            for the script. </p>
+        <p class="p">When you configure the executor, you define the shell script that you want to execute and
+            environment variables to propagate configuration for the script. You also specify the
+            maximum amount of time for the shell script to run. After the specified time elapses,
+            the executor stops the script.</p>
 
-        <p class="p">For example, say you want to perform an action on a file that was closed by a Hadoop FS
-            destination, one that you cannot perform with the HDFS File Metadata executor. You want
-            to use the event record filepath field to specify the absolute path to the closed file.
-            So you use an environment variable in the script, then you define the environment
-            variable using the following expression:
-            <samp class="ph codeph">${record:value('/filepath')}</samp>.</p>
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> When using Shell executors in pipelines, you should configure <span class="ph">Data
+                  Collector</span> to use Shell executor impersonation mode. </div>
 
-        <p class="p">When you configure the executor, you also specify the maximum amount of time for the
-            shell script to run. After the specified time elapses, the executor stops the
-            script.</p>
+        </div>
 
         <p class="p"><span class="ph">For more information about dataflow
                         triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
@@ -61,7 +52,7 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_n2w_txv_vz">
- <h2 class="title topictitle2">Enabling Shell Impersonation Mode</h2>
+ <h2 class="title topictitle2">Data Collector Shell Impersonation Mode</h2>
 
  <div class="body conbody">
         <p class="p">Enable the <span class="ph">Data
@@ -121,6 +112,45 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_av4_pnm_z1b">
+ <h2 class="title topictitle2">Script Configuration</h2>
+
+ <div class="body conbody">
+  <div class="p">When
+            configuring a shell script for the Shell executor, note the following details:<ol class="ol" id="concept_av4_pnm_z1b__ol_kl1_dpm_z1b">
+                <li class="li">When you configure the shell script, ensure that the script returns zero (0) to
+                    indicate successful execution. For example, in a bash script, you can use "exit
+                    0" to return the required zero value.<p class="p">A script that does not return zero might
+                        run successfully when tested on the command line, but will generate errors
+                        when used by the Shell executor in a pipeline. </p>
+</li>
+
+                <li class="li">You cannot use expressions directly in the shell script. To use <span class="ph">Data
+                  Collector</span> expressions in a script: <ul class="ul" id="concept_av4_pnm_z1b__ul_g2y_rxm_z1b">
+                        <li class="li">Use the Environment Variables property in the stage to declare
+                            environment variables for the script. Create an enviroment variable for
+                            each expression that you want to use. </li>
+
+                        <li class="li">Use the environment variables as needed in the script. </li>
+
+                    </ul>
+<p class="p">For example, say you want to perform an action on a file that was closed
+                        by a Hadoop FS destination - one that you cannot perform with the HDFS File
+                        Metadata executor. And you want to use the filepath field in the event
+                        record to specify the absolute path to the closed file. </p>
+<p class="p">So you can
+                        define a filepath environment variable using the following expression:
+                            <samp class="ph codeph">${record:value('/filepath')}</samp> as shown below, then use
+                        the filepath environment variable in the script:</p>
+<p class="p"><img class="image" id="concept_av4_pnm_z1b__image_n1r_wdn_z1b" src="../Graphics/Shell-EnvVariables.png" height="130" width="620" /></p>
+</li>
+
+            </ol>
+</div>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_hyc_3zw_tz">
     <h2 class="title topictitle2">Configuring a Shell Executor</h2>
 
@@ -134,14 +164,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hyc_3zw_tz__d28314e4531" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hyc_3zw_tz__d28457e4531" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d165980e207">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d166946e249">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d165980e210">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d166946e252">Description</th>
 
                                 </tr>
 
@@ -149,24 +179,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d165980e207 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d166946e249 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d165980e210 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d165980e207 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d165980e210 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d166946e252 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d165980e207 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_hyc_3zw_tz__d28314e4577" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d166946e249 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d165980e210 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d166946e252 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d166946e249 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_hyc_3zw_tz__d28457e4577" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d166946e252 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -178,10 +208,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d165980e207 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_hyc_3zw_tz__d28314e4593" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d166946e249 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_hyc_3zw_tz__d28457e4593" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d165980e210 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d166946e252 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -192,10 +222,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d165980e207 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_hyc_3zw_tz__d28314e4610" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d166946e249 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_hyc_3zw_tz__d28457e4610" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d165980e210 ">Error record handling for the stage: <ul class="ul" id="task_hyc_3zw_tz__d28314e4614">
+                                    <td class="entry" valign="top" width="70%" headers="d166946e252 ">Error record handling for the stage: <ul class="ul" id="task_hyc_3zw_tz__d28457e4614">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -226,9 +256,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d165980e321">Environment Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d166946e363">Environment Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d165980e324">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d166946e366">Description</th>
 
                                 </tr>
 
@@ -236,20 +266,20 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d165980e321 ">Environment Variables</td>
+                                    <td class="entry" valign="top" width="30%" headers="d166946e363 ">Environment Variables</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d165980e324 ">Environment variables to use when executing the shell
+                                    <td class="entry" valign="top" width="70%" headers="d166946e366 ">Environment variables to use when executing the shell
                                         script. Click the <span class="ph uicontrol">Add</span> icon to add
-                                        environment variables.<p class="p">You can include <span class="ph">Data
-                  Collector</span> expressions in the variables as needed.</p>
+                                        environment variables.<p class="p">You can use <span class="ph">Data
+                  Collector</span> expressions as needed.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d165980e321 ">Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d166946e363 ">Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d165980e324 ">Milliseconds to allow the script to run. The executor
+                                    <td class="entry" valign="top" width="70%" headers="d166946e366 ">Milliseconds to allow the script to run. The executor
                                         stops executing scripts after the specified timeout.</td>
 
                                 </tr>
@@ -264,8 +294,10 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">On the <span class="keyword wintitle">Script</span> tab, enter the script that you want to
                     run.</span>
-                <div class="itemgroup info">You cannot use expressions, but you can use environment variables defined on
-                    the Environment tab.</div>
+                <div class="itemgroup info">You cannot use expressions in the script, but you can use environment
+                    variables defined on the Environment tab.<div class="note note"><span class="notetitle">Note:</span> Ensure that the script returns
+                        zero (0) to indicate successful execution. For more information, see <a class="xref" href="Shell.html#concept_av4_pnm_z1b">Script Configuration</a>.</div>
+</div>
             </li>
 </ol>
 
