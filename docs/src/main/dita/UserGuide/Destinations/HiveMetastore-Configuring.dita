@@ -161,6 +161,14 @@
                                     </entry>
                                 </row>
                                 <row>
+                                    <entry>Header Attribute Expressions</entry>
+                                    <entry>Adds the specified header attributes to the record. <p>To
+                                            include custom record header attributes, click the Add
+                                            icon. Then, enter the name and value for the attribute.
+                                        </p>You can use expressions to define the name and value to
+                                        use.</entry>
+                                </row>
+                                <row>
                                     <entry>Max Cache Size (entries) <xref
                                             href="HiveMetastore-Cache.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"

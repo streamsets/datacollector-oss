@@ -292,8 +292,9 @@
                                 >Elasticsearch destination enhancement</xref> - The destination can
                             now create parent-child relationships between documents in the same
                             index.</li>
-                        <li>Hive Metastore destination - You can now configure the destination to
-                            create custom record header attributes.</li>
+                        <li><xref href="../Destinations/HiveMetastore.dita#concept_gcr_z2t_zv">Hive
+                                Metastore destination</xref> - You can now configure the destination
+                            to create custom record header attributes.</li>
                         <li><xref
                                 href="../Destinations/KProducer-DataFormat.dita#concept_lww_3b3_kr"
                                 >Kafka Producer destination enhancement</xref> - The destination can
