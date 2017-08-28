@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtractor;
+import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.HeadlessSSOPrincipal;
@@ -94,7 +95,7 @@ public class TestCredentialStoresTaskImpl {
   }
 
   @Test
-  public void TestLoadAndInitStoreGetDestroy() throws Exception {
+  public void testLoadAndInitStoreGetDestroy() throws Exception {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getName()).thenReturn("lib");
     CredentialStoreDefinition storeDef =
@@ -114,44 +115,18 @@ public class TestCredentialStoresTaskImpl {
     CredentialStore store = storeTask.getStores().get("id");
     Assert.assertTrue(store instanceof ClassloaderInContextCredentialStore);
 
-    SSOPrincipal principal = new SSOPrincipalJson();
-    principal.getGroups().add("g");
-    Subject subject = new Subject();
-    subject.getPrincipals().add(principal);
-
-    // enforcing OK
-    Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> store.get("g", "n", "o"));
+    GroupsInScope.execute(ImmutableSet.of("g"), () -> store.get("g", "n", "o"));
 
     // enforcing Fail
     try {
-      Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> store.get("h", "n", "o"));
+      GroupsInScope.execute(ImmutableSet.of("g"), () -> store.get("h", "n", "o"));
       Assert.fail();
     } catch (Exception ex) {
-      Assert.assertTrue(ex.getCause() instanceof StageException);
+      Assert.assertTrue(ex instanceof StageException);
     }
 
-    // headless enforcing OK
-    principal = new HeadlessSSOPrincipal("uid", ImmutableSet.of("g"));
-    subject = new Subject();
-    subject.getPrincipals().add(principal);
-    Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> store.get("g", "n", "o"));
-
-    // headless enforcing Fail
-    try {
-      principal = new HeadlessSSOPrincipal("uid", ImmutableSet.of("g"));
-      subject = new Subject();
-      subject.getPrincipals().add(principal);
-      Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> store.get("h", "n", "o"));
-      Assert.fail();
-    } catch (Exception ex) {
-      Assert.assertTrue(ex.getCause() instanceof StageException);
-    }
-
-    // headless not enforcing
-    principal = HeadlessSSOPrincipal.createRecoveryPrincipal("uid");
-    subject = new Subject();
-    subject.getPrincipals().add(principal);
-    Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> store.get("g", "n", "o"));
+    // not enforcing
+    GroupsInScope.executeIgnoreGroups(() -> store.get("g", "n", "o"));
 
     storeTask.stopTask();
   }

@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.lib.executor;
 
+import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.junit.Assert;
@@ -23,9 +25,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.Subject;
-import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -142,25 +141,16 @@ public class TestSafeScheduledExecutorService {
   }
 
   @Test
-  public void testSubjectInContextRunnable() throws Exception {
+  public void testGroupsInContextRunnable() throws Exception {
     SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
 
-    // doing this invocation to force the initialization of thread outside of the doAs
-    Future future = executorService.submit(() -> {
-    });
-    future.get();
-
-    final Subject subject = new Subject();
-
-
-    Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> {
-      Future future1 =
-          executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-              Assert.assertEquals(subject, Subject.getSubject(AccessController.getContext()));
-            }
-          });
+    GroupsInScope.execute(ImmutableSet.of("g"), () -> {
+      Future future1 = executorService.submit(new Runnable() {
+        @Override
+        public void run() {
+          Assert.assertEquals(ImmutableSet.of("g"), GroupsInScope.getUserGroupsInScope());
+        }
+      });
       future1.get();
       return null;
     });
@@ -172,23 +162,11 @@ public class TestSafeScheduledExecutorService {
   public void testSubjectInContextCallable() throws Exception {
     SafeScheduledExecutorService executorService = new SafeScheduledExecutorService(1, "test");
 
-    // doing this invocation to force the initialization of thread outside of the doAs
-    Future future = executorService.submit(new Callable<Object>() {
-      @Override
-      public Object call() throws Exception {
-        return null;
-      }
-    });
-    future.get();
-
-    final Subject subject = new Subject();
-
-
-    Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> {
+    GroupsInScope.execute(ImmutableSet.of("g"), () -> {
       Future future1 = executorService.submit(new Callable<Void>() {
         @Override
         public Void call() throws Exception {
-          Assert.assertEquals(subject, Subject.getSubject(AccessController.getContext()));
+          Assert.assertEquals(ImmutableSet.of("g"), GroupsInScope.getUserGroupsInScope());
           return null;
         }
       });

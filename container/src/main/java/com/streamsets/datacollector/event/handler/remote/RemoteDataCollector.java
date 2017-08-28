@@ -17,7 +17,6 @@ package com.streamsets.datacollector.event.handler.remote;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -38,6 +37,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.SourceOffset;
+import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -45,9 +45,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
-import com.streamsets.lib.security.SubjectUtils;
 import com.streamsets.lib.security.acl.dto.Acl;
-import com.streamsets.lib.security.http.HeadlessSSOPrincipal;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -59,11 +57,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.inject.Inject;
-import javax.management.relation.Role;
-import javax.security.auth.Subject;
 import java.io.IOException;
-import java.security.Principal;
-import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -124,11 +118,10 @@ public class RemoteDataCollector implements DataCollector {
     validateIfRemote(name, rev, "START");
 
     //TODO we should receive the groups from DPM, SDC-6793
-    Principal principal = new HeadlessSSOPrincipal(user, ImmutableSet.of("all"));
 
-    Subject subject = SubjectUtils.createSubject(principal);
     try {
-      Subject.doAs(subject, (PrivilegedExceptionAction<Object>) () -> {
+      // we need to skip enforcement user groups in scope.
+      GroupsInScope.executeIgnoreGroups(() -> {
         PipelineState pipelineState = pipelineStateStore.getState(name, rev);
         if (pipelineState.getStatus().isActive()) {
           LOG.warn("Pipeline {}:{} is already in active state {}",

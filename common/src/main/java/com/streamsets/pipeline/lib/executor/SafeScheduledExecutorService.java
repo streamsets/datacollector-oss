@@ -16,17 +16,16 @@
 package com.streamsets.pipeline.lib.executor;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.pipeline.lib.log.LogConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import javax.security.auth.Subject;
-import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -223,7 +222,7 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
   }
 
   private class SafeCallable<T> implements Callable<T> {
-    private final Subject subject;
+    private final Set<String> groups;
     private final String user;
     private final String entity;
     private final Callable<T> delegate;
@@ -233,7 +232,7 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
     public SafeCallable(
         String user, String entity, Callable<T> delegate, boolean propagateErrors
     ) {
-      this.subject = Subject.getSubject(AccessController.getContext());
+      groups = GroupsInScope.getUserGroupsInScope();
       this.user = user;
       this.entity = entity;
       this.delegate = delegate;
@@ -243,7 +242,7 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
 
     @Override
     public T call() throws Exception {
-      return Subject.doAs(subject, (PrivilegedExceptionAction<T>) () -> {
+      return GroupsInScope.execute(groups, () -> {
         MDC.put(LogConstants.USER, getAsyncUserName(user));
         MDC.put(LogConstants.ENTITY, getEntity(entity));
         try {
