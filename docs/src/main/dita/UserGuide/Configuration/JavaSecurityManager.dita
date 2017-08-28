@@ -22,10 +22,12 @@
  <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
     includes a Java Security Manager that is enabled by default. </shortdesc>
  <conbody>
-  <p>The Java Security Manager restricts the runtime permissions of user libraries. This allows
-   administrators to control what user libraries do on production systems. For example, by default,
-   user libraries cannot call out to network resources and potentially cause denial of service
-   attacked.</p>
+  <p><indexterm>Java Security Manager<indexterm>Data
+                Collector</indexterm></indexterm><indexterm>Data Collector<indexterm>Java Security
+                    Manager</indexterm></indexterm>The Java Security Manager restricts the runtime
+            permissions of user libraries. This allows administrators to control what user libraries
+            do on production systems. For example, by default, user libraries cannot call out to
+            network resources and potentially cause denial of service attacked.</p>
   <p>The security policy is defined in the <codeph>$SDC_CONF/sdc-security.policy</codeph> file. The
       file syntax is <xref
         href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/PolicyFiles.html"
