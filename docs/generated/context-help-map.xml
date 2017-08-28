@@ -18,6 +18,8 @@
                path="WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy"/>
    <appContext helpID="concept_rr2_mbz_w1b"
                path="WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b"/>
+   <appContext helpID="concept_rr2_mbz_w1b"
+               path="WhatsNew/WhatsNew_Title.html#unique_1137015391"/>
    <appContext helpID="concept_avm_x1y_h1b"
                path="WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b"/>
    <appContext helpID="concept_bsw_cky_11b"
@@ -80,7 +82,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_602604742"/>
+               path="Installation/CMInstall-Overview.html#unique_539600536"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -1485,6 +1487,16 @@
                path="Processors/SalesforceLookup.html#task_rjz_lck_fy"/>
    <appContext helpID="task_fhn_yrk_yx"
                path="Processors/SalesforceLookup.html#task_fhn_yrk_yx"/>
+   <appContext helpID="concept_rfz_ks3_x1b"
+               path="Processors/SchemaGenerator.html#concept_rfz_ks3_x1b"/>
+   <appContext helpID="concept_zm3_ttp_1bb"
+               path="Processors/SchemaGenerator.html#concept_zm3_ttp_1bb"/>
+   <appContext helpID="concept_kss_hgq_1bb"
+               path="Processors/SchemaGenerator.html#concept_kss_hgq_1bb"/>
+   <appContext helpID="concept_rjk_y1q_1bb"
+               path="Processors/SchemaGenerator.html#concept_rjk_y1q_1bb"/>
+   <appContext helpID="task_szj_ms3_x1b"
+               path="Processors/SchemaGenerator.html#task_szj_ms3_x1b"/>
    <appContext helpID="concept_cpx_1lm_zx"
                path="Processors/Spark.html#concept_cpx_1lm_zx"/>
    <appContext helpID="concept_nbj_1jb_c1b"
@@ -2556,7 +2568,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_516178701"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_620227825"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"

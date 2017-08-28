@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_rfz_ks3_x1b">
+ <title>Schema Generator</title>
+ <conbody>
+  <p><indexterm>Schema Generator
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Schema
+                    Generator</indexterm></indexterm>The Schema Generator processor generates a
+            schema based on the structure of a record and writes the schema into a record header
+            attribute. The Schema Generator generates Avro schemas at this time. </p>
+        <p>You might use the Schema Generator in a pipeline to generate the latest version of the
+            Avro schema before writing records to destination systems. </p>
+        <p>When you configure a Schema Generator processor, you can specify the namespace and
+            description for the Avro schema. You can specify whether schema fields should allow
+            nulls and whether schema fields should default to null. You can specify default values
+            for most Avro primitive types, and you can allow the processor to use a larger data
+            types for Avro types without a direct equivalent.</p>
+        <p>You can specify the names for precision and scale attributes for decimal values. And you
+            can configure a default precision and scale for any decimal fields without that
+            information or with an invalid precision or scale.</p>
+        <p>When appropriate, you can configure the Schema Generator to cache a number of schemas,
+            and to apply the schemas to records based on the expression defined in the Cache Key
+            Expression property. </p>
+ </conbody>
+</concept>
