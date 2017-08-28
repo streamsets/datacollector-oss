@@ -34,8 +34,13 @@
  <div class="body conbody"><p class="shortdesc">The Cassandra destination writes data to a Cassandra cluster.</p>
 
   <p class="p">When
-   you configure the Cassandra destination, you define connection information, optional user
-   credentials, and map incoming fields to columns in the Cassandra table.</p>
+            you configure the Cassandra destination, you define connection information and map
+            incoming fields to columns in the Cassandra table.</p>
+
+        <p class="p">You configure whether the destination uses no authentication or username and password
+            authentication to access the Cassandra cluster. If you install the DataStax Enterprise
+            (DSE) Java driver, you can also configure the destination to use DSE username and
+            password authentication or Kerberos authentication.</p>
 
     <p class="p">Batches written to Cassandra are atomic - this means you can only write entire batches of
       records to Cassandra. If an error occurs with one or more records in a batch, Cassandra fails
@@ -44,6 +49,54 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ajh_vhp_x1b">
+ <h2 class="title topictitle2">Authentication</h2>
+
+ <div class="body conbody">
+  <p class="p">Configure the Cassandra destination to use one of the following authentication providers to
+            access the Cassandra cluster:</p>
+ 
+     <ul class="ul" id="concept_ajh_vhp_x1b__ul_ols_kgp_x1b">
+                <li class="li">None - Performs no authentication.</li>
+
+                <li class="li">Username/Password - Uses Cassandra username and password authentication.</li>
+
+                <li class="li">Username/Password (DSE) - Uses DataStax Enterprise username and password
+                    authentication. Requires that you install the DSE Java driver.</li>
+
+                <li class="li">Kerberos (DSE) - Uses Kerberos authentication. Requires that you install the DSE
+                    Java driver.</li>
+
+            </ul>
+<p class="p">Before selecting one of the DSE authentication providers, install the <a class="xref" href="http://docs.datastax.com/en/developer/java-driver-dse/1.2/" target="_blank">DSE Java driver version 1.2.4</a> or later. For information
+            about installing drivers, see <a class="xref" href="../Configuration/ExternalLibs.html#concept_pdv_qlw_ft" title="After you've set up the external directory, use the Package Manager within Data Collector to install external libraries.">Install External Libraries</a>.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_imy_z3p_x1b">
+ <h3 class="title topictitle3">Kerberos (DSE) Authentication</h3>
+
+ <div class="body conbody">
+        <p class="p">If you install the DSE Java driver, you can use
+            Kerberos authentication to connect to a Cassandra cluster. When you use Kerberos
+            authentication, <span class="ph">Data
+                  Collector</span>
+            uses the Kerberos principal and keytab to connect to the cluster. By default, <span class="ph">Data
+                  Collector</span>
+            uses the user account who started it to connect.</p>
+
+        <p class="p">The Kerberos principal and keytab are defined in the <span class="ph">Data
+                  Collector</span>
+            configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>. To use Kerberos
+            authentication, configure all Kerberos properties in the <span class="ph">Data
+                  Collector</span>
+            configuration file, install the DSE Java driver, and then enable Kerberos (DSE)
+            authentication in the Cassandra destination.</p>
+
+ </div>
+
+</div>
+</div>
 <div class="topic concept nested1" id="concept_bdg_bt3_ms">
  <h2 class="title topictitle2">Cassandra Data Types</h2>
 
@@ -115,14 +168,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t1d_z3l_sr__d15404e4531" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t1d_z3l_sr__d15499e4531" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d72694e170">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d73098e258">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d72694e173">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d73098e261">Description</th>
 
                                 </tr>
 
@@ -130,24 +183,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d72694e170 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d73098e258 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d72694e173 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d72694e170 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d72694e173 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d73098e261 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d72694e170 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_t1d_z3l_sr__d15404e4577" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d73098e258 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d72694e173 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d73098e261 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d73098e258 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_t1d_z3l_sr__d15499e4577" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d73098e261 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -159,10 +212,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d72694e170 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_t1d_z3l_sr__d15404e4593" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d73098e258 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_t1d_z3l_sr__d15499e4593" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d72694e173 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d73098e261 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -173,10 +226,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d72694e170 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_t1d_z3l_sr__d15404e4610" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d73098e258 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_t1d_z3l_sr__d15499e4610" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d72694e173 ">Error record handling for the stage: <ul class="ul" id="task_t1d_z3l_sr__d15404e4614">
+                                    <td class="entry" valign="top" width="70%" headers="d73098e261 ">Error record handling for the stage: <ul class="ul" id="task_t1d_z3l_sr__d15499e4614">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -207,9 +260,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d72694e284">Cassandra Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d73098e372">Cassandra Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d72694e287">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d73098e375">Description</th>
 
                                 </tr>
 
@@ -217,25 +270,49 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d72694e284 ">Cassandra Contact Points</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d73098e372 ">Cassandra Contact Points</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d72694e287 ">Host names for nodes in Cassandra cluster. To ensure a
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d73098e375 ">Host names for nodes in Cassandra cluster. To ensure a
                                         connection, use the <span class="ph uicontrol">Add</span> icon to enter
                                         several host names.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d72694e284 ">Cassandra Port</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d73098e372 ">Cassandra Port</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d72694e287 ">The port number for the Cassandra nodes.</td>
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d73098e375 ">The port number for the Cassandra nodes.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d72694e284 ">Protocol Version</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d73098e372 ">Authentication Provider
+                                        <a class="xref" href="Cassandra.html#concept_ajh_vhp_x1b">
+                                            <img class="image" id="task_t1d_z3l_sr__image_a2h_bfn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d72694e287 ">Native protocol version that defines the format of the
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d73098e375 ">Determines the authentication provider used to access the
+                                            cluster:<ul class="ul" id="task_t1d_z3l_sr__ul_ols_kgp_x1b">
+                                            <li class="li">None - Performs no authentication.</li>
+
+                                            <li class="li">Username/Password - Uses Cassandra username and
+                                                password authentication.</li>
+
+                                            <li class="li">Username/Password (DSE) - Uses DataStax Enterprise
+                                                username and password authentication. Requires that
+                                                you install the DSE Java driver.</li>
+
+                                            <li class="li">Kerberos (DSE) - Uses Kerberos authentication.
+                                                Requires that you install the DSE Java driver.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d73098e372 ">Protocol Version</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d73098e375 ">Native protocol version that defines the format of the
                                         binary messages exchanged between the driver and Cassandra.
                                         Select the protocol version that you are using.<p class="p">For
                                             information about determining your protocol version, see
@@ -245,34 +322,26 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d72694e284 ">Compression</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d73098e372 ">Compression</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d72694e287 ">Optional compression type for transport-level requests
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d73098e375 ">Optional compression type for transport-level requests
                                         and responses.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d72694e284 ">Use Credentials</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d73098e372 ">Fully-Qualified Table Name</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d72694e287 ">Indicates whether to use credentials to access the
-                                        cluster.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d72694e284 ">Fully-Qualified Table Name</td>
-
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d72694e287 ">Name of the Cassandra table to use. Enter a
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d73098e375 ">Name of the Cassandra table to use. Enter a
                                         fully-qualified name using the following format: &lt;key
                                         space&gt;.&lt;table name&gt;.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d72694e284 ">Field to Column Mapping</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d73098e372 ">Field to Column Mapping</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d72694e287 ">Map fields from the record to Cassandra columns. Use the
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d73098e375 ">Map fields from the record to Cassandra columns. Use the
                                             <span class="ph uicontrol">Add</span> icon to create additional
                                         field mappings. <div class="note note"><span class="notetitle">Note:</span> The record field data type must match
                                             the data type of the Cassandra column.</div>
@@ -287,8 +356,9 @@
 
                 </div></li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To use Cassandra credentials, click the <span class="keyword wintitle">Credentials</span> tab,
-                    and then enter a user name and password.</span>
+                <span class="ph cmd">To use username/password authentication, click the
+                        <span class="keyword wintitle">Credentials</span> tab, and then enter a user name and
+                    password.</span>
                 <div class="itemgroup info">
                     <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Hashicorp

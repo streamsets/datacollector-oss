@@ -524,7 +524,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested2" id="unique_1299196198">
+<div class="topic concept nested2" id="unique_516178701">
  <h3 class="title topictitle3">Hadoop FS</h3>
 
  <div class="body conbody">
@@ -998,35 +998,6 @@ nc: connectx to 1.2.3.4 port 1234 (tcp) failed: Connection refused</pre>
     
    </dl>
 </div>
-
- </div>
-
-</div>
-<div class="topic concept nested1" id="concept_dpv_chb_ys">
- <h2 class="title topictitle2">Monitoring</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">Use the following tips for help with monitoring the pipeline:</p>
-
-  <div class="p">
-   <dl class="dl">
-    
-     <dt class="dt dlterm">Why is snapshot not capturing any data?</dt>
-
-     <dd class="dd">When you request a snapshot, the <span class="ph">Data
-                  Collector</span> tries to
-      capture the next batch of data that moves through the pipeline. It skips any data that might
-      be passing through the pipeline as you submit the request so it can capture a full batch of
-      data. </dd>
-
-     <dd class="dd">But if data is slow to arrive at the origin, and the origin passes an empty batch
-      (triggered by the batch wait time property), the captured batch might be empty. If this
-      occurs, try capturing another snapshot.</dd>
-
-    
-   </dl>
-
-  </div>
 
  </div>
 

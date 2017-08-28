@@ -85,6 +85,9 @@
 
         <li class="li">Hive Metadata processor</li>
 
+                <li class="li">Cassandra destination, when the DataStax Enterprise Java driver is
+                    installed</li>
+
         <li class="li">Hadoop FS destination</li>
 
         <li class="li">HBase destination</li>
@@ -353,20 +356,24 @@
                   Collector</span> uses
         HTTP.</p>
 
-  <p class="p">HTTPS requires an SSL/TLS certificate. <span class="ph">Data
+  <p class="p">To configure HTTPS, set the
+                <samp class="ph codeph">https.port</samp> property in the <span class="ph">Data
+                  Collector</span>
+            configuration file, <samp class="ph codeph">sdc.properties</samp> to a secure port number. When both
+            the HTTP and HTTPS port properties are defined in the configuration file, the HTTP port
+            bounces to the HTTPS port.</p>
+
+        <p class="p">HTTPS requires an SSL/TLS certificate. <span class="ph">Data
                   Collector</span>
             provides a self-signed certificate so you can use HTTPS immediately. You can also
             generate a certificate that is self-signed or signed by a certifying authority. Web
             browsers generally issue a warning for self-signed certificates. </p>
 
-        <p class="p">When you configure <span class="ph">Data
-                  Collector</span> to
-            use HTTPS, you can have <span class="ph">Data
-                  Collector</span>
-            redirect HTTP requests to HTTPS or to ignore them.</p>
+        <p class="p">You use different properties to configure the certificates for HTTPS based on whether you
+            run standalone or cluster pipelines.</p>
 
-        <p class="p">You use different properties to configure HTTPS based on whether you run standalone or
-            cluster pipelines.</p>
+        <div class="note note"><span class="notetitle">Note:</span> If you run both standalone and cluster pipelines, configure HTTPS for cluster
+            pipelines.</div>
 
  </div>
 
@@ -375,14 +382,16 @@
 
  <div class="body conbody">
     <p class="p">To
-      configure HTTPS when you run standalone pipelines only, you can use a self-signed certificate.
-      Or, you can generate an SSL/TLS certificate and specify the generated keystore file and
-      keystore password file in the <span class="ph">Data
+      configure HTTPS when you run standalone pipelines only, set the <samp class="ph codeph">https.port</samp>
+      property in the <span class="ph">Data
                   Collector</span>
-      configuration file, <samp class="ph codeph">sdc.properties</samp>. </p>
+      configuration file, <samp class="ph codeph">sdc.properties</samp>, to a secure port number.</p>
 
-  <div class="p">When you generate an SSL/TLS certificate to run standalone pipelines only, use the following
-      files: <dl class="dl">
+    <p class="p">You can use a self-signed certificate. Or, you can generate an SSL/TLS certificate and
+      specify the following files in the <samp class="ph codeph">sdc.properties</samp> file:</p>
+
+  <div class="p">
+      <dl class="dl">
         
           <dt class="dt dlterm">keystore file</dt>
 
@@ -414,7 +423,8 @@
 
         
       </dl>
-</div>
+
+    </div>
 
  </div>
 
@@ -424,119 +434,111 @@
 
  <div class="body conbody">
         <p class="p">To configure HTTPS when you run cluster pipelines,
-            you can use a self-signed certificate. Or, you can generate an SSL/TLS certificate for
+            set the <samp class="ph codeph">https.port</samp> property in the <span class="ph">Data
+                  Collector</span>
+            configuration file, <samp class="ph codeph">sdc.properties</samp>, to a secure port number.</p>
+
+        <p class="p">You can use a self-signed certificate. Or, you can generate an SSL/TLS certificate for
             the gateway node and the worker nodes. You specify the generated keystore file and
-            keystore password file for the gateway and worker nodes in the <span class="ph">Data
-                  Collector</span>
-            configuration file, <samp class="ph codeph">sdc.properties</samp>. You can optionally generate a
-            truststore file for the gateway and worker nodes.</p>
+            keystore password file for the gateway and worker nodes in the
+                <samp class="ph codeph">sdc.properties</samp> file. You can optionally generate a truststore file
+            for the gateway and worker nodes.</p>
 
-            <div class="note note"><span class="notetitle">Note:</span> If you run both standalone and cluster pipelines, configure HTTPS for cluster
-            pipelines.</div>
+        <div class="section" id="concept_rdt_h54_cw__section_nqk_qmm_z1b"><h4 class="title sectiontitle">Keystore Files for Cluster Pipelines</h4>
+            
+            <p class="p">When you generate an SSL/TLS certificate to run cluster pipelines, use the following
+                files:</p>
 
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">keystore file and keystore password file on the gateway node</dt>
 
- </div>
+                    <dd class="dd">The keystore file contains the private key and self-signed certificates for
+                        the gateway node to connect to the web server. The keystore password file
+                        contains the password to open the Java keystore file. You can create your
+                        own files or use the provided files. </dd>
 
-</div>
-<div class="topic concept nested2" id="concept_ihc_vlr_dw">
- <h3 class="title topictitle3">Keystore Files for Cluster Pipelines</h3>
+                    <dd class="dd">Store both files on the gateway node. Update the path and name of the files
+                        in the following properties:<ul class="ul" id="concept_rdt_h54_cw__ul_q1d_4hp_cw">
+                            <li class="li"><samp class="ph codeph">https.keystore.path</samp></li>
 
- <div class="body conbody">
-     <p class="p">When you
-            generate an SSL/TLS certificate to run cluster pipelines, use the following files:</p>
+                            <li class="li"><samp class="ph codeph">https.keystore.password</samp></li>
 
-     <dl class="dl">
-         
-             <dt class="dt dlterm">keystore file and keystore password file on the gateway node</dt>
-
-             <dd class="dd">The keystore file contains the private key and self-signed certificates for the
-                 gateway node to connect to the web server. The keystore password file contains
-                 the password to open the Java keystore file. You can create your own files or
-                 use the provided files. </dd>
-
-             <dd class="dd">Store both files on the gateway node. Update the path and name of the files in the
-                 following properties:<ul class="ul" id="concept_ihc_vlr_dw__ul_q1d_4hp_cw">
-                     <li class="li"><samp class="ph codeph">https.keystore.path</samp></li>
-
-                     <li class="li"><samp class="ph codeph">https.keystore.password</samp></li>
-
-                 </ul>
+                        </ul>
 </dd>
 
-             <dd class="dd">Enter an absolute path or a path relative to the <samp class="ph codeph">$SDC_CONF</samp>
-                 directory.</dd>
+                    <dd class="dd">Enter an absolute path or a path relative to the <samp class="ph codeph">$SDC_CONF</samp>
+                        directory.</dd>
 
-         
-         
-             <dt class="dt dlterm">keystore file and keystore password file on all worker nodes</dt>
+                
+                
+                    <dt class="dt dlterm">keystore file and keystore password file on all worker nodes</dt>
 
-             <dd class="dd">You must create your own files for all worker nodes to connect to the web
-                 server. Store the files in the same absolute location on each worker node.
-                 Update the full path to the files in the following properties:<ul class="ul" id="concept_ihc_vlr_dw__ul_acl_shp_cw">
-                     <li class="li"><samp class="ph codeph">https.cluster.keystore.path</samp></li>
+                    <dd class="dd">You must create your own files for all worker nodes to connect to the web
+                        server. Store the files in the same absolute location on each worker node.
+                        Update the full path to the files in the following properties:<ul class="ul" id="concept_rdt_h54_cw__ul_acl_shp_cw">
+                            <li class="li"><samp class="ph codeph">https.cluster.keystore.path</samp></li>
 
-                     <li class="li"><samp class="ph codeph">https.cluster.keystore.password</samp></li>
+                            <li class="li"><samp class="ph codeph">https.cluster.keystore.password</samp></li>
 
-                 </ul>
+                        </ul>
 </dd>
 
-         
-     </dl>
+                
+            </dl>
 
- </div>
+        </div>
 
-</div>
-<div class="topic concept nested2" id="concept_xxz_vlr_dw">
- <h3 class="title topictitle3">Truststore Files for Cluster Pipelines</h3>
+        <div class="section" id="concept_rdt_h54_cw__section_pd3_tmm_z1b"><h4 class="title sectiontitle">Truststore Files for Cluster Pipelines</h4>
+            
+            <p class="p">Optionally, you can generate and use your own truststore file when <span class="ph">Data
+                  Collector</span> runs cluster pipelines. By default, <span class="ph">Data
+                  Collector</span> uses the truststore file from the following directory on all nodes in the
+                cluster: <samp class="ph codeph">$JAVA_HOME/jre/lib/security/cacerts</samp>.</p>
 
- <div class="body conbody">
-     <p class="p">Optionally,
-            you can generate and use your own truststore file when <span class="ph">Data
-                  Collector</span>
-            runs cluster pipelines. By default, <span class="ph">Data
-                  Collector</span>
-            uses the truststore file from the following directory on all nodes in the cluster:
-                <samp class="ph codeph">$JAVA_HOME/jre/lib/security/cacerts</samp>.</p>
+            <p class="p">When you generate a truststore file to run cluster pipelines, use the following
+                files:</p>
 
-        <p class="p">When you generate a truststore file to run cluster pipelines, use the following
-            files:</p>
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">truststore file and truststore password file on the gateway node</dt>
 
-     <dl class="dl">
-         
-             <dt class="dt dlterm">truststore file and truststore password file on the gateway node</dt>
+                    <dd class="dd">The truststore file on the gateway node stores certificates to trust the
+                        identity of the worker nodes. The truststore password file contains the
+                        password to open the truststore file. Store both files on the gateway node.
+                        Uncomment the following properties and enter the path and name of the
+                            files:<ul class="ul" id="concept_rdt_h54_cw__ul_h1s_whp_cw">
+                            <li class="li"><samp class="ph codeph">https.truststore.path</samp></li>
 
-             <dd class="dd">The truststore file on the gateway node stores certificates to trust the
-                 identity of the worker nodes. The truststore password file contains the password
-                 to open the truststore file. Store both files on the gateway node. Uncomment the
-                 following properties and enter the path and name of the files:<ul class="ul" id="concept_xxz_vlr_dw__ul_h1s_whp_cw">
-                     <li class="li"><samp class="ph codeph">https.truststore.path</samp></li>
+                            <li class="li"><samp class="ph codeph">https.truststore.password</samp></li>
 
-                     <li class="li"><samp class="ph codeph">https.truststore.password</samp></li>
-
-                 </ul>
+                        </ul>
 </dd>
 
-             <dd class="dd">Enter an absolute path or a path relative to the <samp class="ph codeph">$SDC_CONF</samp>
-                 directory.</dd>
+                    <dd class="dd">Enter an absolute path or a path relative to the <samp class="ph codeph">$SDC_CONF</samp>
+                        directory.</dd>
 
-         
-         
-             <dt class="dt dlterm">truststore file and truststore password file on all worker nodes</dt>
+                
+                
+                    <dt class="dt dlterm">truststore file and truststore password file on all worker nodes</dt>
 
-             <dd class="dd">The truststore file on the worker nodes stores certificates to trust the
-                 identity of the gateway node. The truststore password file contains the password
-                 to open the truststore file. Store the files in the same absolute location on
-                 each worker node. Uncomment the following properties and enter the full path to
-                 the files:<ul class="ul" id="concept_xxz_vlr_dw__ul_ldk_zhp_cw">
-                     <li class="li"><samp class="ph codeph">https.cluster.truststore.path</samp></li>
+                    <dd class="dd">The truststore file on the worker nodes stores certificates to trust the
+                        identity of the gateway node. The truststore password file contains the
+                        password to open the truststore file. Store the files in the same absolute
+                        location on each worker node. Uncomment the following properties and enter
+                        the full path to the files:<ul class="ul" id="concept_rdt_h54_cw__ul_ldk_zhp_cw">
+                            <li class="li"><samp class="ph codeph">https.cluster.truststore.path</samp></li>
 
-                     <li class="li"><samp class="ph codeph">https.cluster.truststore.password</samp></li>
+                            <li class="li"><samp class="ph codeph">https.cluster.truststore.password</samp></li>
 
-                 </ul>
+                        </ul>
 </dd>
 
-         
-     </dl>
+                
+            </dl>
+
+        </div>
+
 
  </div>
 
@@ -644,6 +646,44 @@
  </div>
 
 </div>
+<div class="topic concept nested2" id="concept_acd_x1z_y1b">
+ <h3 class="title topictitle3">Working with HDFS Encryption Zones</h3>
+
+ <div class="body conbody">
+        <p class="p">Hadoop systems use the
+            Hadoop Key Management Server (KMS) to obtain encryption keys. To enable access to HDFS
+            encryption zones while using proxy users, configure KMS to allow the same user
+            impersonation as you have configured for HDFS. </p>
+
+        <div class="p">To allow Data Collector as a proxy user, add the following properties to the KMS
+            configuration file and configure the values for the properties:<ul class="ul" id="concept_acd_x1z_y1b__ul_ezv_sgz_y1b">
+                <li class="li">hadoop.kms.proxyuser.sdc.groups</li>
+
+                <li class="li">hadoop.kms.proxyuser.sdc.hosts</li>
+
+            </ul>
+</div>
+
+        <p class="p">For example, the following properties allows users in the Ops group access to the
+            encryption zones:</p>
+
+        <pre class="pre codeblock">&lt;property&gt;
+&lt;name&gt;hadoop.kms.proxyuser.sdc.groups&lt;/name&gt;
+&lt;value&gt;Ops&lt;/value&gt;
+&lt;/property&gt;
+&lt;property&gt;
+&lt;name&gt;hadoop.kms.proxyuser.sdc.hosts&lt;/name&gt;
+&lt;value&gt;*&lt;/value&gt;
+&lt;/property&gt;</pre>
+
+        <p class="p">Note that the asterisk (*) indicates no restrictions.</p>
+
+        <p class="p">For more information about configuring KMS proxyusers, see the KMS documentation for the
+            Hadoop distribution that you are using. For example, for Apache Hadoop, see <a class="xref" href="https://hadoop.apache.org/docs/current/hadoop-kms/index.html#KMS_Proxyuser_Configuration" target="_blank">https://hadoop.apache.org/docs/current/hadoop-kms/index.html#KMS_Proxyuser_Configuration</a>.</p>
+
+    </div>
+
+</div>
 </div>
 <div class="topic concept nested1" id="concept_gfx_rvf_qv">
  <h2 class="title topictitle2">Blacklist and Whitelist for Stage Libraries</h2>
@@ -698,9 +738,9 @@ user.stagelibs.blacklist</pre>
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d39286e1181">General Property</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d39286e1247">General Property</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d39286e1184">Description</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d39286e1250">Description</th>
 
                             </tr>
 
@@ -708,9 +748,9 @@ user.stagelibs.blacklist</pre>
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">sdc.base.http.url </td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">sdc.base.http.url </td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Data Collector URL that is included in emails sent for metric
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Data Collector URL that is included in emails sent for metric
                                     and data alerts. <p class="p">Default is
                                             <samp class="ph codeph">http://&lt;hostname&gt;:&lt;http.port&gt;</samp>
                                         where <samp class="ph codeph">&lt;hostname&gt;</samp> is the value defined in
@@ -725,9 +765,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.bindHost</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.bindHost</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Host name or IP address that <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Host name or IP address that <span class="ph">Data
                   Collector</span> binds to. You might want to configure a specific host or IP
                                     address when the machine that <span class="ph">Data
                   Collector</span> is installed on has multiple network cards.<p class="p">Default is
@@ -739,9 +779,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.maxThreads</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.maxThreads</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maximum number of concurrent threads the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maximum number of concurrent threads the <span class="ph">Data
                   Collector</span> web server uses to serve UI requests. <p class="p">Default is 200.
                                         Uncomment the property to change the value, but increasing
                                         this value is not recommended. </p>
@@ -750,18 +790,18 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.port</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.port</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Port number to use for the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Port number to use for the <span class="ph">Data
                   Collector</span> console. <p class="p">Default is 18630.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">https.port</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">https.port</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Secure port number for the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Secure port number for the <span class="ph">Data
                   Collector</span> console. Any number besides -1 enables the secure port
                                     number. <p class="p">If you use both port properties, the HTTP port
                                         bounces to the HTTPS port.</p>
@@ -771,9 +811,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.enable.forwarded.requests</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.enable.forwarded.requests</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Enables handling X-Forwarded-For, X-Forwarded-Proto,
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Enables handling X-Forwarded-For, X-Forwarded-Proto,
                                     X-Forwarded-Port HTTP request headers issued by a reverse proxy
                                     such as HAProxy, ELB, or NGINX. <p class="p">Set to true when hosting <span class="ph">Data
                   Collector</span> behind a reverse proxy or load balancer.</p>
@@ -784,9 +824,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">https.keystore.path</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">https.keystore.path</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Keystore path and file name. Enter an absolute path or a path
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Keystore path and file name. Enter an absolute path or a path
                                     relative to the <samp class="ph codeph">$SDC_CONF</samp> directory. For
                                     cluster pipelines, enter the path to the file on the gateway
                                         node.<p class="p">Default is <span class="ph filepath">sdc-keystore.jks</span> in
@@ -796,9 +836,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">https.keystore.password</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">https.keystore.password</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Path and name of the file that contains the password to the
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Path and name of the file that contains the password to the
                                     keystore file. Enter an absolute path or a path relative to the
                                         <samp class="ph codeph">$SDC_CONF</samp> directory. For cluster pipelines,
                                     enter the path to the file on the gateway node.<p class="p">Default is
@@ -809,18 +849,18 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">https.cluster.keystore.path</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">https.cluster.keystore.path</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">For cluster pipelines, the absolute path and file name of the
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">For cluster pipelines, the absolute path and file name of the
                                     keystore file on worker nodes. The file must be in the same
                                     location on each worker node.</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">https.cluster.keystore.password</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">https.cluster.keystore.password</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">For cluster pipelines, the absolute path and name of the file
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">For cluster pipelines, the absolute path and name of the file
                                     that contains the password to the keystore file on worker nodes.
                                     The file must be in the same location on each worker
                                     node.</td>
@@ -828,9 +868,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">https.truststore.path</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">https.truststore.path</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">For cluster pipelines, the path and name of the truststore
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">For cluster pipelines, the path and name of the truststore
                                     file on the gateway node. Enter an absolute path or a path
                                     relative to the <samp class="ph codeph">$SDC_CONF</samp> directory.<p class="p">Default
                                         is the file from the following directory:
@@ -842,9 +882,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">https.truststore.password</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">https.truststore.password</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">For cluster pipelines, the path and name of the file that
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">For cluster pipelines, the path and name of the file that
                                     contains the password to the truststore file on the gateway
                                     node. Enter an absolute path or a path relative to the
                                         <samp class="ph codeph">$SDC_CONF</samp> directory.<p class="p">Be sure to uncomment
@@ -858,9 +898,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">https.cluster.truststore.path</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">https.cluster.truststore.path</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">For cluster pipelines, the absolute path and file name of the
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">For cluster pipelines, the absolute path and file name of the
                                     truststore file on the worker nodes. The file must be in the
                                     same location on each worker node.<p class="p">Default is the file from
                                         the following directory:
@@ -872,9 +912,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">https.cluster.truststore.password</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">https.cluster.truststore.password</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">For cluster pipelines, the absolute path and name of the file
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">For cluster pipelines, the absolute path and name of the file
                                     that contains the password to the truststore file on the worker
                                     nodes. The file must be in the same location on each worker
                                         node.<p class="p">Be sure to uncomment the property and provide a path
@@ -887,9 +927,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.session.max.inactive.interval</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.session.max.inactive.interval</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maximum amount of time that the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maximum amount of time that the <span class="ph">Data
                   Collector</span> console can remain inactive before the user is logged out.
                                     Use -1 to allow user sessions to remain inactive
                                         indefinitely.<p class="p">Default is 86,400 seconds (24
@@ -899,9 +939,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.authentication</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.authentication</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">HTTP authentication. Use none, basic, digest, or form.<p class="p">The
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">HTTP authentication. Use none, basic, digest, or form.<p class="p">The
                                         HTTP authentication type determines how passwords are
                                         transferred from the browser to <span class="ph">Data
                   Collector</span> over HTTP. Digest authentication encrypts the passwords.
@@ -918,9 +958,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.authentication.login.module</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.authentication.login.module</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Indicates where user account information resides:<ul class="ul" id="task_lxk_kjw_1r__ul_vhv_qvr_g5">
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Indicates where user account information resides:<ul class="ul" id="task_lxk_kjw_1r__ul_vhv_qvr_g5">
                                         <li class="li">Set to <span class="ph uicontrol">file</span> to use the
                                             realm.properties files. </li>
 
@@ -933,9 +973,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.digest.realm</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.digest.realm</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Realm used for HTTP authentication. Use basic-realm,
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Realm used for HTTP authentication. Use basic-realm,
                                     digest-realm, or form-realm. The associated realm.properties
                                     file must be located in the <samp class="ph codeph">$SDC_CONF</samp>
                                         directory.<p class="p">Default is
@@ -947,9 +987,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.realm.file.permission.check</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.realm.file.permission.check</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Checks the permissions for the realm.properties file in
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Checks the permissions for the realm.properties file in
                                         use:<ul class="ul" id="task_lxk_kjw_1r__ul_aff_bwr_g5">
                                         <li class="li">Set to <span class="ph uicontrol">true</span> to ensure that the
                                             file allows access only to the owner.</li>
@@ -965,10 +1005,10 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.authentication.ldap.role.mapping <a class="xref" href="Authentication.html#concept_x2j_5ts_g5" title="If your organization uses LDAP, configure Data Collector to use LDAP authentication. After you configure LDAP authentication, users log in to Data Collector using their LDAP username and password.">
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.authentication.ldap.role.mapping <a class="xref" href="Authentication.html#concept_x2j_5ts_g5" title="If your organization uses LDAP, configure Data Collector to use LDAP authentication. After you configure LDAP authentication, users log in to Data Collector using their LDAP username and password.">
                                         <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maps groups defined by the LDAP server to <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maps groups defined by the LDAP server to <span class="ph">Data
                   Collector</span> roles. <div class="p">Enter a semicolon-separated list as
                                         follows:<pre class="pre codeblock">&lt;ldap group&gt;:&lt;SDC role&gt;<em class="ph i">,&lt;additional SDC role&gt;</em><em class="ph i">,&lt;additional SDC role&gt;</em>);
 &lt;ldap group&gt;:&lt;SDC role&gt;<em class="ph i">,&lt;additional SDC role&gt;</em>... </pre>
@@ -981,18 +1021,18 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">ldap.login.module.name</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">ldap.login.module.name</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Name of the JAAS configuration properties in the
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Name of the JAAS configuration properties in the
                                     $SDC_CONF/ldap-login.conf file. Assumed to be "ldap" unless
                                     otherwise specified. </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.access.control.allow.origin</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.access.control.allow.origin</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">List of domains allowed to access the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">List of domains allowed to access the <span class="ph">Data
                   Collector</span> REST API for cross-origin resource sharing (CORS). To
                                     restrict access to specific domains, enter a comma-separated
                                     list as
@@ -1006,41 +1046,41 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.access.control.allow.headers</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.access.control.allow.headers</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">List of HTTP headers allowed during a cross-domain
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">List of HTTP headers allowed during a cross-domain
                                     request.</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">http.access.control.allow.methods</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">http.access.control.allow.methods</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">List of HTTP methods that can be called during a cross-domain
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">List of HTTP methods that can be called during a cross-domain
                                     request.</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">kerberos.client.enabled</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">kerberos.client.enabled</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Enables Kerberos authentication for <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Enables Kerberos authentication for <span class="ph">Data
                   Collector</span>. Must be enabled to allow stages to use Kerberos to access
                                     external systems. </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">kerberos.client.principal</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">kerberos.client.principal</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Kerberos principal to use. Enter a service principal.</td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Kerberos principal to use. Enter a service principal.</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">kerberos.client.keytab</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">kerberos.client.keytab</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Location of the Kerberos keytab file that contains the
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Location of the Kerberos keytab file that contains the
                                     credentials for the Kerberos principal. <p class="p">Use a fully-qualified
                                         directory or a directory relative to the
                                             <samp class="ph codeph">$SDC_CONF</samp> directory.</p>
@@ -1049,36 +1089,36 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">preview.maxBatchSize</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">preview.maxBatchSize</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maximum number of records used to preview data. <p class="p">Default is
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maximum number of records used to preview data. <p class="p">Default is
                                         10.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">preview.maxBatches</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">preview.maxBatches</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maximum number of batches used to preview data. <p class="p">Default is
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maximum number of batches used to preview data. <p class="p">Default is
                                         10.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">production.maxBatchSize</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">production.maxBatchSize</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maximum number of records included in a batch when the
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maximum number of records included in a batch when the
                                     pipeline runs.<p class="p">Default is 1000.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">parser.limit </td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">parser.limit </td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maximum parser buffer size that origins can use to process
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maximum parser buffer size that origins can use to process
                                     data. Limits the size of the data that can be parsed and
                                     converted to a record.<p class="p">By default, the parser buffer size is
                                             <span class="ph">1048576 bytes</span>. To increase the size, uncomment and configure this
@@ -1089,9 +1129,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">production.maxErrorRecordsPerStage</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">production.maxErrorRecordsPerStage</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maximum number of error records to save in memory for each
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maximum number of error records to save in memory for each
                                     stage to display in monitor mode. When the limit is reached,
                                     older error records are discarded.<p class="p">Default is 100.
                                     </p>
@@ -1100,9 +1140,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">production.maxPipelineErrors</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">production.maxPipelineErrors</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maximum number of pipeline errors to save in memory to
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maximum number of pipeline errors to save in memory to
                                     display in monitor mode. When the limit is reached, older errors
                                     are discarded. <p class="p">Default is 100. </p>
 </td>
@@ -1110,9 +1150,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">max.logtail.concurrent.requests</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">max.logtail.concurrent.requests</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maximum number of external processes allowed to access the
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maximum number of external processes allowed to access the
                                         <span class="ph">Data
                   Collector</span> log file at the same time through REST API calls. <p class="p">Default
                                         is 5.</p>
@@ -1121,16 +1161,16 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">max.webSockets.concurrent.requests</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">max.webSockets.concurrent.requests</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Maximum number of WebSocket calls allowed. </td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Maximum number of WebSocket calls allowed. </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">monitor.memory</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">monitor.memory</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Displays the Stage Heap Memory Usage and the Heap Memory
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Displays the Stage Heap Memory Usage and the Heap Memory
                                     Usage statistics in Monitor mode for the pipeline or for a
                                     stage. <p class="p">Default is false. Set to true only when testing
                                         real-world load usage in the test or production environment.
@@ -1141,9 +1181,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">pipeline.access.control.enabled</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">pipeline.access.control.enabled</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Enables pipeline permissions and sharing pipelines. With
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Enables pipeline permissions and sharing pipelines. With
                                     pipeline permissions enabled, a user must have the appropriate
                                     permissions to view or work with a pipeline. Only Admin users
                                     and pipeline owners have full access to pipelines. <p class="p"><span class="ph">When pipeline permissions are disabled, access to
@@ -1156,9 +1196,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">ui.header.title</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">ui.header.title</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Optional custom header to display in the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Optional custom header to display in the <span class="ph">Data
                   Collector</span> console next to the StreamSets logo. You can create a header
                                     using HTML and include an additional image. <p class="p">To use an image,
                                         place the file in a directory local to the following
@@ -1184,27 +1224,27 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">ui.local.help.base.url</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">ui.local.help.base.url</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Base URL for the online help installed with <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Base URL for the online help installed with <span class="ph">Data
                   Collector</span>.<p class="p">Do not change this value.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">ui.hosted.help.base.url</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">ui.hosted.help.base.url</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Base URL for the online help hosted on the StreamSets
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Base URL for the online help hosted on the StreamSets
                                     website. <p class="p">Do not change this value.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">ui.refresh.interval.ms</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">ui.refresh.interval.ms</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Interval in milliseconds that <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Interval in milliseconds that <span class="ph">Data
                   Collector</span> waits before refreshing the <span class="ph">Data
                   Collector</span> console.<p class="p">Default is 2000.</p>
 </td>
@@ -1212,35 +1252,35 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">ui.jvmMetrics.refresh.interval.ms</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">ui.jvmMetrics.refresh.interval.ms</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Interval in milliseconds that the JVM metrics are
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Interval in milliseconds that the JVM metrics are
                                         refreshed.<p class="p">Default is 4000.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">ui.enable.usage.data.collection</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">ui.enable.usage.data.collection</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Allows anonymous Google Analytics information to be sent to
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Allows anonymous Google Analytics information to be sent to
                                     StreamSets. <p class="p">Default is true. </p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">ui.enable.webSocket</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">ui.enable.webSocket</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Enables <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Enables <span class="ph">Data
                   Collector</span> to use WebSocket to gather pipeline information.</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1181 ">ui.undo.limit</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e1247 ">ui.undo.limit</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1184 ">Number of recent actions stored so you can undo them.
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e1250 ">Number of recent actions stored so you can undo them.
                                 </td>
 
                             </tr>
@@ -1257,9 +1297,9 @@ user.stagelibs.blacklist</pre>
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="22.22222222222222%" id="d39286e1904">Email Property</th>
+                                <th class="entry" valign="top" width="22.22222222222222%" id="d39286e1970">Email Property</th>
 
-                                <th class="entry" valign="top" width="77.77777777777779%" id="d39286e1907">Description</th>
+                                <th class="entry" valign="top" width="77.77777777777779%" id="d39286e1973">Description</th>
 
                             </tr>
 
@@ -1267,83 +1307,83 @@ user.stagelibs.blacklist</pre>
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">mail.transport.protocol</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">mail.transport.protocol</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">Use smtp or smtps. <p class="p">Default is smtp.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">Use smtp or smtps. <p class="p">Default is smtp.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">mail.smtp.host</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">mail.smtp.host</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">SMTP host name.<p class="p">Default is localhost.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">SMTP host name.<p class="p">Default is localhost.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">mail.smtp.port</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">mail.smtp.port</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">SMTP port number.<p class="p">Default is 25.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">SMTP port number.<p class="p">Default is 25.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">mail.smtp.auth</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">mail.smtp.auth</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">Whether the SMTP host uses authentication. Use true or
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">Whether the SMTP host uses authentication. Use true or
                                         false.<p class="p">Default is false.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">mail.smtp.starttls.enable</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">mail.smtp.starttls.enable</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">Whether the SMTP host uses STARTTLS encryption. Use true or
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">Whether the SMTP host uses STARTTLS encryption. Use true or
                                         false.<p class="p">Default is false. </p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">mail.smtps.host</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">mail.smtps.host</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">SMTPS host name. <p class="p">Default is localhost.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">SMTPS host name. <p class="p">Default is localhost.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">mail.smtps.port</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">mail.smtps.port</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">SMTPS port number.<p class="p">Default is 25.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">SMTPS port number.<p class="p">Default is 25.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">mail.smtps.auth</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">mail.smtps.auth</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">Whether the SMTPS host uses authentication. Use true or
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">Whether the SMTPS host uses authentication. Use true or
                                         false.<p class="p">Default is false.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">xmail.username</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">xmail.username</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">User name for the email account to send email.</td>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">User name for the email account to send email.</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">xmail.password</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">xmail.password</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">File that contains the password for the email account.<p class="p">By
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">File that contains the password for the email account.<p class="p">By
                                         default, the file name is
                                             <span class="ph filepath">email-password.txt</span> and expected in
                                         the <samp class="ph codeph">$SDC_CONF</samp> directory.</p>
@@ -1355,9 +1395,9 @@ user.stagelibs.blacklist</pre>
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1904 ">xmail.from.address</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e1970 ">xmail.from.address</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1907 ">Email address to use to send email. </td>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e1973 ">Email address to use to send email. </td>
 
                             </tr>
 
@@ -1374,9 +1414,9 @@ The <span class="ph">Data
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="22.22222222222222%" id="d39286e2058">Advanced Property</th>
+                            <th class="entry" valign="top" width="22.22222222222222%" id="d39286e2124">Advanced Property</th>
 
-                            <th class="entry" valign="top" width="77.77777777777779%" id="d39286e2061">Description</th>
+                            <th class="entry" valign="top" width="77.77777777777779%" id="d39286e2127">Description</th>
 
                         </tr>
 
@@ -1384,10 +1424,10 @@ The <span class="ph">Data
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e2058 ">runtime.conf.location <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."><img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                            <td class="entry" valign="top" width="22.22222222222222%" headers="d39286e2124 ">runtime.conf.location <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and call from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."><img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                 </a></td>
 
-                            <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e2061 ">Location of runtime properties. Use to declare where runtime
+                            <td class="entry" valign="top" width="77.77777777777779%" headers="d39286e2127 ">Location of runtime properties. Use to declare where runtime
                                 properties are defined:<ul class="ul" id="task_lxk_kjw_1r__ul_mh4_rrn_1s">
                                     <li class="li">embedded - The runtime properties are defined in the file.
                                             <p class="p">Use the following naming convention to define runtime
@@ -1413,16 +1453,25 @@ The <span class="ph">Data
 
                 </table>
 </div>
-<div class="p">The <span class="ph">Data
-                  Collector</span> configuration file includes the following stage-specific properties:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lxk_kjw_1r__table_y2g_rx5_nz" class="table" frame="border" border="1" rules="all">
+<p class="p">The <span class="ph">Data
+                  Collector</span> configuration file includes properties with a "java.security." prefix which you
+                can use to configure Java security properties. Any Java security properties that you
+                modify in the configuration file change the JVM configuration. Do not modify the
+                Java security properties when running multiple <span class="ph">Data
+                  Collector</span> instances within the same JVM.</p>
+<p class="p">The <span class="ph">Data
+                  Collector</span>
+                    configuration file includes the following Java security property:</p>
+<div class="p">
+                
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lxk_kjw_1r__table_bjx_fjr_y1b" class="table" frame="border" border="1" rules="all">
                         
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" id="d39286e2127">Stage-Specific Properties</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d39286e2203">Java Security Property</th>
 
-                                <th class="entry" valign="top" id="d39286e2130">Description</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d39286e2206">Description</th>
 
                             </tr>
 
@@ -1430,9 +1479,42 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" headers="d39286e2127 ">stage.conf_hadoop.always.impersonate.current.user</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e2203 ">java.security.networkaddress.cache.ttl</td>
 
-                                <td class="entry" valign="top" headers="d39286e2130 ">Ensures that Hadoop-related stages use the currently logged
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e2206 ">Number of seconds to cache Domain Name Service (DNS)
+                                        lookups.<p class="p">Default is 0, which configures the JVM to use the
+                                        DNS time to live value. For more information, see the <a class="xref" href="http://docs.oracle.com/javase/8/docs/technotes/guides/net/properties.html" target="_blank">networkaddress.cache.ttl
+                                            property</a> in the Oracle documentation.</p>
+</td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+</div>
+
+            </div>
+<div class="p">The <span class="ph">Data
+                  Collector</span> configuration file includes the following stage-specific properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lxk_kjw_1r__table_y2g_rx5_nz" class="table" frame="border" border="1" rules="all">
+                        
+                        
+                        <thead class="thead" align="left">
+                            <tr>
+                                <th class="entry" valign="top" id="d39286e2248">Stage-Specific Properties</th>
+
+                                <th class="entry" valign="top" id="d39286e2251">Description</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody class="tbody">
+                            <tr>
+                                <td class="entry" valign="top" headers="d39286e2248 ">stage.conf_hadoop.always.impersonate.current.user</td>
+
+                                <td class="entry" valign="top" headers="d39286e2251 ">Ensures that Hadoop-related stages use the currently logged
                                     in <span class="ph">Data
                   Collector</span> user to perform tasks, such as writing data, in Hadoop
                                     systems. With this property enabled, <span class="ph">Data
@@ -1446,10 +1528,10 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" headers="d39286e2127 ">stage.conf_hadoop.always.lowercase.user <a class="xref" href="DCConfig.html#concept_dcq_mpk_f1b"><img class="image" id="task_lxk_kjw_1r__image_t4c_hby_f1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                <td class="entry" valign="top" headers="d39286e2248 ">stage.conf_hadoop.always.lowercase.user <a class="xref" href="DCConfig.html#concept_dcq_mpk_f1b"><img class="image" id="task_lxk_kjw_1r__image_t4c_hby_f1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                     </a></td>
 
-                                <td class="entry" valign="top" headers="d39286e2130 ">Converts the user name to lowercase before passing it to
+                                <td class="entry" valign="top" headers="d39286e2251 ">Converts the user name to lowercase before passing it to
                                     Hadoop. <p class="p">Use to lowercase user names from case insensitive
                                         systems, such as a case-insensitive LDAP installation,
                                         before passing the user names to Hadoop systems.</p>
@@ -1461,13 +1543,13 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" headers="d39286e2127 ">
+                                <td class="entry" valign="top" headers="d39286e2248 ">
                                     <p class="p">stage.conf_com.streamsets.pipeline.stage.executor.
                                         shell.impersonation_mode </p>
 
                                 </td>
 
-                                <td class="entry" valign="top" headers="d39286e2130 ">Uses the <span class="ph">Data
+                                <td class="entry" valign="top" headers="d39286e2251 ">Uses the <span class="ph">Data
                   Collector</span> user who starts the pipeline to execute shell scripts defined
                                     in Shell executors. When not enabled, the operating system user
                                     who started <span class="ph">Data
@@ -1477,17 +1559,17 @@ The <span class="ph">Data
 <p class="p">Requires the
                                         user who starts the pipeline to have a matching user account
                                         in the operating system. For more information about the
-                                        security ramifications, see <a class="xref" href="../Executors/Shell.html#concept_n2w_txv_vz">Enabling Shell Impersonation Mode</a>.</p>
+                                        security ramifications, see <a class="xref" href="../Executors/Shell.html#concept_n2w_txv_vz">Data Collector Shell Impersonation Mode</a>.</p>
 <p class="p">Used by Shell executors.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" headers="d39286e2127 ">stage.conf_com.streamsets.pipeline.stage.executor.
+                                <td class="entry" valign="top" headers="d39286e2248 ">stage.conf_com.streamsets.pipeline.stage.executor.
                                     shell.shell</td>
 
-                                <td class="entry" valign="top" headers="d39286e2130 ">Defines the relative or absolute path to the command line
+                                <td class="entry" valign="top" headers="d39286e2251 ">Defines the relative or absolute path to the command line
                                     interpreter to use to execute scripts, such as
                                         <samp class="ph codeph">/bin/bash</samp>.<p class="p">Default is
                                             "<samp class="ph codeph">sh</samp>".</p>
@@ -1498,10 +1580,10 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" headers="d39286e2127 ">stage.conf_com.streamsets.pipeline.stage.executor.
+                                <td class="entry" valign="top" headers="d39286e2248 ">stage.conf_com.streamsets.pipeline.stage.executor.
                                     shell.sudo</td>
 
-                                <td class="entry" valign="top" headers="d39286e2130 ">Defines the relative or absolute path to the sudo to use when
+                                <td class="entry" valign="top" headers="d39286e2251 ">Defines the relative or absolute path to the sudo to use when
                                     executing scripts.<p class="p">Default is
                                         <samp class="ph codeph">sudo</samp>.</p>
 <p class="p">Used by Shell
@@ -1523,9 +1605,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d39286e2259">Observer Properties</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d39286e2381">Observer Properties</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d39286e2262">Description</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d39286e2384">Description</th>
 
                             </tr>
 
@@ -1533,9 +1615,9 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e2259 ">observer.queue.size</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e2381 ">observer.queue.size</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e2262 ">Maximum queue size for data rule evaluation requests. Each
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e2384 ">Maximum queue size for data rule evaluation requests. Each
                                     data rule generates an evaluation request for every batch that
                                     passes through the stream. When the number of requests outstrips
                                     the queue size, requests are dropped.<p class="p">Default is 100.
@@ -1545,9 +1627,9 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e2259 ">observer.sampled.records.cache.size</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e2381 ">observer.sampled.records.cache.size</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e2262 ">Maximum number of records to be cached for display for each
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e2384 ">Maximum number of records to be cached for display for each
                                     rule. The exact number of records is specified in the data rule.
                                         <p class="p">Default is 100. You can reduce this number as
                                     needed.</p>
@@ -1556,9 +1638,9 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e2259 ">observer.queue.offer.max.wait.time.ms</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d39286e2381 ">observer.queue.offer.max.wait.time.ms</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e2262 ">Maximum number of milliseconds to wait before dropping a data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d39286e2384 ">Maximum number of milliseconds to wait before dropping a data
                                     rule evaluation request when the observer queue is full.</td>
 
                             </tr>
@@ -1577,9 +1659,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d39286e2321">Miscellaneous Property</th>
+                                <th class="entry" valign="top" width="30%" id="d39286e2442">Miscellaneous Property</th>
 
-                                <th class="entry" valign="top" width="70%" id="d39286e2324">Description</th>
+                                <th class="entry" valign="top" width="70%" id="d39286e2445">Description</th>
 
                             </tr>
 
@@ -1587,18 +1669,18 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d39286e2321 ">max.stage.private.classloaders</td>
+                                <td class="entry" valign="top" width="30%" headers="d39286e2442 ">max.stage.private.classloaders</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d39286e2324 ">Maximum number of stage libraries <span class="ph">Data
+                                <td class="entry" valign="top" width="70%" headers="d39286e2445 ">Maximum number of stage libraries <span class="ph">Data
                   Collector</span> allows. <p class="p">Default is 50.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d39286e2321 ">runner.thread.pool.size</td>
+                                <td class="entry" valign="top" width="30%" headers="d39286e2442 ">runner.thread.pool.size</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d39286e2324 ">Pre-multiplier size of the thread pool. One running pipeline
+                                <td class="entry" valign="top" width="70%" headers="d39286e2445 ">Pre-multiplier size of the thread pool. One running pipeline
                                     requires five threads, and pipelines share threads in the pool.
                                     To calculate the approximate runner thread pool size, multiply
                                     the number of running pipelines by 2.2.<p class="p">Increasing this value
@@ -1612,18 +1694,18 @@ The <span class="ph">Data
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d39286e2321 ">pipeline.max.runners.count</td>
+                                <td class="entry" valign="top" width="30%" headers="d39286e2442 ">pipeline.max.runners.count</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d39286e2324 ">Maximum number of pipeline runners to use for a multithreaded
+                                <td class="entry" valign="top" width="70%" headers="d39286e2445 ">Maximum number of pipeline runners to use for a multithreaded
                                         pipeline.<p class="p">Default is 50.</p>
 </td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d39286e2321 ">bundle.upload.enabled</td>
+                                <td class="entry" valign="top" width="30%" headers="d39286e2442 ">bundle.upload.enabled</td>
 
-                                <td class="entry" valign="top" width="70%" headers="d39286e2324 ">Allows <span class="ph">Data
+                                <td class="entry" valign="top" width="70%" headers="d39286e2445 ">Allows <span class="ph">Data
                   Collector</span> to directly upload <a class="xref" href="../Administration/Administration_title.html#concept_szj_3mw_xz" title="You can use Data Collector to generate a support bundle. A support bundle is a ZIP file that includes Data Collector logs, environment and configuration information, pipeline JSON files, resource files, and pipeline snapshots. You upload the generated file to the StreamSets support team so that we can use the information to troubleshoot your support tickets. Or, you can download the generated file and then send the file to another StreamSets community member.">support bundles</a> to the StreamSets support team.<p class="p">To
                                         disable the direct upload, uncomment this property.
                                     </p>
@@ -1658,10 +1740,10 @@ Generally,
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d39286e2424">Blacklist / Whitelist Property <a class="xref" href="DCConfig.html#concept_gfx_rvf_qv" title="By default, almost all installed stage libraries are available for use in Data Collector. You can use blacklist and whitelist properties to limit the stage libraries that can be used."><img class="image" id="task_lxk_kjw_1r__image_pvr_lgg_qv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                <th class="entry" valign="top" width="30%" id="d39286e2545">Blacklist / Whitelist Property <a class="xref" href="DCConfig.html#concept_gfx_rvf_qv" title="By default, almost all installed stage libraries are available for use in Data Collector. You can use blacklist and whitelist properties to limit the stage libraries that can be used."><img class="image" id="task_lxk_kjw_1r__image_pvr_lgg_qv" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                     </a></th>
 
-                                <th class="entry" valign="top" width="70%" id="d39286e2437">Description</th>
+                                <th class="entry" valign="top" width="70%" id="d39286e2558">Description</th>
 
                             </tr>
 
@@ -1669,20 +1751,20 @@ Generally,
 
                         <tbody class="tbody">
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d39286e2424 ">system.stagelibs.whitelist<p class="p">system.stagelibs.blacklist</p>
+                                <td class="entry" valign="top" width="30%" headers="d39286e2545 ">system.stagelibs.whitelist<p class="p">system.stagelibs.blacklist</p>
 </td>
 
-                                <td class="entry" valign="top" width="70%" headers="d39286e2437 ">Use one list to limit the StreamSets stage libraries that can
+                                <td class="entry" valign="top" width="70%" headers="d39286e2558 ">Use one list to limit the StreamSets stage libraries that can
                                     be used in <span class="ph">Data
                   Collector</span>. Do not use both.</td>
 
                             </tr>
 
                             <tr>
-                                <td class="entry" valign="top" width="30%" headers="d39286e2424 ">user.stagelibs.whitelist<p class="p">user.stagelibs.blacklist</p>
+                                <td class="entry" valign="top" width="30%" headers="d39286e2545 ">user.stagelibs.whitelist<p class="p">user.stagelibs.blacklist</p>
 </td>
 
-                                <td class="entry" valign="top" width="70%" headers="d39286e2437 ">Use one list to limit the third-party stage libraries that
+                                <td class="entry" valign="top" width="70%" headers="d39286e2558 ">Use one list to limit the third-party stage libraries that
                                     can be used in <span class="ph">Data
                   Collector</span>. Do not use both.</td>
 
@@ -1703,9 +1785,9 @@ Generally,
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d39286e2494">Additional Files Property</th>
+                            <th class="entry" valign="top" width="30%" id="d39286e2615">Additional Files Property</th>
 
-                            <th class="entry" valign="top" width="70%" id="d39286e2497">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d39286e2618">Description</th>
 
                         </tr>
 
@@ -1713,9 +1795,9 @@ Generally,
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d39286e2494 ">config.includes</td>
+                            <td class="entry" valign="top" width="30%" headers="d39286e2615 ">config.includes</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d39286e2497 ">Additional configuration files to include in the <span class="ph">Data
+                            <td class="entry" valign="top" width="70%" headers="d39286e2618 ">Additional configuration files to include in the <span class="ph">Data
                   Collector</span> configuration. The files must be stored in a directory relative
                                 to the <samp class="ph systemoutput">$SDC_CONF</samp> directory.<p class="p">You can
                                     enter multiple file names separated by commas. The files are
@@ -1754,9 +1836,9 @@ Generally,
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="40%" id="d39286e2559">Record Sampling Property</th>
+                            <th class="entry" valign="top" width="40%" id="d39286e2681">Record Sampling Property</th>
 
-                            <th class="entry" valign="top" width="60%" id="d39286e2562">Description</th>
+                            <th class="entry" valign="top" width="60%" id="d39286e2684">Description</th>
 
                         </tr>
 
@@ -1764,17 +1846,17 @@ Generally,
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d39286e2559 ">sdc.record.sampling.sample.size</td>
+                            <td class="entry" valign="top" width="40%" headers="d39286e2681 ">sdc.record.sampling.sample.size</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d39286e2562 ">Size of the sample set.<p class="p">Default is 1.</p>
+                            <td class="entry" valign="top" width="60%" headers="d39286e2684 ">Size of the sample set.<p class="p">Default is 1.</p>
 </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d39286e2559 ">sdc.record.sampling.population.size</td>
+                            <td class="entry" valign="top" width="40%" headers="d39286e2681 ">sdc.record.sampling.population.size</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d39286e2562 ">Size of the total number of records.<p class="p">Default is
+                            <td class="entry" valign="top" width="60%" headers="d39286e2684 ">Size of the total number of records.<p class="p">Default is
                                 10,000.</p>
 </td>
 
@@ -1799,9 +1881,9 @@ Generally,
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="40%" id="d39286e2626">Pipeline State Cache Property</th>
+                            <th class="entry" valign="top" width="40%" id="d39286e2748">Pipeline State Cache Property</th>
 
-                            <th class="entry" valign="top" width="60%" id="d39286e2629">Description</th>
+                            <th class="entry" valign="top" width="60%" id="d39286e2751">Description</th>
 
                         </tr>
 
@@ -1809,9 +1891,9 @@ Generally,
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d39286e2626 ">store.pipeline.state.cache.maximum.size</td>
+                            <td class="entry" valign="top" width="40%" headers="d39286e2748 ">store.pipeline.state.cache.maximum.size</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d39286e2629 ">Maximum number of pipeline states that <span class="ph">Data
+                            <td class="entry" valign="top" width="60%" headers="d39286e2751 ">Maximum number of pipeline states that <span class="ph">Data
                   Collector</span> caches. When the maximum number is reached, <span class="ph">Data
                   Collector</span> evicts the oldest states from the cache.<p class="p">Default is 100.
                                 </p>
@@ -1820,9 +1902,9 @@ Generally,
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="40%" headers="d39286e2626 ">store.pipeline.state.cache.expire.after.access</td>
+                            <td class="entry" valign="top" width="40%" headers="d39286e2748 ">store.pipeline.state.cache.expire.after.access</td>
 
-                            <td class="entry" valign="top" width="60%" headers="d39286e2629 ">Amount of time in minutes that a pipeline state can remain in the
+                            <td class="entry" valign="top" width="60%" headers="d39286e2751 ">Amount of time in minutes that a pipeline state can remain in the
                                 cache after the entry's creation, the most recent replacement of its
                                 value, or its last access.<p class="p">Default is 10 minutes.</p>
 </td>
@@ -1841,9 +1923,9 @@ Generally,
     
     <thead class="thead" align="left">
      <tr>
-      <th class="entry" valign="top" width="46.666666666666664%" id="d39286e2693">Metadata Publisher Property</th>
+      <th class="entry" valign="top" width="46.666666666666664%" id="d39286e2815">Metadata Publisher Property</th>
 
-      <th class="entry" valign="top" width="53.333333333333336%" id="d39286e2696">Description</th>
+      <th class="entry" valign="top" width="53.333333333333336%" id="d39286e2818">Description</th>
 
      </tr>
 
@@ -1851,9 +1933,9 @@ Generally,
 
     <tbody class="tbody">
      <tr>
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2693 ">lineage.publishers</td>
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2815 ">lineage.publishers</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2696 ">Application to publish metadata to. Do not change the default value of
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2818 ">Application to publish metadata to. Do not change the default value of
        <samp class="ph codeph">navigator</samp>.<p class="p">Uncomment the property to enable metadata
         publishing.</p>
 </td>
@@ -1861,9 +1943,9 @@ Generally,
      </tr>
 
      <tr>
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2693 ">lineage.publisher.navigator.def</td>
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2815 ">lineage.publisher.navigator.def</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2696 ">Stage library name used to connect to Cloudera Navigator, entered in the following
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2818 ">Stage library name used to connect to Cloudera Navigator, entered in the following
         format:<pre class="pre codeblock">&lt;stage library name&gt;::
 com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</pre>
 <p class="p">Uncomment
@@ -1878,20 +1960,20 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</pre>
 
      </tr>
 
-     <tr id="task_lxk_kjw_1r__d4385e4159">
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2693 ">lineage.publisher.navigator.config.application_url</td>
+     <tr id="task_lxk_kjw_1r__d4415e4159">
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2815 ">lineage.publisher.navigator.config.application_url</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2696 ">URL to <span class="ph">Data
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2818 ">URL to <span class="ph">Data
                   Collector</span>. For
        example:<pre class="pre codeblock">http://&lt;hostname&gt;:18630/</pre>
 </td>
 
      </tr>
 
-     <tr id="task_lxk_kjw_1r__d4385e4171">
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2693 ">lineage.publisher.navigator.config.navigator_url</td>
+     <tr id="task_lxk_kjw_1r__d4415e4171">
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2815 ">lineage.publisher.navigator.config.navigator_url</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2696 ">URL to the Cloudera Navigator UI. For example:<div class="p">
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2818 ">URL to the Cloudera Navigator UI. For example:<div class="p">
         <pre class="pre codeblock">http://&lt;Navigator Metadata Server host&gt;:&lt;port number&gt;/</pre>
 
        </div>
@@ -1903,10 +1985,10 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</pre>
 
      </tr>
 
-     <tr id="task_lxk_kjw_1r__d4385e4193">
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2693 ">lineage.publisher.navigator.config.metadata_parent_uri</td>
+     <tr id="task_lxk_kjw_1r__d4415e4193">
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2815 ">lineage.publisher.navigator.config.metadata_parent_uri</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2696 ">Navigator Metadata Parent URI. For example:<div class="p">
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2818 ">Navigator Metadata Parent URI. For example:<div class="p">
         <pre class="pre codeblock">http://&lt;Navigator Metadata Server host&gt;:&lt;port number&gt;/</pre>
 
        </div>
@@ -1914,34 +1996,34 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</pre>
 
      </tr>
 
-     <tr id="task_lxk_kjw_1r__d4385e4208">
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2693 ">lineage.publisher.navigator.config.namespace</td>
+     <tr id="task_lxk_kjw_1r__d4415e4208">
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2815 ">lineage.publisher.navigator.config.namespace</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2696 ">Namespace that Cloudera Navigator uses to uniquely identify <span class="ph">Data
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2818 ">Namespace that Cloudera Navigator uses to uniquely identify <span class="ph">Data
                   Collector</span> properties.<p class="p">Default is
         <samp class="ph codeph">sdc</samp>.</p>
 </td>
 
      </tr>
 
-     <tr id="task_lxk_kjw_1r__d4385e4224">
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2693 ">lineage.publisher.navigator.config.username</td>
+     <tr id="task_lxk_kjw_1r__d4415e4224">
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2815 ">lineage.publisher.navigator.config.username</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2696 ">User name to connect to Cloudera Navigator. </td>
-
-     </tr>
-
-     <tr id="task_lxk_kjw_1r__d4385e4233">
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2693 ">lineage.publisher.navigator.config.password</td>
-
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2696 ">Password for the Cloudera Navigator account.</td>
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2818 ">User name to connect to Cloudera Navigator. </td>
 
      </tr>
 
-     <tr id="task_lxk_kjw_1r__d4385e4242">
-      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2693 ">lineage.publisher.navigator.config.autocommit</td>
+     <tr id="task_lxk_kjw_1r__d4415e4233">
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2815 ">lineage.publisher.navigator.config.password</td>
 
-      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2696 ">Enables Cloudera Navigator to immediately process the published metadata.<p class="p">Setting to
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2818 ">Password for the Cloudera Navigator account.</td>
+
+     </tr>
+
+     <tr id="task_lxk_kjw_1r__d4415e4242">
+      <td class="entry" valign="top" width="46.666666666666664%" headers="d39286e2815 ">lineage.publisher.navigator.config.autocommit</td>
+
+      <td class="entry" valign="top" width="53.333333333333336%" headers="d39286e2818 ">Enables Cloudera Navigator to immediately process the published metadata.<p class="p">Setting to
        true can use a large number of resources on the Cloudera Navigator machine. Set to true only
        in a development or test environment.</p>
 <p class="p">Default is false. </p>

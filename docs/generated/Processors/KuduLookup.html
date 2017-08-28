@@ -45,10 +45,10 @@
         <p class="p">When a lookup results in multiple matches, the Kudu Lookup processor can return the first
             matching value or return all matching values in separate records. </p>
 
-        <p class="p">You can configure the processor to locally cache the lookup values to improve
-            performance.</p>
+        <p class="p">To improve pipeline performance, you can configure the Kudu Lookup processor to locally
+            cache the Kudu table information and the lookup values returned from a Kudu table. </p>
 
- </div>
+    </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_cs4_vj1_s1b">
@@ -104,14 +104,46 @@
 
  <div class="body conbody">
             <p class="p">To improve pipeline performance, you can
-            configure the Kudu Lookup processor to locally cache the values returned from a Kudu
-            table.</p>
+            configure the Kudu Lookup processor to locally cache Kudu table information and the
+            lookup values returned from a Kudu table. </p>
 
-            <p class="p">The processor caches values until the cache reaches the
-                  maximum size or the expiration time. When the first limit is reached, the
-                  processor evicts values from the cache.</p>
+        <p class="p">When you stop the pipeline, the processor clears both caches.</p>
+        
+        </div>
 
-            <div class="p">You can configure the following ways to evict values from
+    <div class="topic concept nested2" id="concept_eqf_dh3_x1b">
+ <h3 class="title topictitle3">Cache Table Information</h3>
+
+ <div class="body conbody">
+        <p class="p">By default, the processor locally caches information about each Kudu table to look up,
+            including the table name and schema. You can configure the maximum number of tables that
+            the processor caches information for. When the maximum number is reached, the processor
+            evicts the oldest values from the cache.</p>
+
+        <p class="p">Disable the caching of table information only when you expect the Kudu table schemas to
+            change frequently. In this situation, you want the processor to fetch the updated
+            schemas from Kudu, rather than use an outdated schema in the cache.</p>
+
+        <p class="p">The following image displays the properties that configure the table cache:</p>
+
+        <p class="p"><img class="image" id="concept_eqf_dh3_x1b__image_n41_rm3_x1b" src="../Graphics/KuduLookup_CacheTableInfo.png" height="206" width="746" /></p>
+
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_xr1_fh3_x1b">
+ <h3 class="title topictitle3">Cache Lookup Values</h3>
+
+ <div class="body conbody">
+                <p class="p">By default, the processor does not cache the lookup values returned
+                    from a Kudu table. To improve pipeline performance, you can enable the processor
+                    to locally cache the lookup values.</p>
+
+                <p class="p">When enabled, the processor caches values until the cache reaches the
+                    maximum size or the expiration time. When the first limit is reached, the
+                    processor evicts values from the cache.</p>
+
+     <div class="p">You can configure the following ways to evict values from
                   the cache:<dl class="dl">
                         
                               <dt class="dt dlterm">Size-based eviction</dt>
@@ -140,12 +172,14 @@
                   </dl>
 </div>
 
-            <p class="p">When you stop the pipeline, the processor clears the
-                  cache.</p>
+        <p class="p">The following image displays the properties that configure the lookup value cache:</p>
 
-        </div>
+        <p class="p"><img class="image" id="concept_xr1_fh3_x1b__image_vpz_rl3_x1b" src="../Graphics/KuduLookup_CacheValues.png" height="291" width="740" /></p>
 
-    </div>
+ </div>
+
+</div>
+</div>
 <div class="topic task nested1" id="task_b5b_dyl_p1b">
     <h2 class="title topictitle2">Configuring a Kudu Lookup</h2>
 
@@ -161,14 +195,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_b5b_dyl_p1b__d63609e4651" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_b5b_dyl_p1b__d64044e4651" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d382451e234">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d384878e278">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d382451e237">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d384878e281">Description</th>
 
                                 </tr>
 
@@ -176,31 +210,31 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e234 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e278 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e237 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e234 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d382451e237 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d384878e281 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e234 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e278 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e237 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d384878e281 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e234 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_b5b_dyl_p1b__d63609e4706" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e278 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e237 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d384878e281 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e278 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_b5b_dyl_p1b__d64044e4706" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d384878e281 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -212,10 +246,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e234 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_b5b_dyl_p1b__d63609e4722" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e278 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_b5b_dyl_p1b__d64044e4722" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e237 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d384878e281 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -226,10 +260,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e234 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_b5b_dyl_p1b__d63609e4740" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e278 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_b5b_dyl_p1b__d64044e4740" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e237 ">Error record handling for the stage: <ul class="ul" id="task_b5b_dyl_p1b__d63609e4744">
+                                    <td class="entry" valign="top" width="70%" headers="d384878e281 ">Error record handling for the stage: <ul class="ul" id="task_b5b_dyl_p1b__d64044e4744">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -260,9 +294,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d382451e358">Kudu Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d384878e402">Kudu Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d382451e361">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d384878e405">Description</th>
 
                                 </tr>
 
@@ -270,18 +304,18 @@
 
                             <tbody class="tbody">
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d382451e358 ">Kudu Masters</td>
+      <td class="entry" valign="top" width="30%" headers="d384878e402 ">Kudu Masters</td>
 
-      <td class="entry" valign="top" width="70%" headers="d382451e361 ">Comma-separated list of connection information for the Kudu masters to use. Use the
+      <td class="entry" valign="top" width="70%" headers="d384878e405 ">Comma-separated list of connection information for the Kudu masters to use. Use the
        following format: <pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;</pre>
 </td>
 
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e358 ">Kudu Table</td>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e402 ">Kudu Table</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e361 ">Table to look up. Enter one of the following:<ul class="ul" id="task_b5b_dyl_p1b__ul_qfr_crn_51b">
+                                    <td class="entry" valign="top" width="70%" headers="d384878e405 ">Table to look up. Enter one of the following:<ul class="ul" id="task_b5b_dyl_p1b__ul_qfr_crn_51b">
         <li class="li">Name of an existing Kudu table. If the table doesn't exist, the pipeline fails to
          start.</li>
 
@@ -294,9 +328,9 @@ If the table doesn't
        </ul>
 <div class="p">
        <div class="note note"><span class="notetitle">Note:</span> Impala creates Kudu tables with the following naming convention:
-        <pre class="pre codeblock">impala::&lt;table name&gt;</pre>
-<p class="p">When using a table created by Impala, be
-         sure to use the entire table name. </p>
+          <pre class="pre codeblock">impala:&lt;database name&gt;.&lt;table name&gt;</pre>
+<p class="p">When using a table
+          created by Impala, be sure to use the entire table name. </p>
 </div>
 
       </div>
@@ -305,11 +339,11 @@ If the table doesn't
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e358 ">Key Columns Mapping
+                                    <td class="entry" valign="top" width="30%" headers="d384878e402 ">Key Columns Mapping
                                         <a class="xref" href="KuduLookup.html#concept_cs4_vj1_s1b">
                                             <img class="image" id="task_b5b_dyl_p1b__image_h6p_p2v_uq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e361 ">Map the incoming fields in the record to the primary key
+                                    <td class="entry" valign="top" width="70%" headers="d384878e405 ">Map the incoming fields in the record to the primary key
                                         column or columns in the Kudu table. Enter the following:<ul class="ul" id="task_b5b_dyl_p1b__ul_eqk_prn_51b">
                                             <li class="li">SDC Field - Name of the existing field or fields in
                                                 the record that contain the primary key column or
@@ -329,11 +363,11 @@ If the table doesn't
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e358 ">Columns to Output Fields Mapping
+                                    <td class="entry" valign="top" width="30%" headers="d384878e402 ">Columns to Output Fields Mapping
                                         <a class="xref" href="KuduLookup.html#concept_cs4_vj1_s1b">
                                             <img class="image" id="task_b5b_dyl_p1b__image_h2h_k3v_uq" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e361 ">Map the columns to look up in the Kudu table to the
+                                    <td class="entry" valign="top" width="70%" headers="d384878e405 ">Map the columns to look up in the Kudu table to the
                                         output fields in the record. Enter the following:<ul class="ul" id="task_b5b_dyl_p1b__ul_vk5_fsn_51b">
                                             <li class="li">Column Name - Name of the Kudu column that contains
                                                 the lookup value. Enter a column name or enter an
@@ -345,10 +379,12 @@ If the table doesn't
                                                 exist, Kudu Lookup creates the field.</li>
 
                                             <li class="li">Default Value - Optional default value to use when
-                                                the lookup does not return a value for the field. If
-                                                the lookup returns no value, a default value is not
-                                                defined, and Ignore Missing Value is cleared, the
-                                                processor sends the record to error.</li>
+                                                the lookup does not return a value for the field and
+                                                Ignore Missing Value is selected. <p class="p">If Ignore
+                                                  Missing Value is cleared, the processor sends the
+                                                  record to error when a lookup returns no value -
+                                                  even if you define a default value.</p>
+</li>
 
                                         </ul>
 <p class="p">Use the <span class="ph uicontrol">Add</span> icon to create
@@ -358,25 +394,27 @@ If the table doesn't
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e358 ">Case Sensitive</td>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e402 ">Case Sensitive</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e361 ">Enables case-sensitive column names. Select when the Kudu
+                                    <td class="entry" valign="top" width="70%" headers="d384878e405 ">Enables case-sensitive column names. Select when the Kudu
                                         column names use mixed case. Clear when the Kudu column
                                         names use lower case.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e358 ">Ignore Missing Value</td>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e402 ">Ignore Missing Value</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e361 ">Determines whether the processor ignores missing lookup
+                                    <td class="entry" valign="top" width="70%" headers="d384878e405 ">Determines whether the processor ignores missing lookup
                                             values.<p class="p">When cleared, the processor sends the record
-                                            to error if a lookup returns no value and the Columns to
-                                            Output Fields Mapping does not have a default value
-                                            defined. When selected, the processor continues to
-                                            process the record if a lookup returns no value and the
-                                            Columns to Output Fields Mapping does have a default
-                                            value defined. </p>
+                                            to error if a lookup returns no value. </p>
+<p class="p">When
+                                            selected, the processor continues to process the record
+                                            if a lookup returns no value and the Columns to Output
+                                            Fields Mapping defines a default value. The processor
+                                            sends the record to error if the Columns to Output
+                                            Fields Mapping does not define a default
+                                        value.</p>
 </td>
 
                                 </tr>
@@ -398,9 +436,9 @@ If the table doesn't
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d382451e511">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d384878e559">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d382451e514">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d384878e562">Description</th>
 
                                 </tr>
 
@@ -408,9 +446,9 @@ If the table doesn't
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e511 ">Multiple Values Behavior</td>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e559 ">Multiple Values Behavior</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e514 ">Action to take upon finding multiple matching values: <ul class="ul" id="task_b5b_dyl_p1b__ul_zks_3gj_11b">
+                                    <td class="entry" valign="top" width="70%" headers="d384878e562 ">Action to take upon finding multiple matching values: <ul class="ul" id="task_b5b_dyl_p1b__ul_zks_3gj_11b">
                                             <li class="li">First value only - Returns the first value.</li>
 
                                             <li class="li">Split into Multiple Records - Returns every matching
@@ -422,9 +460,9 @@ If the table doesn't
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e511 ">Operation Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e559 ">Operation Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e514 ">Number of milliseconds the processor waits to allow a
+                                    <td class="entry" valign="top" width="70%" headers="d384878e562 ">Number of milliseconds the processor waits to allow a
                                         lookup to complete.</td>
 
                                 </tr>
@@ -446,9 +484,9 @@ If the table doesn't
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d382451e574">Lookup Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d384878e622">Lookup Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d382451e577">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d384878e625">Description</th>
 
                                 </tr>
 
@@ -456,28 +494,49 @@ If the table doesn't
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d382451e574 ">Enable Local Caching
-                                        <a class="xref" href="KuduLookup.html#concept_vnx_h4r_p1b">
+                                    <td class="entry" valign="top" width="30%" headers="d384878e622 ">Cache Kudu Table
+                                        <a class="xref" href="KuduLookup.html#concept_eqf_dh3_x1b">
+                                            <img class="image" id="task_b5b_dyl_p1b__image_h3p_p9g_kj" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d384878e625 ">Specifies whether to locally cache the name and schema of
+                                        the Kudu tables to look up.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e622 ">Maximum Entries to Cache Table Objects</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d384878e625 ">Maximum number of table entries to cache. When the
+                                        maximum number is reached, the processor evicts the oldest
+                                        values from the cache.<p class="p">Default is -1, which means
+                                            unlimited.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d384878e622 ">Enable Local Caching
+                                        <a class="xref" href="KuduLookup.html#concept_xr1_fh3_x1b">
                                             <img class="image" id="task_b5b_dyl_p1b__image_h2p_p7v_uh" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d382451e577 ">Specifies whether to locally cache the returned
+                                    <td class="entry" valign="top" width="70%" headers="d384878e625 ">Specifies whether to locally cache the returned
        values.</td>
 
                                 </tr>
 <tr>
-      <td class="entry" valign="top" width="30%" headers="d382451e574 ">Maximum Entries to Cache</td>
+      <td class="entry" valign="top" width="30%" headers="d384878e622 ">Maximum Entries to Cache</td>
 
-      <td class="entry" valign="top" width="70%" headers="d382451e577 ">Maximum number of values to cache. When the maximum number is reached, the processor
+      <td class="entry" valign="top" width="70%" headers="d384878e625 ">Maximum number of values to cache. When the maximum number is reached, the processor
        evicts the oldest values from the cache. <p class="p">Default is -1, which means unlimited.</p>
 </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d382451e574 ">Eviction Policy Type</td>
+      <td class="entry" valign="top" width="30%" headers="d384878e622 ">Eviction Policy Type</td>
 
-      <td class="entry" valign="top" width="70%" headers="d382451e577 ">Policy used to evict values from the local cache when the expiration time has
-        passed:<ul class="ul" id="task_b5b_dyl_p1b__d63854e2601">
+      <td class="entry" valign="top" width="70%" headers="d384878e625 ">Policy used to evict values from the local cache when the expiration time has
+        passed:<ul class="ul" id="task_b5b_dyl_p1b__d64289e2601">
         <li class="li">Expire After Last Access - Measures the expiration time since the value was last
          accessed by a read or a write.</li>
 
@@ -490,18 +549,18 @@ If the table doesn't
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d382451e574 ">Expiration Time</td>
+      <td class="entry" valign="top" width="30%" headers="d384878e622 ">Expiration Time</td>
 
-      <td class="entry" valign="top" width="70%" headers="d382451e577 ">Amount of time that a value can remain in the local cache without being accessed or
+      <td class="entry" valign="top" width="70%" headers="d384878e625 ">Amount of time that a value can remain in the local cache without being accessed or
        written to. <p class="p">Default is 1 second.</p>
 </td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d382451e574 ">Time Unit</td>
+      <td class="entry" valign="top" width="30%" headers="d384878e622 ">Time Unit</td>
 
-      <td class="entry" valign="top" width="70%" headers="d382451e577 ">Unit of time for the expiration time. <p class="p">Default is
+      <td class="entry" valign="top" width="70%" headers="d384878e625 ">Unit of time for the expiration time. <p class="p">Default is
        seconds.</p>
 </td>
 

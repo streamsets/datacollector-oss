@@ -152,7 +152,7 @@
             current time. You include the offset field and offset value in the query to determine
             where to start reading data. The query properties are configured like so:</p>
 
-        <p class="p"><img class="image" id="concept_l5w_yhd_kz__image_cbs_btm_3z" src="../Graphics/Elasticsearch_IncrementalQuery.png" height="504" width="529" /></p>
+        <p class="p"><img class="image" id="concept_l5w_yhd_kz__image_cbs_btm_3z" src="../Graphics/Elasticsearch_IncrementalQuery.png" height="560" width="588" /></p>
 
         <p class="p">When you run the pipeline, the query returns all documents that have a timestamp field
             with a value greater than one day before the current time. The query sorts the results
@@ -259,14 +259,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pmh_xpm_2z__d35079e340" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pmh_xpm_2z__d35242e340" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d211144e358">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d212346e358">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d211144e361">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d212346e361">Description</th>
 
                                 </tr>
 
@@ -274,24 +274,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d211144e358 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d212346e358 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d211144e361 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d211144e358 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d211144e361 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d212346e361 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d211144e358 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_pmh_xpm_2z__d35079e386" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d212346e358 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d211144e361 ">Error record handling for the stage: <ul class="ul" id="task_pmh_xpm_2z__d35079e390">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d212346e361 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d212346e358 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_pmh_xpm_2z__d35242e386" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d212346e361 ">Error record handling for the stage: <ul class="ul" id="task_pmh_xpm_2z__d35242e390">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -321,9 +321,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d211144e437">Elasticsearch Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d212346e437">Elasticsearch Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d211144e440">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d212346e440">Description</th>
 
                                 </tr>
 
@@ -331,9 +331,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Cluster HTTP URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Cluster HTTP URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">HTTP URI used to connect to the cluster. Use the
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">HTTP URI used to connect to the cluster. Use the
                                         following format:
                                         <pre class="pre codeblock">&lt;host&gt;:&lt;port&gt;</pre>
 </td>
@@ -341,18 +341,18 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Additional HTTP Params</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Additional HTTP Params</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Additional HTTP parameters that you want to send as query
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Additional HTTP parameters that you want to send as query
                                         string parameters to Elasticsearch. Enter the exact
                                         parameter name and value expected by Elasticsearch.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Detect Additional Nodes in Cluster</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Detect Additional Nodes in Cluster</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">
                                         <p class="p">Detects additional nodes in the cluster based on the
                                             configured Cluster URI. </p>
 
@@ -368,17 +368,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Use Security</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Use Security</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Specifies whether security is enabled on the
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Specifies whether security is enabled on the
                                         Elasticsearch cluster. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Index</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Index</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Optional index to define the scope of the query. Enter an
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Optional index to define the scope of the query. Enter an
                                         index name or an expression that evaluates to the index
                                             name.<p class="p">For example, if you enter
                                                 <samp class="ph codeph">customer</samp> as the index, the query
@@ -389,9 +389,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Mapping</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Mapping</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Optional mapping type to define the scope of the query.
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Optional mapping type to define the scope of the query.
                                         Enter the mapping type or an expression that evaluates to
                                         the mapping type.<p class="p">For example, if you enter
                                                 <samp class="ph codeph">user</samp> as the mapping type, the query
@@ -402,11 +402,11 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Incremental Mode
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Incremental Mode
                                         <a class="xref" href="Elasticsearch.html#concept_tbz_ywl_3z">
                                             <img class="image" id="task_pmh_xpm_2z__image_prq_1zx_mv" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Defines how the origin queries Elasticsearch. Select to
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Defines how the origin queries Elasticsearch. Select to
                                         perform incremental queries. Clear to perform a batch
                                             query.<p class="p">Default is batch mode.</p>
 </td>
@@ -414,9 +414,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Query Interval</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Query Interval</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Amount of time that the origin waits between incremental
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Amount of time that the origin waits between incremental
                                         queries. Enter an expression based on a unit of time. You
                                         can use SECONDS, MINUTES, or HOURS. <p class="p">Required in
                                             incremental mode.</p>
@@ -427,18 +427,18 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Offset Field</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Offset Field</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Field to use for the initial offset value. <p class="p">Required in
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Field to use for the initial offset value. <p class="p">Required in
                                             incremental mode.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Initial Offset</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Initial Offset</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Offset value to use when the pipeline starts. Enter a
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Offset value to use when the pipeline starts. Enter a
                                         constant, an Elasticsearch date math expression, or a <span class="ph">Data
                   Collector</span> expression. <p class="p">Required in incremental mode.</p>
 </td>
@@ -446,20 +446,20 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Query
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Query
                                         <a class="xref" href="Elasticsearch.html#concept_zzw_3pm_3z" title="Define the query that the origin uses to return data from Elasticsearch. You can define any valid Elasticsearch query.">
                                             <img class="image" id="task_pmh_xpm_2z__image_peq_5hl_mg" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Query to read from Elasticsearch. You can define any
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Query to read from Elasticsearch. You can define any
                                         valid Elasticsearch query.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Scroll Timeout <a class="xref" href="Elasticsearch.html#concept_jhw_ttm_3z" title="An Elasticsearch query can retrieve large numbers of documents from a single search request. This allows the Elasticsearch origin to run a single query, and then read multiple batches of data from the scroll until no results are left. An Elasticsearch scroll functions like a cursor in a traditional database.">
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Scroll Timeout <a class="xref" href="Elasticsearch.html#concept_jhw_ttm_3z" title="An Elasticsearch query can retrieve large numbers of documents from a single search request. This allows the Elasticsearch origin to run a single query, and then read multiple batches of data from the scroll until no results are left. An Elasticsearch scroll functions like a cursor in a traditional database.">
                                             <img class="image" id="task_pmh_xpm_2z__image_pes_3gl_g" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Maximum amount of time to keep the search context
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Maximum amount of time to keep the search context
                                             alive.<p class="p">Enter the timeout using Elasticsearch duration
                                             time units. For example, enter <samp class="ph codeph">1m</samp> to
                                             set a one minute timeout.</p>
@@ -468,17 +468,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Delete Scroll on Pipeline Stop <a class="xref" href="Elasticsearch.html#concept_jhw_ttm_3z" title="An Elasticsearch query can retrieve large numbers of documents from a single search request. This allows the Elasticsearch origin to run a single query, and then read multiple batches of data from the scroll until no results are left. An Elasticsearch scroll functions like a cursor in a traditional database.">
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Delete Scroll on Pipeline Stop <a class="xref" href="Elasticsearch.html#concept_jhw_ttm_3z" title="An Elasticsearch query can retrieve large numbers of documents from a single search request. This allows the Elasticsearch origin to run a single query, and then read multiple batches of data from the scroll until no results are left. An Elasticsearch scroll functions like a cursor in a traditional database.">
                                             <img class="image" id="task_pmh_xpm_2z__image_kes_8kl_m" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Delete the scroll when the pipeline stops. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Delete the scroll when the pipeline stops. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Max Batch Size</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Max Batch Size</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Maximum number of records to include in a batch. Honors
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Maximum number of records to include in a batch. Honors
                                         values up to the <span class="ph">Data
                   Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default is 1000. </p>
@@ -487,10 +487,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e437 ">Number of Slices <a class="xref" href="Elasticsearch.html#concept_ifs_wtm_3z" title="The Elasticsearch origin performs parallel processing and enables the creation of a multithreaded pipeline.">
+                                    <td class="entry" valign="top" width="30%" headers="d212346e437 ">Number of Slices <a class="xref" href="Elasticsearch.html#concept_ifs_wtm_3z" title="The Elasticsearch origin performs parallel processing and enables the creation of a multithreaded pipeline.">
                                             <img class="image" id="task_pmh_xpm_2z__image_ges_6kg_s" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e440 ">Number of slices to split the Elasticsearch scroll
+                                    <td class="entry" valign="top" width="70%" headers="d212346e440 ">Number of slices to split the Elasticsearch scroll
                                             into.<p class="p">This property determines how many threads the
                                             origin generates and uses for multithreaded processing.
                                         </p>
@@ -508,16 +508,16 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">If you enabled security, on the <span class="keyword wintitle">Security</span> tab, configure
                     the following properties:</span>
-                <div class="itemgroup info" id="task_pmh_xpm_2z__d35079e7489">
+                <div class="itemgroup info" id="task_pmh_xpm_2z__d35242e7511">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pmh_xpm_2z__d35079e7491" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pmh_xpm_2z__d35242e7513" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d211144e698">Security Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d212346e698">Security Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d211144e701">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d212346e701">Description</th>
 
                                 </tr>
 
@@ -525,9 +525,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e698 ">Security Username/Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e698 ">Security Username/Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e701 ">Elasticsearch username and password. <div class="p">Enter the
+                                    <td class="entry" valign="top" width="70%" headers="d212346e701 ">Elasticsearch username and password. <div class="p">Enter the
                                             username and password using the following
                                             syntax:<pre class="pre codeblock">&lt;username&gt;:&lt;password&gt;</pre>
 </div>
@@ -539,9 +539,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e698 ">SSL Truststore Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e698 ">SSL Truststore Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e701 ">
+                                    <td class="entry" valign="top" width="70%" headers="d212346e701 ">
                                         <p class="p">Location of the truststore file. </p>
 
                                         <p class="p">Configuring this property is the equivalent to
@@ -555,9 +555,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d211144e698 ">SSL Truststore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212346e698 ">SSL Truststore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d211144e701 ">
+                                    <td class="entry" valign="top" width="70%" headers="d212346e701 ">
                                         <p class="p">Password for the truststore file. </p>
 
                                         <p class="p">Configuring this property is the equivalent to
