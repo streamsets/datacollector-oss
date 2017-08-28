@@ -21,13 +21,14 @@
  <title>Configuring HTTPS for Standalone Pipelines</title>
  <conbody>
     <p><indexterm>HTTPS<indexterm>configuring for standalone pipelines</indexterm></indexterm>To
-      configure HTTPS when you run standalone pipelines only, you can use a self-signed certificate.
-      Or, you can generate an SSL/TLS certificate and specify the generated keystore file and
-      keystore password file in the <ph
+      configure HTTPS when you run standalone pipelines only, set the <codeph>https.port</codeph>
+      property in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      configuration file, <codeph>sdc.properties</codeph>. </p>
-  <p>When you generate an SSL/TLS certificate to run standalone pipelines only, use the following
-      files: <dl>
+      configuration file, <codeph>sdc.properties</codeph>, to a secure port number.</p>
+    <p>You can use a self-signed certificate. Or, you can generate an SSL/TLS certificate and
+      specify the following files in the <codeph>sdc.properties</codeph> file:</p>
+  <p>
+      <dl>
         <dlentry>
           <dt>keystore file</dt>
           <dd>A file that contains the private key and self-signed certificates for the web server.
@@ -50,6 +51,7 @@
             relative to the <systemoutput>$SDC_CONF</systemoutput> directory.</dd>
           <dd>The default keystore password file is <filepath>keystore-password.txt</filepath>.</dd>
         </dlentry>
-      </dl></p>
+      </dl>
+    </p>
  </conbody>
 </concept>

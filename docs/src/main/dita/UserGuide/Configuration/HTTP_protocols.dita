@@ -27,17 +27,20 @@
  <conbody>
   <p><indexterm>HTTP protocol<indexterm>configuring for the Data Collector
                 </indexterm></indexterm><indexterm>Data Collector<indexterm>configuring the HTTP
-                    protocol</indexterm></indexterm>HTTPS requires an SSL/TLS certificate. <ph
+                    protocol</indexterm></indexterm>To configure HTTPS, set the
+                <codeph>https.port</codeph> property in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration file, <codeph>sdc.properties</codeph> to a secure port number. When both
+            the HTTP and HTTPS port properties are defined in the configuration file, the HTTP port
+            bounces to the HTTPS port.</p>
+        <p>HTTPS requires an SSL/TLS certificate. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             provides a self-signed certificate so you can use HTTPS immediately. You can also
             generate a certificate that is self-signed or signed by a certifying authority. Web
             browsers generally issue a warning for self-signed certificates. </p>
-        <p>When you configure <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            use HTTPS, you can have <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            redirect HTTP requests to HTTPS or to ignore them.</p>
-        <p>You use different properties to configure HTTPS based on whether you run standalone or
-            cluster pipelines.</p>
+        <p>You use different properties to configure the certificates for HTTPS based on whether you
+            run standalone or cluster pipelines.</p>
+        <note>If you run both standalone and cluster pipelines, configure HTTPS for cluster
+            pipelines.</note>
  </conbody>
 </concept>
