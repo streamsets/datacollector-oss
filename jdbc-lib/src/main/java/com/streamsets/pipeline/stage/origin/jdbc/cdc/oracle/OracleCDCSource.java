@@ -104,6 +104,7 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_82;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_83;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_84;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_85;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_86;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.COMMIT_CODE;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.DDL_CODE;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.DELETE_CODE;
@@ -449,6 +450,10 @@ public class OracleCDCSource extends BaseSource {
         final PreparedStatement select = selectChanges;
         final boolean closeRS = closeResultSet;
         recordsProduced = generateRecords(batchSize, select, batchMaker, closeRS);
+      } catch (StageException ex) {
+        incompleteBatch = false;
+        LOG.error("Error while attempting to produce records", ex);
+        throw ex;
       } catch (Exception ex) {
         incompleteBatch = false;
         // In preview, destroy gets called after timeout which can cause a SQLException
@@ -690,7 +695,7 @@ public class OracleCDCSource extends BaseSource {
       incompleteBatch = false;
       if (ex.getErrorCode() == MISSING_LOG_FILE) {
         LOG.warn("SQL Exception while retrieving records", ex);
-        throw ex;
+        throw new StageException(JDBC_86, ex);
       } else if (ex.getErrorCode() != RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED) {
         LOG.warn("SQL Exception while retrieving records", ex);
       } else if (ex.getErrorCode() == QUERY_TIMEOUT) {
