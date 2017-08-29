@@ -44,6 +44,15 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />.</cmd>
             </step>
+            <step>
+                <cmd>Configure the stage to use Kerberos. </cmd>
+                <info>
+                    <note>Cluster pipelines automatically use Kerberos authentication if the YARN
+                        cluster requires it and if <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> has Kerberos enabled. </note>
+                </info>
+            </step>
         </steps>
     </taskbody>
 </task>

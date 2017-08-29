@@ -24,6 +24,28 @@
         </context>
         <steps>
             <step>
+                <cmd>On Linux, install the following Kerberos client packages on the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> machine:</cmd>
+                <info>
+                    <ul id="ul_lww_2d4_z1b">
+                        <li>krb5-workstation</li>
+                        <li>krb5-client</li>
+                    </ul>
+                </info>
+            </step>
+            <step>
+                <cmd>Copy the Kerberos configuration file, <codeph>krb5.conf</codeph>, to the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> machine. The default location is <codeph>/etc/krb5.conf</codeph>.</cmd>
+                <info>
+                    <p>The <codeph>krb5.conf</codeph> file contains Kerberos configuration
+                        information, including the locations of key distribution centers (KDCs) and
+                        admin servers for the Kerberos realms, defaults for the current realm, and
+                        mappings of hostnames onto Kerberos realms. </p>
+                </info>
+            </step>
+            <step>
                 <cmd>Configure <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> to use Kerberos.</cmd>
@@ -41,6 +63,11 @@
                         conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Cluster-KerbNote"
                     />
                 </info>
+            </step>
+            <step>
+                <cmd>Restart <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />.</cmd>
             </step>
             <step>
                 <cmd>Configure the stage to use Kerberos. </cmd>
