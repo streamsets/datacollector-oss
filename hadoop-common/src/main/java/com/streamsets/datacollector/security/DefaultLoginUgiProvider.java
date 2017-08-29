@@ -34,26 +34,21 @@ public class DefaultLoginUgiProvider extends LoginUgiProvider {
   public UserGroupInformation getLoginUgi(Configuration hdfsConfiguration) throws IOException {
     AccessControlContext accessContext = AccessController.getContext();
     Subject subject = Subject.getSubject(accessContext);
-    // As per SDC-2917 doing this avoids deadlock
     UserGroupInformation loginUgi;
-    synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {
-      // call some method to force load static block in KerberosName
-      KerberosName.hasRulesBeenSet();
-      UserGroupInformation.setConfiguration(hdfsConfiguration);
-      if (UserGroupInformation.isSecurityEnabled()) {
-        loginUgi = UserGroupInformation.getUGIFromSubject(subject);
-      } else {
-        UserGroupInformation.loginUserFromSubject(subject);
-        loginUgi = UserGroupInformation.getLoginUser();
-      }
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(
-            "Subject = {}, Principals = {}, Login UGI = {}",
-            subject,
-            subject == null ? "null" : subject.getPrincipals(),
-            loginUgi
-        );
-      }
+    UserGroupInformation.setConfiguration(hdfsConfiguration);
+    if (UserGroupInformation.isSecurityEnabled()) {
+      loginUgi = UserGroupInformation.getUGIFromSubject(subject);
+    } else {
+      UserGroupInformation.loginUserFromSubject(subject);
+      loginUgi = UserGroupInformation.getLoginUser();
+    }
+    if (LOG.isDebugEnabled()) {
+      LOG.debug(
+          "Subject = {}, Principals = {}, Login UGI = {}",
+          subject,
+          subject == null ? "null" : subject.getPrincipals(),
+          loginUgi
+      );
     }
     return loginUgi;
   }

@@ -39,12 +39,12 @@ import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.impl.DataCollector;
+import com.streamsets.datacollector.security.SecurityUtil;
 import com.streamsets.pipeline.validation.ValidationIssue;
 import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.security.auth.Subject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -71,41 +71,50 @@ public class EmbeddedDataCollector implements DataCollector {
 
   @Override
   public void startPipeline() throws Exception {
-    Subject.doAs(securityContext.getSubject(), new PrivilegedExceptionAction<Void>() {
-      @Override
-      public Void run() throws Exception {
-        File sdcProperties = new File(runtimeInfo.getConfigDir(), "sdc.properties");
-        Utils.checkState(sdcProperties.exists(), Utils.format("sdc property file doesn't exist at '{}'",
-          sdcProperties.getAbsolutePath()));
-        Properties properties = new Properties();
+    PrivilegedExceptionAction<Void> action = () -> {
+      File sdcProperties = new File(runtimeInfo.getConfigDir(), "sdc.properties");
+      Utils.checkState(
+          sdcProperties.exists(),
+          Utils.format("sdc property file doesn't exist at '{}'", sdcProperties.getAbsolutePath())
+      );
+      Properties properties = new Properties();
 
-        InputStream is = null;
-        try {
-          is = new FileInputStream(sdcProperties);
-          properties.load(is);
-        } finally {
-          if (is != null) {
-            is.close();
-          }
+      InputStream is = null;
+      try {
+        is = new FileInputStream(sdcProperties);
+        properties.load(is);
+      } finally {
+        if (is != null) {
+          is.close();
         }
-        // For kafka this is the partitionId, for MR this will be the taskId
-        String uniqueId = Utils.getSdcId();
-        String slaveId = runtimeInfo.getMasterSDCId() + Constants.MASTER_SDC_ID_SEPARATOR + uniqueId;
-        runtimeInfo.setId(slaveId);
-        LOG.info(Utils.format("Slave SDC Id is: '{}'", slaveId));
-        String pipelineName = Utils.checkNotNull(properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_NAME), "Pipeline name");
-        String pipelineUser = Utils.checkNotNull(properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_USER), "Pipeline user");
-        String pipelineRev = Utils.checkNotNull(properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_REV), "Pipeline revision");
-
-        // we need to skip enforcement user groups in scope.
-        GroupsInScope.executeIgnoreGroups(() -> {
-          runner = pipelineManager.getRunner(pipelineName, pipelineRev);
-          runner.start(pipelineUser);
-          return null;
-        });
-        return null;
       }
-    });
+      // For kafka this is the partitionId, for MR this will be the taskId
+      String uniqueId = Utils.getSdcId();
+      String slaveId = runtimeInfo.getMasterSDCId() + Constants.MASTER_SDC_ID_SEPARATOR + uniqueId;
+      runtimeInfo.setId(slaveId);
+      LOG.info(Utils.format("Slave SDC Id is: '{}'", slaveId));
+      String pipelineName = Utils.checkNotNull(
+          properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_NAME),
+          "Pipeline name"
+      );
+      String pipelineUser = Utils.checkNotNull(
+          properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_USER),
+          "Pipeline user"
+      );
+      String pipelineRev = Utils.checkNotNull(
+          properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_REV),
+          "Pipeline revision"
+      );
+
+      // we need to skip enforcement user groups in scope.
+      GroupsInScope.executeIgnoreGroups(() -> {
+        runner = pipelineManager.getRunner(pipelineName, pipelineRev);
+        runner.start(pipelineUser);
+        return null;
+      });
+      return null;
+    };
+    SecurityUtil.doAs(securityContext.getSubject(), action);
   }
 
   @Override
@@ -164,48 +173,51 @@ public class EmbeddedDataCollector implements DataCollector {
     LOG.info("-----------------------------------------------------------------");
     LOG.info("Starting ...");
 
-    Subject.doAs(securityContext.getSubject(), new PrivilegedExceptionAction<Void>() {
-      @Override
-      public Void run() throws Exception {
-        task.init();
-        final Thread shutdownHookThread = new Thread("Main.shutdownHook") {
-          @Override
-          public void run() {
-            LOG.debug("Stopping, reason: SIGTERM (kill)");
-            task.stop();
-          }
-        };
-        shutdownHookThread.setContextClassLoader(classLoader);
-        Runtime.getRuntime().addShutdownHook(shutdownHookThread);
-        dagger.get(RuntimeInfo.class).setShutdownHandler(new ShutdownHandler(LOG, task, new ShutdownHandler.ShutdownStatus()));
-        task.run();
 
-        // this thread waits until the pipeline is shutdown
-        waitingThread = new Thread() {
-          @Override
-          public void run() {
+    PrivilegedExceptionAction<Void> action = () -> {
+      task.init();
+      final Thread shutdownHookThread = new Thread("Main.shutdownHook") {
+        @Override
+        public void run() {
+          LOG.debug("Stopping, reason: SIGTERM (kill)");
+          task.stop();
+        }
+      };
+      shutdownHookThread.setContextClassLoader(classLoader);
+      Runtime.getRuntime().addShutdownHook(shutdownHookThread);
+      dagger.get(RuntimeInfo.class).setShutdownHandler(new ShutdownHandler(
+          LOG,
+          task,
+          new ShutdownHandler.ShutdownStatus()
+      ));
+      task.run();
+
+      // this thread waits until the pipeline is shutdown
+      waitingThread = new Thread() {
+        @Override
+        public void run() {
+          try {
+            task.waitWhileRunning();
             try {
-              task.waitWhileRunning();
-              try {
-                Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
-              } catch (IllegalStateException ignored) {
-                // thrown when we try and remove the shutdown
-                // hook but it is already running
-              }
-              LOG.debug("Stopping, reason: programmatic stop()");
-            } catch (Throwable throwable) {
-              String msg = "Error running pipeline: " + throwable;
-              LOG.error(msg, throwable);
+              Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
+            } catch (IllegalStateException ignored) {
+              // thrown when we try and remove the shutdown
+              // hook but it is already running
             }
+            LOG.debug("Stopping, reason: programmatic stop()");
+          } catch (Throwable throwable) {
+            String msg = "Error running pipeline: " + throwable;
+            LOG.error(msg, throwable);
           }
-        };
-        waitingThread.setContextClassLoader(classLoader);
-        waitingThread.setName("Pipeline-" + pipelineName);
-        waitingThread.setDaemon(true);
-        waitingThread.start();
-        return null;
-      }
-    });
+        }
+      };
+      waitingThread.setContextClassLoader(classLoader);
+      waitingThread.setName("Pipeline-" + pipelineName);
+      waitingThread.setDaemon(true);
+      waitingThread.start();
+      return null;
+    };
+    SecurityUtil.doAs(securityContext.getSubject(), action);
   }
 
   @Override

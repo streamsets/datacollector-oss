@@ -21,12 +21,12 @@ import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.datacollector.security.SecurityUtil;
 import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
-import javax.security.auth.Subject;
 import java.net.Authenticator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivilegedExceptionAction;
@@ -96,31 +96,29 @@ public class Main {
 
       final Logger finalLog = log;
       final ShutdownHandler.ShutdownStatus shutdownStatus = new ShutdownHandler.ShutdownStatus();
-      Subject.doAs(securityContext.getSubject(), new PrivilegedExceptionAction<Void>() {
-        @Override
-        public Void run() throws Exception {
-          task.init();
-          Thread shutdownHookThread = new Thread("Main.shutdownHook") {
-            @Override
-            public void run() {
-              finalLog.debug("Stopping, reason: SIGTERM (kill)");
-              task.stop();
-            }
-          };
-          getRuntime().addShutdownHook(shutdownHookThread);
-          dagger.get(RuntimeInfo.class).setShutdownHandler(new ShutdownHandler(finalLog, task, shutdownStatus));
-          task.run();
-          task.waitWhileRunning();
-          try {
-            getRuntime().removeShutdownHook(shutdownHookThread);
-          } catch (IllegalStateException ignored) {
-            // thrown when we try and remove the shutdown
-            // hook but it is already running
+      PrivilegedExceptionAction action = () -> {
+        task.init();
+        Thread shutdownHookThread = new Thread("Main.shutdownHook") {
+          @Override
+          public void run() {
+            finalLog.debug("Stopping, reason: SIGTERM (kill)");
+            task.stop();
           }
-          finalLog.debug("Stopping, reason: programmatic stop()");
-          return null;
+        };
+        getRuntime().addShutdownHook(shutdownHookThread);
+        dagger.get(RuntimeInfo.class).setShutdownHandler(new ShutdownHandler(finalLog, task, shutdownStatus));
+        task.run();
+        task.waitWhileRunning();
+        try {
+          getRuntime().removeShutdownHook(shutdownHookThread);
+        } catch (IllegalStateException ignored) {
+          // thrown when we try and remove the shutdown
+          // hook but it is already running
         }
-      });
+        finalLog.debug("Stopping, reason: programmatic stop()");
+        return null;
+      };
+      SecurityUtil.doAs(securityContext.getSubject(), action);
       return shutdownStatus.getExitStatus();
     } catch (Throwable ex) {
       if (log != null) {
@@ -136,5 +134,6 @@ public class Main {
       return 1;
     }
   }
+
 
 }

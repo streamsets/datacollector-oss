@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.origin.maprfs;
 
-import com.streamsets.datacollector.stage.StageLockSynchronizedHadoopClusterSource;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
@@ -49,7 +48,7 @@ public class ClusterMapRFSDSource extends ClusterHdfsDSource {
     if(clusterHDFSConfigBean.hdfsUri == null || clusterHDFSConfigBean.hdfsUri.isEmpty()) {
       clusterHDFSConfigBean.hdfsUri = "maprfs:///";
     }
-    clusterMapRFSSource = new StageLockSynchronizedHadoopClusterSource(new ClusterMapRFSSource(clusterHDFSConfigBean));
+    clusterMapRFSSource = new ClusterMapRFSSource(clusterHDFSConfigBean);
     return clusterMapRFSSource;
   }
 

@@ -20,10 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.zookeeper.server.util.KerberosUtil;
-
 import java.io.IOException;
-import java.security.AccessControlContext;
-import java.security.AccessController;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,10 +31,7 @@ public class HadoopSecurityUtil {
   }
 
   public static String getDefaultRealm() throws ReflectiveOperationException {
-    AccessControlContext accessContext = AccessController.getContext();
-    synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {
-      return KerberosUtil.getDefaultRealm();
-    }
+    return KerberosUtil.getDefaultRealm();
   }
 
   /**
@@ -81,11 +75,8 @@ public class HadoopSecurityUtil {
       user = user.toLowerCase();
     }
 
-    // Otherwise impersonate the "user"
-    AccessControlContext accessContext = AccessController.getContext();
-    synchronized (SecurityUtil.getSubjectDomainLock(accessContext)) {
-      return UserGroupInformation.createProxyUser(user, loginUser);
-    }
+    return UserGroupInformation.createProxyUser(user, loginUser);
   }
+
 
 }

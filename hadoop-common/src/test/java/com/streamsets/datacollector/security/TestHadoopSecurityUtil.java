@@ -117,5 +117,4 @@ public class TestHadoopSecurityUtil {
     );
     Assert.assertEquals("real_bryan", ugi.getUserName());
   }
-
 }
