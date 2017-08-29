@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.destination.hive.queryexecutor;
 
-import com.streamsets.datacollector.stage.StageLockSynchronizedHadoopExecutor;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Executor;
@@ -50,6 +49,6 @@ public class HiveQueryDExecutor extends DExecutor {
 
   @Override
   protected Executor createExecutor() {
-    return new StageLockSynchronizedHadoopExecutor(new HiveQueryExecutor(config));
+    return new HiveQueryExecutor(config);
   }
 }

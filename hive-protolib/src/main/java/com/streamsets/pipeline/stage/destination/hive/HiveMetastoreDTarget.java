@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.destination.hive;
 
 
-import com.streamsets.datacollector.stage.StageLockSynchronizedHadoopTarget;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -41,6 +40,6 @@ public class HiveMetastoreDTarget extends DTarget {
   public HMSTargetConfigBean conf;
   @Override
   protected Target createTarget() {
-    return new StageLockSynchronizedHadoopTarget(new HiveMetastoreTarget(conf));
+    return new HiveMetastoreTarget(conf);
   }
 }

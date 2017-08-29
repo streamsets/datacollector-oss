@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.processor.hive;
 
-import com.streamsets.datacollector.stage.StageLockSynchronizedHadoopProcessor;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Processor;
@@ -203,7 +202,7 @@ public class HiveMetadataDProcessor extends DProcessor {
 
   @Override
   protected Processor createProcessor() {
-    return new StageLockSynchronizedHadoopProcessor(new HiveMetadataProcessor(
+    return new HiveMetadataProcessor(
       dbNameEL,
       tableNameEL,
       partitionList,
@@ -217,7 +216,7 @@ public class HiveMetadataDProcessor extends DProcessor {
       dataFormat,
       commentExpression,
       metadataHeaderAttributeConfigs
-    ));
+    );
   }
 
 }
