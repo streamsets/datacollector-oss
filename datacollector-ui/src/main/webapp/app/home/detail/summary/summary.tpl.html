@@ -104,6 +104,44 @@
     </ng-include>
   </div>
 
+  <div ng-if="summaryDataLoaded && selectedType === pipelineConstant.PIPELINE && runnerGauges">
+  <div class="col-sm-4 chartPanels" ng-repeat="runnerGauge in runnerGauges">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span> Runner {{runnerGauge.runnerId}}</span>
+      </div>
+      <div class="panel-body">
+        <ul class="table-properties" ng-init="gaugeData = common.pipelineMetrics.gauges[runnerGauge.gaugeKey].value">
+          <li>
+            <span class="properties-label">Current Stage:</span>
+            <span class="properties-value">{{stageNameToLabelMap[gaugeData.currentStage]}}</span>
+          </li>
+          <li>
+            <span class="properties-label">Batch Count:</span>
+            <span class="properties-value">{{gaugeData.batchCount}}</span>
+          </li>
+          <li ng-if="gaugeData.currentStage !== 'IDLE'">
+            <span class="properties-label">In Stage Since:</span>
+            <span class="properties-value">{{gaugeData.stageStartTime | date:'medium' }}</span>
+          </li>
+          <li ng-if="gaugeData.currentStage !== 'IDLE'">
+            <span class="properties-label">Batch Start Time:</span>
+            <span class="properties-value">{{gaugeData.batchStartTime | date:'medium' }}</span>
+          </li>
+          <li ng-if="gaugeData.currentStage !== 'IDLE'">
+            <span class="properties-label">Offset Key:</span>
+            <span class="properties-value">{{gaugeData.offsetKey}}</span>
+          </li>
+          <li ng-if="gaugeData.currentStage !== 'IDLE'">
+            <span class="properties-label">Offset Value:</span>
+            <span class="properties-value">{{gaugeData.offseValue}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </div>
+
 </div>
 
 
