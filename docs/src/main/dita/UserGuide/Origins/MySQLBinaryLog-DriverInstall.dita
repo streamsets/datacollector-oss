@@ -18,7 +18,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wps_52k_qy">
- <title>Installing the JDBC Driver</title>
+ <title>Install the JDBC Driver</title>
  <conbody>
         <p><indexterm>MySQL Binary Log origin<indexterm>driver
             installation</indexterm></indexterm>Before you use the MySQL Binary Log origin, install

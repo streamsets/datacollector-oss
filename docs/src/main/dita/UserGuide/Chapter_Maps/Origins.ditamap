@@ -305,7 +305,10 @@
   </topicref>
   <topicref href="../Origins/MySQLBinaryLog.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/MySQLBinaryLog-DriverInstall.dita"/>
+   <topicref href="../Origins/MySQLBinaryLog-Prereqs.dita">
+    <topicref href="../Origins/MySQLBinaryLog-RowFormat.dita"/>
+    <topicref href="../Origins/MySQLBinaryLog-DriverInstall.dita"/>
+   </topicref>
    <topicref href="../Origins/MySQLBinaryLog-Offset.dita"/>
    <topicref href="../Origins/MySQLBinaryLog-Record.dita">
     <topicref href="../Origins/MySQLBinaryLog-ProcessingGR.dita"/>
