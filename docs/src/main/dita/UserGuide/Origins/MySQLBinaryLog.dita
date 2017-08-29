@@ -41,6 +41,8 @@
         <p>When needed, you can use a JDBC Query Consumer or a JDBC Multitable Consumer in a
             separate pipeline to read existing data from the MySQL database before you start a
             pipeline with a MySQL Binary Log origin.</p>
+        <p>Before you configure the origin, you must complete several prerequisites including
+            configuring MySQL server for row-based logging and installing the JDBC driver.</p>
         <p>When you configure MySQL Binary Log, you configure the database server from which to read
             the log files. You can configure the origin to read the binary log files from the
             beginning, or you can specify an offset to determine where the origin starts reading

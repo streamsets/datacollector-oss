@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_nwf_f4x_1bb">
+ <title>Prerequisites</title>
+ <conbody>
+  <p>Before you can read MySQL binary logs to generate change data capture records, you must
+            complete the following prerequisites:<ul id="ul_gcz_k4x_1bb">
+                <li>Configure MySQL server to use row-based logging.</li>
+                <li>Install the MySQL JDBC driver.</li>
+            </ul></p>
+ </conbody>
+</concept>

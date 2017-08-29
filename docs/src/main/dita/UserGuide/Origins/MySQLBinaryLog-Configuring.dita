@@ -24,7 +24,9 @@
             <p><indexterm>MySQL Binary Log
                 origin<indexterm>configuring</indexterm></indexterm>Configure a MySQL Binary Log
                 origin to process change data capture (CDC) information provided by MySQL binary
-                logs.</p>
+                logs. Be sure to complete the necessary <xref
+                    href="MySQLBinaryLog-Prereqs.dita#concept_nwf_f4x_1bb">prerequisites</xref>
+                before you configure the origin.</p>
         </context>
         <steps>
             <step
