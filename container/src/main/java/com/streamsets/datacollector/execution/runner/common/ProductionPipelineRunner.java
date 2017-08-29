@@ -36,8 +36,6 @@ import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
-import com.streamsets.datacollector.record.HeaderImpl;
-import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.HistogramJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
@@ -555,7 +553,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       listeners.add((ErrorListener) originPipe.getStage().getStage());
     }
     for(PipeRunner pipeRunner : pipes) {
-      pipeRunner.forEachNoException(pipe -> {
+      pipeRunner.forEach(pipe -> {
         Stage stage = pipe.getStage().getStage();
         if (stage instanceof ErrorListener) {
           listeners.add((ErrorListener) stage);
@@ -598,6 +596,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   ) throws StageException, PipelineRuntimeException {
     int batchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
     long lastBatchTime = offsetTracker.getLastBatchTime();
+    long start = System.currentTimeMillis();
     FullPipeBatch pipeBatch;
 
     // Destroy origin pipe
@@ -618,7 +617,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       final FullPipeBatch finalPipeBatch = pipeBatch;
       finalPipeBatch.skipStage(originPipe);
 
-      pipeRunner.forEach(pipe -> {
+      pipeRunner.executeBatch(null, null, start, pipe -> {
         // Set the last batch time in the stage context of each pipe
         ((StageContext)pipe.getStage().getContext()).setLastBatchTime(lastBatchTime);
         String instanceName = pipe.getStage().getConfiguration().getInstanceName();
@@ -742,7 +741,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       pipeRunner = runnerPool.getRunner();
       OffsetCommitTrigger offsetCommitTrigger = pipeRunner.getOffsetCommitTrigger();
 
-      pipeRunner.forEach(pipe -> {
+      pipeRunner.executeBatch(entityName, newOffset, start, pipe -> {
         committed.set(processPipe(pipe, pipeBatch, committed.get(), entityName, newOffset, memoryConsumedByStage, stageBatchMetrics));
 
       });

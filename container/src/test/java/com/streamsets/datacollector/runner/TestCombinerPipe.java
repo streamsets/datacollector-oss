@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.main.RuntimeInfo;
 
 import org.junit.Test;
@@ -26,6 +27,7 @@ public class TestCombinerPipe {
   @SuppressWarnings("unchecked")
   public void testCombinerPipe() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
+    Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Pipeline pipeline = new MockPipelineBuilder().build(pipelineRunner);
     CombinerPipe pipe = (CombinerPipe) pipeline.getRunners().get(0).get(2);

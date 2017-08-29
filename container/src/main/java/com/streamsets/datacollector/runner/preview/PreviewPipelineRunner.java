@@ -335,7 +335,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     PipeRunner pipeRunner = null;
     try {
       pipeRunner = runnerPool.getRunner();
-      pipeRunner.forEach(pipe -> {
+      pipeRunner.executeBatch(offsetEntity, newOffset, start, pipe -> {
         StageOutput stageOutput = stagesToSkip.get(pipe.getStage().getInfo().getInstanceName());
         if (stageOutput == null || (pipe instanceof ObserverPipe) || (pipe instanceof MultiplexerPipe)) {
           if (!skipTargets || !pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
@@ -369,6 +369,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
     // We're not doing any special event propagation during preview destroy phase
+    long start = System.currentTimeMillis();
 
     // Destroy origin on it's own
     originPipe.destroy(new FullPipeBatch(null,null, batchSize, true));
@@ -377,7 +378,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     for(PipeRunner pipeRunner: pipeRunners) {
       final FullPipeBatch pipeBatch = new FullPipeBatch(null,null, batchSize, true);
       pipeBatch.skipStage(originPipe);
-      pipeRunner.forEach(p -> p.destroy(pipeBatch));
+      pipeRunner.executeBatch(null, null, start, p -> p.destroy(pipeBatch));
     }
   }
 

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.main.RuntimeInfo;
 
 import org.junit.Test;
@@ -28,6 +29,7 @@ public class TestObserverPipe {
   @SuppressWarnings("unchecked")
   public void testNullObserver() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
+    Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
       Pipeline pipeline = new MockPipelineBuilder()
       .build(pipelineRunner);
@@ -41,6 +43,7 @@ public class TestObserverPipe {
   @SuppressWarnings("unchecked")
   private void testObserver(boolean observing) throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
+    Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Observer observer = Mockito.mock(Observer.class);
     Mockito.when(observer.isObserving(Mockito.any(List.class))).thenReturn(observing);

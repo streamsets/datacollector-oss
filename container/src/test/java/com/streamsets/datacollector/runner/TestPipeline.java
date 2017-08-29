@@ -99,7 +99,7 @@ public class TestPipeline {
       .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
-    MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
+    MetricRegistry metrics = new MetricRegistry();
     Mockito.when(runner.getMetrics()).thenReturn(metrics);
     Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
 
@@ -211,8 +211,7 @@ public class TestPipeline {
       .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
-    MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
-    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
 
     Pipeline pipeline = builder.build(runner);
@@ -275,8 +274,7 @@ public class TestPipeline {
       .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
-    MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
-    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
 
     Pipeline pipeline = builder.build(runner);
@@ -353,8 +351,7 @@ public class TestPipeline {
       .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
-    MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
-    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
 
     Source source = Mockito.mock(Source.class);
@@ -444,8 +441,7 @@ public class TestPipeline {
       .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
-    MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
-    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
 
     Source source = Mockito.mock(Source.class);
@@ -478,7 +474,7 @@ public class TestPipeline {
     Mockito.reset(processor);
     Mockito.reset(target);
     Mockito.reset(runner);
-    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Mockito.doThrow(new RuntimeException()).when(processor).init(Mockito.any(Stage.Info.class),
                                                                  Mockito.any(Processor.Context.class));
@@ -502,7 +498,7 @@ public class TestPipeline {
     Mockito.reset(processor);
     Mockito.reset(target);
     Mockito.reset(runner);
-    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Mockito.doThrow(new RuntimeException()).when(processor).destroy();
 
@@ -546,8 +542,7 @@ public class TestPipeline {
       .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
-    MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
-    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
 
     // We want 10 pipeline runners to be created
@@ -604,8 +599,7 @@ public class TestPipeline {
       .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
-    MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
-    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
 
     // Origin reports 10 threads

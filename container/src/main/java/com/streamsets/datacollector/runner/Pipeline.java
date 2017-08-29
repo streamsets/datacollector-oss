@@ -367,7 +367,7 @@ public class Pipeline {
 
     // Initialize all source-less pipeline runners
     for(PipeRunner pipeRunner: pipes) {
-      pipeRunner.forEachNoException(pipe -> {
+      pipeRunner.forEach(pipe -> {
         ((StageContext)pipe.getStage().getContext()).setPipelineFinisherDelegate((PipelineFinisherDelegate)runner);
         issues.addAll(initPipe(pipe, pipeContext));
       });
@@ -520,7 +520,7 @@ public class Pipeline {
   public void stop() {
     ((StageContext)originPipe.getStage().getContext()).setStop(true);
     for(PipeRunner pipeRunner : pipes) {
-      pipeRunner.forEachNoException(p -> ((StageContext)p.getStage().getContext()).setStop(true));
+      pipeRunner.forEach(p -> ((StageContext)p.getStage().getContext()).setStop(true));
     }
   }
 
@@ -834,16 +834,22 @@ public class Pipeline {
       ));
     }
 
-    return new PipeRunner(runnerId, createPipes(
+    return new PipeRunner(
       pipelineName,
       rev,
-      configuration,
-      stages,
-      runner,
-      observer,
-      memoryUsageCollectorResourceBundle,
-      scheduledExecutor
-    ));
+      runnerId,
+      runner.getMetrics(),
+      createPipes(
+        pipelineName,
+        rev,
+        configuration,
+        stages,
+        runner,
+        observer,
+        memoryUsageCollectorResourceBundle,
+        scheduledExecutor
+      )
+    );
   }
 
   private static ExecutionMode getExecutionMode(PipelineConfiguration pipelineConf) {
@@ -984,7 +990,7 @@ public class Pipeline {
   public String toString() {
     Set<String> instances = new LinkedHashSet<>();
     // Describing first runner is sufficient
-    pipes.get(0).forEachNoException(pipe -> instances.add(pipe.getStage().getInfo().getInstanceName()));
+    pipes.get(0).forEach(pipe -> instances.add(pipe.getStage().getInfo().getInstanceName()));
     String observerName = (observer != null) ? observer.getClass().getSimpleName() : null;
     return Utils.format(
       "Pipeline[source='{}' stages='{}' runner='{}' observer='{}']",

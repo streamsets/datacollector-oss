@@ -96,8 +96,7 @@ public class TestMemoryIsolation {
       .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
-    MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
-    Mockito.when(runner.getMetrics()).thenReturn(metrics);
+    Mockito.when(runner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(runner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
 
     Set<Stage> stages = new HashSet<>();
@@ -105,7 +104,7 @@ public class TestMemoryIsolation {
     pipeline.init(false);
 
     // Working with just one runner
-    pipeline.getRunners().get(0).forEachNoException(pipe -> stages.add(pipe.getStage().getStage()));
+    pipeline.getRunners().get(0).forEach(pipe -> stages.add(pipe.getStage().getStage()));
 
     return stages;
   }
