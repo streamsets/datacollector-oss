@@ -56,8 +56,9 @@
                         <ul id="ul_s22_lvr_1bb">
                             <li>New Azure Event Hub Producer destination - A destination that writes
                                 data to Microsoft Azure Event Hub.</li>
-                            <li>New Azure IoT Hub Producer destination - A destination that writes
-                                data to Microsoft Azure IoT Hub.</li>
+                            <li><xref href="../Destinations/AzureIoTHub.dita#concept_pnd_jkq_1bb"
+                                    >New Azure IoT Hub Producer destination</xref> - A destination
+                                that writes data to Microsoft Azure IoT Hub.</li>
                         </ul>
                     </dd>
                 </dlentry>
