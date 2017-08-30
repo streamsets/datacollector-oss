@@ -212,11 +212,6 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   @Override
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException, PipelineRuntimeException {
-    //note down time when this stage was entered
-    long startTimeInStage = System.currentTimeMillis();
-    //update stats
-    updateStatsAtStart(startTimeInStage);
-
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this);
     ErrorSink errorSink = pipeBatch.getErrorSink();
@@ -308,14 +303,11 @@ public class StagePipe extends Pipe<StagePipe.Context> {
 
     pipeBatch.completeStage(batchMaker);
 
-    //get records count to determine if this stage saw any record in this batch
-    int recordsCount = batchSize;
+    // In this is source pipe, update source-specific metrics
     if(isSource()) {
-      //source does not have input records
-      recordsCount = outputRecordsCount;
+      context.getRuntimeStats().setTimeOfLastReceivedRecord(System.currentTimeMillis());
+      context.getRuntimeStats().incBatchCount();
     }
-    //update stats
-    updateStatsAtEnd(startTimeInStage, newOffset, recordsCount);
 
     return batchMetrics;
   }
@@ -364,42 +356,6 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       }
     }
     return runtimeStatsGauge;
-  }
-
-  protected void updateStatsAtStart(long startTimeInStage) {
-    //update the runtime stats
-    //The following needs to be done at the beginning of a stage per batch
-    //1. set name of current stage
-    //2. update current batch age, [if source then update the batch age]
-    //3. update time in current stage [near zero]
-    context.getRuntimeStats().setCurrentStage(getStage().getInfo().getInstanceName());
-    //update batch ige if the stage is Source
-    if (isSource()) {
-      context.getRuntimeStats().setBatchStartTime(System.currentTimeMillis());
-    }
-    context.getRuntimeStats().setCurrentBatchAge(
-      System.currentTimeMillis() - context.getRuntimeStats().getBatchStartTime());
-    context.getRuntimeStats().setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
-  }
-
-  protected void updateStatsAtEnd(long startTimeInStage, String offset, int outputRecordsCount) {
-    //update the runtime stats
-    //The following needs to be done at the beginning of a stage per batch
-    //1. If source, update batch counter, current offset, if there was at least one record in this batch then
-    //   update time of last record
-    //2. update current batch age
-    //3. update time in current stage
-    if (isSource()) {
-      context.getRuntimeStats().setBatchCount(context.getRuntimeStats().getBatchCount() + 1);
-        context.getRuntimeStats().setCurrentSourceOffset(offset);
-      if (outputRecordsCount > 0) {
-        context.getRuntimeStats().setTimeOfLastReceivedRecord(System.currentTimeMillis());
-      }
-    }
-    context.getRuntimeStats().setCurrentBatchAge(
-      System.currentTimeMillis() - context.getRuntimeStats().getBatchStartTime());
-    context.getRuntimeStats().setTimeInCurrentStage(System.currentTimeMillis() - startTimeInStage);
-
   }
 
   private boolean isSource() {

@@ -29,9 +29,12 @@ import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.RuleELRegistry;
 import com.streamsets.datacollector.metrics.ExtendedMeter;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.runner.PipeRunner;
 import com.streamsets.datacollector.runner.RuntimeStats;
 import com.streamsets.datacollector.util.ObserverException;
 import com.streamsets.pipeline.api.impl.Utils;
+
+import java.util.Map;
 
 public class MetricRuleEvaluatorHelper {
 
@@ -219,12 +222,6 @@ public class MetricRuleEvaluatorHelper {
     Object value;
     RuntimeStats runtimeStats = (RuntimeStats)gauge.getValue();
     switch (metricElement) {
-      case CURRENT_BATCH_AGE:
-        value =  runtimeStats.getCurrentBatchAge();
-        break;
-      case TIME_IN_CURRENT_STAGE:
-        value =  runtimeStats.getTimeInCurrentStage();
-        break;
       case TIME_OF_LAST_RECEIVED_RECORD:
         value =  runtimeStats.getTimeOfLastReceivedRecord();
         break;
@@ -283,5 +280,85 @@ public class MetricRuleEvaluatorHelper {
         throw new IllegalArgumentException(Utils.format("Unknown metric type '{}'", metricType));
     }
     return value;
+  }
+
+  /**
+   * Get metric value for given rule evaluation.
+   *
+   * @param metrics Metric Registry for the pipeline.
+   * @param metricId Name of the metric where the value is "usually" stored. This method cover mappings of metrics
+   *                 that got historically moved.
+   * @param metricType Type of the metric
+   * @param metricElement Value that caller needs in order to assert the right condition.
+   * @return Requested metric value or null if it doesn't exists
+   * @throws ObserverException
+   */
+  public static Object getMetricValue(
+    MetricRegistry metrics,
+    String metricId,
+    MetricType metricType,
+    MetricElement metricElement
+  ) throws ObserverException {
+    // We moved the logic of CURRENT_BATCH_AGE and TIME_IN_CURRENT_STAGE due to multi-threaded framework
+    if(metricElement.isOneOf(MetricElement.CURRENT_BATCH_AGE, MetricElement.TIME_IN_CURRENT_STAGE)) {
+      switch (metricElement) {
+        case CURRENT_BATCH_AGE:
+          return getTimeFromRunner(metrics, PipeRunner.METRIC_BATCH_START_TIME);
+        case TIME_IN_CURRENT_STAGE:
+          return getTimeFromRunner(metrics, PipeRunner.METRIC_STAGE_START_TIME);
+        default:
+          throw new IllegalStateException(Utils.format("Unknown metric type '{}'", metricType));
+      }
+    }
+
+    // Default path
+    Metric metric = getMetric(
+        metrics,
+        metricId,
+        metricType
+    );
+
+    if(metric != null) {
+      return getMetricValue(metricElement, metricType, metric);
+    }
+
+    return null;
+  }
+
+  /**
+   * Return calculated metric - from all the runners that are available for given pipeline, return the biggest difference
+   * between given metric and System.currentTimeMillis(). The semantic is that the runner metric stores start time of
+   * certain events (batch start time, stage start time) and we need to find out what is the longer running time for one
+   * of those metrics.
+   *
+   * @param metrics Metric registry for given pipeline.
+   * @param runnerMetricName Name of the PipeRunner metric that contains start time of given action.
+   * @return
+   */
+  private static long getTimeFromRunner(
+    MetricRegistry metrics,
+    String runnerMetricName
+  ) {
+    // First get number of total runners from the runtime gauge
+    RuntimeStats runtimeStats = (RuntimeStats) ((Gauge)getMetric(metrics, "RuntimeStatsGauge.gauge", MetricType.GAUGE)).getValue();
+    long totalRunners = runtimeStats.getTotalRunners();
+
+    long currentTime = System.currentTimeMillis();
+    long maxTime = 0;
+
+    // Then iterate over all runners and find the biggest time difference
+    for(int runnerId = 0; runnerId < totalRunners; runnerId++) {
+      Map<String, Object> runnerMetrics = (Map<String, Object>) ((Gauge)getMetric(metrics, "runner." + runnerId, MetricType.GAUGE)).getValue();
+
+      // Get current value
+      long value = (long) runnerMetrics.getOrDefault(runnerMetricName, 0);
+      long runTime = currentTime - value;
+
+      if(maxTime < runTime) {
+        maxTime = runTime;
+      }
+    }
+
+    return maxTime;
   }
 }

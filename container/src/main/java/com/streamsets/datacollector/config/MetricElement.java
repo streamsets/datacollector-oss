@@ -69,4 +69,20 @@ public enum MetricElement {
   LAST_BATCH_OUTPUT_RECORDS_COUNT,
   LAST_BATCH_ERROR_RECORDS_COUNT,
   LAST_BATCH_ERROR_MESSAGES_COUNT
+  ;
+
+  public boolean isOneOf(MetricElement ...elements) {
+    if(elements == null) {
+      return false;
+    }
+
+    for(MetricElement e: elements) {
+      if(this == e) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 }

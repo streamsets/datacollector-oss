@@ -33,11 +33,7 @@ public class TestRuntimeStats {
     ByteArrayOutputStream bOut = new ByteArrayOutputStream();
     JsonGenerator jsonGenerator = new JsonFactory().createGenerator(bOut);
     RuntimeStats runtimeStats = new RuntimeStats();
-    runtimeStats.setBatchCount(1);
-    runtimeStats.setBatchStartTime(startTime);
-    runtimeStats.setCurrentBatchAge(1);
-    runtimeStats.setCurrentSourceOffset("1::0");
-    runtimeStats.setTimeInCurrentStage(100);
+    runtimeStats.incBatchCount();
     runtimeStats.setTimeOfLastReceivedRecord(startTime);
 
     runtimeStats.serialize(jsonGenerator);
@@ -48,13 +44,6 @@ public class TestRuntimeStats {
     RuntimeStats runtimeStats1 = m.readValue(ser, RuntimeStats.class);
 
     Assert.assertEquals(runtimeStats.getBatchCount(), runtimeStats1.getBatchCount());
-    Assert.assertEquals(runtimeStats.getBatchStartTime(), runtimeStats1.getBatchStartTime());
-    Assert.assertEquals(runtimeStats.getCurrentBatchAge(), runtimeStats1.getCurrentBatchAge());
-    Assert.assertEquals(runtimeStats.getCurrentSourceOffset(), runtimeStats1.getCurrentSourceOffset());
-    Assert.assertEquals(runtimeStats.getCurrentStage(), runtimeStats1.getCurrentStage());
-    Assert.assertEquals(runtimeStats.getTimeInCurrentStage(), runtimeStats1.getTimeInCurrentStage());
     Assert.assertEquals(runtimeStats.getTimeOfLastReceivedRecord(), runtimeStats1.getTimeOfLastReceivedRecord());
-
   }
-
 }

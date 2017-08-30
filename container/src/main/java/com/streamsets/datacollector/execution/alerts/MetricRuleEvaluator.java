@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.execution.alerts;
 
-import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
@@ -46,29 +45,26 @@ public class MetricRuleEvaluator {
 
   public void checkForAlerts() {
     if (metricsRuleDefinition.isEnabled()) {
-      Metric metric = MetricRuleEvaluatorHelper.getMetric(
-        metrics,
-        metricsRuleDefinition.getMetricId(),
-        metricsRuleDefinition.getMetricType()
-      );
-      if(metric != null) {
-        try {
-          Object value = MetricRuleEvaluatorHelper.getMetricValue(
-            metricsRuleDefinition.getMetricElement(),
-            metricsRuleDefinition.getMetricType(),
-            metric
-          );
+      try {
+        Object value = MetricRuleEvaluatorHelper.getMetricValue(
+          metrics,
+          metricsRuleDefinition.getMetricId(),
+          metricsRuleDefinition.getMetricType(),
+          metricsRuleDefinition.getMetricElement()
+        );
+
+        if(value != null) {
           if (MetricRuleEvaluatorHelper.evaluate(value, metricsRuleDefinition.getCondition())) {
             alertManager.alert(value, ruleDefinitionsConfigBean, metricsRuleDefinition);
           }
-        } catch (ObserverException e) {
-          //A faulty condition should not take down rest of the alerts with it.
-          //Log and it and continue for now
-          LOG.error("Error processing metric definition alert '{}', reason: {}", metricsRuleDefinition.getId(),
-            e.toString(), e);
-          //Trigger alert with exception message
-          alertManager.alertException(e.toString(), metricsRuleDefinition);
         }
+      } catch (ObserverException e) {
+        //A faulty condition should not take down rest of the alerts with it.
+        //Log and it and continue for now
+        LOG.error("Error processing metric definition alert '{}', reason: {}", metricsRuleDefinition.getId(),
+          e.toString(), e);
+        //Trigger alert with exception message
+        alertManager.alertException(e.toString(), metricsRuleDefinition);
       }
     }
   }

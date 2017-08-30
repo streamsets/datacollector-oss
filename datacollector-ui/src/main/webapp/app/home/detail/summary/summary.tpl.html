@@ -394,33 +394,6 @@
           </li>
 
           <li>
-            <span class="properties-label">{{'home.detailPane.summaryTab.batchStartTime' | translate}}:</span>
-            <span class="properties-value"
-                  ng-if="common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchStartTime"
-              >{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchStartTime  | date:'medium'}}</span>
-          </li>
-
-          <li>
-            <span class="properties-label">{{'home.detailPane.summaryTab.currentBatchAge' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentBatchAge}} milliseconds</span>
-          </li>
-
-          <li>
-            <span class="properties-label">{{'home.detailPane.summaryTab.currentSourceOffset' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentSourceOffset}}</span>
-          </li>
-
-          <li>
-            <span class="properties-label">{{'home.detailPane.summaryTab.currentStage' | translate}}:</span>
-            <span class="properties-value">{{stageNameToLabelMap[common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStage]}}</span>
-          </li>
-
-          <li>
-            <span class="properties-label">{{'home.detailPane.summaryTab.timeInCurrentStage' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeInCurrentStage}} milliseconds</span>
-          </li>
-
-          <li>
             <span class="properties-value">{{'home.detailPane.summaryTab.threadLastRun' | translate}}</span>
           </li>
 

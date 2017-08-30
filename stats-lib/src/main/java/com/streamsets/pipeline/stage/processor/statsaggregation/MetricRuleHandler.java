@@ -246,27 +246,23 @@ public class MetricRuleHandler {
 
   void evaluateMetricRules(MetricsRuleDefinition metricsRuleDefinition) {
     if (metricsRuleDefinition.isEnabled()) {
-      Metric metric = MetricRuleEvaluatorHelper.getMetric(
-        metrics,
-        metricsRuleDefinition.getMetricId(),
-        metricsRuleDefinition.getMetricType()
-      );
-      if (metric != null) {
-        Object value = null;
-        try {
-          value = MetricRuleEvaluatorHelper.getMetricValue(
-            metricsRuleDefinition.getMetricElement(),
-            metricsRuleDefinition.getMetricType(),
-            metric
-          );
+      Object value = null;
+      try {
+        value = MetricRuleEvaluatorHelper.getMetricValue(
+          metrics,
+          metricsRuleDefinition.getMetricId(),
+          metricsRuleDefinition.getMetricType(),
+          metricsRuleDefinition.getMetricElement()
+        );
+
+        if(value != null) {
           if (MetricRuleEvaluatorHelper.evaluate(value, metricsRuleDefinition.getCondition())) {
             evaluator.raiseAlert(metrics, metricsRuleDefinition, value);
           }
-        } catch (ObserverException ex) {
-          LOG.error("Error processing metric definition alertDataRule '{}', reason: {}", metricsRuleDefinition.getId(),
-            ex.toString(), ex);
-          AlertManagerHelper.alertException(pipelineName, revision, metrics, value, metricsRuleDefinition);
         }
+      } catch (ObserverException ex) {
+        LOG.error("Error processing metric definition alertDataRule '{}', reason: {}", metricsRuleDefinition.getId(), ex.toString(), ex);
+        AlertManagerHelper.alertException(pipelineName, revision, metrics, value, metricsRuleDefinition);
       }
     }
   }

@@ -93,8 +93,6 @@ public class SourcePipe extends StagePipe implements ReportErrorDelegate {
       getStage().getInfo().getInstanceName(),
       getStage().getInfo().getLabel()
     );
-
-    updateStatsAtStart(batchContext.getStartTime());
   }
 
   /**
