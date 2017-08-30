@@ -218,7 +218,7 @@ public class TestProductionPipeline {
     @Override
     public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
       for (String name : runtimeInfoMetrics.getNames()) {
-        if (name.startsWith(MetricsConfigurator.JMX_PREFIX)) {
+        if (name.startsWith(MetricsConfigurator.JMX_PIPELINE_PREFIX)) {
           return null;
         }
       }
@@ -233,7 +233,7 @@ public class TestProductionPipeline {
     Source capture = new RuntimeInfoMetricCheckSource();
     MockStages.setSourceCapture(capture);
     for (String name : runtimeInfoMetrics.getNames()) {
-      if (name.startsWith(MetricsConfigurator.JMX_PREFIX)) {
+      if (name.startsWith(MetricsConfigurator.JMX_PIPELINE_PREFIX)) {
         Assert.fail();
       }
     }
@@ -241,7 +241,7 @@ public class TestProductionPipeline {
     pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
     for (String name : runtimeInfoMetrics.getNames()) {
-      if (name.startsWith(MetricsConfigurator.JMX_PREFIX)) {
+      if (name.startsWith(MetricsConfigurator.JMX_PIPELINE_PREFIX)) {
         Assert.fail();
       }
     }

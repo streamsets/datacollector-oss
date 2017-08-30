@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.executor;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.pipeline.lib.log.LogConstants;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -27,67 +28,50 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.RunnableScheduledFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class SafeScheduledExecutorService implements ScheduledExecutorService {
+public class SafeScheduledExecutorService extends ScheduledThreadPoolExecutor {
   private static final Logger LOG = LoggerFactory.getLogger(SafeScheduledExecutorService.class);
-  private final ScheduledExecutorService scheduledExecutorService;
+  private final String name;
   private ExecutorSupport executorSupport = new ExecutorSupport(LOG);
 
-  public SafeScheduledExecutorService(int corePoolSize, final String prefix) {
-    this(corePoolSize, new ThreadFactory() {
+  public SafeScheduledExecutorService(int corePoolSize, final String name) {
+    this(corePoolSize, name, new ThreadFactory() {
       private final ThreadFactory defaultThreadFactory = Executors.defaultThreadFactory();
       @Override
       public Thread newThread(Runnable r) {
         Thread thread = defaultThreadFactory.newThread(r);
         thread.setDaemon(true);
-        thread.setName(prefix + "-" + thread.getName());
+        thread.setName(name + "-" + thread.getName());
         return thread;
       }
     });
   }
 
-  public SafeScheduledExecutorService(int corePoolSize, ThreadFactory threadFactory) {
-    scheduledExecutorService = Executors.newScheduledThreadPool(corePoolSize, threadFactory);
+  public SafeScheduledExecutorService(int corePoolSize, String name, ThreadFactory threadFactory) {
+    super(corePoolSize, threadFactory);
+    this.name = name;
   }
 
-  @Override
-  public void shutdown() {
-    scheduledExecutorService.shutdown();
-  }
-
-  @Override
-  public boolean isShutdown() {
-    return scheduledExecutorService.isShutdown();
-  }
-
-  @Override
-  public boolean isTerminated() {
-    return false;
-  }
-
-  @Override
-  public List<Runnable> shutdownNow() {
-    return scheduledExecutorService.shutdownNow();
-  }
-
-  @Override
-  public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-    return scheduledExecutorService.awaitTermination(timeout, unit);
+  public String getName() {
+    return name;
   }
 
   @Override
   public Future<?> submit(final Runnable runnable) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    return scheduledExecutorService.submit(new SafeRunnable(user, entity, runnable, true));
+    return super.submit(new SafeRunnable(user, entity, runnable, true));
   }
 
   @Override
@@ -98,7 +82,7 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
     for (Callable<T> task : tasks) {
       wrappedTasks.add(new SafeCallable<T>(user, entity, task, true));
     }
-    return scheduledExecutorService.invokeAll(wrappedTasks);
+    return super.invokeAll(wrappedTasks);
   }
 
   @Override
@@ -110,7 +94,7 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
     for (Callable<T> task : tasks) {
       wrappedTasks.add(new SafeCallable<T>(user, entity, task, true));
     }
-    return scheduledExecutorService.invokeAll(wrappedTasks, timeout, unit);
+    return super.invokeAll(wrappedTasks, timeout, unit);
   }
 
   @Override
@@ -121,7 +105,7 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
     for (Callable<T> task : tasks) {
       wrappedTasks.add(new SafeCallable<T>(user, entity, task, true));
     }
-    return scheduledExecutorService.invokeAny(wrappedTasks);
+    return super.invokeAny(wrappedTasks);
   }
 
   @Override
@@ -133,58 +117,56 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
     for (Callable<T> task : tasks) {
       wrappedTasks.add(new SafeCallable<T>(user, entity, task, true));
     }
-    return scheduledExecutorService.invokeAny(wrappedTasks, timeout, unit);
+    return super.invokeAny(wrappedTasks, timeout, unit);
   }
 
   @Override
   public <T> Future<T> submit(Callable<T> task) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    return scheduledExecutorService.submit(new SafeCallable<>(user, entity, task, true));
+    return super.submit(new SafeCallable<>(user, entity, task, true));
   }
 
   @Override
   public <T> Future<T> submit(Runnable task, T result) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    return scheduledExecutorService.submit(new SafeRunnable(user, entity, task, true), result);
+    return super.submit(new SafeRunnable(user, entity, task, true), result);
   }
 
   @Override
   public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    return scheduledExecutorService.scheduleAtFixedRate(new SafeRunnable(user, entity, command, true), initialDelay,
-                                                        period, unit);
+    return super.scheduleAtFixedRate(new SafeRunnable(user, entity, command, true), initialDelay, period, unit);
   }
 
   @Override
   public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long period, TimeUnit unit) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    return scheduledExecutorService.scheduleWithFixedDelay(new SafeRunnable(user, entity, command, true),
-                                                           initialDelay, period, unit);
+    return super.scheduleWithFixedDelay(new SafeRunnable(user, entity, command, true), initialDelay, period, unit);
   }
 
   @Override
   public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    return scheduledExecutorService.schedule(new SafeRunnable(user, entity, command, true), delay, unit);
+    return super.schedule(new SafeRunnable(user, entity, command, true), delay, unit);
   }
 
   @Override
   public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    return scheduledExecutorService.schedule(new SafeCallable<>(user, entity, callable, true), delay, unit);
+    return super.schedule(new SafeCallable<>(user, entity, callable, true), delay, unit);
   }
 
   @Override
   public void execute(Runnable command) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    scheduledExecutorService.execute(new SafeRunnable(user, entity, command, false));
+    super.execute(new SafeRunnable(user, entity, command, false));
   }
 
   private static String getAsyncUserName(String user) {
@@ -270,27 +252,25 @@ public class SafeScheduledExecutorService implements ScheduledExecutorService {
   public void scheduleAtFixedRateAndForget(Runnable command, long initialDelay, long period, TimeUnit unit) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    scheduledExecutorService.scheduleAtFixedRate(new SafeRunnable(user, entity, command, false), initialDelay, period,
-                                                 unit);
+    super.scheduleAtFixedRate(new SafeRunnable(user, entity, command, false), initialDelay, period, unit);
   }
 
   public void submitAndForget(final Runnable runnable) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    scheduledExecutorService.submit(new SafeRunnable(user, entity, runnable, false));
+    super.submit(new SafeRunnable(user, entity, runnable, false));
   }
 
   public void scheduleWithFixedDelayAndForget(Runnable command, long initialDelay, long period, TimeUnit unit) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    scheduledExecutorService.scheduleWithFixedDelay(new SafeRunnable(user, entity, command, false), initialDelay,
-                                                    period, unit);
+    super.scheduleWithFixedDelay(new SafeRunnable(user, entity, command, false), initialDelay, period, unit);
   }
 
   public void scheduleAndForget(Runnable command, long delay, TimeUnit unit) {
     String user = MDC.get(LogConstants.USER);
     String entity = MDC.get(LogConstants.ENTITY);
-    scheduledExecutorService.schedule(new SafeRunnable(user, entity, command, false), delay, unit);
+    super.schedule(new SafeRunnable(user, entity, command, false), delay, unit);
   }
 
 }

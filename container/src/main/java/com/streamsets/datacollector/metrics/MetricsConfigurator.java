@@ -45,7 +45,8 @@ import java.util.concurrent.TimeUnit;
  *  that are covering all instances of given stage when pipeline is running in multi-threaded fashion.
  */
 public class MetricsConfigurator {
-  public static final String JMX_PREFIX = "sdc.pipeline.";
+  public static final String JMX_PIPELINE_PREFIX = "sdc.pipeline.";
+  public static final String JMX_FRAMEWORK_PREFIX = "sdc.pipeline.";
 
   public static final String METER_SUFFIX = ".meter";
   public static final String COUNTER_SUFFIX = ".counter";
@@ -65,8 +66,8 @@ public class MetricsConfigurator {
     return name + type;
   }
 
-  private static String jmxNamePrefix(String pipelineName, String pipelineRev) {
-    return JMX_PREFIX + pipelineName + "." + pipelineRev + ".";
+  private static String jmxPipelinePrefix(String pipelineName, String pipelineRev) {
+    return JMX_PIPELINE_PREFIX + pipelineName + "." + pipelineRev + ".";
   }
 
   private static <T extends Metric> T create(
@@ -76,7 +77,7 @@ public class MetricsConfigurator {
     final String pipelineName,
     final String pipelineRev
   ) {
-    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
+    final String jmxNamePrefix = jmxPipelinePrefix(pipelineName, pipelineRev);
     final MetricRegistry metricRegistry = sdcMetrics;
     if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
@@ -169,6 +170,12 @@ public class MetricsConfigurator {
     );
   }
 
+  public static Gauge<Map<String, Object>> createFrameworkGauge(MetricRegistry metricRegistry, String componentName, String metricName, Comparator<String> comparator) {
+    String fullName = JMX_FRAMEWORK_PREFIX + componentName + "." + metricName + GAUGE_SUFFIX;
+    Gauge<Map<String, Object>> gauge = new MapGauge(comparator);
+    return metricRegistry.register(fullName, gauge);
+  }
+
   public static Gauge<Map<String, Object>> createStageGauge(MetricRegistry metrics, String nameSuffix, Comparator<String> comparator, final String pipelineName, final String pipelineRev) {
     String name = metricName(nameSuffix, GAUGE_SUFFIX);
     if(metrics.getGauges().containsKey(name)) {
@@ -223,7 +230,7 @@ public class MetricsConfigurator {
    * Remove metric object (regardless of it's type)
    */
   private static boolean remove(final MetricRegistry metrics, final String name, String pipelineName, String pipelineRev) {
-    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
+    final String jmxNamePrefix = jmxPipelinePrefix(pipelineName, pipelineRev);
     final MetricRegistry metricRegistry = sdcMetrics;
     if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
@@ -266,12 +273,12 @@ public class MetricsConfigurator {
   }
 
   public static synchronized void registerPipeline(String pipelineName, String pipelineRev) {
-    runningPipelines.add(jmxNamePrefix(pipelineName, pipelineRev));
+    runningPipelines.add(jmxPipelinePrefix(pipelineName, pipelineRev));
   }
 
   public static synchronized void cleanUpJmxMetrics(final String pipelineName, final String pipelineRev) {
     final MetricRegistry metricRegistry = sdcMetrics;
-    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
+    final String jmxNamePrefix = jmxPipelinePrefix(pipelineName, pipelineRev);
     runningPipelines.remove(jmxNamePrefix);
     if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {

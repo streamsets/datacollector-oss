@@ -16,7 +16,9 @@
 package com.streamsets.datacollector.execution.executor;
 
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.metrics.MetricSafeScheduledExecutorService;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
@@ -41,37 +43,63 @@ import javax.inject.Singleton;
 public class ExecutorModule {
 
   @Provides @Singleton @Named("previewExecutor")
-  public SafeScheduledExecutorService providePreviewExecutor(Configuration configuration) {
-    return new SafeScheduledExecutorService(
-      configuration.get(ExecutorConstants.PREVIEWER_THREAD_POOL_SIZE_KEY, ExecutorConstants.PREVIEWER_THREAD_POOL_SIZE_DEFAULT), "preview");
+  public SafeScheduledExecutorService providePreviewExecutor(
+    Configuration configuration,
+    RuntimeInfo runtimeInfo
+  ) {
+    return new MetricSafeScheduledExecutorService(
+      configuration.get(ExecutorConstants.PREVIEWER_THREAD_POOL_SIZE_KEY, ExecutorConstants.PREVIEWER_THREAD_POOL_SIZE_DEFAULT),
+      "preview",
+      runtimeInfo.getMetrics()
+    );
   }
 
   @Provides @Singleton @Named("runnerExecutor")
-  public SafeScheduledExecutorService provideRunnerExecutor(Configuration configuration) {
-    return new SafeScheduledExecutorService(
-      configuration.get(ExecutorConstants.RUNNER_THREAD_POOL_SIZE_KEY, ExecutorConstants.RUNNER_THREAD_POOL_SIZE_DEFAULT), "runner");
+  public SafeScheduledExecutorService provideRunnerExecutor(
+    Configuration configuration,
+    RuntimeInfo runtimeInfo
+  ) {
+    return new MetricSafeScheduledExecutorService(
+      configuration.get(ExecutorConstants.RUNNER_THREAD_POOL_SIZE_KEY, ExecutorConstants.RUNNER_THREAD_POOL_SIZE_DEFAULT),
+      "runner",
+      runtimeInfo.getMetrics()
+    );
   }
 
   @Provides @Singleton @Named("managerExecutor")
-  public SafeScheduledExecutorService provideManagerExecutor(Configuration configuration) {
+  public SafeScheduledExecutorService provideManagerExecutor(
+    Configuration configuration,
+    RuntimeInfo runtimeInfo
+  ) {
     //thread used to evict runners from the cache in manager
-    return new SafeScheduledExecutorService(
+    return new MetricSafeScheduledExecutorService(
       configuration.get(ExecutorConstants.MANAGER_EXECUTOR_THREAD_POOL_SIZE_KEY, ExecutorConstants.MANAGER_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
-      "managerExecutor");
+      "managerExecutor",
+      runtimeInfo.getMetrics()
+    );
   }
 
   @Provides @Singleton @Named("eventHandlerExecutor")
-  public SafeScheduledExecutorService provideEventExecutor(Configuration configuration) {
-    return new SafeScheduledExecutorService(
+  public SafeScheduledExecutorService provideEventExecutor(
+    Configuration configuration,
+    RuntimeInfo runtimeInfo
+  ) {
+    return new MetricSafeScheduledExecutorService(
       configuration.get(ExecutorConstants.EVENT_EXECUTOR_THREAD_POOL_SIZE_KEY, ExecutorConstants.EVENT_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
-      "eventHandlerExecutor");
+      "eventHandlerExecutor",
+      runtimeInfo.getMetrics()
+    );
   }
 
   @Provides @Singleton @Named("supportBundleExecutor")
-  public SafeScheduledExecutorService provideSupportBundleExecutor(Configuration configuration) {
-    return new SafeScheduledExecutorService(
+  public SafeScheduledExecutorService provideSupportBundleExecutor(
+    Configuration configuration,
+    RuntimeInfo runtimeInfo
+  ) {
+    return new MetricSafeScheduledExecutorService(
       configuration.get(ExecutorConstants.BUNDLE_EXECUTOR_THREAD_POOL_SIZE_KEY, ExecutorConstants.BUNDLE_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
-      "supportBundleExecutor"
+      "supportBundleExecutor",
+      runtimeInfo.getMetrics()
     );
   }
 
