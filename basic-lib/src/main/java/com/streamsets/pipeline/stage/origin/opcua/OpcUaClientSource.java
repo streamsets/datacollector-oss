@@ -809,9 +809,11 @@ public class OpcUaClientSource implements PushSource {
 
         // recursively browse to children
         rd.getNodeId().local().ifPresent(nodeId -> {
-          LinkedHashMap<String, Field> childrenMap = new LinkedHashMap<>();
-          browseNode(nodeId, childrenMap);
-          fieldMap.put("children",  Field.create(childrenMap));
+          if (!nodeId.equals(browseRoot)) {
+            LinkedHashMap<String, Field> childrenMap = new LinkedHashMap<>();
+            browseNode(nodeId, childrenMap);
+            fieldMap.put("children",  Field.create(childrenMap));
+          }
         });
 
         rootFieldMap.put(rd.getBrowseName().getName(), Field.create(fieldMap));
