@@ -1799,7 +1799,7 @@ input_stream.read()</codeblock></p>
                         </dlentry>
                   </dl>
                   <draft-comment author="Loretta"><b>DESTDataFormat-Binary</b> - the following is
-                        just for Kafka Producer and Amazon S3.</draft-comment>
+                        just for Kafka Producer, Amazon S3, Azure IoT Hub.</draft-comment>
                   <dl>
                         <dlentry id="DESTDataFormat-Binary">
                               <dt>Binary</dt>
@@ -1826,7 +1826,7 @@ input_stream.read()</codeblock></p>
                   </dl>
             </p>
             <draft-comment author="Loretta"><b>DestDF-ProtoMess</b> - Amazon S3, Directory? Hadoop
-                  FS?</draft-comment>
+                  FS?, Azure IoT Hub</draft-comment>
             <dl>
                   <dlentry id="DestDF-ProtoMess">
                         <dt>Protobuf</dt>
@@ -1946,7 +1946,7 @@ input_stream.read()</codeblock></p>
             </dl>
             <p>
                   <draft-comment author="Loretta">The following DEST-XMLmessages is used by Kafka
-                        Producer and JMS Producer</draft-comment>
+                        Producer and JMS Producer and Azure IoT Hub</draft-comment>
             </p>
             <p>
                   <dl>

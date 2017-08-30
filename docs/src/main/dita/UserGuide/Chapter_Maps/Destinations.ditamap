@@ -61,6 +61,14 @@
    <topicref href="../Destinations/DataLakeStore-DataFormats.dita"/>
    <topicref href="../Destinations/DataLakeStore-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/AzureIoTHub.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/AzureIoTHub-RegisterSDC.dita"/>
+   <topicref href="../Destinations/AzureIoTHub-DataFormats.dita"/>
+   <topicref href="../Destinations/AzureIoTHub-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/Cassandra.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pnd_jkq_1bb">
+ <title>Azure IoT Hub Producer</title>
+ <conbody>
+  <p><indexterm>Azure IoT Hub Producer
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Azure
+                    IoT Hub Producer</indexterm></indexterm>The Azure IoT Hub Producer destination
+            writes data to Microsoft Azure IoT Hub. To write to Microsoft Azure Data Lake Store, use
+            the Azure Data Lake Store destination. To write to Microsoft Azure Event Hub, use the
+            Azure Event Hub Producer destination.</p>
+        <p>Use the Azure IoT Hub Producer destination in a pipeline when you want to send device
+            data - such as temperature or sensor data - to Azure IoT Hub after processing the
+            data.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            functions as a simulated device that sends messages to Azure IoT Hub. Before you
+            configure the Azure IoT Hub Producer destination, register <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as
+            a simulated device in your IoT hub. </p>
+        <p>When you configure the Azure IoT Hub Producer destination, you specify connection
+            information such as the IoT hub name and device ID. You also specify the authentication
+            key that the destination uses to identify itself when it sends messages to your IoT
+            hub.</p>
+ </conbody>
+</concept>

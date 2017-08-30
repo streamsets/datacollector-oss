@@ -89,6 +89,22 @@
               <entry/>
             </row>
             <row>
+              <entry>Azure IoT Hub Producer</entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_whq_1rr_1bb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_xhq_1rr_1bb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_yhq_1rr_1bb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_zhq_1rr_1bb"
+                /></entry>
+              <entry/>
+              <entry/>
+            </row>
+            <row>
               <entry>Cassandra</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
