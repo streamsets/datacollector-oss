@@ -433,6 +433,9 @@ public class OracleCDCSource extends BaseSource {
             startDate = startDate.minusSeconds(configBean.txnWindow);
           }
           LocalDateTime endTime = getEndTimeForStartTime(startDate);
+          if (configBean.bufferLocally && incompleteBatch) {
+            startLogMnrForRedoDict();
+          }
           if (lastSCN == null || !configBean.bufferLocally || getContext().isPreview()) {
             startLogMinerUsingGivenDates(startDate.format(dtFormatter), endTime.format(dtFormatter));
           } else {
@@ -705,6 +708,11 @@ public class OracleCDCSource extends BaseSource {
     } finally {
       if (configBean.bufferLocally) {
         closeResultSet(resultSet);
+        if (incompleteBatch) {
+          // If an incomplete batch is seen, it means we are going to move the window forward
+          // Ending this session and starting a new one helps reduce PGA memory usage.
+          endLogMnr.execute();
+        }
       }
       LOG.debug(COUNT_FOR_BATCH_AND_BATCH_SIZE, countToCheck, batchSize);
       if (forceNewResultSet || incompleteBatch) {
@@ -759,12 +767,12 @@ public class OracleCDCSource extends BaseSource {
     attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
     record.set(Field.create(fields));
     LOG.debug(GENERATED_RECORD, record);
-    Joiner errorStringJoiner = Joiner.on(",");
+    Joiner errorStringJoiner = Joiner.on(", ");
     List<String> errorColumns = Collections.emptyList();
     if (!fieldTypeExceptions.isEmpty()) {
       errorColumns = fieldTypeExceptions.stream().map(ex -> {
             String fieldTypeName = JDBCTypeNames.getOrDefault(ex.fieldType, "unknown");
-            return "Column = " + ex.column + ", Type = " + fieldTypeName + ", Value = " + ex.columnVal;
+            return "[Column = '" + ex.column + "', Type = '" + fieldTypeName + "', Value = '" + ex.columnVal +"']";
           }
       ).collect(Collectors.toList());
     }
@@ -1259,6 +1267,9 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private void startLogMnrForRedoDict() throws SQLException, StageException {
+    if (configBean.dictionary != DictionaryValues.DICT_FROM_REDO_LOGS) {
+      return;
+    }
     BigDecimal endSCN = getEndingSCN();
 
     SQLException lastException = null;
