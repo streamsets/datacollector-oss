@@ -613,14 +613,20 @@
                                                 characters.</li>
                                     </ul></dd>
                               <dd>You can use a list or list-map root field type for delimited data,
-                                    optionally including the header information when available. </dd>
+                                    optionally including the header information when available. For
+                                    more information about the root field types, see <xref
+                                          href="../Data_Formats/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
+                                    />.</dd>
+                              <dd>When using a header line, you can allow processing records with
+                                    additional columns. The additional columns are named using a
+                                    custom prefix and integers in sequential increasing order, such
+                                    as  _extra_1, _extra_2. When you disallow additional columns
+                                    when using a header line, records that include additional
+                                    columns are sent to error.</dd>
                               <dd>You can also replace a string constant with null values.</dd>
                               <dd>When a record exceeds the maximum record length defined for the
                                     origin, the origin processes the object based on the error
                                     handling configured for the stage.</dd>
-                              <dd>For more information about the root field types, see <xref
-                                          href="../Data_Formats/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
-                                    />.</dd>
                         </dlentry>
                         <dlentry id="OriginDF-DELIMFILE">
                               <dt>Delimited</dt>
@@ -642,7 +648,16 @@
                                                 characters.</li>
                                     </ul></dd>
                               <dd>You can use a list or list-map root field type for delimited data,
-                                    optionally including the header information when available. </dd>
+                                    optionally including the header information when available. For
+                                    more information about the root field types, see <xref
+                                          href="../Data_Formats/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
+                                    />.</dd>
+                              <dd>When using a header line, you can allow processing records with
+                                    additional columns. The additional columns are named using a
+                                    custom prefix and integers in sequential increasing order, such
+                                    as  _extra_1, _extra_2. When you disallow additional columns
+                                    when using a header line, records that include additional
+                                    columns are sent to error.</dd>
                               <dd>You can also replace a string constant with null values.</dd>
                               <dd>When a record exceeds the user-defined maximum record length, the
                                     origin cannot continue processing data in the file. Records
@@ -659,9 +674,6 @@
                                                 Otherwise, it leaves the file in the directory.</li>
                                           <li>Stop Pipeline - The origin stops the pipeline. </li>
                                     </ul></dd>
-                              <dd>For more information about the root field types, see <xref
-                                          href="../Data_Formats/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
-                                    />.</dd>
                         </dlentry>
                         <dlentry id="OriginDF-JSON">
                               <dt>JSON</dt>

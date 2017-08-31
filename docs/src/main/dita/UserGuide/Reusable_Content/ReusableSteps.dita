@@ -769,6 +769,20 @@
                                     <entry>Indicates whether a file contains a header line, and
                                         whether to use the header line.</entry>
                                 </row>
+                                <row id="row-Del-ExtraColumns">
+                                    <entry>Allow Extra Columns</entry>
+                                    <entry>When processing data with a header line, allows
+                                        processing records with more columns than exist in the
+                                        header line.</entry>
+                                </row>
+                                <row id="row-Del-ExtraColPrefix">
+                                    <entry>Extra Column Prefix</entry>
+                                    <entry>Prefix to use for any additional columns. Extra columns
+                                        are named using the prefix and sequential increasing
+                                        integers as follows:
+                                            <codeph>&lt;prefix>&lt;integer></codeph>. <p>For
+                                            example, _extra_1.  Default is _extra_.</p></entry>
+                                </row>
                                 <row id="O-row-Del-MaxRecLength">
                                     <entry>Max Record Length (chars)</entry>
                                     <entry>Maximum length of a record in characters. Longer records

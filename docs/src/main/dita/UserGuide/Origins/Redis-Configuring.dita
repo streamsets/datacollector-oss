@@ -217,6 +217,14 @@
                                     <entry/>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-Del-ExtraColumns">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-Del-ExtraColPrefix">
+                                    <entry/>
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-Del-MaxRecLength">
                                     <entry/>
                                 </row>
