@@ -696,9 +696,12 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     MemoryLimitConfiguration memoryLimitConfiguration = new MemoryLimitConfiguration();
     MemoryLimitExceeded memoryLimitExceeded = pipelineConfiguration.memoryLimitExceeded;
     long memoryLimit = pipelineConfiguration.memoryLimit;
-    if (memoryLimit > JvmEL.jvmMaxMemoryMB() * 0.85) {
-      throw new PipelineRuntimeException(ValidationError.VALIDATION_0063, memoryLimit,
-                                         "above the maximum", JvmEL.jvmMaxMemoryMB() * 0.85);
+    if (memoryLimit > JvmEL.jvmMaxMemoryMB() * Constants.MAX_HEAP_MEMORY_LIMIT_CONFIGURATION) {
+      throw new PipelineRuntimeException(ValidationError.VALIDATION_0063,
+          memoryLimit,
+          "above the maximum",
+          JvmEL.jvmMaxMemoryMB() * Constants.MAX_HEAP_MEMORY_LIMIT_CONFIGURATION
+      );
     }
     if (memoryLimitExceeded != null && memoryLimit > 0) {
       memoryLimitConfiguration = new MemoryLimitConfiguration(memoryLimitExceeded, memoryLimit);

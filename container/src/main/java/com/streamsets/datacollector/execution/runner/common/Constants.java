@@ -48,6 +48,7 @@ public class Constants {
   public static final int STATS_AGGREGATOR_QUEUE_SIZE_DEFAULT = 1000;
   public static final String MAX_STATS_REQUEST_OFFER_WAIT_TIME_MS_KEY = "stats.queue.offer.max.wait.time.ms";
   public static final int MAX_STATS_REQUEST_OFFER_WAIT_TIME_MS_DEFAULT = 0;
+  public static final double MAX_HEAP_MEMORY_LIMIT_CONFIGURATION = 0.95;
 
   public static final String STOP_PIPELINE_MESSAGE = "Requested via REST API";
 

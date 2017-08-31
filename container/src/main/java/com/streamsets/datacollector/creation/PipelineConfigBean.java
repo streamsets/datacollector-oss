@@ -124,11 +124,11 @@ public class PipelineConfigBean implements Stage {
     required = true,
     type = ConfigDef.Type.NUMBER,
     label = "Max Pipeline Memory (MB)",
-    defaultValue = "${jvm:maxMemoryMB() * 0.65}",
+    defaultValue = "${jvm:maxMemoryMB() * 0.85}",
     description = "Maximum amount of memory the pipeline can use. Configure in relationship to the SDC Java heap " +
-      "size. The default is 650 and a value of 0 or less disables the limit.",
+      "size. The default is 85% of heap and a value of 0 disables the limit.",
     displayPosition = 60,
-    min = 128,
+    min = 0,
     group = ""
   )
   public long memoryLimit;
@@ -137,7 +137,7 @@ public class PipelineConfigBean implements Stage {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="STOP_PIPELINE",
+      defaultValue="LOG",
       label = "On Memory Exceeded",
       description = "Behavior when the pipeline exceeds the memory limit. Tip: Configure an alert to indicate when the " +
         "memory use approaches the limit." ,

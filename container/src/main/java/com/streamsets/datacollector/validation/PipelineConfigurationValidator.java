@@ -39,6 +39,7 @@ import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.JvmEL;
+import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.record.PathElement;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -377,14 +378,14 @@ public class PipelineConfigurationValidator {
     boolean canPreview = true;
     if (pipelineBean != null) {
       PipelineConfigBean config = pipelineBean.getConfig();
-      if (config.memoryLimit > JvmEL.jvmMaxMemoryMB() * 0.85) {
+      if (config.memoryLimit > JvmEL.jvmMaxMemoryMB() * Constants.MAX_HEAP_MEMORY_LIMIT_CONFIGURATION) {
         issues.add(
             IssueCreator.getPipeline().create(
                 "",
                 "memoryLimit",
                 ValidationError.VALIDATION_0063,
                 config.memoryLimit,
-                JvmEL.jvmMaxMemoryMB() * 0.85)
+                JvmEL.jvmMaxMemoryMB() * Constants.MAX_HEAP_MEMORY_LIMIT_CONFIGURATION)
         );
         canPreview = false;
       }
