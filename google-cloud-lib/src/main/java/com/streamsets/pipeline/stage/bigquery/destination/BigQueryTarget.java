@@ -33,19 +33,30 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
 import com.streamsets.pipeline.stage.bigquery.lib.Errors;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class BigQueryTarget extends BaseTarget {
-  private static final Joiner COMMA_JOINER = Joiner.on(",");
   private static final Logger LOG = LoggerFactory.getLogger(BigQueryTarget.class);
+  private static final Joiner COMMA_JOINER = Joiner.on(",");
+
+  static final SimpleDateFormat DATE_FORMAT = createSimpleDateFormat("yyyy-MM-dd");
+  static final SimpleDateFormat TIME_FORMAT = createSimpleDateFormat("HH:mm:ss.SSSSSS");
+  static final SimpleDateFormat DATE_TIME_FORMAT = createSimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
 
   private final BigQueryTargetConfig conf;
 
@@ -56,6 +67,13 @@ public class BigQueryTarget extends BaseTarget {
   BigQueryTarget(BigQueryTargetConfig conf) {
     this.conf = conf;
   }
+
+  private static SimpleDateFormat createSimpleDateFormat(String pattern) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+    simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    return simpleDateFormat;
+  }
+
 
   @Override
   public List<ConfigIssue> init() {
@@ -79,7 +97,7 @@ public class BigQueryTarget extends BaseTarget {
     ELVars elVars = getContext().createELVars();
 
     batch.getRecords().forEachRemaining(record -> {
-      indexToRecords.put(index.incrementAndGet(), record);
+      indexToRecords.put(index.getAndIncrement(), record);
       RecordEL.setRecordInContext(elVars, record);
       try {
         String datasetName = dataSetEval.eval(elVars, conf.datasetEL, String.class);
@@ -150,7 +168,8 @@ public class BigQueryTarget extends BaseTarget {
         if (field.getType().isOneOf(Field.Type.MAP, Field.Type.LIST, Field.Type.LIST_MAP, Field.Type.FILE_REF)) {
           throw new OnRecordErrorException(record,  Errors.BIGQUERY_12, "/" + fieldEntry.getKey());
         }
-        rowObject.put(fieldEntry.getKey(), field.getValue());
+        //Skip null value fields
+        Optional.ofNullable(field.getValue()).ifPresent(v -> rowObject.put(fieldEntry.getKey(), getPrimitiveValueFromField(field)));
       }
     } else {
       throw new OnRecordErrorException(record,  Errors.BIGQUERY_12, "/");
@@ -175,9 +194,28 @@ public class BigQueryTarget extends BaseTarget {
           throw new OnRecordErrorException(record, Errors.BIGQUERY_13, mappingConfig.fieldPath);
         }
       } else {
-        rowObject.put(mappingConfig.columnName, record.get(mappingConfig.fieldPath).getValue());
+        Field field = record.get(mappingConfig.fieldPath);
+        //Skip null value fields
+        Optional.ofNullable(field.getValue()).ifPresent( v -> rowObject.put(mappingConfig.columnName, getPrimitiveValueFromField(field)));
       }
     }
     return rowObject;
   }
+
+
+  private Object getPrimitiveValueFromField(Field field) {
+    switch (field.getType()) {
+      case DATE:
+        return DATE_FORMAT.format(field.getValueAsDate());
+      case TIME:
+        return TIME_FORMAT.format(field.getValueAsTime()); //+ " " + Calendar.getInstance().getTimeZone().toZoneId();
+      case DATETIME:
+        return DATE_TIME_FORMAT.format(field.getValueAsDatetime()); //+ " " + Calendar.getInstance().getTimeZone().toZoneId();
+      case BYTE_ARRAY:
+        return Base64.getEncoder().encodeToString(field.getValueAsByteArray());
+      default:
+        return field.getValue();
+    }
+  }
+
 }

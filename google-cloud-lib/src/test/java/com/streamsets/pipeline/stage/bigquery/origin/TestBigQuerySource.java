@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.bigquery.origin;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.FieldValue;
@@ -53,7 +54,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(value = Parameterized.class)
-@PrepareForTest({ServiceAccountCredentials.class, BigQueryDelegate.class})
+@PrepareForTest({ServiceAccountCredentials.class, GoogleCredentials.class, BigQueryDelegate.class})
 public class TestBigQuerySource {
   private BigQuery mockBigquery;
   private JobId jobId;
@@ -77,8 +78,9 @@ public class TestBigQuerySource {
     mockResult = mock(QueryResult.class);
 
     mockStatic(ServiceAccountCredentials.class);
+    mockStatic(GoogleCredentials.class);
     ServiceAccountCredentials serviceAccountCredentials = mock(ServiceAccountCredentials.class);
-    when(ServiceAccountCredentials.fromStream(any())).thenReturn(serviceAccountCredentials);
+    when(GoogleCredentials.fromStream(any())).thenReturn(serviceAccountCredentials);
   }
 
   @Test
