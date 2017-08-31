@@ -1,0 +1,269 @@
+{
+  "snapshotBatches" : [ [ {
+    "instanceName" : "DevRawDataSource_01",
+    "output" : {
+      "DevRawDataSource_01OutputLane15040430714000" : [ {
+        "header" : {
+          "stageCreator" : "DevRawDataSource_01",
+          "sourceId" : "rawData::0",
+          "stagesPath" : "DevRawDataSource_01",
+          "trackingId" : "rawData::0::DevRawDataSource_01",
+          "previousTrackingId" : null,
+          "raw" : null,
+          "rawMimeType" : null,
+          "errorDataCollectorId" : null,
+          "errorPipelineName" : null,
+          "errorStage" : null,
+          "errorStageLabel" : null,
+          "errorCode" : null,
+          "errorMessage" : null,
+          "errorTimestamp" : 0,
+          "errorStackTrace" : null,
+          "values" : { }
+        },
+        "value" : {
+          "type" : "MAP",
+          "value" : {
+            "threshold" : {
+              "type" : "INTEGER",
+              "value" : "100",
+              "dqpath" : "/threshold",
+              "sqpath" : "/threshold"
+            },
+            "val1" : {
+              "type" : "INTEGER",
+              "value" : "108",
+              "dqpath" : "/val1",
+              "sqpath" : "/val1"
+            },
+            "val2" : {
+              "type" : "INTEGER",
+              "value" : "99",
+              "dqpath" : "/val2",
+              "sqpath" : "/val2"
+            },
+            "val3" : {
+              "type" : "INTEGER",
+              "value" : "42",
+              "dqpath" : "/val3",
+              "sqpath" : "/val3"
+            },
+            "val4" : {
+              "type" : "INTEGER",
+              "value" : "1009",
+              "dqpath" : "/val4",
+              "sqpath" : "/val4"
+            },
+            "val5" : {
+              "type" : "INTEGER",
+              "value" : "1178",
+              "dqpath" : "/val5",
+              "sqpath" : "/val5"
+            },
+            "val6" : {
+              "type" : "INTEGER",
+              "value" : "1499",
+              "dqpath" : "/val6",
+              "sqpath" : "/val6"
+            },
+            "val7" : {
+              "type" : "INTEGER",
+              "value" : "67",
+              "dqpath" : "/val7",
+              "sqpath" : "/val7"
+            },
+            "val8" : {
+              "type" : "INTEGER",
+              "value" : "18",
+              "dqpath" : "/val8",
+              "sqpath" : "/val8"
+            },
+            "val9" : {
+              "type" : "INTEGER",
+              "value" : "55",
+              "dqpath" : "/val9",
+              "sqpath" : "/val9"
+            },
+            "val10" : {
+              "type" : "INTEGER",
+              "value" : "18",
+              "dqpath" : "/val10",
+              "sqpath" : "/val10"
+            },
+            "val11" : {
+              "type" : "INTEGER",
+              "value" : "45",
+              "dqpath" : "/val11",
+              "sqpath" : "/val11"
+            },
+            "val12" : {
+              "type" : "INTEGER",
+              "value" : "9986",
+              "dqpath" : "/val12",
+              "sqpath" : "/val12"
+            },
+            "val13" : {
+              "type" : "INTEGER",
+              "value" : "345",
+              "dqpath" : "/val13",
+              "sqpath" : "/val13"
+            },
+            "val14" : {
+              "type" : "INTEGER",
+              "value" : "45",
+              "dqpath" : "/val14",
+              "sqpath" : "/val14"
+            },
+            "val15" : {
+              "type" : "INTEGER",
+              "value" : "16",
+              "dqpath" : "/val15",
+              "sqpath" : "/val15"
+            },
+            "val16" : {
+              "type" : "INTEGER",
+              "value" : "10543",
+              "dqpath" : "/val16",
+              "sqpath" : "/val16"
+            },
+            "val17" : {
+              "type" : "INTEGER",
+              "value" : "3081",
+              "dqpath" : "/val17",
+              "sqpath" : "/val17"
+            },
+            "val18" : {
+              "type" : "INTEGER",
+              "value" : "138",
+              "dqpath" : "/val18",
+              "sqpath" : "/val18"
+            },
+            "val19" : {
+              "type" : "INTEGER",
+              "value" : "77",
+              "dqpath" : "/val19",
+              "sqpath" : "/val19"
+            },
+            "val20" : {
+              "type" : "INTEGER",
+              "value" : "4101",
+              "dqpath" : "/val20",
+              "sqpath" : "/val20"
+            }
+          },
+          "dqpath" : "",
+          "sqpath" : ""
+        }
+      } ]
+    },
+    "errorRecords" : [ ],
+    "stageErrors" : null,
+    "eventRecords" : [ ]
+  }, {
+    "instanceName" : "FieldRemover_01",
+    "output" : {
+      "FieldRemover_01OutputLane15040432490340" : [ {
+        "header" : {
+          "stageCreator" : "DevRawDataSource_01",
+          "sourceId" : "rawData::0",
+          "stagesPath" : "DevRawDataSource_01:FieldRemover_01",
+          "trackingId" : "rawData::0::DevRawDataSource_01:FieldRemover_01",
+          "previousTrackingId" : "rawData::0::DevRawDataSource_01",
+          "raw" : null,
+          "rawMimeType" : null,
+          "errorDataCollectorId" : null,
+          "errorPipelineName" : null,
+          "errorStage" : null,
+          "errorStageLabel" : null,
+          "errorCode" : null,
+          "errorMessage" : null,
+          "errorTimestamp" : 0,
+          "errorStackTrace" : null,
+          "values" : { }
+        },
+        "value" : {
+          "type" : "MAP",
+          "value" : {
+            "threshold" : {
+              "type" : "INTEGER",
+              "value" : "100",
+              "dqpath" : "/threshold",
+              "sqpath" : "/threshold"
+            },
+            "val1" : {
+              "type" : "INTEGER",
+              "value" : "108",
+              "dqpath" : "/val1",
+              "sqpath" : "/val1"
+            },
+            "val4" : {
+              "type" : "INTEGER",
+              "value" : "1009",
+              "dqpath" : "/val4",
+              "sqpath" : "/val4"
+            },
+            "val5" : {
+              "type" : "INTEGER",
+              "value" : "1178",
+              "dqpath" : "/val5",
+              "sqpath" : "/val5"
+            },
+            "val6" : {
+              "type" : "INTEGER",
+              "value" : "1499",
+              "dqpath" : "/val6",
+              "sqpath" : "/val6"
+            },
+            "val12" : {
+              "type" : "INTEGER",
+              "value" : "9986",
+              "dqpath" : "/val12",
+              "sqpath" : "/val12"
+            },
+            "val13" : {
+              "type" : "INTEGER",
+              "value" : "345",
+              "dqpath" : "/val13",
+              "sqpath" : "/val13"
+            },
+            "val16" : {
+              "type" : "INTEGER",
+              "value" : "10543",
+              "dqpath" : "/val16",
+              "sqpath" : "/val16"
+            },
+            "val17" : {
+              "type" : "INTEGER",
+              "value" : "3081",
+              "dqpath" : "/val17",
+              "sqpath" : "/val17"
+            },
+            "val18" : {
+              "type" : "INTEGER",
+              "value" : "138",
+              "dqpath" : "/val18",
+              "sqpath" : "/val18"
+            },
+            "val20" : {
+              "type" : "INTEGER",
+              "value" : "4101",
+              "dqpath" : "/val20",
+              "sqpath" : "/val20"
+            }
+          },
+          "dqpath" : "",
+          "sqpath" : ""
+        }
+      } ]
+    },
+    "errorRecords" : [ ],
+    "stageErrors" : null,
+    "eventRecords" : [ ]
+  }, {
+    "instanceName" : "Trash_01",
+    "output" : { },
+    "errorRecords" : [ ],
+    "stageErrors" : null,
+    "eventRecords" : [ ]
+  } ] ]
+}
