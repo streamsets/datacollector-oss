@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.http;
 
+import com.codahale.metrics.JmxReporter;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 
@@ -42,6 +43,7 @@ import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Array;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -341,7 +343,15 @@ public class JMXJsonServlet extends HttpServlet {
         }
         jg.writeEndArray();
       } else if (value instanceof GaugeValue) {
-        ((GaugeValue)value).serialize(jg);
+        ((GaugeValue) value).serialize(jg);
+      } else if(value instanceof Map) {
+        Map<String, Object> map = (Map<String, Object>) value;
+        jg.writeStartObject();
+        for(Map.Entry<String, Object> entry : map.entrySet()) {
+          jg.writeFieldName(entry.getKey());
+          writeObject(jg, entry.getValue());
+        }
+        jg.writeEndObject();
       } else {
         jg.writeString(value.toString());
       }
