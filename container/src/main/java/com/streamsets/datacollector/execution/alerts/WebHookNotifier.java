@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.alerts;
 
+import com.google.common.base.Strings;
 import com.streamsets.datacollector.config.AuthenticationType;
 import com.streamsets.datacollector.config.PipelineWebhookConfig;
 import com.streamsets.datacollector.config.WebhookCommonConfig;
@@ -105,16 +106,16 @@ public class WebHookNotifier implements StateEventListener {
             try {
               DateFormat dateTimeFormat = new SimpleDateFormat(EmailConstants.DATE_MASK, Locale.ENGLISH);
               String payload = webhookConfig.payload
-                  .replace(WebhookConstants.PIPELINE_TITLE_KEY, pipelineTitle)
-                  .replace(WebhookConstants.PIPELINE_URL_KEY, runtimeInfo.getBaseHttpUrl() +
-                      EmailConstants.PIPELINE_URL + toState.getPipelineId().replaceAll(" ", "%20"))
-                  .replace(WebhookConstants.PIPELINE_STATE_KEY, toState.getStatus().toString())
+                  .replace(WebhookConstants.PIPELINE_TITLE_KEY, Strings.nullToEmpty(pipelineTitle))
+                  .replace(WebhookConstants.PIPELINE_URL_KEY, Strings.nullToEmpty(runtimeInfo.getBaseHttpUrl() +
+                      EmailConstants.PIPELINE_URL + toState.getPipelineId().replaceAll(" ", "%20")))
+                  .replace(WebhookConstants.PIPELINE_STATE_KEY, Strings.nullToEmpty(toState.getStatus().toString()))
                   .replace(WebhookConstants.TIME_KEY, dateTimeFormat.format(new Date(toState.getTimeStamp())))
-                  .replace(WebhookConstants.PIPELINE_STATE_MESSAGE_KEY, toState.getMessage())
-                  .replace(WebhookConstants.PIPELINE_RUNTIME_PARAMETERS_KEY,
-                      StringEscapeUtils.escapeJson(ObjectMapperFactory.get().writeValueAsString(runtimeParameters)))
-                  .replace(WebhookConstants.PIPELINE_METRICS_KEY,
-                      StringEscapeUtils.escapeJson(toState.getMetrics()));
+                  .replace(WebhookConstants.PIPELINE_STATE_MESSAGE_KEY, Strings.nullToEmpty(toState.getMessage()))
+                  .replace(WebhookConstants.PIPELINE_RUNTIME_PARAMETERS_KEY, Strings.nullToEmpty(
+                      StringEscapeUtils.escapeJson(ObjectMapperFactory.get().writeValueAsString(runtimeParameters))))
+                  .replace(WebhookConstants.PIPELINE_METRICS_KEY, Strings.nullToEmpty(
+                      StringEscapeUtils.escapeJson(toState.getMetrics())));
 
 
               if (payload.contains(WebhookConstants.PIPELINE_INPUT_RECORDS_COUNT_KEY) ||
