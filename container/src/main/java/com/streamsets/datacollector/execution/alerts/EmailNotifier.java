@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution.alerts;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
@@ -97,7 +98,7 @@ public class EmailNotifier implements StateEventListener {
             case RUN_ERROR:
               url = Resources.getResource(EmailConstants.NOTIFY_ERROR_EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
-              emailBody = emailBody.replace(EmailConstants.DESCRIPTION_KEY, toState.getMessage());
+              emailBody = emailBody.replace(EmailConstants.DESCRIPTION_KEY, Strings.nullToEmpty(toState.getMessage()));
               subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + pipelineTitle + " - ERROR";
               break;
             case STOPPED:
@@ -138,7 +139,7 @@ public class EmailNotifier implements StateEventListener {
         }
         java.text.DateFormat dateTimeFormat = new SimpleDateFormat(EmailConstants.DATE_MASK, Locale.ENGLISH);
         emailBody = emailBody.replace(EmailConstants.TIME_KEY, dateTimeFormat.format(new Date(toState.getTimeStamp())))
-          .replace(EmailConstants.PIPELINE_NAME_KEY, pipelineTitle)
+          .replace(EmailConstants.PIPELINE_NAME_KEY, Strings.nullToEmpty(pipelineTitle))
           .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL +
             toState.getPipelineId().replaceAll(" ", "%20"));
         try {
