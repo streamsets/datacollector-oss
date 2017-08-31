@@ -41,13 +41,19 @@ import org.powermock.reflect.Whitebox;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.DATE_FORMAT;
+import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.DATE_TIME_FORMAT;
+import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.TIME_FORMAT;
 
 
 @RunWith(PowerMockRunner.class)
@@ -296,4 +302,51 @@ public class TestBigQueryTarget {
     Assert.assertEquals(1, runner.getErrorRecords().size());
   }
 
+  @Test
+  public void testDateTimeAndByteFields() throws Exception {
+    Record record = RecordCreator.create();
+    Map<String, Field> rootField = new LinkedHashMap<>();
+    Map<String, Object> expectedContentMap = new LinkedHashMap<>();
+
+    Date currentDate = new Date();
+
+    String sampleBytes = "sample";
+
+    rootField.put("dateField", Field.create(Field.Type.DATE, currentDate));
+    expectedContentMap.put("dateField", DATE_FORMAT.format(currentDate));
+
+    rootField.put("timeField", Field.create(Field.Type.TIME, currentDate));
+    expectedContentMap.put("timeField", TIME_FORMAT.format(currentDate));
+
+    rootField.put("datetimeField", Field.create(Field.Type.DATETIME, currentDate));
+    expectedContentMap.put("datetimeField", DATE_TIME_FORMAT.format(currentDate));
+
+    rootField.put("bytesField", Field.create(Field.Type.BYTE_ARRAY, sampleBytes.getBytes()));
+    expectedContentMap.put("bytesField", Base64.getEncoder().encodeToString(sampleBytes.getBytes()));
+
+    record.set(Field.create(rootField));
+
+    Mockito.doAnswer(invocationOnMock -> {
+      InsertAllRequest request = (InsertAllRequest) invocationOnMock.getArguments()[0];
+      InsertAllRequest.RowToInsert rowToInsert = request.getRows().get(0);
+      Map<String,Object> actualContentMap =  rowToInsert.getContent();
+
+      Assert.assertEquals(expectedContentMap.keySet(), actualContentMap.keySet());
+
+      expectedContentMap.forEach((ek, ev) -> {
+         Object actualContent = actualContentMap.get(ek);
+         Assert.assertEquals(ev, actualContent);
+      });
+
+      InsertAllResponse response = PowerMockito.mock(InsertAllResponse.class);
+      Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
+      Mockito.doReturn(false).when(response).hasErrors();
+      return response;
+    }).when(bigQuery).insertAll(Mockito.any(InsertAllRequest.class));
+
+    BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
+    configBuilder.implicitFieldMapping(true);
+    configBuilder.ignoreInvalidColumns(true);
+    createAndRunner(configBuilder.build(), Collections.singletonList(record));
+  }
 }

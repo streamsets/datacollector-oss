@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.bigquery.lib;
 
 import com.google.auth.Credentials;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.BigQueryOptions;
@@ -282,7 +283,7 @@ public class BigQueryDelegate {
     }
 
     try (InputStream in = new FileInputStream(credentialsFile)) {
-      credentials = ServiceAccountCredentials.fromStream(in);
+      credentials = GoogleCredentials.fromStream(in);
     } catch (FileNotFoundException e) {
       LOG.error(BIGQUERY_04.getMessage(), credentialsFile.getPath(), e);
       issues.add(context.createConfigIssue(
