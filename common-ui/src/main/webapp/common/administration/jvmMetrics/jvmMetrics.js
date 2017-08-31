@@ -366,6 +366,34 @@ angular
         ]
       },
       {
+        name: 'managerRunnerCache',
+        label: 'Cache: Pipeline Runner',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'metrics:name=sdc.pipeline.metrics-cache.manager-runner-cache.runtime.gauge',
+            property: 'Value/count',
+            key: 'Entries',
+            values: [],
+            area: true
+          }
+        ]
+      },
+      {
+        name: 'managerPreviewerCache',
+        label: 'Cache: Pipeline Previewer',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'metrics:name=sdc.pipeline.metrics-cache.manager-previewer-cache.runtime.gauge',
+            property: 'Value/count',
+            key: 'Entries',
+            values: [],
+            area: true
+          }
+        ]
+      },
+      {
         name: 'cpuUsage',
         label: 'CPU Usage',
         xAxisTickFormat: $scope.dateFormat(),

@@ -35,6 +35,7 @@ import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PreviewerProvider;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.metrics.MetricsCache;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -202,17 +203,22 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   @Override
   public void runTask() {
-    previewerCache = CacheBuilder.newBuilder()
-      .expireAfterAccess(30, TimeUnit.MINUTES).removalListener(new RemovalListener<String, Previewer>() {
-        @Override
-        public void onRemoval(RemovalNotification<String, Previewer> removal) {
-          Previewer previewer = removal.getValue();
-          LOG.warn("Evicting idle previewer '{}::{}'::'{}' in status '{}'",
-            previewer.getName(), previewer.getRev(), previewer.getId(), previewer.getStatus());
-        }
-      }).build();
+    previewerCache = new MetricsCache<>(
+      runtimeInfo.getMetrics(),
+      "manager-previewer-cache",
+        CacheBuilder.newBuilder()
+          .expireAfterAccess(30, TimeUnit.MINUTES).removalListener((RemovalListener<String, Previewer>) removal -> {
+            Previewer previewer = removal.getValue();
+            LOG.warn("Evicting idle previewer '{}::{}'::'{}' in status '{}'",
+              previewer.getName(), previewer.getRev(), previewer.getId(), previewer.getStatus());
+          }).build()
+    );
 
-    runnerCache = CacheBuilder.newBuilder().build();
+    runnerCache = new MetricsCache<>(
+      runtimeInfo.getMetrics(),
+      "manager-runner-cache",
+      CacheBuilder.newBuilder().build())
+    ;
 
     List<PipelineInfo> pipelineInfoList;
     try {
