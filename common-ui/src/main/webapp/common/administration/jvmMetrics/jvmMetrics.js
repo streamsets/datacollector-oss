@@ -191,6 +191,181 @@ angular
 
     $scope.chartList = [
       {
+        name: 'runnerPool',
+        label: 'Thread Pool: Pipeline Runner',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.runner.runtime.gauge',
+            property: 'Value/running',
+            key: 'Running',
+            values: [],
+            area: true
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.runner.runtime.gauge',
+            property: 'Value/waiting',
+            key: 'Waiting',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.runner.runtime.gauge',
+            property: 'Value/max',
+            key: 'Max',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.runner.runtime.gauge',
+            property: 'Value/periodic',
+            key: 'Periodic',
+            values: [],
+            area: false
+          }
+        ]
+      },
+      {
+        name: 'previewerPool',
+        label: 'Thread Pool: Pipeline Previewer',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.preview.runtime.gauge',
+            property: 'Value/running',
+            key: 'Running',
+            values: [],
+            area: true
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.preview.runtime.gauge',
+            property: 'Value/waiting',
+            key: 'Waiting',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.preview.runtime.gauge',
+            property: 'Value/max',
+            key: 'Max',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.preview.runtime.gauge',
+            property: 'Value/periodic',
+            key: 'Periodic',
+            values: [],
+            area: false
+          }
+        ]
+      },
+      {
+        name: 'bundlePool',
+        label: 'Thread Pool: Support Bundle',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.supportBundleExecutor.runtime.gauge',
+            property: 'Value/running',
+            key: 'Running',
+            values: [],
+            area: true
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.supportBundleExecutor.runtime.gauge',
+            property: 'Value/waiting',
+            key: 'Waiting',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.supportBundleExecutor.runtime.gauge',
+            property: 'Value/max',
+            key: 'Max',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.supportBundleExecutor.runtime.gauge',
+            property: 'Value/periodic',
+            key: 'Periodic',
+            values: [],
+            area: false
+          }
+        ]
+      },
+      {
+        name: 'eventPool',
+        label: 'Thread Pool: Event Handler',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.eventHandlerExecutor.runtime.gauge',
+            property: 'Value/running',
+            key: 'Running',
+            values: [],
+            area: true
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.eventHandlerExecutor.runtime.gauge',
+            property: 'Value/waiting',
+            key: 'Waiting',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.eventHandlerExecutor.runtime.gauge',
+            property: 'Value/max',
+            key: 'Max',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.eventHandlerExecutor.runtime.gauge',
+            property: 'Value/periodic',
+            key: 'Periodic',
+            values: [],
+            area: false
+          }
+        ]
+      },
+      {
+        name: 'managerPool',
+        label: 'Thread Pool: Manager',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.managerExecutor.runtime.gauge',
+            property: 'Value/running',
+            key: 'Running',
+            values: [],
+            area: true
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.managerExecutor.runtime.gauge',
+            property: 'Value/waiting',
+            key: 'Waiting',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.managerExecutor.runtime.gauge',
+            property: 'Value/max',
+            key: 'Max',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.managerExecutor.runtime.gauge',
+            property: 'Value/periodic',
+            key: 'Periodic',
+            values: [],
+            area: false
+          }
+        ]
+      },
+      {
         name: 'cpuUsage',
         label: 'CPU Usage',
         xAxisTickFormat: $scope.dateFormat(),

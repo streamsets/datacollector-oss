@@ -14,7 +14,7 @@
         "configuration": "Configuration",
         "enableDPM": "Enable DPM",
         "disableDPM": "Disable DPM",
-        "jvmMetrics": "JVM Metrics",
+        "jvmMetrics": "SDC Metrics",
         "logs": "Logs",
         "main": "Administration",
         "resetLocalStorage": "Reset Browser Local Storage",
@@ -704,7 +704,7 @@
       "heap": "Heap Memory",
       "nonheap": "Non-Heap Memory"
     },
-    "title": "JVM Metrics",
+    "title": "Data Collector Metrics",
     "threads": {
       "title": "Threads",
       "threadDump": "Threads Dump",
@@ -722,7 +722,7 @@
       "waitedCount": "Waited Count",
       "viewThreadDump" : "View Threads Dump ..."
     },
-    "settingsTitle": "JVM Metrics Settings"
+    "settingsTitle": "Data Collector Metrics Settings"
   },
   "logs": {
     "all": "All",
