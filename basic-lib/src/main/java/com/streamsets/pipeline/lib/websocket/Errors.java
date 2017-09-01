@@ -13,26 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.websocketserver;
+package com.streamsets.pipeline.lib.websocket;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  WEB_SOCKET("WebSocket"),
-  DATA_FORMAT("Data Format"),
-  TLS("TLS"),
+public enum Errors implements ErrorCode {
+  WEB_SOCKET_01("Failed to connect : {}"),
+  WEB_SOCKET_02("Invalid Resource URI. Reason : {}"),
+  WEB_SOCKET_03("Error when disconnecting MQTT Client. Reason: {}"),
   ;
 
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
+  private final String msg;
+  Errors(String msg) {
+    this.msg = msg;
   }
 
   @Override
-  public String getLabel() {
-    return this.label;
+  public String getCode() {
+    return name();
   }
+
+  @Override
+  public String getMessage() {
+    return msg;
+  }
+
 }

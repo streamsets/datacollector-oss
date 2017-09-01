@@ -13,26 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.websocket;
+package com.streamsets.pipeline.lib.websocket;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.lib.http.AuthenticationType;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  WEB_SOCKET("WebSocket"),
-  TLS("TLS"),
-  DATA_FORMAT("Data Format"),
-  ;
-
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+public class AuthenticationTypeChooserValues extends BaseEnumChooserValues<AuthenticationType> {
+  public AuthenticationTypeChooserValues() {
+    super(
+        AuthenticationType.NONE,
+        AuthenticationType.BASIC
+    );
   }
 }

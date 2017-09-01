@@ -13,49 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.websocket;
+package com.streamsets.pipeline.stage.origin.websocket;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.configurablestage.DPushSource;
 import com.streamsets.pipeline.lib.websocket.Groups;
 
 @StageDef(
-    version = 2,
+    version = 1,
     label = "WebSocket Client",
-    description = "Uses a WebSocket client to write data",
+    description = "Uses an WebSocket client to subscribe to a channel",
     icon = "websockets.png",
+    execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
-    execution = {
-        ExecutionMode.STANDALONE,
-        ExecutionMode.CLUSTER_BATCH,
-        ExecutionMode.CLUSTER_YARN_STREAMING,
-        ExecutionMode.CLUSTER_MESOS_STREAMING,
-        ExecutionMode.EDGE
-    },
-    onlineHelpRefUrl = "index.html#Destinations/WebSocketClient.html#task_erb_pjn_lz",
-    upgrader = WebSocketTargetUpgrader.class
+    onlineHelpRefUrl = "TODO"
 )
-@ConfigGroups(Groups.class)
 @HideConfigs({
+    "conf.dataFormatConfig.jsonContent",
     "conf.tlsConfig.keyStoreFilePath",
     "conf.tlsConfig.keyStoreType",
     "conf.tlsConfig.keyStorePassword",
     "conf.tlsConfig.keyStoreAlgorithm"
 })
+@ConfigGroups(Groups.class)
 @GenerateResourceBundle
-public class WebSocketDTarget extends DTarget {
+public class WebSocketClientDSource extends DPushSource {
 
   @ConfigDefBean
-  public WebSocketTargetConfig conf;
+  public WebSocketClientSourceConfigBean conf;
+
 
   @Override
-  protected Target createTarget() {
-    return new WebSocketTarget(conf);
+  protected PushSource createPushSource() {
+    return new WebSocketClientSource(conf);
   }
 }

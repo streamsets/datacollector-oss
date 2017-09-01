@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.websocketserver;
 
 import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.websocket.Groups;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class WebSocketServerPushSource extends AbstractWebSocketServerPushSource
     dataFormatConfig.init(
         getContext(),
         dataFormat,
-        com.streamsets.pipeline.stage.origin.httpserver.Groups.DATA_FORMAT.name(),
+        Groups.DATA_FORMAT.name(),
         "dataFormatConfig",
         DataFormatConstants.MAX_OVERRUN_LIMIT,
         issues

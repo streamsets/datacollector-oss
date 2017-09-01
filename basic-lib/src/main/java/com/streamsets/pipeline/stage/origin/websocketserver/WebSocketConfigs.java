@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+import com.streamsets.pipeline.lib.websocket.Groups;
 
 public class WebSocketConfigs extends HttpConfigs {
 

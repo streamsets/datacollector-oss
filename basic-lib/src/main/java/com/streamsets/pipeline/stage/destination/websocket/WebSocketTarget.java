@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.http.Errors;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+import com.streamsets.pipeline.lib.websocket.Groups;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
