@@ -54,9 +54,8 @@ public class EventHubConsumerConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "${pipeline:id()}",
-      label = "Event Processor Host Name Prefix",
-      description = "The hostName parameter is a name for this event processor host, which must be unique among all " +
-          "event processor hosts receiving from this Event Hub/consumer group combination",
+      label = "Event Processor Prefix",
+      description = "Enter a prefix unique to the pipeline. Used when communicating with Azure Event Hub.",
       displayPosition = 110,
       group = "EVENT_HUB"
   )
@@ -89,8 +88,8 @@ public class EventHubConsumerConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "Storage Container Name",
-      description = "",
+      label = "Container Name",
+      description = "Used to store offset information. You must use a separate container for each pipeline.",
       displayPosition = 140,
       group = "EVENT_HUB"
   )

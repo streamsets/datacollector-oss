@@ -64,9 +64,9 @@ public class IotHubProducerConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Shared Access Signature Key",
+      label = "Shared Access Key",
       defaultValue = "",
-      description = "",
+      description = "Shared Access Primary Key string associated with the policy",
       displayPosition = 30,
       group = "IOT_HUB"
   )

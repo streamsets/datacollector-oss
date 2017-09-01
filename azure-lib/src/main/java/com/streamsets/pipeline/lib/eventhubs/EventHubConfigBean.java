@@ -22,9 +22,9 @@ public class EventHubConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Service Bus Namespace Name",
+      label = "Namespace Name",
       defaultValue = "",
-      description = "",
+      description = "Namespace that contains the event hub",
       displayPosition = 10,
       group = "EVENT_HUB"
   )
@@ -44,9 +44,9 @@ public class EventHubConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Shared Access Signature Key Name",
+      label = "Shared Access Policy Name",
       defaultValue = "",
-      description = "",
+      description = "Name of a shared access policy associated with the namespace",
       displayPosition = 30,
       group = "EVENT_HUB"
   )
@@ -55,9 +55,9 @@ public class EventHubConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Shared Access Signature Key",
+      label = "Connection String Key",
       defaultValue = "",
-      description = "",
+      description = "One of the connection string key values associated with the policy",
       displayPosition = 40,
       group = "EVENT_HUB"
   )
