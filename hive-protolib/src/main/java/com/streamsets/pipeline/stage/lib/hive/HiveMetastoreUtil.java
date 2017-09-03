@@ -60,6 +60,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
@@ -839,15 +840,17 @@ public final class HiveMetastoreUtil {
 
   public static Connection getHiveConnection(
       final String jdbcUrl,
-      final UserGroupInformation loginUgi
+      final UserGroupInformation loginUgi,
+      final List<ConnectionPropertyBean> driverProperties
   ) throws StageException {
+
+    Properties resolvedDriverProperties = new Properties();
+    for(ConnectionPropertyBean bean : driverProperties) {
+      resolvedDriverProperties.setProperty(bean.property, bean.value.get());
+    }
+
     try {
-      return loginUgi.doAs(new PrivilegedExceptionAction<Connection>() {
-        @Override
-        public Connection run() throws SQLException {
-          return DriverManager.getConnection(jdbcUrl);
-        }
-      });
+      return loginUgi.doAs((PrivilegedExceptionAction<Connection>) () -> DriverManager.getConnection(jdbcUrl, resolvedDriverProperties));
     } catch (Exception e) {
       LOG.error("Failed to connect to Hive with JDBC URL:" + jdbcUrl, e);
       throw new StageException(Errors.HIVE_22, jdbcUrl, e.getMessage());

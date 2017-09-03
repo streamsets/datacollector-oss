@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.lib.hive;
 import com.google.common.base.Joiner;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +66,18 @@ public class HiveConfigBean {
       group = "HIVE"
   )
   public String hiveJDBCDriver;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "[]",
+      label = "Additional JDBC Configuration Properties",
+      description = "Additional properties to pass to the underlying JDBC driver.",
+      displayPosition = 30,
+      group = "HIVE"
+  )
+  @ListBeanModel
+  public List<ConnectionPropertyBean> driverProperties = new ArrayList<>();
 
   @ConfigDef(
       required = false,
@@ -122,7 +136,7 @@ public class HiveConfigBean {
   public Connection getHiveConnection() throws StageException {
     if(!HiveMetastoreUtil.isHiveConnectionValid(hiveConnection, loginUgi)) {
       LOG.info("Connection to Hive become stale, reconnecting.");
-      hiveConnection = HiveMetastoreUtil.getHiveConnection(hiveJDBCUrl, loginUgi);
+      hiveConnection = HiveMetastoreUtil.getHiveConnection(hiveJDBCUrl, loginUgi, driverProperties);
     }
     return hiveConnection;
   }

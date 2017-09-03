@@ -162,7 +162,11 @@ public abstract class BaseHiveIT {
 
     // JDBC Connection to Hive
     Class.forName(HIVE_JDBC_DRIVER);
-    hiveConnection = HiveMetastoreUtil.getHiveConnection(getHiveJdbcUrl(), HadoopSecurityUtil.getLoginUser(conf));
+    hiveConnection = HiveMetastoreUtil.getHiveConnection(
+      getHiveJdbcUrl(),
+      HadoopSecurityUtil.getLoginUser(conf),
+      Collections.emptyList()
+    );
 
     // And finally we're initialized
     isHiveInitialized = true;
