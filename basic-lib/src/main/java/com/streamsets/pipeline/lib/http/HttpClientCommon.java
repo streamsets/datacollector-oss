@@ -91,6 +91,13 @@ public class HttpClientCommon {
     headerVars = context.createELVars();
     headerEval = context.createELEval(HEADER_CONFIG_NAME);
 
+    String proxyUsername = null;
+    String proxyPassword = null;
+    if(jerseyClientConfig.useProxy) {
+      proxyUsername = jerseyClientConfig.proxy.resolveUsername(context, Groups.PROXY.name(), "conf.client.proxy.", issues);
+      proxyPassword = jerseyClientConfig.proxy.resolvePassword(context, Groups.PROXY.name(), "conf.client.proxy.", issues);
+    }
+
     jerseyClientConfig.init(context, Groups.PROXY.name(), "conf.client.", issues);
     // Validation succeeded so configure the client.
     if (issues.isEmpty()) {
@@ -99,15 +106,27 @@ public class HttpClientCommon {
           .property(ClientProperties.READ_TIMEOUT, jerseyClientConfig.readTimeoutMillis)
           .property(ClientProperties.ASYNC_THREADPOOL_SIZE, jerseyClientConfig.numThreads)
           .property(ClientProperties.REQUEST_ENTITY_PROCESSING, jerseyClientConfig.transferEncoding)
-          .property(ClientProperties.USE_ENCODING, jerseyClientConfig.httpCompression.getValue())
-          .connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(jerseyClientConfig)));
+          .property(ClientProperties.USE_ENCODING, jerseyClientConfig.httpCompression.getValue());
+
+      if(jerseyClientConfig.useProxy) {
+          clientConfig = clientConfig.connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(
+            jerseyClientConfig.useProxy,
+            proxyUsername,
+            proxyPassword
+          )));
+      }
 
       ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
       configureCompression(clientBuilder);
 
       if (jerseyClientConfig.useProxy) {
-        JerseyClientUtil.configureProxy(jerseyClientConfig.proxy, clientBuilder);
+        JerseyClientUtil.configureProxy(
+          jerseyClientConfig.proxy.uri,
+          proxyUsername,
+          proxyPassword,
+          clientBuilder
+        );
       }
 
       JerseyClientUtil.configureSslContext(jerseyClientConfig.tlsConfig, clientBuilder);

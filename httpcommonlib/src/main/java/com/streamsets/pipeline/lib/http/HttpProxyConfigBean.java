@@ -15,8 +15,12 @@
  */
 package com.streamsets.pipeline.lib.http;
 
-import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.ConfigDef;
+
+import java.util.List;
 
 public class HttpProxyConfigBean {
   @ConfigDef(
@@ -32,25 +36,80 @@ public class HttpProxyConfigBean {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       dependsOn = "useProxy^",
       triggeredByValue = "true",
       displayPosition = 20,
-      elDefs = VaultEL.class,
       group = "#0"
   )
-  public String username = "";
+  public CredentialValue username = () -> "";
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       dependsOn = "useProxy^",
       triggeredByValue = "true",
       displayPosition = 30,
-      elDefs = VaultEL.class,
       group = "#0"
   )
-  public String password = ""; // NOSONAR
+  public CredentialValue password = () -> "";
+
+  public String resolveUsername(
+    Stage.Context context,
+    String groupName,
+    String prefix,
+    List<Stage.ConfigIssue> issues
+  ) {
+    return resolveCredential(
+      username,
+      "username",
+      context,
+      groupName,
+      prefix,
+      issues
+    );
+  }
+
+  public String resolvePassword(
+    Stage.Context context,
+    String groupName,
+    String prefix,
+    List<Stage.ConfigIssue> issues
+  ) {
+    return resolveCredential(
+      password,
+      "password",
+      context,
+      groupName,
+      prefix,
+      issues
+    );
+  }
+
+  private String resolveCredential(
+    CredentialValue credentialValue,
+    String property,
+    Stage.Context context,
+    String groupName,
+    String prefix,
+    List<Stage.ConfigIssue> issues
+  ) {
+    if(credentialValue == null) {
+      return null;
+    }
+
+    try {
+      return credentialValue.get();
+    } catch (StageException e) {
+      issues.add(context.createConfigIssue(
+        groupName,
+        prefix + property,
+        Errors.HTTP_29,
+        property,
+        e.toString()));
+      return null;
+    }
+  }
 }

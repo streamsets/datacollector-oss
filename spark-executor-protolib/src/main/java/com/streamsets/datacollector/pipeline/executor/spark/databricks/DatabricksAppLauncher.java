@@ -83,30 +83,50 @@ public class DatabricksAppLauncher implements AppLauncher {
     com.streamsets.pipeline.lib.http.HttpProxyConfigBean proxyConf = databricksConfigBean.proxyConfigBean
         .getUnderlyingConfig();
 
-    ClientConfig clientConfig = new ClientConfig()
-        .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
-        .property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED)
-        .connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(
-            !StringUtils.isEmpty(proxyConf.uri),
-            proxyConf.username,
-            proxyConf.password
-        )));
+    boolean useProxy = !StringUtils.isEmpty(proxyConf.uri);
+    String proxyUsername = null;
+    String proxyPassword = null;
+    if(useProxy) {
+      proxyUsername = proxyConf.resolveUsername(context, "PROXY", "conf.databricksConfigBean.proxyConfigBean.", issues);
+      proxyPassword = proxyConf.resolvePassword(context, "PROXY", "conf.databricksConfigBean.proxyConfigBean.", issues);
+    }
 
-    HttpAuthenticationFeature auth = configs.credentialsConfigBean.init();
-    ClientBuilder builder = getClientBuilder()
+    if(issues.isEmpty()) {
+      ClientConfig clientConfig = new ClientConfig()
+        .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
+        .property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED);
+
+      if(useProxy) {
+       clientConfig = clientConfig.connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(
+           useProxy,
+           proxyUsername,
+           proxyPassword
+        )));
+      }
+
+      HttpAuthenticationFeature auth = configs.credentialsConfigBean.init();
+      ClientBuilder builder = getClientBuilder()
         .withConfig(clientConfig)
         .register(JacksonJsonProvider.class);
 
-    if (auth != null) {
-      builder.register(auth);
+      if (auth != null) {
+        builder.register(auth);
+      }
+
+      JerseyClientUtil.configureSslContext(databricksConfigBean.sslConfigBean.getUnderlyingConfig(), builder);
+
+      if(useProxy) {
+        JerseyClientUtil.configureProxy(
+          proxyConf.uri,
+          proxyUsername,
+          proxyPassword,
+          builder
+        );
+      }
+
+      client = builder.build();
+      validateWithDatabricks(context, issues);
     }
-
-    JerseyClientUtil.configureSslContext(databricksConfigBean.sslConfigBean.getUnderlyingConfig(), builder);
-
-    JerseyClientUtil.configureProxy(proxyConf, builder);
-
-    client = builder.build();
-    validateWithDatabricks(context, issues);
     return issues;
   }
 

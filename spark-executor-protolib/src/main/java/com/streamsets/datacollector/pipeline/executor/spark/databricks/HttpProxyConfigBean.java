@@ -16,7 +16,7 @@
 package com.streamsets.datacollector.pipeline.executor.spark.databricks;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.apache.commons.lang3.StringUtils;
 
 public class HttpProxyConfigBean {
@@ -33,25 +33,23 @@ public class HttpProxyConfigBean {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       dependsOn = "clusterManager^^",
       triggeredByValue = "DATABRICKS",
-      elDefs = VaultEL.class,
       group = "PROXY"
   )
-  public String username = "";
+  public CredentialValue username = () -> "";
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       dependsOn = "clusterManager^^",
       triggeredByValue = "DATABRICKS",
-      elDefs = VaultEL.class,
       group = "PROXY"
   )
-  public String password = ""; // NOSONAR
+  public CredentialValue password = () -> "";
 
   private com.streamsets.pipeline.lib.http.HttpProxyConfigBean underlying;
 

@@ -49,6 +49,7 @@ public enum Errors implements ErrorCode {
   HTTP_26("Algorithm '{}' is unavailable"),
   HTTP_27("Key is invalid: {}"),
   HTTP_28("Exception in post processing or cleanup: {}"),
+  HTTP_29("Can't resolve credential value for {}: {}"),
 
 
   // HTTP Target

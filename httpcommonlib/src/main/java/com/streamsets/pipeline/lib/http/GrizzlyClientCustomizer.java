@@ -37,12 +37,6 @@ public class GrizzlyClientCustomizer implements GrizzlyConnectorProvider.AsyncCl
   private final String username;
   private final String password;
 
-  public GrizzlyClientCustomizer(JerseyClientConfigBean conf) {
-    this.useProxy = conf.useProxy;
-    this.username = conf.proxy.username;
-    this.password = conf.proxy.password;
-  }
-
   public GrizzlyClientCustomizer(boolean useProxy, String username, String password) {
     this.useProxy = useProxy;
     this.username = username;

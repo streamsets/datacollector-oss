@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.http;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.SslConfigurator;
@@ -85,20 +86,25 @@ public class JerseyClientUtil {
     }
   }
 
-  public static ClientBuilder configureProxy(HttpProxyConfigBean conf, ClientBuilder clientBuilder) {
-    if (!StringUtils.isEmpty(conf.uri)) {
-      clientBuilder.property(ClientProperties.PROXY_URI, conf.uri);
-      LOG.debug("Using Proxy: '{}'", conf.uri);
+  public static ClientBuilder configureProxy(
+    String uri,
+    String username,
+    String password,
+    ClientBuilder clientBuilder
+  ) {
+    if (!StringUtils.isEmpty(uri)) {
+      clientBuilder.property(ClientProperties.PROXY_URI, uri);
+      LOG.debug("Using Proxy: '{}'", uri);
     } else { // No proxy URI, then return
       return clientBuilder;
     }
-    if (!StringUtils.isEmpty(conf.username)) {
-      clientBuilder.property(ClientProperties.PROXY_USERNAME, conf.username);
-      LOG.debug("Using Proxy Username: '{}'", conf.username);
+    if (!StringUtils.isEmpty(username)) {
+      clientBuilder.property(ClientProperties.PROXY_USERNAME, username);
+      LOG.debug("Using Proxy Username: '{}'", username);
     }
-    if (!StringUtils.isEmpty(conf.password)) {
-      clientBuilder.property(ClientProperties.PROXY_PASSWORD, conf.password);
-      LOG.debug("Using Proxy Password: '{}'", conf.password);
+    if (!StringUtils.isEmpty(password)) {
+      clientBuilder.property(ClientProperties.PROXY_PASSWORD, password);
+      LOG.debug("Using Proxy Password: '{}'", password);
     }
 
     return clientBuilder;

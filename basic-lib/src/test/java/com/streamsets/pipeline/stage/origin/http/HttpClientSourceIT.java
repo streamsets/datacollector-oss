@@ -74,6 +74,7 @@ import java.security.KeyPairGenerator;
 import java.security.Signature;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -655,8 +656,11 @@ public class HttpClientSourceIT extends JerseyTest {
         .build();
     runner.runInit();
 
+    int batchId = -1;
+
     try {
       for (String[] expectedNames : expectedNameBatches) {
+        batchId++;
         StageRunner.Output output = runner.runProduce(null, 1000);
         Map<String, List<Record>> recordMap = output.getRecords();
         List<Record> parsedRecords = new ArrayList<>(recordMap.get("lane"));
@@ -667,7 +671,7 @@ public class HttpClientSourceIT extends JerseyTest {
         }
 
 
-        assertEquals(expectedNames.length, parsedRecords.size());
+        assertEquals("Expected size different fot batch id: " + batchId, expectedNames.length, parsedRecords.size());
 
         for (int i = 0; i < parsedRecords.size(); i++) {
           if (dataFormat == DataFormat.JSON || dataFormat == DataFormat.XML) {
@@ -930,7 +934,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.resourceUrl = getBaseUri() + "stream/slow-stream";
     conf.client.readTimeoutMillis = (int)SLOW_STREAM_UNIT_TIME*3;
     conf.basic.maxBatchSize = 3;
-    conf.basic.maxWaitTime = 10000;
+    conf.basic.maxWaitTime = 700;
     conf.pollingInterval = 1000;
     conf.httpMethod = HttpMethod.GET;
     conf.dataFormat = DataFormat.JSON;
@@ -1161,10 +1165,14 @@ public class HttpClientSourceIT extends JerseyTest {
 
       for (int i = 0; i < parsedRecords.size(); i++) {
         assertTrue(parsedRecords.get(i).has("/name"));
-        // Grizzly is from some reason lower-casing the header attribute names. That is however correct as RFC 2616 clearly
-        // states that header names are case-insensitive.
-        assertEquals("StreamSets", parsedRecords.get(i).getHeader().getAttribute("x-test-header"));
-        assertEquals("[a, b]", parsedRecords.get(i).getHeader().getAttribute("x-list-header"));
+
+        // Grizzly might lower-case the header attribute names on some platforms/versions. That is however correct
+        // as RFC 2616 clearly states that header names are case-insensitive.
+        Map<String, Object> lowerCasedKeys = new HashMap<>();
+        parsedRecords.get(i).getHeader().getAllAttributes().forEach((k, v) -> lowerCasedKeys.put(k.toLowerCase(), v));
+
+        assertEquals("StreamSets", lowerCasedKeys.get("x-test-header"));
+        assertEquals("[a, b]", lowerCasedKeys.get("x-list-header"));
         assertEquals(EXPECTED_NAMES[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
       }
     } finally {

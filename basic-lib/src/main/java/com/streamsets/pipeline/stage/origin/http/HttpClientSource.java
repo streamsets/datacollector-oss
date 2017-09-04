@@ -231,17 +231,36 @@ public class HttpClientSource extends BaseSource {
    * Helper method to apply Jersey client configuration properties.
    */
   private void configureClient(List<ConfigIssue> issues) {
+    String proxyUsername = null;
+    String proxyPassword = null;
+    if(conf.client.useProxy) {
+      proxyUsername = conf.client.proxy.resolveUsername(getContext(), Groups.PROXY.name(), "conf.client.proxy.", issues);
+      proxyPassword = conf.client.proxy.resolvePassword(getContext(), Groups.PROXY.name(), "conf.client.proxy.", issues);
+    }
+
     ClientConfig clientConfig = new ClientConfig()
         .property(ClientProperties.CONNECT_TIMEOUT, conf.client.connectTimeoutMillis)
         .property(ClientProperties.READ_TIMEOUT, conf.client.readTimeoutMillis)
         .property(ClientProperties.ASYNC_THREADPOOL_SIZE, 1)
-        .property(ClientProperties.REQUEST_ENTITY_PROCESSING, conf.client.transferEncoding)
-        .connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(conf.client)));
+        .property(ClientProperties.REQUEST_ENTITY_PROCESSING, conf.client.transferEncoding);
+
+    if(conf.client.useProxy) {
+      clientConfig = clientConfig.connectorProvider(new GrizzlyConnectorProvider(new GrizzlyClientCustomizer(
+        conf.client.useProxy,
+        proxyUsername,
+        proxyPassword
+      )));
+    }
 
     clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
     if (conf.client.useProxy) {
-      JerseyClientUtil.configureProxy(conf.client.proxy, clientBuilder);
+      JerseyClientUtil.configureProxy(
+        conf.client.proxy.uri,
+        proxyPassword,
+        proxyUsername,
+        clientBuilder
+      );
     }
 
     JerseyClientUtil.configureSslContext(conf.client.tlsConfig, clientBuilder);
