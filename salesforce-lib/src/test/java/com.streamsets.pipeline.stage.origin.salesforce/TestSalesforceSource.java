@@ -358,8 +358,8 @@ public class TestSalesforceSource {
   private ForceSourceConfigBean getForceSourceConfig() {
     ForceSourceConfigBean conf = new ForceSourceConfigBean();
 
-    conf.username = username;
-    conf.password = password;
+    conf.username = () -> username;
+    conf.password = () -> password;
     conf.authEndpoint = authEndpoint;
     conf.apiVersion = apiVersion;
     conf.basicConfig.maxBatchSize = maxBatchSize;

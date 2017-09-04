@@ -83,7 +83,11 @@ public class ForceTarget extends BaseTarget {
   private class ForceSessionRenewer implements SessionRenewer {
     @Override
     public SessionRenewalHeader renewSession(ConnectorConfig config) throws ConnectionException {
-      partnerConnection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer()));
+      try {
+        partnerConnection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer()));
+      } catch (StageException e) {
+        throw new ConnectionException("Can't create partner config", e);
+      }
 
       SessionRenewalHeader header = new SessionRenewalHeader();
       header.name = new QName("urn:enterprise.soap.sforce.com", "SessionHeader");
@@ -140,7 +144,7 @@ public class ForceTarget extends BaseTarget {
         partnerConnection = Connector.newConnection(partnerConfig);
         bulkConnection = ForceUtils.getBulkConnection(partnerConfig, conf);
         LOG.info("Successfully authenticated as {}", conf.username);
-      } catch (ConnectionException | AsyncApiException ce) {
+      } catch (ConnectionException | AsyncApiException | StageException ce) {
         LOG.error("Can't connect to SalesForce", ce);
         issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
             "connectorConfig",

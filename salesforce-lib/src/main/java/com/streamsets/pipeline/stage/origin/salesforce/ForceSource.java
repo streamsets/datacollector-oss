@@ -134,7 +134,11 @@ public class ForceSource extends BaseSource {
     public SessionRenewalHeader renewSession(ConnectorConfig config) throws ConnectionException {
       LOG.info("Renewing Salesforce session");
 
-      partnerConnection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer()));
+      try {
+        partnerConnection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer()));
+      } catch (StageException e) {
+        throw new ConnectionException("Can't create partner config", e);
+      }
 
       SessionRenewalHeader header = new SessionRenewalHeader();
       header.name = new QName("urn:enterprise.soap.sforce.com", "SessionHeader");
@@ -193,7 +197,7 @@ public class ForceSource extends BaseSource {
             ));
           }
         }
-      } catch (ConnectionException | AsyncApiException e) {
+      } catch (ConnectionException | AsyncApiException | StageException e) {
         LOG.error("Error connecting: {}", e);
         issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
             ForceConfigBean.CONF_PREFIX + "authEndpoint",

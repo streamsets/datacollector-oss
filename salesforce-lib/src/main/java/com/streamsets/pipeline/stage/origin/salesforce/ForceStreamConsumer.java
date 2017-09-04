@@ -204,9 +204,12 @@ public class ForceStreamConsumer {
       if (conf.useProxyCredentials) {
         URI proxyURI = new URI("http", null, conf.proxyHostname,
             conf.proxyPort, null, null, null);
-        httpClient.getAuthenticationStore().addAuthentication(
-            new BasicAuthentication(proxyURI, conf.proxyRealm,
-                conf.proxyUsername, conf.proxyPassword));
+        httpClient.getAuthenticationStore().addAuthentication(new BasicAuthentication(
+              proxyURI,
+              conf.proxyRealm.get(),
+              conf.proxyUsername.get(),
+              conf.proxyPassword.get()
+        ));
       }
     }
     httpClient.start();

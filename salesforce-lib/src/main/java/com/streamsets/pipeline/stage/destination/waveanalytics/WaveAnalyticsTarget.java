@@ -91,7 +91,12 @@ public class WaveAnalyticsTarget extends BaseTarget {
   private class WaveSessionRenewer implements SessionRenewer {
     @Override
     public SessionRenewalHeader renewSession(ConnectorConfig config) throws ConnectionException {
-      connection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new WaveSessionRenewer()));
+      try {
+        connection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new WaveSessionRenewer()));
+      } catch (StageException e) {
+        throw new ConnectionException("Can't create partner config", e);
+      }
+
       SessionRenewalHeader header = new SessionRenewalHeader();
       header.name = new QName("urn:enterprise.soap.sforce.com", "SessionHeader");
       header.headerElement = connection.getSessionHeader();
@@ -415,7 +420,7 @@ public class WaveAnalyticsTarget extends BaseTarget {
 
       String soapEndpoint = connection.getConfig().getServiceEndpoint();
       restEndpoint = soapEndpoint.substring(0, soapEndpoint.indexOf("services/Soap/"));
-    } catch (ConnectionException ce) {
+    } catch (ConnectionException | StageException ce) {
       issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
           ForceConfigBean.CONF_PREFIX + "authEndpoint",
           Errors.WAVE_00,

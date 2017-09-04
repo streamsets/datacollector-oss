@@ -79,7 +79,11 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
   public class ForceSessionRenewer implements SessionRenewer {
     @Override
     public SessionRenewalHeader renewSession(ConnectorConfig config) throws ConnectionException {
-      partnerConnection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new ForceLookupProcessor.ForceSessionRenewer()));
+      try {
+        partnerConnection = Connector.newConnection(ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer()));
+      } catch (StageException e) {
+        throw new ConnectionException("Can't create partner config", e);
+      }
 
       SessionRenewalHeader header = new SessionRenewalHeader();
       header.name = new QName("urn:enterprise.soap.sforce.com", "SessionHeader");
@@ -101,7 +105,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
         ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new ForceLookupProcessor.ForceSessionRenewer());
 
         partnerConnection = new PartnerConnection(partnerConfig);
-      } catch (ConnectionException e) {
+      } catch (ConnectionException | StageException e) {
         LOG.error("Error connecting: {}", e);
         issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
             "connectorConfig",

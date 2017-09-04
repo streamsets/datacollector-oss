@@ -102,21 +102,21 @@ public class ForceUtils {
     return (th instanceof ApiFault) ? ((ApiFault) th).getExceptionMessage() : th.getMessage();
   }
 
-  private static void setProxyConfig(ForceConfigBean conf, ConnectorConfig config) {
+  private static void setProxyConfig(ForceConfigBean conf, ConnectorConfig config) throws StageException {
     if (conf.useProxy) {
       config.setProxy(conf.proxyHostname, conf.proxyPort);
       if (conf.useProxyCredentials) {
-        config.setProxyUsername(conf.proxyUsername);
-        config.setProxyPassword(conf.proxyPassword);
+        config.setProxyUsername(conf.proxyUsername.get());
+        config.setProxyPassword(conf.proxyPassword.get());
       }
     }
   }
 
-  public static ConnectorConfig getPartnerConfig(ForceConfigBean conf, SessionRenewer sessionRenewer) {
+  public static ConnectorConfig getPartnerConfig(ForceConfigBean conf, SessionRenewer sessionRenewer) throws StageException {
     ConnectorConfig config = new ConnectorConfig();
 
-    config.setUsername(conf.username);
-    config.setPassword(conf.password);
+    config.setUsername(conf.username.get());
+    config.setPassword(conf.password.get());
     config.setAuthEndpoint("https://"+conf.authEndpoint+"/services/Soap/u/"+conf.apiVersion);
     config.setCompression(conf.useCompression);
     config.setTraceMessage(conf.showTrace);
@@ -127,8 +127,10 @@ public class ForceUtils {
     return config;
   }
 
-  public static BulkConnection getBulkConnection(ConnectorConfig partnerConfig, ForceConfigBean conf) throws ConnectionException,
-      AsyncApiException {
+  public static BulkConnection getBulkConnection(
+      ConnectorConfig partnerConfig,
+      ForceConfigBean conf
+  ) throws ConnectionException, AsyncApiException, StageException {
     // When PartnerConnection is instantiated, a login is implicitly
     // executed and, if successful,
     // a valid session is stored in the ConnectorConfig instance.
