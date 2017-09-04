@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 
 public class S3SSEConfigBean {
@@ -39,7 +38,6 @@ public class S3SSEConfigBean {
       description = "256-bit, base64-encoded encryption key for Amazon S3 to use to encrypt or decrypt your data",
       defaultValue = "",
       displayPosition = 20,
-      elDefs = VaultEL.class,
       dependsOn = "useCustomerSSEKey",
       triggeredByValue = "true",
       group = "#0"
@@ -53,7 +51,6 @@ public class S3SSEConfigBean {
       description = "Base64-encoded 128-bit MD5 digest of the encryption key according to RFC 1321",
       defaultValue = "",
       displayPosition = 30,
-      elDefs = VaultEL.class,
       dependsOn = "useCustomerSSEKey",
       triggeredByValue = "true",
       group = "#0"

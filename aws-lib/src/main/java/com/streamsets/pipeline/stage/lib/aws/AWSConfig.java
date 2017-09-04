@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.lib.aws;
 
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
@@ -30,7 +29,6 @@ public class AWSConfig {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Access Key ID",
       displayPosition = -110,
-      elDefs = VaultEL.class,
       group = "#0"
   )
   public CredentialValue awsAccessKeyId;
@@ -40,7 +38,6 @@ public class AWSConfig {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Secret Access Key",
       displayPosition = -100,
-      elDefs = VaultEL.class,
       group = "#0"
   )
   public CredentialValue awsSecretAccessKey;

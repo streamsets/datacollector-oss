@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 
 import java.util.ArrayList;

@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.destination.s3;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.lib.aws.SSEChooserValues;
@@ -63,7 +62,6 @@ public class S3TargetSSEConfigBean {
       description = "AWS KMS master encryption key that was used for the object. " +
           "The KMS key you specify in the policy must use the \"arn:aws:kms:region:acct-id:key/key-id\" format.",
       displayPosition = 30,
-      elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "KMS",
       group = "#0"
@@ -76,7 +74,6 @@ public class S3TargetSSEConfigBean {
       label = "Encryption Context",
       description = "Set of key-value pairs that you can pass to AWS KMS",
       displayPosition = 40,
-      elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "KMS",
       group = "#0"
@@ -90,7 +87,6 @@ public class S3TargetSSEConfigBean {
       label = "Customer Encryption Key",
       description = "256-bit, base64-encoded encryption key for Amazon S3 to use to encrypt or decrypt your data",
       displayPosition = 50,
-      elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "CUSTOMER",
       group = "#0"
@@ -103,7 +99,6 @@ public class S3TargetSSEConfigBean {
       label = "Customer Encryption Key MD5",
       description = "Base64-encoded 128-bit MD5 digest of the encryption key according to RFC 1321",
       displayPosition = 60,
-      elDefs = VaultEL.class,
       dependsOn = "encryption",
       triggeredByValue = "CUSTOMER",
       group = "#0"

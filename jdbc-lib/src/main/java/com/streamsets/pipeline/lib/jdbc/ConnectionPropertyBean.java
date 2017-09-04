@@ -17,7 +17,6 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.lib.el.VaultEL;
 
 public class ConnectionPropertyBean {
   @ConfigDef(
@@ -34,7 +33,6 @@ public class ConnectionPropertyBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Value",
       displayPosition = 20,
-      elDefs = VaultEL.class,
       group = "JDBC"
   )
   public CredentialValue value;

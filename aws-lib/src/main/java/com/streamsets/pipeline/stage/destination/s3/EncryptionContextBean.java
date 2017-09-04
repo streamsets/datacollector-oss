@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.destination.s3;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.lib.el.VaultEL;
 
 public class EncryptionContextBean {
   @ConfigDef(
@@ -32,8 +31,7 @@ public class EncryptionContextBean {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Value",
-      displayPosition = 20,
-      elDefs = VaultEL.class
+      displayPosition = 20
   )
   public CredentialValue value;
 
