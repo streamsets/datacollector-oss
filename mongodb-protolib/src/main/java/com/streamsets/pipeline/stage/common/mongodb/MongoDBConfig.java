@@ -26,10 +26,11 @@ import com.mongodb.ServerAddress;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -100,28 +101,26 @@ public class MongoDBConfig {
   public AuthenticationType authenticationType;
 
   @ConfigDef(
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       required = true,
       dependsOn = "authenticationType",
       triggeredByValue = {"USER_PASS","LDAP"},
       group = "CREDENTIALS",
-      displayPosition = 50,
-      elDefs = VaultEL.class
+      displayPosition = 50
   )
-  public String username;
+  public CredentialValue username;
 
   @ConfigDef(
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       required = true,
       dependsOn = "authenticationType",
       triggeredByValue = {"USER_PASS","LDAP"},
       group = "CREDENTIALS",
-      displayPosition = 60,
-      elDefs = VaultEL.class
+      displayPosition = 60
   )
-  public String password;
+  public CredentialValue password;
 
   // Advanced configs
 
@@ -424,7 +423,18 @@ public class MongoDBConfig {
     }
 
     MongoClient mongoClient = null;
-    List<MongoCredential> credentials = createCredentials();
+    List<MongoCredential> credentials;
+    try {
+      credentials = createCredentials();
+    } catch (StageException ex) {
+      issues.add(context.createConfigIssue(
+          Groups.MONGODB.name(),
+          MONGO_CONFIG_PREFIX + "connectionString",
+          Errors.MONGODB_34,
+          ex.toString()
+      ));
+      return null;
+    }
 
     if (credentials.isEmpty()) {
       Optional.ofNullable(mongoURI.getCredentials()).ifPresent(credentials::add);
@@ -498,15 +508,15 @@ public class MongoDBConfig {
     return mongoCollection;
   }
 
-  private List<MongoCredential> createCredentials() {
+  private List<MongoCredential> createCredentials() throws StageException {
     MongoCredential credential = null;
     List<MongoCredential> credentials = new ArrayList<>(1);
     switch (authenticationType) {
       case USER_PASS:
-        credential = MongoCredential.createCredential(username, database, password.toCharArray());
+        credential = MongoCredential.createCredential(username.get(), database, password.get().toCharArray());
         break;
       case LDAP:
-        credential = MongoCredential.createCredential(username, "$external", password.toCharArray());
+        credential = MongoCredential.createCredential(username.get(), "$external", password.get().toCharArray());
         break;
       case NONE:
       default:
