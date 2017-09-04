@@ -128,6 +128,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   private final long startTime;
   private final LineagePublisherDelegator lineagePublisherDelegator;
   private PipelineFinisherDelegate pipelineFinisherDelegate;
+  private RuntimeInfo runtimeInfo;
 
   //for SDK
   public StageContext(
@@ -237,6 +238,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.pipelineMaxMemory = pipelineMaxMemory;
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
+    this.runtimeInfo = runtimeInfo;
     this.resourcesDir = runtimeInfo.getResourcesDir();
     this.sdcId = runtimeInfo.getId();
     this.emailSender = emailSender;
@@ -618,7 +620,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
         startTime,
         pipelineId,
         getSdcId(),
-        "http://streamsets.com",
+        runtimeInfo.getBaseHttpUrl() + LineageEventImpl.PARTIAL_URL + pipelineId,
         stageInfo.getInstanceName()
     );
 

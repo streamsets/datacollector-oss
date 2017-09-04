@@ -229,7 +229,7 @@ public class Pipeline {
 
     // Publish LineageEvent first...
     if(productionExecution) {
-      LineageEvent event = createLineageEvent(LineageEventType.START);
+      LineageEvent event = createLineageEvent(LineageEventType.START, runner.getRuntimeInfo().getBaseHttpUrl());
       lineagePublisherTask.publishEvent(event);
     }
 
@@ -476,7 +476,7 @@ public class Pipeline {
     }
 
     if(productionExecution) {
-      LineageEvent event = createLineageEvent(LineageEventType.STOP);
+      LineageEvent event = createLineageEvent(LineageEventType.STOP, runner.getRuntimeInfo().getBaseHttpUrl());
       Map<String, String> props = new HashMap<>();
       props.put("Pipeline_Stop_Reason", stopReason.name());
       event.setProperties(props);
@@ -1051,7 +1051,7 @@ public class Pipeline {
     return eventRecord;
   }
 
-  private LineageEvent createLineageEvent(LineageEventType type) {
+  private LineageEvent createLineageEvent(LineageEventType type, String partURL) {
     if (!type.isFrameworkOnly()) {
       throw new IllegalArgumentException(Utils.format(ContainerError.CONTAINER_01402.getMessage(), type.getLabel()));
     }
@@ -1063,7 +1063,7 @@ public class Pipeline {
         startTime,
         pipelineConf.getPipelineId(),
         runner.getRuntimeInfo().getId(),
-        "http://streamsets.com",
+        partURL + LineageEventImpl.PARTIAL_URL + pipelineConf.getPipelineId(),
         FRAMEWORK_NAME
     );
   }

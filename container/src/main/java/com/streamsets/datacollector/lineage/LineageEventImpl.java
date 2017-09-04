@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class LineageEventImpl implements LineageEvent {
+  public static final String PARTIAL_URL = "/collector/pipeline/";
   private Map<LineageGeneralAttribute, String> generalAttributes;
   private Map<LineageSpecificAttribute, String> specificAttributes;
 
