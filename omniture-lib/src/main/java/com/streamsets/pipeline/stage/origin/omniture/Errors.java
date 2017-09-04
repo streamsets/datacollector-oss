@@ -23,7 +23,9 @@ public enum Errors implements ErrorCode {
   OMNITURE_00("Cannot parse record '{}': {}"),
   OMNITURE_01("Error fetching resource. {}"),
   OMNITURE_02("Error while fetching report ID {}: {}"),
-  OMNITURE_03("Report Description is not valid JSON")
+  OMNITURE_03("Report Description is not valid JSON"),
+  OMNITURE_04("Can't resolve credential {}: {}"),
+
   ;
 
   private final String msg;

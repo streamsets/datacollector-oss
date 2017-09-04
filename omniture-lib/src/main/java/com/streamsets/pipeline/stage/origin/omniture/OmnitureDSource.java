@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.origin.omniture;
 
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -23,7 +22,9 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
@@ -127,26 +128,23 @@ public class OmnitureDSource extends DSource {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       description = "Omniture Username",
       displayPosition = 45,
-      elDefs = VaultEL.class,
       group = "OMNITURE"
   )
-  public String username;
+  public CredentialValue username;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Shared Secret",
       description = "Omniture Shared Secret",
       displayPosition = 50,
-      elDefs = VaultEL.class,
       group = "OMNITURE"
   )
-  public String sharedSecret;
-
+  public CredentialValue sharedSecret;
 
   @ConfigDef(
       required = true,

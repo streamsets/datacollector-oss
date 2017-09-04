@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.omniture;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
@@ -51,8 +52,8 @@ class OmniturePollingConsumer implements Runnable {
 
   private final String reportDescription;
   private final long responseTimeoutMillis;
-  private final String username;
-  private final String sharedSecret;
+  private final CredentialValue username;
+  private final CredentialValue sharedSecret;
   private final BlockingQueue<String> entityQueue;
 
   private volatile boolean stop = false;
@@ -65,40 +66,51 @@ class OmniturePollingConsumer implements Runnable {
    * @param username
    * @param sharedSecret
    * @param entityQueue A queue to place received chunks (usually a single JSON object) into.
-   * @param proxySettings
    */
   public OmniturePollingConsumer(
       final String resourceUrl,
       final String reportDescription,
       final long responseTimeoutMillis,
-      final String username,
-      final String sharedSecret,
+      final CredentialValue username,
+      final CredentialValue sharedSecret,
       BlockingQueue<String> entityQueue,
-      HttpProxyConfigBean proxySettings) {
+      boolean useProxy,
+      String proxyUri,
+      String proxyUsername,
+      String proxyPassword
+  ) {
     this.responseTimeoutMillis = responseTimeoutMillis;
     this.username = username;
     this.sharedSecret = sharedSecret;
     this.reportDescription = reportDescription;
     this.entityQueue = entityQueue;
     ClientConfig config = new ClientConfig();
-    configureProxy(config, proxySettings);
+    if(useProxy) {
+      configureProxy(
+          config,
+          proxyUri,
+          proxyUsername,
+          proxyPassword
+      );
+    }
     Client client = ClientBuilder.newClient(config);
 
     queueResource = client.target(resourceUrl + "?method=Report.Queue");
     getResource = client.target(resourceUrl + "?method=Report.Get");
   }
 
-  private void configureProxy(ClientConfig config, HttpProxyConfigBean proxySettings) {
-    // Proxy is optional, so if null do nothing. We also allow for anonymous or
-    // unauthenticated connections.
-    if (proxySettings != null) {
-      config.property(ClientProperties.PROXY_URI, proxySettings.proxyUri);
-      if (proxySettings.username != null && !proxySettings.username.isEmpty()) {
-        config.property(ClientProperties.PROXY_USERNAME, proxySettings.username);
-      }
-      if (proxySettings.password != null && !proxySettings.password.isEmpty()) {
-        config.property(ClientProperties.PROXY_PASSWORD, proxySettings.password);
-      }
+  private void configureProxy(
+    ClientConfig config,
+    String proxyUri,
+    String username,
+    String password
+  ) {
+    config.property(ClientProperties.PROXY_URI, proxyUri);
+    if (username != null && !username.isEmpty()) {
+      config.property(ClientProperties.PROXY_USERNAME, username);
+    }
+    if (password != null && !password.isEmpty()) {
+      config.property(ClientProperties.PROXY_PASSWORD, password);
     }
     config.connectorProvider(new ApacheConnectorProvider());
   }
@@ -132,7 +144,7 @@ class OmniturePollingConsumer implements Runnable {
    */
   public int queueReport() throws IOException, InterruptedException, ExecutionException, TimeoutException, StageException {
     final AsyncInvoker asyncInvoker = queueResource.request()
-        .header(WSSE_HEADER, OmnitureAuthUtil.getHeader(username, sharedSecret))
+        .header(WSSE_HEADER, OmnitureAuthUtil.getHeader(username.get(), sharedSecret.get()))
         .async();
     LOG.debug("Queueing report using URL {} with description {}",
         queueResource.getUri().toURL().toString(), reportDescription);
@@ -178,7 +190,7 @@ class OmniturePollingConsumer implements Runnable {
     Response response = null;
     while (!stop) {
       final AsyncInvoker asyncInvoker = getResource.request()
-          .header(WSSE_HEADER, OmnitureAuthUtil.getHeader(username, sharedSecret))
+          .header(WSSE_HEADER, OmnitureAuthUtil.getHeader(username.get(), sharedSecret.get()))
           .async();
 
       LOG.debug("Getting report using URL {} with report ID {}", getResource.getUri().toURL().toString(), reportId);
