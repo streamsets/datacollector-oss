@@ -420,8 +420,8 @@ public class Pipeline {
         if(exception == null) {
           exception = ex;
         }
+        stopReason = PipelineStopReason.FAILURE;
       }
-      stopReason = PipelineStopReason.FAILURE;
     }
 
     try {
