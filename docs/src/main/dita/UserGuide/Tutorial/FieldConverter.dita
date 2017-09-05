@@ -66,8 +66,8 @@
                                 <row>
                                     <entry>Date Format</entry>
                                     <entry>Date format used by the data. <p>Select the following
-                                            format: <uicontrol>YYYY-MM-DD
-                                        hh:mm:ss</uicontrol>.</p></entry>
+                                            format: <uicontrol>yyyy-MM-DD
+                                        HH:mm:ss</uicontrol>.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

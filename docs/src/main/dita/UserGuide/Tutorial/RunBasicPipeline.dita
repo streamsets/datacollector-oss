@@ -25,11 +25,11 @@
         />.</shortdesc>
     <taskbody>
         <context>The console enters Monitor mode and shows summary statistics in the Monitor panel.
-            At some point as the pipeline runs, the data alert triggers. A message displays and the
-            location of the triggered data alert turns red:<p><image
-                    href="../Graphics/Tutorial-RunPipeline.png" id="image_gc3_vyr_ps" scale="55"
-                /></p><p>You can close the message and explore the information available in the
-                Monitor panel.</p><p>Note that when you select an unused part of the canvas, the
+            At some point as the pipeline runs, the data alert triggers and the location of the
+            triggered data alert turns red:<p><image href="../Graphics/Tutorial-RunPipeline.png"
+                    id="image_gc3_vyr_ps" scale="55"/></p>Click the data alert icon to view the data
+            alert notification. Then, close the notification and explore the information available
+            in the Monitor panel.<p>Note that when you select an unused part of the canvas, the
                 Monitor panel displays monitoring information for the entire pipeline. When you
                 select a stage, it displays information for the stage. </p><p>The Jython Evaluator
                 shows 40 error records. Click the error records number to see the list of cached

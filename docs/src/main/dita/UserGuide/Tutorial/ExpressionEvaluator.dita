@@ -76,7 +76,7 @@
                     we could define them as ${'credit_card_type'} and ${'N/A'}. </info>
             </step>
             <step>
-                <cmd>Link the Expression Evaluator to the Hadoop FS destination. </cmd>
+                <cmd>Link the Expression Evaluator to the Local FS destination. </cmd>
                 <info>This streams the data from this branch to the destination, merging data from
                     both branches: <p><image href="../Graphics/Tutorial-Expression.png"
                             id="image_adv_r2r_ps" scale="50"/></p></info>

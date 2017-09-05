@@ -36,8 +36,55 @@
         </context>
         <steps id="steps_lnv_lfm_ls">
             <step>
-                <cmd>Add a <uicontrol>Jython Evaluator</uicontrol> processor to the canvas and
-                    connect the first output location of the Stream Selector to it.</cmd>
+                <cmd>Add a <uicontrol>Jython Evaluator</uicontrol> processor to the canvas.</cmd>
+                <info>
+                    <p>If the Jython Evaluator processor isn’t listed in the stage library, you’ll
+                        need to install the Jython stage library first. By default, a full <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> installation includes the Jython stage library. The core installation
+                        does not include the Jython stage library.</p>
+                </info>
+                <substeps id="substeps_yhd_f2z_1bb">
+                    <substep>
+                        <cmd>In the <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> top right toolbar, click the <uicontrol>Package Manager</uicontrol>
+                            icon:</cmd>
+                        <info><image href="../Graphics/PackageManager-iconrow.png"
+                                id="image_nw1_2gz_d1b" scale="50"/></info>
+                    </substep>
+                    <substep>
+                        <cmd>In the Package Manager search field, type “jy” so that the Package
+                            Manager displays the Jython stage library:</cmd>
+                        <info><image href="../Graphics/Tutorial_JythonStageLib.png" scale="60"
+                                id="image_l2r_hfz_1bb"/></info>
+                    </substep>
+                    <substep>
+                        <cmd>Select the library, click the <uicontrol>Install</uicontrol> icon
+                                (<image href="../Graphics/icon_InstallLib.png" scale="70"
+                                id="image_zmh_lfz_1bb"/>), and then click
+                                <uicontrol>Install</uicontrol> to confirm your choice.</cmd>
+                        <info><ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> installs the external library and displays a message offering to
+                                restart <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            />. </info>
+                    </substep>
+                    <substep>
+                        <cmd>Click <uicontrol>Restart Data Collector</uicontrol>.</cmd>
+                    </substep>
+                    <substep>
+                        <cmd>After <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> restarts, open the tutorial pipeline in the canvas and then add a
+                            Jython Evaluator processor to the canvas.</cmd>
+                    </substep>
+                </substeps>
+            </step>
+            <step>
+                <cmd>Connect the first output location of the Stream Selector to the Jython
+                    Evaluator.</cmd>
                 <info>This routes records paid by credit card to the Jython Evaluator. </info>
             </step>
             <step>
