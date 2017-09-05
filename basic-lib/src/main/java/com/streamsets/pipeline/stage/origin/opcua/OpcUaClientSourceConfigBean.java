@@ -212,4 +212,7 @@ public class OpcUaClientSourceConfigBean {
   )
   public long refreshNodeIdsInterval = 3600;
 
+  @ConfigDefBean
+  public OpcUaClientSourceChannelConfigBean channelConf;
+
 }

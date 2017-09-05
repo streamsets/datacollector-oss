@@ -35,6 +35,7 @@ import org.eclipse.milo.opcua.stack.client.UaTcpStackClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.StatusCodes;
+import org.eclipse.milo.opcua.stack.core.channel.ChannelConfig;
 import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.ByteString;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
@@ -186,9 +187,17 @@ public class OpcUaClientSource implements PushSource {
         .filter(e -> e.getSecurityPolicyUri().equals(securityPolicy.getSecurityPolicyUri()))
         .findFirst().orElseThrow(() -> new StageException(Errors.OPC_UA_01));
 
+    ChannelConfig channelConfig = new ChannelConfig(
+        conf.channelConf.maxChunkSize,
+        conf.channelConf.maxChunkCount,
+        conf.channelConf.maxMessageSize,
+        conf.channelConf.maxArrayLength,
+        conf.channelConf.maxStringLength
+    );
     OpcUaClientConfigBuilder clientConfigBuilder = OpcUaClientConfig.builder()
         .setApplicationName(LocalizedText.english(conf.applicationName))
-        .setApplicationUri(conf.applicationUri);
+        .setApplicationUri(conf.applicationUri)
+        .setChannelConfig(channelConfig);
 
     if (!securityPolicy.equals(SecurityPolicy.None)) {
       KeyStore keyStore = conf.tlsConfig.getKeyStore();
