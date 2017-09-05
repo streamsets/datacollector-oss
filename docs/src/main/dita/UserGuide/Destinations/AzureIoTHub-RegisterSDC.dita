@@ -58,7 +58,7 @@
                 device.</li>
             <li>Make a note of the device ID and the primary key. When you configure the Azure IoT
                 Hub Producer destination, use these values for the Device ID property and the Shared
-                Access Signature Key stage property.<p><image
+                Access Key stage property.<p><image
                         href="../Graphics/AzureIoTHubProducer_Device.png" scale="60"
                         id="image_wly_lvw_1bb"/></p></li>
         </ol>

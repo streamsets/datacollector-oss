@@ -60,12 +60,12 @@
                                         sensitive.</entry>
                                 </row>
                                 <row>
-                                    <entry>Shared Access Signature Key <xref
+                                    <entry>Shared Access Key <xref
                                             href="AzureIoTHub-RegisterSDC.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_nlx_yjt_1bb"/>
                                         </xref></entry>
-                                    <entry>Shared access signature (SAS) key for the <ph
+                                    <entry>Shared access primary key string for the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> device registered in your IoT hub. Enter the primary key
                                         value for the <ph
