@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.lineage.LineageEvent;
 import org.joda.time.Instant;
 
 @MClass(model = "sdc_pipeline_instance")
-public class NavigatorPipelineInstance extends Entity {
+public class NavigatorPipelineInstance extends NavigatorPipelineModel {
 
   @MProperty(attribute = "firstClassParentId")
   private String parentId;
@@ -55,31 +55,24 @@ public class NavigatorPipelineInstance extends Entity {
   public NavigatorPipelineInstance(
       String namespace, LineageEvent event, Entity model, String parentId
   ) {
-
-    pipelineStartTime = event.getPipelineStartTime();
-    pipelineId = event.getPipelineId();
+    fillIn(namespace, event, parentId);
     setTemplate(model);
 
-    setNamespace(namespace);
-    setName(NavigatorHelper.nameChopper(event.getPipelineTitle() + " instance"));
-    setOwner(event.getPipelineUser());
+    setName(NavigatorHelper.nameChopper(event.getPipelineTitle() + " Instance"));
     setSourceType(SourceType.SDK);
     setEntityType(EntityType.OPERATION_EXECUTION);
+    setLink(event.getPermalink());
 
-    setStarted(new Instant(pipelineStartTime));
     setEnded(new Instant(event.getTimeStamp()));
 
+    // need to have unique identity - specifically NOT the
+    // identity which would match the model: NavigatorPipelineModel
     setIdentity(generateId());
     // TODO: this is a Navigator bug.  this should be set, but not to a valid node.
     // if set to a valid node, in 5.9, the parent replaces the child in the UI.
     //    this.parentId = parentId;
     this.parentId = getIdentity();
 
-
-    setSourceId(Integer.toString(SourceType.HDFS.ordinal()));
-
-    setTags(event.getTags());
-    setProperties(event.getProperties());
   }
 
   @Override
