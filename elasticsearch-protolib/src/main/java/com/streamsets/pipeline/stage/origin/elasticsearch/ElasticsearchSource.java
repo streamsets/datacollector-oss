@@ -259,7 +259,7 @@ public class ElasticsearchSource extends BasePushSource {
       if (getContext().isPreview() || conf.deleteCursor) {
         try {
           deleteScroll(offset.getScrollId());
-        } catch (IOException e) {
+        } catch (IOException | StageException e) {
           LOG.warn("Error deleting cursor, will expire automatically.", e);
         }
       }
@@ -309,7 +309,7 @@ public class ElasticsearchSource extends BasePushSource {
       return offset;
     }
 
-    private JsonObject getInitialResponse(int batchSize, String timeOffset) throws IOException {
+    private JsonObject getInitialResponse(int batchSize, String timeOffset) throws IOException, StageException{
       String requestBodyString = conf.query;
       if (conf.isIncrementalMode) {
         try {
@@ -343,7 +343,7 @@ public class ElasticsearchSource extends BasePushSource {
           endpoint,
           params,
           entity,
-          delegate.getAuthenticationHeader()
+          delegate.getAuthenticationHeader(conf.securityConfig.securityUser.get())
       );
 
       Reader reader = new InputStreamReader(response.getEntity().getContent());
@@ -361,7 +361,7 @@ public class ElasticsearchSource extends BasePushSource {
             "/_search/scroll",
             conf.params,
             entity,
-            delegate.getAuthenticationHeader()
+            delegate.getAuthenticationHeader(conf.securityConfig.securityUser.get())
         );
 
         return parseEntity(response.getEntity());
@@ -372,7 +372,7 @@ public class ElasticsearchSource extends BasePushSource {
       }
     }
 
-    private void deleteScroll(String scrollId) throws IOException {
+    private void deleteScroll(String scrollId) throws IOException, StageException {
       if (scrollId == null) {
         return;
       }
@@ -381,7 +381,13 @@ public class ElasticsearchSource extends BasePushSource {
           String.format("{\"scroll_id\":[\"%s\"]}", scrollId),
           ContentType.APPLICATION_JSON
       );
-      delegate.performRequest("DELETE", "/_search/scroll", conf.params, entity, delegate.getAuthenticationHeader());
+      delegate.performRequest(
+        "DELETE",
+        "/_search/scroll",
+        conf.params,
+        entity,
+        delegate.getAuthenticationHeader(conf.securityConfig.securityUser.get())
+      );
     }
 
     private JsonObject parseEntity(HttpEntity entity) throws IOException {

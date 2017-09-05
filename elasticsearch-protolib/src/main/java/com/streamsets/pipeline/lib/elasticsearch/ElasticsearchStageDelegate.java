@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.elasticsearch;
 
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
 import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
@@ -84,12 +85,23 @@ public class ElasticsearchStageDelegate {
       }
     }
 
-    if (conf.useSecurity && !SECURITY_USER_PATTERN.matcher(conf.securityConfig.securityUser).matches()) {
+    String securityUser = null;
+    try {
+      securityUser = conf.securityConfig.securityUser.get();
+    } catch (StageException e) {
+       issues.add(context.createConfigIssue(
+          Groups.SECURITY.name(),
+          SecurityConfig.CONF_PREFIX + "securityUser",
+          Errors.ELASTICSEARCH_32,
+           e.toString()
+      ));
+    }
+
+    if (conf.useSecurity && !SECURITY_USER_PATTERN.matcher(securityUser).matches()) {
       issues.add(context.createConfigIssue(
           Groups.SECURITY.name(),
           SecurityConfig.CONF_PREFIX + "securityUser",
-          Errors.ELASTICSEARCH_20,
-          conf.securityConfig.securityUser
+          Errors.ELASTICSEARCH_20
       ));
     }
 
@@ -109,7 +121,7 @@ public class ElasticsearchStageDelegate {
         buildSSLContext(issues, restClientBuilder);
 
         restClient = restClientBuilder.build();
-        restClient.performRequest("GET", "/", getAuthenticationHeader());
+        restClient.performRequest("GET", "/", getAuthenticationHeader(securityUser));
       } else {
         restClient = restClientBuilder.build();
         restClient.performRequest("GET", "/");
@@ -185,7 +197,20 @@ public class ElasticsearchStageDelegate {
       if (StringUtils.isEmpty(keyStorePath)) {
         sslcontext = SSLContext.getDefault();
       } else {
-        final String keyStorePass = conf.securityConfig.sslTrustStorePassword;
+        String keyStorePass = null;
+        try {
+          keyStorePass = conf.securityConfig.sslTrustStorePassword.get();
+        } catch (StageException e) {
+           issues.add(
+              context.createConfigIssue(
+                  Groups.ELASTIC_SEARCH.name(),
+                  SecurityConfig.CONF_PREFIX + "sslTrustStorePassword",
+                  Errors.ELASTICSEARCH_31,
+                  e.toString()
+              )
+          );
+        }
+
         if (StringUtils.isEmpty(keyStorePass)) {
           issues.add(
               context.createConfigIssue(
@@ -259,13 +284,13 @@ public class ElasticsearchStageDelegate {
     }
   }
 
-  public Header[] getAuthenticationHeader() {
+  public Header[] getAuthenticationHeader(String securityUser) {
     if (!conf.useSecurity) {
       return new Header[0];
     }
 
     // Credentials are in form of "username:password".
-    byte[] credentials = conf.securityConfig.securityUser.getBytes();
+    byte[] credentials = securityUser.getBytes();
     return Collections.singletonList(new BasicHeader(
         "Authorization",
         "Basic " + Base64.encodeBase64String(credentials)

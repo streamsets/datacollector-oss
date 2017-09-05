@@ -315,7 +315,7 @@ public class ElasticsearchTarget extends BaseTarget {
             "/_bulk",
             conf.params,
             entity,
-            delegate.getAuthenticationHeader()
+            delegate.getAuthenticationHeader(conf.securityConfig.securityUser.get())
         );
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         response.getEntity().writeTo(baos);

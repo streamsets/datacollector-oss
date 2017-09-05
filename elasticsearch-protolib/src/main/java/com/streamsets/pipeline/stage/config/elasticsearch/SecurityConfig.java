@@ -15,8 +15,8 @@
  */
 package com.streamsets.pipeline.stage.config.elasticsearch;
 
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 public class SecurityConfig {
 
@@ -26,17 +26,15 @@ public class SecurityConfig {
   // on error stage where there is only one tab an hence all configs are sequential.
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "username:password",
       label = "Security Username/Password",
-      description = "",
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
       displayPosition = 41,
-      elDefs = VaultEL.class,
       group = "SECURITY"
   )
-  public String securityUser;
+  public CredentialValue securityUser = () -> "";
 
   @ConfigDef(
       required = false,
@@ -53,15 +51,12 @@ public class SecurityConfig {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
+      type = ConfigDef.Type.CREDENTIAL,
       label = "SSL TrustStore Password",
-      description = "",
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
       displayPosition = 43,
-      elDefs = VaultEL.class,
       group = "SECURITY"
   )
-  public String sslTrustStorePassword;
+  public CredentialValue sslTrustStorePassword = () -> "";
 }

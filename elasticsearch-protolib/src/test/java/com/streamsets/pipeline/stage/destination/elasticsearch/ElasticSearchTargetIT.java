@@ -502,7 +502,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     // Invalid shield user
     conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
     conf.useSecurity = true;
-    conf.securityConfig.securityUser = "INVALID_SHIELD_USER";
+    conf.securityConfig.securityUser = () -> "INVALID_SHIELD_USER";
 
     target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
