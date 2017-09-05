@@ -163,8 +163,8 @@ public class WebSocketClientSource implements PushSource {
 
     if (conf.authType.equals(AuthenticationType.BASIC)) {
       String basicAuthHeader = WebSocketCommon.generateBasicAuthHeader(
-          conf.basicAuth.username,
-          conf.basicAuth.password
+          conf.basicAuth.username.get(),
+          conf.basicAuth.password.get()
       );
       request.setHeader("Authorization", basicAuthHeader);
     }

@@ -653,8 +653,8 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.authType = AuthenticationType.BASIC;
       conf.client.useOAuth2 = true;
       conf.client.oauth2.credentialsGrantType = CLIENT_CREDENTIALS;
-      conf.client.basicAuth.password = CLIENT_SECRET;
-      conf.client.basicAuth.username = CLIENT_ID;
+      conf.client.basicAuth.password = () -> CLIENT_SECRET;
+      conf.client.basicAuth.username = () -> CLIENT_ID;
       conf.client.oauth2.tokenUrl = getBaseUri() + "basicToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.CLIENT_CREDENTIALS;
 

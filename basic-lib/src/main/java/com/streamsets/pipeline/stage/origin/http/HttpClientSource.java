@@ -293,8 +293,18 @@ public class HttpClientSource extends BaseSource {
           clientBuilder
         );
       }
-    } else if (conf.client.authType != AuthenticationType.NONE) {
-      JerseyClientUtil.configurePasswordAuth(conf.client.authType, conf.client.basicAuth, clientBuilder);
+    } else if (conf.client.authType.isOneOf(AuthenticationType.DIGEST, AuthenticationType.BASIC, AuthenticationType.UNIVERSAL)) {
+      String username = conf.client.basicAuth.resolveUsername(getContext(),"CREDENTIALS", "conf.client.basicAuth.", issues);
+      String passowrd = conf.client.basicAuth.resolvePassword(getContext(),"CREDENTIALS", "conf.client.basicAuth.", issues);
+
+      if(issues.isEmpty()) {
+        JerseyClientUtil.configurePasswordAuth(
+          conf.client.authType,
+          username,
+          passowrd,
+          clientBuilder
+        );
+      }
     }
     client = clientBuilder.build();
     if (conf.client.useOAuth2) {

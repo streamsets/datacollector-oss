@@ -179,8 +179,18 @@ public class HttpClientCommon {
           clientBuilder
         );
       }
-    } else if (jerseyClientConfig.authType != AuthenticationType.NONE) {
-      JerseyClientUtil.configurePasswordAuth(jerseyClientConfig.authType, jerseyClientConfig.basicAuth, clientBuilder);
+    } else if (jerseyClientConfig.authType.isOneOf(AuthenticationType.DIGEST, AuthenticationType.BASIC, AuthenticationType.UNIVERSAL)) {
+      String username = jerseyClientConfig.basicAuth.resolveUsername(context,"CREDENTIALS", "conf.basicAuth.", issues);
+      String password = jerseyClientConfig.basicAuth.resolvePassword(context,"CREDENTIALS", "conf.basicAuth.", issues);
+
+      if(issues.isEmpty()) {
+        JerseyClientUtil.configurePasswordAuth(
+          jerseyClientConfig.authType,
+          username,
+          password,
+          clientBuilder
+        );
+      }
     }
     client = clientBuilder.build();
     if (jerseyClientConfig.useOAuth2) {

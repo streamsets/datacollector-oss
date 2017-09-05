@@ -1084,8 +1084,8 @@ public class HttpClientSourceIT extends JerseyTest {
   public void testUniversalAuth() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.client.authType = AuthenticationType.UNIVERSAL;
-    conf.client.basicAuth.username = "foo";
-    conf.client.basicAuth.password = "bar";
+    conf.client.basicAuth.username = () -> "foo";
+    conf.client.basicAuth.password = () -> "bar";
     conf.httpMode = HttpClientMode.POLLING;
     conf.resourceUrl = getBaseUri() + "auth";
     conf.client.readTimeoutMillis = 1000;
@@ -1121,8 +1121,8 @@ public class HttpClientSourceIT extends JerseyTest {
   public void testNoWWWAuthenticate() throws Exception {
     HttpClientConfigBean conf = new HttpClientConfigBean();
     conf.client.authType = AuthenticationType.BASIC;
-    conf.client.basicAuth.username = "foo";
-    conf.client.basicAuth.password = "bar";
+    conf.client.basicAuth.username = () -> "foo";
+    conf.client.basicAuth.password = () -> "bar";
     conf.httpMode = HttpClientMode.POLLING;
     conf.resourceUrl = getBaseUri() + "preemptive";
     conf.client.readTimeoutMillis = 1000;
@@ -1443,8 +1443,8 @@ public class HttpClientSourceIT extends JerseyTest {
       conf.client.authType = AuthenticationType.BASIC;
       conf.client.useOAuth2 = true;
       conf.client.oauth2.credentialsGrantType = CLIENT_CREDENTIALS;
-      conf.client.basicAuth.password = CLIENT_SECRET;
-      conf.client.basicAuth.username = CLIENT_ID;
+      conf.client.basicAuth.password = () -> CLIENT_SECRET;
+      conf.client.basicAuth.username = () -> CLIENT_ID;
       conf.client.oauth2.tokenUrl = getBaseUri() + "basicToken";
       conf.httpMode = HttpClientMode.STREAMING;
       conf.resourceUrl = getBaseUri() + "stream";

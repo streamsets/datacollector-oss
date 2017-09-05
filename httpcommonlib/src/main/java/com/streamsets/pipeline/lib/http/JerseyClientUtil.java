@@ -48,19 +48,20 @@ public class JerseyClientUtil {
 
   public static void configurePasswordAuth(
       AuthenticationType authType,
-      PasswordAuthConfigBean conf,
+      String username,
+      String password,
       ClientBuilder clientBuilder
   ) {
     if (authType == AuthenticationType.BASIC) {
-      clientBuilder.register(HttpAuthenticationFeature.basic(conf.username, conf.password));
+      clientBuilder.register(HttpAuthenticationFeature.basic(username, password));
     }
 
     if (authType == AuthenticationType.DIGEST) {
-      clientBuilder.register(HttpAuthenticationFeature.digest(conf.username, conf.password));
+      clientBuilder.register(HttpAuthenticationFeature.digest(username, password));
     }
 
     if (authType == AuthenticationType.UNIVERSAL) {
-      clientBuilder.register(HttpAuthenticationFeature.universal(conf.username, conf.password));
+      clientBuilder.register(HttpAuthenticationFeature.universal(username, password));
     }
   }
 

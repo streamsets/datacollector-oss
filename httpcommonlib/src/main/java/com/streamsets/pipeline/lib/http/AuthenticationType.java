@@ -37,4 +37,20 @@ public enum AuthenticationType implements Label {
   public String getLabel() {
     return label;
   }
+
+  public boolean isOneOf(AuthenticationType ...types) {
+    if(types == null) {
+      return false;
+    }
+
+    for(AuthenticationType t : types) {
+      if(this == t) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
 }
