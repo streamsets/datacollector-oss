@@ -30,14 +30,14 @@ public class TestHttpReceiver {
   @Test
   public void testReceiver() throws Exception {
     HttpConfigs configs = Mockito.mock(HttpConfigs.class);
-    Mockito.when(configs.getAppId()).thenReturn("id");
+    Mockito.when(configs.getAppId()).thenReturn(() -> "id");
     HttpRequestFragmenter fragmenter = Mockito.mock(HttpRequestFragmenter.class);
     FragmentWriter writer = Mockito.mock(FragmentWriter.class);
     HttpReceiver receiver = new HttpReceiverWithFragmenterWriter("/", configs, fragmenter, writer);
 
     Assert.assertEquals("/", receiver.getUriPath());
 
-    Assert.assertEquals("id", receiver.getAppId());
+    Assert.assertEquals("id", receiver.getAppId().get());
 
     Mockito
         .when(fragmenter.validate(Mockito.any(HttpServletRequest.class), Mockito.any(HttpServletResponse.class)))

@@ -17,7 +17,7 @@ package com.streamsets.pipeline.lib.httpsource;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
@@ -58,14 +58,13 @@ public class RawHttpConfigs extends HttpConfigs {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Application ID",
       description = "Only HTTP requests presenting this token will be accepted.",
       displayPosition = 20,
-      elDefs = VaultEL.class,
       group = "HTTP"
   )
-  public String appId;
+  public CredentialValue appId = () -> "";
 
   @ConfigDef(
       required = true,
@@ -89,7 +88,7 @@ public class RawHttpConfigs extends HttpConfigs {
   }
 
   @Override
-  public String getAppId() {
+  public CredentialValue getAppId() {
     return appId;
   }
 

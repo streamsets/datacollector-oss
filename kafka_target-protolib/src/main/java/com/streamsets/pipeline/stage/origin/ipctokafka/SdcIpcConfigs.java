@@ -17,7 +17,7 @@ package com.streamsets.pipeline.stage.origin.ipctokafka;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
@@ -60,14 +60,13 @@ public class SdcIpcConfigs extends HttpConfigs {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "RPC ID",
       description = "User-defined ID. Must match the RPC ID used by the RPC destination of the origin pipeline.",
       displayPosition = 20,
-      elDefs = VaultEL.class,
       group = "RPC"
   )
-  public String appId;
+  public CredentialValue appId;
 
   @ConfigDef(
       required = true,
@@ -94,7 +93,7 @@ public class SdcIpcConfigs extends HttpConfigs {
   }
 
   @Override
-  public String getAppId() {
+  public CredentialValue getAppId() {
     return appId;
   }
 

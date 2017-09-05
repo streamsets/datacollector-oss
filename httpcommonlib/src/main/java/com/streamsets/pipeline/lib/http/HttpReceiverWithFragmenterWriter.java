@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.http;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +68,7 @@ public class HttpReceiverWithFragmenterWriter implements HttpReceiver {
   }
 
   @Override
-  public String getAppId() {
+  public CredentialValue getAppId() {
     return httpConfigs.getAppId();
   }
 

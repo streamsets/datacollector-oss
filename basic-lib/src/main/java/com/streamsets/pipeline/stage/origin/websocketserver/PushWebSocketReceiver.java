@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -77,7 +78,7 @@ public class PushWebSocketReceiver implements WebSocketReceiver {
   }
 
   @Override
-  public String getAppId() {
+  public CredentialValue getAppId() {
     return webSocketConfigs.getAppId();
   }
 

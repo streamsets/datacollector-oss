@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.http;
 
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +30,7 @@ public interface HttpReceiver {
 
   void destroy();
 
-  String getAppId();
+  CredentialValue getAppId();
 
   boolean isAppIdViaQueryParamAllowed();
 

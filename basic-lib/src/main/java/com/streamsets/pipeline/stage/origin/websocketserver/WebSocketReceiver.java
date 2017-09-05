@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.websocketserver;
 
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 
@@ -28,7 +29,7 @@ public interface WebSocketReceiver {
 
   void destroy();
 
-  String getAppId();
+  CredentialValue getAppId();
 
   boolean isAppIdViaQueryParamAllowed();
 

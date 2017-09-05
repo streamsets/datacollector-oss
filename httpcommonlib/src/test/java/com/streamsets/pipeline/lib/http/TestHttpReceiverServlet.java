@@ -40,7 +40,7 @@ public class TestHttpReceiverServlet {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
     HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
-    Mockito.when(receiver.getAppId()).thenReturn("id");
+    Mockito.when(receiver.getAppId()).thenReturn(() -> "id");
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, null);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -95,7 +95,7 @@ public class TestHttpReceiverServlet {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
     HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
-    Mockito.when(receiver.getAppId()).thenReturn("id");
+    Mockito.when(receiver.getAppId()).thenReturn(() -> "id");
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, null);
     servlet = Mockito.spy(servlet);
 
@@ -174,7 +174,7 @@ public class TestHttpReceiverServlet {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
     HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
-    Mockito.when(receiver.getAppId()).thenReturn("id");
+    Mockito.when(receiver.getAppId()).thenReturn(() -> "id");
     Mockito.when(receiver.process(Mockito.any(), Mockito.any())).thenReturn(true);
     BlockingQueue<Exception> errorQueue = new ArrayBlockingQueue<Exception>(1);
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, errorQueue);

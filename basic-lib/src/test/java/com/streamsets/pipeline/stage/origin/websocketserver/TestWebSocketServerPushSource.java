@@ -40,7 +40,7 @@ public class TestWebSocketServerPushSource {
   @Test
   public void testSource() throws Exception {
     WebSocketConfigs webSocketConfigs = new WebSocketConfigs();
-    webSocketConfigs.appId = "appId";
+    webSocketConfigs.appId = () -> "appId";
     webSocketConfigs.port = NetworkUtils.getRandomPort();
     webSocketConfigs.maxConcurrentRequests = 1;
     webSocketConfigs.tlsConfigBean.tlsEnabled = false;
@@ -93,7 +93,7 @@ public class TestWebSocketServerPushSource {
   @Test
   public void testWithAppIdViaQueryParam() throws Exception {
     WebSocketConfigs webSocketConfigs = new WebSocketConfigs();
-    webSocketConfigs.appId = "appId";
+    webSocketConfigs.appId = () -> "appId";
     webSocketConfigs.port = NetworkUtils.getRandomPort();
     webSocketConfigs.maxConcurrentRequests = 1;
     webSocketConfigs.tlsConfigBean.tlsEnabled = false;

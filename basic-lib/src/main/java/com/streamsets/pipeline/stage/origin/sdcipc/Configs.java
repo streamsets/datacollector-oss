@@ -17,7 +17,7 @@ package com.streamsets.pipeline.stage.origin.sdcipc;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import org.slf4j.Logger;
@@ -47,14 +47,13 @@ public class Configs extends HttpConfigs {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "SDC RPC ID",
       description = "User-defined ID. Must match the SDC RPC ID used by the SDC RPC destination of the origin pipeline.",
       displayPosition = 20,
-      elDefs = VaultEL.class,
       group = "RPC"
   )
-  public String appId;
+  public CredentialValue appId = () -> "";
 
   @ConfigDef(
       required = true,
@@ -97,7 +96,7 @@ public class Configs extends HttpConfigs {
   }
 
   @Override
-  public String getAppId() {
+  public CredentialValue getAppId() {
     return appId;
   }
 

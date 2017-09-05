@@ -19,6 +19,7 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.Timer;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.iq80.snappy.SnappyFramedInputStream;
 import org.slf4j.Logger;
@@ -63,6 +64,12 @@ public class HttpReceiverServlet extends HttpServlet {
   boolean validateAppId(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
     boolean valid = false;
+    String ourAppId = null;
+    try {
+      ourAppId = getReceiver().getAppId().get();
+    } catch (StageException e) {
+      throw new IOException("Cant resolve credential value", e);
+    }
     String requestor = req.getRemoteAddr() + ":" + req.getRemotePort();
     String reqAppId = req.getHeader(HttpConstants.X_SDC_APPLICATION_ID_HEADER);
 
@@ -73,7 +80,7 @@ public class HttpReceiverServlet extends HttpServlet {
     if (reqAppId == null) {
       LOG.warn("Request from '{}' missing appId, rejected", requestor);
       res.sendError(HttpServletResponse.SC_FORBIDDEN, "Missing 'appId'");
-    } else if (!getReceiver().getAppId().equals(reqAppId)) {
+    } else if (!ourAppId.equals(reqAppId)) {
       LOG.warn("Request from '{}' invalid appId '{}', rejected", requestor, reqAppId);
       res.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid 'appId'");
     } else {

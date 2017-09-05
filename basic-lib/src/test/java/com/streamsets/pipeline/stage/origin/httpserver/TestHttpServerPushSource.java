@@ -48,7 +48,7 @@ public class TestHttpServerPushSource {
   @Test
   public void testSource() throws Exception {
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = "id";
+    httpConfigs.appId = () -> "id";
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;
@@ -98,7 +98,7 @@ public class TestHttpServerPushSource {
   @Test
   public void testWithAppIdViaQueryParam() throws Exception {
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = "id";
+    httpConfigs.appId = () -> "id";
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;
@@ -148,7 +148,7 @@ public class TestHttpServerPushSource {
   @Test
   public void testAvroData() throws Exception {
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = "id";
+    httpConfigs.appId = () -> "id";
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;

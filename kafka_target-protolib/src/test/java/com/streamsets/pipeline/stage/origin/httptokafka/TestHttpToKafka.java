@@ -82,7 +82,7 @@ public class TestHttpToKafka {
 
     // Configure stage
     final RawHttpConfigs configs = new RawHttpConfigs();
-    configs.appId = "test";
+    configs.appId = () -> "test";
     configs.maxConcurrentRequests = 10;
     configs.tlsConfigBean.tlsEnabled = false;
     configs.port = randomPort;

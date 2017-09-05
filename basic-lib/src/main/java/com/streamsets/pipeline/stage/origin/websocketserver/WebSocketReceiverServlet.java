@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.websocketserver;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Timer;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.http.HttpConstants;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
@@ -111,6 +112,13 @@ public class WebSocketReceiverServlet extends WebSocketServlet implements WebSoc
 
   private boolean validateAppId(ServletUpgradeRequest req, ServletUpgradeResponse res) throws ServletException, IOException {
     boolean valid = false;
+    String ourAppId = null;
+    try {
+      ourAppId = getReceiver().getAppId().get();
+    } catch (StageException e) {
+      throw new IOException("Cant resolve credential value", e);
+    }
+
     String requester = req.getRemoteAddress() + ":" + req.getRemotePort();
     String reqAppId = req.getHeader(HttpConstants.X_SDC_APPLICATION_ID_HEADER);
 
@@ -129,8 +137,8 @@ public class WebSocketReceiverServlet extends WebSocketServlet implements WebSoc
       // http://stackoverflow.com/questions/4361173/http-headers-in-websockets-client-api
       // check sub-protocol header for APP ID
       List<String> subProtocols = req.getSubProtocols();
-      if (subProtocols != null && subProtocols.contains(getReceiver().getAppId())) {
-        reqAppId = getReceiver().getAppId();
+      if (subProtocols != null && subProtocols.contains(ourAppId)) {
+        reqAppId = ourAppId;
         res.setAcceptedSubProtocol(reqAppId);
       }
     }

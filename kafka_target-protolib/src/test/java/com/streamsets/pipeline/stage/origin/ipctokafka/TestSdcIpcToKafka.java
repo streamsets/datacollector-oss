@@ -91,7 +91,7 @@ public class TestSdcIpcToKafka {
   public void testWrite() throws Exception {
     // Configure stage
     final SdcIpcConfigs configs = new SdcIpcConfigs();
-    configs.appId = "test";
+    configs.appId = () -> "test";
     configs.maxConcurrentRequests = 10;
     configs.maxRpcRequestSize = 10000;
     configs.tlsConfigBean.tlsEnabled = false;

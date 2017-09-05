@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.sdcipc;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -55,10 +56,18 @@ public class IpcServlet extends HttpServlet {
     this.queue = queue;
   }
 
+  private String resolveAppId() throws IOException {
+    try {
+      return configs.appId.get();
+    } catch (StageException e) {
+      throw new IOException("Cant resolve credential value", e);
+    }
+  }
+
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String appId = req.getHeader(Constants.X_SDC_APPLICATION_ID_HEADER);
-    if (!configs.appId.equals(appId)) {
+    if (!resolveAppId().equals(appId)) {
       LOG.warn("Validation from '{}' invalid appId '{}', rejected", req.getRemoteAddr(), appId);
       resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid 'appId'");
     } else {
@@ -86,7 +95,7 @@ public class IpcServlet extends HttpServlet {
           resp.sendError(HttpServletResponse.SC_BAD_REQUEST,
                          Utils.format("Wrong content-type '{}', expected '{}'", contentType,
                                       Constants.APPLICATION_BINARY));
-        } else if (!configs.appId.equals(appId)) {
+        } else if (!resolveAppId().equals(appId)) {
           LOG.warn("IPC from '{}' invalid appId '{}', rejected", req.getRemoteAddr(), appId);
           resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid 'appId'");
         } else {

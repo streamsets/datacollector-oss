@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
 import com.streamsets.pipeline.lib.io.OverrunInputStream;
@@ -82,7 +83,7 @@ public class PushHttpReceiver implements HttpReceiver {
   }
 
   @Override
-  public String getAppId() {
+  public CredentialValue getAppId() {
     return httpConfigs.getAppId();
   }
 

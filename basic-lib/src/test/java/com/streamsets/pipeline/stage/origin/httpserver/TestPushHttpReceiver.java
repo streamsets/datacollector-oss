@@ -83,9 +83,9 @@ public class TestPushHttpReceiver {
   }
 
     @Test
-  public void testGetters() {
+  public void testGetters() throws Exception {
     HttpConfigs httpConfigs = Mockito.mock(HttpConfigs.class);
-    Mockito.when(httpConfigs.getAppId()).thenReturn("id");
+    Mockito.when(httpConfigs.getAppId()).thenReturn(() -> "id");
 
     DataParserFactory parserFactory = Mockito.mock(DataParserFactory.class);
     DataParserFormatConfig dataConfigs = Mockito.mock(DataParserFormatConfig.class);
@@ -99,7 +99,7 @@ public class TestPushHttpReceiver {
     Assert.assertEquals(context, receiver.getContext());
     Assert.assertEquals(parserFactory, receiver.getParserFactory());
 
-    Assert.assertEquals("id", receiver.getAppId());
+    Assert.assertEquals("id", receiver.getAppId().get());
     Mockito.verify(httpConfigs, Mockito.times(1)).getAppId();
 
     Assert.assertEquals("/", receiver.getUriPath());
