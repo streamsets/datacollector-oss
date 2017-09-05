@@ -165,7 +165,20 @@ public class HttpClientCommon {
       Stage.Context context
   ) {
     if (jerseyClientConfig.authType == AuthenticationType.OAUTH) {
-      authToken = JerseyClientUtil.configureOAuth1(jerseyClientConfig.oauth, clientBuilder);
+      String consumerKey = jerseyClientConfig.oauth.resolveConsumerKey(context,"CREDENTIALS", "conf.oauth.", issues);
+      String consumerSecret = jerseyClientConfig.oauth.resolveConsumerKey(context, "CREDENTIALS", "conf.oauth.", issues);
+      String token = jerseyClientConfig.oauth.resolveToken(context, "CREDENTIALS", "conf.oauth.", issues);
+      String tokenSecret = jerseyClientConfig.oauth.resolveTokenSecret(context, "CREDENTIALS", "conf.oauth.", issues);
+
+      if(issues.isEmpty()) {
+        authToken = JerseyClientUtil.configureOAuth1(
+          consumerKey,
+          consumerSecret,
+          token,
+          tokenSecret,
+          clientBuilder
+        );
+      }
     } else if (jerseyClientConfig.authType != AuthenticationType.NONE) {
       JerseyClientUtil.configurePasswordAuth(jerseyClientConfig.authType, jerseyClientConfig.basicAuth, clientBuilder);
     }

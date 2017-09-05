@@ -15,59 +15,149 @@
  */
 package com.streamsets.pipeline.lib.http;
 
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
+
+import java.util.List;
 
 public class OAuthConfigBean {
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Consumer Key",
       description = "OAuth Consumer Key",
       displayPosition = 10,
-      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"
   )
-  public String consumerKey;
+  public CredentialValue consumerKey = () -> "";
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Consumer Secret",
       description = "OAuth Consumer Secret",
       displayPosition = 20,
-      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"
   )
-  public String consumerSecret;
+  public CredentialValue consumerSecret = () -> "";
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Token",
       description = "OAuth Consumer Token",
       displayPosition = 30,
-      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"
   )
-  public String token;
+  public CredentialValue token = () -> "";
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Token Secret",
       description = "OAuth Token Secret",
       displayPosition = 40,
-      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"
   )
-  public String tokenSecret;
+  public CredentialValue tokenSecret = () -> "";
+
+  public String resolveConsumerKey(
+    Stage.Context context,
+    String groupName,
+    String prefix,
+    List<Stage.ConfigIssue> issues
+  ) {
+    return resolveCredential(
+      consumerKey,
+      "consumerKey",
+      context,
+      groupName,
+      prefix,
+      issues
+    );
+  }
+
+  public String resolveConsumerSecret(
+    Stage.Context context,
+    String groupName,
+    String prefix,
+    List<Stage.ConfigIssue> issues
+  ) {
+    return resolveCredential(
+      consumerSecret,
+      "consumerSecret",
+      context,
+      groupName,
+      prefix,
+      issues
+    );
+  }
+
+  public String resolveToken(
+    Stage.Context context,
+    String groupName,
+    String prefix,
+    List<Stage.ConfigIssue> issues
+  ) {
+    return resolveCredential(
+      token,
+      "token",
+      context,
+      groupName,
+      prefix,
+      issues
+    );
+  }
+
+  public String resolveTokenSecret(
+    Stage.Context context,
+    String groupName,
+    String prefix,
+    List<Stage.ConfigIssue> issues
+  ) {
+    return resolveCredential(
+      tokenSecret,
+      "tokenSecret",
+      context,
+      groupName,
+      prefix,
+      issues
+    );
+  }
+
+  private String resolveCredential(
+    CredentialValue credentialValue,
+    String property,
+    Stage.Context context,
+    String groupName,
+    String prefix,
+    List<Stage.ConfigIssue> issues
+  ) {
+    if(credentialValue == null) {
+      return null;
+    }
+
+    try {
+      return credentialValue.get();
+    } catch (StageException e) {
+      issues.add(context.createConfigIssue(
+        groupName,
+        prefix + property,
+        Errors.HTTP_29,
+        property,
+        e.toString()));
+      return null;
+    }
+  }
+
 }

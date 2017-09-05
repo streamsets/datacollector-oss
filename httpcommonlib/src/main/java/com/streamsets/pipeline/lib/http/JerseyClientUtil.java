@@ -64,10 +64,16 @@ public class JerseyClientUtil {
     }
   }
 
-  public static AccessToken configureOAuth1(OAuthConfigBean conf, ClientBuilder clientBuilder) {
-    ConsumerCredentials consumerCredentials = new ConsumerCredentials(conf.consumerKey, conf.consumerSecret);
+  public static AccessToken configureOAuth1(
+    String consumerKey,
+    String consumerSecret,
+    String token,
+    String tokenSecret,
+    ClientBuilder clientBuilder
+  ) {
+    ConsumerCredentials consumerCredentials = new ConsumerCredentials(consumerKey, consumerSecret);
 
-    AccessToken accessToken = new AccessToken(conf.token, conf.tokenSecret);
+    AccessToken accessToken = new AccessToken(token, tokenSecret);
     Feature feature = OAuth1ClientSupport.builder(consumerCredentials)
         .feature()
         .accessToken(accessToken)

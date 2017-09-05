@@ -80,6 +80,7 @@ import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_22;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_24;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_30;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_31;
 import static com.streamsets.pipeline.lib.parser.json.Errors.JSON_PARSER_00;
 
 /**
@@ -278,7 +279,20 @@ public class HttpClientSource extends BaseSource {
    */
   private void configureAuthAndBuildClient(ClientBuilder clientBuilder, List<ConfigIssue> issues) {
     if (conf.client.authType == AuthenticationType.OAUTH) {
-      authToken = JerseyClientUtil.configureOAuth1(conf.client.oauth, clientBuilder);
+      String consumerKey = conf.client.oauth.resolveConsumerKey(getContext(),"CREDENTIALS", "conf.clinet.oauth.", issues);
+      String consumerSecret = conf.client.oauth.resolveConsumerKey(getContext(), "CREDENTIALS", "conf.client.oauth.", issues);
+      String token = conf.client.oauth.resolveToken(getContext(), "CREDENTIALS", "conf.client.oauth.", issues);
+      String tokenSecret = conf.client.oauth.resolveTokenSecret(getContext(), "CREDENTIALS", "conf.client.oauth.", issues);
+
+      if(issues.isEmpty()) {
+        authToken = JerseyClientUtil.configureOAuth1(
+          consumerKey,
+          consumerSecret,
+          token,
+          tokenSecret,
+          clientBuilder
+        );
+      }
     } else if (conf.client.authType != AuthenticationType.NONE) {
       JerseyClientUtil.configurePasswordAuth(conf.client.authType, conf.client.basicAuth, clientBuilder);
     }
