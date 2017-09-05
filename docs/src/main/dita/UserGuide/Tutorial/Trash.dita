@@ -25,7 +25,7 @@
         <context>
             <p>The Trash destination deletes any records that pass to it. This allows you to test a
                 pipeline without writing data to a production system. </p>
-            <p>If you prefer, you can use the Hadoop FS destination to write to file as we did
+            <p>If you prefer, you can use the Local FS destination to write to file as we did
                 earlier in the tutorial, or you can use another destination to write to a
                 development destination system available to you.</p>
             <p>The Trash destination requires no configuration, so just add it to the canvas and

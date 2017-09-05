@@ -37,7 +37,7 @@
    <topicref href="../Tutorial/StreamSelector.dita"/>
    <topicref href="../Tutorial/Jython.dita"/>
    <topicref href="../Tutorial/FieldMasker.dita"/>
-   <topicref href="../Tutorial/HadoopFS.dita"/>
+   <topicref href="../Tutorial/LocalFS.dita"/>
    <topicref href="../Tutorial/ExpressionEvaluator.dita"/>
    <topicref href="../Tutorial/DataRule.dita"/>
    <topicref href="../Tutorial/RunBasicPipeline.dita"/>

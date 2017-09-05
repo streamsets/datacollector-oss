@@ -100,9 +100,9 @@
                 Evaluator.</li>
               <li>Click the <uicontrol>Records</uicontrol> icon and expand the first input and
                 output record. <p>Notice the fields created by the stage - dropoff_location,
-                  pickup_location and trip_location - are highlighted in green.</p><p>Though it
-                  isn't necessary for these calculations, let's see how you can edit preview data to
-                  test stage configuration:</p></li>
+                  pickup_location and trip_revenue - are highlighted in green.</p><p>Though it isn't
+                  necessary for these calculations, let's see how you can edit preview data to test
+                  stage configuration:</p></li>
               <li>In the first input record, in the Input Data column, click on the Pickup Latitude
                   data,<uicontrol> 40.730068</uicontrol>, add a negative sign before the data. Hit
                   <uicontrol>Enter</uicontrol> or click outside the data.<p>As shown below, the
