@@ -514,6 +514,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Kinetica libs -->
+    <fileSet>
+      <directory>${basedir}/../${kinetica_6_0-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- Elasticsearch libs -->
     <fileSet>
       <directory>${basedir}/../${elasticsearch_5-lib}/target/streamsets-libs/</directory>
