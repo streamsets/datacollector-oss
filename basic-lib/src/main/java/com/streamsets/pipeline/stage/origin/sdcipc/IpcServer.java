@@ -93,8 +93,8 @@ public class IpcServer {
       final TlsConfigBean tlsConfig = configs.getTlsConfigBean();
 
       sslContextFactory.setKeyStore(tlsConfig.getKeyStore());
-      sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword);
-      sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword);
+      sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword.get());
+      sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword.get());
       sslContextFactory.setSslContext(tlsConfig.getSslContext());
       sslContextFactory.setIncludeProtocols(tlsConfig.getFinalProtocols());
       sslContextFactory.setIncludeCipherSuites(tlsConfig.getFinalCipherSuites());

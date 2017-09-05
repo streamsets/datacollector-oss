@@ -50,7 +50,7 @@ public class TestConfigs {
     config.retriesPerBatch = 2;
     config.tlsConfigBean.tlsEnabled = false;
     config.tlsConfigBean.trustStoreFilePath = "";
-    config.tlsConfigBean.trustStorePassword = "";
+    config.tlsConfigBean.trustStorePassword = () -> "";
     config.hostVerification = true;
   }
 
@@ -99,7 +99,7 @@ public class TestConfigs {
     config.retriesPerBatch = 2;
     config.tlsConfigBean.tlsEnabled = true;
     config.tlsConfigBean.trustStoreFilePath = trustStoreFile;
-    config.tlsConfigBean.trustStorePassword = trustStorePassword;
+    config.tlsConfigBean.trustStorePassword = () -> trustStorePassword;
     config.hostVerification = hostnameVerification;
   }
 
@@ -243,13 +243,13 @@ public class TestConfigs {
     TLSTestUtils.createTrustStore(trustStoreLocation, "password", "cert1", cert1);
 
     config.tlsConfigBean.trustStoreFilePath = trustStoreLocation;
-    config.tlsConfigBean.trustStorePassword = "password";
+    config.tlsConfigBean.trustStorePassword = () -> "password";
     config.validateSecurity(getContext(), issues);
     Assert.assertEquals(0, issues.size());
 
     // valid trust store file, invalid password
     config.tlsConfigBean.trustStoreFilePath = trustStoreLocation;
-    config.tlsConfigBean.trustStorePassword = "invalid";
+    config.tlsConfigBean.trustStorePassword = () -> "invalid";
     config.validateSecurity(getContext(), issues);
     Assert.assertEquals(1, issues.size());
     issues.clear();

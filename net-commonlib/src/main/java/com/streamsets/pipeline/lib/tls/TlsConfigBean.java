@@ -18,8 +18,9 @@ package com.streamsets.pipeline.lib.tls;
 import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,17 +109,16 @@ public class TlsConfigBean {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       description = "The password to the keystore file, if applicable.  Using a password is highly recommended for "
           + "security reasons.",
       label = "Keystore Password",
       displayPosition = DISPLAY_POSITION_OFFSET + 70,
-      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
   )
-  public String keyStorePassword;
+  public CredentialValue keyStorePassword = () -> "";
 
   @ConfigDef(
       required = true,
@@ -162,17 +162,16 @@ public class TlsConfigBean {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       description = "The password to the truststore file, if applicable.  Using a password is highly recommended for "
           + "security reasons.",
       label = "Truststore Password",
       displayPosition = DISPLAY_POSITION_OFFSET + 170,
-      elDefs = VaultEL.class,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
   )
-  public String trustStorePassword;
+  public CredentialValue trustStorePassword;
 
   @ConfigDef(
       required = true,
@@ -439,8 +438,8 @@ public class TlsConfigBean {
     }
 
     try {
-      kmf.init(keyStore, getPasswordChars(keyStorePassword));
-    } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
+      kmf.init(keyStore, getPasswordChars(keyStorePassword.get()));
+    } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | StageException e) {
       issues.add(context.createConfigIssue(
           groupName,
           configPrefix + "keyStoreFilePath",
@@ -535,7 +534,7 @@ public class TlsConfigBean {
       String configPrefix,
       List<Stage.ConfigIssue> issues,
       Path keyStorePath,
-      String password,
+      CredentialValue password,
       KeyStoreType type,
       String storeCategory
   ) {
@@ -566,8 +565,8 @@ public class TlsConfigBean {
     }
 
     try (final InputStream keyStoreIs = Files.newInputStream(keyStorePath)) {
-      ks.load(keyStoreIs, getPasswordChars(password));
-    } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
+      ks.load(keyStoreIs, getPasswordChars(password.get()));
+    } catch (IOException | NoSuchAlgorithmException | CertificateException | StageException e) {
       issues.add(context.createConfigIssue(
           groupName,
           configPrefix + storeCategory.toLowerCase() + "StoreFilePath",

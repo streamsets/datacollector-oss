@@ -157,12 +157,12 @@ public class TestTCPServerSource {
     TLSTestUtils.createKeyStore(keyStore.toString(), keyStorePassword, "web", keyPair.getPrivate(), cert);
 
     configBean.tlsConfigBean.keyStoreFilePath = keyStore.getAbsolutePath();
-    configBean.tlsConfigBean.keyStorePassword = "invalid-password";
+    configBean.tlsConfigBean.keyStorePassword = () -> "invalid-password";
 
     initSourceAndValidateIssues(configBean, TlsConfigErrors.TLS_21);
 
     // finally, a valid certificate/config
-    configBean.tlsConfigBean.keyStorePassword = keyStorePassword;
+    configBean.tlsConfigBean.keyStorePassword = () -> keyStorePassword;
     initSourceAndValidateIssues(configBean);
 
     // ack ELs

@@ -182,7 +182,7 @@ public class TestReceiverServer {
 
       {
         tlsConfigBean.keyStoreFilePath = keyStore.getAbsolutePath();
-        tlsConfigBean.keyStorePassword = keyStorePassword;
+        tlsConfigBean.keyStorePassword = () -> keyStorePassword;
         tlsConfigBean.tlsEnabled = true;
       }
 

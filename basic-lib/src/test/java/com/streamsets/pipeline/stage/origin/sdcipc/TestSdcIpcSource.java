@@ -72,7 +72,7 @@ public class TestSdcIpcSource {
     configs.appId = "appId";
     configs.tlsConfigBean.tlsEnabled = ssl;
     configs.tlsConfigBean.keyStoreFilePath = keyStore.toString();
-    configs.tlsConfigBean.keyStorePassword = "keystore";
+    configs.tlsConfigBean.keyStorePassword = () -> "keystore";
     configs.port = randomPort;
     configs.maxWaitTimeSecs = 2;
     Source source = new SdcIpcSource(configs);
@@ -161,7 +161,7 @@ public class TestSdcIpcSource {
     config.tlsConfigBean.tlsEnabled = ssl;
     config.hostVerification = false;
     config.tlsConfigBean.trustStoreFilePath = trustStoreFile;
-    config.tlsConfigBean.trustStorePassword = trustStorePassword;
+    config.tlsConfigBean.trustStorePassword = () -> trustStorePassword;
     config.tlsConfigBean.useDefaultCiperSuites = true;
     config.tlsConfigBean.cipherSuites.add("TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256");
     List<Stage.ConfigIssue> issues = config.init(context);

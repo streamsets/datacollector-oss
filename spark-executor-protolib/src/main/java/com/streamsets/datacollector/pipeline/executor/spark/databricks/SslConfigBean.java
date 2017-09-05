@@ -17,7 +17,7 @@ package com.streamsets.datacollector.pipeline.executor.spark.databricks;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.lib.el.VaultEL;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
 import java.util.List;
@@ -44,15 +44,14 @@ public class SslConfigBean {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       displayPosition = 1010,
-      elDefs = VaultEL.class,
       dependsOn = "clusterManager^^",
       triggeredByValue = "DATABRICKS",
       group = "SSL"
   )
-  public String trustStorePassword = ""; // NOSONAR
+  public CredentialValue trustStorePassword = () -> "";
 
   @ConfigDef(
       required = false,
@@ -67,15 +66,14 @@ public class SslConfigBean {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       displayPosition = 1030,
-      elDefs = VaultEL.class,
       dependsOn = "clusterManager^^",
       triggeredByValue = "DATABRICKS",
       group = "SSL"
   )
-  public String keyStorePassword = ""; // NOSONAR
+  public CredentialValue keyStorePassword = () -> "";
 
   private TlsConfigBean underlyingConfig;
 

@@ -99,8 +99,8 @@ public abstract class AbstractHttpReceiverServer {
         TlsConfigBean tlsConfig = configs.getTlsConfigBean();
         sslContextFactory.setKeyStorePath(tlsConfig.keyStoreFilePath);
         sslContextFactory.setKeyStoreType(tlsConfig.keyStoreType.getJavaValue());
-        sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword);
-        sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword);
+        sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword.get());
+        sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword.get());
         sslContextFactory.setIncludeProtocols(tlsConfig.getFinalProtocols());
         sslContextFactory.setIncludeCipherSuites(tlsConfig.getFinalCipherSuites());
 

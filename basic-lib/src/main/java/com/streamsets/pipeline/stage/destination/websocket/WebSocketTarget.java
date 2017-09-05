@@ -117,7 +117,7 @@ public class WebSocketTarget extends BaseTarget {
           sslContextFactory.setKeyStoreType(tlsConf.keyStoreType.getJavaValue());
         }
         if (tlsConf.keyStorePassword != null) {
-          sslContextFactory.setKeyStorePassword(tlsConf.keyStorePassword);
+          sslContextFactory.setKeyStorePassword(tlsConf.keyStorePassword.get());
         }
         if (tlsConf.trustStoreFilePath != null) {
           sslContextFactory.setTrustStorePath(tlsConf.trustStoreFilePath);
@@ -126,7 +126,7 @@ public class WebSocketTarget extends BaseTarget {
           sslContextFactory.setTrustStoreType(tlsConf.trustStoreType.getJavaValue());
         }
         if (tlsConf.trustStorePassword != null) {
-          sslContextFactory.setTrustStorePassword(tlsConf.trustStorePassword);
+          sslContextFactory.setTrustStorePassword(tlsConf.trustStorePassword.get());
         }
         if (tlsConf != null && tlsConf.isEnabled() && tlsConf.isInitialized()) {
           sslContextFactory.setSslContext(tlsConf.getSslContext());

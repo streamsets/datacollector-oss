@@ -202,7 +202,7 @@ public class OpcUaClientSource implements PushSource {
     if (!securityPolicy.equals(SecurityPolicy.None)) {
       KeyStore keyStore = conf.tlsConfig.getKeyStore();
       if (keyStore != null) {
-        Key clientPrivateKey = keyStore.getKey(conf.clientKeyAlias, conf.tlsConfig.keyStorePassword.toCharArray());
+        Key clientPrivateKey = keyStore.getKey(conf.clientKeyAlias, conf.tlsConfig.keyStorePassword.get().toCharArray());
         if (clientPrivateKey instanceof PrivateKey) {
           X509Certificate clientCertificate = (X509Certificate) keyStore.getCertificate(conf.clientKeyAlias);
           PublicKey clientPublicKey = clientCertificate.getPublicKey();

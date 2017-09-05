@@ -68,7 +68,7 @@ public class TestSdcIpcTarget {
     config.retriesPerBatch = 2;
     config.tlsConfigBean.tlsEnabled = false;
     config.tlsConfigBean.trustStoreFilePath = "";
-    config.tlsConfigBean.trustStorePassword = "";
+    config.tlsConfigBean.trustStorePassword = () -> "";
     config.hostVerification = true;
     SdcIpcTarget target = new SdcIpcTarget(config);
     target.initializeHostPortsLists();
@@ -89,7 +89,7 @@ public class TestSdcIpcTarget {
     config.retriesPerBatch = 2;
     config.tlsConfigBean.tlsEnabled = false;
     config.tlsConfigBean.trustStoreFilePath = "";
-    config.tlsConfigBean.trustStorePassword = "";
+    config.tlsConfigBean.trustStorePassword = () -> "";
     config.hostVerification = true;
 
     // 2 hostPorts
@@ -151,7 +151,7 @@ public class TestSdcIpcTarget {
     config.retriesPerBatch = 2;
     config.tlsConfigBean.tlsEnabled = false;
     config.tlsConfigBean.trustStoreFilePath = "";
-    config.tlsConfigBean.trustStorePassword = "";
+    config.tlsConfigBean.trustStorePassword = () -> "";
     config.hostVerification = true;
 
     SdcIpcTarget target = new SdcIpcTarget(config);
@@ -193,7 +193,7 @@ public class TestSdcIpcTarget {
     config.retriesPerBatch = 2;
     config.tlsConfigBean.tlsEnabled = false;
     config.tlsConfigBean.trustStoreFilePath = "";
-    config.tlsConfigBean.trustStorePassword = "";
+    config.tlsConfigBean.trustStorePassword = () -> "";
     config.hostVerification = true;
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -330,7 +330,7 @@ public class TestSdcIpcTarget {
       config.retriesPerBatch = 2;
       config.tlsConfigBean.tlsEnabled = false;
       config.tlsConfigBean.trustStoreFilePath = "";
-      config.tlsConfigBean.trustStorePassword = "";
+      config.tlsConfigBean.trustStorePassword = () -> "";
       config.hostVerification = true;
       config.compression = false;
 
@@ -433,7 +433,7 @@ public class TestSdcIpcTarget {
       config.retriesPerBatch = 2;
       config.tlsConfigBean.tlsEnabled = true;
       config.tlsConfigBean.trustStoreFilePath = trustStore.getName();
-      config.tlsConfigBean.trustStorePassword = "truststore";
+      config.tlsConfigBean.trustStorePassword = () -> "truststore";
       config.hostVerification = hostVerification;
 
       SdcIpcTarget target = new SdcIpcTarget(config);
