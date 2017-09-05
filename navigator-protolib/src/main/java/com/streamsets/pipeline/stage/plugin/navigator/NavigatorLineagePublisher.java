@@ -47,7 +47,6 @@ public class NavigatorLineagePublisher implements LineagePublisher {
   private static final String[] PROPERTY_NAMES = {
       "application_url",
       "navigator_url",
-      "metadata_parent_uri",
       "namespace",
       "username",
       "password",
@@ -63,20 +62,27 @@ public class NavigatorLineagePublisher implements LineagePublisher {
   private long nodeCount;
 
   @Override
-  public List<ConfigIssue> init(Context context) {
+  public List<LineagePublisher.ConfigIssue> init(Context context) {
     LOG.info("Navigator Lineage Plugin initializing");
 
-    final List<ConfigIssue> issues = new ArrayList<>();
+    final List<LineagePublisher.ConfigIssue> issues = new ArrayList<>();
 
-    // add ths property - it's not exposed in the sdc.properties file.
+    // add this property - it's not exposed in the sdc.properties file.
     navigatorProperties.put("navigator_api_version", 9);
+
     for (String prop : PROPERTY_NAMES) {
-      navigatorProperties.put(prop, context.getConfig(prop));
+      if(context.getConfig(prop) != null) {
+        navigatorProperties.put(prop, context.getConfig(prop));
+      } else {
+        LOG.error(Errors.NAVIGATOR_09.getMessage(), prop);
+        issues.add(context.createConfigIssue(Errors.NAVIGATOR_09, prop));
+      }
     }
 
     try {
       plugin = NavigatorPlugin.fromConfigMap(navigatorProperties);
     } catch (Exception ex) {
+      LOG.error(Errors.NAVIGATOR_02.getMessage(), navigatorProperties.get("navigator_url"));
       issues.add(context.createConfigIssue(Errors.NAVIGATOR_02, navigatorProperties.get("navigator_url")));
     }
 

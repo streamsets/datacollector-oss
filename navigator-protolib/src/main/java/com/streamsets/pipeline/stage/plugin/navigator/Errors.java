@@ -25,10 +25,11 @@ public enum Errors implements ErrorCode {
   NAVIGATOR_02("Error communicating with Navigator server '{}'"),
   NAVIGATOR_03("Invalid LineageEndPointType '{}'"),
   NAVIGATOR_04("START message - but key {} is already cached. "),
-  NAVIGATOR_05("got {} event for {} but nothing is cached. {}"),
-  NAVIGATOR_06("processing key {} but cache has no entries."),
-  NAVIGATOR_07("error multiple STOP events."),
-  NAVIGATOR_08("error multiple START events."),
+  NAVIGATOR_05("Got {} event for {} but nothing is cached. {}"),
+  NAVIGATOR_06("Processing key {} but cache has no entries."),
+  NAVIGATOR_07("Error - multiple STOP events."),
+  NAVIGATOR_08("Error - multiple START events."),
+  NAVIGATOR_09("sdc properties file is missing a Navigator configuration parameter: '{}'"),
   ;
 
   private final String msg;
