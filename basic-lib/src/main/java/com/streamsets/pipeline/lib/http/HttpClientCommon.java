@@ -179,6 +179,9 @@ public class HttpClientCommon {
       } catch (IOException ex) {
         LOG.error("OAuth2 Authentication Response does not contain access token", ex);
         issues.add(context.createConfigIssue(OAUTH2_GROUP, CONF_CLIENT_OAUTH2_TOKEN_URL, HTTP_22));
+      } catch (StageException ex) {
+        LOG.error(HTTP_30.getMessage(), ex.toString(), ex);
+        issues.add(context.createConfigIssue(OAUTH2_GROUP, CONF_CLIENT_OAUTH2_TOKEN_URL, HTTP_30, ex.toString()));
       } catch (NotFoundException ex) {
         LOG.error(Utils.format(
             HTTP_24.getMessage(), jerseyClientConfig.oauth2.tokenUrl, jerseyClientConfig.oauth2.transferEncoding), ex);

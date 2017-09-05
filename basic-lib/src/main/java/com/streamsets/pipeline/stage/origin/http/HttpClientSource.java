@@ -79,6 +79,7 @@ import java.util.function.Function;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_22;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_24;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_30;
 import static com.streamsets.pipeline.lib.parser.json.Errors.JSON_PARSER_00;
 
 /**
@@ -291,6 +292,9 @@ public class HttpClientSource extends BaseSource {
       } catch (IOException ex) {
         LOG.error(NO_ACCESS_TOKEN, ex);
         issues.add(getContext().createConfigIssue(OAUTH2_GROUP, CONF_CLIENT_OAUTH2_TOKEN_URL, HTTP_22));
+      } catch (StageException ex) {
+        LOG.error(HTTP_30.getMessage(), ex.toString(), ex);
+        issues.add(getContext().createConfigIssue(OAUTH2_GROUP, CONF_CLIENT_OAUTH2_TOKEN_URL, HTTP_30, ex.toString()));
       } catch (NotFoundException ex) {
         LOG.error(Utils.format(HTTP_24.getMessage(),
             conf.client.oauth2.tokenUrl, conf.client.oauth2.transferEncoding), ex);

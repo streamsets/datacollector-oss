@@ -52,14 +52,14 @@ public class OAuth2TestUtil {
       params.put(OAuth2ConfigBean.CLIENT_ID_KEY, Collections.singletonList(clientId));
       params.put(OAuth2ConfigBean.CLIENT_SECRET_KEY, Collections.singletonList(clientSecret));
       params.put(OAuth2ConfigBean.GRANT_TYPE_KEY, Collections.singletonList(OAuth2ConfigBean.CLIENT_CREDENTIALS_GRANT));
-      configBean.clientId = clientId;
-      configBean.clientSecret = clientSecret;
+      configBean.clientId = () -> clientId;
+      configBean.clientSecret = () -> clientSecret;
     } else {
       params.put(OAuth2ConfigBean.RESOURCE_OWNER_KEY, Collections.singletonList(clientId));
       params.put(OAuth2ConfigBean.PASSWORD_KEY, Collections.singletonList(clientSecret));
       params.put(OAuth2ConfigBean.GRANT_TYPE_KEY, Collections.singletonList(OAuth2ConfigBean.RESOURCE_OWNER_GRANT));
-      configBean.username = clientId;
-      configBean.password = clientSecret;
+      configBean.username = () -> clientId;
+      configBean.password = () -> clientSecret;
     }
 
     configBean.credentialsGrantType = grantType;

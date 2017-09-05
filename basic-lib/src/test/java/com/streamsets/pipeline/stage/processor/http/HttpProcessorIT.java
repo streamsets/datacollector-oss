@@ -607,8 +607,8 @@ public class HttpProcessorIT extends JerseyTest {
       conf.resourceUrl = getBaseUri() + "test/get";
       conf.client.authType = AuthenticationType.NONE;
       conf.client.useOAuth2 = true;
-      conf.client.oauth2.clientSecret = CLIENT_SECRET;
-      conf.client.oauth2.clientId = CLIENT_ID;
+      conf.client.oauth2.clientSecret = () -> CLIENT_SECRET;
+      conf.client.oauth2.clientId = () -> CLIENT_ID;
       conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.CLIENT_CREDENTIALS;
 
@@ -698,8 +698,8 @@ public class HttpProcessorIT extends JerseyTest {
       conf.resourceUrl = getBaseUri() + "tokenresetstream";
       conf.client.authType = AuthenticationType.NONE;
       conf.client.useOAuth2 = true;
-      conf.client.oauth2.clientSecret = CLIENT_SECRET;
-      conf.client.oauth2.clientId = CLIENT_ID;
+      conf.client.oauth2.clientSecret = () -> CLIENT_SECRET;
+      conf.client.oauth2.clientId = () -> CLIENT_ID;
       conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.CLIENT_CREDENTIALS;
       Processor processor = new HttpProcessor(conf);
@@ -743,8 +743,8 @@ public class HttpProcessorIT extends JerseyTest {
       conf.resourceUrl = getBaseUri() + "test/get";
       conf.client.authType = AuthenticationType.NONE;
       conf.client.useOAuth2 = true;
-      conf.client.oauth2.username = USERNAME;
-      conf.client.oauth2.password = PASSWORD;
+      conf.client.oauth2.username = () -> USERNAME;
+      conf.client.oauth2.password = () -> PASSWORD;
       conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
 
@@ -788,8 +788,8 @@ public class HttpProcessorIT extends JerseyTest {
       conf.resourceUrl = getBaseUri() + "tokenresetstream";
       conf.client.authType = AuthenticationType.NONE;
       conf.client.useOAuth2 = true;
-      conf.client.oauth2.username = USERNAME;
-      conf.client.oauth2.password = PASSWORD;
+      conf.client.oauth2.username = () -> USERNAME;
+      conf.client.oauth2.password = () -> PASSWORD;
       conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
 
@@ -834,10 +834,10 @@ public class HttpProcessorIT extends JerseyTest {
       conf.resourceUrl = getBaseUri() + "test/get";
       conf.client.authType = AuthenticationType.NONE;
       conf.client.useOAuth2 = true;
-      conf.client.oauth2.username = USERNAME;
-      conf.client.oauth2.password = PASSWORD;
-      conf.client.oauth2.resourceOwnerClientSecret = CLIENT_SECRET;
-      conf.client.oauth2.resourceOwnerClientId = CLIENT_ID;
+      conf.client.oauth2.username = () -> USERNAME;
+      conf.client.oauth2.password = () -> PASSWORD;
+      conf.client.oauth2.resourceOwnerClientSecret = () -> CLIENT_SECRET;
+      conf.client.oauth2.resourceOwnerClientId = () -> CLIENT_ID;
       conf.client.oauth2.tokenUrl = getBaseUri() + "resourceToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
 
@@ -881,10 +881,10 @@ public class HttpProcessorIT extends JerseyTest {
       conf.resourceUrl = getBaseUri() + "tokenresetstream";
       conf.client.authType = AuthenticationType.NONE;
       conf.client.useOAuth2 = true;
-      conf.client.oauth2.username = USERNAME;
-      conf.client.oauth2.password = PASSWORD;
-      conf.client.oauth2.resourceOwnerClientSecret = CLIENT_SECRET;
-      conf.client.oauth2.resourceOwnerClientId = CLIENT_ID;
+      conf.client.oauth2.username = () -> USERNAME;
+      conf.client.oauth2.password = () -> PASSWORD;
+      conf.client.oauth2.resourceOwnerClientSecret = () -> CLIENT_SECRET;
+      conf.client.oauth2.resourceOwnerClientId = () -> CLIENT_ID;
       conf.client.oauth2.tokenUrl = getBaseUri() + "resourceToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
 
@@ -932,8 +932,8 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.useOAuth2 = true;
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.JWT;
       conf.client.oauth2.algorithm = SigningAlgorithms.RS256;
-      conf.client.oauth2.jwtClaims = JWT;
-      conf.client.oauth2.key = Base64.encodeBase64String(keyPair.getPrivate().getEncoded());
+      conf.client.oauth2.jwtClaims = () -> JWT;
+      conf.client.oauth2.key = () -> Base64.encodeBase64String(keyPair.getPrivate().getEncoded());
       conf.client.oauth2.tokenUrl = getBaseUri() + "jwtToken";
 
       Record record = RecordCreator.create();

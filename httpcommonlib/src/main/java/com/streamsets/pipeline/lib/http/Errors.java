@@ -50,6 +50,7 @@ public enum Errors implements ErrorCode {
   HTTP_27("Key is invalid: {}"),
   HTTP_28("Exception in post processing or cleanup: {}"),
   HTTP_29("Can't resolve credential value for {}: {}"),
+  HTTP_30("Can't resolve OAuth2 credentials: {}"),
 
 
   // HTTP Target
