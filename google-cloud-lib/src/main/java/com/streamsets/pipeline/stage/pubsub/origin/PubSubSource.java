@@ -19,9 +19,9 @@ package com.streamsets.pipeline.stage.pubsub.origin;
 import com.google.api.gax.batching.FlowControlSettings;
 import com.google.api.gax.batching.FlowController;
 import com.google.api.gax.core.CredentialsProvider;
+import com.google.api.gax.core.ExecutorProvider;
+import com.google.api.gax.core.InstantiatingExecutorProvider;
 import com.google.api.gax.grpc.ChannelProvider;
-import com.google.api.gax.grpc.ExecutorProvider;
-import com.google.api.gax.grpc.InstantiatingExecutorProvider;
 import com.google.cloud.pubsub.v1.PagedResponseWrappers;
 import com.google.cloud.pubsub.v1.Subscriber;
 import com.google.cloud.pubsub.v1.SubscriptionAdminSettings;
@@ -256,7 +256,7 @@ public class PubSubSource extends BasePushSource {
    * @return channel provider based on the stage configuration.
    */
   private ChannelProvider getChannelProvider() {
-    return SubscriptionAdminSettings.defaultChannelProviderBuilder()
+    return SubscriptionAdminSettings.defaultGrpcChannelProviderBuilder()
         .setMaxInboundMessageSize(MAX_INBOUND_MESSAGE_SIZE)
         .setEndpoint(Strings.isNullOrEmpty(conf.advanced.customEndpoint) ? SubscriptionAdminSettings
             .getDefaultEndpoint() : conf.advanced.customEndpoint)
