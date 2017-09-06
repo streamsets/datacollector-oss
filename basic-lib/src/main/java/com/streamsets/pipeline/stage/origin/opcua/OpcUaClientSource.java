@@ -355,7 +355,8 @@ public class OpcUaClientSource implements PushSource {
           try {
             process(values, System.currentTimeMillis() + "." + counter.getAndIncrement());
           } catch (Exception ex) {
-            errorQueue.offer(ex);
+            LOG.error(Errors.OPC_UA_09.getMessage(), ex.getMessage(), ex);
+            errorQueue.offer(new StageException(Errors.OPC_UA_09, ex.getMessage(), ex));
           }
           if (ThreadUtil.sleep(conf.pollingInterval)) {
             pollForData();
@@ -417,10 +418,13 @@ public class OpcUaClientSource implements PushSource {
   }
 
   private void onSubscriptionValue(UaMonitoredItem item, DataValue value) {
-    LOG.debug(
-        "subscription value received: item={}, value={}",
-        item.getReadValueId().getNodeId(), value.getValue());
-    process(ImmutableList.of(value), item.getReadValueId().getNodeId() + "." + counter.getAndIncrement());
+    LOG.debug("subscription value received: item={}, value={}", item.getReadValueId().getNodeId(), value.getValue());
+    try {
+      process(ImmutableList.of(value), item.getReadValueId().getNodeId() + "." + counter.getAndIncrement());
+    } catch (Exception ex) {
+      LOG.error(Errors.OPC_UA_09.getMessage(), ex.getMessage(), ex);
+      errorQueue.offer(new StageException(Errors.OPC_UA_09, ex.getMessage(), ex));
+    }
   }
 
   private void process(List<DataValue> dataValues, String recordSourceId) {
@@ -828,8 +832,8 @@ public class OpcUaClientSource implements PushSource {
         rootFieldMap.put(rd.getBrowseName().getName(), Field.create(fieldMap));
       }
     } catch (InterruptedException | ExecutionException ex) {
-      LOG.error("Browsing nodeId={} failed: {}", browseRoot, ex.getMessage(), ex);
-      errorQueue.offer(ex);
+      LOG.error(Errors.OPC_UA_10.getMessage(), browseRoot, ex.getMessage(), ex);
+      errorQueue.offer(new StageException(Errors.OPC_UA_10, browseRoot, ex.getMessage(), ex));
     }
   }
 
