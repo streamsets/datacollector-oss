@@ -73,7 +73,7 @@ public abstract class BaseTableJdbcSourceIT {
   protected static final String JDBC_URL = "jdbc:h2:mem:" + database;// + ";MVCC=TRUE";
   protected static final String CREATE_STATEMENT_TEMPLATE = "CREATE TABLE %s.%s ( %s )";
   protected static final String INSERT_STATEMENT_TEMPLATE = "INSERT INTO %s.%s values ( %s )";
-  protected static final String DROP_STATEMENT_TEMPLATE = "DROP TABLE %s.%s";
+  protected static final String DROP_STATEMENT_TEMPLATE = "DROP TABLE %s.%s CASCADE";
   protected static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
   protected static final Random RANDOM = RandomTestUtils.getRandom();
 
