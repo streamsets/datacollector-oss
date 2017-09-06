@@ -506,6 +506,7 @@ public class OracleCDCSource extends BaseSource {
     try {
       if (!currentResultSet.isPresent()) {
         selectChanges.setQueryTimeout(configBean.queryTimeout);
+        selectChanges.setFetchSize(configBean.jdbcFetchSize);
         resultSet = selectChanges.executeQuery();
         currentResultSet = Optional.of(resultSet);
       } else {

@@ -184,6 +184,17 @@ public class OracleCDCConfigBean {
   )
   public int queryTimeout;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "JDBC Fetch Size",
+      description = "To reduce latency, set this lower if the write rate to the tables is low.",
+      displayPosition = 145,
+      group = "CDC",
+      min = 1,
+      defaultValue = "1"
+  )
+  public int jdbcFetchSize;
 
   @ConfigDef(
       required = true,
