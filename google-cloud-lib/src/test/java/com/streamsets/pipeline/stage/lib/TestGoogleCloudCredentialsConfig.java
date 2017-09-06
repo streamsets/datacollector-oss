@@ -16,20 +16,15 @@
 
 package com.streamsets.pipeline.stage.lib;
 
-import com.streamsets.datacollector.config.StageType;
-import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
-import com.streamsets.datacollector.runner.StageContext;
-import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.pipeline.api.DeliveryGuarantee;
-import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.sdk.PushSourceRunner;
+import com.streamsets.pipeline.stage.pubsub.origin.PubSubDSource;
 import org.junit.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_01;
@@ -45,24 +40,8 @@ public class TestGoogleCloudCredentialsConfig {
     credentialsConfig.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     credentialsConfig.path = "/tmp/does-not-exist.json";
 
-    StageContext context = new StageContext(
-        "stage",
-        StageType.SOURCE,
-        -1,
-        false,
-        OnRecordError.TO_ERROR,
-        Collections.emptyList(),
-        Collections.emptyMap(),
-        Collections.emptyMap(),
-        ExecutionMode.STANDALONE,
-        DeliveryGuarantee.AT_LEAST_ONCE,
-        null,
-        null,
-        new Configuration(),
-        new LineagePublisherDelegator.NoopDelegator()
-    );
     List<Stage.ConfigIssue> issues = new ArrayList<>();
-    credentialsConfig.getCredentialsProvider(context, issues);
+    credentialsConfig.getCredentialsProvider(createContext(), issues);
 
     assertEquals(1, issues.size());
     assertTrue(issues.get(0).toString().contains(GOOGLE_01.getCode()));
@@ -76,26 +55,19 @@ public class TestGoogleCloudCredentialsConfig {
     credentialsConfig.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     credentialsConfig.path = tempFile.toString();
 
-    StageContext context = new StageContext(
-        "stage",
-        StageType.SOURCE,
-        -1,
-        false,
-        OnRecordError.TO_ERROR,
-        Collections.emptyList(),
-        Collections.emptyMap(),
-        Collections.emptyMap(),
-        ExecutionMode.STANDALONE,
-        DeliveryGuarantee.AT_LEAST_ONCE,
-        null,
-        null,
-        new Configuration(),
-        new LineagePublisherDelegator.NoopDelegator()
-    );
     List<Stage.ConfigIssue> issues = new ArrayList<>();
-    credentialsConfig.getCredentialsProvider(context, issues);
+    credentialsConfig.getCredentialsProvider(createContext(), issues);
 
     assertEquals(1, issues.size());
     assertTrue(issues.get(0).toString().contains(GOOGLE_02.getCode()));
+  }
+
+  private Stage.Context createContext() {
+    PushSourceRunner runner = new PushSourceRunner.Builder(PubSubDSource.class)
+      .addOutputLane("lane")
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+
+    return runner.getContext();
   }
 }
