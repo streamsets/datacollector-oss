@@ -68,7 +68,6 @@
     <aws-lib>aws-lib</aws-lib>
     <basic-lib>basic-lib</basic-lib>
     <bigtable-lib>bigtable-lib</bigtable-lib>
-    <windows-lib>windows-lib</windows-lib>
     <dev-lib>dev-lib</dev-lib>
     <google-cloud-lib>google-cloud-lib</google-cloud-lib>
     <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
@@ -82,6 +81,7 @@
     <salesforce-lib>salesforce-lib</salesforce-lib>
     <stats-lib>stats-lib</stats-lib>
     <vault-credentialstore-lib>vault-credentialstore-lib</vault-credentialstore-lib>
+    <windows-lib>windows-lib</windows-lib>
 
   </properties>
 
@@ -206,7 +206,6 @@
     <module>azure-lib</module>
     <module>basic-lib</module>
     <module>bigtable-lib</module>
-    <module>windows-lib</module>
     <module>dev-lib</module>
     <module>google-cloud-lib</module>
     <module>influxdb_0_9-lib</module>
@@ -220,6 +219,7 @@
     <module>salesforce-lib</module>
     <module>stats-lib</module>
     <module>vault-credentialstore-lib</module>
+    <module>windows-lib</module>
   </modules>
 
   <build>
