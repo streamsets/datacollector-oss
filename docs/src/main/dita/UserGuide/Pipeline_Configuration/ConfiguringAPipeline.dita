@@ -184,11 +184,14 @@
                                                 ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="10" id="image_ldk_s5g_cs"/>
                                         </xref></entry>
-                                    <entry>Maximum amount of memory for the pipeline to use. You can
-                                        enter a numeric value or edit the default expression to use
-                                        a percentage of the <ph
+                                    <entry>Maximum amount of memory for the pipeline to use. Used
+                                        only when the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> Java heap size. <p>Default is 65% of the <ph
+                                        /> monitor.memory configuration property is set to
+                                            true.<p>You can enter a numeric value or edit the
+                                            default expression to use a percentage of the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> Java heap size. </p><p>Default is 65% of the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> Java heap
                                             size:<codeblock> ${jvm:maxMemoryMB() * 0.65}</codeblock></p></entry>
@@ -196,7 +199,7 @@
                                 <row>
                                     <entry>On Memory Exceeded</entry>
                                     <entry>Action to take when the pipeline memory reaches the
-                                        memory limit:<ul id="ul_vsf_3k4_1s">
+                                        configured Max Pipeline Memory:<ul id="ul_vsf_3k4_1s">
                                             <li>Log - Logs a message in the pipeline history.</li>
                                             <li>Log and Alert - Logs a message and triggers an alert
                                                 that displays in monitor mode and sends an alert

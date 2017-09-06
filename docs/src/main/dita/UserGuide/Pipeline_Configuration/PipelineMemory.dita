@@ -19,20 +19,25 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_twq_nhx_rr">
  <title>Pipeline Memory</title>
- <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-  uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine,
-  you can configure the maximum amount of memory that can be used for the pipeline. </shortdesc>
  <conbody>
   <p><indexterm>pipeline properties<indexterm>maximum
      memory</indexterm></indexterm><indexterm>memory<indexterm>maximum for a
-    pipeline</indexterm></indexterm>Best practice is to configure the pipeline to use up to 65% of
-   the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Java
-   heap size. For example, with the default <ph
+    pipeline</indexterm></indexterm>When you enable the monitor.memory <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
+   property, you can use the <uicontrol>Max Pipeline Memory</uicontrol> pipeline property to define
+   the maximum amount of memory <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses when it
+   runs the pipeline. </p>
+  <p>The monitor.memory property should only be enabled during development and testing. For more
+   information, see <xref href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"/>. </p>
+  <p>When you configure the <uicontrol>Max Pipeline Memory</uicontrol> pipeline property, best
+   practice is to configure the pipeline to use up to 65% of the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Java heap
+   size. For example, with the default <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Java heap size
    of 1024 MB, the highest setting for the pipeline memory should be 665 MB.</p>
-  <p>Use the <uicontrol>Max Pipeline Memory</uicontrol> pipeline property to define the maximum
-   amount of memory to use. When you configure the pipeline, you can also configure the action to
-   take when pipeline memory usage exceeds the configured amount.</p>
+  <p>You can also configure the action to take when pipeline memory usage exceeds the configured
+   amount.</p>
   <p>
    <note type="tip">To avoid errors, you might create an alert to indicate when the memory usage
     approaches the configured limit.</note>

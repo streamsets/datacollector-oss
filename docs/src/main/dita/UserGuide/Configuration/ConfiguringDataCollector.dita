@@ -347,12 +347,13 @@
                             </row>
                             <row>
                                 <entry>monitor.memory</entry>
-                                <entry>Displays the Stage Heap Memory Usage and the Heap Memory
-                                    Usage statistics in Monitor mode for the pipeline or for a
-                                    stage. <p>Default is false. Set to true only when testing
-                                        real-world load usage in the test or production environment.
-                                        When finished testing, set the property back to
-                                    false.</p></entry>
+                                <entry>Allows you to configure the Max Pipeline Memory and On Memory
+                                    Exceeded pipeline properties. Also displays the Stage Heap
+                                    Memory Usage and the Heap Memory Usage statistics in Monitor
+                                    mode for the pipeline or for a stage. <p>Default is false. Set
+                                        to true only when testing real-world load usage in the test
+                                        or production environment. When finished testing, set the
+                                        property back to false.</p></entry>
                             </row>
                             <row>
                                 <entry>pipeline.access.control.enabled</entry>
