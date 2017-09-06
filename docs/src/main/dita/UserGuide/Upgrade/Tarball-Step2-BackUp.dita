@@ -20,8 +20,8 @@
 <concept id="concept_bwg_r1h_1z">
     <title>Step 2. Back Up the Previous Version</title>
     <shortdesc>Before you install the new version, create a backup of the files in the previous
-        version by copying and renaming the configuration, data, log, and resource directories. That
-        way, you can continue to run the previous version if needed.</shortdesc>
+        version by copying and renaming the configuration, data, and resource directories. That way,
+        you can continue to run the previous version if needed.</shortdesc>
     <conbody>
         <p>Copy and rename the following directories:<ul id="ul_d4f_t1h_1z">
                 <li>SDC_CONF - The <ph
@@ -30,9 +30,6 @@
                 <li>SDC_DATA - The <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> directory for pipeline state and configuration information.</li>
-                <li>SDC_LOG - The <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> directory for logs.</li>
                 <li>SDC_RESOURCES - The <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> directory for runtime resource files.</li>

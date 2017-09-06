@@ -20,7 +20,7 @@
 <concept id="concept_nzl_hkb_mw">
     <title>Step 2. Back Up the Previous Version</title>
     <shortdesc>Before you install the new version, create a backup of the files in the previous
-        version by copying and renaming the data, log, and resource directories. You’ll also need to
+        version by copying and renaming the data and resource directories. You’ll also need to
         create a backup of the environment configuration file,
             <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph>, so that the file is not overwritten when
         you install the new version. That way, you can continue to run the previous version if
@@ -29,8 +29,6 @@
         <p>Copy and rename the following directories and files:<ul id="ul_grw_zch_1z">
                 <li>Data directory defined in the SDC_DATA environment variable. Default is
                         <codeph>/var/lib/sdc</codeph>.</li>
-                <li>Log directory defined in the SDC_LOG environment variable. Default is
-                        <codeph>/var/log/sdc</codeph>.</li>
                 <li>Resource directory defined in the SDC_RESOURCES environment variable. Default is
                         <codeph>/var/lib/sdc-resources</codeph>.</li>
                 <li>Environment configuration file,
