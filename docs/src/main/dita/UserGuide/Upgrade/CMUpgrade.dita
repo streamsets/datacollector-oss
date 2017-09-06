@@ -35,9 +35,10 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             through Cloudera Manager, perform the following steps:</p>
             <p><xref href="CM-Step1-StopPipelines.dita#task_q3b_zfc_rx"/></p>
-            <p><xref href="CM-Step2-InstallCSD.dita#task_rrx_m3v_xv"/></p>
-            <p><xref href="CM-Step3-InstallParcel.dita#task_cgv_2jv_xv"/></p>
-            <p><xref href="CM-Step4-ActivateParcel.dita#task_mdr_phr_5v"/></p>
+        <p><xref href="CM-Step2-BackUp.dita#concept_xrh_b11_dbb"/></p>
+            <p><xref href="CM-Step3-InstallCSD.dita#task_rrx_m3v_xv"/></p>
+            <p><xref href="CM-Step4-InstallParcel.dita#task_cgv_2jv_xv"/></p>
+            <p><xref href="CM-Step5-ActivateParcel.dita#task_mdr_phr_5v"/></p>
         
         <note type="warning">You must perform the steps in this order, or <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

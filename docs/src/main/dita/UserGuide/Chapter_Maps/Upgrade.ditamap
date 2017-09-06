@@ -66,9 +66,10 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Upgrade/CM-Step1-StopPipelines.dita"/>
-   <topicref href="../Upgrade/CM-Step2-InstallCSD.dita"/>
-   <topicref href="../Upgrade/CM-Step3-InstallParcel.dita"/>
-   <topicref href="../Upgrade/CM-Step4-ActivateParcel.dita"/>
+   <topicref href="../Upgrade/CM-Step2-BackUp.dita"/>
+   <topicref href="../Upgrade/CM-Step3-InstallCSD.dita"/>
+   <topicref href="../Upgrade/CM-Step4-InstallParcel.dita"/>
+   <topicref href="../Upgrade/CM-Step5-ActivateParcel.dita"/>
   </topicref>
   <topicref href="../Upgrade/PostUpgrade.dita" chunk="to-content">
    <topicmeta>
