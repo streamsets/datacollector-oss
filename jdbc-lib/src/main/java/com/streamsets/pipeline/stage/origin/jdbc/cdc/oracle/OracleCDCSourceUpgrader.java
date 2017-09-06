@@ -35,7 +35,14 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
         }
         // fall through
       case 2:
-        return upgradeV2ToV3(configs);
+        configs = upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          return configs;
+        }
+
+        // fall through
+      case 3:
+        return upgradeV3ToV4(configs);
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -54,6 +61,11 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
     configs.add(new Config("oracleCDCConfigBean.keepOriginalQuery", false));
     configs.add(new Config("oracleCDCConfigBean.dbTimeZone", ZoneId.systemDefault().getId()));
     configs.add(new Config("oracleCDCConfigBean.queryTimeout", "${5 * MINUTES}"));
+    return configs;
+  }
+
+  private static List<Config> upgradeV3ToV4(List<Config> configs) {
+    configs.add(new Config("oracleCDCConfigBean.jdbcFetchSize", 1));
     return configs;
   }
 }

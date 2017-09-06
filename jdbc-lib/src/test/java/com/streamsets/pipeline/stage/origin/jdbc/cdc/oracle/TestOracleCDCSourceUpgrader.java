@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@ public class TestOracleCDCSourceUpgrader {
     List<Config> configs = new ArrayList<>(1);
 
     configs = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 1, 2, configs);
-    Assert.assertTrue(configs.size() == 2);
+    Assert.assertEquals(2, configs.size());
     Assert.assertEquals(configs.get(0).getName(), "oracleCDCConfigBean.txnWindow");
     Assert.assertEquals(configs.get(0).getValue(), "${1 * HOURS}");
     Assert.assertEquals(configs.get(1).getName(), "oracleCDCConfigBean.logminerWindow");
@@ -41,7 +41,7 @@ public class TestOracleCDCSourceUpgrader {
     List<Config> configs = new ArrayList<>(1);
 
     configs = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 2, 3, configs);
-    Assert.assertTrue(configs.size() == 6);
+    Assert.assertEquals(6, configs.size());
     Assert.assertEquals(configs.get(0).getName(), "oracleCDCConfigBean.bufferLocally");
     Assert.assertEquals(configs.get(0).getValue(), false);
     Assert.assertEquals(configs.get(1).getName(), "oracleCDCConfigBean.discardExpired");
@@ -54,6 +54,16 @@ public class TestOracleCDCSourceUpgrader {
     Assert.assertEquals(configs.get(4).getValue(), ZoneId.systemDefault().getId());
     Assert.assertEquals(configs.get(5).getName(), "oracleCDCConfigBean.queryTimeout");
     Assert.assertEquals(configs.get(5).getValue(), "${5 * MINUTES}");
+  }
+
+  @Test
+  public void upgradeV3TOV4() throws Exception {
+    List<Config> configs = new ArrayList<>(1);
+
+    configs = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 3, 4, configs);
+    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals(configs.get(0).getName(), "oracleCDCConfigBean.jdbcFetchSize");
+    Assert.assertEquals(configs.get(0).getValue(), 1);
   }
 
 }
