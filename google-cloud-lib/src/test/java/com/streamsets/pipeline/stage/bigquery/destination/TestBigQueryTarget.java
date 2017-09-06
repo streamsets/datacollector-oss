@@ -334,8 +334,8 @@ public class TestBigQueryTarget {
       Assert.assertEquals(expectedContentMap.keySet(), actualContentMap.keySet());
 
       expectedContentMap.forEach((ek, ev) -> {
-         Object actualContent = actualContentMap.get(ek);
-         Assert.assertEquals(ev, actualContent);
+        Object actualContent = actualContentMap.get(ek);
+        Assert.assertEquals(ev, actualContent);
       });
 
       InsertAllResponse response = PowerMockito.mock(InsertAllResponse.class);
@@ -348,5 +348,71 @@ public class TestBigQueryTarget {
     configBuilder.implicitFieldMapping(true);
     configBuilder.ignoreInvalidColumns(true);
     createAndRunner(configBuilder.build(), Collections.singletonList(record));
+  }
+
+
+  @Test
+  public void testRowId() throws Exception {
+    List<Record> records = new ArrayList<>();
+
+    records.add(
+        createRecord(
+            ImmutableMap.of("a", 1, "b", 11, "c", 111)
+        )
+    );
+    records.add(
+        createRecord(
+            ImmutableMap.of("a", 2, "b", 22, "c", 222)
+        )
+    );
+    records.add(
+        createRecord(
+            ImmutableMap.of("a", 1, "b", 33, "c", 333)
+        )
+    );
+
+
+    final Map<String, Map<String, Object>> rowIdToRow = new LinkedHashMap<>();
+
+    Mockito.doAnswer(invocationOnMock -> {
+      InsertAllResponse response = PowerMockito.mock(InsertAllResponse.class);
+      Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
+      Mockito.doReturn(false).when(response).hasErrors();
+
+      InsertAllRequest request = (InsertAllRequest)invocationOnMock.getArguments()[0];
+
+      request.getRows().forEach(row ->
+          rowIdToRow.computeIfAbsent(row.getId(), rowId -> new LinkedHashMap<>()).putAll(row.getContent())
+      );
+      return response;
+    }).when(bigQuery).insertAll(Mockito.any(InsertAllRequest.class));
+
+
+    BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
+    configBuilder.implicitFieldMapping(true);
+    configBuilder.ignoreInvalidColumns(true);
+    //Set value of a has row id
+    configBuilder.rowIdExpression("${record:value('/a')}");
+    createAndRunner(configBuilder.build(), records);
+
+    Assert.assertEquals(2, rowIdToRow.size());
+
+    rowIdToRow.forEach((rowId, row) ->{
+      switch (rowId) {
+        case "1":
+          Assert.assertEquals(1, row.get("a"));
+          Assert.assertEquals(33, row.get("b"));
+          Assert.assertEquals(333, row.get("c"));
+          break;
+        case "2":
+          Assert.assertEquals(2, row.get("a"));
+          Assert.assertEquals(22, row.get("b"));
+          Assert.assertEquals(222, row.get("c"));
+          break;
+        default:
+          Assert.fail("Unexpected row id: " + rowId);
+          break;
+      }
+    });
   }
 }

@@ -33,15 +33,13 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
 import com.streamsets.pipeline.stage.bigquery.lib.Errors;
-import org.jetbrains.annotations.NotNull;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +61,8 @@ public class BigQueryTarget extends BaseTarget {
   private BigQuery bigQuery;
   private ELEval dataSetEval;
   private ELEval tableNameELEval;
+  private ELEval rowIdELEval;
+
 
   BigQueryTarget(BigQueryTargetConfig conf) {
     this.conf = conf;
@@ -84,6 +84,7 @@ public class BigQueryTarget extends BaseTarget {
     );
     dataSetEval = getContext().createELEval("datasetEL");
     tableNameELEval = getContext().createELEval("tableNameEL");
+    rowIdELEval = getContext().createELEval("rowIdExpression");
     return issues;
   }
 
@@ -106,7 +107,7 @@ public class BigQueryTarget extends BaseTarget {
         List<Record> tableIdRecords = tableIdToRecords.computeIfAbsent(tableId, t -> new ArrayList<>());
         tableIdRecords.add(record);
       } catch (ELEvalException e) {
-        LOG.error("Error evaluating EL.", e);
+        LOG.error("Error evaluating DataSet/TableName EL", e);
         getContext().toError(record, Errors.BIGQUERY_10, e);
       }
     });
@@ -114,21 +115,29 @@ public class BigQueryTarget extends BaseTarget {
     tableIdToRecords.forEach((tableId, records) -> {
       InsertAllRequest.Builder insertAllRequestBuilder = InsertAllRequest.newBuilder(tableId);
       records.forEach(record -> {
+            RecordEL.setRecordInContext(elVars, record);
+            String recordId;
             try {
-              Map<String, ?> rowContent = conf.implicitFieldMapping ?
-                  covertToRowObjectFromRecordImplicitly(record) :
-                  covertToRowObjectFromRecordExplicitly(
-                      record,
-                      conf.bigQueryFieldMappingConfigs,
-                      conf.ignoreInvalidColumn
-                  );
-              if (rowContent.isEmpty()) {
-                throw new OnRecordErrorException(record, Errors.BIGQUERY_14);
+              recordId = (StringUtils.isEmpty(conf.rowIdExpression))? null : rowIdELEval.eval(elVars, conf.rowIdExpression, String.class);
+              try {
+                Map<String, ?> rowContent = conf.implicitFieldMapping ?
+                    covertToRowObjectFromRecordImplicitly(record) :
+                    covertToRowObjectFromRecordExplicitly(
+                        record,
+                        conf.bigQueryFieldMappingConfigs,
+                        conf.ignoreInvalidColumn
+                    );
+                if (rowContent.isEmpty()) {
+                  throw new OnRecordErrorException(record, Errors.BIGQUERY_14);
+                }
+                insertAllRequestBuilder.addRow(recordId, rowContent);
+              } catch (OnRecordErrorException e) {
+                LOG.error("Error when converting record {} to row, Reason : {} ", record.getHeader().getSourceId(), e.getMessage());
+                getContext().toError(record, e.getErrorCode(), e.getParams());
               }
-              insertAllRequestBuilder.addRow(record.getHeader().getSourceId(), rowContent);
-            } catch (OnRecordErrorException e) {
-              LOG.error("Error when converting record {} to row, Reason : {} ", record.getHeader().getSourceId(), e.getMessage());
-              getContext().toError(record, e.getErrorCode(), e.getParams());
+            } catch (ELEvalException e) {
+              LOG.error("Error evaluating Row Expression EL", e);
+              getContext().toError(record, Errors.BIGQUERY_10,e);
             }
           }
       );
@@ -182,7 +191,7 @@ public class BigQueryTarget extends BaseTarget {
    * @param record record to be converted
    * @return Java row representation for the record
    */
-  Map<String, Object> covertToRowObjectFromRecordExplicitly(
+  private Map<String, Object> covertToRowObjectFromRecordExplicitly(
       Record record,
       List<BigQueryFieldMappingConfig> fieldMappingConfigs,
       boolean ignoreInvalidColumn

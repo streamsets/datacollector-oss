@@ -23,6 +23,7 @@ public class BigQueryTargetConfigBuilder {
   private String projectId;
   private String datasetEL;
   private String tableNameEL;
+  private String rowIdExpression;
 
   private boolean implicitFieldMapping;
   private boolean ignoreInvalidColumns;
@@ -35,6 +36,7 @@ public class BigQueryTargetConfigBuilder {
     this.datasetEL = "sample";
     this.tableNameEL = "sample";
     this.projectId = "sample";
+    this.rowIdExpression = "";
   }
 
   public BigQueryTargetConfigBuilder projectId(String projectId) {
@@ -49,6 +51,11 @@ public class BigQueryTargetConfigBuilder {
 
   public BigQueryTargetConfigBuilder tableNameEL(String tableNameEL) {
     this.tableNameEL = tableNameEL;
+    return this;
+  }
+
+  public BigQueryTargetConfigBuilder rowIdExpression(String rowIdExpression) {
+    this.rowIdExpression = rowIdExpression;
     return this;
   }
 
@@ -74,6 +81,7 @@ public class BigQueryTargetConfigBuilder {
     config.tableNameEL = tableNameEL;
     config.ignoreInvalidColumn = ignoreInvalidColumns;
     config.implicitFieldMapping = implicitFieldMapping;
+    config.rowIdExpression = rowIdExpression;
     config.bigQueryFieldMappingConfigs =
         columnToFieldMapping.entrySet().stream().map(e ->  {
           BigQueryFieldMappingConfig fieldMappingConfig = new BigQueryFieldMappingConfig();
