@@ -64,6 +64,11 @@
                                         </ul></entry>
                                 </row>
                                 <row>
+                                    <entry>Polling Interval (ms) </entry>
+                                    <entry>Milliseconds to wait before checking for new data. Used
+                                        in the polling mode only. </entry>
+                                </row>
+                                <row>
                                     <entry>Per-Status Actions</entry>
                                     <entry>Actions to take for specific response statuses. For
                                         example, you can configure the origin to retry the request
@@ -72,19 +77,25 @@
                                             action for an additional status code.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Polling Interval (ms) </entry>
-                                    <entry>Milliseconds to wait before checking for new data. Used
-                                        in the polling mode only. </entry>
-                                </row>
-                                <row>
                                     <entry>HTTP Method</entry>
                                     <entry>HTTP method to use to request data from the
                                         server.</entry>
                                 </row>
                                 <row>
+                                    <entry>Body Time Zone</entry>
+                                    <entry>Time zone to use for evaluating the request body. Use
+                                        when the request body includes datetime variables or time
+                                        functions.</entry>
+                                </row>
+                                <row>
                                     <entry>Request Body</entry>
                                     <entry>Request data to use with the specified method. Available
-                                        for the PUT, POST, and DELETE methods.</entry>
+                                        for the PUT, POST, and DELETE methods.<p>You can use <xref
+                                                href="../Expression_Language/TimeFunctions.dita#concept_qkr_trf_sw"
+                                                >time functions</xref> and <xref
+                                                href="../Expression_Language/DateTimeVariables.dita#concept_gh4_qd2_sv"
+                                                >datetime variables</xref>, such as ${YYYY()}, in
+                                            the request body.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Default Request Content Type</entry>

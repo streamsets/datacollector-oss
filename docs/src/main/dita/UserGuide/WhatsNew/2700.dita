@@ -173,8 +173,10 @@
                                 FS origin enhancement</xref> - The Hadoop FS origin now allows you
                             to read data from other file systems using the Hadoop FileSystem
                             interface. Use the Hadoop FS origin in cluster batch pipelines.</li>
-                        <li>HTTP Client origin enhancement - The HTTP Client origin now allows time
-                            functions and datetime variables in the URL query parameters and request
+                        <li><xref href="../Origins/HTTPClient-Configuring.dita#task_akl_rkz_5r">HTTP
+                                Client origin enhancement</xref> - The HTTP Client origin now allows
+                            time functions and datetime variables in the request body. It also
+                            allows you to specify the time zone to use when evaluating the request
                             body. </li>
                         <li><xref href="../Origins/HTTPServer-DataFormat.dita#concept_anf_ss4_qy"
                                 >HTTP Server origin enhancement</xref> - The HTTP Server origin can
