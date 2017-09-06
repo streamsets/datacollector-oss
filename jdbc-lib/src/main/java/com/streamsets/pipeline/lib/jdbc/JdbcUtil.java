@@ -228,13 +228,14 @@ public class JdbcUtil {
       Connection connection,
       String catalog,
       String schemaPattern,
-      String schemaLessTablePattern
+      String schemaLessTablePattern,
+      boolean includeViews
   ) throws SQLException {
     return connection.getMetaData().getTables(
         catalog,
         schemaPattern,
         schemaLessTablePattern,
-        new String[]{"TABLE"}
+        includeViews ? new String[]{"TABLE", "VIEW"} : new String[]{"TABLE"}
     );
   }
 

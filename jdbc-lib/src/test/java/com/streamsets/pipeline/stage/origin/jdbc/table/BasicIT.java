@@ -170,6 +170,9 @@ public class BasicIT extends BaseTableJdbcSourceIT {
         );
       }
 
+      // VIEW for CRICKET_STARTS
+      statement.addBatch("CREATE VIEW TEST.CRICKET_STARS_VIEW AS SELECT * FROM TEST.CRICKET_STARS");
+
       //TENNIS STARS
       statement.addBatch(
           "CREATE TABLE TEST.TENNIS_STARS " +
@@ -287,6 +290,25 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("CRICKET_STARS")
         .schema(database)
+        .build();
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .build();
+
+    Map<String, String> offsets = new HashMap<>();
+    List<Record> records = runProduceSingleBatchAndGetRecords(tableJdbcSource, offsets, 1000);
+    Assert.assertEquals(10, records.size());
+    checkRecords(EXPECTED_CRICKET_STARS_RECORDS, records);
+  }
+
+  @Test
+  public void testSingleView() throws Exception {
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern("CRICKET_STARS_VIEW")
+        .schema(database)
+        .overrideDefaultOffsetColumns(true)
+        .offsetColumns(ImmutableList.of("P_ID"))
         .build();
 
     TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
