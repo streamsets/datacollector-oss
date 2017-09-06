@@ -51,6 +51,19 @@ public class BigQueryTargetConfig {
   )
   public String tableNameEL;
 
+  @ConfigDef(
+      //Not needed, if not configured, its considered a plain insert without row id
+      required = false,
+      label = "Row Id Expression",
+      type = ConfigDef.Type.STRING,
+      description = "Use an expression language to specify a row id to perform insert/update",
+      displayPosition = 30,
+      group = "BIGQUERY",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = {RecordEL.class}
+  )
+  public String rowIdExpression;
+
 
   @ConfigDef(
       required = true,
