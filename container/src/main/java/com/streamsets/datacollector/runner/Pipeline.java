@@ -397,6 +397,7 @@ public class Pipeline {
   }
 
   public void destroy(boolean productionExecution, PipelineStopReason stopReason) throws StageException, PipelineRuntimeException {
+    LOG.info("Destroying pipeline with reason={}", stopReason.name());
     Throwable exception = null;
 
     try {
@@ -483,6 +484,7 @@ public class Pipeline {
       lineagePublisherTask.publishEvent(event);
     }
 
+    LOG.info("Pipeline finished destroying with final reason={}", stopReason.name());
     // Propagate exception if it was thrown
     if(exception != null) {
       Throwables.propagateIfInstanceOf(exception, StageException.class);
