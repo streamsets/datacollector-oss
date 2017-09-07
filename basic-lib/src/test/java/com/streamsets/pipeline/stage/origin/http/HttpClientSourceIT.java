@@ -1475,7 +1475,7 @@ public class HttpClientSourceIT extends JerseyTest {
       conf.client.useOAuth2 = true;
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.JWT;
       conf.client.oauth2.algorithm = SigningAlgorithms.RS256;
-      conf.client.oauth2.jwtClaims = () -> JWT;
+      conf.client.oauth2.jwtClaims = JWT;
       conf.client.oauth2.key = () -> Base64.encodeBase64String(keyPair.getPrivate().getEncoded());
       conf.client.oauth2.tokenUrl = getBaseUri() + "jwtToken";
       conf.httpMode = HttpClientMode.STREAMING;

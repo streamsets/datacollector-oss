@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.TimeEL;
@@ -240,7 +239,7 @@ public class OAuth2ConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CREDENTIAL,
+      type = ConfigDef.Type.STRING,
       label = "JWT Claims",
       description = "Claims to be used with JWT token request, represented as JSON",
       displayPosition = 40,
@@ -252,7 +251,7 @@ public class OAuth2ConfigBean {
       },
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
-  public CredentialValue jwtClaims = () -> "";
+  public String jwtClaims = "";
 
   @ConfigDef(
       required = false,
@@ -317,7 +316,7 @@ public class OAuth2ConfigBean {
 
   private void prepareEL(Stage.Context context, List<Stage.ConfigIssue> issues) {
     try {
-      String resolvedJwtClaims = jwtClaims.get();
+      String resolvedJwtClaims = jwtClaims;
       context.parseEL(resolvedJwtClaims);
       timeEvaluator = context.createELEval("jwtClaims");
       elVars = context.createELVars();
@@ -452,7 +451,7 @@ public class OAuth2ConfigBean {
   private void insertJWTFields(MultivaluedMap<String, String> requestValues) throws IOException, StageException {
     String parsedJwt;
     try {
-      parsedJwt = timeEvaluator.eval(elVars, jwtClaims.get(), String.class);
+      parsedJwt = timeEvaluator.eval(elVars, jwtClaims, String.class);
     } catch (Exception ex) { // NOSONAR
       throw new RuntimeException(ex); // NOSONAR Unlikely to ever happen since init would have failed.
     }
