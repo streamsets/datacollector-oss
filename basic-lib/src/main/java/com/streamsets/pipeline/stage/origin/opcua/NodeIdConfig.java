@@ -55,4 +55,12 @@ public class NodeIdConfig {
       min = 0
   )
   public int namespaceIndex = 0;
+
+
+  public String toString() {
+    return "field:" + field +
+        ", identifier:" + identifier +
+        ", identifierType: " + identifierType +
+        ",namespaceIndex: " + namespaceIndex;
+  }
 }

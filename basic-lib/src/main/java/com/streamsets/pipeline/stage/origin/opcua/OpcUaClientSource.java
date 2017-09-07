@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import org.apache.directory.api.util.Strings;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
@@ -292,7 +293,18 @@ public class OpcUaClientSource implements PushSource {
           }
         }
 
-        conf.nodeIdConfigs.forEach(nodeIdConfig -> {
+        for (NodeIdConfig nodeIdConfig: conf.nodeIdConfigs) {
+          if (this.conf.nodeIdFetchMode.equals(NodeIdFetchMode.FILE)) {
+            if (Strings.isEmpty(nodeIdConfig.field) || Strings.isEmpty(nodeIdConfig.identifier)) {
+              issues.add(context.createConfigIssue(
+                  Groups.NODE_IDS.name(),
+                  "conf.nodeIdConfigsFilePath",
+                  Errors.OPC_UA_11,
+                  nodeIdConfig
+              ));
+              break;
+            }
+          }
           switch (nodeIdConfig.identifierType) {
             case NUMERIC:
               nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, Integer.parseInt(nodeIdConfig.identifier)));
@@ -307,7 +319,7 @@ public class OpcUaClientSource implements PushSource {
               nodeIds.add(new NodeId(nodeIdConfig.namespaceIndex, new ByteString(nodeIdConfig.identifier.getBytes())));
               break;
           }
-        });
+        }
       }
     } catch (Exception ex) {
       issues.add(
