@@ -54,17 +54,248 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>rpm-maven-plugin</artifactId>
-        <version>2.1.2</version>
+        <version>2.1.5</version>
         <executions>
+          <!-- el7 -->
           <execution>
-            <id>generate-sdc-rpm</id>
+            <id>generate-sdc-rpm-el7</id>
             <goals>
               <goal>attached-rpm</goal>
             </goals>
             <configuration>
               <name>streamsets-datacollector</name>
-              <classifier>streamsets-datacollector</classifier>
-              <license>Proprietary</license>
+              <classifier>el7</classifier>
+              <license>Apache Software License 2.0</license>
+              <distribution>el7</distribution>
+              <group>Applications/System</group>
+              <packager>StreamSets</packager>
+              <targetOS>linux</targetOS>
+              <prefix>/opt</prefix>
+              <provides>
+                <provide>streamsets-datacollector</provide>
+              </provides>
+              <requires>
+                <require>jre &gt;= 1.8</require>
+                <require>bash</require>
+                <require>which</require>
+              </requires>
+              <!-- prevent installation on wrong distribution since rpm-maven-plugin doesn't include {?dist} macro -->
+              <conflicts>
+                <conflict>centos-release &lt; 7</conflict>
+                <conflict>redhat-release &lt; 7</conflict>
+              </conflicts>
+              <defineStatements>
+                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+                <defineStatement>service_user ${sdc.user}</defineStatement>
+                <defineStatement>service_group ${sdc.group}</defineStatement>
+                <defineStatement>install_dir ${sdc.dir}</defineStatement>
+                <defineStatement>sdc_dist ${sdc.dir}/streamsets-datacollector-${project.version}</defineStatement>
+              </defineStatements>
+              <mappings>
+                <mapping>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-basic-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-basic-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/api-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/api-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/container-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/container-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/libs-common-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/libs-common-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/user-libs</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/user-libs</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/sdc-static-web</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/sdc-static-web</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/bin</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/bin</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/libexec</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/libexec</location>
+                      <excludes>
+                        <exclude>bootstrap-libs</exclude>
+                      </excludes>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/cli-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/cli-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/root-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/root-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/etc/sdc</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                </mapping>
+                <mapping>
+                  <directory>/etc/sdc</directory>
+                  <directoryIncluded>false</directoryIncluded>
+                  <filemode>644</filemode>
+                  <username>${sdc.user}</username>
+                  <groupname>${sdc.group}</groupname>
+                  <configuration>noreplace</configuration>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/etc</location>
+                      <excludes>
+                        <exclude>email-password.txt</exclude>
+                        <exclude>keystore-password.txt</exclude>
+                        <exclude>form-realm.properties</exclude>
+                      </excludes>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/etc/sdc</directory>
+                  <directoryIncluded>false</directoryIncluded>
+                  <filemode>600</filemode>
+                  <username>${sdc.user}</username>
+                  <groupname>${sdc.group}</groupname>
+                  <configuration>noreplace</configuration>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/etc/email-password.txt</location>
+                    </source>
+                    <source>
+                      <location>${sdc.distroot}/etc/keystore-password.txt</location>
+                    </source>
+                    <source>
+                      <location>${sdc.distroot}/etc/form-realm.properties</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/usr/lib/systemd/system</directory>
+                  <directoryIncluded>false</directoryIncluded>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <filemode>644</filemode>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/systemd/sdc.socket</location>
+                    </source>
+                    <source>
+                      <location>${sdc.distroot}/systemd/sdc.service</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/usr/bin</directory>
+                  <sources>
+                    <softlinkSource>
+                      <location>${sdc.dir}/bin/streamsets</location>
+                    </softlinkSource>
+                  </sources>
+                </mapping>
+              </mappings>
+              <preinstallScriptlet>
+                <scriptFile>src/main/scripts/el7/rpm-preinstall</scriptFile>
+                <fileEncoding>utf-8</fileEncoding>
+              </preinstallScriptlet>
+              <postinstallScriptlet>
+                <scriptFile>src/main/scripts/el7/rpm-post</scriptFile>
+                <fileEncoding>utf-8</fileEncoding>
+              </postinstallScriptlet>
+              <postremoveScriptlet>
+                <scriptFile>src/main/scripts/el7/rpm-postun</scriptFile>
+                <fileEncoding>utf-8</fileEncoding>
+              </postremoveScriptlet>
+            </configuration>
+          </execution>
+          <!-- el6 -->
+          <execution>
+            <id>generate-sdc-rpm-el6</id>
+            <goals>
+              <goal>attached-rpm</goal>
+            </goals>
+            <configuration>
+              <name>streamsets-datacollector</name>
+              <classifier>el6</classifier>
+              <license>Apache Software License 2.0</license>
               <distribution>el6</distribution>
               <group>Applications/System</group>
               <packager>StreamSets</packager>
@@ -78,6 +309,13 @@
                 <require>bash</require>
                 <require>which</require>
               </requires>
+              <!-- prevent installation on wrong distribution since rpm-maven-plugin doesn't include {?dist} macro -->
+              <conflicts>
+                <conflict>centos-release &lt; 6</conflict>
+                <conflict>redhat-release &lt; 6</conflict>
+                <conflict>centos-release &gt; 6</conflict>
+                <conflict>redhat-release &gt; 6</conflict>
+              </conflicts>
               <defineStatements>
                 <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
                 <defineStatement>service_user ${sdc.user}</defineStatement>
@@ -277,15 +515,15 @@
                 </mapping>
               </mappings>
               <preinstallScriptlet>
-                <scriptFile>src/main/scripts/rpm-preinstall</scriptFile>
+                <scriptFile>src/main/scripts/el6/rpm-preinstall</scriptFile>
                 <fileEncoding>utf-8</fileEncoding>
               </preinstallScriptlet>
               <postinstallScriptlet>
-                <scriptFile>src/main/scripts/rpm-post</scriptFile>
+                <scriptFile>src/main/scripts/el6/rpm-post</scriptFile>
                 <fileEncoding>utf-8</fileEncoding>
               </postinstallScriptlet>
               <postremoveScriptlet>
-                <scriptFile>src/main/scripts/rpm-postun</scriptFile>
+                <scriptFile>src/main/scripts/el6/rpm-postun</scriptFile>
                 <fileEncoding>utf-8</fileEncoding>
               </postremoveScriptlet>
             </configuration>

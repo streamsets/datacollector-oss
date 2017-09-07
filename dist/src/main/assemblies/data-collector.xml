@@ -68,6 +68,16 @@
       <fileMode>0644</fileMode>
     </fileSet>
 
+    <!-- systemd -->
+    <fileSet>
+      <directory>${basedir}/src/main</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>systemd/*</include>
+      </includes>
+      <fileMode>0644</fileMode>
+    </fileSet>
+
     <!-- libexec -->
     <fileSet>
       <directory>${basedir}/src/main</directory>

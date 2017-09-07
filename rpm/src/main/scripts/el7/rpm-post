@@ -18,5 +18,6 @@
 # under the License.
 #
 #
-sed -i 's|\(SDC_DIST="\)\(.*\)|\1%{install_dir}"|' /etc/init.d/sdc
-sed -i 's|\(SDC_HOME="\)\(.*\)|\1%{install_dir}"|' /etc/init.d/sdc
+
+mkdir -p /var/log/sdc
+systemctl daemon-reload

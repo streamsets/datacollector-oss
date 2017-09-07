@@ -18,5 +18,7 @@
 # under the License.
 #
 #
-/usr/bin/getent group %{service_group} || /usr/sbin/groupadd -r %{service_group}
-/usr/bin/getent passwd %{service_user} || /usr/sbin/useradd -r -d %{install_dir} -g %{service_group} -s /sbin/nologin %{service_user}
+
+if [ $1 -eq 0 ]; then
+  /usr/sbin/userdel %{service_user}
+fi

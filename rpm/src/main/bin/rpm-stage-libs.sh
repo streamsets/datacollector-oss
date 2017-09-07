@@ -21,30 +21,30 @@ set -x
 DIST=$1
 TARGET=$2
 VERSION=$3
-RPM_ALL_DIST=streamsets-datacollector-${VERSION}-all-rpms
+DISTS=(el6 el7)
 
-cd ${TARGET} || exit
+cd "${TARGET}" || exit
 
-if [ ! -d "${RPM_ALL_DIST}" ];
-then
-  mkdir ${RPM_ALL_DIST}
-fi
+for dist in "${DISTS[@]}"; do
+  RPM_ALL_DIST=streamsets-datacollector-${VERSION}-${dist}-all-rpms
+  mkdir -p "${RPM_ALL_DIST}"
 
-# copy all stage-lib rpms to ${RPM_ALL_DIST}
-for STAGE_DIR in ${DIST}/*
-do
-  STAGE_LIB=${STAGE_DIR}/target/rpm
-  STAGE_NAME=$(basename ${STAGE_DIR})
-  RPM="rpm"
-  if [ -d "${STAGE_LIB}" ] && [ "${STAGE_NAME}" != "${RPM}" ];
-  then
-    echo "Processing stage library: ${STAGE_NAME}"
-    cp -Rf ${STAGE_LIB}/*/RPMS/noarch/streamsets-datacollector-*.noarch.rpm ${RPM_ALL_DIST}
-  fi
+  # copy all stage-lib rpms to ${RPM_ALL_DIST}
+  for STAGE_DIR in ${DIST}/*
+  do
+    STAGE_LIB=${STAGE_DIR}/target/rpm
+    STAGE_NAME=$(basename "${STAGE_DIR}")
+    RPM="rpm"
+    if [ -d "${STAGE_LIB}" ] && [ "${STAGE_NAME}" != "${RPM}" ];
+    then
+      echo "Processing stage library: ${STAGE_NAME}"
+      ln -sf "${STAGE_LIB}"/*/RPMS/noarch/streamsets-datacollector-*.noarch.rpm "${RPM_ALL_DIST}"
+    fi
+  done
+
+  # copy core rpm to ${RPM_ALL_DIST}
+  ln -sf "${TARGET}"/streamsets-datacollector-"${dist}"/RPMS/noarch/streamsets-datacollector-*.noarch.rpm "${RPM_ALL_DIST}"
+
+  # additional step to archive all stage-libs into tar file -- no additional compression since rpm already uses cpio
+  tar cfh "${RPM_ALL_DIST}/streamsets-datacollector-${VERSION}-${dist}-all-rpms.tar" "${RPM_ALL_DIST}"/streamsets-datacollector-*.noarch.rpm
 done
-
-# copy core rpm to ${RPM_ALL_DIST}
-cp -Rf ${TARGET}/streamsets-datacollector-streamsets-datacollector/RPMS/noarch/streamsets-datacollector-*.noarch.rpm ${RPM_ALL_DIST}
-
-# additional step to compress all stage-libs into tar file
-tar -czf ${RPM_ALL_DIST}/streamsets-datacollector-${VERSION}-all-rpms.tgz ${RPM_ALL_DIST}/streamsets-datacollector-*.noarch.rpm
