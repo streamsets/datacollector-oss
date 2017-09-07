@@ -293,7 +293,8 @@ public class JdbcUtil {
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(minOffsetQuery)
       ) {
-        if (rs.next()) {
+        // explicitly position to first, then try to get next.
+        if (rs.first() && rs.next()) {
           String minValue;
           final int colType = rs.getMetaData().getColumnType(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
           switch (colType) {
