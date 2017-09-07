@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_p25_wm2_dbb">
+ <title>Providing NodeIds</title>
+ <conbody>
+  <p><indexterm>OPC UA Client origin<indexterm>providing node IDs</indexterm></indexterm>The OPC UA
+            Client origin provides several ways to specify the nodeIds for the nodes that you want
+            to use:<dl>
+                <dlentry>
+                    <dt>Manual</dt>
+                    <dd>Manually enter the NodeId information. Use this method when you have a
+                        specific set and low volume of nodes that you want to use. You can use
+                        simple or bulk edit mode.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>File</dt>
+                    <dd>Provide a file of NodeId information. Use this method when you have a
+                        relatively static set of nodes that you want to use. You can update the file
+                        as needed, but will need to restart the pipeline to capture the latest
+                        nodes.</dd>
+                    <dd>The file must be in a directory local to <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />. By default, the origin expects you to secure the information in a <xref
+                            href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
+                            >runtime resource file</xref>.</dd>
+                    <dd>Enter the NodeId information in the file using the following JSON
+                        format:<codeblock>[
+	{
+		"identifierType": "&lt;NUMERIC | STRING | UUID | OPAQUE>",
+		"namespaceIndex": &lt;namespaceIndex>,
+		"field": "&lt;field name>",
+		"identifier": "&lt;node identifier>"
+	},
+	{
+		"identifierType": "&lt;NUMERIC | STRING | UUID | OPAQUE>",
+		"namespaceIndex": &lt;namespaceIndex>,
+		"field": "&lt;field name>",
+		"identifier": "&lt;node identifier>"
+	}
+]</codeblock></dd>
+                    <dd>
+                        <note type="tip">This is the same format used when entering node information
+                            manually in bulk edit mode. To verify the format, you can enter two
+                            NodeIds manually in simple format, then switch to bulk edit mode.</note>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Browse Nodes</dt>
+                    <dd>Specify a root NodeId, allowing the origin to browse for all available nodes
+                        under the root node. Use this method when you want to process data from a
+                        dynamic set of nodes that are under a single root node. </dd>
+                    <dd>When you browse nodes, you specify an refresh interval. The refresh interval
+                        indicates how long the origin should wait before browsing again for an
+                        updated list of nodes to process. </dd>
+                </dlentry>
+            </dl></p>
+ </conbody>
+</concept>

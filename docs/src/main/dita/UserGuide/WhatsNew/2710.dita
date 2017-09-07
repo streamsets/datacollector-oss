@@ -36,6 +36,10 @@
                         <ul id="ul_gr5_hvr_1bb">
                             <li>New Azure Event Hub Consumer origin - A multithreaded origin that
                                 reads data from Microsoft Azure Event Hub.</li>
+                            <li><xref href="../Origins/OPCUAClient-NodeIDs.dita#concept_p25_wm2_dbb"
+                                    >OPC UA Client origin enhancement</xref> - You can now specify
+                                node information in a file. Or have the origin browse for nodes to
+                                use based on a specified root node.</li>
                         </ul>
                     </dd>
                 </dlentry>
