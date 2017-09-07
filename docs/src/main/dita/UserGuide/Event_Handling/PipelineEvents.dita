@@ -73,5 +73,7 @@
                         pipeline. In the event consuming pipeline, you can include as many stages as
                         you need for more complex processing. </p></li>
             </ul></p>
+        <p>For a case study that describes a couple ways to use pipeline events, see <xref
+                href="CaseStudy-SqoopReplacement.dita#concept_vrh_jrs_bbb"/>.</p>
     </conbody>
 </concept>
