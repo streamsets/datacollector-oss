@@ -77,6 +77,24 @@
                 /></entry>
             </row>
             <row>
+              <entry>Azure Event Hub Consumer</entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qwy_qlf_bbb"
+                /></entry>
+              <entry/>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_b3b_rlf_bbb"
+                /></entry>
+              <entry/>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_swc_rlf_bbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_wzd_rlf_bbb"
+                /></entry>
+              <entry/>
+              <entry/>
+            </row>
+            <row>
               <entry>CoAP Server</entry>
               <entry/>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_a2q_1zn_sz"

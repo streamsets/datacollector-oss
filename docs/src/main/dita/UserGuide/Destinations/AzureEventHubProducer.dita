@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xq5_d5q_1bb">
+ <title>Azure Event Hub Producer</title>
+ <conbody>
+  <p><indexterm>Azure Event Hub Producer
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Azure
+                    Event Hub Producer</indexterm></indexterm>The Azure Event Hub Producer writes
+            data to Microsoft Azure Event Hub. To write to Microsoft Azure Data Lake Store, use the
+            Azure Data Lake Store destination. To write to Microsoft Azure IoT Hub, use the Azure
+            IoT Hub Producer destination.</p>
+        <p>When you configure the Azure Event Hub Producer, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AEHub-config"
+            /></p>
+ </conbody>
+</concept>
