@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vrh_jrs_bbb">
+ <title>Case Study: Offloading Data from Relational Sources to Hadoop</title>
+ <conbody>
+  <p><indexterm>dataflow trigger case study<indexterm>Apache Sqoop replacement (batch loading to
+                    Hadoop)</indexterm></indexterm><indexterm>pipeline events<indexterm>case
+                    study</indexterm></indexterm>Say you want to batch-load data from a set of
+            database tables to Hive, basically replacing an old Apache Sqoop implementation. Before
+            processing new data, you want to delete the previous tables. And you'd like to create a
+            notification file when the pipeline stops to trigger subsequent actions from other
+            applications, like a _SUCCESS file to launch a MapReduce job.</p>
+        <p>Here's how the tasks break down:<dl>
+                <dlentry>
+                    <dt>Batch processing</dt>
+                    <dd>
+                        <p>To perform batch processing, where the pipeline stops automatically after
+                            all processing is complete, you use an origin that creates the
+                            no-more-data event, and you pass that event to the Pipeline Finisher
+                            executor. We'll step through this quickly, but for a case study centered
+                            on the Pipeline Finisher, see <xref
+                                href="CaseStudy-StopPipeline.dita#concept_kff_ykv_lz"/>. </p>
+                        <p>To process database data, we can use the JDBC Multitable Consumer - it
+                            generates the no-more-data event and can spawn multiple threads for
+                            greater throughput. For a list of origins that generate the no-more-data
+                            event, see <xref
+                                href="../Executors/PipelineFinisher-EventStages.dita#concept_dct_z3v_j1b"
+                            /> in the Pipeline Finisher documentation.</p>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Remove existing data before processing new data</dt>
+                    <dd>To perform tasks before the pipeline starts processing data, use the
+                        pipeline start event. So, for example, if you wanted to run a shell command
+                        to perform a set of tasks before the processing begins, you could use the
+                        Shell executor. </dd>
+                    <dd>To truncate Hive tables, we'll use the Hive Query executor.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Create a notification file when the pipeline stops</dt>
+                    <dd>Use the pipeline stop event to perform tasks after all processing completes,
+                        before the pipeline comes to a full stop. To create an empty success file,
+                        we'll use the HDFS File Metadata executor.</dd>
+                </dlentry>
+            </dl></p>
+        <p>Now let's take it step-by-step:<ol id="ol_lqq_mxs_bbb">
+                <li>First create the pipeline that you want to use. <p>We use the JDBC Multitable
+                        Consumer in the following simple pipeline, but your pipeline can be as
+                        complex as needed. </p><p><image
+                            href="../Graphics/Event-Sqoop-Pipeline1.png" id="image_dww_szs_bbb"
+                            scale="60"/></p></li>
+                <li>To set up batch processing, enable event generation in the origin by selecting
+                    the <uicontrol>Produce Events</uicontrol> property on the
+                        <wintitle>General</wintitle> tab. Then, connect the event output stream to
+                    the Pipeline Finisher executor.<p>Now, when the origin completes processing all
+                        data, it passes a no-more-data event to the Pipeline Finisher. And after all
+                        pipeline tasks are complete, the executor stops the pipeline.</p><p><image
+                            href="../Graphics/Event-Sqoop-OriginFinisher.png" id="image_v3j_1bt_bbb"
+                            scale="60"/></p><note>The JDBC Multitable Consumer origin generates only
+                        the no-more-data event, so you don't need to use a Stream Selector or
+                        executor precondition to manage other event types. But if the origin you
+                        want to use generates additional event types, you should ensure that only
+                        the no-more-data event is routed to the Pipeline Finisher. For details, see
+                        the <xref href="CaseStudy-StopPipeline.dita#concept_kff_ykv_lz">Stop the
+                            Pipeline case study</xref>. </note></li>
+                <li>To truncate Hive tables before processing begins, configure the pipeline to pass
+                    the pipeline start event to the Hive Query executor.<p>To do this, on the
+                            <uicontrol>General</uicontrol> tab, you configure the <uicontrol>Start
+                            Event</uicontrol> property, selecting the Hive Query executor as
+                        follows:</p><p><image href="../Graphics/Event-Sqoop-StartEvent.png"
+                            id="image_bzp_w2t_bbb" scale="60"/></p><p>Notice, a <wintitle>Start
+                            Event - Hive Query</wintitle> tab now displays. This is because the
+                        executors for pipeline start and stop events do not display in the pipeline
+                        canvas - you configure the selected executor as part of the pipeline
+                        properties.</p><p>Also note that you can pass each type of pipeline event to
+                        one executor or to another pipeline for more complex processing. For more
+                        information about pipeline events, see <xref
+                            href="PipelineEvents.dita#concept_amg_2qr_t1b"/>.</p></li>
+                <li>To configure the executor, click the <wintitle>Start Event - Hive
+                        Query</wintitle> tab. <p>You configure the connection properties as needed,
+                        then specify the query to use. In this case, you can use the following
+                        query, filling in the table
+                        name:</p><codeblock>TRUNCATE TABLE IF EXISTS &lt;table name></codeblock><p>Also,
+                        select <uicontrol>Stop on Query Failure</uicontrol>. This ensures that the
+                        pipeline stops and avoids performing any processing when the executor cannot
+                        complete the truncate query. The properties should look like
+                            this:</p><p><image href="../Graphics/Event-Sqoop-HiveQuery.png"
+                            id="image_ovf_jht_bbb" scale="75"/></p><p>With this configuration, when
+                        you start the pipeline, the Hive Query executor truncates the specified
+                        table before data processing begins. And when the truncate completes
+                        successfully, the pipeline begins processing.</p></li>
+                <li>Now, to generate a success file after all processing is complete, you perform
+                    similar steps with the<uicontrol> Stop Event</uicontrol> property. <p>Configure
+                        the pipeline to pass the pipeline stop event to the HDFS File Metadata
+                        executor as follows:</p><p><image
+                            href="../Graphics/Event-Sqoop-StopEvent.png" id="image_c3s_vj5_bbb"
+                            scale="65"/></p></li>
+                <li>Then, on the <wintitle>Stop Event - HDFS File Metadata</wintitle> tab, specify
+                    the connection information and configure the executor to create the success file
+                    in the required directory with the specified name.<p><image
+                            href="../Graphics/Event-Sqoop-HDFSFileMeta.png" id="image_r44_2m5_bbb"
+                            scale="65"/></p><p>With these configurations in place, when you start
+                        the pipeline, the Hive Query executor truncates the table specified in the
+                        query, then pipeline processing begins. When the JDBC Multitable Consumer
+                        completes processing all available data, it passes a no-more-date event to
+                        the Pipeline Finisher executor. </p><p>The Pipeline Finisher executor allows
+                        the pipeline stop event to trigger the HDFS File Metadata executor to create
+                        the empty file, then brings the pipeline to a graceful stop. Batch job
+                        complete!</p></li>
+            </ol></p>
+ </conbody>
+</concept>
