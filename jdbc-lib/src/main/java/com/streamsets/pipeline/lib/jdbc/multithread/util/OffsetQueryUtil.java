@@ -50,7 +50,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class OffsetQueryUtil {
-  private static final JsonMapper JSON_MAPPER = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
   private static final Logger LOG = LoggerFactory.getLogger(OffsetQueryUtil.class);
 
   private static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
@@ -428,42 +427,6 @@ public final class OffsetQueryUtil {
         }
 
         offsetMap.put(parts[0], parts[1]);
-      }
-    }
-    return offsetMap;
-  }
-  /**
-   * Serialize the Map of table to offset to a String
-   * @param offsetMap Map of table to Offset.
-   * @return Serialized offset
-   * @throws StageException When Serialization exception happens
-   */
-  public static String serializeOffsetMap(Map<String, String> offsetMap) throws StageException {
-    try {
-      return JSON_MAPPER.writeValueAsString(offsetMap);
-    } catch (IOException ex) {
-      LOG.error("Error when serializing", ex);
-      throw new StageException(JdbcErrors.JDBC_60, ex);
-    }
-  }
-
-  /**
-   * Deserialize String offset to Map of table to offset
-   * @param lastSourceOffset Serialized offset String
-   * @return Map of table to lastOffset
-   * @throws StageException When Deserialization exception happens
-   */
-  @SuppressWarnings("unchecked")
-  public static Map<String, String> deserializeOffsetMap(String lastSourceOffset) throws StageException {
-    Map<String, String> offsetMap;
-    if (StringUtils.isEmpty(lastSourceOffset)) {
-      offsetMap = new HashMap<>();
-    } else {
-      try {
-        offsetMap = JSON_MAPPER.readValue(lastSourceOffset, Map.class);
-      } catch (IOException ex) {
-        LOG.error("Error when deserializing", ex);
-        throw new StageException(JdbcErrors.JDBC_61, ex);
       }
     }
     return offsetMap;

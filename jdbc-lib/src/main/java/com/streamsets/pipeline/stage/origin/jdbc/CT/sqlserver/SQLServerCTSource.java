@@ -43,6 +43,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.cache.SQLServerCTContextLoader;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
+import com.streamsets.pipeline.lib.util.OffsetUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
@@ -50,6 +51,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -310,7 +312,12 @@ public class SQLServerCTSource extends BasePushSource {
         String innerTableOffsetsAsString = lastOffsets.get(Source.POLL_SOURCE_OFFSET_KEY);
 
         if (innerTableOffsetsAsString != null) {
-          offsets.putAll(OffsetQueryUtil.deserializeOffsetMap(innerTableOffsetsAsString));
+          try {
+            offsets.putAll(OffsetUtil.deserializeOffsetMap(innerTableOffsetsAsString));
+          } catch (IOException ex) {
+            LOG.error("Error when deserializing", ex);
+            throw new StageException(JdbcErrors.JDBC_61, ex);
+          }
         }
 
         offsets.forEach((tableName, tableOffset) -> getContext().commitOffset(tableName, tableOffset));
