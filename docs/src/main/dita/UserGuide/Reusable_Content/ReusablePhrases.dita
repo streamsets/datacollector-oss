@@ -962,6 +962,12 @@
                   a prefix and bucket.</p>
             <p id="S3origin-CopyMove2">Copying the object leaves the original object in place. </p>
             <p>
+                  <draft-comment author="Loretta">Azure Event Hub reusable stuff</draft-comment>
+            </p>
+            <p><ph id="AEHub-config">you specify the Microsoft Azure namespace and event hub names.
+                        You also define the shared access policy name and connection string
+                        key.</ph></p>
+            <p>
                   <draft-comment author="Loretta"><uicontrol>ul-S3-custSSE</uicontrol> is used by
                         Amazon S3 origin and destination in the SSE topic:</draft-comment>
             </p>
@@ -1245,6 +1251,9 @@ web-0011.log</codeblock></dd>
             </p>
             <p>
                   <ul id="Multithread-OriginsList">
+                        <li><xref href="../Origins/AzureEventHub.dita#concept_c1z_15q_1bb">Azure
+                                    Event Hub Consumer</xref> - Reads data from Microsoft Azure
+                              Event Hub.</li>
                         <li><xref href="../Origins/CoAPServer.dita#concept_wfy_ghn_sz">CoAP
                                     Server</xref> - Listens on a CoAP endpoint and processes the
                               contents of all authorized CoAP requests.</li>

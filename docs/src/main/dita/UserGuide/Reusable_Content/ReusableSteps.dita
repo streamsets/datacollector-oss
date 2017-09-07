@@ -3813,8 +3813,8 @@
                                         be in the <ph
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
-                                        <p>For more information about environment variables, see
-                                            <xref
+                                            <p>For more information about environment variables, see
+                                                <xref
                                                 href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
                                             />. For information about generating the descriptor
                                             file, see <xref
@@ -4257,6 +4257,63 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The following step is used by the Event Hub
+                        destination, rows by the origin.</draft-comment>
+                </cmd>
+            </step>
+            <step id="AEhub-EventHubConfig">
+                <cmd>On the <wintitle>Event Hub</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_q3q_g2f_bbb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Event Hub Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="AEhub-Namespace">
+                                    <entry>Namespace Name</entry>
+                                    <entry>The name of the namespace that contains the event hub
+                                        that you want to use.</entry>
+                                </row>
+                                <row id="AEhub-EventHubName">
+                                    <entry>Event Hub Name</entry>
+                                    <entry>The event hub name.</entry>
+                                </row>
+                                <row id="AEhub-KeyName">
+                                    <entry>Shared Access Policy Name</entry>
+                                    <entry>The policy name associated with the namespace. <p>To
+                                            retrieve the policy name, when logged into the Azure
+                                            portal, navigate to your namespace and event hub, and
+                                            then click Shared Access Policies for a list of
+                                            policies. </p><p>When appropriate, you can use the
+                                            default shared access key policy,
+                                            RootManageSharedAccessKey.</p></entry>
+                                </row>
+                                <row id="AEhub-Key">
+                                    <entry>Connection String Key </entry>
+                                    <entry>One of the connection string keys associated with the
+                                        specified shared access policy. <p>To retrieve a connection
+                                            string key, after accessing the list of shared access
+                                            policies, click the policy name, and then copy the
+                                            Connection String - Primary Key value. </p><p>The value
+                                            typically begins with "Endpoint".</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+                <info>For more information about Microsoft Azure Event Hub, see the <xref
+                        href="https://docs.microsoft.com/en-us/azure/event-hubs/" format="html"
+                        scope="external">Event Hub documentation</xref>.</info>
             </step>
             <step>
                 <cmd>

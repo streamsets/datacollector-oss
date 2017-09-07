@@ -28,6 +28,8 @@
           S3. </li>
         <li><xref href="DataLakeStore.dita#concept_jzm_kf4_zx">Azure Data Lake Store</xref> - Writes
           data to the Azure Data Lake Store.</li>
+        <li><xref href="AzureEventHubProducer.dita#concept_xq5_d5q_1bb">Azure Event Hub
+            Producer</xref> - Writes data to Azure Event Hub.</li>
         <li><xref href="AzureIoTHub.dita#concept_pnd_jkq_1bb">Azure IoT Hub Producer</xref> - Writes
           data to Microsoft Azure IoT Hub.</li>
         <li><xref href="Cassandra.dita#concept_hfy_mfd_sr">Cassandra</xref> - Writes data to a

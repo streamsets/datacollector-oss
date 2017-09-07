@@ -89,6 +89,22 @@
               <entry/>
             </row>
             <row>
+              <entry>Azure Event Hub Producer</entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_f55_plf_bbb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_byv_plf_bbb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_pgx_plf_bbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_m3y_plf_bbb"
+                /></entry>
+              <entry/>
+              <entry/>
+            </row>
+            <row>
               <entry>Azure IoT Hub Producer</entry>
               <entry/>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_whq_1rr_1bb"
