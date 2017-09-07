@@ -18,7 +18,7 @@ package com.streamsets.pipeline.lib.dirspooler;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.google.common.base.Preconditions;
-import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.io.DirectoryPathCreationWatcher;
@@ -57,7 +57,7 @@ public class DirectorySpooler {
   private static final Logger LOG = LoggerFactory.getLogger(DirectorySpooler.class);
   private static final String PENDING_FILES = "pending.files";
 
-  private final Source.Context context;
+  private final PushSource.Context context;
   private final String spoolDir;
   private final int maxSpoolFiles;
   private final String pattern;
@@ -77,7 +77,7 @@ public class DirectorySpooler {
   }
 
   public static class Builder {
-    private Source.Context context;
+    private PushSource.Context context;
     private String spoolDir;
     private int maxSpoolFiles;
     private String pattern;
@@ -94,7 +94,7 @@ public class DirectorySpooler {
       postProcessing = FilePostProcessing.NONE;
     }
 
-    public Builder setContext(Source.Context context) {
+    public Builder setContext(PushSource.Context context) {
       this.context = Preconditions.checkNotNull(context, "context cannot be null");
       return this;
     }
@@ -176,7 +176,8 @@ public class DirectorySpooler {
       if (postProcessing == FilePostProcessing.ARCHIVE) {
         Preconditions.checkArgument(archiveDir != null, "archive dir not specified");
       }
-      return new DirectorySpooler(context,
+      return new DirectorySpooler(
+          context,
           spoolDir,
           maxSpoolFiles,
           pattern,
@@ -193,7 +194,7 @@ public class DirectorySpooler {
   }
 
   public DirectorySpooler(
-      Source.Context context,
+      PushSource.Context context,
       String spoolDir,
       int maxSpoolFiles,
       String pattern,
@@ -221,7 +222,7 @@ public class DirectorySpooler {
   }
 
   public DirectorySpooler(
-      Source.Context context,
+      PushSource.Context context,
       String spoolDir,
       int maxSpoolFiles,
       String pattern,
@@ -411,7 +412,7 @@ public class DirectorySpooler {
     return running;
   }
 
-  public Source.Context getContext() {
+  public PushSource.Context getContext() {
     return context;
   }
 

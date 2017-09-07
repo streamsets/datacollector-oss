@@ -18,7 +18,7 @@ package com.streamsets.pipeline.lib.dirspooler;
 import com.codahale.metrics.Counter;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.OnRecordError;
-import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
@@ -57,14 +57,14 @@ public class TestDirectorySpoolerSubDirectories {
   private File spoolDir;
   private File archiveDir;
 
-  private Source.Context context;
+  private PushSource.Context context;
 
   @Before
   public void setUp() {
     File dir = new File("target", UUID.randomUUID().toString());
     spoolDir = new File(dir, "spool");
     archiveDir = new File(dir, "archive");
-    context = ContextInfoCreator.createSourceContext("s", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
+    context = (PushSource.Context) ContextInfoCreator.createSourceContext("s", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
   }
 
   private DirectorySpooler.Builder initializeAndGetBuilder() {

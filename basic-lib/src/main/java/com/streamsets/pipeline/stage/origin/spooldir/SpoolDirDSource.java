@@ -20,11 +20,13 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRawSourcePreviewer;
+import com.streamsets.pipeline.configurablestage.DPushSource;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
@@ -48,13 +50,13 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
   "conf.dataFormatConfig.avroSchemaSource"
 })
 @GenerateResourceBundle
-public class SpoolDirDSource extends DSource {
+public class SpoolDirDSource extends DPushSource {
 
   @ConfigDefBean
   public SpoolDirConfigBean conf;
 
   @Override
-  protected Source createSource() {
+  protected PushSource createPushSource() {
     if (conf.dataFormat == DataFormat.AVRO) {
       conf.dataFormatConfig.avroSchemaSource = SOURCE;
     }

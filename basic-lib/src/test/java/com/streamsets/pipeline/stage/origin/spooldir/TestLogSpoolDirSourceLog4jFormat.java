@@ -25,6 +25,7 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
 import com.streamsets.pipeline.lib.parser.log.Constants;
+import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
@@ -192,7 +193,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
   @Test
   public void testProduceFullFile() throws Exception {
     SpoolDirSource source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -249,7 +250,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
   @Test
   public void testProduceLessThanFile() throws Exception {
     SpoolDirSource source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -345,7 +346,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
     conf.dataFormatConfig.maxStackTraceLines = 0;
 
     SpoolDirSource source = new SpoolDirSource(conf);
-    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -411,7 +412,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
   @Test
   public void testProduceFullFileWithStackTrace() throws Exception {
     SpoolDirSource source = createSource();
-    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -486,7 +487,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
   @Test
   public void testProduceFullFileWithStackTraceCutShort() throws Exception {
     SpoolDirSource source = createSource(OnParseError.INCLUDE_AS_STACK_TRACE, 10);
-    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
@@ -584,7 +585,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
   @Test(expected = StageException.class)
   public void testTreatStackTraceAsError() throws Exception {
     SpoolDirSource source = createSource(OnParseError.ERROR, 0);
-    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");

@@ -15,11 +15,16 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.ToErrorContext;
+import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -60,12 +65,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class SpoolDirSource extends BaseSource {
+public class SpoolDirSource extends BasePushSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
   private static final String OFFSET_SEPARATOR = "::";
   private static final String MINUS_ONE = "-1";
   private static final String ZERO = "0";
   private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
+  private static final int ONE = 1;
   static final String PERMISSIONS = "permissions";
 
   private static final String BASE_DIR = "baseDir";
@@ -96,8 +102,14 @@ public class SpoolDirSource extends BaseSource {
 
   private long totalFiles;
 
+
   public SpoolDirSource(SpoolDirConfigBean conf) {
     this.conf = conf;
+  }
+
+  @Override
+  public int getNumberOfThreads() {
+    return ONE;
   }
 
   @Override
@@ -110,8 +122,6 @@ public class SpoolDirSource extends BaseSource {
         getContext(),
         issues
     );
-
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     boolean waitForPathToBePresent = !validateDir(
         conf.spoolDir, Groups.FILES.name(),
@@ -351,34 +361,52 @@ public class SpoolDirSource extends BaseSource {
     return spooler;
   }
 
-  protected String getFileFromSourceOffset(String sourceOffset) throws StageException {
-    String file = null;
-    if (sourceOffset != null) {
-      file = sourceOffset;
-      int separator = sourceOffset.indexOf(OFFSET_SEPARATOR);
+  protected String getFileFromSourceOffset(Map<String, String> sourceOffset) throws StageException {
+    String sourceOffsetFile = null;
+    if (sourceOffset != null && sourceOffset.size() > 0) {
+      sourceOffsetFile = sourceOffset.get(Source.POLL_SOURCE_OFFSET_KEY);
+      int separator = sourceOffsetFile.indexOf(OFFSET_SEPARATOR);
       if (separator > -1) {
-        file = sourceOffset.substring(0, separator);
-        if (NULL_FILE.equals(file)) {
-          file = null;
+        sourceOffsetFile = sourceOffsetFile.substring(0, separator);
+        if (NULL_FILE.equals(sourceOffsetFile)) {
+          sourceOffsetFile = null;
         }
       }
     }
-    return file;
+    return sourceOffsetFile;
   }
 
-  protected String getOffsetFromSourceOffset(String sourceOffset) throws StageException {
+  protected String getOffsetFromSourceOffset(Map<String, String> sourceOffset) throws StageException {
     String offset = ZERO;
-    if (sourceOffset != null) {
-      int separator = sourceOffset.indexOf(OFFSET_SEPARATOR);
+    if (sourceOffset != null && sourceOffset.size() > 0) {
+      int separator = sourceOffset.get(Source.POLL_SOURCE_OFFSET_KEY).indexOf(OFFSET_SEPARATOR);
       if (separator > -1) {
-        offset = sourceOffset.substring(separator + OFFSET_SEPARATOR.length());
+        offset = sourceOffset.get(Source.POLL_SOURCE_OFFSET_KEY).substring(separator + OFFSET_SEPARATOR.length());
+      }
+
+      if (offset == null || offset.length() < 1 ) {
+        offset = ZERO;
       }
     }
     return offset;
   }
 
   protected String createSourceOffset(String file, String fileOffset) {
-    return (file == null) ? NULL_FILE + OFFSET_SEPARATOR + fileOffset : file + OFFSET_SEPARATOR + fileOffset;
+    StringBuilder newOffset = new StringBuilder();
+
+    if (file == null) {
+      newOffset.append(NULL_FILE);
+    } else {
+      newOffset.append(file);
+    }
+
+    if (fileOffset != null && fileOffset.isEmpty()) {
+      newOffset.append(OFFSET_SEPARATOR + MINUS_ONE);
+    } else if (fileOffset != null) {
+      newOffset.append(OFFSET_SEPARATOR + fileOffset);
+    }
+
+    return newOffset.toString();
   }
 
   private boolean hasToFetchNextFileFromSpooler(String file, String offset) {
@@ -430,14 +458,31 @@ public class SpoolDirSource extends BaseSource {
             (f1.lastModified() == f2.lastModified() && f1.getName().compareTo(f2.getName()) > 0);
   }
 
+  @VisibleForTesting
+  void setErrorRecordHandler(DefaultErrorRecordHandler errorRecordHandler) {
+    this.errorRecordHandler = errorRecordHandler;
+  }
+
   @Override
-  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+  public void produce(Map<String, String> lastSourceOffset, int maxBatchSize) throws StageException {
     int batchSize = Math.min(conf.batchSize, maxBatchSize);
+    while (!getContext().isStopped()) {
+      BatchContext batchContext = getContext().startBatch();
+      BatchMaker batchMaker = batchContext.getBatchMaker();
+      errorRecordHandler = new DefaultErrorRecordHandler(getContext(), batchContext);
+
+      String newSourceOffset = produceBatch(lastSourceOffset, batchSize, batchContext, batchMaker);
+      lastSourceOffset = ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, newSourceOffset);
+    }
+  }
+
+  private String produceBatch(Map<String, String> lastSourceOffset, int batchSize, BatchContext batchContext, BatchMaker batchMaker) throws StageException {
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
     String file = getFileFromSourceOffset(lastSourceOffset);
     String fullPath = (file != null) ? getSpooler().getSpoolDir() + "/" + file : null;
     // if lastSourceOffset is NULL (beginning of source) it returns 0
     String offset = getOffsetFromSourceOffset(lastSourceOffset);
+
     if (hasToFetchNextFileFromSpooler(fullPath, offset)) {
       currentFile = null;
       try {
@@ -445,7 +490,9 @@ public class SpoolDirSource extends BaseSource {
         do {
           if (nextAvailFile != null) {
             LOG.warn("Ignoring file '{}' in spool directory as is lesser than offset file '{}'",
-                nextAvailFile.toString(), fullPath);
+                nextAvailFile.toString(),
+                fullPath
+            );
           }
           nextAvailFile = getSpooler().poolForFile(conf.poolingTimeoutSecs, TimeUnit.SECONDS);
         } while (!isFileFromSpoolerEligible(nextAvailFile, fullPath, offset));
@@ -486,12 +533,12 @@ public class SpoolDirSource extends BaseSource {
           }
         }
 
-        if(currentFile != null) {
+        if (currentFile != null) {
           perFileRecordCount = 0;
           perFileErrorCount = 0;
-          SpoolDirEvents.NEW_FILE.create(getContext())
-            .with("filepath", currentFile.getAbsolutePath())
-            .createAndSend();
+          SpoolDirEvents.NEW_FILE.create(getContext(), batchContext)
+              .with("filepath", currentFile.getAbsolutePath())
+              .createAndSend();
           noMoreDataFileCount++;
           totalFiles++;
         }
@@ -509,12 +556,12 @@ public class SpoolDirSource extends BaseSource {
         // we ask for a batch from the currentFile starting at offset
         offset = produce(currentFile, offset, batchSize, batchMaker);
 
-        if(MINUS_ONE.equals(offset)) {
-          SpoolDirEvents.FINISHED_FILE.create(getContext())
-            .with("filepath", currentFile.getAbsolutePath())
+        if (MINUS_ONE.equals(offset)) {
+          SpoolDirEvents.FINISHED_FILE.create(getContext(), batchContext)
+              .with("filepath", currentFile.getAbsolutePath())
               .with("error-count", perFileErrorCount)
               .with("record-count", perFileRecordCount)
-            .createAndSend();
+              .createAndSend();
 
           LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
           event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, currentFile.getAbsolutePath());
@@ -528,6 +575,7 @@ public class SpoolDirSource extends BaseSource {
       } catch (BadSpoolFileException ex) {
         LOG.error(Errors.SPOOLDIR_01.getMessage(), ex.getFile(), ex.getPos(), ex.toString(), ex);
         getContext().reportError(Errors.SPOOLDIR_01, ex.getFile(), ex.getPos(), ex.toString(), ex);
+
         try {
           // then we ask the spooler to error handle the failed file
           spooler.handleCurrentFileAsError();
@@ -540,21 +588,25 @@ public class SpoolDirSource extends BaseSource {
       }
     }
 
-      if(shouldSendNoMoreDataEvent) {
-        LOG.info("sending no-more-data event.  records {} errors {} files {} ",
-            noMoreDataRecordCount, noMoreDataErrorCount, noMoreDataFileCount);
-        SpoolDirEvents.NO_MORE_DATA.create(getContext())
-            .with("record-count", noMoreDataRecordCount)
-            .with("error-count", noMoreDataErrorCount)
-            .with("file-count", noMoreDataFileCount)
-            .createAndSend();
-        shouldSendNoMoreDataEvent = false;
-        noMoreDataRecordCount = 0;
-        noMoreDataErrorCount = 0;
-        noMoreDataFileCount = 0;
-      }
+    if (shouldSendNoMoreDataEvent) {
+      LOG.info("sending no-more-data event.  records {} errors {} files {} ",
+          noMoreDataRecordCount, noMoreDataErrorCount, noMoreDataFileCount
+      );
+      SpoolDirEvents.NO_MORE_DATA.create(getContext(), batchContext)
+          .with("record-count", noMoreDataRecordCount)
+          .with("error-count", noMoreDataErrorCount)
+          .with("file-count", noMoreDataFileCount)
+          .createAndSend();
+      shouldSendNoMoreDataEvent = false;
+      noMoreDataRecordCount = 0;
+      noMoreDataErrorCount = 0;
+      noMoreDataFileCount = 0;
+    }
 
-    // create a new offset using the current file and offset
+
+    //Process And Commit offsets
+    getContext().processBatch(batchContext, Source.POLL_SOURCE_OFFSET_KEY, createSourceOffset(file, offset));
+
     return createSourceOffset(file, offset);
   }
 
@@ -596,6 +648,7 @@ public class SpoolDirSource extends BaseSource {
             // Propagate partially parsed record to error stream
             record = ex.getUnparsedRecord();
             setHeaders(record, file, offset);
+
             errorRecordHandler.onError(new OnRecordErrorException(record, ex.getErrorCode(), ex.getParams()));
             perFileErrorCount++;
             noMoreDataErrorCount++;
