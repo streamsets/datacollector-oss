@@ -29,8 +29,7 @@ import com.streamsets.pipeline.stage.bigquery.lib.Groups;
     description = "Executes a streaming insert to Google Big Query",
     icon="bigquery.png",
     producesEvents = true,
-    //TODO
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Destinations/BigQuery.html#task_gxn_dsk_dbb"
 )
 @ConfigGroups(Groups.class)
 public class BigQueryDTarget extends DTarget{
