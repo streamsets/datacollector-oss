@@ -107,6 +107,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.mapr.db</groupId>
+      <artifactId>maprdb-cdc</artifactId>
+      <version>6.0.0-mapr-beta</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>provided</scope>
