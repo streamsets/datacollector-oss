@@ -34,8 +34,9 @@
                     <dt>Origins</dt>
                     <dd>
                         <ul id="ul_gr5_hvr_1bb">
-                            <li>New Azure Event Hub Consumer origin - A multithreaded origin that
-                                reads data from Microsoft Azure Event Hub.</li>
+                            <li><xref href="../Origins/AzureEventHub.dita#concept_c1z_15q_1bb">New
+                                    Azure Event Hub Consumer origin</xref> - A multithreaded origin
+                                that reads data from Microsoft Azure Event Hub.</li>
                             <li><xref href="../Origins/OPCUAClient-NodeIDs.dita#concept_p25_wm2_dbb"
                                     >OPC UA Client origin enhancement</xref> - You can now specify
                                 node information in a file. Or have the origin browse for nodes to
@@ -58,8 +59,10 @@
                     <dt>Destinations</dt>
                     <dd>
                         <ul id="ul_s22_lvr_1bb">
-                            <li>New Azure Event Hub Producer destination - A destination that writes
-                                data to Microsoft Azure Event Hub.</li>
+                            <li><xref
+                                    href="../Destinations/AzureEventHubProducer.dita#concept_xq5_d5q_1bb"
+                                    >New Azure Event Hub Producer destination</xref> - A destination
+                                that writes data to Microsoft Azure Event Hub.</li>
                             <li><xref href="../Destinations/AzureIoTHub.dita#concept_pnd_jkq_1bb"
                                     >New Azure IoT Hub Producer destination</xref> - A destination
                                 that writes data to Microsoft Azure IoT Hub.</li>

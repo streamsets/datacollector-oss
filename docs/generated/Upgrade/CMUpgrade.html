@@ -45,11 +45,13 @@ To upgrade <span class="ph">Data
 
             <p class="p"><a class="xref" href="CMUpgrade.html#task_q3b_zfc_rx" title="In Data Collector, stop all running pipelines.">Step 1. Stop All Pipelines</a></p>
 
-            <p class="p"><a class="xref" href="CMUpgrade.html#task_rrx_m3v_xv" title="Install the new StreamSets custom service descriptor file (CSD), and then restart Cloudera Manager.">Step 2. Install the StreamSets Custom Service Descriptor</a></p>
+        <p class="p"><a class="xref" href="CMUpgrade.html#concept_xrh_b11_dbb" title="Before you install the new version, create a backup of the files in the previous version by copying and renaming the configuration, data, and resource directories. That way, you can continue to run the previous version if needed.">Step 2. Back Up the Previous Version</a></p>
 
-            <p class="p"><a class="xref" href="CMUpgrade.html#task_cgv_2jv_xv" title="You can manually install the StreamSets parcel and related checksum files. Manually install the files when the Cloudera Manager Server does not have internet access.">Step 3. Manually Install the Parcel and Checksum Files (Optional)</a></p>
+            <p class="p"><a class="xref" href="CMUpgrade.html#task_rrx_m3v_xv" title="Install the new StreamSets custom service descriptor file (CSD), and then restart Cloudera Manager.">Step 3. Install the StreamSets Custom Service Descriptor</a></p>
 
-            <p class="p"><a class="xref" href="CMUpgrade.html#task_mdr_phr_5v" title="After you add the StreamSets repository to Cloudera Manager, you can download and distribute the new StreamSets parcel across the cluster. Stop the StreamSets service and deactivate the previous parcel before you activate the new parcel.">Step 4. Distribute and Activate the New StreamSets Parcel</a></p>
+            <p class="p"><a class="xref" href="CMUpgrade.html#task_cgv_2jv_xv" title="You can manually install the StreamSets parcel and related checksum files. Manually install the files when the Cloudera Manager Server does not have internet access.">Step 4. Manually Install the Parcel and Checksum Files (Optional)</a></p>
+
+            <p class="p"><a class="xref" href="CMUpgrade.html#task_mdr_phr_5v" title="After you add the StreamSets repository to Cloudera Manager, you can download and distribute the new StreamSets parcel across the cluster. Stop the StreamSets service and deactivate the previous parcel before you activate the new parcel.">Step 5. Distribute and Activate the New StreamSets Parcel</a></p>
 
         
         <div class="note warning"><span class="warningtitle">Warning:</span> You must perform the steps in this order, or <span class="ph">Data
@@ -81,8 +83,46 @@ To upgrade <span class="ph">Data
     </div>
 
 </div>
+<div class="topic concept nested1" id="concept_xrh_b11_dbb">
+ <h2 class="title topictitle2">Step 2. Back Up the Previous Version</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Before you install the new version, create a backup of the files in the previous version
+        by copying and renaming the configuration, data, and resource directories. That way, you can
+        continue to run the previous version if needed.</p>
+
+  <p class="p">Copy and rename the following directories on every Cloudera Manager node that runs Data
+            Collector:</p>
+
+        <div class="p">
+            <ul class="ul">
+                <li class="li">SDC_DATA - The <span class="ph">Data
+                  Collector</span> directory for pipeline state and configuration information.</li>
+
+                <li class="li">SDC_RESOURCES - The <span class="ph">Data
+                  Collector</span> directory for runtime resource files.</li>
+
+            </ul>
+
+        </div>
+
+        <p class="p">For example, if you are upgrading version 2.6.0.0, copy the <span class="ph">Data
+                  Collector</span>
+            configuration directory and rename it as follows: <samp class="ph codeph">/etc/sdc2600</samp>.</p>
+
+        <p class="p">If you need to roll back to the previous version, you must restore the previous
+            directories on every Cloudera Manager node that runs <span class="ph">Data
+                  Collector</span>.</p>
+
+ </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
+</div>
 <div class="topic task nested1" id="task_rrx_m3v_xv">
-    <h2 class="title topictitle2">Step 2. Install the StreamSets Custom Service Descriptor</h2>
+    <h2 class="title topictitle2">Step 3. Install the StreamSets Custom Service Descriptor</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">Install the new StreamSets custom service descriptor file (CSD), and then restart
@@ -134,7 +174,7 @@ For Ubuntu
 
 </div>
 <div class="topic task nested1" id="task_cgv_2jv_xv">
-    <h2 class="title topictitle2">Step 3. Manually Install the Parcel and Checksum Files (Optional)</h2>
+    <h2 class="title topictitle2">Step 4. Manually Install the Parcel and Checksum Files (Optional)</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">You can manually install the StreamSets parcel and related checksum files. Manually
@@ -167,7 +207,7 @@ For Ubuntu
 
 </div>
 <div class="topic task nested1" id="task_mdr_phr_5v">
-    <h2 class="title topictitle2">Step 4. Distribute and Activate the New StreamSets Parcel</h2>
+    <h2 class="title topictitle2">Step 5. Distribute and Activate the New StreamSets Parcel</h2>
 
     
     <div class="body taskbody"><p class="shortdesc">After you add the StreamSets repository to Cloudera Manager, you can download and

@@ -48,7 +48,7 @@
 
             <p class="p"><a class="xref" href="Tarball.html#task_uzq_gwl_5v" title="Stop all pipelines and then shut down the previous version of Data Collector.">Step 1. Shut Down the Previous Version</a></p>
 
-            <p class="p"><a class="xref" href="Tarball.html#concept_bwg_r1h_1z" title="Before you install the new version, create a backup of the files in the previous version by copying and renaming the configuration, data, log, and resource directories. That way, you can continue to run the previous version if needed.">Step 2. Back Up the Previous Version</a></p>
+            <p class="p"><a class="xref" href="Tarball.html#concept_bwg_r1h_1z" title="Before you install the new version, create a backup of the files in the previous version by copying and renaming the configuration, data, and resource directories. That way, you can continue to run the previous version if needed.">Step 2. Back Up the Previous Version</a></p>
 
             <p class="p"><a class="xref" href="Tarball.html#concept_bfv_jyl_5v" title="The instructions that you use to install the new version depend on whether you start Data Collector manually or as a service.">Step 3. Install the New Version</a></p>
 
@@ -102,8 +102,8 @@
 
     
     <div class="body conbody"><p class="shortdesc">Before you install the new version, create a backup of the files in the previous
-        version by copying and renaming the configuration, data, log, and resource directories. That
-        way, you can continue to run the previous version if needed.</p>
+        version by copying and renaming the configuration, data, and resource directories. That way,
+        you can continue to run the previous version if needed.</p>
 
         <div class="p">Copy and rename the following directories:<ul class="ul" id="concept_bwg_r1h_1z__ul_d4f_t1h_1z">
                 <li class="li">SDC_CONF - The <span class="ph">Data
@@ -111,9 +111,6 @@
 
                 <li class="li">SDC_DATA - The <span class="ph">Data
                   Collector</span> directory for pipeline state and configuration information.</li>
-
-                <li class="li">SDC_LOG - The <span class="ph">Data
-                  Collector</span> directory for logs.</li>
 
                 <li class="li">SDC_RESOURCES - The <span class="ph">Data
                   Collector</span> directory for runtime resource files.</li>
@@ -265,9 +262,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d411623e568">Environment Variable</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d420938e562">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d411623e571">Value</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d420938e565">Value</th>
 
                                 </tr>
 
@@ -275,9 +272,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411623e568 ">SDC_CONF</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d420938e562 ">SDC_CONF</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411623e571 ">New location outside of the base <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d420938e565 ">New location outside of the base <span class="ph">Data
                   Collector</span> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
                                         configuration directory to <samp class="ph codeph">/etc/sdc2600</samp>,
@@ -286,23 +283,23 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411623e568 ">SDC_DATA</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d420938e562 ">SDC_DATA</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411623e571 ">Same directory that the previous version used.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411623e568 ">SDC_LOG</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411623e571 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d420938e565 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d411623e568 ">SDC_RESOURCES</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d420938e562 ">SDC_LOG</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d411623e571 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d420938e565 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d420938e562 ">SDC_RESOURCES</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d420938e565 ">Same directory that the previous version used.</td>
 
                                 </tr>
 

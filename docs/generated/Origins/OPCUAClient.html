@@ -40,8 +40,9 @@
             to configure the origin. </p>
 
         <p class="p">When you configure the OPC UA Client origin, you specify connection information and tag
-            information to associate with each client request. You also select the origin mode and
-            the node IDs to use. </p>
+            information to associate with each client request. You select the processing mode for
+            the origin and specify the NodeIds for the nodes you want to use. You can use one of
+            several different methods to provide the NodeIds.</p>
 
         <p class="p">You can optionally configure the security policy that you want to use, related TLS
             properties, and an optional client private key alias. </p>
@@ -50,12 +51,12 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_nbk_mkc_h1b">
- <h2 class="title topictitle2">Modes</h2>
+ <h2 class="title topictitle2">Processing Mode</h2>
 
  <div class="body conbody">
   <div class="p">The OPC UA Client origin
-            processes data differently depending on the mode that you choose. The origin can run in
-            the following modes:<dl class="dl">
+            processes data differently depending on the mode that you choose. The origin can use the
+            following processing modes:<dl class="dl">
                 
                     <dt class="dt dlterm">Polling</dt>
 
@@ -67,15 +68,15 @@
                         pipeline to avoid delays in processing.</dd>
 
                     <dd class="dd">For example, say you set the OPC UA Client to poll the server every minute,
-                        and you specify five node IDs. When the pipeline runs, the origin generates
-                        a record every minute, with the status of each of the five node IDs in each
+                        and you specify five NodeIds. When the pipeline runs, the origin generates a
+                        record every minute, with the status of each of the five NodeIds in each
                         record, regardless of whether any changes occurred since the last poll.</dd>
 
                 
                 
                     <dt class="dt dlterm">Subscribe</dt>
 
-                    <dd class="dd">The origin subscribes to the specified node IDs. The OPC UA server sends an
+                    <dd class="dd">The origin subscribes to the specified nodes. The OPC UA server sends an
                         update each time a change occurs with one of the specified nodes. When node
                         changes occur, the server sends each change to the origin separately. </dd>
 
@@ -83,9 +84,9 @@
                         origin generates a record, it passes the record to the pipeline to avoid
                         delays in processing.</dd>
 
-                    <dd class="dd">For example, say you set the OPC UA Client origin to subscribe to ten node
-                        IDs. After you start the pipeline, the pipeline sits idly until the OPC UA
-                        server sends data about a change to a subscribed node. </dd>
+                    <dd class="dd">For example, say you set the OPC UA Client origin to subscribe to ten nodes.
+                        After you start the pipeline, the pipeline sits idly until the OPC UA server
+                        sends data about a change to a subscribed node. </dd>
 
                 
                 
@@ -96,7 +97,7 @@
                         node details, such as the node identifier and namespace index. </dd>
 
                     <dd class="dd">This mode provides easy access to the node details that you need to
-                        configure the Node IDs in the origin. </dd>
+                        configure the NodeIds in the origin. </dd>
 
                     <dd class="dd">You can use browse nodes mode in data preview to view node details and then
                         configure the origin. Or, you can run a pipeline in browse nodes mode to
@@ -106,10 +107,79 @@
                     <dd class="dd">For example, say previewing your OPC UA server in browse nodes mode returns
                         the following information:<p class="p"><img class="image" id="concept_nbk_mkc_h1b__image_rmp_4v3_h1b" src="../Graphics/OPCUAServer-DataPreview.png" height="521" width="317" /></p>
 <p class="p">You can then use this
-                            information to configure the node IDs that you want to subscribe to, as
+                            information to configure the nodes that you want to subscribe to, as
                             follows:</p>
 <p class="p"><img class="image" id="concept_nbk_mkc_h1b__image_uyr_s1w_j1b" src="../Graphics/OPCUAServer-Config.png" height="165" width="822" /></p>
 </dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_p25_wm2_dbb">
+ <h2 class="title topictitle2">Providing NodeIds</h2>
+
+ <div class="body conbody">
+  <div class="p">The OPC UA
+            Client origin provides several ways to specify the nodeIds for the nodes that you want
+            to use:<dl class="dl">
+                
+                    <dt class="dt dlterm">Manual</dt>
+
+                    <dd class="dd">Manually enter the NodeId information. Use this method when you have a
+                        specific set and low volume of nodes that you want to use. You can use
+                        simple or bulk edit mode.</dd>
+
+                
+                
+                    <dt class="dt dlterm">File</dt>
+
+                    <dd class="dd">Provide a file of NodeId information. Use this method when you have a
+                        relatively static set of nodes that you want to use. You can update the file
+                        as needed, but will need to restart the pipeline to capture the latest
+                        nodes.</dd>
+
+                    <dd class="dd">The file must be in a directory local to <span class="ph">Data
+                  Collector</span>. By default, the origin expects you to secure the information in a <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resource file</a>.</dd>
+
+                    <dd class="dd">Enter the NodeId information in the file using the following JSON
+                        format:<pre class="pre codeblock">[
+	{
+		"identifierType": "&lt;NUMERIC | STRING | UUID | OPAQUE&gt;",
+		"namespaceIndex": &lt;namespaceIndex&gt;,
+		"field": "&lt;field name&gt;",
+		"identifier": "&lt;node identifier&gt;"
+	},
+	{
+		"identifierType": "&lt;NUMERIC | STRING | UUID | OPAQUE&gt;",
+		"namespaceIndex": &lt;namespaceIndex&gt;,
+		"field": "&lt;field name&gt;",
+		"identifier": "&lt;node identifier&gt;"
+	}
+]</pre>
+</dd>
+
+                    <dd class="dd">
+                        <div class="note tip"><span class="tiptitle">Tip:</span> This is the same format used when entering node information
+                            manually in bulk edit mode. To verify the format, you can enter two
+                            NodeIds manually in simple format, then switch to bulk edit mode.</div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Browse Nodes</dt>
+
+                    <dd class="dd">Specify a root NodeId, allowing the origin to browse for all available nodes
+                        under the root node. Use this method when you want to process data from a
+                        dynamic set of nodes that are under a single root node. </dd>
+
+                    <dd class="dd">When you browse nodes, you specify an refresh interval. The refresh interval
+                        indicates how long the origin should wait before browsing again for an
+                        updated list of nodes to process. </dd>
 
                 
             </dl>
@@ -160,14 +230,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bqt_mx3_h1b__d35242e340" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bqt_mx3_h1b__d35721e340" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d274741e203">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d282541e280">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d274741e206">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d282541e283">Description</th>
 
                                 </tr>
 
@@ -175,24 +245,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d274741e203 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d282541e280 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d274741e206 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d274741e203 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d274741e206 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d282541e283 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d274741e203 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_bqt_mx3_h1b__d35242e386" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d282541e280 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d274741e206 ">Error record handling for the stage: <ul class="ul" id="task_bqt_mx3_h1b__d35242e390">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d282541e283 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d282541e280 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_bqt_mx3_h1b__d35721e386" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d282541e283 ">Error record handling for the stage: <ul class="ul" id="task_bqt_mx3_h1b__d35721e390">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -222,9 +292,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d274741e282">OPC UA Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d282541e359">OPC UA Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d274741e285">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d282541e362">Description</th>
 
                                 </tr>
 
@@ -232,25 +302,25 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e282 ">Resource URL</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e359 ">Resource URL</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e285 ">OPC UA resource URL to use.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d282541e362 ">OPC UA resource URL to use.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e282 ">Application Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e359 ">Application Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e285 ">Application name to use for contact with the OPC UA
+                                    <td class="entry" valign="top" width="70%" headers="d282541e362 ">Application name to use for contact with the OPC UA
                                         server. This name can appear in reporting tools to identify
                                         the  application that sent a request.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e282 ">Application URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e359 ">Application URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e285 ">Application URI to use for contact with the OPC UA
+                                    <td class="entry" valign="top" width="70%" headers="d282541e362 ">Application URI to use for contact with the OPC UA
                                         server. Enter a unique ID that begins with "urn" as
                                         follows:<pre class="pre codeblock">urn:&lt;application URI&gt;</pre>
  This
@@ -260,17 +330,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e282 ">Request Timeout</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e359 ">Request Timeout</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e285 ">Milliseconds to wait for a response before timing
+                                    <td class="entry" valign="top" width="70%" headers="d282541e362 ">Milliseconds to wait for a response before timing
                                         out.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e282 ">Mode</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e359 ">Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e285 ">Mode to use to retrieve data from the OPC UA server:<ul class="ul" id="task_bqt_mx3_h1b__ul_ty1_ndw_j1b">
+                                    <td class="entry" valign="top" width="70%" headers="d282541e362 ">Mode to use to retrieve data from the OPC UA server:<ul class="ul" id="task_bqt_mx3_h1b__ul_ty1_ndw_j1b">
                                             <li class="li">Polling - Use to request data at regular
                                                 intervals.</li>
 
@@ -283,15 +353,15 @@
 
                                         </ul>
 <p class="p">For more information about mode types and the data
-                                            returned in each mode, see <a class="xref" href="OPCUAClient.html#concept_nbk_mkc_h1b">Modes</a>.</p>
+                                            returned in each mode, see <a class="xref" href="OPCUAClient.html#concept_nbk_mkc_h1b">Processing Mode</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e282 ">Polling Interval (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e359 ">Polling Interval (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e285 ">Milliseconds to wait between polling. Used with the
+                                    <td class="entry" valign="top" width="70%" headers="d282541e362 ">Milliseconds to wait between polling. Used with the
                                         polling mode only.</td>
 
                                 </tr>
@@ -304,9 +374,14 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">On the <span class="ph uicontrol">Node IDs</span> tab, configure the following information
-                    for each node that you want to use. Click the <span class="ph uicontrol">Add</span> icon to
-                    add additional nodes.</span>
+                <span class="ph cmd">On the <span class="keyword wintitle">Node IDs</span> tab, select the <span class="ph uicontrol">NodeId
+                        Mode</span>.</span>
+                <div class="itemgroup info">For more information about the different ways you can provide node
+                    information, see <a class="xref" href="OPCUAClient.html#concept_p25_wm2_dbb">Providing NodeIds</a>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using the Manual NodeId mode, use <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to enter the nodes that you want to use.
+                    Click the <span class="ph uicontrol">Add</span> icon to add additional nodes. </span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bqt_mx3_h1b__table_ptm_gbw_l1b" class="table" frame="border" border="1" rules="all">
@@ -314,9 +389,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d274741e397">Node Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d282541e494">Node Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d274741e400">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d282541e497">Description</th>
 
                                 </tr>
 
@@ -324,24 +399,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e397 ">Field Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e494 ">Field Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e400 ">The name of the node.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d282541e497 ">The name of the node.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e397 ">Identifier</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e494 ">Identifier</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e400 ">The identifier for the node within the OPC UA Server
+                                    <td class="entry" valign="top" width="70%" headers="d282541e497 ">The identifier for the node within the OPC UA Server
                                         address space.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e397 ">Identifier Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e494 ">Identifier Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e400 ">The format and data type of the identifier. Use one of
+                                    <td class="entry" valign="top" width="70%" headers="d282541e497 ">The format and data type of the identifier. Use one of
                                         the following types:<ul class="ul" id="task_bqt_mx3_h1b__ul_h2h_sbw_l1b">
                                             <li class="li">Numeric</li>
 
@@ -357,10 +432,120 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e397 ">Namespace Index</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e494 ">Namespace Index</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e400 ">The index the OPC UA Server uses for a namespace
+                                    <td class="entry" valign="top" width="70%" headers="d282541e497 ">The index that the OPC UA Server uses for a namespace
                                         URI.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using the File NodeId mode, configure the following property: </span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bqt_mx3_h1b__table_hk5_2qk_dbb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d282541e578">File Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d282541e581">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e578 ">NodeId File Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d282541e581 ">Path to the file that contains NodeId information for the
+                                        nodes that you want to process. Use a file local to <span class="ph">Data
+                  Collector</span> that includes the NodeId information in the appropriate
+                                        format. For more information, see <a class="xref" href="OPCUAClient.html#concept_p25_wm2_dbb">Providing NodeIds</a>.<p class="p">Default is
+                                                <samp class="ph codeph">${runtime:loadResource('nodeIdConfigs.json',
+                                                false)}</samp>, which assumes you are using a
+                                                <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resource file</a> named
+                                            nodeIdConfigs.json.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using Browse NodeId mode, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bqt_mx3_h1b__table_xb5_yxk_dbb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d282541e644">Browse Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d282541e647">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e644 ">Root Node Identifier</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d282541e647 ">The identifier for the root node within the OPC UA Server
+                                        address space. The origin processes data from all nodes
+                                        under the root node.<p class="p">For more information about browsing
+                                            nodes, see <a class="xref" href="OPCUAClient.html#concept_p25_wm2_dbb">Providing NodeIds</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e644 ">Root Node Identifier Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d282541e647 ">The format and data type of the root node identifier. Use
+                                        one of the following types:<ul class="ul" id="task_bqt_mx3_h1b__ul_w1w_3yk_dbb">
+                                            <li class="li">Numeric</li>
+
+                                            <li class="li">String</li>
+
+                                            <li class="li">UUID</li>
+
+                                            <li class="li">Opaque</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e644 ">Root Node Namespace Index</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d282541e647 ">The index that the OPC UA Server uses for a namespace
+                                        URI.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e644 ">NodeId Refresh Interval (sec)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d282541e647 ">Seconds to wait before browsing the root node for an
+                                        updated list of nodes to use.</td>
 
                                 </tr>
 
@@ -381,9 +566,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d274741e484">Security Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d282541e737">Security Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d274741e487">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d282541e740">Description</th>
 
                                 </tr>
 
@@ -391,9 +576,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Security Policy</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Security Policy</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">The security policy to use. Select one of the following
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">The security policy to use. Select one of the following
                                             policies:<ul class="ul" id="task_bqt_mx3_h1b__ul_lnw_jhr_y1b">
                                             <li class="li">Basic128Rsa15</li>
 
@@ -411,16 +596,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Client Private Key Alias</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Client Private Key Alias</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">Optional private key alias to use.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">Optional private key alias to use.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Enable TLS</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Enable TLS</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">
                                         <p class="p">Enables the use of TLS. </p>
 
                                     </td>
@@ -428,10 +613,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Keystore File <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_kqb_rqf_5z">
-                                            <img class="image" id="task_bqt_mx3_h1b__d35242e2905" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Keystore File <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_kqb_rqf_5z">
+                                            <img class="image" id="task_bqt_mx3_h1b__d35721e2931" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">The path to the keystore file. Enter an absolute path to
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">The path to the keystore file. Enter an absolute path to
                                         the file or a path relative to the <span class="ph">Data
                   Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                             <p class="p">For more information about environment variables, see
@@ -442,10 +627,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Keystore Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Keystore Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">Type of keystore to use. Use one of the following
-                                            types:<ul class="ul" id="task_bqt_mx3_h1b__d35242e2929">
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">Type of keystore to use. Use one of the following
+                                            types:<ul class="ul" id="task_bqt_mx3_h1b__d35721e2955">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS-12 (p12 file)</li>
@@ -457,9 +642,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Keystore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Keystore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">Password to the keystore file. A password is optional,
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">Password to the keystore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as passwords,
                   you can use <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Hashicorp Vault secrets</a> or <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a>. </div>
@@ -470,38 +655,38 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Keystore Key Algorithm</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Keystore Key Algorithm</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">The algorithm used to manage the keystore. <p class="p">Default is
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">The algorithm used to manage the keystore. <p class="p">Default is
                                                 <span class="ph">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Use Default Protocols</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Use Default Protocols</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">Determines the transport layer security (TLS) protocol to
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">Determines the transport layer security (TLS) protocol to
                                         use. The default protocol is <span class="ph">TLSv1.2</span>. To use a different protocol, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_mvs_cxf_5z">
-                                            <img class="image" id="task_bqt_mx3_h1b__d35242e3055" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Transport Protocols <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_mvs_cxf_5z">
+                                            <img class="image" id="task_bqt_mx3_h1b__d35721e3081" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">The TLS protocols to use. To use a protocol other than
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">The TLS protocols to use. To use a protocol other than
                                         the default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
-                                        protocol name. <div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as
-                                                <span class="ph">TLSv1.2</span>.</div>
+                                        protocol name. You can use <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
+                                            protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Use Default Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Use Default Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">Determines the cipher suite to use when performing the
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">Determines the cipher suite to use when performing the
                                         SSL/TLS handshake. <p class="p"><span class="ph">Data
                   Collector</span> provides a set of cipher suites that it can use by
                                             default. For a full list, see <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_cwx_dyf_5z">Cipher Suites</a>.</p>
@@ -510,14 +695,15 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d274741e484 ">Cipher Suites</td>
+                                    <td class="entry" valign="top" width="30%" headers="d282541e737 ">Cipher Suites</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d274741e487 ">Cipher suites to use. To use a cipher suite that is not a
+                                    <td class="entry" valign="top" width="70%" headers="d282541e740 ">Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <span class="ph uicontrol">Add</span> icon and enter the name of
-                                        the cipher suite.<p class="p">Enter the Java Secure Socket Extension
-                                            (JSSE) name for the additional cipher suites that you
-                                            want to use. </p>
+                                        the cipher suite. You can use <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
+                                            suites.<p class="p">Enter the Java Secure Socket Extension (JSSE)
+                                            name for the additional cipher suites that you want to
+                                            use. </p>
 </td>
 
                                 </tr>

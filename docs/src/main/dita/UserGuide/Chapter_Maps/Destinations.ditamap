@@ -61,7 +61,8 @@
    <topicref href="../Destinations/DataLakeStore-DataFormats.dita"/>
    <topicref href="../Destinations/DataLakeStore-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/AzureEventHubProducer.dita">
+  <topicref href="../Destinations/AzureEventHubProducer.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Destinations/AzureEventHubProducer-DataFormats.dita"/>
    <topicref href="../Destinations/AzureEventHubProducer-Configuring.dita"/>
   </topicref>

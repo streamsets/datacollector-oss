@@ -46,7 +46,7 @@
             newly-created tables.</p>
 
         <div class="p">
-            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_kjw_llk_fx__d28386e4401">The Hive Query executor waits for
+            <div class="note note"><span class="notetitle">Note:</span> <span class="ph" id="concept_kjw_llk_fx__d28865e4418">The Hive Query executor waits for
                               each query to complete before continuing with the next query for the
                               same event record. It also waits for all queries to complete before
                               starting the queries for the next event record. Depending on the speed
@@ -61,7 +61,7 @@
             a query fails.</p>
 
         <p class="p">You can also configure the executor to generate events for
-                  another event stream. <span class="ph" id="concept_kjw_llk_fx__d28386e1707">For more information about dataflow
+                  another event stream. <span class="ph" id="concept_kjw_llk_fx__d28865e1717">For more information about dataflow
                         triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
 
         <p class="p">For a case study about using the Hive Query executor, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_szz_xwm_lx">Case Study: Impala Metadata Updates for DDS for Hive</a>.</p>
@@ -207,9 +207,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d161364e284">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d165832e284">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d161364e287">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d165832e287">Description</th>
 
                         </tr>
 
@@ -217,9 +217,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d161364e284 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d165832e284 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d161364e287 ">Event type. Uses one of the following event types:<ul class="ul" id="concept_iwg_r2p_my__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d165832e287 ">Event type. Uses one of the following event types:<ul class="ul" id="concept_iwg_r2p_my__ul_m12_mgp_qx">
                                     <li class="li">successful-query - Generated when the executor determines
                                         that Hive successfully ran the submitted query. </li>
 
@@ -232,16 +232,16 @@
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d161364e284 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d165832e284 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d161364e287 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d165832e287 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d161364e284 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d165832e284 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_iwg_r2p_my__d28475e1688" valign="top" width="70%" headers="d161364e287 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_iwg_r2p_my__d28954e1694" valign="top" width="70%" headers="d165832e287 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -268,9 +268,9 @@
                                     
                                     <thead class="thead" align="left">
                                         <tr>
-                                            <th class="entry" valign="top" width="30%" id="d161364e363">Event Field Name</th>
+                                            <th class="entry" valign="top" width="30%" id="d165832e363">Event Field Name</th>
 
-                                            <th class="entry" valign="top" width="70%" id="d161364e366">Description</th>
+                                            <th class="entry" valign="top" width="70%" id="d165832e366">Description</th>
 
                                         </tr>
 
@@ -278,9 +278,9 @@
 
                                     <tbody class="tbody">
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d161364e363 ">query</td>
+                                            <td class="entry" valign="top" width="30%" headers="d165832e363 ">query</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d161364e366 ">The query that Hive ran successfully.</td>
+                                            <td class="entry" valign="top" width="70%" headers="d165832e366 ">The query that Hive ran successfully.</td>
 
                                         </tr>
 
@@ -308,9 +308,9 @@
                                     
                                     <thead class="thead" align="left">
                                         <tr>
-                                            <th class="entry" valign="top" width="30%" id="d161364e414">Event Field Name</th>
+                                            <th class="entry" valign="top" width="30%" id="d165832e414">Event Field Name</th>
 
-                                            <th class="entry" valign="top" width="70%" id="d161364e417">Description</th>
+                                            <th class="entry" valign="top" width="70%" id="d165832e417">Description</th>
 
                                         </tr>
 
@@ -318,16 +318,16 @@
 
                                     <tbody class="tbody">
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d161364e414 ">query</td>
+                                            <td class="entry" valign="top" width="30%" headers="d165832e414 ">query</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d161364e417 ">The query that Hive failed to run. </td>
+                                            <td class="entry" valign="top" width="70%" headers="d165832e417 ">The query that Hive failed to run. </td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry" valign="top" width="30%" headers="d161364e414 ">unexecuted-queries</td>
+                                            <td class="entry" valign="top" width="30%" headers="d165832e414 ">unexecuted-queries</td>
 
-                                            <td class="entry" valign="top" width="70%" headers="d161364e417 ">Any additional queries that did not execute.
+                                            <td class="entry" valign="top" width="70%" headers="d165832e417 ">Any additional queries that did not execute.
                                                   <p class="p">The event record includes this field only when
                                                   you configure the executor to skip running
                                                   subsequent queries when a query fails.
@@ -368,14 +368,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__d28457e5279" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__d28936e5317" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d161364e496">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d165832e496">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d161364e499">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d165832e499">Description</th>
 
                                 </tr>
 
@@ -383,41 +383,41 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d161364e496 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165832e496 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d161364e499 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d161364e496 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d161364e499 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d165832e499 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d161364e496 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165832e496 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d161364e499 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d165832e499 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d161364e496 ">Produce Events <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">
-                                            <img class="image" id="task_mgm_4lk_fx__d28457e5334" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d165832e496 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d161364e499 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d165832e499 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d165832e496 ">Produce Events <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">
+                                            <img class="image" id="task_mgm_4lk_fx__d28936e5372" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d165832e499 ">Generates event records when events occur. Use for event
                                         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-                                            <img class="image" id="task_mgm_4lk_fx__d28457e5340" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_mgm_4lk_fx__d28936e5378" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d161364e496 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_mgm_4lk_fx__d28457e5349" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d165832e496 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_mgm_4lk_fx__d28936e5387" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d161364e499 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d165832e499 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -429,10 +429,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d161364e496 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_mgm_4lk_fx__d28457e5366" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d165832e496 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_mgm_4lk_fx__d28936e5404" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d161364e499 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d165832e499 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -443,10 +443,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d161364e496 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_mgm_4lk_fx__d28457e5383" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d165832e496 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_mgm_4lk_fx__d28936e5421" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d161364e499 ">Error record handling for the stage: <ul class="ul" id="task_mgm_4lk_fx__d28457e5387">
+                                    <td class="entry" valign="top" width="70%" headers="d165832e499 ">Error record handling for the stage: <ul class="ul" id="task_mgm_4lk_fx__d28936e5425">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -476,9 +476,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d161364e637">Hive Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d165832e637">Hive Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d161364e640">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d165832e640">Description</th>
 
                                 </tr>
 
@@ -486,24 +486,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d161364e637 ">JDBC URL</td>
+       <td class="entry" valign="top" width="30%" headers="d165832e637 ">JDBC URL</td>
 
-       <td class="entry" valign="top" width="70%" headers="d161364e640 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
+       <td class="entry" valign="top" width="70%" headers="d165832e640 ">JDBC URL for Hive. You can use the default, or replace the expression for the database
         name with a specific database name when appropriate.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d161364e637 ">JDBC Driver Name</td>
+       <td class="entry" valign="top" width="30%" headers="d165832e637 ">JDBC Driver Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d161364e640 ">The fully-qualified JDBC driver name.</td>
+       <td class="entry" valign="top" width="70%" headers="d165832e640 ">The fully-qualified JDBC driver name.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d161364e637 ">Hadoop Configuration Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d165832e637 ">Hadoop Configuration Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d161364e640 ">
+       <td class="entry" valign="top" width="70%" headers="d165832e640 ">
         <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration files. For a
          Cloudera Manager installation, enter hive-conf. </p>
 
@@ -525,9 +525,9 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d161364e637 ">Additional Hadoop Configuration</td>
+       <td class="entry" valign="top" width="30%" headers="d165832e637 ">Additional Hadoop Configuration</td>
 
-       <td class="entry" valign="top" width="70%" headers="d161364e640 ">
+       <td class="entry" valign="top" width="70%" headers="d165832e640 ">
         <p class="p">Additional properties to use. </p>
 
         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and define the property name and
@@ -554,9 +554,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d161364e739">Query Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d165832e739">Query Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d161364e742">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d165832e742">Description</th>
 
                                 </tr>
 
@@ -564,20 +564,20 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d161364e739 ">SQL Queries <a class="xref" href="HiveQuery.html#concept_jzl_yrr_mx">
+                                    <td class="entry" valign="top" width="30%" headers="d165832e739 ">SQL Queries <a class="xref" href="HiveQuery.html#concept_jzl_yrr_mx">
                                             <img class="image" id="task_mgm_4lk_fx__image_rfz_thp_fs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d161364e742 ">One or more SQL queries to execute on Hive or Impala upon
-                                        receiving an event record.<p class="p">To add additional queries,
-                                            click the <span class="ph uicontrol">Add</span> icon.</p>
-<p class="p">The
-                                            executor processes multiple queries in order, and waits
-                                            for each query to complete before continuing to the next
-                                            query.</p>
-<div class="p">To process events from the Hive Metastore
-                                            or Hadoop FS destinations when using the Drift
-                                            Synchronization Solution for Hive with Impala, you might
-                                            use the following query:
+                                    <td class="entry" valign="top" width="70%" headers="d165832e742 ">One or more SQL queries to execute on Hive or Impala upon
+                                        receiving an event record.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                                <span class="ph uicontrol">Add</span> icon to add additional
+                                            queries.</p>
+<p class="p">The executor processes multiple queries
+                                            in order, and waits for each query to complete before
+                                            continuing to the next query.</p>
+<div class="p">To process events
+                                            from the Hive Metastore or Hadoop FS destinations when
+                                            using the Drift Synchronization Solution for Hive with
+                                            Impala, you might use the following query:
                                             <pre class="pre codeblock">invalidate metadata ${record:attribute('/table')}</pre>
 </div>
 <p class="p">For
@@ -587,9 +587,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d161364e739 ">Stop on Query Failure</td>
+                                    <td class="entry" valign="top" width="30%" headers="d165832e739 ">Stop on Query Failure</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d161364e742 ">Skips the remaining queries for an event record when a
+                                    <td class="entry" valign="top" width="70%" headers="d165832e742 ">Skips the remaining queries for an event record when a
                                         query fails. <p class="p">By default, upon a failed query, the
                                             executor continues to run all configured queries for the
                                             event record. </p>
