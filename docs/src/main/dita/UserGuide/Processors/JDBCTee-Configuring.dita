@@ -79,8 +79,11 @@
                                                 receives the generated column value. You can specify
                                                 an existing field or a new field. If the field does
                                                 not exist, JDBC Tee creates the field. </li>
-                                        </ul><p>Use the <uicontrol>Add</uicontrol> icon to create
-                                            additional generated column mappings.</p></entry>
+                                        </ul><p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to create additional
+                                            generated column mappings.</p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/LogFormat_row">

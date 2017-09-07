@@ -86,14 +86,16 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_rfz_thp_fs"/></xref></entry>
                                     <entry>One or more SQL queries to execute on Hive or Impala upon
-                                        receiving an event record.<p>To add additional queries,
-                                            click the <uicontrol>Add</uicontrol> icon.</p><p>The
-                                            executor processes multiple queries in order, and waits
-                                            for each query to complete before continuing to the next
-                                            query.</p><p>To process events from the Hive Metastore
-                                            or Hadoop FS destinations when using the Drift
-                                            Synchronization Solution for Hive with Impala, you might
-                                            use the following query:
+                                        receiving an event record.<p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to add additional
+                                            queries.</p><p>The executor processes multiple queries
+                                            in order, and waits for each query to complete before
+                                            continuing to the next query.</p><p>To process events
+                                            from the Hive Metastore or Hadoop FS destinations when
+                                            using the Drift Synchronization Solution for Hive with
+                                            Impala, you might use the following query:
                                             <codeblock>invalidate metadata ${record:attribute('/table')}</codeblock></p><p>For
                                             more information, see <xref
                                                 href="HiveQuery-ImpalaHDS.dita#concept_hqg_nzh_vx"

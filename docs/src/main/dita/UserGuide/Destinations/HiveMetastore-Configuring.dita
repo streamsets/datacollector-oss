@@ -163,9 +163,11 @@
                                 <row>
                                     <entry>Header Attribute Expressions</entry>
                                     <entry>When generating events, adds the specified header
-                                        attributes to the event record. <p>To include custom record
-                                            header attributes, click the Add icon. Then, enter the
-                                            name and value for the attribute. </p>You can use
+                                        attributes to the event record. <p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the Add icon
+                                            to include custom record header attributes. Then, enter
+                                            the name and value for the attribute. </p>You can use
                                         expressions to define the name and value to use.</entry>
                                 </row>
                                 <row>

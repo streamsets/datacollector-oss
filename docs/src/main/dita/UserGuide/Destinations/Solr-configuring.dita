@@ -82,7 +82,9 @@
                                     <entry>Map fields from the record to Solr fields. <p>Mapped
                                             fields must have compatible data types. For example, you
                                             must map List and Map fields in the record to Solr
-                                            fields that are multi-valued.</p><p>Use the
+                                            fields that are multi-valued.</p><p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
                                                 <uicontrol>Add</uicontrol> icon to create additional
                                             field mappings.</p></entry>
                                 </row>

@@ -122,7 +122,9 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_npg_nc1_j1b"/>
                                         </xref></entry>
-                                    <entry>The tags to add to an existing object. Click the
+                                    <entry>The tags to add to an existing object. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
                                             <uicontrol>Add</uicontrol> icon to configure a tag.
                                                 <p><ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-S3keyvalues"

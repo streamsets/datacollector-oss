@@ -32,7 +32,9 @@
            
             <step>
                 <cmd>On the <uicontrol>Conditions</uicontrol> tab, click <uicontrol>Add</uicontrol>
-                    icon for each condition that you want to create.</cmd>
+                    icon for each condition that you want to create. You can use <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref> to add conditions.</cmd>
                 <info>Each new condition creates a corresponding output location. You cannot edit or
                     delete the condition for the default stream.</info>
             </step>

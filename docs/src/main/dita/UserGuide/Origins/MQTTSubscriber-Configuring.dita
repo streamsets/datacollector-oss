@@ -57,7 +57,9 @@
                                     <entry>Topic Filter <xref href="MQTTSubscriber-Topics.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="11"
                                                 id="image_off_y2h_mw"/></xref></entry>
-                                    <entry>Topics to subscribe to. Use the
+                                    <entry>Topics to subscribe to. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
                                             <uicontrol>Add</uicontrol> icon to read from additional
                                         topics. </entry>
                                 </row>

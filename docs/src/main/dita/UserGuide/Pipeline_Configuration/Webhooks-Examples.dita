@@ -79,12 +79,15 @@
                                     this:</p><codeblock>&lt;http|https>://&lt;system ip>.&lt;http port>/rest/v1/pipeline/&lt;pipeline id>/start</codeblock><p>For
                                     example:
                                     http://localhost:18630/rest/v1/pipeline/MyPipelinefbb6894c-08ec-421e-9e3c-4e6bbb2f5baf/start</p></li>
-                            <li>Click the <uicontrol>Add</uicontrol> icon to add a request header,
-                                and add the following header: <codeph>X-Requested-By</codeph><p>And
-                                    set the value to: <codeph>sdc</codeph>.</p><p>You can use the
-                                    default method and authentication type, and keep or delete the
-                                    payload, since they aren't used by the REST API.</p><p>This is
-                                    how the webhook might look:</p><p><image
+                            <li>Using <xref
+                                    href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                    >simple or bulk edit mode</xref>, click the
+                                    <uicontrol>Add</uicontrol> icon to add a request header, and add
+                                the following header: <codeph>X-Requested-By</codeph><p>And set the
+                                    value to: <codeph>sdc</codeph>.</p><p>You can use the default
+                                    method and authentication type, and keep or delete the payload,
+                                    since they aren't used by the REST API.</p><p>This is how the
+                                    webhook might look:</p><p><image
                                         href="../Graphics/WebHook-RESTAPI.png" id="image_n53_fyz_rz"
                                         scale="60"/></p></li>
                         </ol>

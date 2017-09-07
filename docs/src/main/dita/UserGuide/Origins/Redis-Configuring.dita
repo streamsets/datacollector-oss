@@ -54,7 +54,9 @@
                                         href="Redis-ChannelPattern.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="11"
                                                 id="image_off_y4w_jw"/></xref></entry>
-                                    <entry>Name of the channel to use. Use the
+                                    <entry>Name of the channel to use. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
                                             <uicontrol>Add</uicontrol> icon to read from additional
                                         channels. </entry>
                                 </row>
@@ -64,7 +66,9 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="11"
                                                 id="image_up3_y4w_jw"/></xref></entry>
                                     <entry>Glob-style pattern to use. The origin subscribes to
-                                        channels with names that match the pattern. Use the
+                                        channels with names that match the pattern. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
                                             <uicontrol>Add</uicontrol> icon to read from additional
                                         patterns. </entry>
                                 </row>

@@ -245,7 +245,9 @@
             <step>
                 <cmd>To define runtime parameters, on the <wintitle>Parameters</wintitle> tab, click
                     the <uicontrol>Add</uicontrol> icon and define the name and the default value
-                    for each parameter.</cmd>
+                    for each parameter. You can use <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref> to add the parameters.</cmd>
                 <info>For more information, see <xref
                         href="RuntimeParameters.dita#concept_rjh_ntz_qr"/>.</info>
             </step>
@@ -276,7 +278,9 @@
                                 <row>
                                     <entry>Email IDs</entry>
                                     <entry>Email addresses to receive notification when the pipeline
-                                        state changes to one of the specified states. Click the
+                                        state changes to one of the specified states. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
                                             <uicontrol>Add</uicontrol> icon to add additional
                                         addresses. </entry>
                                 </row>
@@ -284,8 +288,11 @@
                                     <entry
                                         conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-Webhook-entry"/>
                                     <entry>Webhook to send when the pipeline state changes to one of
-                                        the specified states. Click the <uicontrol>Add</uicontrol>
-                                        icon to add additional webhooks.</entry>
+                                        the specified states. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
+                                            <uicontrol>Add</uicontrol> icon to add additional
+                                        webhooks.</entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/WH-URL-row">
@@ -767,8 +774,11 @@
                                     <entry>Launcher Env Configuration</entry>
                                     <entry>
                                         <p>Additional configuration properties for the cluster
-                                            launcher. Click the <uicontrol>Add</uicontrol> icon and
-                                            define the property name and value. </p>
+                                            launcher. Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon and define the
+                                            property name and value. </p>
                                     </entry>
                                 </row>
                                 <row>

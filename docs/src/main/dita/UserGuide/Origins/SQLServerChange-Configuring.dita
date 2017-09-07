@@ -170,8 +170,10 @@
             </step>
             <step>
                 <cmd>On the <wintitle>Change Tracking</wintitle> tab, define one or more table
-                    configurations. Click the <uicontrol>Add</uicontrol> icon to define another
-                    table configuration.</cmd>
+                    configurations. Using <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref>, click the <uicontrol>Add</uicontrol> icon
+                    to define another table configuration.</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_c11_hl5_s1b">
                         <tgroup cols="2">
@@ -180,9 +182,9 @@
                             <thead>
                                 <row>
                                     <entry>Change Tracking Property <xref
-                                            href="SQLServerChange-TableConfig.dita"
-                                                ><image href="../Graphics/icon_moreInfo.png"
-                                                scale="10" id="image_hvl_qp5_qy"/>
+                                            href="SQLServerChange-TableConfig.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_hvl_qp5_qy"/>
                                         </xref></entry>
                                     <entry>Description</entry>
                                 </row>

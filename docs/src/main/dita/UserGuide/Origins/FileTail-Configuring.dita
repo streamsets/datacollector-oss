@@ -96,7 +96,9 @@
                                 </row>
                                 <row>
                                     <entry>File to Tail</entry>
-                                    <entry>Directories and sets of files to process. Click the
+                                    <entry>Directories and sets of files to process. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
                                             <uicontrol>Add</uicontrol> icon to enter additional sets
                                         of information. </entry>
                                 </row>

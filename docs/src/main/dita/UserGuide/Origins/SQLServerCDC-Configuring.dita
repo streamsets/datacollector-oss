@@ -165,8 +165,10 @@
             </step>
             <step>
                 <cmd>On the <wintitle>CDC</wintitle> tab, define one or more table configurations.
-                    Click the <uicontrol>Add</uicontrol> icon to define another table
-                    configuration.</cmd>
+                    Using <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref>, click the <uicontrol>Add</uicontrol> icon
+                    to define another table configuration.</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_c11_hl5_s1b">
                         <tgroup cols="2">
@@ -174,10 +176,9 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>CDC Property <xref
-                                            href="SQLServerCDC-TableConfig.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_hvl_qp5_qy"/>
+                                    <entry>CDC Property <xref href="SQLServerCDC-TableConfig.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_hvl_qp5_qy"/>
                                         </xref></entry>
                                     <entry>Description</entry>
                                 </row>
@@ -207,7 +208,8 @@
                                 <row>
                                     <entry>Table Exclusion Pattern</entry>
                                     <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TableExclusionPatt"/>
+                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TableExclusionPatt"
+                                    />
                                 </row>
                                 <row>
                                     <entry>Initial Offset</entry>

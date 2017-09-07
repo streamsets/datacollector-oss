@@ -193,8 +193,10 @@
             </step>
             <step>
                 <cmd>On the <wintitle>Tables</wintitle> tab, define one or more table
-                    configurations. Click the <uicontrol>Add</uicontrol> icon to define another
-                    table configuration.</cmd>
+                    configurations. Using <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref>, click the <uicontrol>Add</uicontrol> icon
+                    to define another table configuration.</cmd>
                 <info>Configure the following properties for each table configuration:<table
                         frame="all" rowsep="1" colsep="1" id="table_cvl_qp5_qy">
                         <tgroup cols="2">

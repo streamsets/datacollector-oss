@@ -195,8 +195,11 @@
                                 <row>
                                     <entry>Job Configuration</entry>
                                     <entry>Key-value pairs of configuration properties to define the
-                                        job. You can use expressions in keys and values. <p>Click
-                                            the <uicontrol>Add</uicontrol> icon to add additional
+                                        job. You can use expressions in keys and values. <p>Using
+                                                <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to add additional
                                             properties. </p></entry>
                                 </row>
                             </tbody>

@@ -47,8 +47,11 @@
                                             href="GeoIP-Databases.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_w55_4yn_lw"/></xref></entry>
-                                    <entry>The MaxMind GeoIP databases that you want to use. Click
-                                        the <uicontrol>Add</uicontrol> icon to add additional
+                                    <entry>The MaxMind GeoIP databases that you want to use. Using
+                                            <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
+                                            <uicontrol>Add</uicontrol> icon to add additional
                                         databases.</entry>
                                 </row>
                                 <row>

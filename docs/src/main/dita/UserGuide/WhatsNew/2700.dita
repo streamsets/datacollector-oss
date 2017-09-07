@@ -442,9 +442,12 @@
                 <dt>Miscellaneous</dt>
                 <dd>
                     <ul id="ul_y2k_htz_w1b">
-                        <li>Global bulk edit mode - In any property where you would previously click
-                            an Add icon to add additional configurations, you can now switch to bulk
-                            edit mode to enter a list of configurations in JSON format.</li>
+                        <li><xref
+                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                >Global bulk edit mode</xref> - In any property where you would
+                            previously click an Add icon to add additional configurations, you can
+                            now switch to bulk edit mode to enter a list of configurations in JSON
+                            format.</li>
                         <li>Snapshot enhancement - Snapshots no longer produce empty batches when
                             waiting for data.</li>
                         <li><xref

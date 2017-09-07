@@ -49,7 +49,10 @@
                     use the <uicontrol>Subtract</uicontrol> icon to remove the row.</info>
             </step>
             <step>
-                <cmd>To add a row, click the <uicontrol>Add</uicontrol> icon.</cmd>
+                <cmd>Using <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref>, click the <uicontrol>Add</uicontrol> icon
+                    to add a row.</cmd>
             </step>
             <step>
                 <cmd>On the left side, enter the name of the user or group that you want to transfer

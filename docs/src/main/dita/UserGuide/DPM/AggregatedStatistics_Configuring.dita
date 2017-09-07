@@ -213,7 +213,9 @@
                                 </row>
                                 <row>
                                     <entry>Kafka Configuration</entry>
-                                    <entry>Additional Kafka properties to use. Click the
+                                    <entry>Additional Kafka properties to use. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
                                             <uicontrol>Add</uicontrol> icon and define the Kafka
                                         property name and value.<p>Use the property names and values
                                             as expected by Kafka. Do not use the broker.list

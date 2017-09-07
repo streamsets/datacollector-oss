@@ -57,8 +57,11 @@
                                     <entry>Topic <xref href="MQTTPublisher-Topic.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="11"
                                                 id="image_off_y2h_mw"/></xref></entry>
-                                    <entry>Topic to publish to. Use the <uicontrol>Add</uicontrol>
-                                        icon to read from additional topics. </entry>
+                                    <entry>Topic to publish to. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
+                                            <uicontrol>Add</uicontrol> icon to read from additional
+                                        topics. </entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row_MQTTQoS">

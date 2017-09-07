@@ -45,9 +45,11 @@
                             <tbody>
                                 <row>
                                     <entry>Cassandra Contact Points</entry>
-                                    <entry>Host names for nodes in Cassandra cluster. To ensure a
-                                        connection, use the <uicontrol>Add</uicontrol> icon to enter
-                                        several host names.</entry>
+                                    <entry>Host names for nodes in Cassandra cluster. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
+                                            <uicontrol>Add</uicontrol> icon to enter several host
+                                        names to ensure a connection.</entry>
                                 </row>
                                 <row>
                                     <entry>Cassandra Port</entry>
@@ -95,7 +97,10 @@
                                 </row>
                                 <row>
                                     <entry>Field to Column Mapping</entry>
-                                    <entry>Map fields from the record to Cassandra columns. Use the
+                                    <entry>Map fields from the record to Cassandra columns. Using
+                                            <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
                                             <uicontrol>Add</uicontrol> icon to create additional
                                         field mappings. <note>The record field data type must match
                                             the data type of the Cassandra column.</note></entry>

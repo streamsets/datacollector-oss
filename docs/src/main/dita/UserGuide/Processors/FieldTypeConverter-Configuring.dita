@@ -144,7 +144,9 @@
             </step>
             <step>
                 <cmd>To configure additional type conversions, click the <uicontrol>Add</uicontrol>
-                    icon and then repeat the previous step.  </cmd>
+                    icon and then repeat the previous step. You can use <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref> to configure additional conversions.</cmd>
                 <info>You can configure additional conversions by field name or additional
                     conversions by data type. You cannot use both methods in the same stage. </info>
             </step>
