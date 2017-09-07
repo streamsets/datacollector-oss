@@ -259,49 +259,12 @@ public class BigQueryDelegate {
     }
   }
 
-
   public static BigQuery getBigquery(Credentials credentials, String projectId) {
     BigQueryOptions options = BigQueryOptions.newBuilder()
         .setCredentials(credentials)
         .setProjectId(projectId)
         .build();
     return options.getService();
-  }
-
-  public static Optional<Credentials> getCredentials(
-      Stage.Context context,
-      List<Stage.ConfigIssue> issues,
-      GoogleCloudCredentialsConfig credentialsConf
-  ) {
-    Credentials credentials = null;
-
-    File credentialsFile;
-    if (Paths.get(credentialsConf.path).isAbsolute()) {
-      credentialsFile = new File(credentialsConf.path);
-    } else {
-      credentialsFile = new File(context.getResourcesDirectory(), credentialsConf.path);
-    }
-
-    try (InputStream in = new FileInputStream(credentialsFile)) {
-      credentials = GoogleCredentials.fromStream(in);
-    } catch (FileNotFoundException e) {
-      LOG.error(BIGQUERY_04.getMessage(), credentialsFile.getPath(), e);
-      issues.add(context.createConfigIssue(
-          Groups.CREDENTIALS.name(),
-          "conf.credentials.path",
-          BIGQUERY_04,
-          credentialsFile.getPath()
-      ));
-    } catch (IOException | IllegalArgumentException e) {
-      LOG.error(BIGQUERY_05.getMessage(), e);
-      issues.add(context.createConfigIssue(
-          Groups.CREDENTIALS.name(),
-          "conf.credentials.path",
-          BIGQUERY_05
-      ));
-    }
-
-    return Optional.ofNullable(credentials);
   }
 
 }

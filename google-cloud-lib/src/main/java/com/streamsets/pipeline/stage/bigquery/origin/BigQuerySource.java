@@ -85,10 +85,20 @@ public class BigQuerySource extends BaseSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    BigQueryDelegate.getCredentials(getContext(), issues, conf.credentials).ifPresent(
-        c -> delegate = new BigQueryDelegate(getBigQuery(c), conf.useLegacySql)
-    );
-
+    conf.credentials.getCredentialsProvider(getContext(), issues).ifPresent(provider -> {
+      if (issues.isEmpty()) {
+        try {
+          Optional.ofNullable(provider.getCredentials()).ifPresent(c -> delegate = new BigQueryDelegate(getBigQuery(c), conf.useLegacySql));
+        } catch (IOException e) {
+          LOG.error(BIGQUERY_05.getMessage(), e);
+          issues.add(getContext().createConfigIssue(
+              Groups.CREDENTIALS.name(),
+              "conf.credentials.credentialsProvider",
+              BIGQUERY_05
+          ));
+        }
+      }
+    });
     return issues;
   }
 

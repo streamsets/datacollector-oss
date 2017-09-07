@@ -29,6 +29,7 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
 import com.streamsets.pipeline.stage.bigquery.lib.Errors;
 import com.streamsets.pipeline.stage.bigquery.lib.TestBigQueryDelegate;
+import com.streamsets.pipeline.stage.lib.CredentialsProviderType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,7 +81,7 @@ public class TestBigQuerySource {
     mockStatic(ServiceAccountCredentials.class);
     mockStatic(GoogleCredentials.class);
     ServiceAccountCredentials serviceAccountCredentials = mock(ServiceAccountCredentials.class);
-    when(GoogleCredentials.fromStream(any())).thenReturn(serviceAccountCredentials);
+    when(ServiceAccountCredentials.fromStream(any())).thenReturn(serviceAccountCredentials);
   }
 
   @Test
@@ -88,6 +89,7 @@ public class TestBigQuerySource {
     BigQuerySourceConfig conf = new BigQuerySourceConfig();
     conf.credentials.projectId = "test";
     conf.credentials.path = "/bogus";
+    conf.credentials.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
 
     BigQuerySource bigquerySource = new BigQuerySource(conf);
     SourceRunner runner = new SourceRunner.Builder(BigQueryDSource.class, bigquerySource)
@@ -96,7 +98,7 @@ public class TestBigQuerySource {
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     assertEquals(1, issues.size());
-    assertTrue(issues.get(0).toString().contains(Errors.BIGQUERY_04.getCode()));
+    assertTrue(issues.get(0).toString().contains(com.streamsets.pipeline.stage.lib.Errors.GOOGLE_01.getCode()));
   }
 
   @Test
@@ -107,6 +109,7 @@ public class TestBigQuerySource {
     BigQuerySourceConfig conf = new BigQuerySourceConfig();
     conf.credentials.projectId = "test";
     conf.credentials.path = tempFile.getAbsolutePath();
+    conf.credentials.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     conf.query = "SELECT * FROM [test:table]";
 
     QueryResponse mockQueryResponse = mock(QueryResponse.class);
