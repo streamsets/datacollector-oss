@@ -145,7 +145,8 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
       String resourcesDir,
       EmailSender emailSender,
       Configuration configuration,
-      LineagePublisherDelegator lineagePublisherDelegator
+      LineagePublisherDelegator lineagePublisherDelegator,
+      RuntimeInfo runtimeInfo
   ) {
     this.pipelineId = "myPipeline";
     this.pipelineTitle = "My Pipeline";
@@ -192,6 +193,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
     this.emailSender = emailSender;
     reportErrorDelegate = errorSink;
     this.sharedRunnerMap = new ConcurrentHashMap<>();
+    this.runtimeInfo = runtimeInfo;
 
     // sample all records while testing
     this.configuration = configuration.getSubSetConfiguration(STAGE_CONF_PREFIX);

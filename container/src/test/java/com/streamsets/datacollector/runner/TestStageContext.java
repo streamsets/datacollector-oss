@@ -27,6 +27,7 @@ import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.util.Configuration;
@@ -179,7 +180,8 @@ public class TestStageContext {
       null,
       sender,
       new Configuration(),
-      new LineagePublisherDelegator.NoopDelegator()
+      new LineagePublisherDelegator.NoopDelegator(),
+      Mockito.mock(RuntimeInfo.class)
     );
 
     try {
@@ -210,7 +212,8 @@ public class TestStageContext {
       null,
       sender,
       new Configuration(),
-      new LineagePublisherDelegator.NoopDelegator()
+      new LineagePublisherDelegator.NoopDelegator(),
+      Mockito.mock(RuntimeInfo.class)
     );
 
     context.notify(ImmutableList.of("foo", "bar"), "SUBJECT", "BODY");
@@ -467,7 +470,8 @@ public class TestStageContext {
       null,
       new EmailSender(new Configuration()),
       configuration,
-      new LineagePublisherDelegator.NoopDelegator()
+      new LineagePublisherDelegator.NoopDelegator(),
+      Mockito.mock(RuntimeInfo.class)
     );
   }
 }

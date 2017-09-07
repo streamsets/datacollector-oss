@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
@@ -47,7 +48,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
     Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
-    String resourcesDir
+    String resourcesDir,
+    RuntimeInfo runtimeInfo
   ) {
     super(
       processorClass,
@@ -61,7 +63,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
       stageSdcConf,
       executionMode,
       deliveryGuarantee,
-      resourcesDir
+      resourcesDir,
+      runtimeInfo
     );
   }
 
@@ -75,7 +78,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
     Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
-    String resourcesDir
+    String resourcesDir,
+    RuntimeInfo runtimeInfo
   ) {
     super(
       processorClass,
@@ -88,7 +92,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
       stageSdcConf,
       executionMode,
       deliveryGuarantee,
-      resourcesDir
+      resourcesDir,
+      runtimeInfo
     );
   }
 
@@ -131,7 +136,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
           stageSdcConf,
           executionMode,
           deliveryGuarantee,
-          resourcesDir
+          resourcesDir,
+          runtimeInfo
         );
       } else {
         return new ProcessorRunner(
@@ -144,7 +150,8 @@ public class ProcessorRunner extends StageRunner<Processor> {
           stageSdcConf,
           executionMode,
           deliveryGuarantee,
-          resourcesDir
+          resourcesDir,
+          runtimeInfo
         );
       }
     }

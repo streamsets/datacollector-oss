@@ -224,7 +224,8 @@ public abstract class StageRunner<S extends Stage> {
     Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
-    String resourcesDir
+    String resourcesDir,
+    RuntimeInfo runtimeInfo
   ) {
     this(
       stageClass,
@@ -238,7 +239,8 @@ public abstract class StageRunner<S extends Stage> {
       stageSdcConf,
       executionMode,
       deliveryGuarantee,
-      resourcesDir
+      resourcesDir,
+      runtimeInfo
     );
   }
 
@@ -254,7 +256,8 @@ public abstract class StageRunner<S extends Stage> {
     Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
-    String resourcesDir
+    String resourcesDir,
+    RuntimeInfo runtimeInfo
   ) {
 
     if(DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY) == null) {
@@ -299,7 +302,8 @@ public abstract class StageRunner<S extends Stage> {
         resourcesDir,
         new EmailSender(new Configuration()),
         sdcConfiguration,
-        new LineagePublisherDelegator.ListDelegator(this.lineageEvents)
+        new LineagePublisherDelegator.ListDelegator(this.lineageEvents),
+        runtimeInfo
     );
     status = Status.CREATED;
   }
@@ -431,6 +435,7 @@ public abstract class StageRunner<S extends Stage> {
     DeliveryGuarantee deliveryGuarantee = DeliveryGuarantee.AT_LEAST_ONCE;
     OnRecordError onRecordError;
     String resourcesDir;
+    RuntimeInfo runtimeInfo;
 
     protected Builder(Class<S> stageClass, S stage) {
       this.stageClass =stageClass;
@@ -440,6 +445,7 @@ public abstract class StageRunner<S extends Stage> {
       onRecordError = OnRecordError.STOP_PIPELINE;
       this.constants = new HashMap<>();
       this.stageSdcConf = new HashMap<>();
+      this.runtimeInfo = new SdkRuntimeInfo("", null,  null);
     }
 
     @SuppressWarnings("unchecked")
@@ -493,6 +499,11 @@ public abstract class StageRunner<S extends Stage> {
 
     public B addConstants(Map<String, Object> constants) {
       this.constants.putAll(constants);
+      return (B) this;
+    }
+
+    public B setRuntimeInfo(RuntimeInfo runtimeInfo) {
+      this.runtimeInfo = runtimeInfo;
       return (B) this;
     }
 

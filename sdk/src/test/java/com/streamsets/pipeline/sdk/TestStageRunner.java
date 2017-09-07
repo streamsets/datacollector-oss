@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -44,7 +45,8 @@ public class TestStageRunner {
       Map<String, Object> constants,
       Map<String, String> stageSdcConf,
       ExecutionMode executionMode,
-      String resourcesDir
+      String resourcesDir,
+      RuntimeInfo runtimeInfo
     ) {
       super(
         stageClass,
@@ -57,7 +59,8 @@ public class TestStageRunner {
         stageSdcConf,
         executionMode,
         DeliveryGuarantee.AT_LEAST_ONCE,
-        resourcesDir
+        resourcesDir,
+        runtimeInfo
       );
     }
 
@@ -70,7 +73,8 @@ public class TestStageRunner {
       Map<String, Object> constants,
       Map<String, String> stageSdcConf,
       ExecutionMode executionMode,
-      String resourcesDir
+      String resourcesDir,
+      RuntimeInfo runtimeInfo
     ) {
       super(
         stageClass,
@@ -84,7 +88,8 @@ public class TestStageRunner {
         stageSdcConf,
         executionMode,
         DeliveryGuarantee.AT_LEAST_ONCE,
-        resourcesDir
+        resourcesDir,
+        runtimeInfo
       );
     }
 
@@ -111,7 +116,8 @@ public class TestStageRunner {
             constants,
             stageSdcConf,
             executionMode,
-            resourcesDir
+            resourcesDir,
+            runtimeInfo
           )
           : new DummyStageRunner(
             stageClass,
@@ -121,7 +127,8 @@ public class TestStageRunner {
             constants,
             stageSdcConf,
             executionMode,
-            resourcesDir
+            resourcesDir,
+            runtimeInfo
           );
       }
     }

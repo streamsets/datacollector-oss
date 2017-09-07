@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Batch;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,7 +55,8 @@ public class TestFilterRecordBatch {
       "",
       new EmailSender(new Configuration()),
       new Configuration(),
-      new LineagePublisherDelegator.NoopDelegator()
+      new LineagePublisherDelegator.NoopDelegator(),
+      Mockito.mock(RuntimeInfo.class)
     );
   }
 

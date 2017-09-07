@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -46,7 +47,8 @@ public class TargetRunner extends StageRunner<Target> {
     Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
-    String resourcesDir
+    String resourcesDir,
+    RuntimeInfo runtimeInfo
   ) {
     super(
       targetClass,
@@ -60,7 +62,8 @@ public class TargetRunner extends StageRunner<Target> {
       stageSdcConf,
       executionMode,
       deliveryGuarantee,
-      resourcesDir
+      resourcesDir,
+      runtimeInfo
     );
   }
 
@@ -74,7 +77,8 @@ public class TargetRunner extends StageRunner<Target> {
     Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
-    String resourcesDir
+    String resourcesDir,
+    RuntimeInfo runtimeInfo
   ) {
     super(
       sourceClass,
@@ -87,7 +91,8 @@ public class TargetRunner extends StageRunner<Target> {
       stageSdcConf,
       executionMode,
       deliveryGuarantee,
-      resourcesDir
+      resourcesDir,
+      runtimeInfo
     );
   }
 
@@ -124,7 +129,8 @@ public class TargetRunner extends StageRunner<Target> {
           stageSdcConf,
           executionMode,
           deliveryGuarantee,
-          resourcesDir
+          resourcesDir,
+          runtimeInfo
         );
       } else {
         return new TargetRunner(
@@ -136,7 +142,8 @@ public class TargetRunner extends StageRunner<Target> {
           stageSdcConf,
           executionMode,
           deliveryGuarantee,
-          resourcesDir
+          resourcesDir,
+          runtimeInfo
         );
       }
     }

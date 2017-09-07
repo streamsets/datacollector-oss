@@ -94,7 +94,8 @@ public class ContextInfoCreator {
         resourcesDir,
         new EmailSender(new Configuration()),
         new Configuration(),
-        new LineagePublisherDelegator.NoopDelegator()
+        new LineagePublisherDelegator.NoopDelegator(),
+        new SdkRuntimeInfo("",null, null)
     );
   }
 

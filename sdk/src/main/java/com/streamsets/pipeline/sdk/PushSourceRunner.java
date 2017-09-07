@@ -17,6 +17,7 @@ package com.streamsets.pipeline.sdk;
 
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.*;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
@@ -57,7 +58,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
     Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
-    String resourcesDir
+    String resourcesDir,
+    RuntimeInfo runtimeInfo
   ) {
     super(
       stageClass,
@@ -70,7 +72,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
       stageSdcConf,
       executionMode,
       deliveryGuarantee,
-      resourcesDir
+      resourcesDir,
+      runtimeInfo
     );
   }
 
@@ -85,7 +88,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
     Map<String, String> stageSdcConf,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
-    String resourcesDir
+    String resourcesDir,
+    RuntimeInfo runtimeInfo
   ) {
     super(
       stageClass,
@@ -99,7 +103,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
       stageSdcConf,
       executionMode,
       deliveryGuarantee,
-      resourcesDir
+      resourcesDir,
+      runtimeInfo
     );
   }
 
@@ -245,7 +250,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
           stageSdcConf,
           executionMode,
           deliveryGuarantee,
-          resourcesDir
+          resourcesDir,
+          runtimeInfo
         );
       } else {
         return new PushSourceRunner(
@@ -258,7 +264,8 @@ public class PushSourceRunner extends StageRunner<PushSource>  implements PushSo
           stageSdcConf,
           executionMode,
           deliveryGuarantee,
-          resourcesDir
+          resourcesDir,
+          runtimeInfo
         );
       }
     }

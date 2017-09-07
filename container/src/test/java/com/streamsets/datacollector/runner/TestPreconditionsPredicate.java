@@ -57,7 +57,8 @@ public class TestPreconditionsPredicate {
         "",
         new EmailSender(new Configuration()),
         new Configuration(),
-        new LineagePublisherDelegator.NoopDelegator()
+        new LineagePublisherDelegator.NoopDelegator(),
+        Mockito.mock(RuntimeInfo.class)
     );
   }
 

@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -44,7 +45,9 @@ public class ExecutorRunner extends StageRunner<Executor> {
                         Map<String, String> stageSdcConf,
                         ExecutionMode executionMode,
                         DeliveryGuarantee deliveryGuarantee,
-                        String resourcesDir) {
+                        String resourcesDir,
+                        RuntimeInfo runtimeInfo
+  ) {
     super(executorClass,
       executor,
       StageType.EXECUTOR,
@@ -56,7 +59,8 @@ public class ExecutorRunner extends StageRunner<Executor> {
       stageSdcConf,
       executionMode,
       deliveryGuarantee,
-      resourcesDir
+      resourcesDir,
+      runtimeInfo
     );
   }
 
@@ -69,7 +73,9 @@ public class ExecutorRunner extends StageRunner<Executor> {
                         Map<String, String> stageSdcConf,
                         ExecutionMode executionMode,
                         DeliveryGuarantee deliveryGuarantee,
-                        String resourcesDir) {
+                        String resourcesDir,
+                        RuntimeInfo runtimeInfo
+  ) {
     super(executorClass,
       StageType.EXECUTOR,
       configuration,
@@ -80,7 +86,8 @@ public class ExecutorRunner extends StageRunner<Executor> {
       stageSdcConf,
       executionMode,
       deliveryGuarantee,
-      resourcesDir
+      resourcesDir,
+      runtimeInfo
     );
   }
 
@@ -118,7 +125,8 @@ public class ExecutorRunner extends StageRunner<Executor> {
           stageSdcConf,
           executionMode,
           deliveryGuarantee,
-          resourcesDir
+          resourcesDir,
+          runtimeInfo
         );
       } else {
         return new ExecutorRunner(
@@ -130,7 +138,8 @@ public class ExecutorRunner extends StageRunner<Executor> {
           stageSdcConf,
           executionMode,
           deliveryGuarantee,
-          resourcesDir
+          resourcesDir,
+          runtimeInfo
         );
       }
     }
