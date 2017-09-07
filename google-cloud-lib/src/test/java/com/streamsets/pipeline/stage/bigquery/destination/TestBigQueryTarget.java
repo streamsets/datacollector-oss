@@ -23,22 +23,27 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
+import com.streamsets.pipeline.stage.lib.GoogleCloudCredentialsConfig;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
+import java.lang.reflect.InvocationHandler;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -62,34 +67,38 @@ import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.
     BigQueryTarget.class,
     InsertAllResponse.class,
     BigQueryDelegate.class,
-    Credentials.class
+    Credentials.class,
+    GoogleCloudCredentialsConfig.class
 })
 public class TestBigQueryTarget {
 
-  public BigQuery bigQuery;
+  private BigQuery bigQuery = PowerMockito.mock(BigQuery.class);
 
   @Before
   public void setup() {
-    bigQuery = PowerMockito.mock(BigQuery.class);
-    PowerMockito
-        .replace(MemberMatcher.method(BigQueryDelegate.class, "getCredentials"))
-        .with((proxy, method, args) -> Optional.empty());
+    PowerMockito.replace(
+        MemberMatcher.method(GoogleCloudCredentialsConfig.class, "getCredentials", Stage.Context.class, List.class)
+    ).with((proxy,method,args) -> PowerMockito.mock(Credentials.class));
   }
-
 
   private TargetRunner createAndRunner(BigQueryTargetConfig config, List<Record> records) throws Exception {
     Target target = new BigQueryTarget(config);
-    Whitebox.setInternalState(target, "bigQuery", bigQuery);
     TargetRunner runner = new TargetRunner.Builder(BigQueryDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .build();
     runner.runInit();
+    Whitebox.setInternalState(target, "bigQuery", bigQuery);
     try {
       runner.runWrite(records);
     } finally {
       runner.runDestroy();
     }
     return runner;
+  }
+
+
+  private void mockBigQueryInsertAllRequest(Answer<InsertAllResponse> insertAllResponseAnswer) {
+    PowerMockito.doAnswer(insertAllResponseAnswer).when(bigQuery).insertAll(Mockito.any(InsertAllRequest.class));
   }
 
 
@@ -151,8 +160,7 @@ public class TestBigQueryTarget {
     records.add(createRecord(ImmutableMap.of("a", "2", "b", 2, "c", 2.0)));
     records.add(createRecord(ImmutableMap.of("a", "3", "b", 3, "c", 3.0)));
 
-
-    Mockito.doAnswer(invocationOnMock -> {
+    mockBigQueryInsertAllRequest(invocationOnMock -> {
       InsertAllRequest insertAllRequest = (InsertAllRequest)invocationOnMock.getArguments()[0];
 
       List<InsertAllRequest.RowToInsert> rows = insertAllRequest.getRows();
@@ -169,7 +177,7 @@ public class TestBigQueryTarget {
       Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
       Mockito.doReturn(false).when(response).hasErrors();
       return response;
-    }).when(bigQuery).insertAll(Mockito.any(InsertAllRequest.class));
+  });
 
     BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
     configBuilder.implicitFieldMapping(true);
@@ -189,7 +197,7 @@ public class TestBigQueryTarget {
     final Map<String, String> columnToFieldMapping =
         ImmutableMap.of("a", "/a", "ba1", "/b/a1", "bb1", "/b/b1", "bc1", "/b/c1", "c", "/c");
 
-    Mockito.doAnswer(invocationOnMock -> {
+    mockBigQueryInsertAllRequest(invocationOnMock -> {
       InsertAllRequest insertAllRequest = (InsertAllRequest)invocationOnMock.getArguments()[0];
 
       List<InsertAllRequest.RowToInsert> rows = insertAllRequest.getRows();
@@ -207,7 +215,7 @@ public class TestBigQueryTarget {
       Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
       Mockito.doReturn(false).when(response).hasErrors();
       return response;
-    }).when(bigQuery).insertAll(Mockito.any(InsertAllRequest.class));
+    });
 
     BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
     configBuilder.implicitFieldMapping(false);
@@ -232,7 +240,7 @@ public class TestBigQueryTarget {
     final Map<String, String> columnToFieldMapping =
         ImmutableMap.of("a", "/a", "ba1", "/b/a1", "bb1", "/b/b1", "bc1", "/b/c1", "c", "/c");
 
-    Mockito.doAnswer(invocationOnMock -> {
+    mockBigQueryInsertAllRequest(invocationOnMock -> {
       InsertAllRequest insertAllRequest = (InsertAllRequest)invocationOnMock.getArguments()[0];
 
       List<InsertAllRequest.RowToInsert> rows = insertAllRequest.getRows();
@@ -249,7 +257,7 @@ public class TestBigQueryTarget {
       Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
       Mockito.doReturn(false).when(response).hasErrors();
       return response;
-    }).when(bigQuery).insertAll(Mockito.any(InsertAllRequest.class));
+    });
 
     BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
     configBuilder.implicitFieldMapping(false);
@@ -288,12 +296,12 @@ public class TestBigQueryTarget {
         )
     );
 
-    Mockito.doAnswer(invocationOnMock -> {
+    mockBigQueryInsertAllRequest(invocationOnMock -> {
       InsertAllResponse response = PowerMockito.mock(InsertAllResponse.class);
       Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
       Mockito.doReturn(false).when(response).hasErrors();
       return response;
-    }).when(bigQuery).insertAll(Mockito.any(InsertAllRequest.class));
+    });
 
     BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
     configBuilder.implicitFieldMapping(true);
@@ -326,7 +334,7 @@ public class TestBigQueryTarget {
 
     record.set(Field.create(rootField));
 
-    Mockito.doAnswer(invocationOnMock -> {
+    mockBigQueryInsertAllRequest(invocationOnMock -> {
       InsertAllRequest request = (InsertAllRequest) invocationOnMock.getArguments()[0];
       InsertAllRequest.RowToInsert rowToInsert = request.getRows().get(0);
       Map<String,Object> actualContentMap =  rowToInsert.getContent();
@@ -342,7 +350,7 @@ public class TestBigQueryTarget {
       Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
       Mockito.doReturn(false).when(response).hasErrors();
       return response;
-    }).when(bigQuery).insertAll(Mockito.any(InsertAllRequest.class));
+    });
 
     BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
     configBuilder.implicitFieldMapping(true);
@@ -374,7 +382,7 @@ public class TestBigQueryTarget {
 
     final Map<String, Map<String, Object>> rowIdToRow = new LinkedHashMap<>();
 
-    Mockito.doAnswer(invocationOnMock -> {
+    mockBigQueryInsertAllRequest(invocationOnMock -> {
       InsertAllResponse response = PowerMockito.mock(InsertAllResponse.class);
       Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
       Mockito.doReturn(false).when(response).hasErrors();
@@ -385,7 +393,7 @@ public class TestBigQueryTarget {
           rowIdToRow.computeIfAbsent(row.getId(), rowId -> new LinkedHashMap<>()).putAll(row.getContent())
       );
       return response;
-    }).when(bigQuery).insertAll(Mockito.any(InsertAllRequest.class));
+    });
 
 
     BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();

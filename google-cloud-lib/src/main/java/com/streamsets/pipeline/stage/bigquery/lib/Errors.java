@@ -29,6 +29,7 @@ public enum Errors implements ErrorCode {
   BIGQUERY_12("Unsupported field '{}' of type '{}'"),
   BIGQUERY_13("Field Path '{}' not present in the record"),
   BIGQUERY_14("Empty row generated for the record"),
+  BIGQUERY_15("Error evaluated Row Id, value evaluates to empty"),
   ;
 
   private final String msg;

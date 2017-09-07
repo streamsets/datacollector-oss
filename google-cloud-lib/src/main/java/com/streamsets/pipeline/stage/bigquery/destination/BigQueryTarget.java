@@ -33,10 +33,12 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
 import com.streamsets.pipeline.stage.bigquery.lib.Errors;
+import com.streamsets.pipeline.stage.bigquery.lib.Groups;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -45,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -74,14 +77,25 @@ public class BigQueryTarget extends BaseTarget {
     return simpleDateFormat;
   }
 
-
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    BigQueryDelegate.getCredentials(getContext(), issues, conf.credentials).ifPresent(c ->
-        bigQuery = BigQueryDelegate.getBigquery(c, conf.credentials.projectId)
-    );
+    conf.credentials.getCredentialsProvider(getContext(), issues).ifPresent(provider -> {
+      if (issues.isEmpty()) {
+        try {
+          Optional.ofNullable(provider.getCredentials()).ifPresent(c -> bigQuery = BigQueryDelegate.getBigquery(c, conf.credentials.projectId));
+        } catch (IOException e) {
+          LOG.error(Errors.BIGQUERY_05.getMessage(), e);
+          issues.add(getContext().createConfigIssue(
+              Groups.CREDENTIALS.name(),
+              "conf.credentials.credentialsProvider",
+              Errors.BIGQUERY_05
+          ));
+        }
+      }
+    });
+
     dataSetEval = getContext().createELEval("datasetEL");
     tableNameELEval = getContext().createELEval("tableNameEL");
     rowIdELEval = getContext().createELEval("rowIdExpression");
@@ -92,34 +106,31 @@ public class BigQueryTarget extends BaseTarget {
   public void write(Batch batch) throws StageException {
     Map<TableId, List<Record>> tableIdToRecords = new LinkedHashMap<>();
     Map<Long, Record> indexToRecords = new LinkedHashMap<>();
+    final AtomicBoolean areThereRecordsToWrite = new AtomicBoolean(false);
 
-    final AtomicLong index = new AtomicLong(0);
+    if (batch.getRecords().hasNext()) {
+      final AtomicLong index = new AtomicLong(0);
+      ELVars elVars = getContext().createELVars();
+      batch.getRecords().forEachRemaining(record -> {
+        indexToRecords.put(index.getAndIncrement(), record);
+        RecordEL.setRecordInContext(elVars, record);
+        try {
+          String datasetName = dataSetEval.eval(elVars, conf.datasetEL, String.class);
+          String tableName = tableNameELEval.eval(elVars, conf.tableNameEL, String.class);
+          TableId tableId = TableId.of(datasetName, tableName);
+          List<Record> tableIdRecords = tableIdToRecords.computeIfAbsent(tableId, t -> new ArrayList<>());
+          tableIdRecords.add(record);
+        } catch (ELEvalException e) {
+          LOG.error("Error evaluating DataSet/TableName EL", e);
+          getContext().toError(record, Errors.BIGQUERY_10, e);
+        }
+      });
 
-    ELVars elVars = getContext().createELVars();
-
-    batch.getRecords().forEachRemaining(record -> {
-      indexToRecords.put(index.getAndIncrement(), record);
-      RecordEL.setRecordInContext(elVars, record);
-      try {
-        String datasetName = dataSetEval.eval(elVars, conf.datasetEL, String.class);
-        String tableName = tableNameELEval.eval(elVars, conf.tableNameEL, String.class);
-        TableId tableId = TableId.of(datasetName, tableName);
-        List<Record> tableIdRecords = tableIdToRecords.computeIfAbsent(tableId, t -> new ArrayList<>());
-        tableIdRecords.add(record);
-      } catch (ELEvalException e) {
-        LOG.error("Error evaluating DataSet/TableName EL", e);
-        getContext().toError(record, Errors.BIGQUERY_10, e);
-      }
-    });
-
-    tableIdToRecords.forEach((tableId, records) -> {
-      InsertAllRequest.Builder insertAllRequestBuilder = InsertAllRequest.newBuilder(tableId);
-      records.forEach(record -> {
-            RecordEL.setRecordInContext(elVars, record);
-            String recordId;
-            try {
-              recordId = (StringUtils.isEmpty(conf.rowIdExpression))? null : rowIdELEval.eval(elVars, conf.rowIdExpression, String.class);
+      tableIdToRecords.forEach((tableId, records) -> {
+        InsertAllRequest.Builder insertAllRequestBuilder = InsertAllRequest.newBuilder(tableId);
+        records.forEach(record -> {
               try {
+                String recordId  = getRowIdForRecord(elVars, record);
                 Map<String, ?> rowContent = conf.implicitFieldMapping ?
                     covertToRowObjectFromRecordImplicitly(record) :
                     covertToRowObjectFromRecordExplicitly(
@@ -131,35 +142,55 @@ public class BigQueryTarget extends BaseTarget {
                   throw new OnRecordErrorException(record, Errors.BIGQUERY_14);
                 }
                 insertAllRequestBuilder.addRow(recordId, rowContent);
+                areThereRecordsToWrite.set(true);
               } catch (OnRecordErrorException e) {
                 LOG.error("Error when converting record {} to row, Reason : {} ", record.getHeader().getSourceId(), e.getMessage());
                 getContext().toError(record, e.getErrorCode(), e.getParams());
               }
-            } catch (ELEvalException e) {
-              LOG.error("Error evaluating Row Expression EL", e);
-              getContext().toError(record, Errors.BIGQUERY_10,e);
+            }
+        );
+
+        if (areThereRecordsToWrite.get()) {
+          insertAllRequestBuilder.setIgnoreUnknownValues(conf.ignoreInvalidColumn);
+          insertAllRequestBuilder.setSkipInvalidRows(false);
+
+          InsertAllRequest request = insertAllRequestBuilder.build();
+
+          if (!request.getRows().isEmpty()) {
+            InsertAllResponse response = bigQuery.insertAll(request);
+            if (response.hasErrors()) {
+              response.getInsertErrors().forEach((recordId, errors) -> {
+                Record record = indexToRecords.get(recordId);
+                String messages = COMMA_JOINER.join(errors.stream().map(BigQueryError::getMessage).collect(Collectors.toList()));
+                String reasons = COMMA_JOINER.join(errors.stream().map(BigQueryError::getReason).collect(Collectors.toList()));
+                LOG.error("Error when inserting record {}, Reasons : {}, Messages : {}", record.getHeader().getSourceId(), reasons, messages);
+                getContext().toError(record, Errors.BIGQUERY_11, reasons, messages);
+              });
             }
           }
-      );
+        }
+      });
+    }
+  }
 
-      insertAllRequestBuilder.setIgnoreUnknownValues(conf.ignoreInvalidColumn);
-      insertAllRequestBuilder.setSkipInvalidRows(false);
-
-      InsertAllRequest request = insertAllRequestBuilder.build();
-
-      if (!request.getRows().isEmpty()) {
-        InsertAllResponse response = bigQuery.insertAll(request);
-        if (response.hasErrors()) {
-          response.getInsertErrors().forEach((recordId, errors) -> {
-            Record record = indexToRecords.get(recordId);
-            String messages = COMMA_JOINER.join(errors.stream().map(BigQueryError::getMessage).collect(Collectors.toList()));
-            String reasons = COMMA_JOINER.join(errors.stream().map(BigQueryError::getReason).collect(Collectors.toList()));
-            LOG.error("Error when inserting record {}, Reasons : {}, Messages : {}", record.getHeader().getSourceId(), reasons, messages);
-            getContext().toError(record, Errors.BIGQUERY_11, reasons, messages);
-          });
+  /**
+   * Evaluate and obtain the row id if the expression is present or return null.
+   */
+  private String getRowIdForRecord(ELVars elVars, Record record) throws OnRecordErrorException {
+    String recordId = null;
+    RecordEL.setRecordInContext(elVars, record);
+    try {
+      if (!(StringUtils.isEmpty(conf.rowIdExpression))) {
+        recordId = rowIdELEval.eval(elVars, conf.rowIdExpression, String.class);
+        if (StringUtils.isEmpty(recordId)) {
+          throw new OnRecordErrorException(record, Errors.BIGQUERY_15);
         }
       }
-    });
+    } catch (ELEvalException e) {
+      LOG.error("Error evaluating Row Expression EL", e);
+      throw new OnRecordErrorException(record, Errors.BIGQUERY_10,e);
+    }
+    return recordId;
   }
 
   /**
@@ -211,15 +242,17 @@ public class BigQueryTarget extends BaseTarget {
     return rowObject;
   }
 
-
+  /**
+   * Convert the sdc Field to an object for row content
+   */
   private Object getPrimitiveValueFromField(Field field) {
     switch (field.getType()) {
       case DATE:
         return DATE_FORMAT.format(field.getValueAsDate());
       case TIME:
-        return TIME_FORMAT.format(field.getValueAsTime()); //+ " " + Calendar.getInstance().getTimeZone().toZoneId();
+        return TIME_FORMAT.format(field.getValueAsTime());
       case DATETIME:
-        return DATE_TIME_FORMAT.format(field.getValueAsDatetime()); //+ " " + Calendar.getInstance().getTimeZone().toZoneId();
+        return DATE_TIME_FORMAT.format(field.getValueAsDatetime());
       case BYTE_ARRAY:
         return Base64.getEncoder().encodeToString(field.getValueAsByteArray());
       default:
