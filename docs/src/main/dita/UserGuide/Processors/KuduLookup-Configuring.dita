@@ -73,7 +73,9 @@
                                                 in the Kudu table.</li>
                                         </ul><p>The primary key for a Kudu table can be either a
                                             simple key consisting of a single column or a compound
-                                            key consisting of multiple columns. Use the
+                                            key consisting of multiple columns. Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
                                                 <uicontrol>Add</uicontrol> icon to add multiple
                                             columns for a compound primary key.</p></entry>
                                 </row>
@@ -99,8 +101,11 @@
                                                   Missing Value is cleared, the processor sends the
                                                   record to error when a lookup returns no value -
                                                   even if you define a default value.</p></li>
-                                        </ul><p>Use the <uicontrol>Add</uicontrol> icon to create
-                                            additional field mappings.</p></entry>
+                                        </ul><p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to create additional
+                                            field mappings.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Case Sensitive</entry>

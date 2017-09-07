@@ -116,8 +116,11 @@
                                                   Required when you specify a default value. The
                                                   processor uses the Salesforce data type by
                                                   default. </li>
-                                            </ul></p><p>Use the <uicontrol>Add</uicontrol> icon to
-                                            create additional field mappings.</p></entry>
+                                            </ul></p><p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to create additional
+                                            field mappings.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Enable Local Caching

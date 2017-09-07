@@ -117,8 +117,11 @@
                                                 the Salesforce object that receives the data. Enter
                                                 a field name or enter an expression that defines the
                                                 field. </li>
-                                        </ul><p>Use the <uicontrol>Add</uicontrol> icon to create
-                                            additional field mappings.</p></entry>
+                                        </ul><p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to create additional
+                                            field mappings.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

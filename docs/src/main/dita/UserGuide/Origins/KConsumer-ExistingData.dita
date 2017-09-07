@@ -26,7 +26,10 @@
         <p>To read all unread data in the topic, add the auto.offset.reset Kafka configuration
             property to the origin:<ol id="ol_n4r_rvn_sx">
                 <li>On the <wintitle>Kafka</wintitle> tab, click the <uicontrol>Add</uicontrol> icon
-                    to add a new Kafka configuration property.</li>
+                    to add a new Kafka configuration property.<p>You can use <xref
+                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                            >simple or bulk edit mode</xref> to add configuration
+                    properties.</p></li>
                 <li>For the property name, enter <uicontrol>auto.offset.reset</uicontrol>.</li>
                 <li>Define the value for the auto.offset.reset property: <ul id="ul_ucr_fwn_sx">
                         <li>When using versions before Kafka 0.9.0.0, set the property to

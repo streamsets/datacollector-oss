@@ -73,8 +73,11 @@
                                                 placement="inline" id="image_a3h_bfn_vs"
                                             /></xref></entry>
                                     <entry>Explicitly map fields from records to HBase columns, and
-                                        then define the storage type for the column in HBase. <p>Use
-                                            the <uicontrol>Add</uicontrol> icon to create additional
+                                        then define the storage type for the column in HBase.
+                                            <p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to create additional
                                             explicit field mappings. </p></entry>
                                 </row>
                                 <row>

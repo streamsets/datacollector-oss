@@ -51,8 +51,11 @@
                                             <li>Flume host and port - Host name and port number for
                                                 the Flume agent. Use the following format: &lt;host
                                                 name>:&lt;port number>.</li>
-                                        </ul>Click the <uicontrol>Add</uicontrol> icon to add
-                                        additional host configuration.</entry>
+                                        </ul>Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
+                                            <uicontrol>Add</uicontrol> icon to add additional host
+                                        configurations.</entry>
                                 </row>
                                 <row>
                                     <entry>Client Type</entry>

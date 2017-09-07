@@ -93,8 +93,10 @@
             </step>
             <step>
                 <cmd>On the <uicontrol>Node IDs</uicontrol> tab, configure the following information
-                    for each node that you want to use. Click the <uicontrol>Add</uicontrol> icon to
-                    add additional nodes.</cmd>
+                    for each node that you want to use. Using <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref>, click the <uicontrol>Add</uicontrol> icon
+                    to add additional nodes.</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ptm_gbw_l1b">
                         <tgroup cols="2">

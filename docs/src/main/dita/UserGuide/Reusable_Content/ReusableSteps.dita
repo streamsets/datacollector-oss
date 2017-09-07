@@ -1507,8 +1507,11 @@
                                             />.</p><p>For information about using namespaces with
                                             XPath expressions, see <xref
                                                 href="../Data_Formats/XMLDF-XPath-Namespaces.dita#concept_mkk_3zj_dy"
-                                            />.</p><p>Use the <uicontrol>Add</uicontrol> icon to add
-                                            additional namespaces.</p></entry>
+                                            />.</p><p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to add additional
+                                            namespaces.</p></entry>
                                 </row>
                                 <row id="O-row-XMLOutputAtts">
                                     <entry>Output Field Attributes</entry>
@@ -1812,8 +1815,10 @@
                                         the default <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-defaultProtocol-ph"
                                         />, click the <uicontrol>Add</uicontrol> icon and enter the
-                                        protocol name. <note>Older protocols are not as secure as
-                                                <ph
+                                        protocol name. You can use <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref> to add
+                                            protocols.<note>Older protocols are not as secure as <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-defaultProtocol-ph"
                                             />.</note></entry>
                                 </row>
@@ -1832,9 +1837,12 @@
                                     <entry>Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <uicontrol>Add</uicontrol> icon and enter the name of
-                                        the cipher suite.<p>Enter the Java Secure Socket Extension
-                                            (JSSE) name for the additional cipher suites that you
-                                            want to use. </p></entry>
+                                        the cipher suite. You can use <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref> to add cipher
+                                            suites.<p>Enter the Java Secure Socket Extension (JSSE)
+                                            name for the additional cipher suites that you want to
+                                            use. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2180,9 +2188,11 @@
                                     </entry>
                                     <entry>
                                         <p id="p-KafkaConfig1">Additional Kafka configuration
-                                            properties to use. To add properties, click
-                                                <uicontrol>Add</uicontrol> and define the Kafka
-                                            property name and value.</p>
+                                            properties to use. Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to add properties.
+                                            Define the Kafka property name and value.</p>
                                         <p id="p-KafkaConfig2">Use the property names and values as
                                             expected by Kafka.</p>
                                         <p id="p-KafkaConfig3">For information about enabling secure
@@ -2514,9 +2524,11 @@
                             <tbody>
                                 <row id="row-UDPport">
                                     <entry>Port</entry>
-                                    <entry>Port to listen to for data. To list additional ports,
-                                        click the<uicontrol> Add</uicontrol> icon.<note>To listen to
-                                            a port below 1024, <ph
+                                    <entry>Port to listen to for data. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the<uicontrol>
+                                            Add</uicontrol> icon to list additional ports.<note>To
+                                            listen to a port below 1024, <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> must be run by a user with root privileges.
                                             Otherwise, the operating system does not allow <ph
@@ -4634,7 +4646,9 @@
                                     </row>
                                     <row id="KPKConfigs">
                                         <entry>Kafka Configuration</entry>
-                                        <entry>Additional Kafka properties to use. Click the
+                                        <entry>Additional Kafka properties to use. Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
                                                 <uicontrol>Add</uicontrol> icon and define the Kafka
                                             property name and value. <p>Use the property names and
                                                 values as expected by Kafka. Do not use the
@@ -4763,10 +4777,13 @@
                                     <entry>Connection information for the destination pipeline to
                                         continue processing data. Use the following format:
                                             <codeph>&lt;host>:&lt;port></codeph>. <p>Use a single
-                                            RPC connection for each destination pipeline. Add
-                                            additional connections as needed.</p><p>Use the port
-                                            number when you configure the SDC RPC origin that
-                                            receives the data.</p></entry>
+                                            RPC connection for each destination pipeline. Using
+                                                <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, add additional
+                                            connections as needed.</p><p>Use the port number when
+                                            you configure the SDC RPC origin that receives the
+                                            data.</p></entry>
                                 </row>
                                 <row id="row-RPCID">
                                     <entry>SDC RPC ID</entry>

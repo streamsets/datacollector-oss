@@ -46,8 +46,11 @@
                                 <row>
                                     <entry>Environment Variables</entry>
                                     <entry>Environment variables to use when executing the shell
-                                        script. Click the <uicontrol>Add</uicontrol> icon to add
-                                        environment variables.<p>You can use <ph
+                                        script. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
+                                            <uicontrol>Add</uicontrol> icon to add environment
+                                            variables.<p>You can use <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> expressions as needed.</p></entry>
                                 </row>

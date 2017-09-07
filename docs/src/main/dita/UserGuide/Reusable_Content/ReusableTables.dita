@@ -80,8 +80,10 @@
        <entry id="WH-Webhook-entry">Webhooks <xref href="../Pipeline_Configuration/Webhooks.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_cr2_33t_rz"
         /></xref></entry>
-       <entry>Webhook to send when an alert triggers. Click the <uicontrol>Add</uicontrol> icon to
-        add additional webhooks.</entry>
+       <entry>Webhook to send when an alert triggers. Using <xref
+         href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb">simple or bulk
+         edit mode</xref>, click the <uicontrol>Add</uicontrol> icon to add additional
+        webhooks.</entry>
       </row>
       <row id="WH-URL-row">
        <entry>Webhook URL</entry>
@@ -683,8 +685,10 @@
      <row>
       <entry>Additional Key-Value Pairs</entry>
       <entry>Optional key-value pairs to send to the token URL when requesting an access token. For
-       example, you can define the OAuth 2 <codeph>scope</codeph> request parameter.<p>Use the
-         <uicontrol>Add</uicontrol> icon to add additional key-value pairs.</p></entry>
+       example, you can define the OAuth 2 <codeph>scope</codeph> request parameter.<p>Using <xref
+         href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb">simple or bulk
+         edit mode</xref>, click the <uicontrol>Add</uicontrol> icon to add additional key-value
+        pairs.</p></entry>
      </row>
     </tbody>
    </tgroup>
@@ -989,7 +993,9 @@
          example, to convert a field value to an integer, enter the following for the parameterized
          value:<codeblock>CAST(? AS INTEGER)</codeblock></p><p>The question mark (?) is substituted
          with the value of the field. Leave the default value of ? if you do not need to apply a SQL
-         function.</p><p>Use the <uicontrol>Add</uicontrol> icon to create additional field to
+         function.</p><p>Using <xref
+          href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb">simple or bulk
+          edit mode</xref>, click the <uicontrol>Add</uicontrol> icon to create additional field to
          column mappings.</p></entry>
       </row>
       <row id="JDBCQueryInterval">

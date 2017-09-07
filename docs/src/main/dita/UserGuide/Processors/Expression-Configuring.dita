@@ -68,8 +68,10 @@
                 </info>
             </step>
             <step>
-                <cmd>To add additional field expressions, click the <uicontrol>Add</uicontrol> icon.
-                </cmd>
+                <cmd>Using <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref>, click the <uicontrol>Add</uicontrol> icon
+                    to add additional field expressions. </cmd>
             </step>
             <step>
                 <cmd>To configure a record header attribute expression, configure the following
@@ -117,8 +119,10 @@
                 </info>
             </step>
             <step>
-                <cmd>To add additional header attribute expressions, click the
-                        <uicontrol>Add</uicontrol> icon. </cmd>
+                <cmd>Using <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref>, click the <uicontrol>Add</uicontrol> icon
+                    to add additional header attribute expressions. </cmd>
             </step>
             <step>
                 <cmd>To configure a field attribute expression, configure the following
@@ -160,8 +164,10 @@
                 </info>
             </step>
             <step>
-                <cmd>To add additional field attribute expressions, click the
-                        <uicontrol>Add</uicontrol> icon. </cmd>
+                <cmd>Using <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref>, click the <uicontrol>Add</uicontrol> icon
+                    to add additional field attribute expressions. </cmd>
             </step>
         </steps>
     </taskbody>

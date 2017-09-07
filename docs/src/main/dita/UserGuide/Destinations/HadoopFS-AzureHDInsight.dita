@@ -47,7 +47,10 @@
                                 credentials:<ol id="ol_yxb_1ht_px">
                                 <li>In the destination, on the <wintitle>Hadoop FS</wintitle> tab,
                                     click the <uicontrol>Add</uicontrol> icon to add a new Hadoop FS
-                                    configuration property. </li>
+                                    configuration property. <p>You can use <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref> to add configuration
+                                        properties.</p></li>
                                 <li>Enter the following property name, using the Azure storage
                                     account name for &lt;storage account
                                     name>:<codeblock>fs.azure.account.key.&lt;storage account name>.blob.core.windows.net</codeblock>For

@@ -30,8 +30,10 @@
                     tab.</cmd>
             </step>
             <step>
-                <cmd>Click the <uicontrol>Add</uicontrol> icon and define the name and the default
-                    value for each parameter.</cmd>
+                <cmd>Using <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref>, click the <uicontrol>Add</uicontrol> icon
+                    and define the name and the default value for each parameter.</cmd>
                 <info>For example, define a parameter named JDBCConnectionString with the default
                     value of <codeph>jdbc:mysql://localhost:3306/sample</codeph>.</info>
             </step>

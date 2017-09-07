@@ -170,9 +170,12 @@
                                     </entry>
                                     <entry>
                                         <p>Additional properties to use. </p>
-                                        <p>To add properties, click Add and define the property name
-                                            and value. Use the property names and values as expected
-                                            by Hive and HDFS or MapR FS.</p>
+                                        <p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click Add to add
+                                            additional properties and define the property name and
+                                            value. Use the property names and values as expected by
+                                            Hive and HDFS or MapR FS.</p>
                                     </entry>
                                 </row>
                             </tbody>
@@ -223,9 +226,11 @@
                                                 placement="inline" id="image_zxv_2nn_l1b"
                                         /></xref></entry>
                                     <entry>Use to define custom record header attributes for the
-                                        metadata record. <p>Click the <uicontrol>Add</uicontrol>
-                                            icon to configure custom record header
-                                        attributes.</p></entry>
+                                        metadata record. <p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to configure custom
+                                            record header attributes.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

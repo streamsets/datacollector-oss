@@ -36,6 +36,7 @@
    <shortdesc/>
   </topicmeta>
  </topicref>
+  <topicref href="../Pipeline_Configuration/SimpleBulkEdit.dita"/>
   <topicref href="../Pipeline_Configuration/RuntimeValues.dita">
    <topicref href="../Pipeline_Configuration/RuntimeParameters.dita">
     <topicmeta>

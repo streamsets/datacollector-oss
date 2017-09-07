@@ -79,8 +79,10 @@
                 </info>
             </step>
             <step>
-                <cmd>To configure an additional email, click the <uicontrol>Add</uicontrol>
-                    icon.</cmd>
+                <cmd>Using <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref>, click the <uicontrol>Add</uicontrol> icon
+                    to configure an additional email.</cmd>
             </step>
         </steps>
     </taskbody>

@@ -77,7 +77,8 @@
                                                   existing field or a new field. If the field does
                                                   not exist, JDBC Lookup creates the field. </li>
                                                 <li>Default Value - Optional default value to use
-                                                  when the query does not return a value for the field. If the query returns no value and this
+                                                  when the query does not return a value for the
+                                                  field. If the query returns no value and this
                                                   property is not defined, the processor sends the
                                                   record to error.<p>To enter a default value for
                                                   the Date data type, use the following format:
@@ -88,8 +89,11 @@
                                                   Required when you specify a default value. The
                                                   processor uses the database column data type by
                                                   default. </li>
-                                            </ul></p><p>Use the <uicontrol>Add</uicontrol> icon to
-                                            create additional column mappings.</p></entry>
+                                            </ul></p><p>Using <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >simple or bulk edit mode</xref>, click the
+                                                <uicontrol>Add</uicontrol> icon to create additional
+                                            column mappings.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Multiple Values Behavior</entry>

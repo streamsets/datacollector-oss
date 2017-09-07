@@ -99,7 +99,9 @@
             </step>
             <step>
                 <cmd>To mask another field, click the <uicontrol>Add</uicontrol> icon, and then
-                    repeat the previous step.</cmd>
+                    repeat the previous step. You can use <xref
+                        href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                        >simple or bulk edit mode</xref> to mask another field.</cmd>
             </step>
         </steps>
     </taskbody>
