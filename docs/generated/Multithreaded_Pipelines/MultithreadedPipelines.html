@@ -47,33 +47,6 @@
             to the pipeline and <span class="ph">Data
                   Collector</span>.</p>
 
-        <div class="p">At this time, you can use the following origins to create a multithreaded pipeline:<ul class="ul" id="concept_zpp_2xc_py__ul_oql_bym_3z">
-                <li class="li">CoAP Server</li>
-
-                <li class="li">Elasticsearch</li>
-
-                <li class="li">Google Pub/Sub Subscriber</li>
-
-                <li class="li">HTTP Server</li>
-
-                <li class="li">JDBC Multitable Consumer</li>
-
-                <li class="li">Kinesis Consumer</li>
-
-                <li class="li">SQL Server CDC Client</li>
-
-                <li class="li">SQL Server Change Tracking</li>
-
-                <li class="li">TCP Server origin</li>
-
-                <li class="li">WebSocket Server origin</li>
-
-            </ul>
-</div>
-
-        <p class="p">You can also use the Dev Data Generator development origin to test multithreaded
-            pipelines. </p>
-
         <p class="p">A multithreaded pipeline honors the configured delivery guarantee for the pipeline, but
             does not guarantee the order in which batches of data are processed. </p>
 
@@ -102,7 +75,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data
                   Collector</span> creates a number of pipeline runners based on the pipeline Max Runners
-                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d34911e1869">Each
+                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d35390e1879">Each
                               thread connects to the origin system and creates a batch of data, and
                               passes the batch to an available pipeline runner.</span></span></p>
 
@@ -156,6 +129,10 @@
     <div class="body conbody">
         <div class="p">You can use the following origins
             to create multithreaded pipelines:<ul class="ul" id="concept_wcz_tpd_py__ul_djp_zvk_tz">
+                        <li class="li"><a class="xref" href="../Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure
+                                    Event Hub Consumer</a> - Reads data from Microsoft Azure
+                              Event Hub.</li>
+
                         <li class="li"><a class="xref" href="../Origins/CoAPServer.html#concept_wfy_ghn_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Server origin is a multithreaded origin that listens on a CoAP endpoint and processes the contents of all authorized CoAP requests.">CoAP
                                     Server</a> - Listens on a CoAP endpoint and processes the
                               contents of all authorized CoAP requests.</li>
@@ -368,6 +345,10 @@
             <ul class="ul" id="concept_sfp_1nd_py__ul_igl_q4d_py">
                 <li class="li">Use multithreaded origins to create a multithreaded pipeline. You can use the
                     following origins at this time:<ul class="ul" id="concept_sfp_1nd_py__ul_llv_cwk_tz">
+                        <li class="li"><a class="xref" href="../Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure
+                                    Event Hub Consumer</a> - Reads data from Microsoft Azure
+                              Event Hub.</li>
+
                         <li class="li"><a class="xref" href="../Origins/CoAPServer.html#concept_wfy_ghn_sz" title="Constrained Application Protocol (CoAP) is a web transfer protocol designed for machine-to-machine devices. The CoAP Server origin is a multithreaded origin that listens on a CoAP endpoint and processes the contents of all authorized CoAP requests.">CoAP
                                     Server</a> - Listens on a CoAP endpoint and processes the
                               contents of all authorized CoAP requests.</li>

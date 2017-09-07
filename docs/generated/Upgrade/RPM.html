@@ -51,7 +51,7 @@
 
             <p class="p"><a class="xref" href="RPM.html#task_zk4_tr5_xv" title="Stop all pipelines and then shut down the previous version of Data Collector.">Step 1. Shut Down the Previous Version</a></p>
 
-            <p class="p"><a class="xref" href="RPM.html#concept_nzl_hkb_mw" title="Before you install the new version, create a backup of the files in the previous version by copying and renaming the data, log, and resource directories. You’ll also need to create a backup of the environment configuration file, $SDC_DIST/libexec/sdcd-env.sh, so that the file is not overwritten when you install the new version. That way, you can continue to run the previous version if needed.">Step 2. Back Up the Previous Version</a></p>
+            <p class="p"><a class="xref" href="RPM.html#concept_nzl_hkb_mw" title="Before you install the new version, create a backup of the files in the previous version by copying and renaming the data and resource directories. You’ll also need to create a backup of the environment configuration file, $SDC_DIST/libexec/sdcd-env.sh, so that the file is not overwritten when you install the new version. That way, you can continue to run the previous version if needed.">Step 2. Back Up the Previous Version</a></p>
 
             <p class="p"><a class="xref" href="RPM.html#task_ofc_2zl_5v" title="Install the new version of the RPM package. Installing the full Data Collector as a service requires sudo privileges on the root directory.">Step 3. Install the New Version</a></p>
 
@@ -106,7 +106,7 @@
 
     
     <div class="body conbody"><p class="shortdesc">Before you install the new version, create a backup of the files in the previous
-        version by copying and renaming the data, log, and resource directories. You’ll also need to
+        version by copying and renaming the data and resource directories. You’ll also need to
         create a backup of the environment configuration file,
             <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp>, so that the file is not overwritten when
         you install the new version. That way, you can continue to run the previous version if
@@ -115,9 +115,6 @@
         <div class="p">Copy and rename the following directories and files:<ul class="ul" id="concept_nzl_hkb_mw__ul_grw_zch_1z">
                 <li class="li">Data directory defined in the SDC_DATA environment variable. Default is
                         <samp class="ph codeph">/var/lib/sdc</samp>.</li>
-
-                <li class="li">Log directory defined in the SDC_LOG environment variable. Default is
-                        <samp class="ph codeph">/var/log/sdc</samp>.</li>
 
                 <li class="li">Resource directory defined in the SDC_RESOURCES environment variable. Default is
                         <samp class="ph codeph">/var/lib/sdc-resources</samp>.</li>

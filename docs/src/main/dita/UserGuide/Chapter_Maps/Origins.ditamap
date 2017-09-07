@@ -40,7 +40,8 @@
    <topicref href="../Origins/AmazonS3-DataFormat.dita"/>
    <topicref href="../Origins/AmazonS3-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/AzureEventHub.dita">
+  <topicref href="../Origins/AzureEventHub.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/AzureEventHub-StorageAccount.dita"/>
    <topicref href="../Origins/AzureEventHub-ResetOrigin.dita"/>
    <topicref href="../Origins/AzureEventHub-MultithreadProcessing.dita"/>
