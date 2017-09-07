@@ -434,18 +434,23 @@ public class JdbcSource extends BaseSource {
               .with(ROW_COUNT, queryRowCount)
               .with(SOURCE_OFFSET, nextSourceOffset)
               .createAndSend();
+
+          // In case of non-incremental mode, we need to generate no-more-data event as soon as we hit end of the
+          // result set. Incremental mode will try to run the query again and generate the event if and only if
+          // the next query results in zero rows.
+          if(!isIncrementalMode) {
+            generateNoMoreDataEvent();
+          }
+
         }
 
-        /**
+        /*
          * We want to generate no-more data event on next batch if:
          * 1) We run a query in this batch and returned empty.
          * 2) We consumed at least some data since last time (to not generate the event all the time)
          */
-        if(queryStartedInThisBatch && rowCount == 0 && noMoreDataRecordCount > 0) {
-          CommonEvents.NO_MORE_DATA.create(getContext())
-            .with("record-count", noMoreDataRecordCount)
-            .createAndSend();
-          noMoreDataRecordCount = 0;
+        if(isIncrementalMode && queryStartedInThisBatch && rowCount == 0 && noMoreDataRecordCount > 0) {
+          generateNoMoreDataEvent();
         }
 
       } catch (SQLException e) {
@@ -476,6 +481,13 @@ public class JdbcSource extends BaseSource {
       }
     }
     return nextSourceOffset;
+  }
+
+  private void generateNoMoreDataEvent() {
+    CommonEvents.NO_MORE_DATA.create(getContext())
+      .with("record-count", noMoreDataRecordCount)
+      .createAndSend();
+    noMoreDataRecordCount = 0;
   }
 
   private boolean continueReading(int rowCount, int batchSize) {

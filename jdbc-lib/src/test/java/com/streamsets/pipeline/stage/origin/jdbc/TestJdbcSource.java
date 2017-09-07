@@ -1000,7 +1000,7 @@ public class TestJdbcSource {
   }
 
   @Test
-  public void testNoMoreDataEvent() throws Exception {
+  public void testNoMoreDataEventIncremental() throws Exception {
     JdbcSource origin = new JdbcSource(
         true,
         query,
@@ -1049,6 +1049,62 @@ public class TestJdbcSource {
       Assert.assertEquals(1, runner.getEventRecords().size());
       Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
       Assert.assertEquals(0, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testNoMoreDataEventNonIncremental() throws Exception {
+    JdbcSource origin = new JdbcSource(
+        false,
+        queryNonIncremental,
+        "0",
+        "P_ID",
+        false,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        new CommonSourceConfigBean(0, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        false,
+        "",
+        createConfigBean(h2ConnectionString, username, password),
+        UnknownTypeAction.STOP_PIPELINE
+        );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      StageRunner.Output output;
+
+      // First batch will read the first 2 rows
+      output = runner.runProduce(null, 2);
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      Assert.assertEquals(0, runner.getEventRecords().size());
+      runner.clearEvents();
+
+      // Second batch will read the rest and generate both success and no-more-data events
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      Assert.assertEquals(2, runner.getEventRecords().size());
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals(4, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
+      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals(4, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
+      runner.clearEvents();
+
+      // Third batch will start reading from begging since it's non-incremental mode and we'll read ll the records
+      // and hence another no-more-data will be generated.
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(4, output.getRecords().get("lane").size());
+      Assert.assertEquals(2, runner.getEventRecords().size());
+      Assert.assertEquals("jdbc-query-success", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals(4, runner.getEventRecords().get(0).get("/rows").getValueAsLong());
+      Assert.assertEquals("no-more-data", runner.getEventRecords().get(1).getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals(4, runner.getEventRecords().get(1).get("/record-count").getValueAsLong());
     } finally {
       runner.runDestroy();
     }
