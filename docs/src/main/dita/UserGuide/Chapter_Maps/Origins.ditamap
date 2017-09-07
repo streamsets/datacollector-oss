@@ -323,6 +323,7 @@
   <topicref href="../Origins/OPCUAClient.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/OPCUAClient-Mode.dita"/>
+   <topicref href="../Origins/OPCUAClient-NodeIDs.dita"/>
    <topicref href="../Origins/OPCUAClient-Security.dita"/>
    <topicref href="../Origins/OPCUAClient-Configuring.dita"/>
   </topicref>
