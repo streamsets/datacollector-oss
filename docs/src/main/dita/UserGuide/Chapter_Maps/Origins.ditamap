@@ -187,6 +187,7 @@
     <topicref href="../Origins/MultiTableJDBCConsumer-TableName.dita"/>
     <topicref href="../Origins/MultiTableJDBCConsumer-Offsets.dita"/>
    </topicref>
+   <topicref href="../Origins/MultiTableJDBCConsumer-Views.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-Multithread.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-MultithreadTable.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-MultithreadPartition.dita">
