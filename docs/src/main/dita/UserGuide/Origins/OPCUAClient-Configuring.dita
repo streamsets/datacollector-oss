@@ -228,6 +228,50 @@
                 </info>
             </step>
             <step>
+                <cmd>On the <wintitle>Channel Config</wintitle> tab, you can configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wzz_tvr_dbb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Channel Configuration Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Chunk Size</entry>
+                                    <entry>Maximum size of a single chunk. Must be set to 8192 or
+                                        larger. <p>Default is 65536.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Chunk Count</entry>
+                                    <entry>Maximum number of chunks in a message.<p>Default is
+                                            32.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Message Size</entry>
+                                    <entry>Maximum size of a message after all chunks are
+                                            assembled.<p>The default is 2097152, which is &lt;Max
+                                            Chunk Size> * &lt;Max Chunk Count>.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Array Length</entry>
+                                    <entry>Maximum length of an array. Default is 65536.</entry>
+                                </row>
+                                <row>
+                                    <entry>Max String Length</entry>
+                                    <entry>Maximum string length. Default is 65536.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
                 <cmd>On the <wintitle>Security</wintitle> tab, optionally configure the following
                     properties:</cmd>
                 <info>
