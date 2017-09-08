@@ -75,6 +75,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Upgrade/PostUpgrade-JDBCMultitable.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Vault.dita"/>
    <topicref href="../Upgrade/PostUpgrade-JDBCProducer.dita"/>
    <topicref href="../Upgrade/PostUpgrade-Preconditions.dita"/>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_m43_zzm_dbb">
+ <title>Reading from Views</title>
+ <shortdesc>The JDBC Multitable Consumer origin can read from views in addition to tables. </shortdesc>
+ <conbody>
+        <p><indexterm>JDBC Multitable Consumer
+                    origin<indexterm>views</indexterm></indexterm><indexterm>views<indexterm>JDBC
+                    Multitable Consumer origin</indexterm></indexterm>The origin reads from all
+            tables and views that are included in the defined table configurations. If a table
+            configuration includes views that you do not want to read, simply exclude them from the
+            configuration.</p>
+        <p>Use the origin to read from simple views that select data from a single table. </p>
+        <p>We do not recommend using the origin to read from complex views that combine data from
+            two or more tables using joins. If the origin reads from complex views, it runs multiple
+            queries in parallel which can cause a heavy workload on the database. </p>
+    </conbody>
+</concept>
