@@ -28,7 +28,8 @@
             information to associate with each client request. You select the processing mode for
             the origin and specify the NodeIds for the nodes you want to use. You can use one of
             several different methods to provide the NodeIds.</p>
-        <p>You can optionally configure the security policy that you want to use, related TLS
-            properties, and an optional client private key alias. </p>
+        <p>You can configure channel properties, such as the maximum chunk or message size. You can
+            optionally configure the security policy that you want to use, related TLS properties,
+            and an optional client private key alias. </p>
     </conbody>
 </concept>
