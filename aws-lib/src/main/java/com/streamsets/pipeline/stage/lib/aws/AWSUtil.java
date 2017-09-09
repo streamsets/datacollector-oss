@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AWSUtil {
-
+  private static final int MILLIS = 1000;
   private AWSUtil() {}
 
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) {
@@ -44,6 +44,8 @@ public class AWSUtil {
 
   public static ClientConfiguration getClientConfiguration(ProxyConfig config) {
     ClientConfiguration clientConfig = new ClientConfiguration();
+
+    clientConfig.setConnectionTimeout(config.connectionTimeout * MILLIS);
 
     // Optional proxy settings
     if (config.useProxy) {
