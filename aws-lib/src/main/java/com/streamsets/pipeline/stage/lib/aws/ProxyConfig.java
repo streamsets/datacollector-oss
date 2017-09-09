@@ -26,6 +26,18 @@ public class ProxyConfig {
 
   @ConfigDef(
       required = true,
+      label = "Connection Timeout",
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "50",
+      description = "Set connection timeout (in seconds)",
+      displayPosition = 4999,
+      group = "ADVANCED"
+  )
+  public Integer connectionTimeout = 50;
+
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Proxy",
       description = "Whether or not to connect to AWS through a proxy",

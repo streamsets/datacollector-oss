@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AWSUtil {
-
+  private static final int MILLIS = 1000;
   private AWSUtil() {}
 
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) throws StageException {
@@ -45,6 +45,8 @@ public class AWSUtil {
 
   public static ClientConfiguration getClientConfiguration(ProxyConfig config) throws StageException {
     ClientConfiguration clientConfig = new ClientConfiguration();
+
+    clientConfig.setConnectionTimeout(config.connectionTimeout * MILLIS);
 
     // Optional proxy settings
     if (config.useProxy) {
