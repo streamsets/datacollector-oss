@@ -142,6 +142,13 @@ public class TestSlaveManager {
 
     @Provides
     @Singleton
+    @Named("runnerStopExecutor")
+    public SafeScheduledExecutorService provideRunnerStopExecutor() {
+      return new SafeScheduledExecutorService(10, "runnerStop");
+    }
+
+    @Provides
+    @Singleton
     public RunnerProvider provideRunnerProvider() {
       return new SlaveRunnerProviderImpl();
     }

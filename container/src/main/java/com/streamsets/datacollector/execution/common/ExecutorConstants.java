@@ -19,13 +19,21 @@ public class ExecutorConstants {
 
   public static final String PREVIEWER_THREAD_POOL_SIZE_KEY = "previewer.thread.pool.size";
   public static final int PREVIEWER_THREAD_POOL_SIZE_DEFAULT = 4;
+
   public static final String RUNNER_THREAD_POOL_SIZE_KEY = "runner.thread.pool.size";
   public static final int RUNNER_THREAD_POOL_SIZE_DEFAULT = 50;
   public static final int RUNNER_THREAD_POOL_SIZE_MULTIPLIER = 10;
+
+  public static final String RUNNER_STOP_THREAD_POOL_SIZE_KEY = "runner_stop.thread.pool.size";
+  public static final String RUNNER_STOP_THREAD_POOL_KEEP_ALIVE_TIME_KEY = "runner_stop.thread.pool.size";
+  public static final int RUNNER_STOP_THREAD_POOL_KEEP_ALIVE_TIME_DEFAULT = 5;
+
   public static final String MANAGER_EXECUTOR_THREAD_POOL_SIZE_KEY = "manager.executor.thread.pool.size";
   public static final int MANAGER_EXECUTOR_THREAD_POOL_SIZE_DEFAULT = 4;
+
   public static final String EVENT_EXECUTOR_THREAD_POOL_SIZE_KEY = "event.executor.thread.pool.size";
   public static final int EVENT_EXECUTOR_THREAD_POOL_SIZE_DEFAULT = 2;
+
   public static final String BUNDLE_EXECUTOR_THREAD_POOL_SIZE_KEY = "bundle.executor.thread.pool.size";
   public static final int BUNDLE_EXECUTOR_THREAD_POOL_SIZE_DEFAULT = 1;
 

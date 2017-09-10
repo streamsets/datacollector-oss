@@ -47,11 +47,17 @@ public class AsyncRunner implements Runner, PipelineInfo {
 
   private final Runner runner;
   private final SafeScheduledExecutorService runnerExecutor;
+  private final SafeScheduledExecutorService runnerStopExecutor;
 
   @Inject
-  public AsyncRunner (Runner runner, @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor) {
+  public AsyncRunner(
+    Runner runner,
+    @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor,
+    @Named("runnerStopExecutor") SafeScheduledExecutorService runnerStopExecutor
+  ) {
     this.runner = runner;
     this.runnerExecutor = runnerExecutor;
+    this.runnerStopExecutor = runnerStopExecutor;
   }
 
   @Override
@@ -115,7 +121,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
       runner.stop(user);
       return null;
     };
-    runnerExecutor.submit(callable);
+    runnerStopExecutor.submit(callable);
   }
 
   @Override
@@ -128,7 +134,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
       runner.forceQuit(user);
       return null;
     };
-    runnerExecutor.submit(callable);
+    runnerStopExecutor.submit(callable);
   }
 
   @Override

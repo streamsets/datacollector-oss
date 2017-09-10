@@ -516,7 +516,11 @@ public class TestUtil {
     @Provides @Named("runnerExecutor") @Singleton
     public SafeScheduledExecutorService provideRunnerExecutor() {
       return new SafeScheduledExecutorService(10, "runner");
+    }
 
+    @Provides @Named("runnerStopExecutor") @Singleton
+    public SafeScheduledExecutorService provideRunnerStopExecutor() {
+      return new SafeScheduledExecutorService(10, "runnerStop");
     }
 
     @Provides @Named("managerExecutor") @Singleton
@@ -677,8 +681,11 @@ public class TestUtil {
     }
 
     @Provides
-    public Runner provideRunner(@Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor) {
-      return new AsyncRunner(new StandaloneRunner(name, rev, objectGraph), runnerExecutor);
+    public Runner provideRunner(
+      @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor,
+      @Named("runnerStopExecutor") SafeScheduledExecutorService runnerStopExecutor
+    ) {
+      return new AsyncRunner(new StandaloneRunner(name, rev, objectGraph), runnerExecutor, runnerStopExecutor);
     }
   }
 
@@ -736,7 +743,10 @@ public class TestUtil {
       return (name, rev, objectGraph, executionMode) -> {
         ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(name, rev));
         TestRunnerModule testRunnerModule = new TestRunnerModule(name, rev, plus);
-        return testRunnerModule.provideRunner(new SafeScheduledExecutorService(1, "runnerExecutor"));
+        return testRunnerModule.provideRunner(
+            new SafeScheduledExecutorService(1, "runnerExecutor"),
+            new SafeScheduledExecutorService(1, "runnerStopExecutor")
+        );
       };
     }
 

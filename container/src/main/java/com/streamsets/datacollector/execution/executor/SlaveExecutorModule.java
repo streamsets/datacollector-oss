@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.execution.executor;
 
-import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.main.SlaveRuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
@@ -37,25 +36,41 @@ public class SlaveExecutorModule {
   @Named("runnerExecutor")
   public SafeScheduledExecutorService provideRunnerExecutor(Configuration configuration) {
     return new SafeScheduledExecutorService(
-      configuration.get(ExecutorConstants.RUNNER_THREAD_POOL_SIZE_KEY, ExecutorConstants.RUNNER_THREAD_POOL_SIZE_DEFAULT), "runner");
+      ExecutorModule.getRunnerSize(configuration),
+      "runner"
+    );
+  }
+
+  @Provides
+  @Singleton
+  @Named("runnerStopExecutor")
+  public SafeScheduledExecutorService provideRunnerStopExecutor(Configuration configuration) {
+    return new SafeScheduledExecutorService(
+      ExecutorModule.getRunnerStopSize(configuration),
+      "runnerStop"
+    );
+
+    // We don't explicitly set thread expiration for stop executor in slave as it's allowed to run only one pipeline.
   }
 
   @Provides
   @Singleton
   @Named("eventHandlerExecutor")
   public SafeScheduledExecutorService provideEventExecutor(Configuration configuration) {
-    return new SafeScheduledExecutorService(configuration.get(
-        ExecutorConstants.EVENT_EXECUTOR_THREAD_POOL_SIZE_KEY,
-        ExecutorConstants.EVENT_EXECUTOR_THREAD_POOL_SIZE_DEFAULT
-    ), "eventHandlerExecutor");
+    return new SafeScheduledExecutorService(
+      ExecutorModule.getEventSize(configuration),
+      "eventHandlerExecutor"
+    );
   }
 
   @Provides
   @Singleton
   @Named("supportBundleExecutor")
   public SafeScheduledExecutorService provideSupportBundleExecutor(Configuration configuration) {
-    // Harcoding a single executor for generating support bundle at this time
-    return new SafeScheduledExecutorService(1, "supportBundleExecutor");
+    return new SafeScheduledExecutorService(
+      ExecutorModule.getBundleSize(configuration),
+      "supportBundleExecutor"
+    );
   }
 
   @Provides

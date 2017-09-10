@@ -722,9 +722,25 @@ public class TestClusterRunner {
 
   private Runner createClusterRunnerForUnsupportedPipeline() {
     eventListenerManager = new EventListenerManager();
-    return new AsyncRunner(new ClusterRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0", runtimeInfo, conf,
-      pipelineStoreTask, pipelineStateStore, stageLibraryTask, executorService, clusterHelper,
-      new ResourceManager(conf), eventListenerManager, "myToken", aclStoreTask), new SafeScheduledExecutorService(1, "runner"));
+    return new AsyncRunner(
+      new ClusterRunner(
+        TestUtil.HIGHER_VERSION_PIPELINE,
+        "0",
+        runtimeInfo,
+        conf,
+        pipelineStoreTask,
+        pipelineStateStore,
+        stageLibraryTask,
+        executorService,
+        clusterHelper,
+        new ResourceManager(conf),
+        eventListenerManager,
+        "myToken",
+        aclStoreTask
+      ),
+      new SafeScheduledExecutorService(1, "runner"),
+      new SafeScheduledExecutorService(1, "runnerStop")
+      );
   }
 
   static class MyClusterRunner extends ClusterRunner {

@@ -46,8 +46,11 @@ public class StandaloneRunnerModule {
   }
 
   @Provides
-  public Runner provideAsyncRunner(StandaloneRunner runner,
-                                        @Named("runnerExecutor") SafeScheduledExecutorService asyncExecutor) {
-    return new AsyncRunner(runner, asyncExecutor);
+  public Runner provideAsyncRunner(
+      StandaloneRunner runner,
+      @Named("runnerExecutor") SafeScheduledExecutorService asyncExecutor,
+      @Named("runnerStopExecutor") SafeScheduledExecutorService asyncStopExecutor
+  ) {
+    return new AsyncRunner(runner, asyncExecutor, asyncStopExecutor);
   }
 }

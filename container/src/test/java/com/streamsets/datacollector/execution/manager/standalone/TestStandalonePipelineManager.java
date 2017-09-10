@@ -187,6 +187,11 @@ public class TestStandalonePipelineManager {
       return new SafeScheduledExecutorService(10, "runner");
     }
 
+    @Provides @Singleton @Named("runnerStopExecutor")
+    public SafeScheduledExecutorService provideRunnerStopExecutor() {
+      return new SafeScheduledExecutorService(10, "runnerStop");
+    }
+
     @Provides @Singleton @Named("managerExecutor")
     public SafeScheduledExecutorService provideManagerExecutor() {
       return new SafeScheduledExecutorService(10, "manager");

@@ -226,6 +226,41 @@ angular
         ]
       },
       {
+        name: 'runnerStopPool',
+        label: 'Thread Pool: Pipeline Stop Runner',
+        xAxisTickFormat: $scope.dateFormat(),
+        values: [
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.runnerStop.runtime.gauge',
+            property: 'Value/running',
+            key: 'Running',
+            values: [],
+            area: true
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.runnerStop.runtime.gauge',
+            property: 'Value/waiting',
+            key: 'Waiting',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.runnerStop.runtime.gauge',
+            property: 'Value/max',
+            key: 'Max',
+            values: [],
+            area: false
+          },
+          {
+            name: 'metrics:name=sdc.pipeline.safe-executor.runnerStop.runtime.gauge',
+            property: 'Value/periodic',
+            key: 'Periodic',
+            values: [],
+            area: false
+          }
+        ]
+      },
+      {
         name: 'previewerPool',
         label: 'Thread Pool: Pipeline Previewer',
         xAxisTickFormat: $scope.dateFormat(),
