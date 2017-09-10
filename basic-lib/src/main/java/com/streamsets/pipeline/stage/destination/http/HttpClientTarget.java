@@ -256,8 +256,10 @@ public class HttpClientTarget extends BaseTarget {
         return MediaType.APPLICATION_OCTET_STREAM;
       case JSON:
       case SDC_JSON:
-      default:
         return MediaType.APPLICATION_JSON;
+      default:
+        // Default is binary blob
+        return MediaType.APPLICATION_OCTET_STREAM;
     }
   }
 
