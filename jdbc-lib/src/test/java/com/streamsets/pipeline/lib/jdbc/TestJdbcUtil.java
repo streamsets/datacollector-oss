@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.junit.After;
@@ -26,11 +27,19 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
+import static org.hamcrest.Matchers.emptyCollectionOf;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+
+import static org.junit.Assert.assertThat;
 
 public class TestJdbcUtil {
 
@@ -42,6 +51,7 @@ public class TestJdbcUtil {
   private final String schema = "SCHEMA_TEST";
   private final String tableName = "MYAPP";
   private final String tableNameWithSpecialChars = "MYAPP.TEST_TABLE1.CUSTOMER";
+  private final String emptyTableName = "EMPTY_TABLE";
   private final String dataTypesTestTable = "DATA_TYPES_TEST";
 
   private HikariPoolConfigBean createConfigBean() {
@@ -84,6 +94,10 @@ public class TestJdbcUtil {
       statement.addBatch(
           "INSERT INTO " + schema + "." + dataTypesTestTable + " VALUES (1, CAST('1970-01-01 00:00:00+02:00' " +
               "AS TIMESTAMP WITH TIME ZONE));"
+      );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS " + schema + "." + "\"" + emptyTableName + "\"" +
+              "(P_ID TIMESTAMP NOT NULL, PRIMARY KEY(P_ID));"
       );
       String unprivUser = "unpriv_user";
       String unprivPassword = "unpriv_pass";
@@ -165,6 +179,33 @@ public class TestJdbcUtil {
         }
       }
     }
+  }
+
+  @Test
+  public void testGetMinValues() throws Exception {
+    HikariPoolConfigBean config = createConfigBean();
+
+    HikariDataSource dataSource = JdbcUtil.createDataSourceForRead(config);
+    Connection connection = dataSource.getConnection();
+
+    Map<String, String> emptyTableMin = JdbcUtil.getMinimumOffsetValues(
+        connection,
+        schema,
+        emptyTableName,
+        QuoteChar.NONE,
+        Arrays.asList("P_ID")
+    );
+    assertThat(emptyTableMin.size(), equalTo(0));
+
+    Map<String, String> typedTableMin = JdbcUtil.getMinimumOffsetValues(
+        connection,
+        schema,
+        dataTypesTestTable,
+        QuoteChar.NONE,
+        Arrays.asList("P_ID")
+    );
+    assertThat(typedTableMin.size(), equalTo(1));
+    assertThat(typedTableMin, hasEntry("P_ID", "1"));
   }
 
 }

@@ -173,6 +173,23 @@ public class TableContext {
         }
         return false;
       }
+
+      if (!sourceTableContext.getOffsetColumnToMinValues().containsKey(offsetColToType.getKey())) {
+        String reason = String.format(
+            "Table %s is not partitionable because %s column (type %s) did not have a minimum value available at" +
+                " pipeline start time; only tables with with at least one row can be partitioned",
+            tableName,
+            offsetColToType.getKey(),
+            JDBCType.valueOf(type).getName()
+        );
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(reason);
+        }
+        if (outputReasons != null) {
+          outputReasons.add(reason);
+        }
+        return false;
+      }
     }
 
     return true;
