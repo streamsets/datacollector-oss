@@ -54,6 +54,8 @@
                ng-if="!snapshotInfo.inProgress"
                ng-click="viewSnapshot(snapshotInfo)"></a>
             <span class="separator" ng-if="!snapshotInfo.inProgress">|</span>
+            <a href="javascript:;" translate="global.form.download" ng-if="!snapshotInfo.inProgress" ng-click="downloadSnapshot(snapshotInfo)"></a>
+            <span class="separator" ng-if="!snapshotInfo.inProgress">|</span>
             <a href="javascript:;" translate="global.form.delete"
                ng-if="!snapshotInfo.inProgress"
                ng-click="deleteSnapshot(snapshotInfo.id, $index)"> Delete </a>

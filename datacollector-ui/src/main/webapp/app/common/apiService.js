@@ -1094,6 +1094,19 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Download captured snapshot for given pipeline name.
+       *
+       * @param pipelineName
+       * @param rev
+       * @param snapshotName
+       * @returns {*}
+       */
+      downloadSnapshot: function(pipelineName, rev, snapshotName) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '?attachment=true&rev=' + rev;
+        window.open(url, '_blank', '');
+      },
+
+      /**
        * Delete captured snapshot for given pipeline name.
        *
        * @param pipelineName

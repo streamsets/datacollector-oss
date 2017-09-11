@@ -81,6 +81,15 @@ angular
       },
 
       /**
+       * Download Snapshot
+       *
+       * @param snapshotName
+       */
+      downloadSnapshot: function(snapshotInfo) {
+        api.pipelineAgent.downloadSnapshot(snapshotInfo.name, 0, snapshotInfo.id);
+      },
+
+      /**
        * Delete Snapshot
        *
        * @param snapshotName

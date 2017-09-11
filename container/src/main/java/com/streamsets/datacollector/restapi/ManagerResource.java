@@ -661,13 +661,21 @@ public class ManagerResource {
   public Response getSnapshot(
       @PathParam("pipelineId") String pipelineId,
       @PathParam("snapshotName") String snapshotName,
-      @QueryParam("rev") @DefaultValue("0") String rev
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      @QueryParam("attachment") @DefaultValue("false") Boolean attachment
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     Runner runner = manager.getRunner(pipelineId, rev);
     if(runner != null) {
-      return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getSnapshot(snapshotName).getOutput()).build();
+      if (attachment) {
+        String fileName = pipelineId + "_" + snapshotName;
+        return Response.ok().
+            header("Content-Disposition", "attachment; filename=\"" + fileName + ".json\"").
+            type(MediaType.APPLICATION_JSON).entity(runner.getSnapshot(snapshotName).getOutput()).build();
+      } else {
+        return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getSnapshot(snapshotName).getOutput()).build();
+      }
     }
     return Response.noContent().build();
   }
