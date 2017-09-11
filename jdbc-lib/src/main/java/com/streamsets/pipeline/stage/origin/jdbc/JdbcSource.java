@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
@@ -508,9 +509,10 @@ public class JdbcSource extends BaseSource {
     }
   }
 
-  private String prepareQuery(String query, String lastSourceOffset) {
+  @VisibleForTesting
+  String prepareQuery(String query, String lastSourceOffset) {
     final String offset = null == lastSourceOffset ? initialOffset : lastSourceOffset;
-    return query.replaceAll("\\$\\{offset}", offset);
+    return query.replaceAll("\\$\\{(offset|OFFSET)}", offset);
   }
 
   private Record processRow(ResultSet resultSet, long rowCount) throws SQLException, StageException {

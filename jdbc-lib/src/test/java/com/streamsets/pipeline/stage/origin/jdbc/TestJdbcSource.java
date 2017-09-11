@@ -1233,4 +1233,30 @@ public class TestJdbcSource {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testQueryReplaceUpperOffset() throws Exception {
+    JdbcSource origin = new JdbcSource(
+        true,
+        queryUnkownType,
+        "0",
+        "P_ID",
+        false,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        // Using "0" leads to SDC-6429
+        new CommonSourceConfigBean(10, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        false,
+        "",
+        createConfigBean(h2ConnectionString, username, password),
+        UnknownTypeAction.CONVERT_TO_STRING
+    );
+
+    final String lastSourceOffset = "10";
+    final String query = "${OFFSET}${offset}";
+
+    String result = origin.prepareQuery(query, lastSourceOffset);
+    Assert.assertEquals(result, lastSourceOffset+lastSourceOffset);
+  }
 }
