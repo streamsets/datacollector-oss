@@ -293,29 +293,36 @@ public class JdbcUtil {
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(minOffsetQuery)
       ) {
-        // explicitly position to first, then try to get next.
-        if (rs.first() && rs.next()) {
-          String minValue;
+        if (rs.first()) {
+          String minValue = null;
           final int colType = rs.getMetaData().getColumnType(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
           switch (colType) {
             case Types.DATE:
               java.sql.Date date = rs.getDate(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
-              minValue = String.valueOf(date.toInstant().toEpochMilli());
+              if (date != null) {
+                minValue = String.valueOf(date.toInstant().toEpochMilli());
+              }
               break;
             case Types.TIME:
               java.sql.Time time = rs.getTime(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
-              minValue = String.valueOf(time.toInstant().toEpochMilli());
+              if (time != null) {
+                minValue = String.valueOf(time.toInstant().toEpochMilli());
+              }
               break;
             case Types.TIMESTAMP:
               Timestamp timestamp = rs.getTimestamp(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
-              final Instant instant = timestamp.toInstant();
-              minValue = String.valueOf(instant.toEpochMilli());
+              if (timestamp != null) {
+                final Instant instant = timestamp.toInstant();
+                minValue = String.valueOf(instant.toEpochMilli());
+              }
               break;
             default:
               minValue = rs.getString(MIN_OFFSET_VALUE_QUERY_RESULT_SET_INDEX);
               break;
           }
-          minOffsetValues.put(offsetColumn, minValue);
+          if (minValue != null) {
+            minOffsetValues.put(offsetColumn, minValue);
+          }
         } else {
           LOG.warn("Unable to get minimum offset value using query {}; result set had no rows", minOffsetQuery);
         }

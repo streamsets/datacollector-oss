@@ -497,6 +497,24 @@ public class TestMultithreadedTableProvider {
     assertLoadedPartitions(partitionsAndOffsets, provider);
   }
 
+  @Test
+  public void tableWithNoMinOffsetValues() {
+    TableContext table = createTableContext(
+        "schema",
+        "tableName",
+        "off",
+        "1000",
+        null,
+        -1,
+        true
+    );
+
+    List<String> reasons = new LinkedList<>();
+    assertThat(TableContext.isPartitionable(table, reasons), equalTo(false));
+    assertThat(reasons, hasSize(1));
+    assertThat(reasons.get(0), containsString("did not have a minimum value available"));
+  }
+
   private void assertLoadedPartitions(
       Map<TableRuntimeContext, Map<String, String>> partitionsAndOffsets,
       MultithreadedTableProvider provider
@@ -702,11 +720,35 @@ public class TestMultithreadedTableProvider {
       int maxActivePartitions,
       boolean enablePartitioning
   ) {
+    return createTableContext(
+        schema,
+        tableName,
+        offsetColumn,
+        partitionSize,
+        "0",
+        maxActivePartitions,
+        enablePartitioning
+    );
+  }
+
+  @NotNull
+  private static TableContext createTableContext(
+      String schema,
+      String tableName,
+      String offsetColumn,
+      String partitionSize,
+      String minOffsetColValue,
+      int maxActivePartitions,
+      boolean enablePartitioning
+  ) {
     LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
     offsetColumnToType.put(offsetColumn, Types.INTEGER);
     Map<String, String> offsetColumnToStartOffset = new HashMap<>();
     Map<String, String> offsetColumnToPartitionSizes = new HashMap<>();
-    Map<String, String> offsetColumnToMinValues = Collections.singletonMap(offsetColumn, "0");
+    Map<String, String> offsetColumnToMinValues = new HashMap<>();
+    if (minOffsetColValue != null) {
+      offsetColumnToMinValues.put(offsetColumn, minOffsetColValue);
+    }
     offsetColumnToPartitionSizes.put(offsetColumn, partitionSize);
     String extraOffsetColumnConditions = null;
 
