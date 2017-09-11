@@ -219,6 +219,16 @@
                                         seconds.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>JDBC Fetch Size</entry>
+                                    <entry>Minimum number of records to fetch before passing a batch
+                                        to the pipeline. <p>Keep this value low to allow the origin
+                                            to pass records to the pipeline as soon as possible,
+                                            rather than waiting for a larger number of records to
+                                            become available. Lower values can increase throughput
+                                            when writes to the destination system are
+                                            slow.</p><p>Default is 1.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Send Redo Query</entry>
                                     <entry>Includes the LogMiner redo query in the oracle.cdc.query
                                         record header attribute.</entry>

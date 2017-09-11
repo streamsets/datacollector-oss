@@ -35,6 +35,23 @@
         you upgrade.</p>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_hhc_15s_dbb">
+ <h2 class="title topictitle2">Update JDBC Multitable Consumer Pipelines</h2>
+
+ <div class="body conbody">
+        <p class="p">With version 2.7.1.1, the JDBC Multitable Consumer origin can now read from views in
+            addition to tables. The origin now reads from all tables and all views that are included
+            in the defined table configurations. </p>
+
+        <p class="p">When upgrading pipelines that contain a JDBC Multitable Consumer origin from <span class="ph">Data
+                  Collector</span>
+            versions earlier than 2.7.1.1, review the table configurations to determine if any views
+            are included. If a table configuration includes views that you do not want to read,
+            simply exclude them from the configuration.</p>
+
+    </div>
+
+</div>
 <div class="topic concept nested1" id="concept_yyv_v45_zw">
  <h2 class="title topictitle2">Update Vault Pipelines</h2>
 

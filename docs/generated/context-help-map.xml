@@ -19,7 +19,9 @@
    <appContext helpID="concept_rr2_mbz_w1b"
                path="WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="WhatsNew/WhatsNew_Title.html#unique_1546484834"/>
+               path="WhatsNew/WhatsNew_Title.html#unique_10712869"/>
+   <appContext helpID="concept_rr2_mbz_w1b"
+               path="WhatsNew/WhatsNew_Title.html#unique_1744924363"/>
    <appContext helpID="concept_avm_x1y_h1b"
                path="WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b"/>
    <appContext helpID="concept_bsw_cky_11b"
@@ -82,7 +84,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_249822110"/>
+               path="Installation/CMInstall-Overview.html#unique_1098517790"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -309,6 +311,8 @@
    <appContext helpID="task_mdr_phr_5v" path="Upgrade/CMUpgrade.html#task_mdr_phr_5v"/>
    <appContext helpID="concept_zll_vn5_zw"
                path="Upgrade/PostUpgrade.html#concept_zll_vn5_zw"/>
+   <appContext helpID="concept_hhc_15s_dbb"
+               path="Upgrade/PostUpgrade.html#concept_hhc_15s_dbb"/>
    <appContext helpID="concept_yyv_v45_zw"
                path="Upgrade/PostUpgrade.html#concept_yyv_v45_zw"/>
    <appContext helpID="concept_cmh_ryd_pz"
@@ -773,6 +777,8 @@
                path="Origins/MultiTableJDBCConsumer.html#concept_ank_41x_4y"/>
    <appContext helpID="concept_yfx_mhx_4y"
                path="Origins/MultiTableJDBCConsumer.html#concept_yfx_mhx_4y"/>
+   <appContext helpID="concept_m43_zzm_dbb"
+               path="Origins/MultiTableJDBCConsumer.html#concept_m43_zzm_dbb"/>
    <appContext helpID="concept_nbk_xgt_p1b"
                path="Origins/MultiTableJDBCConsumer.html#concept_nbk_xgt_p1b"/>
    <appContext helpID="concept_tz5_fw5_gz"
@@ -2606,7 +2612,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_133957109"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_2001276152"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
