@@ -151,6 +151,15 @@ public class RedisSubscriptionSource extends BaseRedisSource {
           break;
         }
         Thread.sleep(1000);
+        i++;
+      }
+      if( i == conf.connectionTimeout) {
+        issues.add(getContext().createConfigIssue(Groups.REDIS.name(),
+            "uri",
+            Errors.REDIS_05,
+            conf.uri
+        ));
+
       }
     } catch (Exception e) {
       issues.add(getContext().createConfigIssue(Groups.REDIS.name(),
