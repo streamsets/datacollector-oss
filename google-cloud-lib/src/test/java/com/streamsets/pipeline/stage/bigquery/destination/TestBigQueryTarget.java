@@ -35,7 +35,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
@@ -43,7 +42,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
-import java.lang.reflect.InvocationHandler;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -52,9 +50,9 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.DATE_FORMAT;
 import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.DATE_TIME_FORMAT;
@@ -282,35 +280,6 @@ public class TestBigQueryTarget {
   }
 
   @Test
-  public void testImplicitMappingWithNestMapFieldError() throws Exception {
-    List<Record> records = new ArrayList<>();
-    records.add(
-        createRecord(
-            ImmutableMap.of("a", "1", "b", ImmutableMap.of("a1", 1, "b1", 1, "c1", 1), "c", 1.0)
-        )
-    );
-
-    records.add(
-        createRecord(
-            ImmutableMap.of("a", "2","c", 2.0)
-        )
-    );
-
-    mockBigQueryInsertAllRequest(invocationOnMock -> {
-      InsertAllResponse response = PowerMockito.mock(InsertAllResponse.class);
-      Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
-      Mockito.doReturn(false).when(response).hasErrors();
-      return response;
-    });
-
-    BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
-    configBuilder.implicitFieldMapping(true);
-    configBuilder.ignoreInvalidColumns(true);
-    TargetRunner runner = createAndRunner(configBuilder.build(), records);
-    Assert.assertEquals(1, runner.getErrorRecords().size());
-  }
-
-  @Test
   public void testDateTimeAndByteFields() throws Exception {
     Record record = RecordCreator.create();
     Map<String, Field> rootField = new LinkedHashMap<>();
@@ -423,4 +392,100 @@ public class TestBigQueryTarget {
       }
     });
   }
+
+  @SuppressWarnings("unchecked")
+  private void checkValues(Object expected, Object actual) {
+    if (expected instanceof Map) {
+      Map<String, Object> expectedMap = (Map<String, Object>)expected;
+      Map<String, Object> actualMap = (Map<String, Object>)actual;
+      Assert.assertEquals(expectedMap.keySet(), actualMap.keySet());
+      expectedMap.forEach((k,v) -> checkValues(expectedMap.get(k), v));
+    } else if (expected  instanceof List) {
+      List<Object> expectedList = (List<Object>)expected;
+      List<Object> actualList = (List<Object>)actual;
+      Assert.assertEquals(expectedList.size(), actualList.size());
+      IntStream.range(0, expectedList.size()).forEach(idx -> checkValues(expectedList.get(idx), actualList.get(idx)));
+    } else {
+      Assert.assertEquals(expected, actual);
+    }
+  }
+
+  @Test
+  public void testNestedAndRepeatedRecords() throws Exception {
+    Map<String, Object> expectedRowContent = new LinkedHashMap<>();
+
+    //one level map
+    Map<String, Object> innerLevelMap = new LinkedHashMap<>();
+    innerLevelMap.put("aMap1", 1);
+    innerLevelMap.put("aMap2", 2.0);
+    innerLevelMap.put("aMap3", true);
+
+    expectedRowContent.put("a", innerLevelMap);
+
+    //single list
+    List<String> innerStringList = new ArrayList<>();
+    innerStringList.add("bList1");
+    innerStringList.add("bList2");
+    innerStringList.add("bList3");
+
+    expectedRowContent.put("b", innerStringList);
+
+    //Nested Repeated map
+    List<Map<String, Object>> innerLevelMapList = new ArrayList<>();
+
+    Map<String, Object> innerLevelMap1 = new LinkedHashMap<>();
+    innerLevelMap1.put("cList1a", "a");
+    innerLevelMap1.put("cList1b", 1);
+    innerLevelMap1.put("cList1c", 2.0);
+    innerLevelMap1.put("cList1d", true);
+    innerLevelMap1.put("cList1e", ImmutableMap.of("e", 1));
+
+
+    Map<String, Object> innerLevelMap2 = new LinkedHashMap<>();
+    innerLevelMap2.put("cList2a", "b");
+    innerLevelMap2.put("cList2b", 2);
+    innerLevelMap2.put("cList2c", 3.0);
+    innerLevelMap2.put("cList2d", false);
+    innerLevelMap1.put("cList2e", ImmutableMap.of("e", 2));
+
+
+    Map<String, Object> innerLevelMap3 = new LinkedHashMap<>();
+    innerLevelMap3.put("cList3a", "c");
+    innerLevelMap3.put("cList3b", 3);
+    innerLevelMap3.put("cList3c", 4.0);
+    innerLevelMap3.put("cList3d", true);
+    innerLevelMap1.put("cList3e", ImmutableMap.of("e", 3));
+
+    innerLevelMapList.add(innerLevelMap1);
+    innerLevelMapList.add(innerLevelMap2);
+    innerLevelMapList.add(innerLevelMap3);
+
+    expectedRowContent.put("c", innerLevelMapList);
+
+
+    Record record = RecordCreator.create();
+    record.set(createField(expectedRowContent));
+
+    mockBigQueryInsertAllRequest(invocationOnMock -> {
+      InsertAllRequest insertAllRequest = (InsertAllRequest)invocationOnMock.getArguments()[0];
+
+      List<InsertAllRequest.RowToInsert> rows = insertAllRequest.getRows();
+
+      Assert.assertEquals(1, rows.size());
+
+      InsertAllRequest.RowToInsert row = rows.get(0);
+
+      row.getContent().forEach((k, v) -> checkValues(expectedRowContent.get(k), v));
+
+      InsertAllResponse response = PowerMockito.mock(InsertAllResponse.class);
+      Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
+      Mockito.doReturn(false).when(response).hasErrors();
+      return response;
+    });
+
+    BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
+    configBuilder.implicitFieldMapping(true);
+    createAndRunner(configBuilder.build(), Collections.singletonList(record));
+  }
+
 }
