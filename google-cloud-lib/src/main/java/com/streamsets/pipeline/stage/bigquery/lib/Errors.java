@@ -30,6 +30,7 @@ public enum Errors implements ErrorCode {
   BIGQUERY_13("Field Path '{}' not present in the record"),
   BIGQUERY_14("Empty row generated for the record"),
   BIGQUERY_15("Error evaluated Row Id, value evaluates to empty"),
+  BIGQUERY_16("Root field of record should be a Map or a List Map"),
   ;
 
   private final String msg;

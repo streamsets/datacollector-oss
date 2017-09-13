@@ -205,14 +205,11 @@ public class BigQueryTarget extends BaseTarget {
       Map<String, Field> fieldMap = rootField.getValueAsMap();
       for (Map.Entry<String, Field> fieldEntry : fieldMap.entrySet()) {
         Field field = fieldEntry.getValue();
-        if (field.getType().isOneOf(Field.Type.MAP, Field.Type.LIST, Field.Type.LIST_MAP, Field.Type.FILE_REF)) {
-          throw new OnRecordErrorException(record,  Errors.BIGQUERY_12, "/" + fieldEntry.getKey());
-        }
         //Skip null value fields
-        Optional.ofNullable(field.getValue()).ifPresent(v -> rowObject.put(fieldEntry.getKey(), getPrimitiveValueFromField(field)));
+        Optional.ofNullable(field.getValue()).ifPresent(v -> rowObject.put(fieldEntry.getKey(), getValueFromField(field)));
       }
     } else {
-      throw new OnRecordErrorException(record,  Errors.BIGQUERY_12, "/");
+      throw new OnRecordErrorException(record,  Errors.BIGQUERY_16);
     }
     return rowObject;
   }
@@ -236,7 +233,7 @@ public class BigQueryTarget extends BaseTarget {
       } else {
         Field field = record.get(mappingConfig.fieldPath);
         //Skip null value fields
-        Optional.ofNullable(field.getValue()).ifPresent( v -> rowObject.put(mappingConfig.columnName, getPrimitiveValueFromField(field)));
+        Optional.ofNullable(field.getValue()).ifPresent( v -> rowObject.put(mappingConfig.columnName, getValueFromField(field)));
       }
     }
     return rowObject;
@@ -245,8 +242,16 @@ public class BigQueryTarget extends BaseTarget {
   /**
    * Convert the sdc Field to an object for row content
    */
-  private Object getPrimitiveValueFromField(Field field) {
+  private Object getValueFromField(Field field) {
     switch (field.getType()) {
+      case LIST:
+        //REPEATED
+        return field.getValueAsList().stream().map(this::getValueFromField).collect(Collectors.toList());
+      case MAP:
+      case LIST_MAP:
+        //RECORD
+        return field.getValueAsMap().entrySet().stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, e -> getValueFromField(e.getValue())));
       case DATE:
         return DATE_FORMAT.format(field.getValueAsDate());
       case TIME:
@@ -255,9 +260,9 @@ public class BigQueryTarget extends BaseTarget {
         return DATE_TIME_FORMAT.format(field.getValueAsDatetime());
       case BYTE_ARRAY:
         return Base64.getEncoder().encodeToString(field.getValueAsByteArray());
+      //TODO: SDC-7293 -> Throw errors for decimal and other unsupported types
       default:
         return field.getValue();
     }
   }
-
 }
