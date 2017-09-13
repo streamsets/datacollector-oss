@@ -177,7 +177,7 @@
                   Collector</span>s
             that are reserved for pipelines that read from the enterprise data warehouse.</p>
 
-        <p class="p"><img class="image" id="concept_inh_ccs_bx__image_dtc_h21_cx" src="../Graphics/DPM_ManageOrchestration.png" height="189" width="544" /></p>
+        <p class="p"><img class="image" id="concept_inh_ccs_bx__image_fkl_vcc_fbb" src="../Graphics/DPM_ManageOrchestration.png" height="201" width="578" /></p>
 
     </div>
 
@@ -194,7 +194,8 @@
         <p class="p">As a data architect, you create a
             topology in <span class="ph">DPM</span> to
             map multiple related jobs into a single view. A topology provides interactive end-to-end
-            views of data as it traverses multiple pipelines.</p>
+            views of data as it traverses multiple pipelines. You can add any number of jobs to a
+            topology.</p>
 
         <p class="p">To continue our Customer 360 example, after the WebLog Collection pipeline reads web
             server log files and writes the data to Kafka, another pipeline consumes the Kafka data,
@@ -202,10 +203,12 @@
             social feeds and from an enterprise data warehouse and also write the data to HDFS. In
                 <span class="ph">DPM</span>, you can create a topology that includes jobs for all the pipelines, as follows: </p>
 
-        <p class="p"><img class="image" id="concept_t34_2ds_bx__image_um3_nk1_cx" src="../Graphics/DPM_MapPipelinesTopology.png" height="430" width="622" /></p>
+        <p class="p"><img class="image" id="concept_t34_2ds_bx__image_q5h_1dc_fbb" src="../Graphics/DPM_MapPipelinesTopology.png" height="366" width="742" /></p>
 
         <p class="p">From the topology, you can select each job and then drill into the configuration details
-            of each pipeline. You can add any number of jobs to a topology.</p>
+            of each pipeline. For example, if we select the Social Feeds Dataflows job in the
+            topology canvas above, we can the three stages included in the pipeline in the detail
+            pane on the right.</p>
 
     </div>
 
@@ -225,10 +228,10 @@
             monitoring provides real-time statistics and error information about the running
             pipelines. </p>
 
-        <p class="p">For example, the Summary tab of the Customer 360 topology provides a single view into the
+        <p class="p">For example, the detail pane of the Customer 360 topology provides a single view into the
             record count and throughput for all running pipelines in the topology:</p>
 
-        <p class="p"><img class="image" id="concept_sx5_zds_bx__image_hv1_ctq_fx" src="../Graphics/DPM_MeasureQualityTopology.png" height="487" width="744" /></p>
+        <p class="p"><img class="image" id="concept_sx5_zds_bx__image_t1k_s2c_fbb" src="../Graphics/DPM_MeasureQualityTopology.png" height="357" width="796" /></p>
 
         <p class="p">You can select a job or a connecting system within the topology to discover more detailed
             monitoring about the job or system. </p>
@@ -241,10 +244,10 @@
             all remote pipeline instances that are run on a group of <span class="ph">Data
                   Collector</span>s.</p>
 
-        <p class="p">For example, if we select the Social Feeds Dataflows job in the topology, the Summary tab
-            displays metrics for the selected job:</p>
+        <p class="p">For example, if we select the Social Feeds Dataflows job in the topology canvas, the
+            detail pane displays metrics for the selected job:</p>
 
-        <p class="p"><img class="image" id="concept_sx5_zds_bx__image_ylz_ptq_fx" src="../Graphics/DPM_MeasureQualityJob.png" height="536" width="748" /></p>
+        <p class="p"><img class="image" id="concept_sx5_zds_bx__image_hrt_t2c_fbb" src="../Graphics/DPM_MeasureQualityJob.png" height="397" width="800" /></p>
 
     </div>
 
@@ -282,7 +285,7 @@
             graph of the error record rate. The red line in the graph represents the defined
             threshold, as follows:</p>
 
-        <p class="p"><img class="image" id="concept_xvp_x2x_fz__image_xyw_rfx_fz" src="../Graphics/DPM_MasterOperations.png" height="354" width="680" /></p>
+        <p class="p"><img class="image" id="concept_xvp_x2x_fz__image_q5c_y2c_fbb" src="../Graphics/DPM_MasterOperations.png" height="443" width="538" /></p>
 
         <p class="p">We've seen how you can use <span class="ph">DPM</span> to
             turn a high-level architecture diagram of your dataflows into pipelines and jobs that
