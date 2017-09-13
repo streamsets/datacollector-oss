@@ -826,11 +826,11 @@ public class PipelineStoreResource {
     if(ruleDefinitions != null) {
       PipelineConfiguration pipelineConfiguration = store.load(pipelineId, rev);
       PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-          .create(pipelineConfiguration, Collections.emptyList(), null);
+          .create(pipelineConfiguration, new ArrayList<>(), null);
       RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
           pipelineId,
           ruleDefinitions,
-          pipelineConfigBean.constants
+          pipelineConfigBean != null ? pipelineConfigBean.constants : null
       );
       ruleDefinitionValidator.validateRuleDefinition();
     }
@@ -864,11 +864,11 @@ public class PipelineStoreResource {
     RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
     PipelineConfiguration pipelineConfiguration = store.load(pipelineId, rev);
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfiguration, Collections.emptyList(), null);
+        .create(pipelineConfiguration, new ArrayList<>(), null);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
         pipelineId,
         ruleDefs,
-        pipelineConfigBean.constants
+        pipelineConfigBean != null ? pipelineConfigBean.constants : null
     );
     ruleDefinitionValidator.validateRuleDefinition();
     ruleDefs = store.storeRules(pipelineId, rev, ruleDefs);
