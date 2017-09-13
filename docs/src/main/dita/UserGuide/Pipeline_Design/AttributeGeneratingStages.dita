@@ -371,6 +371,13 @@
                                         id="image_myq_n44_2z"/></xref></entry>
                         </row>
                         <row>
+                            <entry>MapR FS File Metadata executor</entry>
+                            <entry>Includes event header attributes when generating events. <xref
+                                    href="../Executors/MapRFSFileMeta-EventRecords.dita#concept_omr_3tk_rx">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_xp3_55w_2bb"/></xref></entry>
+                        </row>
+                        <row>
                             <entry>MapReduce executor</entry>
                             <entry>Includes event header attributes when generating events.
                                 <xref

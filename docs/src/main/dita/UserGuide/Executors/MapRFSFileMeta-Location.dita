@@ -20,18 +20,19 @@
 <concept id="concept_uwh_vck_rx">
     <title>Changing the File Name or Location</title>
     <conbody>
-        <p><indexterm>HDFS File Metadata executor<indexterm>changing file names and
-                    locations</indexterm></indexterm>When using the HDFS File Metadata executor to
-            change file metadata, you can change the name or location of files after they close.
+        <p><indexterm>MapR FS File Metadata executor<indexterm>changing file names and
+                    locations</indexterm></indexterm>When using the MapR FS File Metadata executor
+            to change file metadata, you can change the name or location of files after they close.
             When you specify new file names and locations, you can enter constants or expressions.
             Use any expression that evaluates to the values that you want to use. </p>
         <p>When needed, you can use the file functions in expressions to use part of the existing
             filepath. File functions can return any part of a path, file name, or extension. <dl>
                 <dlentry>
                     <dt>Example for moving files</dt>
-                    <dd>Say you have Hadoop FS writing JSON files to the following directory
+                    <dd>Say you have the MapR FS destination writing JSON files to the following
+                        directory
                         structure:<codeblock>/server1/weblogs/&lt;subdir>/&lt;filename></codeblock></dd>
-                    <dd>After the files are written, you want HDFS File Metadata executor to move
+                    <dd>After the files are written, you want MapR FS File Metadata executor to move
                         the files to a different root directory. When moving files you need to
                         specify the new location for the files. So you configure the executor to
                         move files to a different directory while still using the rest of the path

@@ -204,6 +204,7 @@
                                     <li>Changes file metadata, such as the file name, location, or
                                         permissions.</li>
                                     <li>Creates an empty file.</li>
+                                    <li>Removes a file or directory.</li>
                                 </ul>
                             </entry>
                         </row>
@@ -214,6 +215,17 @@
                                     <li>Determines that the submitted query completed
                                         successfully.</li>
                                     <li>Determines that the submitted query failed to complete.</li>
+                                </ul>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>MapR FS File Metadata executor</entry>
+                            <entry>
+                                <ul>
+                                    <li>Changes file metadata, such as the file name, location, or
+                                        permissions.</li>
+                                    <li>Creates an empty file.</li>
+                                    <li>Removes a file or directory.</li>
                                 </ul>
                             </entry>
                         </row>

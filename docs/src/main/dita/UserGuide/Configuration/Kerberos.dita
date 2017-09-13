@@ -53,6 +53,7 @@
         <li>MapR FS destination</li>
         <li>Solr destination</li>
         <li>HDFS File Metadata executor</li>
+                <li>MapR FS File Metadata executor</li>
         <li>MapReduce executor</li>
                 <li>Spark executor</li>
       </ul></p>

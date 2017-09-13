@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_egg_c3s_rx">
+ <title>HDFS Properties and Configuration Files</title>
+ <conbody>
+  <p><indexterm>MapR FS File Metadata executor<indexterm>using or adding HDFS
+                properties</indexterm></indexterm><indexterm>HDFS properties<indexterm>MapR FS File
+                    Metadata executor</indexterm></indexterm>You can configure the MapR FS File
+            Metadata executor to use HDFS configuration files and individual HDFS properties:<dl>
+                <dlentry>
+                    <dt>HDFS configuration files</dt>
+                    <dd>You can use the following HDFS configuration files with the MapR FS File
+                        Metadata executor:<ul
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFSfiles_HDFSdest"
+                            id="ul_qhn_ytr_bt">
+                            <li/>
+                        </ul></dd>
+                    <dd>To use HDFS configuration files: <ol id="ol_rb2_2nr_bt">
+                            <li>Store the files or a symlink to the files in the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> resources directory. </li>
+                            <li>In the MapR FS File Metadata executor, specify the location of the
+                                files. </li>
+                        </ol><note> For a Cloudera Manager installation, Data Collector
+                            automatically creates a symlink to the files named
+                                <codeph>hadoop-conf</codeph>. Enter <codeph>hadoop-conf</codeph> for
+                            the location of the files in the MapR FS File Metadata
+                        executor.</note></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Individual properties</dt>
+                    <dd>You can configure individual HDFS properties in the executor. To add an HDFS
+                        property, you specify the exact property name and the value. The MapR FS
+                        File Metadata executor does not validate the property names or
+                            values.<note>Individual properties override properties defined in the
+                            HDFS configuration file. </note></dd>
+                </dlentry>
+            </dl></p>
+ </conbody>
+</concept>

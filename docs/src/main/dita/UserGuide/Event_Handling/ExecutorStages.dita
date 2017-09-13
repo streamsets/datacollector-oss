@@ -60,17 +60,16 @@
                 <dlentry>
                     <dt>HDFS File Metadata executor</dt>
                     <dd>Changes file metadata, creates an empty file, or removes a file or directory
-                        upon receiving an event. When changing file metadata, the executor can
-                        rename and move files in addition to specifying the owner and group, and
-                        updating permissions and ACLs for files. When creating an empty file, the
-                        executor can specify the owner and group and set permissions and ACLs for
-                        the file. When removing files and directories, the executor performs the
-                        task recursively.</dd>
+                        from HDFS or a local file system upon receiving an event. <p>When changing
+                            file metadata, the executor can rename and move files in addition to
+                            specifying the owner and group, and updating permissions and ACLs for
+                            files. When creating an empty file, the executor can specify the owner
+                            and group and set permissions and ACLs for the file. When removing files
+                            and directories, the executor performs the task recursively.</p></dd>
                     <dd><ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FileMetadata-Use"
-                        /> For example, you might use the HDFS File Metadata executor with the Mapr
-                        FS destination to move and change the permissions of files when the
-                        destination closes a file.</dd>
+                        />
+                    </dd>
                 </dlentry>
                 <dlentry>
                     <dt>Pipeline Finisher executor</dt>
@@ -90,6 +89,20 @@
                     <dt>JDBC Query executor</dt>
                     <dd>Connects to a database using JDBC and runs the specified SQL query. </dd>
                     <dd>Use to run a SQL query on a database after an event occurs.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>MapR FS File Metadata executor</dt>
+                    <dd>Changes file metadata, creates an empty file, or removes a file or directory
+                        in MapR FS upon receiving an event. When changing file metadata, the
+                        executor can rename and move files in addition to specifying the owner and
+                        group, and updating permissions and ACLs for files. When creating an empty
+                        file, the executor can specify the owner and group and set permissions and
+                        ACLs for the file. When removing files and directories, the executor
+                        performs the task recursively.</dd>
+                    <dd><ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRMetadata-Use"
+                        />
+                    </dd>
                 </dlentry>
                 <dlentry>
                     <dt>MapReduce executor</dt>

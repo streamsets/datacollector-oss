@@ -18,15 +18,12 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ggb_d1l_rx">
- <title>Related Event Generating Stages</title>
+ <title>Related Event Generating Stage</title>
  <conbody>
-  <p><indexterm>HDFS File Metadata executor<indexterm>related event generating
-                stages</indexterm></indexterm>Use the HDFS File Metadata executor in the event
-            stream in a pipeline. Though you can use the executor in any logical way, the HDFS File
-            Metadata executor is optimized to update file metadata for output files or whole files
-            written by the following stages: <ul id="ul_j1c_bn5_4z">
-                <li>Hadoop FS destination</li>
-                <li>Local FS destination</li>
-            </ul></p>
+  <p><indexterm>MapR FS File Metadata executor<indexterm>related event generating
+                stage</indexterm></indexterm>Use the MapR FS File Metadata executor in the event
+            stream in a pipeline. Though you can use the executor in any logical way, the MapR FS
+            File Metadata executor is optimized to update file metadata for output files or whole
+            files written by the MapR FS destination. </p>
  </conbody>
 </concept>

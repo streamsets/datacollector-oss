@@ -16,12 +16,11 @@
 <concept id="concept_f1n_k24_x1b">
  <title>Changing Metadata</title>
  <conbody>
-        <p><indexterm>HDFS File Metadata executor<indexterm>changing
-                metadata</indexterm></indexterm>You can configure the HDFS File Metadata executor to
-            change metadata for a file in HDFS or a local file system after receiving an event. For
-            example, you might use the executor to change file permissions after a destination
-            closes a file.</p>
-        <p>When changing file metadata, the HDFS File Metadata executor can change the following
+        <p><indexterm>MapR FS File Metadata executor<indexterm>changing
+                metadata</indexterm></indexterm>You can configure the MapR FS File Metadata executor
+            to change the metadata for a file in MapR FS after receiving an event. You might use the
+            executor to change metadata after a destination closes a file.</p>
+        <p>When changing file metadata, the MapR FS File Metadata executor can change the following
             file metadata at the same time:<ul id="ul_gym_xw3_rx">
                 <li>File name</li>
                 <li>File location</li>
@@ -31,6 +30,6 @@
             </ul></p>
         <p>When changing metadata, the user who impersonates the HDFS user must have the necessary
             permissions to perform the task. For more information about the HDFS user, see <xref
-                href="HDFSFileMeta-HDFSUser.dita#concept_krb_g2f_pz"/>.</p>
+                href="MapRFSFileMeta-HDFSUser.dita#concept_krb_g2f_pz"/>.</p>
     </conbody>
 </concept>

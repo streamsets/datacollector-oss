@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ohx_r5h_z1b">
+ <title>MapR FS File Metadata Executor</title>
+    <conbody>
+        <p><indexterm>executors<indexterm>MapR FS File
+                Metadata</indexterm></indexterm><indexterm>MapR FS File Metadata
+                    executor<indexterm>overview</indexterm></indexterm>The MapR FS File Metadata
+            executor changes file metadata, creates an empty file, or removes a file or directory in
+            MapR FS each time it receives an event. You cannot perform multiple tasks in the same
+            executor. To perform more than one task, use additional executors. </p>
+        <p>Use the MapR FS File Metadata executor as part of an event stream. For example, you might
+            use the executor to move a file or change file permissions after it receives a file
+            closure event from the MapR FS destination.</p>
+        <p>When changing metadata, you configure an expression that represents the location and name
+            of the file to process, and then specify the changes you want to perform. When creating
+            an empty file, you specify the output location for the file, and can optionally specify
+            the owner, permissions, and ACLs for the file. When removing a file or directory, you
+            specify the location of the file or directory.</p>
+        <p>When necessary, you can enable Kerberos authentication and specify an HDFS user. You can
+            also use HDFS configuration files and add other HDFS configuration properties as needed. </p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-Executor-EventXref"
+        />
+        <p>For a case study on how to use a similar executor, see <xref
+                href="../Event_Handling/CaseStudy-FileManagement.dita#concept_d1q_xl4_lx"/>.</p>
+    </conbody>
+</concept>

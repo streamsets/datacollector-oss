@@ -29,7 +29,11 @@
             nice to set the permissions for the written files. </p>
         <p>So what do you do? </p>
         <p>Add an event stream to the pipeline to manage output files when the Hadoop FS destination
-            is done writing them. </p>
+            is done writing them. Then, use the HDFS File Metadata executor in the event
+                stream.<note>If you prefer, instead of using the Hadoop FS destination with the HDFS
+                File Metadata executor, you can use the Local FS destination with the HDFS File
+                Metadata executor or the MapR FS destination with the MapR FS File Metadata
+                executor.</note></p>
         <p>Here's a pipeline that reads from a database using JDBC, performs some processing, and
             writes to HDFS:</p>
         <p><image href="../Graphics/Event-Move-BasicPipe.png" id="image_y1d_zm4_lx" scale="70"/></p>

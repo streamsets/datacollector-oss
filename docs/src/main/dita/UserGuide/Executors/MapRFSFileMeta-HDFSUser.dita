@@ -20,11 +20,11 @@
 <concept id="concept_krb_g2f_pz">
  <title>HDFS User</title>
     <conbody>
-        <p><indexterm>HDFS File Metadata executor<indexterm>using an HDFS
+        <p><indexterm>MapR FS File Metadata executor<indexterm>using an HDFS
                 user</indexterm></indexterm><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-Intro"/>
-            executor to change file metadata, create files, or remove files or directories in HDFS
-            or a local file system.</p>
+            executor to change file metadata, create files, or remove files or directories in MapR
+            FS.</p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ImpProperty"/>
         <p>Note that the executor uses a different user account to connect. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HUser-ConnectGeneric"
@@ -33,7 +33,7 @@
                 <li>On the external system, configure the user as a proxy user and authorize the
                     user to impersonate a HDFS user. <p>For more information, see the HDFS
                         documentation. </p></li>
-                <li>In the HDFS File Metadata executor, enter the HDFS user name.</li>
+                <li>In the MapR FS File Metadata executor, enter the HDFS user name.</li>
             </ol></p>
     </conbody>
 </concept>

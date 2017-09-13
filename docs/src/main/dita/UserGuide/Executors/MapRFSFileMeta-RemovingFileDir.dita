@@ -16,15 +16,16 @@
 <concept id="concept_yf2_hc4_x1b">
  <title>Removing a File or Directory</title>
  <conbody>
-  <p><indexterm>HDFS File Metadata executor<indexterm>changing metadata</indexterm></indexterm>You
-            can configure the HDFS File Metadata executor to remove a file or directory from HDFS or
-            a local file system after receiving an event. </p>
-        <p>For example, say you run a daily pipeline that writes data to HDFS. You can use the HDFS
-            File Metadata executor to remove the target directory and all of its contents before a
-            pipeline starts processing data. Simply configure the pipeline to pass the pipeline
-            start event to an HDFS File Metadata executor, then specify the target directory when
-            you configure the executor. For more information about using pipeline events, see <xref
-                href="../Event_Handling/PipelineEvents.dita#concept_amg_2qr_t1b"/>.</p>
+  <p><indexterm>MapR FS File Metadata executor<indexterm>changing
+            metadata</indexterm></indexterm>You can configure the MapR FS File Metadata executor to
+            remove a file or directory from MapR FS after receiving an event. </p>
+        <p>For example, say you run a daily pipeline that writes data to MapR FS. You can use the
+            MapR FS File Metadata executor to remove the target directory and all of its contents
+            before a pipeline starts processing data. Simply configure the pipeline to pass the
+            pipeline start event to an MapR FS File Metadata executor, then specify the target
+            directory when you configure the executor. For more information about using pipeline
+            events, see <xref href="../Event_Handling/PipelineEvents.dita#concept_amg_2qr_t1b"
+            />.</p>
         <p>Remove directories with caution. The executor removes directories recursively, deleting
             any subdirectories and their contents in addition to the specified directory. </p>
  </conbody>

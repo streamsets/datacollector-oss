@@ -70,6 +70,24 @@
             <topicref href="../Executors/JDBCExecutor-Driver.dita"/>
             <topicref href="../Executors/JDBCQuery-Configuring.dita"/>
         </topicref>
+        <topicref href="../Executors/MapRFSFileMeta.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta> 
+            <topicref href="../Executors/MapRFSFileMeta-EventStages.dita"/>
+            <topicref href="../Executors/MapRFSFileMeta-ChangeMetadata.dita">
+                <topicref href="../Executors/MapRFSFileMeta-FilePath.dita"/>
+                <topicref href="../Executors/MapRFSFileMeta-Location.dita"/>
+                <topicref href="../Executors/MapRFSFileMeta-Permissions.dita"/>
+            </topicref>
+            <topicref href="../Executors/MapRFSFileMeta-EmptyFile.dita"/>
+            <topicref href="../Executors/MapRFSFileMeta-RemovingFileDir.dita"/>
+            <topicref href="../Executors/MapRFSFileMeta-EventGeneration.dita">
+                <topicref href="../Executors/MapRFSFileMeta-EventRecords.dita"/>
+            </topicref>
+            <topicref href="../Executors/MapRFSFileMeta-Kerberos.dita"/>
+            <topicref href="../Executors/MapRFSFileMeta-HDFSUser.dita"/>
+            <topicref href="../Executors/MapRFSFileMeta-HDFSProperties.dita"/>
+            <topicref href="../Executors/MapRFSFileMeta-Configuring.dita"/>
+        </topicref>
         <topicref href="../Executors/MapReduce.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Executors/MapReduce-Prerequisites.dita"/>

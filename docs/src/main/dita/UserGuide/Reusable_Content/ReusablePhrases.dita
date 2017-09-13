@@ -1148,8 +1148,10 @@ web-0011.log</codeblock></dd>
             </p>
             <p><ph id="FileMetadata-Use">You can use the executor in any logical way, such as
                         changing file metadata after receiving file closure events from the Hadoop
-                        FS, Local FS, and MapR FS destinations.</ph>
+                        FS or Local FS destinations.</ph>
             </p>
+            <p><ph id="MapRMetadata-Use">You can use the executor in any logical way, such as
+                        creating an empty file after the MapR FS destination closes a file.</ph></p>
             <p><ph id="MapReduce-Use">You can use the executor in any logical way, such as running
                         MapReduce jobs after the Hadoop FS or MapR FS destination closes files.</ph>
             </p>
@@ -1174,12 +1176,13 @@ web-0011.log</codeblock></dd>
                               or change permissions on closed files. <p>For an example, see <xref
                                           href="../Event_Handling/CaseStudy-FileManagement.dita#concept_d1q_xl4_lx"
                                     />.</p></li>
-                        <li>With the Hive Query executor to run Hive or Impala queries after closing
-                              output files. <p>For an example, see <xref
+                        <li id="D-li-Event-HiveQuery">With the Hive Query executor to run Hive or
+                              Impala queries after closing output files. <p>For an example, see
+                                          <xref
                                           href="../Event_Handling/CaseStudy-Impala.dita#concept_szz_xwm_lx"
                                     />.</p></li>
-                        <li>With the MapReduce executor to convert completed Avro files to Parquet.
-                                    <p>For an example, see <xref
+                        <li id="D-li-Event-Mapreduce">With the MapReduce executor to convert
+                              completed Avro files to Parquet. <p>For an example, see <xref
                                           href="../Event_Handling/CaseStudy-Parquet.dita#concept_jkm_rnz_kx"
                                     />.</p></li>
                         <li id="D-li-Event-Email">With the Email executor to send a custom email
@@ -2933,11 +2936,6 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <p><ph id="ph-S3keyvalues">You can configure multiple tags. When you configure a tag,
                         you can define a tag with just the key or specify a key and value. You can
                         also use expressions to define tag values.</ph></p>
-            <p>
-                  <draft-comment author="Loretta">The following is used a few places in HDFS File
-                        Metadata Executor topics:</draft-comment>
-            </p>
-            <p><ph id="EX-ph-FileSystems">HDFS, MapR FS, or a local file system</ph></p>
             <p>
                   <draft-comment author="Loretta">The note is used in HDFS File Metadata executor
                         File Path topic and Configuring</draft-comment>
