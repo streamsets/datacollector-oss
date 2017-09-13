@@ -77,6 +77,7 @@
                 <li>HBase lookup and destination</li>
                 <li>MapR DB destination</li>
                 <li>HDFS File Metadata executor</li>
+                <li>MapR FS File Metadata executor</li>
                 <li>MapReduce executor</li>
             </ul></p>
     </conbody>

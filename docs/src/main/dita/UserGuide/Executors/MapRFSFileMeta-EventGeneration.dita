@@ -17,23 +17,16 @@
 
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_bqd_3qb_rx">
+<concept id="concept_vhl_mfj_rx">
  <title>Event Generation</title>
  <conbody>
-        <p><indexterm>MapR FS destination<indexterm>event
-                generation</indexterm></indexterm><indexterm>event generation<indexterm>MapR FS
-                    destination</indexterm></indexterm>The MapR FS destination <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-ph-EventGen1"
-            /></p>
-        <p>MapR FS events can be used in any logical way. For example: <ul id="ul_tvd_2lw_2bb">
-                <li>With the MapR FS File Metadata executor to move or change permissions on closed
-                    files. <p>For an example, see <xref
-                            href="../Event_Handling/CaseStudy-FileManagement.dita#concept_d1q_xl4_lx"
-                        />.</p></li>
-                <li
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-HiveQuery"/>
-                <li
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Mapreduce"/>
+  <p><indexterm>MapR FS File Metadata executor<indexterm>event
+                generation</indexterm></indexterm><indexterm>event generation<indexterm>MapR FS File
+                    Metadata executor</indexterm></indexterm>The MapR FS File Metadata executor can
+            generate events that you can use in an event stream. When you enable event generation,
+            the executor generates events each time it changes file metadata, creates an empty file,
+            or removes a file or directory.</p>
+        <p>MapR FS File Metadata events can be used in any logical way. For example: <ul>
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"/>
                 <li

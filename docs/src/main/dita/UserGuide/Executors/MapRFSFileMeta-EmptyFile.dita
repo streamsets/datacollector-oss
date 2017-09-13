@@ -16,10 +16,10 @@
 <concept id="concept_c2m_td4_x1b">
  <title>Creating an Empty File</title>
  <conbody>
-  <p><indexterm>HDFS File Metadata executor<indexterm>creating empty
-            files</indexterm></indexterm>You can configure the HDFS File Metadata executor to create
-            empty files in HDFS or a local file system upon receiving an event. You might create
-            empty files to trigger downstream actions in other applications, such as Oozie. </p>
+  <p><indexterm>MapR FS File Metadata executor<indexterm>creating empty
+                files</indexterm></indexterm>You can configure the MapR FS File Metadata executor to
+            create empty files in MapR FS upon receiving an event. You might create empty files to
+            trigger downstream actions in other applications, such as Oozie. </p>
         <p>To create an empty file, specify an expression for the File Path property that provides
             an absolute path to the location where you want the file created. <note
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FileMetadataEx-BadDefault"

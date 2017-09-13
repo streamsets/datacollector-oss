@@ -22,9 +22,9 @@
  <conbody>
   <p><indexterm>executors<indexterm>HDFS File Metadata</indexterm></indexterm><indexterm>HDFS File
                 Metadata executor<indexterm>overview</indexterm></indexterm>The HDFS File Metadata
-            executor changes file metadata, creates an empty file, or removes a file or directory
-            each time it receives an event. You cannot perform multiple tasks in the same executor.
-            To perform more than one task, use additional executors. </p>
+            executor changes file metadata, creates an empty file, or removes a file or directory in
+            HDFS or a local file system each time it receives an event. You cannot perform multiple
+            tasks in the same executor. To perform more than one task, use additional executors. </p>
         <p>Use the HDFS File Metadata executor as part of an event stream. For example, you might
             use the executor to move a file or change file permissions after it receives a file
             closure event from the Hadoop FS destination.</p>

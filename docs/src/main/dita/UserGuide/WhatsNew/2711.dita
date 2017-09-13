@@ -47,9 +47,10 @@
                     <dt>Executor</dt>
                     <dd>
                         <ul id="ul_zzr_ztn_2bb">
-                            <li>New MapR FS File Metadata executor - The new executor can change
-                                file metadata, create an empty file, or remove a file or directory
-                                in MapR each time it receives an event. </li>
+                            <li><xref href="../Executors/MapRFSFileMeta.dita#concept_ohx_r5h_z1b"
+                                    >New MapR FS File Metadata executor</xref> - The new executor
+                                can change file metadata, create an empty file, or remove a file or
+                                directory in MapR each time it receives an event. </li>
                         </ul>
                     </dd>
                 </dlentry>

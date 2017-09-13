@@ -310,7 +310,7 @@
                                 <entry>MapR FS</entry>
                                 <entry>
                                     <ul id="ul_rvh_dsq_tx">
-                                        <li>HDFS File Metadata executor to change file metadata,
+                                        <li>MapR FS File Metadata executor to change file metadata,
                                             create an empty file, or remove a file or directory
                                             after closing a file.</li>
                                         <li>MapReduce executor to run a MapReduce job after closing
@@ -358,6 +358,16 @@
                                     <ul id="ul_xmw_dk3_xz">
                                         <li>Email executor to send email when a query succeeds or
                                             fails.</li>
+                                        <li>Any destination for event storage.</li>
+                                    </ul>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>MapR FS File Metadata executor</entry>
+                                <entry>
+                                    <ul id="ul_mjp_tr4_2bb">
+                                        <li>Email executor to send email each time the executor
+                                            changes file metadata.</li>
                                         <li>Any destination for event storage.</li>
                                     </ul>
                                 </entry>
