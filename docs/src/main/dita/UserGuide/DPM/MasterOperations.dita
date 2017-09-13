@@ -45,7 +45,8 @@
             to investigate the issues that need to be resolved. The triggered data SLA displays a
             graph of the error record rate. The red line in the graph represents the defined
             threshold, as follows:</p>
-        <p><image href="../Graphics/DPM_MasterOperations.png" scale="55" id="image_xyw_rfx_fz"/></p>
+        <p><image href="../Graphics/DPM_MasterOperations.png" scale="55" id="image_q5c_y2c_fbb"
+            /></p>
         <p>We've seen how you can use <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> to
             turn a high-level architecture diagram of your dataflows into pipelines and jobs that
