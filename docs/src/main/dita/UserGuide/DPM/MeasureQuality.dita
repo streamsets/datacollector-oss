@@ -31,10 +31,10 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
             monitoring provides real-time statistics and error information about the running
             pipelines. </p>
-        <p>For example, the Summary tab of the Customer 360 topology provides a single view into the
+        <p>For example, the detail pane of the Customer 360 topology provides a single view into the
             record count and throughput for all running pipelines in the topology:</p>
-        <p><image href="../Graphics/DPM_MeasureQualityTopology.png" scale="55" id="image_hv1_ctq_fx"
-            /></p>
+        <p><image href="../Graphics/DPM_MeasureQualityTopology.png" scale="60"
+                id="image_t1k_s2c_fbb"/></p>
         <p>You can select a job or a connecting system within the topology to discover more detailed
             monitoring about the job or system. </p>
         <p>When you start a job on a group of <ph
@@ -45,9 +45,9 @@
             all remote pipeline instances that are run on a group of <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />s.</p>
-        <p>For example, if we select the Social Feeds Dataflows job in the topology, the Summary tab
-            displays metrics for the selected job:</p>
-        <p><image href="../Graphics/DPM_MeasureQualityJob.png" scale="55" id="image_ylz_ptq_fx"
+        <p>For example, if we select the Social Feeds Dataflows job in the topology canvas, the
+            detail pane displays metrics for the selected job:</p>
+        <p><image href="../Graphics/DPM_MeasureQualityJob.png" scale="60" id="image_hrt_t2c_fbb"
             /></p>
     </conbody>
 </concept>

@@ -29,16 +29,19 @@
             topology in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/> to
             map multiple related jobs into a single view. A topology provides interactive end-to-end
-            views of data as it traverses multiple pipelines.</p>
+            views of data as it traverses multiple pipelines. You can add any number of jobs to a
+            topology.</p>
         <p>To continue our Customer 360 example, after the WebLog Collection pipeline reads web
             server log files and writes the data to Kafka, another pipeline consumes the Kafka data,
             processes it, and streams the data to HDFS. Additional pipelines read from Twitter
             social feeds and from an enterprise data warehouse and also write the data to HDFS. In
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
             />, you can create a topology that includes jobs for all the pipelines, as follows: </p>
-        <p><image href="../Graphics/DPM_MapPipelinesTopology.png" scale="50" id="image_um3_nk1_cx"
+        <p><image href="../Graphics/DPM_MapPipelinesTopology.png" scale="60" id="image_q5h_1dc_fbb"
             /></p>
         <p>From the topology, you can select each job and then drill into the configuration details
-            of each pipeline. You can add any number of jobs to a topology.</p>
+            of each pipeline. For example, if we select the Social Feeds Dataflows job in the
+            topology canvas above, we can the three stages included in the pipeline in the detail
+            pane on the right.</p>
     </conbody>
 </concept>

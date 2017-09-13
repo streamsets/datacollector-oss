@@ -56,7 +56,7 @@
             in the data warehouse group, which are <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s
             that are reserved for pipelines that read from the enterprise data warehouse.</p>
-        <p><image href="../Graphics/DPM_ManageOrchestration.png" scale="80" id="image_dtc_h21_cx"
+        <p><image href="../Graphics/DPM_ManageOrchestration.png" scale="85" id="image_fkl_vcc_fbb"
             /></p>
     </conbody>
 </concept>
