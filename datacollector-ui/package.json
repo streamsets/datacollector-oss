@@ -1,7 +1,7 @@
 {
   "name": "data-collector-ui",
   "private": true,
-  "version": "2.7.11",
+  "version": "2.7.12-SNAPSHOT",
   "description": "StreamSets Data Collector UI",
   "homepage": "http://streamsets.com/",
   "devDependencies": {
