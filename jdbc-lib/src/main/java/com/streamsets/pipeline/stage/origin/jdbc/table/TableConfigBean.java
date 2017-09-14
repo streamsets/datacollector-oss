@@ -34,7 +34,7 @@ public final class TableConfigBean {
   public static final String MAX_NUM_ACTIVE_PARTITIONS_FIELD = "maxNumActivePartitions";
   public static final String PARTITION_SIZE_FIELD = "partitionSize";
 
-  public static final String PARTITIONING_MODE_DEFAULT_VALUE_STR = "BEST_EFFORT";
+  public static final String PARTITIONING_MODE_DEFAULT_VALUE_STR = "DISABLED";
   public static final PartitioningMode PARTITIONING_MODE_DEFAULT_VALUE = PartitioningMode.valueOf(
       PARTITIONING_MODE_DEFAULT_VALUE_STR
   );
