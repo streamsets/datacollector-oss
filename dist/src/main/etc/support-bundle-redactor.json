@@ -16,6 +16,11 @@
       "trigger": "bindPassword",
       "search": "bindPassword=[^\"' ]*",
       "replace": "bindPassword=REDACTED"
+    }, {
+      "description": "SDC Sensitive Configs",
+      "trigger": ".password=",
+      "search": "^(https.cluster.keystore.password|https.keystore.password|https.truststore.password|https.cluster.truststore.password|xmail.password|lineage.publisher.navigator.config.password)=.*$",
+      "replace": "$1=REDACTED"
     }
   ]
 }
