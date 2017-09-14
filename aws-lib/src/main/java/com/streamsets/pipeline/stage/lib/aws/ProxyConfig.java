@@ -28,7 +28,7 @@ public class ProxyConfig {
       required = true,
       label = "Connection Timeout",
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "50",
+      defaultValue = "10",
       description = "Set connection timeout (in seconds)",
       displayPosition = 4999,
       group = "ADVANCED"
