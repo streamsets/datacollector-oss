@@ -25,6 +25,7 @@ public enum Errors implements ErrorCode {
       " and BYTE_ARRAY."),
   DATAPARSER_03("{} parsing the field '{}' as type {} for record '{}': {}"),
   DATAPARSER_04("IOException attempting to parse whole file field '{}' for record '{}': {}"),
+  DATAPARSER_05("Input field '{}' does not exist in record '{}'; cannot parse as type {}"),
   ;
 
 

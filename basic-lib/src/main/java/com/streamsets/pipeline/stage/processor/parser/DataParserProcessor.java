@@ -159,6 +159,14 @@ public class DataParserProcessor extends SingleLaneRecordProcessor {
             ex
         );
       }
+    } else {
+      throw new OnRecordErrorException(
+          record,
+          Errors.DATAPARSER_05,
+          configs.fieldPathToParse,
+          record.getHeader().getSourceId(),
+          typeName
+      );
     }
   }
 

@@ -41,8 +41,11 @@ import java.util.List;
 import java.util.Map;
 
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasKey;
 import static com.streamsets.testing.Matchers.fieldWithValue;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -148,6 +151,48 @@ public class TestDataParserProcessor {
       assertTrue(output.getRecords().containsKey(outputLane));
       final List<Record> records = output.getRecords().get(outputLane);
       NetflowTestUtil.assertRecordsForTenPackets(records, configs.parsedFieldPath);
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testInvalidInputField() throws Exception {
+    String inputFieldPath = "input";
+    String outputFieldPath = "output";
+
+    DataParserConfig configs = new DataParserConfig();
+    configs.dataFormat = DataFormat.JSON;
+    final DataParserFormatConfig dataParserFormatConfig = new DataParserFormatConfig();
+    configs.dataFormatConfig = dataParserFormatConfig;
+    configs.fieldPathToParse = "/" + inputFieldPath + "_non_existent";
+    configs.parsedFieldPath = "/" + outputFieldPath;
+    configs.multipleValuesBehavior = MultipleValuesBehavior.SPLIT_INTO_MULTIPLE_RECORDS;
+
+    DataParserProcessor processor = new DataParserProcessor(configs);
+
+    final String outputLane = "out";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(DataParserDProcessor.class, processor)
+        .addOutputLane(outputLane).setOnRecordError(OnRecordError.TO_ERROR).build();
+    List<Record> input = new ArrayList<>();
+
+    Map<String, Field> map = new HashMap<>();
+    map.put(inputFieldPath, Field.create("{\"first\": 1}"));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+    input.add(record);
+    try {
+      runner.runInit();
+      StageRunner.Output output = runner.runProcess(input);
+      assertTrue(output.getRecords().containsKey(outputLane));
+      final List<Record> records = output.getRecords().get(outputLane);
+      assertThat(records, hasSize(0));
+      final List<Record> errors = runner.getErrorRecords();
+      assertThat(errors, notNullValue());
+      assertThat(errors, hasSize(1));
+      Record errorRecord = errors.get(0);
+      assertThat(errorRecord.getHeader().getErrorCode(), equalTo(Errors.DATAPARSER_05.name()));
     } finally {
       runner.runDestroy();
     }
