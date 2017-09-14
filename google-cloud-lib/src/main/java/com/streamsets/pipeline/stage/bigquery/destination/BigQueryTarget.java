@@ -246,11 +246,11 @@ public class BigQueryTarget extends BaseTarget {
     switch (field.getType()) {
       case LIST:
         //REPEATED
-        return field.getValueAsList().stream().map(this::getValueFromField).collect(Collectors.toList());
+        return field.getValueAsList().stream().filter(le -> le.getValue() != null).map(this::getValueFromField).collect(Collectors.toList());
       case MAP:
       case LIST_MAP:
         //RECORD
-        return field.getValueAsMap().entrySet().stream()
+        return field.getValueAsMap().entrySet().stream().filter(me -> me.getValue().getValue() != null)
             .collect(Collectors.toMap(Map.Entry::getKey, e -> getValueFromField(e.getValue())));
       case DATE:
         return DATE_FORMAT.format(field.getValueAsDate());
