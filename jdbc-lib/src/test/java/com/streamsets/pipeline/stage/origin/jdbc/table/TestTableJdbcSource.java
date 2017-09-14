@@ -107,6 +107,14 @@ public class TestTableJdbcSource {
   }
 
   @Test
+  public void testDefaultPartitioningMode() throws Exception {
+    final TableConfigBean tableConfig = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder().tablePattern(
+        "testTable"
+    ).build();
+    assertThat(tableConfig.partitioningMode, equalTo(PartitioningMode.DISABLED));
+  }
+
+  @Test
   public void testLessConnectionPoolSizeThanNoOfThreads() throws Exception {
     TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder( "jdbc:db://localhost:1000", true, USER_NAME, PASSWORD)
         .tableConfigBeans(
