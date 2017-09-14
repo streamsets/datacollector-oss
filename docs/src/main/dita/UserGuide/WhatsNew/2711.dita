@@ -25,6 +25,9 @@
                     <dt>Origins</dt>
                     <dd>
                         <ul id="ul_gr5_hvr_1bb">
+                            <li><xref href="../Origins/AmazonS3-Configuring.dita#task_gfj_ssv_yq"
+                                    >Amazon S3 origin enhancement</xref> - You can now specify a
+                                Connection Timeout advanced property. </li>
                             <li><xref
                                     href="../Origins/MultiTableJDBCConsumer-Views.dita#concept_m43_zzm_dbb"
                                     >JDBC Multitable Consumer origin enhancement</xref> - You can

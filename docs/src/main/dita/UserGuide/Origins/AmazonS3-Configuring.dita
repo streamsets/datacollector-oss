@@ -285,6 +285,8 @@
                                 </row>
                             </thead>
                             <tbody>
+                                <row><entry>Connection Timeout</entry><entry>Seconds to wait for a response before closing the connection. <p>Default is 10
+                                        seconds.</p></entry></row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-UseProxy">
                                     <entry/>
