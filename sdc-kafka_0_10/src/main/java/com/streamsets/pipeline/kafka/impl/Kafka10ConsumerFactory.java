@@ -38,7 +38,8 @@ public class Kafka10ConsumerFactory extends SdcKafkaConsumerFactory {
         settings.getTopic(),
         settings.getConsumerGroup(),
         settings.getKafkaConsumerConfigs(),
-        settings.getContext()
+        settings.getContext(),
+        settings.getBatchSize()
     );
   }
 }

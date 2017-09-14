@@ -46,9 +46,10 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
       String topic,
       String consumerGroup,
       Map<String, Object> kafkaConsumerConfigs,
-      Source.Context context
+      Source.Context context,
+      int batchSize
   ) {
-    super(topic, context);
+    super(topic, context, batchSize);
     this.bootStrapServers = bootStrapServers;
     this.consumerGroup = consumerGroup;
     this.context = context;

@@ -28,6 +28,7 @@ public class ConsumerFactorySettings {
   private final Source.Context context;
   private final Map<String, Object> kafkaConsumerConfigs;
   private final String consumerGroup;
+  private final int batchSize;
 
   public ConsumerFactorySettings(
     String zookeeperConnect,
@@ -36,7 +37,8 @@ public class ConsumerFactorySettings {
     int maxWaitTime,
     Source.Context context,
     Map<String, Object> kafkaConsumerConfigs,
-    String consumerGroup
+    String consumerGroup,
+    int batchSize
   ) {
     this.zookeeperConnect = zookeeperConnect;
     this.bootstrapServers = bootstrapServers;
@@ -45,6 +47,7 @@ public class ConsumerFactorySettings {
     this.context = context;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
     this.consumerGroup = consumerGroup;
+    this.batchSize = batchSize;
   }
 
   public String getBootstrapServers() {
@@ -73,5 +76,9 @@ public class ConsumerFactorySettings {
 
   public String getZookeeperConnect() {
     return zookeeperConnect;
+  }
+
+  public int getBatchSize() {
+    return batchSize;
   }
 }

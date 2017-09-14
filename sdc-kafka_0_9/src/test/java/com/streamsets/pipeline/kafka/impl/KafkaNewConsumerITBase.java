@@ -254,7 +254,8 @@ public abstract class KafkaNewConsumerITBase {
         maxWaitTime,
         context,
         kafkaConfigs,
-        group
+        group,
+      100
     );
     SdcKafkaConsumerFactory sdcKafkaConsumerFactory = SdcKafkaConsumerFactory.create(settings);
     return sdcKafkaConsumerFactory.create();

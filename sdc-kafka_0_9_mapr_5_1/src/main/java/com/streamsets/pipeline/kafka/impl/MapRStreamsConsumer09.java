@@ -46,9 +46,10 @@ public class MapRStreamsConsumer09 extends BaseKafkaConsumer09 {
     String topic,
     String consumerGroup,
     Map<String, Object> kafkaConsumerConfigs,
-    Source.Context context
+    Source.Context context,
+    int batchSize
   ) {
-    super(topic, context);
+    super(topic, context, batchSize);
     this.consumerGroup = consumerGroup;
     this.context = context;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;

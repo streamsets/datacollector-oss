@@ -26,9 +26,10 @@ public class KafkaConsumer10 extends KafkaConsumer09 {
       String topic,
       String consumerGroup,
       Map<String, Object> kafkaConsumerConfigs,
-      Source.Context context
+      Source.Context context,
+      int batchSize
   ) {
-    super(bootStrapServers, topic, consumerGroup, kafkaConsumerConfigs, context);
+    super(bootStrapServers, topic, consumerGroup, kafkaConsumerConfigs, context, batchSize);
   }
 
   @Override

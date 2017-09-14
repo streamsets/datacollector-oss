@@ -63,7 +63,7 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
   private volatile long rebalanceTime;
 
   // blocking queue which is populated by the kafka consumer runnable that polls
-  private final ArrayBlockingQueue<ConsumerRecord<String, byte[]>> recordQueue;
+  private ArrayBlockingQueue<ConsumerRecord<String, byte[]>> recordQueue;
   private final ScheduledExecutorService executorService;
   // runnable that polls the kafka topic for records and populates the blocking queue
   private KafkaConsumerRunner kafkaConsumerRunner;
@@ -88,10 +88,10 @@ public abstract class BaseKafkaConsumer09 implements SdcKafkaConsumer, ConsumerR
 
   private static final Logger LOG = LoggerFactory.getLogger(BaseKafkaConsumer09.class);
 
-  public BaseKafkaConsumer09(String topic, Source.Context context) {
+  public BaseKafkaConsumer09(String topic, Source.Context context, int batchSize) {
     this.topic = topic;
     this.topicPartitionToOffsetMetadataMap = new HashMap<>();
-    this.recordQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_SIZE);
+    this.recordQueue = new ArrayBlockingQueue<>(batchSize);
     this.executorService = new ScheduledThreadPoolExecutor(1);
     this.pollCommitMutex = new Object();
     this.rebalanceInProgress = new AtomicBoolean(false);
