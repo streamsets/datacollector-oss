@@ -33,7 +33,7 @@ public class ProxyConfig {
       displayPosition = 4999,
       group = "ADVANCED"
   )
-  public Integer connectionTimeout = 50;
+  public Integer connectionTimeout = 10;
 
 
   @ConfigDef(
