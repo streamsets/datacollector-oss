@@ -31,6 +31,7 @@ import com.streamsets.datacollector.execution.RawPreview;
 import com.streamsets.datacollector.execution.preview.common.PreviewError;
 import com.streamsets.datacollector.execution.preview.common.PreviewOutputImpl;
 import com.streamsets.datacollector.execution.preview.common.RawPreviewImpl;
+import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
@@ -226,7 +227,7 @@ public class SyncPreviewer implements Previewer {
     } finally {
       if (previewPipeline != null) {
         try {
-          previewPipeline.destroy();
+          previewPipeline.destroy(PipelineStopReason.FINISHED);
         } catch (StageException e) {
           throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
         }
@@ -242,7 +243,7 @@ public class SyncPreviewer implements Previewer {
     if(previewStatus.isActive()) {
       changeState(PreviewStatus.CANCELLING, null);
     }
-    destroyPipeline();
+    destroyPipeline(PipelineStopReason.USER_ACTION);
     if(previewStatus == PreviewStatus.CANCELLING) {
       changeState(PreviewStatus.CANCELLED, null);
     }
@@ -254,20 +255,20 @@ public class SyncPreviewer implements Previewer {
     if(previewStatus.isActive()) {
       changeState(PreviewStatus.TIMING_OUT, null);
     }
-    destroyPipeline();
+    destroyPipeline(PipelineStopReason.FAILURE);
     if(previewStatus == PreviewStatus.TIMING_OUT) {
       changeState(PreviewStatus.TIMED_OUT, null);
     }
     PipelineEL.unsetConstantsInContext();
   }
 
-  private void destroyPipeline() {
+  private void destroyPipeline(PipelineStopReason reason) {
     if(previewPipeline == null) {
       return;
     }
 
     try {
-      previewPipeline.destroy();
+      previewPipeline.destroy(reason);
     } catch (StageException|PipelineRuntimeException e) {
       LOG.error("Error destroying pipeline", e);
     }
