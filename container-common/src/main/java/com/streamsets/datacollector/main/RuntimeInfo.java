@@ -17,12 +17,19 @@ package com.streamsets.datacollector.main;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +39,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public abstract class RuntimeInfo {
+  private static final Logger LOG = LoggerFactory.getLogger(RuntimeInfo.class);
+
   public static final String SPLITTER = "|";
   public static final String CONFIG_DIR = ".conf.dir";
   public static final String DATA_DIR = ".data.dir";
@@ -42,6 +51,13 @@ public abstract class RuntimeInfo {
   public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
   public static final String UNDEF = "UNDEF";
   public static final String CALLBACK_URL = "/public-rest/v1/cluster/callback";
+
+
+  public static final String SECURITY_PREFIX = "java.security.";
+  public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
+  public static final String PIPELINE_ACCESS_CONTROL_ENABLED = "pipeline.access.control.enabled";
+  public static final boolean PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT = false;
+
   private boolean DPMEnabled;
   private boolean aclEnabled;
 
@@ -269,4 +285,38 @@ public abstract class RuntimeInfo {
   public void setAclEnabled(boolean aclEnabled) {
     this.aclEnabled = aclEnabled;
   }
+
+  public static void loadOrReloadConfigs(RuntimeInfo runtimeInfo, Configuration conf) {
+    File configFile = new File(runtimeInfo.getConfigDir(), "sdc.properties");
+    if (configFile.exists()) {
+      try(FileReader reader = new FileReader(configFile)) {
+        conf.load(reader);
+        runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
+        String appAuthToken = conf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
+        runtimeInfo.setAppAuthToken(appAuthToken);
+        boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
+        runtimeInfo.setDPMEnabled(isDPMEnabled);
+        boolean aclEnabled = conf.get(PIPELINE_ACCESS_CONTROL_ENABLED, PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT);
+        String auth = conf.get(WebServerTask.AUTHENTICATION_KEY, WebServerTask.AUTHENTICATION_DEFAULT);
+        if (aclEnabled && (!"none".equals(auth) || isDPMEnabled)) {
+          runtimeInfo.setAclEnabled(true);
+        } else {
+          runtimeInfo.setAclEnabled(false);
+        }
+      } catch (IOException ex) {
+        throw new RuntimeException(ex);
+      }
+    } else {
+      LOG.error("Error did not find sdc.properties at expected location: {}", configFile);
+    }
+
+    // Transfer all security properties to the JVM configuration
+    for(Map.Entry<String, String> entry : conf.getSubSetConfiguration(SECURITY_PREFIX).getValues().entrySet()) {
+      java.security.Security.setProperty(
+          entry.getKey().substring(SECURITY_PREFIX.length()),
+          entry.getValue()
+      );
+    }
+  }
+
 }

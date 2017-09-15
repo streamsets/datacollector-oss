@@ -277,7 +277,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       copyDpmTokenIfRequired(sdcProperties, etcStagingDir);
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.SLAVE.name());
       sdcProperties.setProperty(WebServerTask.REALM_FILE_PERMISSION_CHECK, "false");
-      sdcProperties.remove(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL);
+      sdcProperties.remove(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL);
       if (runtimeInfo != null) {
         if (runtimeInfo.getSSLContext() != null) {
           sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "-1");

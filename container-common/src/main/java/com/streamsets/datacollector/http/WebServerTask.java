@@ -731,6 +731,22 @@ public abstract class WebServerTask extends AbstractTask {
 
   @Override
   protected void runTask() {
+    runTaskInternal();
+    try {
+      WebServerAgentCondition.waitForCredentials();
+      if (WebServerAgentCondition.getReceivedCredentials()) {
+        LOG.info("Restarting web server task");
+        RuntimeInfo.loadOrReloadConfigs(runtimeInfo, conf);
+        stopTask();
+        initTask();
+        runTaskInternal();
+      }
+    } catch (InterruptedException ex) {
+      LOG.error("Interrupted while waiting for credentials to be deployed", ex);
+    }
+  }
+
+  private void runTaskInternal() {
     for (ContextConfigurator cc : contextConfigurators) {
       cc.start();
     }
@@ -775,11 +791,6 @@ public abstract class WebServerTask extends AbstractTask {
       setSSLContext();
     }
     postStart();
-    try {
-      WebServerAgentCondition.waitForCredentials();
-    } catch (InterruptedException ex) {
-      LOG.error("Interrupted while waiting for credentials to be deployed", ex);
-    }
   }
 
   public URI getServerURI() throws ServerNotYetRunningException {

@@ -31,7 +31,11 @@ public class WebServerAgentCondition {
   }
 
   public static boolean canContinue() {
-    return !shouldCheckForCredentials() || receivedCredentials.get();
+    return !shouldCheckForCredentials() || getReceivedCredentials();
+  }
+
+  public static boolean getReceivedCredentials() {
+    return receivedCredentials.get();
   }
 
   public static void setCredentialsReceived() {

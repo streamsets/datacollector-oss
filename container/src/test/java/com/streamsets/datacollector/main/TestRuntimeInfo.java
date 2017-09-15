@@ -58,7 +58,7 @@ public class TestRuntimeInfo {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR);
-    System.getProperties().remove(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL);
+    System.getProperties().remove(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL);
   }
 
   @Test
@@ -114,7 +114,7 @@ public class TestRuntimeInfo {
     Assert.assertTrue(dir.mkdirs());
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
     Properties props = new Properties();
-    props.setProperty(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
+    props.setProperty(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
     props.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "AUTH_TOKEN");
     props.setProperty(RemoteSSOService.DPM_ENABLED, "true");
     Writer writer = new FileWriter(new File(dir, "sdc.properties"));
@@ -134,7 +134,7 @@ public class TestRuntimeInfo {
     Assert.assertTrue(dir.mkdirs());
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
     Properties props = new Properties();
-    props.setProperty(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
+    props.setProperty(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
     props.setProperty(ClusterModeConstants.CLUSTER_PIPELINE_REMOTE, "true");
     props.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "AUTH_TOKEN");
     props.setProperty(RemoteSSOService.DPM_ENABLED, "true");

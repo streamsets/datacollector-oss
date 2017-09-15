@@ -22,6 +22,7 @@ import com.streamsets.lib.security.http.CredentialsBeanJson;
 import com.streamsets.datacollector.util.Configuration;
 import io.swagger.annotations.Api;
 import org.apache.commons.io.Charsets;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
@@ -39,6 +41,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -71,6 +74,7 @@ public class CredentialsDeploymentResource {
 
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
   @Path("/deployCredentials")
   public Response deployCredentials(CredentialsBeanJson credentialsBeanJson) throws Exception {
     LOG.info("Credentials have been received. Validating..");
@@ -87,8 +91,9 @@ public class CredentialsDeploymentResource {
             "likely due to agent failure or a denial of service attack");
         System.exit(-1);
       }
+      return Response.status(Response.Status.BAD_REQUEST).entity("Cannot validate the received credentials").build();
     }
-    return Response.ok().build();
+    return Response.ok(runtimeInfo.getId()).build();
   }
 
   private boolean validateSignature(CredentialsBeanJson credentialsBeanJson)
@@ -102,6 +107,7 @@ public class CredentialsDeploymentResource {
     Signature sig = Signature.getInstance("SHA256withRSA");
     sig.initVerify(key);
     sig.update(credentialsBeanJson.getToken().getBytes(Charsets.UTF_8));
+    LOG.info("Token : {}, Signature {}", credentialsBeanJson.getToken(), credentialsBeanJson.getTokenSignature());
     return sig.verify(Base64.getDecoder().decode(credentialsBeanJson.getTokenSignature()));
   }
 
@@ -135,12 +141,14 @@ public class CredentialsDeploymentResource {
     try (FileReader reader = new FileReader(dpmProperties)) {
       conf.load(reader);
     }
+    conf.unset("dpm.base.url");
     conf.set("dpm.enabled", true);
     conf.set("dpm.appAuthToken", Configuration.FileRef.PREFIX + "application-token.txt" + Configuration.FileRef.SUFFIX);
-    conf.set("dpm.base.url", credentialsBeanJson.getDpmUrl());
     try (FileWriter writer = new FileWriter(dpmProperties)) {
       conf.save(writer);
     }
+    Files.write(Paths.get(dpmProperties.getPath()) , ("dpm.base.url=" + credentialsBeanJson.getDpmUrl()).getBytes(), StandardOpenOption.APPEND);
+    runtimeInfo.setDPMEnabled(true);
     LOG.info("DPM token deployed");
   }
 }

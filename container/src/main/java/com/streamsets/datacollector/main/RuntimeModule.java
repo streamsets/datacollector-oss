@@ -45,12 +45,8 @@ import java.util.Map;
 }, includes = MetricsModule.class)
 public class RuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
-  public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
   public static final String SDC_PROPERTY_PREFIX = "sdc";
   public static final String PIPELINE_EXECUTION_MODE_KEY = "pipeline.execution.mode";
-  public static final String PIPELINE_ACCESS_CONTROL_ENABLED = "pipeline.access.control.enabled";
-  public static final boolean PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT = false;
-  public static final String SECURITY_PREFIX = "java.security.";
   private static List<ClassLoader> stageLibraryClassLoaders = Collections.emptyList();//ImmutableList.of(RuntimeModule.class.getClassLoader());
 
   public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
@@ -73,37 +69,7 @@ public class RuntimeModule {
   public Configuration provideConfiguration(RuntimeInfo runtimeInfo) {
     Configuration.setFileRefsBaseDir(new File(runtimeInfo.getConfigDir()));
     Configuration conf = new Configuration();
-    File configFile = new File(runtimeInfo.getConfigDir(), "sdc.properties");
-    if (configFile.exists()) {
-      try(FileReader reader = new FileReader(configFile)) {
-        conf.load(reader);
-        runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
-        String appAuthToken = conf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
-        runtimeInfo.setAppAuthToken(appAuthToken);
-        boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
-        runtimeInfo.setDPMEnabled(isDPMEnabled);
-        boolean aclEnabled = conf.get(PIPELINE_ACCESS_CONTROL_ENABLED, PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT);
-        String auth = conf.get(WebServerTask.AUTHENTICATION_KEY, WebServerTask.AUTHENTICATION_DEFAULT);
-        if (aclEnabled && (!"none".equals(auth) || isDPMEnabled)) {
-          runtimeInfo.setAclEnabled(true);
-        } else {
-          runtimeInfo.setAclEnabled(false);
-        }
-      } catch (IOException ex) {
-        throw new RuntimeException(ex);
-      }
-    } else {
-      LOG.error("Error did not find sdc.properties at expected location: {}", configFile);
-    }
-
-    // Transfer all security properties to the JVM configuration
-    for(Map.Entry<String, String> entry : conf.getSubSetConfiguration(SECURITY_PREFIX).getValues().entrySet()) {
-      java.security.Security.setProperty(
-        entry.getKey().substring(SECURITY_PREFIX.length()),
-        entry.getValue()
-      );
-    }
-
+    RuntimeInfo.loadOrReloadConfigs(runtimeInfo, conf);
     return conf;
   }
 
