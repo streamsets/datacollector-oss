@@ -30,10 +30,21 @@ public class ProxyConfig {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "10",
       description = "Set connection timeout (in seconds)",
-      displayPosition = 4999,
+      displayPosition = 4998,
       group = "ADVANCED"
   )
   public Integer connectionTimeout = 10;
+
+  @ConfigDef(
+      required = true,
+      label = "Socket Timeout",
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "50",
+      description = "Set socket timeout (in seconds) for read and write operations. ",
+      displayPosition = 4999,
+      group = "ADVANCED"
+  )
+  public Integer socketTimeout = 50;
 
 
   @ConfigDef(

@@ -47,6 +47,7 @@ public class AWSUtil {
     ClientConfiguration clientConfig = new ClientConfiguration();
 
     clientConfig.setConnectionTimeout(config.connectionTimeout * MILLIS);
+    clientConfig.setSocketTimeout(config.socketTimeout * MILLIS);
 
     // Optional proxy settings
     if (config.useProxy) {
