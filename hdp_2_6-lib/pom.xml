@@ -394,6 +394,22 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-kafka_multisource-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.scala-lang</groupId>
+          <artifactId>scala-library</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.101tec</groupId>
+          <artifactId>zkclient</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-kafka_target-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
@@ -590,6 +606,7 @@
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                 <source>${basedir}/../flume-protolib/src/test/java</source>
                 <source>${basedir}/../kafka_source-protolib/src/test/java</source>
+                <source>${basedir}/../kafka_multisource-protolib/src/test/java</source>
                 <source>${basedir}/../kafka_target-protolib/src/test/java</source>
                 <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
               </sources>
@@ -620,6 +637,9 @@
                 </resource>
                 <resource>
                   <directory>${basedir}/../kafka_source-protolib/src/test/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${basedir}/../kafka_multisource-protolib/src/test/resources</directory>
                 </resource>
                 <resource>
                   <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>

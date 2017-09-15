@@ -158,6 +158,7 @@
     <module>sdc-kafka_0_10</module>
     <module>kafka-common</module>
     <module>kafka_source-protolib</module>
+    <module>kafka_multisource-protolib</module>
     <module>kafka_target-protolib</module>
     <module>maprstreams-common</module>
     <module>maprstreams-target-protolib</module>
