@@ -86,12 +86,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -461,6 +463,9 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     } catch (Throwable e) {
       LOG.error("Can't process batch", e);
 
+      // We try to create partial batch on processing failure
+      createFailureBatch(batchContext.getPipeBatch());
+
       // We got exception while executing pipeline which is a signal that we should stop processing
       ((StageContext)originPipe.getStage().getContext()).setStop(true);
 
@@ -531,15 +536,24 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       // Since the origin already run, the FullPipeBatch will have a new offset
       String newOffset = pipeBatch.getNewOffset();
 
-      // Run rest of the pipeline
-      runSourceLessBatch(
-        start,
-        pipeBatch,
-        Source.POLL_SOURCE_OFFSET_KEY,
-        newOffset,
-        memoryConsumedByStage,
-        stageBatchMetrics
-      );
+      try {
+        // Run rest of the pipeline
+        runSourceLessBatch(
+          start,
+          pipeBatch,
+          Source.POLL_SOURCE_OFFSET_KEY,
+          newOffset,
+          memoryConsumedByStage,
+          stageBatchMetrics
+        );
+      } catch (Throwable t) {
+        // We try to create partial batch on processing failure
+        createFailureBatch(pipeBatch);
+
+        Throwables.propagateIfInstanceOf(t, StageException.class);
+        Throwables.propagateIfInstanceOf(t, PipelineRuntimeException.class);
+        Throwables.propagate(t);
+      }
 
       for (BatchListener batchListener : batchListenerList) {
         batchListener.postBatch();
@@ -996,6 +1010,23 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       } else {
         return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName));
       }
+    }
+  }
+
+  /**
+   * Create special batch by salvaging memory structures when pipelines gets into un-recoverable error.
+   *
+   * @param pipeBatch Current batch
+   */
+  private void createFailureBatch(FullPipeBatch pipeBatch) {
+    // SDC-XXXX: This behavior should be configurable - not sure if on SDC or pipeline level though (future exercise)
+    try {
+      String snapshotName = "Failure_" + UUID.randomUUID().toString();
+      String snapshotLabel = "Failure at " + LocalDateTime.now().toString();
+      snapshotStore.create("", pipelineName, revision, snapshotName, snapshotLabel);
+      snapshotStore.save(pipelineName, revision, snapshotName, -1, ImmutableList.of(pipeBatch.createFailureSnapshot()));
+    } catch (PipelineException ex) {
+      LOG.error("Can't serialize failure snapshot", ex);
     }
   }
 

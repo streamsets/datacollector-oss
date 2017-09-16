@@ -71,4 +71,8 @@ public interface PipeBatch {
 
   int getErrorMessages();
 
+  /**
+   * Create partial snapshot from in-memory structures. This method will be called only on pipeline failure.
+   */
+  List<StageOutput> createFailureSnapshot();
 }

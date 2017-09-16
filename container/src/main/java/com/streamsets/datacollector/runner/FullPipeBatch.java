@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -216,6 +217,42 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   public List<StageOutput> getSnapshotsOfAllStagesOutput() {
+    return stageOutputSnapshot;
+  }
+
+  @Override
+  public List<StageOutput> createFailureSnapshot() {
+    // Stage name -> (Lane name -> Records)
+    Map<String, Map<String, List<Record>>> salvagedStageOutputs = new LinkedHashMap<>();
+
+    // Salvage what is in memory
+    fullPayload.forEach((lane, records) -> {
+      // We can work only with multiplexer lanes as only those encode all the information we need
+      if(!lane.endsWith(LaneResolver.MULTIPLEXER_OUT)) {
+        return;
+      }
+
+      // Split the lane name to get out - stage and lane name
+      String[] parts = lane.split(LaneResolver.SEPARATOR);
+      Utils.checkState(parts.length == 3, "Invalid multiplexer lane name: " + lane);
+      String stageName = parts[1];
+
+      parts = parts[0].split(LaneResolver.ROUTING_SEPARATOR);
+      Utils.checkState(parts.length == 2, "Invalid multiplexer lane name: " + lane);
+      String laneName = parts[0];
+
+      Map<String, List<Record>> stageOutput = salvagedStageOutputs.computeIfAbsent(stageName, name -> new LinkedHashMap<>());
+
+      // Since we can copy records for lanes that diverge, we use putIfAbsent()
+      stageOutput.putIfAbsent(laneName, records);
+    });
+
+    // Convert salvaged structure to final snapshot
+    List<StageOutput> stageOutputSnapshot = new ArrayList<>();
+    salvagedStageOutputs.forEach((stageName, outputs) -> {
+      stageOutputSnapshot.add(new StageOutput(stageName, outputs, errorSink, eventSink));
+    });
+
     return stageOutputSnapshot;
   }
 

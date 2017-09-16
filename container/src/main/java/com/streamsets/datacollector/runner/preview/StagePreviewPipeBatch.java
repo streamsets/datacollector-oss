@@ -137,4 +137,9 @@ public class StagePreviewPipeBatch implements PipeBatch {
   public int getErrorMessages() {
     return 0;
   }
+
+  @Override
+  public List<StageOutput> createFailureSnapshot() {
+    throw new UnsupportedOperationException("createFailureSnapshot()");
+  }
 }
