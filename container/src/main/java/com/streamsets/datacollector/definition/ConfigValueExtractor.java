@@ -160,6 +160,9 @@ public abstract class ConfigValueExtractor {
               errors.add(new ErrorMessage(DefinitionError.DEF_014, contextMsg, field.getType()));
             }
             break;
+          case RUNTIME:
+            // TODO: SDC-7362: Isolate DataFormat library to it's own class loader
+            break;
         }
       }
     }
@@ -238,6 +241,9 @@ public abstract class ConfigValueExtractor {
                 break;
               case CREDENTIAL:
                 value = new ClearCredentialValue(valueStr);
+                break;
+              case RUNTIME:
+                // TODO: SDC-7362: Isolate DataFormat library to it's own class loader
                 break;
             }
           } catch (IOException ex) {
