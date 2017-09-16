@@ -93,7 +93,7 @@ public class FullPipeBatch implements PipeBatch {
     List<Record> records = new ArrayList<>();
     List<String> inputLanes = pipe.getInputLanes();
     for (String inputLane : inputLanes) {
-      records.addAll(fullPayload.remove(inputLane));
+      records.addAll(fullPayload.get(inputLane));
     }
     if (pipe.getStage().getDefinition().getType().isOneOf(StageType.TARGET, StageType.EXECUTOR)) {
       outputRecords += records.size();
@@ -155,6 +155,11 @@ public class FullPipeBatch implements PipeBatch {
 
   @Override
   public void completeStage(StagePipe pipe) {
+    List<String> inputLanes = pipe.getInputLanes();
+    for(String inputLane : inputLanes) {
+      fullPayload.remove(inputLane);
+    }
+
     if(pipe.getEventLanes().size() == 1) {
       fullPayload.put(pipe.getEventLanes().get(0), eventSink.getStageEvents(pipe.getStage().getInfo().getInstanceName()));
     }
