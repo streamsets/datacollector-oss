@@ -119,11 +119,6 @@ public class StagePreviewPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void combineLanes(List<String> lanes, String to) {
-    throw new UnsupportedOperationException("combineLanes()");
-  }
-
-  @Override
   public int getInputRecords() {
     return 0;
   }

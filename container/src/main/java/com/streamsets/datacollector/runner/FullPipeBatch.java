@@ -260,18 +260,6 @@ public class FullPipeBatch implements PipeBatch {
   }
 
   @Override
-  public void combineLanes(List<String> lanes, String to) {
-    List<String> undefLanes = remove(lanes, fullPayload.keySet());
-    Preconditions.checkState(undefLanes.isEmpty(), Utils.formatL("Lanes '{}' does not exist", undefLanes));
-    fullPayload.put(to, new ArrayList<Record>());
-    for (String lane : lanes) {
-      List<Record> records = Preconditions.checkNotNull(fullPayload.remove(lane), Utils.formatL(
-          "Stream '{}' does not exist", lane));
-      fullPayload.get(to).addAll(records);
-    }
-  }
-
-  @Override
   public int getInputRecords() {
     return inputRecords;
   }

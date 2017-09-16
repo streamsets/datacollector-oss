@@ -303,53 +303,6 @@ public class TestPipeBatch {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void testCombineLanes() throws Exception {
-    FullPipeBatch pipeBatch = new FullPipeBatch(null, null, -1, true);
-
-    PipelineBean pipelineBean = getPipelineBean();
-    StageRuntime[] stages = {
-      new StageRuntime(pipelineBean, pipelineBean.getOrigin()),
-      new StageRuntime(pipelineBean, pipelineBean.getPipelineStageBeans().getStages().get(0))
-    };
-
-    StageContext context = Mockito.mock(StageContext.class);
-    Mockito.when(context.isPreview()).thenReturn(false);
-    stages[0].setContext(context);
-
-    List<String> stageOutputLanes = stages[0].getConfiguration().getOutputLanes();
-    StagePipe pipe = new StagePipe(stages[0], Collections.EMPTY_LIST,
-      LaneResolver.getPostFixed(stageOutputLanes, LaneResolver.STAGE_OUT), Collections.EMPTY_LIST);
-
-    // starting source
-    BatchMakerImpl batchMaker = pipeBatch.startStage(pipe);
-    Assert.assertEquals(new ArrayList<String>(stageOutputLanes), batchMaker.getLanes());
-
-    Record record = new RecordImpl("i", "source", null, null);
-    record.getHeader().setAttribute("a", "A");
-    batchMaker.addRecord(record, stageOutputLanes.get(0));
-
-    // completing source
-    pipeBatch.completeStage(batchMaker);
-
-    List<String> list = ImmutableList.of("x", "y");
-    pipeBatch.moveLaneCopying(pipe.getOutputLanes().get(0), list);
-
-    Record copiedRecordX = pipeBatch.getFullPayload().get("x").get(0);
-    Record copiedRecordY = pipeBatch.getFullPayload().get("y").get(0);
-
-    pipeBatch.combineLanes(list, "z");
-    Map<String, List<Record>> snapshot = pipeBatch.getLaneOutputRecords(ImmutableList.of("z"));
-
-    Assert.assertEquals(1, snapshot.size());
-    Assert.assertEquals(2, snapshot.get("z").size());
-
-    Assert.assertSame(copiedRecordX, pipeBatch.getFullPayload().get("z").get(0));
-    Assert.assertSame(copiedRecordY, pipeBatch.getFullPayload().get("z").get(1));
-  }
-
-
-  @Test
-  @SuppressWarnings("unchecked")
   public void testOverride() throws Exception {
     PipeBatch pipeBatch = new FullPipeBatch(null, null, -1, true);
 
