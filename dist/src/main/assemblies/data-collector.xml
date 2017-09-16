@@ -178,6 +178,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- DataFormants libs -->
+    <fileSet>
+      <directory>${basedir}/../dataformats-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- stats-lib -->
     <fileSet>
       <directory>${basedir}/../stats-lib/target/streamsets-libs/</directory>
