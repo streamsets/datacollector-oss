@@ -27,7 +27,6 @@ public class LaneResolver {
   static final String STAGE_OUT       = "::s";
   static final String OBSERVER_OUT    = "::o";
   static final String MULTIPLEXER_OUT = "::m";
-  static final String COMBINER_OUT    = "::c";
   private static final String ROUTING_SEPARATOR = "--";
 
   private static void validatePostFix(String postFix) {
@@ -39,7 +38,6 @@ public class LaneResolver {
     validatePostFix(STAGE_OUT);
     validatePostFix(OBSERVER_OUT);
     validatePostFix(MULTIPLEXER_OUT);
-    validatePostFix(COMBINER_OUT);
   }
 
   static List<String> getPostFixed(List<String> lanes, String postfix) {
@@ -61,7 +59,17 @@ public class LaneResolver {
   }
 
   public List<String> getStageInputLanes(int idx) {
-    return getCombinerOutputLanes(idx);
+    List<String> list = new ArrayList<>();
+    for (String input : stages.get(idx).getConfiguration().getInputLanes()) {
+      for (int i = 0; i < idx; i++) {
+        for (String output : stages.get(i).getConfiguration().getOutputAndEventLanes()) {
+          if (output.equals(input)) {
+            list.add(createLane(output, stages.get(idx).getInfo().getInstanceName()));
+          }
+        }
+      }
+    }
+    return getPostFixed(list, MULTIPLEXER_OUT);
   }
 
   public List<String> getStageOutputLanes(int idx) {
@@ -97,28 +105,6 @@ public class LaneResolver {
     }
     return getPostFixed(list, MULTIPLEXER_OUT);
   }
-
-  public List<String> getCombinerInputLanes(int idx) {
-    List<String> list = new ArrayList<>();
-    for (String input : stages.get(idx).getConfiguration().getInputLanes()) {
-      for (int i = 0; i < idx; i++) {
-        for (String output : stages.get(i).getConfiguration().getOutputAndEventLanes()) {
-          if (output.equals(input)) {
-            list.add(createLane(output, stages.get(idx).getInfo().getInstanceName()));
-          }
-        }
-      }
-    }
-    return getPostFixed(list, MULTIPLEXER_OUT);
-  }
-
-  @SuppressWarnings("unchecked")
-  public List<String> getCombinerOutputLanes(int idx) {
-    boolean noInput = stages.get(idx).getConfiguration().getInputLanes().isEmpty();
-    return (noInput) ? Collections.EMPTY_LIST : getPostFixed(ImmutableList.of(stages.get(idx).getInfo().getInstanceName()),
-                                                             COMBINER_OUT);
-  }
-
 
   public static List<String> getMatchingOutputLanes(String source, List<String> output) {
     String prefix = source + ROUTING_SEPARATOR;

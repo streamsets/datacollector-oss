@@ -52,7 +52,7 @@ public class TestBatchMakerImpl {
     Mockito.when(stageRuntime.getInfo()).thenReturn(stageInfo);
     Mockito.when(stageRuntime.getConfiguration()).thenReturn(stageConfiguration);
     Mockito.when(stageRuntime.getDefinition()).thenReturn(stageDef);
-    List<String> pipeInput = LaneResolver.getPostFixed(ImmutableList.of("a"), LaneResolver.COMBINER_OUT);
+    List<String> pipeInput = LaneResolver.getPostFixed(ImmutableList.of("a"), LaneResolver.MULTIPLEXER_OUT);
     List<String> pipeOutputs = new ArrayList<String>();
     for (String output : outputs) {
       pipeOutputs.add(LaneResolver.createLane(output, "x"));

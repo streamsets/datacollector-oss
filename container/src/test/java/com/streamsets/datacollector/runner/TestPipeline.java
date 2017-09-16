@@ -107,16 +107,14 @@ public class TestPipeline {
 
     // assert the pipes
     Pipe[] pipes = getSourceAndPipelinePipes(pipeline);
-    Assert.assertEquals(9, pipes.length);
+    Assert.assertEquals(7, pipes.length);
     Assert.assertTrue(pipes[0] instanceof StagePipe);
     Assert.assertTrue(pipes[1] instanceof ObserverPipe);
     Assert.assertTrue(pipes[2] instanceof MultiplexerPipe);
-    Assert.assertTrue(pipes[3] instanceof CombinerPipe);
-    Assert.assertTrue(pipes[4] instanceof StagePipe);
-    Assert.assertTrue(pipes[5] instanceof ObserverPipe);
-    Assert.assertTrue(pipes[6] instanceof MultiplexerPipe);
-    Assert.assertTrue(pipes[7] instanceof CombinerPipe);
-    Assert.assertTrue(pipes[8] instanceof StagePipe);
+    Assert.assertTrue(pipes[3] instanceof StagePipe);
+    Assert.assertTrue(pipes[4] instanceof ObserverPipe);
+    Assert.assertTrue(pipes[5] instanceof MultiplexerPipe);
+    Assert.assertTrue(pipes[6] instanceof StagePipe);
 
     // assert the pipes wiring (in this case is just lineal, the TestLaneResolver covers the diff scenarios)
     List<String> prevOutput = new ArrayList<>();
@@ -143,7 +141,7 @@ public class TestPipeline {
         stageName = stageDefs.get(0).getStageName();
         stageVersion = stageDefs.get(0).getStageVersion();
         infos.set(0, stage.getInfo());
-      } else if (i < 7) {
+      } else if (i < 6) {
         instanceName = "p";
         stageName = stageDefs.get(1).getStageName();
         stageVersion = stageDefs.get(1).getStageVersion();
@@ -167,7 +165,7 @@ public class TestPipeline {
       Assert.assertEquals(infos, stage.getContext().getPipelineInfo());
       if (i < 3) {
         Assert.assertEquals(ImmutableList.of("s"), (((Source.Context)stage.getContext()).getOutputLanes()));
-      } else if (i < 7) {
+      } else if (i < 6) {
         Assert.assertEquals(ImmutableList.of("p"), (((Processor.Context)stage.getContext()).getOutputLanes()));
       }
     }
@@ -218,27 +216,23 @@ public class TestPipeline {
 
     // assert the pipes
     Pipe[] pipes = getSourceAndPipelinePipes(pipeline);
-    Assert.assertEquals(9, pipes.length);
+    Assert.assertEquals(7, pipes.length);
     Assert.assertTrue(pipes[0] instanceof StagePipe);
     Assert.assertEquals("s", pipes[0].getStage().getConfiguration().getInstanceName());
     Assert.assertTrue(pipes[1] instanceof ObserverPipe);
     Assert.assertEquals("s", pipes[1].getStage().getConfiguration().getInstanceName());
     Assert.assertTrue(pipes[2] instanceof MultiplexerPipe);
     Assert.assertEquals("s", pipes[2].getStage().getConfiguration().getInstanceName());
-    Assert.assertTrue(pipes[3] instanceof CombinerPipe);
+
+    Assert.assertTrue(pipes[3] instanceof StagePipe);
     Assert.assertEquals("t", pipes[3].getStage().getConfiguration().getInstanceName());
-
-    Assert.assertTrue(pipes[4] instanceof StagePipe);
+    Assert.assertTrue(pipes[4] instanceof ObserverPipe);
     Assert.assertEquals("t", pipes[4].getStage().getConfiguration().getInstanceName());
-    Assert.assertTrue(pipes[5] instanceof ObserverPipe);
+    Assert.assertTrue(pipes[5] instanceof MultiplexerPipe);
     Assert.assertEquals("t", pipes[5].getStage().getConfiguration().getInstanceName());
-    Assert.assertTrue(pipes[6] instanceof MultiplexerPipe);
-    Assert.assertEquals("t", pipes[6].getStage().getConfiguration().getInstanceName());
 
-    Assert.assertTrue(pipes[7] instanceof CombinerPipe);
-    Assert.assertEquals("e", pipes[7].getStage().getConfiguration().getInstanceName());
-    Assert.assertTrue(pipes[8] instanceof StagePipe);
-    Assert.assertEquals("e", pipes[8].getStage().getConfiguration().getInstanceName());
+    Assert.assertTrue(pipes[6] instanceof StagePipe);
+    Assert.assertEquals("e", pipes[6].getStage().getConfiguration().getInstanceName());
   }
 
   @Test

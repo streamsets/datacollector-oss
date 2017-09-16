@@ -893,9 +893,6 @@ public class Pipeline {
           pipesBuilder.add(pipe);
           break;
         case PROCESSOR:
-          pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
-                                  laneResolver.getCombinerOutputLanes(idx));
-          pipesBuilder.add(pipe);
           pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
                                laneResolver.getStageOutputLanes(idx), laneResolver.getStageEventLanes(idx), scheduledExecutor,
             memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
@@ -909,9 +906,6 @@ public class Pipeline {
           break;
         case EXECUTOR:
         case TARGET:
-          pipe = new CombinerPipe(stage, laneResolver.getCombinerInputLanes(idx),
-                                  laneResolver.getCombinerOutputLanes(idx));
-          pipesBuilder.add(pipe);
           pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
             laneResolver.getStageOutputLanes(idx), laneResolver.getStageEventLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
           pipesBuilder.add(pipe);
