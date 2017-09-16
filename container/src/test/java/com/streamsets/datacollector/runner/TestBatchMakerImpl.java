@@ -55,7 +55,7 @@ public class TestBatchMakerImpl {
     List<String> pipeInput = LaneResolver.getPostFixed(ImmutableList.of("a"), LaneResolver.MULTIPLEXER_OUT);
     List<String> pipeOutputs = new ArrayList<String>();
     for (String output : outputs) {
-      pipeOutputs.add(LaneResolver.createLane(output, "x"));
+      pipeOutputs.add(LaneResolver.createLane(output, "x", "x"));
     }
     List<String> pipeOutput = LaneResolver.getPostFixed(pipeOutputs, LaneResolver.STAGE_OUT);
 

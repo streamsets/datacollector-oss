@@ -125,14 +125,14 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(sourceInstance), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(0));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(sourceInstance, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(sourceInstance, targetInstance, sourceInstance)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(0));
 
     // target stage
     Assert.assertEquals(1, resolver.getStageInputLanes(1).size());
     Assert.assertEquals(0, resolver.getStageOutputLanes(1).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(sourceInstance, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(sourceInstance, targetInstance, sourceInstance)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(1)
     );
 
@@ -180,14 +180,14 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(sourceInstance), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(0));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(sourceInstance, processorInstance)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(sourceInstance, processorInstance, sourceInstance)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(0));
 
     // processor stage
     Assert.assertEquals(1, resolver.getStageInputLanes(1).size());
     Assert.assertEquals(1, resolver.getStageOutputLanes(1).size());
     Assert.assertEquals(
-        LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(sourceInstance, processorInstance)), LaneResolver.MULTIPLEXER_OUT),
+        LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(sourceInstance, processorInstance, sourceInstance)), LaneResolver.MULTIPLEXER_OUT),
         resolver.getStageInputLanes(1)
     );
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance), LaneResolver.STAGE_OUT),
@@ -207,14 +207,14 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(1));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(processorInstance, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(processorInstance, targetInstance, processorInstance)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(1));
 
     // target stage
     Assert.assertEquals(1, resolver.getStageInputLanes(2).size());
     Assert.assertEquals(0, resolver.getStageOutputLanes(2).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance, targetInstance, processorInstance)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(2)
     );
 
@@ -264,14 +264,14 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(sourceInstance), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(0));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(sourceInstance, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(sourceInstance, processorInstance1, sourceInstance)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(0));
 
     // processor1 stage
     Assert.assertEquals(1, resolver.getStageInputLanes(1).size());
     Assert.assertEquals(1, resolver.getStageOutputLanes(1).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(sourceInstance, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(sourceInstance, processorInstance1, sourceInstance)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(1)
     );
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance1), LaneResolver.STAGE_OUT),
@@ -291,14 +291,14 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance1), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(1));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(processorInstance1, processorInstance2)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(processorInstance1, processorInstance2, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(1));
 
     // processor2 stage
     Assert.assertEquals(1, resolver.getStageInputLanes(2).size());
     Assert.assertEquals(1, resolver.getStageOutputLanes(2).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance1, processorInstance2)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance1, processorInstance2, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(2)
     );
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance2), LaneResolver.STAGE_OUT),
@@ -318,14 +318,14 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance2), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(2));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(processorInstance2, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(processorInstance2, targetInstance, processorInstance2)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(2));
 
     // target stage
     Assert.assertEquals(1, resolver.getStageInputLanes(3).size());
     Assert.assertEquals(0, resolver.getStageOutputLanes(3).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance2, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance2, targetInstance, processorInstance2)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(3));
 
     // target observer
@@ -337,15 +337,15 @@ public class TestLaneResolver {
     Assert.assertEquals(0, resolver.getMultiplexerOutputLanes(3).size());
 
     // getMatchingOutputLanes
-    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("s1", "p1")),
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("s1", "p1", "s1")),
                                                   LaneResolver.MULTIPLEXER_OUT),
                         LaneResolver.getMatchingOutputLanes("s1", resolver.getMultiplexerOutputLanes(0)));
 
-    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1", "p2")),
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1", "p2", "p1")),
                                                   LaneResolver.MULTIPLEXER_OUT),
                         LaneResolver.getMatchingOutputLanes("p1", resolver.getMultiplexerOutputLanes(1)));
 
-    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p2", "t1")),
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p2", "t1", "p2")),
                                                   LaneResolver.MULTIPLEXER_OUT),
                         LaneResolver.getMatchingOutputLanes("p2", resolver.getMultiplexerOutputLanes(2)));
 
@@ -392,14 +392,14 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(sourceInstance), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(0));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(sourceInstance, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(sourceInstance, processorInstance1, sourceInstance)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(0));
 
     // processor1 stage
     Assert.assertEquals(1, resolver.getStageInputLanes(1).size());
     Assert.assertEquals(1, resolver.getStageOutputLanes(1).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(sourceInstance, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(sourceInstance, processorInstance1, sourceInstance)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(1)
     );
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance1), LaneResolver.STAGE_OUT),
@@ -419,15 +419,15 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance1), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(1));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(processorInstance1, processorInstance2),
-                            LaneResolver.createLane(processorInstance1, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(processorInstance1, processorInstance2, processorInstance1),
+                            LaneResolver.createLane(processorInstance1, targetInstance, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(1));
 
     // processor2 stage
     Assert.assertEquals(1, resolver.getStageInputLanes(2).size());
     Assert.assertEquals(1, resolver.getStageOutputLanes(2).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance1, processorInstance2)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance1, processorInstance2, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(2)
     );
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance2), LaneResolver.STAGE_OUT),
@@ -447,14 +447,14 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance2), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(2));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(processorInstance2, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(processorInstance2, targetInstance, processorInstance2)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(2));
 
     // target stage
     Assert.assertEquals(2, resolver.getStageInputLanes(3).size());
     Assert.assertEquals(0, resolver.getStageOutputLanes(3).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance1, targetInstance), LaneResolver.createLane(processorInstance2, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance1, targetInstance, processorInstance1), LaneResolver.createLane(processorInstance2, targetInstance, processorInstance2)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(3)
     );
 
@@ -469,12 +469,12 @@ public class TestLaneResolver {
 
     // getMatchingOutputLanes
 
-    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1", "p2"),
-                                                                   LaneResolver.createLane("p1", "t1")),
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1", "p2", "p1"),
+                                                                   LaneResolver.createLane("p1", "t1", "p1")),
                                                   LaneResolver.MULTIPLEXER_OUT),
                         LaneResolver.getMatchingOutputLanes("p1", resolver.getMultiplexerOutputLanes(1)));
 
-    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p2", "t1")),
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p2", "t1", "p2")),
                                                   LaneResolver.MULTIPLEXER_OUT),
                         LaneResolver.getMatchingOutputLanes("p2", resolver.getMultiplexerOutputLanes(2)));
 
@@ -523,14 +523,14 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(sourceInstance), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(0));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(sourceInstance, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(sourceInstance, processorInstance1, sourceInstance)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(0));
 
     // processor1 stage
     Assert.assertEquals(1, resolver.getStageInputLanes(1).size());
     Assert.assertEquals(2, resolver.getStageOutputLanes(1).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(sourceInstance, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(sourceInstance, processorInstance1, sourceInstance)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(1)
     );
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance1a, processorInstance1b), LaneResolver.STAGE_OUT),
@@ -550,15 +550,15 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance1a, processorInstance1b), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(1));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(processorInstance1a, processorInstance2),
-                            LaneResolver.createLane(processorInstance1b, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(processorInstance1a, processorInstance2, processorInstance1),
+                            LaneResolver.createLane(processorInstance1b, targetInstance, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(1));
 
     // processor2 stage
     Assert.assertEquals(1, resolver.getStageInputLanes(2).size());
     Assert.assertEquals(1, resolver.getStageOutputLanes(2).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance1a, processorInstance2)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance1a, processorInstance2, processorInstance1)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(2)
     );
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance2), LaneResolver.STAGE_OUT),
@@ -578,14 +578,14 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(processorInstance2), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(2));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane(processorInstance2, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane(processorInstance2, targetInstance, processorInstance2)), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(2));
 
     // target stage
     Assert.assertEquals(2, resolver.getStageInputLanes(3).size());
     Assert.assertEquals(0, resolver.getStageOutputLanes(3).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance1b, targetInstance), LaneResolver.createLane(processorInstance2, targetInstance)), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane(processorInstance1b, targetInstance, processorInstance1), LaneResolver.createLane(processorInstance2, targetInstance, processorInstance2)), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(3)
     );
 
@@ -599,15 +599,15 @@ public class TestLaneResolver {
 
     // getMatchingOutputLanes
 
-    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1a", "p2")),
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1a", "p2", "p1")),
                                                   LaneResolver.MULTIPLEXER_OUT),
                         LaneResolver.getMatchingOutputLanes("p1a", resolver.getMultiplexerOutputLanes(1)));
 
-    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1b", "t1")),
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p1b", "t1", "p1")),
                                                   LaneResolver.MULTIPLEXER_OUT),
                         LaneResolver.getMatchingOutputLanes("p1b", resolver.getMultiplexerOutputLanes(1)));
 
-    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p2", "t1")),
+    Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("p2", "t1", "p2")),
                                                   LaneResolver.MULTIPLEXER_OUT),
                         LaneResolver.getMatchingOutputLanes("p2", resolver.getMultiplexerOutputLanes(2)));
 
@@ -653,8 +653,8 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("s", "se"), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(0));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-          LaneResolver.createLane("s", "t"),
-          LaneResolver.createLane("se", "e")),
+          LaneResolver.createLane("s", "t", "s"),
+          LaneResolver.createLane("se", "e", "s")),
         LaneResolver.MULTIPLEXER_OUT),
       resolver.getMultiplexerOutputLanes(0));
 
@@ -663,7 +663,7 @@ public class TestLaneResolver {
     Assert.assertEquals(0, resolver.getStageOutputLanes(1).size());
     Assert.assertEquals(1, resolver.getStageEventLanes(1).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("s", "t")), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("s", "t", "s")), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(1)
     );
 
@@ -681,7 +681,7 @@ public class TestLaneResolver {
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of("te"), LaneResolver.OBSERVER_OUT),
                         resolver.getMultiplexerInputLanes(1));
     Assert.assertEquals(LaneResolver.getPostFixed(ImmutableList.of(
-                            LaneResolver.createLane("te", "e")), LaneResolver.MULTIPLEXER_OUT),
+                            LaneResolver.createLane("te", "e", "t")), LaneResolver.MULTIPLEXER_OUT),
                         resolver.getMultiplexerOutputLanes(1));
 
     // event stage
@@ -689,7 +689,7 @@ public class TestLaneResolver {
     Assert.assertEquals(0, resolver.getStageOutputLanes(2).size());
     Assert.assertEquals(0, resolver.getStageEventLanes(2).size());
     Assert.assertEquals(
-      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("se", "e"), LaneResolver.createLane("te", "e")), LaneResolver.MULTIPLEXER_OUT),
+      LaneResolver.getPostFixed(ImmutableList.of(LaneResolver.createLane("se", "e", "s"), LaneResolver.createLane("te", "e", "t")), LaneResolver.MULTIPLEXER_OUT),
       resolver.getStageInputLanes(2)
     );
   }

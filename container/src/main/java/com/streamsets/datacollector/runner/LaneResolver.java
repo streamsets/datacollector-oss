@@ -24,9 +24,10 @@ import java.util.List;
 
 public class LaneResolver {
   static final int POSTFIX_LEN = 3;
-  static final String STAGE_OUT       = "::s";
-  static final String OBSERVER_OUT    = "::o";
-  static final String MULTIPLEXER_OUT = "::m";
+  static final String SEPARATOR       = "::";
+  static final String STAGE_OUT       = SEPARATOR + "s";
+  static final String OBSERVER_OUT    = SEPARATOR + "o";
+  static final String MULTIPLEXER_OUT = SEPARATOR + "m";
   private static final String ROUTING_SEPARATOR = "--";
 
   private static void validatePostFix(String postFix) {
@@ -48,8 +49,8 @@ public class LaneResolver {
     return ImmutableList.copyOf(postFixed);
   }
 
-  static String createLane(String from, String to) {
-    return from + ROUTING_SEPARATOR + to;
+  static String createLane(String from, String to, String stageName) {
+    return from + ROUTING_SEPARATOR + to + SEPARATOR + stageName;
   }
 
   private final List<StageRuntime> stages;
@@ -64,7 +65,11 @@ public class LaneResolver {
       for (int i = 0; i < idx; i++) {
         for (String output : stages.get(i).getConfiguration().getOutputAndEventLanes()) {
           if (output.equals(input)) {
-            list.add(createLane(output, stages.get(idx).getInfo().getInstanceName()));
+            list.add(createLane(
+              output,
+              stages.get(idx).getInfo().getInstanceName(),
+              stages.get(i).getInfo().getInstanceName()
+            ));
           }
         }
       }
@@ -98,7 +103,11 @@ public class LaneResolver {
       for (int i = idx + 1; i < stages.size(); i++) {
         for (String input : stages.get(i).getConfiguration().getInputLanes()) {
           if (input.equals(output)) {
-            list.add(createLane(output, stages.get(i).getInfo().getInstanceName()));
+            list.add(createLane(
+              output,
+              stages.get(i).getInfo().getInstanceName(),
+              stages.get(idx).getInfo().getInstanceName()
+            ));
           }
         }
       }

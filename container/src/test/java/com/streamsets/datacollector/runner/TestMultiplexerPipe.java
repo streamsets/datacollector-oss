@@ -42,8 +42,8 @@ public class TestMultiplexerPipe {
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getRunners().get(0).get(1);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
-    Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(eq("t::o"), eq("t--t::m"));
-    Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(eq("e::o"), eq("e--e::m"));
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(eq("t::o"), eq("t--t::s::m"));
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLane(eq("e::o"), eq("e--e::s::m"));
     Mockito.verifyNoMoreInteractions(pipeBatch);
   }
 
@@ -76,8 +76,8 @@ public class TestMultiplexerPipe {
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getRunners().get(0).get(1);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
-    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("t::o"), (List<String>)argThat(contains("t--t1::m", "t--t2::m")));
-    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("e::o"), (List<String>)argThat(contains("e--t3::m", "e--t4::m")));
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("t::o"), (List<String>)argThat(contains("t--t1::s::m", "t--t2::s::m")));
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("e::o"), (List<String>)argThat(contains("e--t3::s::m", "e--t4::s::m")));
     Mockito.verifyNoMoreInteractions(pipeBatch);
   }
 
