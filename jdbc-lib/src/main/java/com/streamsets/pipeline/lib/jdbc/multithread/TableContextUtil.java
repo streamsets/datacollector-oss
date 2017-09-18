@@ -585,7 +585,7 @@ public final class TableContextUtil {
         StringUtils.isEmpty(tableConfigBean.tableExclusionPattern)?
             null : Pattern.compile(tableConfigBean.tableExclusionPattern);
 
-    long currentVersion = getCurrentVersion(connection) - 1;
+    long currentVersion = getCurrentVersion(connection);
 
     try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, tableConfigBean.schema, tableConfigBean.tablePattern, false)) {
       while (rs.next()) {
