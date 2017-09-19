@@ -85,6 +85,7 @@ public class TestTableJdbcSourceUpgrader {
 
     configs.add(new Config(TableJdbcConfigBean.TABLE_CONFIG, tableConfigMaps));
 
+
     TableJdbcSourceUpgrader upgrader = new TableJdbcSourceUpgrader();
     List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 2, 3, configs);
 
@@ -112,6 +113,50 @@ public class TestTableJdbcSourceUpgrader {
     assertAllContain(
         TableConfigBean.MAX_NUM_ACTIVE_PARTITIONS_FIELD,
         TableConfigBean.DEFAULT_MAX_NUM_ACTIVE_PARTITIONS,
+        upgradedTableConfig1,
+        upgradedTableConfig2
+    );
+
+    assertHasAllEntries(upgradedTableConfig1, tableConfigMap1);
+    assertHasAllEntries(upgradedTableConfig2, tableConfigMap2);
+  }
+
+  @Test
+  public void testUpgradeV3ToV4() throws Exception {
+
+    List<Config> configs = new ArrayList<>();
+
+    List<LinkedHashMap<String, Object>> tableConfigMaps = new LinkedList<>();
+
+    LinkedHashMap<String, Object> tableConfigMap1 = new LinkedHashMap<>();
+    tableConfigMap1.put("tablePattern", "pattern1");
+    tableConfigMap1.put("overrideDefaultOffsetColumns", false);
+    tableConfigMap1.put("offsetColumns", Collections.emptyList());
+    tableConfigMap1.put("offsetColumnToInitialOffsetValue", Collections.emptyList());
+    tableConfigMap1.put("schema", "schema");
+    tableConfigMaps.add(tableConfigMap1);
+    LinkedHashMap<String, Object> tableConfigMap2 = new LinkedHashMap<>(tableConfigMap1);
+    tableConfigMap2.put("tablePattern", "pattern2");
+    tableConfigMap2.put("schema", "schema2");
+    tableConfigMaps.add(tableConfigMap2);
+
+    configs.add(new Config(TableJdbcConfigBean.TABLE_CONFIG, tableConfigMaps));
+
+    TableJdbcSourceUpgrader upgrader = new TableJdbcSourceUpgrader();
+    List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 3, 4, configs);
+
+    Config upgradedTableConfigs = UpgraderUtils.getConfigWithName(upgradedConfigs, TableJdbcConfigBean.TABLE_CONFIG);
+    assertThat(upgradedTableConfigs, notNullValue());
+    assertThat(upgradedTableConfigs.getValue(), is(instanceOf(List.class)));
+    List<LinkedHashMap<String, Object>> upgradedTableConfigsList =
+        (List<LinkedHashMap<String, Object>>) upgradedTableConfigs.getValue();
+
+    assertThat(upgradedTableConfigsList, hasSize(2));
+    LinkedHashMap<String, Object> upgradedTableConfig1 = upgradedTableConfigsList.get(0);
+    LinkedHashMap<String, Object> upgradedTableConfig2 = upgradedTableConfigsList.get(1);
+    assertAllContain(
+        TableConfigBean.ENABLE_NON_INCREMENTAL_FIELD,
+        TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
         upgradedTableConfig1,
         upgradedTableConfig2
     );

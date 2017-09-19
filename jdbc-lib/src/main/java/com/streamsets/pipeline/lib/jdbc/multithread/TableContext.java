@@ -23,6 +23,7 @@ import java.sql.JDBCType;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,7 +39,7 @@ public class TableContext {
   private final LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
   private final Map<String, String> offsetColumnToPartitionOffsetAdjustments = new HashMap<>();
   private final Map<String, String> offsetColumnToMinValues = new HashMap<>();
-
+  private final boolean enableNonIncremental;
   private final PartitioningMode partitioningMode;
   private final int maxNumActivePartitions;
   private final String extraOffsetColumnConditions;
@@ -51,6 +52,7 @@ public class TableContext {
       Map<String, String> offsetColumnToStartOffset,
       Map<String, String> offsetColumnToPartitionOffsetAdjustments,
       Map<String, String> offsetColumnToMinValues,
+      boolean enableNonIncremental,
       PartitioningMode partitioningMode,
       int maxNumActivePartitions,
       String extraOffsetColumnConditions
@@ -67,6 +69,7 @@ public class TableContext {
       this.offsetColumnToMinValues.putAll(offsetColumnToMinValues);
     }
     this.extraOffsetColumnConditions = extraOffsetColumnConditions;
+    this.enableNonIncremental = enableNonIncremental;
     this.partitioningMode = partitioningMode;
     this.maxNumActivePartitions = maxNumActivePartitions;
     if (offsetColumnToPartitionOffsetAdjustments != null) {
@@ -115,6 +118,14 @@ public class TableContext {
     return Collections.unmodifiableMap(offsetColumnToMinValues);
   }
 
+  public boolean isNonIncrementalLoadRequired() {
+    return isEnableNonIncremental() && getOffsetColumns().isEmpty();
+  }
+
+  public boolean isEnableNonIncremental() {
+    return enableNonIncremental;
+  }
+
   public boolean isPartitionable() {
     return partitionable;
   }
@@ -142,57 +153,58 @@ public class TableContext {
 
   public static boolean isPartitionable(TableContext sourceTableContext, List<String> outputReasons) {
     final String tableName = sourceTableContext.getQualifiedName();
+
+    List<String> reasons = new LinkedList<>();
+
+    if (sourceTableContext.isNonIncrementalLoadRequired()) {
+      reasons.add(String.format(
+          "Table %s is not partitionable because it requires using non-incremental loading",
+          tableName
+      ));
+    }
+
     if (sourceTableContext.getOffsetColumns().size() > 1) {
-      String reason = String.format(
+      reasons.add(String.format(
           "Table %s is not partitionable because it has more than one offset column",
           tableName
-      );
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(reason);
-      }
-      if (outputReasons != null) {
-        outputReasons.add(reason);
-      }
-      return false;
+      ));
     }
 
     for (Map.Entry<String, Integer> offsetColToType : sourceTableContext.getOffsetColumnToType().entrySet()) {
       final int type = offsetColToType.getValue();
       if (!TableContextUtil.PARTITIONABLE_TYPES.contains(type)) {
-        String reason = String.format(
+        reasons.add(String.format(
             "Table %s is not partitionable because %s column (type %s) is not partitionable",
             tableName,
             offsetColToType.getKey(),
             JDBCType.valueOf(type).getName()
-        );
-        if (LOG.isDebugEnabled()) {
-          LOG.debug(reason);
-        }
-        if (outputReasons != null) {
-          outputReasons.add(reason);
-        }
-        return false;
+        ));
       }
 
       if (!sourceTableContext.getOffsetColumnToMinValues().containsKey(offsetColToType.getKey())) {
-        String reason = String.format(
+        reasons.add(String.format(
             "Table %s is not partitionable because %s column (type %s) did not have a minimum value available at" +
                 " pipeline start time; only tables with with at least one row can be partitioned",
             tableName,
             offsetColToType.getKey(),
             JDBCType.valueOf(type).getName()
-        );
-        if (LOG.isDebugEnabled()) {
-          LOG.debug(reason);
-        }
-        if (outputReasons != null) {
-          outputReasons.add(reason);
-        }
-        return false;
+        ));
       }
     }
 
-    return true;
+    if (reasons.isEmpty()) {
+      return true;
+    } else {
+      if (outputReasons != null) {
+        outputReasons.addAll(reasons);
+      }
+      if (LOG.isDebugEnabled()) {
+        for (String reason : reasons) {
+          LOG.debug(reason);
+        }
+      }
+      return false;
+    }
   }
 
   @Override

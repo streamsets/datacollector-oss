@@ -65,6 +65,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -550,7 +551,7 @@ public class JdbcUtil {
             break;
           case Types.TIMESTAMP_WITH_TIMEZONE:
             OffsetDateTime offsetDateTime = rs.getObject(columnIndex, OffsetDateTime.class);
-            field = Field.create(Field.Type.DATETIME, Date.from(offsetDateTime.toInstant()));
+            field = Field.create(Field.Type.ZONED_DATETIME, offsetDateTime.toZonedDateTime());
             break;
           //case Types.REF_CURSOR: // JDK8 only
           case Types.SQLXML:

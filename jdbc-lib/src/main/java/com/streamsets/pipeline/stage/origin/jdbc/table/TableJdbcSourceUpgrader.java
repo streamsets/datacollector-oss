@@ -45,6 +45,12 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -91,6 +97,20 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
       tableConfigMap.put(
           TableConfigBean.MAX_NUM_ACTIVE_PARTITIONS_FIELD,
           TableConfigBean.DEFAULT_MAX_NUM_ACTIVE_PARTITIONS
+      );
+    }
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    Config tableConfigs = UpgraderUtils.getConfigWithName(configs, TableJdbcConfigBean.TABLE_CONFIG);
+
+    List<LinkedHashMap<String, Object>> tableConfigsMap =
+        (List<LinkedHashMap<String, Object>>) tableConfigs.getValue();
+
+    for (LinkedHashMap<String, Object> tableConfigMap : tableConfigsMap) {
+      tableConfigMap.put(
+          TableConfigBean.ENABLE_NON_INCREMENTAL_FIELD,
+          TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE
       );
     }
   }

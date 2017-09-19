@@ -47,6 +47,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -59,8 +60,10 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -95,6 +98,7 @@ public abstract class BaseTableJdbcSourceIT {
           .put(Field.Type.DATE, "DATE")
           .put(Field.Type.TIME, "TIME")
           .put(Field.Type.DATETIME, "TIMESTAMP")
+          .put(Field.Type.ZONED_DATETIME, "TIMESTAMP WITH TIME ZONE")
           .build();
 
   protected static Connection connection;
@@ -224,6 +228,8 @@ public abstract class BaseTableJdbcSourceIT {
       case DATETIME:
       case TIME:
         return getRandomDateTime(fieldType);
+      case ZONED_DATETIME:
+        return ZonedDateTime.now();
       case DOUBLE:
         return RANDOM.nextDouble();
       case FLOAT:
@@ -280,6 +286,10 @@ public abstract class BaseTableJdbcSourceIT {
         return DateFormatUtils.format(field.getValueAsDate(), "yyyy-MM-dd");
       case DATETIME:
         return DateFormatUtils.format(field.getValueAsDate(), "yyyy-MM-dd HH:mm:ss.SSS");
+      case ZONED_DATETIME:
+        return DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(
+            field.getValueAsZonedDateTime().toInstant().toEpochMilli()
+        );
       default:
         return String.valueOf(field.getValue());
     }
@@ -334,6 +344,7 @@ public abstract class BaseTableJdbcSourceIT {
                   Field.Type.DATE,
                   Field.Type.TIME,
                   Field.Type.DATETIME,
+                  Field.Type.ZONED_DATETIME,
                   Field.Type.CHAR,
                   Field.Type.STRING
               )
@@ -391,6 +402,12 @@ public abstract class BaseTableJdbcSourceIT {
         break;
       case BYTE_ARRAY:
         Assert.assertArrayEquals(errorString, expectedField.getValueAsByteArray(), actualField.getValueAsByteArray());
+        break;
+      case ZONED_DATETIME:
+        // H2 seems to throw away millis by default, so just make sure they are within 1 second
+        final long millisDifference = expectedField.getValueAsZonedDateTime().toInstant().toEpochMilli()
+            - actualField.getValueAsZonedDateTime().toInstant().toEpochMilli();
+        assertThat(errorString, Math.abs(millisDifference), lessThanOrEqualTo(1000l));
         break;
       default:
         Assert.assertEquals(errorString, expectedField.getValue(), actualField.getValue());

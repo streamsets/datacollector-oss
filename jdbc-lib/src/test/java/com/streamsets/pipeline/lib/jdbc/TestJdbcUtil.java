@@ -27,6 +27,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -174,8 +178,14 @@ public class TestJdbcUtil {
             0,
             UnknownTypeAction.STOP_PIPELINE
           );
-          assertEquals(Field.Type.DATETIME, field.getType());
-          assertEquals(new Date(MINUS_2HRS_OFFSET), field.getValueAsDatetime());
+          assertEquals(Field.Type.ZONED_DATETIME, field.getType());
+          assertEquals(
+              ZonedDateTime.ofInstant(Instant.ofEpochMilli(MINUS_2HRS_OFFSET), ZoneId.ofOffset(
+                  "",
+                  ZoneOffset.ofHours(2)
+              )),
+              field.getValueAsZonedDateTime()
+          );
         }
       }
     }

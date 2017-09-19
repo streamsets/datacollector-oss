@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.cache.JdbcTableReadContextInvalidationListener;
 import com.streamsets.pipeline.lib.jdbc.multithread.cache.JdbcTableReadContextLoader;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -41,6 +42,8 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -230,7 +233,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
               resultSetEndReached
           );
         } finally {
-          handlePostBatchAsNeeded(new AtomicBoolean(resultSetEndReached), recordCount, batchContext);
+          handlePostBatchAsNeeded(resultSetEndReached, recordCount, batchContext);
         }
       } catch (SQLException | ExecutionException | StageException | InterruptedException e) {
         //invalidate if the connection is closed
@@ -270,6 +273,10 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
       AtomicBoolean evictTableReadContext,
       TableReadContext tableReadContext
   ) {
+    if (tableReadContext.isNeverEvict()) {
+      evictTableReadContext.set(false);
+      return;
+    }
     boolean shouldEvict = evictTableReadContext.get();
     boolean isNumberOfBatchesReached = (
         tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES
@@ -283,7 +290,12 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
    * After a batch is generate perform needed operations, generate and commit batch
    * Evict entries from {@link #tableReadContextCache}, reset {@link #tableRuntimeContext}
    */
-  private void handlePostBatchAsNeeded(AtomicBoolean shouldEvict, int recordCount, BatchContext batchContext) {
+  private void handlePostBatchAsNeeded(
+      boolean resultSetEndReached,
+      int recordCount,
+      BatchContext batchContext
+  ) {
+    AtomicBoolean shouldEvict = new AtomicBoolean(resultSetEndReached);
     //Only process batch if there are records
     if (recordCount > 0) {
       TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableRuntimeContext);
@@ -298,8 +310,24 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
             calculateEvictTableFlag(shouldEvict, tableReadContext);
           });
       updateGauge(JdbcBaseRunnable.Status.BATCH_GENERATED);
+
       //Process And Commit offsets
-      context.processBatch(batchContext, tableRuntimeContext.getOffsetKey(), offsets.get(tableRuntimeContext.getOffsetKey()));
+      if (tableRuntimeContext.isUsingNonIncrementalLoad()) {
+        // process the batch now, will handle the offset commit outside this block
+        context.processBatch(batchContext);
+      } else {
+        // for incremental (normal) mode, the offset was already stored in this map
+        // by the specific subclass's createAndAddRecord method
+        final String offsetValue = offsets.get(tableRuntimeContext.getOffsetKey());
+        context.processBatch(batchContext, tableRuntimeContext.getOffsetKey(), offsetValue);
+      }
+
+    }
+
+    if (tableRuntimeContext.isUsingNonIncrementalLoad()) {
+      // for non-incremental mode, the offset is simply a singleton map indicating whether it's finished
+      final String offsetValue = createNonIncrementalLoadOffsetValue(resultSetEndReached);
+      context.commitOffset(tableRuntimeContext.getOffsetKey(), offsetValue);
     }
 
     //Make sure we close the result set only when there are no more rows in the result set
@@ -312,7 +340,6 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
 
       tableRuntimeContext = null;
     } else if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
-      //tableProvider.switchAwayFromTable(tableRuntimeContext, threadNumber);
       tableRuntimeContext = null;
     }
 
@@ -326,6 +353,12 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
         context.commitOffset(partition.getOffsetKey(), null);
       }
     }
+  }
+
+  private static String createNonIncrementalLoadOffsetValue(boolean completed) {
+    final Map<String, String> offsets = new HashMap<>();
+    offsets.put(TableRuntimeContext.NON_INCREMENTAL_LOAD_OFFSET_COMPLETED_KEY, String.valueOf(completed));
+    return OffsetQueryUtil.getSourceKeyOffsetsRepresentation(offsets);
   }
 
   /**

@@ -28,7 +28,7 @@ public interface JdbcRunnable {
    */
   void createAndAddRecord(
       ResultSet rs,
-      TableRuntimeContext tableContext,
+      TableRuntimeContext tableRuntimeContext,
       BatchContext batchContext
   ) throws SQLException, StageException;
 }

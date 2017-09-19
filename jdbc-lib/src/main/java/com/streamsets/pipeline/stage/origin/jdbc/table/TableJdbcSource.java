@@ -466,11 +466,21 @@ public class TableJdbcSource extends BasePushSource {
       } else {
         offsetVersion = lastOffsets.remove(OFFSET_VERSION);
 
-        offsets.putAll(lastOffsets);
-
         if (OFFSET_VERSION_2.equals(offsetVersion)) {
-          tableOrderProvider.initializeFromV2Offsets(offsets);
+          final Map<String, String> newCommitOffsets = new HashMap<>();
+          tableOrderProvider.initializeFromV2Offsets(lastOffsets, newCommitOffsets);
+
+          //clear out existing offset keys and recommit new ones
+          for (String offsetKey : lastOffsets.keySet()) {
+            if (OFFSET_VERSION.equals(offsetKey)) {
+              continue;
+            }
+            getContext().commitOffset(offsetKey, null);
+          }
+          offsets.putAll(newCommitOffsets);
+          newCommitOffsets.forEach((key, value) -> getContext().commitOffset(key, value));
         } else if (OFFSET_VERSION_1.equals(offsetVersion) || Strings.isNullOrEmpty(offsetVersion)) {
+          offsets.putAll(lastOffsets);
           upgradeFromV1();
         }
       }

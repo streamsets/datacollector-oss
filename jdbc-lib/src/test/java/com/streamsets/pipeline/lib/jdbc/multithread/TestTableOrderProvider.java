@@ -24,6 +24,7 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -165,6 +166,7 @@ public class TestTableOrderProvider {
         Collections.emptyMap(),
         Collections.emptyMap(),
         Collections.emptyMap(),
+        TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
         PartitioningMode.DISABLED,
         -1,
         null

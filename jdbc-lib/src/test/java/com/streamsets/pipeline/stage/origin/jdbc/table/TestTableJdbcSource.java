@@ -315,6 +315,7 @@ public class TestTableJdbcSource {
         offsetColumnToStartOffset,
         offsetColumnToPartitionOffsetAdjustments,
         offsetColumnToMinValues,
+        TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
         PartitioningMode.REQUIRED,
         -1,
         null
@@ -322,6 +323,7 @@ public class TestTableJdbcSource {
 
     final TableRuntimeContext tableRuntimeContext = new TableRuntimeContext(
         tableContext,
+        false,
         true,
         1,
         Collections.emptyMap(),

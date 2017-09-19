@@ -39,6 +39,9 @@ public final class TableConfigBean {
       PARTITIONING_MODE_DEFAULT_VALUE_STR
   );
 
+  public static final String ENABLE_NON_INCREMENTAL_FIELD = "enableNonIncremental";
+  public static final boolean ENABLE_NON_INCREMENTAL_DEFAULT_VALUE = false;
+
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
@@ -106,6 +109,18 @@ public final class TableConfigBean {
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public Map<String, String> offsetColumnToInitialOffsetValue = new LinkedHashMap<>();
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Enable Non-Incremental Load",
+      description = "Use non-incremental loading for any tables that do not have suitable keys or offset column" +
+          " overrides defined.  Progress within the table will not be tracked.",
+      displayPosition = 75,
+      defaultValue = "" + ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
+      group = "TABLE"
+  )
+  public boolean enableNonIncremental = ENABLE_NON_INCREMENTAL_DEFAULT_VALUE;
 
   @ConfigDef(
       required = true,

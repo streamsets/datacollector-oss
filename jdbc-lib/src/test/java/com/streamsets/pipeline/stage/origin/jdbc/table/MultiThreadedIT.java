@@ -58,6 +58,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
   private static final String COLUMN_NAME_PREFIX = "col";
   private static final String OFFSET_FIELD_NAME = "off";
   private static final String OFFSET_FIELD_RAW_NAME = "off_raw";
+  private static final int NON_INCREMENTAL_LOAD_TEST_TABLE_NUMBER = 1;
   private static final int NUMBER_OF_TABLES = 10;
   private static final int NUMBER_OF_COLUMNS_PER_TABLE = 1;
   private static final int NUMBER_OF_THREADS = 4;
@@ -151,6 +152,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
     IntStream.range(0, NUMBER_OF_TABLES).forEach(tableNumber -> {
       try (Statement st = connection.createStatement()){
         final boolean multipleRecordsWithSameOffsetTable = tableNumber == 0;
+        final boolean nonIncrementalTestTable = tableNumber == NON_INCREMENTAL_LOAD_TEST_TABLE_NUMBER;
         String tableName = TABLE_NAME_PREFIX + tableNumber;
         Map<String, Field.Type> columnToFieldType = new LinkedHashMap<>();
         Map<String, String> offsetColumns = new LinkedHashMap<>();
@@ -166,7 +168,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
                 tableName,
                 offsetColumns,
                 otherColumns,
-                !multipleRecordsWithSameOffsetTable
+                !multipleRecordsWithSameOffsetTable && !nonIncrementalTestTable
             )
         );
         createRecordsAndExecuteInsertStatements(tableName, st, columnToFieldType, multipleRecordsWithSameOffsetTable);
@@ -197,10 +199,10 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
     private final Map<String, List<Record>> tableToRecords;
     private final Set<String> tablesYetToBeCompletelyRead;
 
-    private MultiThreadedJdbcTestCallback(PushSourceRunner pushSourceRunner) {
+    private MultiThreadedJdbcTestCallback(PushSourceRunner pushSourceRunner, Set<String> tables) {
       this.pushSourceRunner = pushSourceRunner;
       this.tableToRecords = new ConcurrentHashMap<>();
-      this.tablesYetToBeCompletelyRead = new HashSet<>(EXPECTED_TABLES_TO_RECORDS.keySet());
+      this.tablesYetToBeCompletelyRead = new HashSet<>(tables);
     }
 
     private Map<String, List<Record>> waitForAllBatchesAndReset() {
@@ -234,18 +236,27 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
     }
   }
 
+  public void testMultiThreadedRead(TableJdbcSource tableJdbcSource, String... tables) throws Exception {
+    testMultiThreadedRead(tableJdbcSource, new HashSet<>(Arrays.asList(tables)));
+  }
+
   public void testMultiThreadedRead(TableJdbcSource tableJdbcSource) throws Exception {
+    testMultiThreadedRead(tableJdbcSource, EXPECTED_TABLES_TO_RECORDS.keySet());
+  }
+
+  public void testMultiThreadedRead(TableJdbcSource tableJdbcSource, Set<String> tables) throws Exception {
     PushSourceRunner runner = new PushSourceRunner.Builder(TableJdbcDSource.class, tableJdbcSource)
         .addOutputLane("a").build();
     runner.runInit();
-    MultiThreadedJdbcTestCallback multiThreadedJdbcTestCallback = new MultiThreadedJdbcTestCallback(runner);
+    MultiThreadedJdbcTestCallback multiThreadedJdbcTestCallback = new MultiThreadedJdbcTestCallback(runner, tables);
 
     try {
       runner.runProduce(Collections.emptyMap(), 20, multiThreadedJdbcTestCallback);
       Map<String, List<Record>> actualTableToRecords = multiThreadedJdbcTestCallback.waitForAllBatchesAndReset();
-      Assert.assertEquals(EXPECTED_TABLES_TO_RECORDS.size(), actualTableToRecords.size());
+      Assert.assertEquals(tables.size(), actualTableToRecords.size());
 
-      EXPECTED_TABLES_TO_RECORDS.forEach((tableName, expectedRecords) -> {
+      EXPECTED_TABLES_TO_RECORDS.keySet().stream().filter(table -> tables.contains(table)).forEach((tableName) -> {
+        final List<Record> expectedRecords = EXPECTED_TABLES_TO_RECORDS.get(tableName);
         List<Record> actualRecords = actualTableToRecords.get(tableName);
         checkRecords(tableName, expectedRecords, actualRecords, new Comparator<Record>() {
           @Override
@@ -339,6 +350,28 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
         .build();
 
     testMultiThreadedRead(tableJdbcSource);
+  }
+
+  @Test
+  public void testNonIncrementalLoad() throws Exception {
+
+    final String nonIncrementalTable = TABLE_NAME_PREFIX + NON_INCREMENTAL_LOAD_TEST_TABLE_NUMBER;
+    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+        .tablePattern(nonIncrementalTable)
+        .schema(database)
+        .partitionSize("1000")
+        .partitioningMode(PartitioningMode.BEST_EFFORT)
+        .enableNonIncremental(true)
+        .build();
+
+    TableJdbcSource tableJdbcSource = new TableJdbcSourceTestBuilder(JDBC_URL, true, USER_NAME, PASSWORD)
+        .tableConfigBeans(ImmutableList.of(tableConfigBean))
+        .batchTableStrategy(BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE)
+        // 4 threads
+        .numberOfThreads(NUMBER_OF_THREADS)
+        .build();
+
+    testMultiThreadedRead(tableJdbcSource, nonIncrementalTable);
   }
 
   @Test

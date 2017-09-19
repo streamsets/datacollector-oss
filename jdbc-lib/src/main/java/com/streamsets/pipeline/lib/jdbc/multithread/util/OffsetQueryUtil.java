@@ -141,6 +141,21 @@ public final class OffsetQueryUtil {
     }
   }
 
+  public static String buildBaseTableQuery(
+      TableRuntimeContext tableRuntimeContext,
+      String quoteChar
+  ) throws ELEvalException {
+    final TableContext tableContext = tableRuntimeContext.getSourceTableContext();
+    return String.format(
+        TABLE_QUERY_SELECT,
+        TableContextUtil.getQuotedQualifiedTableName(
+            tableContext.getSchema(),
+            tableContext.getTableName(),
+            quoteChar
+        )
+    );
+  }
+
   /**
    * Build query using the lastOffset which is of the form (<column1>=<value1>::<column2>=<value2>::<column3>=<value3>)
    *
@@ -157,16 +172,7 @@ public final class OffsetQueryUtil {
     final TableContext tableContext = tableRuntimeContext.getSourceTableContext();
     StringBuilder queryBuilder = new StringBuilder();
     List<Pair<Integer, String>> paramValueToSet = new ArrayList<>();
-    queryBuilder.append(
-        String.format(
-            TABLE_QUERY_SELECT,
-            TableContextUtil.getQuotedQualifiedTableName(
-                tableContext.getSchema(),
-                tableContext.getTableName(),
-                quoteChar
-            )
-        )
-    );
+    queryBuilder.append(buildBaseTableQuery(tableRuntimeContext, quoteChar));
 
     Map<String, String> storedTableToOffset = getColumnsToOffsetMapFromOffsetFormat(lastOffset);
     final boolean noStoredOffsets = storedTableToOffset.isEmpty();

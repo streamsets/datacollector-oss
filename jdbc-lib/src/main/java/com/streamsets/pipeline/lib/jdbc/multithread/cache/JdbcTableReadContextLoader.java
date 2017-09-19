@@ -24,6 +24,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -55,20 +56,27 @@ public class JdbcTableReadContextLoader extends CacheLoader<TableRuntimeContext,
 
   @Override
   public TableReadContext load(TableRuntimeContext tableRuntimeContext) throws Exception {
-    Pair<String, List<Pair<Integer, String>>> queryAndParamValToSet =
-        OffsetQueryUtil.buildAndReturnQueryAndParamValToSet(
-            tableRuntimeContext,
-            offsets.get(tableRuntimeContext.getOffsetKey()),
-            quoteChar,
-            tableJdbcELEvalContext
-        );
+    Pair<String, List<Pair<Integer, String>>> queryAndParamValToSet;
+    final boolean nonIncremental = tableRuntimeContext.isUsingNonIncrementalLoad();
+    if (nonIncremental) {
+      final String baseTableQuery = OffsetQueryUtil.buildBaseTableQuery(tableRuntimeContext, quoteChar);
+      queryAndParamValToSet = Pair.of(baseTableQuery, Collections.emptyList());
+    } else {
+      queryAndParamValToSet = OffsetQueryUtil.buildAndReturnQueryAndParamValToSet(
+          tableRuntimeContext,
+          offsets.get(tableRuntimeContext.getOffsetKey()),
+          quoteChar,
+          tableJdbcELEvalContext
+      );
+    }
 
     TableReadContext tableReadContext =
         new TableReadContext(
             connectionManager.getConnection(),
             queryAndParamValToSet.getLeft(),
             queryAndParamValToSet.getRight(),
-            fetchSize
+            fetchSize,
+            nonIncremental
         );
 
     //Clear the initial offset after the  query is build so we will not use the initial offset from the next

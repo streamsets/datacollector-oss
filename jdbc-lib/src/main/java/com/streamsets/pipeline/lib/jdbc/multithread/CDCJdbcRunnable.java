@@ -73,7 +73,7 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
   @Override
   public void createAndAddRecord(
       ResultSet rs,
-      TableRuntimeContext tableContext,
+      TableRuntimeContext tableRuntimeContext,
       BatchContext batchContext
   ) throws SQLException, StageException {
     ResultSetMetaData md = rs.getMetaData();
@@ -90,19 +90,19 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
     Map<String, String> columnOffsets = new HashMap<>();
 
     // Generate Offset includes __$start_lsn and __$seqval
-    for (String key : tableContext.getSourceTableContext().getOffsetColumns()) {
+    for (String key : tableRuntimeContext.getSourceTableContext().getOffsetColumns()) {
       columnOffsets.put(key, rs.getString(key));
     }
 
     String offsetFormat = OffsetQueryUtil.getOffsetFormat(columnOffsets);
 
-    Record record = context.createRecord(tableContext.getQualifiedName() + "::" + offsetFormat);
+    Record record = context.createRecord(tableRuntimeContext.getQualifiedName() + "::" + offsetFormat);
     record.set(Field.createListMap(fields));
 
     //Set Column Headers
     JdbcUtil.setColumnSpecificHeaders(
         record,
-        Collections.singleton(tableContext.getSourceTableContext().getTableName()),
+        Collections.singleton(tableRuntimeContext.getSourceTableContext().getTableName()),
         md,
         JDBC_NAMESPACE_HEADER
     );
@@ -121,6 +121,6 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
 
     batchContext.getBatchMaker().addRecord(record);
 
-    offsets.put(tableContext.getOffsetKey(), offsetFormat);
+    offsets.put(tableRuntimeContext.getOffsetKey(), offsetFormat);
   }
 }

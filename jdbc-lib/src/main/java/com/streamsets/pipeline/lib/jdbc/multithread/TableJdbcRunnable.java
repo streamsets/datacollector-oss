@@ -54,7 +54,7 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
   @Override
   public void createAndAddRecord(
       ResultSet rs,
-      TableRuntimeContext tableContext,
+      TableRuntimeContext tableRuntimeContext,
       BatchContext batchContext
   ) throws SQLException, StageException {
     ResultSetMetaData md = rs.getMetaData();
@@ -67,26 +67,35 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
         tableJdbcConfigBean.unknownTypeAction
     );
 
-    final Map<String, String> columnsToOffsets = OffsetQueryUtil.getOffsetsFromColumns(tableContext, fields);
-    columnsToOffsets.forEach((col, off) -> tableContext.recordColumnOffset(col, String.valueOf(off)));
+    // TODO: change offset format here for incremental mode (finished=true if result set end reached)
 
-    String offsetFormat = OffsetQueryUtil.getOffsetFormat(columnsToOffsets);
-    Record record = context.createRecord(tableContext.getQualifiedName() + ":" + offsetFormat);
+    String offsetValue = null;
+
+    if (!tableRuntimeContext.isUsingNonIncrementalLoad()) {
+      final Map<String, String> columnsToOffsets = OffsetQueryUtil.getOffsetsFromColumns(tableRuntimeContext, fields);
+      columnsToOffsets.forEach((col, off) -> tableRuntimeContext.recordColumnOffset(col, String.valueOf(off)));
+
+      offsetValue = OffsetQueryUtil.getOffsetFormat(columnsToOffsets);
+    }
+
+    Record record = context.createRecord(tableRuntimeContext.getQualifiedName() + ":" + offsetValue);
     record.set(Field.createListMap(fields));
 
     //Set Column Headers
     JdbcUtil.setColumnSpecificHeaders(
         record,
-        Collections.singleton(tableContext.getSourceTableContext().getTableName()),
+        Collections.singleton(tableRuntimeContext.getSourceTableContext().getTableName()),
         md,
         JDBC_NAMESPACE_HEADER
     );
 
-    record.getHeader().setAttribute(PARTITION_ATTRIBUTE, tableContext.getDescription());
+    record.getHeader().setAttribute(PARTITION_ATTRIBUTE, tableRuntimeContext.getDescription());
     record.getHeader().setAttribute(THREAD_NUMBER_ATTRIBUTE, String.valueOf(threadNumber));
 
     batchContext.getBatchMaker().addRecord(record);
 
-    offsets.put(tableContext.getOffsetKey(), offsetFormat);
+    if (offsetValue != null) {
+      offsets.put(tableRuntimeContext.getOffsetKey(), offsetValue);
+    }
   }
 }

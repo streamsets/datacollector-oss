@@ -246,6 +246,7 @@ public class TableJdbcSourceTestBuilder {
     private PartitioningMode partitioningMode;
     private String partitionSize;
     private int maxNumActivePartitions;
+    private boolean enableNonIncremental;
 
     public TableConfigBeanTestBuilder() {
       this.schema = "";
@@ -258,6 +259,7 @@ public class TableJdbcSourceTestBuilder {
       this.partitioningMode = TableConfigBean.PARTITIONING_MODE_DEFAULT_VALUE;
       this.partitionSize = TableConfigBean.DEFAULT_PARTITION_SIZE;
       this.maxNumActivePartitions = TableConfigBean.DEFAULT_MAX_NUM_ACTIVE_PARTITIONS;
+      this.enableNonIncremental = TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE;
     }
 
     public TableConfigBeanTestBuilder schema(String schema) {
@@ -300,6 +302,11 @@ public class TableJdbcSourceTestBuilder {
       return this;
     }
 
+    public TableConfigBeanTestBuilder enableNonIncremental(boolean enableNonIncremental) {
+      this.enableNonIncremental = enableNonIncremental;
+      return this;
+    }
+
     public TableConfigBeanTestBuilder partitionSize(String partitionSize) {
       this.partitionSize = partitionSize;
       return this;
@@ -320,6 +327,7 @@ public class TableJdbcSourceTestBuilder {
       tableConfigBean.offsetColumns = offsetColumns;
       tableConfigBean.extraOffsetColumnConditions = extraOffsetColumnConditions;
       tableConfigBean.partitioningMode = partitioningMode;
+      tableConfigBean.enableNonIncremental = enableNonIncremental;
       tableConfigBean.partitionSize = partitionSize;
       tableConfigBean.maxNumActivePartitions = maxNumActivePartitions;
       return tableConfigBean;

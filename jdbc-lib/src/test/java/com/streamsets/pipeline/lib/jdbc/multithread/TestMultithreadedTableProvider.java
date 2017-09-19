@@ -17,15 +17,12 @@ package com.streamsets.pipeline.lib.jdbc.multithread;
 
 import com.google.common.collect.SortedSetMultimap;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
-import com.streamsets.pipeline.lib.jdbc.multithread.MultithreadedTableProvider;
-import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
-import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
-import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
 import com.streamsets.testing.RandomTestUtils;
 import jersey.repackaged.com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -187,6 +184,49 @@ public class TestMultithreadedTableProvider {
   }
 
 
+  // TODO: finish this up
+  @Test
+  public void nonIncremental() throws InterruptedException {
+
+    final String schema = "db";
+    final String table1Name = "table1";
+    final int maxActivePartitions = 100;
+    final int threadNumber = 1;
+
+    TableContext table1 = createTableContext(
+        schema,
+        table1Name,
+        null,
+        TableConfigBean.DEFAULT_PARTITION_SIZE,
+        null,
+        maxActivePartitions,
+        false,
+        true
+    );
+
+    MultithreadedTableProvider provider = createTableProvider(1, table1, BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE);
+
+    assertThat(provider.shouldGenerateNoMoreDataEvent(), equalTo(false));
+
+    TableRuntimeContext part1 = provider.nextTable(threadNumber);
+
+    assertThat(provider.isNewPartitionAllowed(part1), equalTo(false));
+
+    final SortedSetMultimap<TableContext, TableRuntimeContext> activePartitions = provider.getActiveRuntimeContexts();
+    assertThat(activePartitions.size(), equalTo(1));
+
+    provider.reportDataOrNoMoreData(part1, 1000, 1000, false);
+
+    assertThat(provider.shouldGenerateNoMoreDataEvent(), equalTo(false));
+
+    provider.reportDataOrNoMoreData(part1, 900, 1000, true);
+
+    assertThat(provider.shouldGenerateNoMoreDataEvent(), equalTo(true));
+    assertThat(provider.getSharedAvailableTablesQueue(), empty());
+    assertThat(provider.shouldGenerateNoMoreDataEvent(), equalTo(false));
+
+  }
+
   @Test
   public void switchFromPartitionedToNotPartitioned() throws InterruptedException, StageException {
     int batchSize = 10;
@@ -229,7 +269,7 @@ public class TestMultithreadedTableProvider {
     // recreate the table as non-partitioned, and recreate the provider to use it
     TableContext table1NoPartitioning = createTableContext(schema, table1Name, offsetCol, partitionSize, maxActivePartitions, false);
     provider = createTableProvider(numThreads, table1NoPartitioning, BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE);
-    provider.initializeFromV2Offsets(currentOffsets);
+    provider.initializeFromV2Offsets(currentOffsets, new HashMap<>());
 
     part1 = provider.nextTable(threadNumber);
     provider.reportDataOrNoMoreData(part1, 0, batchSize, true);
@@ -334,7 +374,7 @@ public class TestMultithreadedTableProvider {
 
     // ...and the runner
     provider = createTableProvider(numThreads, table1, BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE);
-    provider.initializeFromV2Offsets(runnerOffsets);
+    provider.initializeFromV2Offsets(runnerOffsets, new HashMap<>());
 
     part1 = provider.nextTable(threadNumber);
 
@@ -492,7 +532,19 @@ public class TestMultithreadedTableProvider {
 
     MultithreadedTableProvider provider = createProvider(partitionsAndOffsets.keySet());
 
-    provider.initializeFromV2Offsets(offsets);
+    final HashMap<String, String> newCommitOffsets = new HashMap<>();
+    provider.initializeFromV2Offsets(offsets, newCommitOffsets);
+    assertThat(newCommitOffsets.size(), equalTo(offsets.size()));
+
+    assertLoadedPartitions(partitionsAndOffsets, provider);
+
+    // now test when the offset format is from before non-incremental mode was added
+    provider = createProvider(partitionsAndOffsets.keySet());
+    final HashMap<String, String> newCommitOffsetsPreNonInc = new HashMap<>();
+    final Map<String, String> preNonIncrementalOffsets = buildOffsetMap(partitionsAndOffsets, true);
+    provider.initializeFromV2Offsets(preNonIncrementalOffsets, newCommitOffsetsPreNonInc);
+    assertThat(newCommitOffsetsPreNonInc.size(), equalTo(preNonIncrementalOffsets.size()));
+    assertThat(newCommitOffsetsPreNonInc, equalTo(newCommitOffsets));
 
     assertLoadedPartitions(partitionsAndOffsets, provider);
   }
@@ -519,6 +571,7 @@ public class TestMultithreadedTableProvider {
       Map<TableRuntimeContext, Map<String, String>> partitionsAndOffsets,
       MultithreadedTableProvider provider
   ) {
+    Map<TableRuntimeContext, Map<String, String>> checkPartitionsAndOffsets = new HashMap<>(partitionsAndOffsets);
     final SortedSetMultimap<TableContext, TableRuntimeContext> activePartitions = provider.getActiveRuntimeContexts();
 
     Map<TableContext, Integer> maxPartitionSequenceWithData = new HashMap<>();
@@ -535,10 +588,10 @@ public class TestMultithreadedTableProvider {
 
       assertThat(
           "partitionsAndOffsets did not contain a key seen in provider activeRuntimeContexts",
-          partitionsAndOffsets,
+          checkPartitionsAndOffsets,
           hasKey(partition)
       );
-      Map<String, String> storedOffsets = partitionsAndOffsets.remove(partition);
+      Map<String, String> storedOffsets = checkPartitionsAndOffsets.remove(partition);
       if (storedOffsets == null) {
         assertThat(
             "partition initialStoredOffsets should have been empty",
@@ -561,7 +614,7 @@ public class TestMultithreadedTableProvider {
     }
     assertThat(
         "randomly generated partition in partitionsAndOffsets did not appear in provider activeRuntimeContexts",
-        partitionsAndOffsets.size(),
+        checkPartitionsAndOffsets.size(),
         equalTo(0)
     );
     for (Map.Entry<TableContext, Integer> minSequenceSeenEntry : minPartitionSequenceSeen.entrySet()) {
@@ -598,11 +651,24 @@ public class TestMultithreadedTableProvider {
   }
 
   private static Map<String, String> buildOffsetMap(Map<TableRuntimeContext, Map<String, String>> partitions) {
+    return buildOffsetMap(partitions, false);
+  }
+
+  private static Map<String, String> buildOffsetMap(
+      Map<TableRuntimeContext, Map<String, String>> partitions,
+      final boolean preNonIncremental
+  ) {
     final Map<String, String> offsets = new HashMap<>();
-    partitions.forEach((part, off) -> offsets.put(
-        part.getOffsetKey(),
-        off == null ? null : OffsetQueryUtil.getOffsetFormat(off)
-    ));
+    partitions.forEach((part, off) -> {
+      String offsetKey = part.getOffsetKey();
+      if (preNonIncremental) {
+        // before non-incremental mode, offset keys didn't have the final portion (usingNonIncrementalLoad)
+        // so remove the final term
+        final int index = StringUtils.lastIndexOf(offsetKey, TableRuntimeContext.OFFSET_TERM_SEPARATOR);
+        offsetKey = offsetKey.substring(0, index);
+      }
+      offsets.put(offsetKey, off == null ? null : OffsetQueryUtil.getOffsetFormat(off));
+    });
     return offsets;
   }
 
@@ -653,13 +719,14 @@ public class TestMultithreadedTableProvider {
           Collections.singletonMap(offsetColName, null),
           Collections.singletonMap(offsetColName, String.valueOf(partitionSize)),
           Collections.singletonMap(offsetColName, "0"),
+          TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
           partitioningMode,
           maxNumPartitions,
           null
       );
 
       for (int p = 0; p < maxNumPartitions; p++) {
-        if (partitioned && random.nextBoolean()) {
+        if (partitioned && random.nextBoolean() && !(p == maxNumPartitions - 1 && partitions.isEmpty())) {
           // only create some partitions
           continue;
         }
@@ -675,7 +742,9 @@ public class TestMultithreadedTableProvider {
         }
 
         TableRuntimeContext partition = new TableRuntimeContext(
-            table, partitioned,
+            table,
+            false,
+            partitioned,
             partitioned ? p + 1 : TableRuntimeContext.NON_PARTITIONED_SEQUENCE,
             Collections.singletonMap(offsetColName, String.valueOf(startOffset)),
             Collections.singletonMap(offsetColName, String.valueOf(maxOffset)),
@@ -741,15 +810,41 @@ public class TestMultithreadedTableProvider {
       int maxActivePartitions,
       boolean enablePartitioning
   ) {
+    return createTableContext(
+        schema,
+        tableName,
+        offsetColumn,
+        partitionSize,
+        minOffsetColValue,
+        maxActivePartitions,
+        enablePartitioning,
+        TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE
+    );
+  }
+
+  @NotNull
+  private static TableContext createTableContext(
+      String schema,
+      String tableName,
+      String offsetColumn,
+      String partitionSize,
+      String minOffsetColValue,
+      int maxActivePartitions,
+      boolean enablePartitioning,
+      boolean enableNonIncremental
+  ) {
     LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
-    offsetColumnToType.put(offsetColumn, Types.INTEGER);
     Map<String, String> offsetColumnToStartOffset = new HashMap<>();
     Map<String, String> offsetColumnToPartitionSizes = new HashMap<>();
     Map<String, String> offsetColumnToMinValues = new HashMap<>();
-    if (minOffsetColValue != null) {
-      offsetColumnToMinValues.put(offsetColumn, minOffsetColValue);
+
+    if (offsetColumn != null) {
+      offsetColumnToType.put(offsetColumn, Types.INTEGER);
+      if (minOffsetColValue != null) {
+        offsetColumnToMinValues.put(offsetColumn, minOffsetColValue);
+      }
+      offsetColumnToPartitionSizes.put(offsetColumn, partitionSize);
     }
-    offsetColumnToPartitionSizes.put(offsetColumn, partitionSize);
     String extraOffsetColumnConditions = null;
 
     return new TableContext(
@@ -759,9 +854,11 @@ public class TestMultithreadedTableProvider {
         offsetColumnToStartOffset,
         offsetColumnToPartitionSizes,
         offsetColumnToMinValues,
+        enableNonIncremental,
         enablePartitioning ? PartitioningMode.BEST_EFFORT : PartitioningMode.DISABLED,
         maxActivePartitions,
         extraOffsetColumnConditions
     );
   }
+
 }

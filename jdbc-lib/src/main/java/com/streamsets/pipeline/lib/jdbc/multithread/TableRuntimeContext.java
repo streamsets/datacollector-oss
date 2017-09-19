@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +38,18 @@ public class TableRuntimeContext {
   public static final int NON_PARTITIONED_SEQUENCE = -1;
   private static final Logger LOG = LoggerFactory.getLogger(TableRuntimeContext.class);
 
+  public static final String TABLE_NAME_KEY = "tableName";
+  public static final String PARTITIONED_KEY = "partitioned";
+  public static final String PARTITION_SEQUENCE_KEY = "partitionSequence";
+  public static final String PARTITION_START_OFFSETS_KEY = "partitionStartOffsets";
+  public static final String PARTITION_MAX_OFFSETS_KEY = "partitionMaxOffsets";
+  public static final String USING_NON_INCREMENTAL_LOAD_KEY = "usingNonIncrementalLoad";
+
+  public static final String NON_INCREMENTAL_LOAD_OFFSET_COMPLETED_KEY = "completed";
+
   private final TableContext sourceTableContext;
   private final boolean partitioned;
+  private final boolean usingNonIncrementalLoad;
   private final int partitionSequence;
   private final Map<String, String> startingPartitionOffsets = new HashMap<>();
   private final Map<String, String> maxPartitionOffsets = new HashMap<>();
@@ -64,25 +75,52 @@ public class TableRuntimeContext {
       TableContext sourceTableContext,
       Map<String, String> storedOffsets
   ) {
+    final boolean useNonIncrementalLoad = sourceTableContext.isNonIncrementalLoadRequired();
     if (sourceTableContext.getPartitioningMode() != PartitioningMode.DISABLED && sourceTableContext.isPartitionable()) {
-      return new TableRuntimeContext(sourceTableContext, true, 1, sourceTableContext.getOffsetColumnToStartOffset(), null, storedOffsets);
+      return new TableRuntimeContext(
+          sourceTableContext,
+          useNonIncrementalLoad,
+          true,
+          1,
+          sourceTableContext.getOffsetColumnToStartOffset(),
+          null,
+          storedOffsets
+      );
     } else {
-      return new TableRuntimeContext(sourceTableContext, false, NON_PARTITIONED_SEQUENCE, sourceTableContext.getOffsetColumnToStartOffset(), null, storedOffsets);
+      return new TableRuntimeContext(
+          sourceTableContext,
+          useNonIncrementalLoad,
+          false,
+          NON_PARTITIONED_SEQUENCE,
+          sourceTableContext.getOffsetColumnToStartOffset(),
+          null,
+          storedOffsets
+      );
     }
   }
 
   public TableRuntimeContext(
       TableContext sourceTableContext,
+      boolean usingNonIncrementalLoad,
       boolean partitioned,
       int partitionSequence,
       Map<String, String> startingPartitionOffsets,
       Map<String, String> maxPartitionOffsets
   ) {
-    this(sourceTableContext, partitioned, partitionSequence, startingPartitionOffsets, maxPartitionOffsets, null);
+    this(
+        sourceTableContext,
+        usingNonIncrementalLoad,
+        partitioned,
+        partitionSequence,
+        startingPartitionOffsets,
+        maxPartitionOffsets,
+        null
+    );
   }
 
   TableRuntimeContext(
       TableContext sourceTableContext,
+      boolean usingNonIncrementalLoad,
       boolean partitioned,
       int partitionSequence,
       Map<String, String> startingPartitionOffsets,
@@ -92,6 +130,7 @@ public class TableRuntimeContext {
     Utils.checkNotNull(sourceTableContext, "sourceTableContext");
     this.sourceTableContext = sourceTableContext;
     this.partitioned = partitioned;
+    this.usingNonIncrementalLoad = usingNonIncrementalLoad;
     this.partitionSequence = partitionSequence;
     if (startingPartitionOffsets != null) {
       this.startingPartitionOffsets.putAll(startingPartitionOffsets);
@@ -137,6 +176,10 @@ public class TableRuntimeContext {
 
   public boolean isPartitioned() {
     return partitioned;
+  }
+
+  public boolean isUsingNonIncrementalLoad() {
+    return usingNonIncrementalLoad;
   }
 
   public int getPartitionSequence() {
@@ -206,7 +249,9 @@ public class TableRuntimeContext {
 
   public static SortedSetMultimap<TableContext, TableRuntimeContext> buildPartitionsFromStoredV2Offsets(
       Map<String, TableContext> tableContextMap,
-      Map<String, String> offsets
+      Map<String, String> offsets,
+      Set<TableContext> excludeTables,
+      Map<String, String> newCommitOffsets
   ) throws StageException {
     SortedSetMultimap<TableContext, TableRuntimeContext> returnMap = buildSortedPartitionMap();
     for (Map.Entry<String, String> offsetEntry : offsets.entrySet()) {
@@ -214,33 +259,38 @@ public class TableRuntimeContext {
       final String offsetValue = offsetEntry.getValue();
       LOG.debug("Parsing offset with key {}", offsetKey);
       final String[] parts = StringUtils.splitByWholeSeparator(offsetKey, OFFSET_TERM_SEPARATOR);
-      if (parts.length != 5) {
+      if (parts.length < 5 || parts.length > 6) {
         throw new IllegalStateException(String.format(
-            "Offset was not in correct format.  Expected 5 parts separated by %s to represnt tableName, partitioned," +
-                " partitionSequence, partitionStartOffsets, and partitionMaxOffsets respectively.  Invalid offset" +
-                " key: %s",
+            "Offset was not in correct format.  Expected 5 or 6 parts separated by %s to represent" +
+                " %s, %s, %s, %s, %s, and - optionally - %s, respectively.  Invalid offset key: %s",
             OFFSET_TERM_SEPARATOR,
+            TABLE_NAME_KEY,
+            PARTITIONED_KEY,
+            PARTITION_SEQUENCE_KEY,
+            PARTITION_START_OFFSETS_KEY,
+            PARTITION_MAX_OFFSETS_KEY,
+            USING_NON_INCREMENTAL_LOAD_KEY,
             offsetKey)
         );
       }
 
       final String qualifiedTableName = checkAndReturnOffsetTermValue(
           parts[0],
-          "qualifiedTableName",
+          TABLE_NAME_KEY,
           1,
           offsetKey
       );
 
       final String partitionedStr = checkAndReturnOffsetTermValue(
           parts[1],
-          "partitioned",
+          PARTITIONED_KEY,
           2,
           offsetKey
       );
       final boolean partitioned = Boolean.valueOf(partitionedStr);
       final String partitionSequenceStr = checkAndReturnOffsetTermValue(
           parts[2],
-          "partitionSequence",
+          PARTITION_SEQUENCE_KEY,
           3,
           offsetKey
       );
@@ -259,7 +309,7 @@ public class TableRuntimeContext {
 
       final String partitionStartOffsetsStr = checkAndReturnOffsetTermValue(
           parts[3],
-          "partitionStartOffsets",
+          PARTITION_START_OFFSETS_KEY,
           4,
           offsetKey
       );
@@ -269,7 +319,7 @@ public class TableRuntimeContext {
 
       final String partitionMaxOffsetsStr = checkAndReturnOffsetTermValue(
           parts[4],
-          "partitionMaxOffsets",
+          PARTITION_MAX_OFFSETS_KEY,
           5,
           offsetKey
       );
@@ -277,6 +327,19 @@ public class TableRuntimeContext {
           partitionMaxOffsetsStr
       );
 
+      boolean usingNonIncrementalLoad = false;
+      if (parts.length == 6) {
+        // contains the non-incremental load key as well
+        final String usingNonIncrementalLoadStr = checkAndReturnOffsetTermValue(
+            parts[5],
+            USING_NON_INCREMENTAL_LOAD_KEY,
+            6,
+            offsetKey
+        );
+        usingNonIncrementalLoad = BooleanUtils.toBoolean(usingNonIncrementalLoadStr);
+      }
+
+      // TODO: change code to read offset properly for non-incremental (finished=true) and NOT re-add if finished
       if (!tableContextMap.containsKey(qualifiedTableName)) {
         // TODO: something stronger here?  basically we will throw away an offset for a no-longer-configured table
         LOG.warn(String.format(
@@ -288,21 +351,61 @@ public class TableRuntimeContext {
       } else {
         final TableContext tableContext = tableContextMap.get(qualifiedTableName);
 
-        final Map<String, String> initialStoredOffsets = OffsetQueryUtil.validateStoredAndSpecifiedOffset(
-            tableContext,
-            offsetValue
-        );
+        TableRuntimeContext partition = null;
+        if (usingNonIncrementalLoad) {
+          boolean completed = false;
+          final Map<String, String> offsetMap = OffsetQueryUtil.getOffsetsFromSourceKeyRepresentation(offsetValue);
+          final String checkStateMsg = String.format(
+              "offset value for table using non-incremental load (key \"%s\") should be a map with at most a" +
+                  " single key called %s (which has a boolean value), but was: %s",
+              offsetKey,
+              NON_INCREMENTAL_LOAD_OFFSET_COMPLETED_KEY,
+              offsetValue
+          );
+          Utils.checkState(offsetMap.size() <= 1, checkStateMsg);
+          if (!offsetMap.isEmpty()) {
+            Utils.checkState(offsetMap.containsKey(NON_INCREMENTAL_LOAD_OFFSET_COMPLETED_KEY), checkStateMsg);
+            completed = Boolean.valueOf(offsetMap.get(NON_INCREMENTAL_LOAD_OFFSET_COMPLETED_KEY));
+          }
 
-        final TableRuntimeContext partition = new TableRuntimeContext(
-            tableContext,
-            partitioned,
-            partSeq,
-            startOffsets,
-            maxOffsets,
-            initialStoredOffsets
-        );
+          if (completed) {
+            LOG.info(
+                "Table {} was marked completed by a non-incremental load, so it will not be added again unless the" +
+                    " origin is reset",
+                qualifiedTableName
+            );
+            excludeTables.add(tableContext);
+          } else {
+            partition = new TableRuntimeContext(
+                tableContext,
+                usingNonIncrementalLoad,
+                partitioned,
+                partSeq,
+                startOffsets,
+                maxOffsets,
+                Collections.emptyMap()
+            );
+          }
+        } else {
+          final Map<String, String> initialStoredOffsets = OffsetQueryUtil.validateStoredAndSpecifiedOffset(
+              tableContext,
+              offsetValue
+          );
+          partition = new TableRuntimeContext(
+              tableContext,
+              usingNonIncrementalLoad,
+              partitioned,
+              partSeq,
+              startOffsets,
+              maxOffsets,
+              initialStoredOffsets
+          );
+        }
 
-        returnMap.put(tableContext, partition);
+        if (partition != null) {
+          newCommitOffsets.put(partition.getOffsetKey(), offsetValue);
+          returnMap.put(tableContext, partition);
+        }
       }
     }
 
@@ -323,11 +426,27 @@ public class TableRuntimeContext {
 
   public String getOffsetKey() {
     final StringBuilder sb = new StringBuilder();
-    appendOffsetTerm(sb, "tableName", sourceTableContext.getQualifiedName(), false);
-    appendOffsetTerm(sb, "partitioned", String.valueOf(isPartitioned()), false);
-    appendOffsetTerm(sb, "partitionSequence", String.valueOf(getPartitionSequence()), false);
-    appendOffsetTerm(sb, "partitionStartOffsets", OffsetQueryUtil.getSourceKeyOffsetsRepresentation(startingPartitionOffsets), false);
-    appendOffsetTerm(sb, "partitionMaxOffsets", OffsetQueryUtil.getSourceKeyOffsetsRepresentation(maxPartitionOffsets), true);
+    appendOffsetTerm(sb, TABLE_NAME_KEY, sourceTableContext.getQualifiedName(), false);
+    appendOffsetTerm(sb, PARTITIONED_KEY, String.valueOf(isPartitioned()), false);
+    appendOffsetTerm(sb, PARTITION_SEQUENCE_KEY, String.valueOf(getPartitionSequence()), false);
+    appendOffsetTerm(
+        sb,
+        PARTITION_START_OFFSETS_KEY,
+        OffsetQueryUtil.getSourceKeyOffsetsRepresentation(startingPartitionOffsets),
+        false
+    );
+    appendOffsetTerm(
+        sb,
+        PARTITION_MAX_OFFSETS_KEY,
+        OffsetQueryUtil.getSourceKeyOffsetsRepresentation(maxPartitionOffsets),
+        false
+    );
+    appendOffsetTerm(
+        sb,
+        USING_NON_INCREMENTAL_LOAD_KEY,
+        String.valueOf(usingNonIncrementalLoad),
+        true
+    );
     return sb.toString();
   }
 
@@ -370,6 +489,7 @@ public class TableRuntimeContext {
 
     final TableRuntimeContext nextPartition = new TableRuntimeContext(
         lastPartition.sourceTableContext,
+        lastPartition.usingNonIncrementalLoad,
         lastPartition.partitioned,
         newPartitionSequence,
         nextStartingOffsets,
@@ -396,15 +516,19 @@ public class TableRuntimeContext {
       return false;
     }
     TableRuntimeContext that = (TableRuntimeContext) o;
-    return partitioned == that.partitioned && partitionSequence == that.partitionSequence && Objects.equals
-        (sourceTableContext,
+    return
+        partitioned == that.partitioned &&
+        usingNonIncrementalLoad == that.usingNonIncrementalLoad &&
+        partitionSequence == that.partitionSequence &&
+        Objects.equals(
+            sourceTableContext,
             that.sourceTableContext
         );
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(sourceTableContext, partitioned, partitionSequence);
+    return Objects.hash(sourceTableContext, partitioned, partitionSequence, usingNonIncrementalLoad);
   }
 
   public String getDescription() {

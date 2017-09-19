@@ -179,7 +179,7 @@ public final class TableContextUtil {
       }
     } else {
       List<String> primaryKeys = JdbcUtil.getPrimaryKeys(connection, schemaName, tableName);
-      if (primaryKeys.isEmpty()) {
+      if (primaryKeys.isEmpty() && !tableConfigBean.enableNonIncremental) {
         issues.add(context.createConfigIssue(
             Groups.TABLE.name(),
             TableJdbcConfigBean.TABLE_CONFIG,
@@ -248,6 +248,7 @@ public final class TableContextUtil {
         offsetColumnToStartOffset,
         offsetAdjustments,
         offsetColumnMinValues,
+        tableConfigBean.enableNonIncremental,
         tableConfigBean.partitioningMode,
         tableConfigBean.maxNumActivePartitions,
         tableConfigBean.extraOffsetColumnConditions
@@ -709,6 +710,7 @@ public final class TableContextUtil {
         offsetColumnToStartOffset,
         offsetAdjustments,
         offsetColumnMinValues,
+        TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
         partitioningMode,
         maxNumActivePartitions,
         extraOffsetColumnConditions
@@ -743,6 +745,7 @@ public final class TableContextUtil {
         offsetColumnToStartOffset,
         offsetAdjustments,
         offsetColumnMinValues,
+        TableConfigBean.ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
         partitioningMode,
         maxNumActivePartitions,
         extraOffsetColumnConditions

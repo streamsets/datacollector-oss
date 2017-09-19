@@ -109,7 +109,7 @@ public final class MultithreadedTableProvider {
 
     // always construct initial values for partition queue based on table contexts
     // if stored offsets come into play, those will be handled by a subsequent invocation
-    generateInitialPartitionsInSharedQueue(false, null);
+    generateInitialPartitionsInSharedQueue(false, null, null);
 
     this.tablesWithNoMoreData = Sets.newConcurrentHashSet();
     this.threadNumToMaxTableSlots = threadNumToMaxTableSlots;
@@ -126,20 +126,26 @@ public final class MultithreadedTableProvider {
         offsets,
         offsetKeysToRemove
     );
-    generateInitialPartitionsInSharedQueue(true, v1Offsets);
+    generateInitialPartitionsInSharedQueue(true, v1Offsets, null);
 
     initializeMaxPartitionWithDataPerTable(offsets);
     return offsetKeysToRemove;
   }
 
-  public void initializeFromV2Offsets(Map<String, String> offsets) throws StageException {
+  public void initializeFromV2Offsets(
+      Map<String, String> offsets,
+      Map<String, String> newCommitOffsets
+  ) throws StageException {
+    final Set<TableContext> excludeTables = new HashSet<>();
     SortedSetMultimap<TableContext, TableRuntimeContext> v2Offsets = TableRuntimeContext.buildPartitionsFromStoredV2Offsets(
         tableContextMap,
-        offsets
+        offsets,
+        excludeTables,
+        newCommitOffsets
     );
     handlePartitioningTurnedOffOrOn(v2Offsets);
-    generateInitialPartitionsInSharedQueue(true, v2Offsets);
-    initializeMaxPartitionWithDataPerTable(offsets);
+    generateInitialPartitionsInSharedQueue(true, v2Offsets, excludeTables);
+    initializeMaxPartitionWithDataPerTable(newCommitOffsets);
   }
 
   /**
@@ -224,6 +230,7 @@ public final class MultithreadedTableProvider {
 
       final TableRuntimeContext nextPartition = new TableRuntimeContext(
           sourceTableContext,
+          lastPartition.isUsingNonIncrementalLoad(),
           (lastPartition.isPartitioned() && !partitioningTurnedOff) || partitioningTurnedOn,
           newPartitionSequence,
           nextStartingOffsets,
@@ -237,7 +244,8 @@ public final class MultithreadedTableProvider {
   @VisibleForTesting
   void generateInitialPartitionsInSharedQueue(
       boolean fromStoredOffsets,
-      Multimap<TableContext, TableRuntimeContext> reconstructedPartitions
+      Multimap<TableContext, TableRuntimeContext> reconstructedPartitions,
+      Set<TableContext> excludeTables
   ) {
     sharedAvailableTablesQueue.clear();
     activeRuntimeContexts.clear();
@@ -245,6 +253,10 @@ public final class MultithreadedTableProvider {
       //create the initial partition for each table
       final TableContext tableContext = tableContextMap.get(qualifiedTableName);
 
+      if (excludeTables != null && excludeTables.contains(tableContext)) {
+        LOG.debug("Not adding table {} to table provider since it was excluded", qualifiedTableName);
+        continue;
+      }
       Collection<TableRuntimeContext> partitions = null;
       if (fromStoredOffsets) {
         partitions = reconstructedPartitions.get(tableContext);
@@ -371,8 +383,8 @@ public final class MultithreadedTableProvider {
       synchronized (partitionStateLock) {
         keepPartitioningIfNeeded(headPartition);
       }
-    } else if (LOG.isDebugEnabled()) {
-      LOG.debug("No item at head of shared partition queue");
+    } else if (LOG.isTraceEnabled()) {
+      LOG.trace("No item at head of shared partition queue");
     }
   }
 
@@ -592,20 +604,20 @@ public final class MultithreadedTableProvider {
   }
 
   @VisibleForTesting
-  void releaseOwnedTable(TableRuntimeContext tableContext, int threadNumber) {
-    final TableContext sourceContext = tableContext.getSourceTableContext();
+  void releaseOwnedTable(TableRuntimeContext tableRuntimeContext, int threadNumber) {
+    final TableContext sourceContext = tableRuntimeContext.getSourceTableContext();
 
     String tableName = sourceContext.getQualifiedName();
     LOG.trace(
         "Thread '{}' has released ownership for table '{}'",
         getCurrentThreadName(),
-        tableContext.getDescription()
+        tableRuntimeContext.getDescription()
     );
 
     //Remove the last element (because we put the current processing element at the tail of dequeue)
     TableRuntimeContext removedPartition = getOwnedTablesQueue().pollLast();
     Utils.checkState(
-        tableContext.equals(removedPartition),
+        tableRuntimeContext.equals(removedPartition),
         Utils.format(
             "Expected table to be remove '{}', Found '{}' at the last of the queue",
             tableName,
@@ -615,6 +627,12 @@ public final class MultithreadedTableProvider {
     synchronized (partitionStateLock) {
       boolean containsActiveEntry = activeRuntimeContexts.containsEntry(sourceContext, removedPartition);
       if (containsActiveEntry || sharedAvailableTablesQueue.isEmpty()) {
+        if (tableRuntimeContext.isUsingNonIncrementalLoad()) {
+          if (LOG.isDebugEnabled()) {
+            LOG.debug("Not re-adding table {} because it is non-incremental");
+          }
+          return;
+        }
         try {
           sharedAvailableTablesQueue.put(removedPartition);
         } catch (InterruptedException e) {
@@ -645,13 +663,13 @@ public final class MultithreadedTableProvider {
    * if there is data/no more data on the current table
    */
   public void reportDataOrNoMoreData(
-      TableRuntimeContext tableContext,
+      TableRuntimeContext tableRuntimeContext,
       int recordCount,
       int batchSize,
       boolean resultSetEndReached
   ) {
 
-    final TableContext sourceContext = tableContext.getSourceTableContext();
+    final TableContext sourceContext = tableRuntimeContext.getSourceTableContext();
 
     // we need to account for the activeRuntimeContexts here
     // if there are still other active contexts in process, then this should do "nothing"
@@ -660,29 +678,29 @@ public final class MultithreadedTableProvider {
     final boolean noMoreData = recordCount == 0 || resultSetEndReached;
 
     if (noMoreData) {
-      tableContext.setMarkedNoMoreData(true);
+      tableRuntimeContext.setMarkedNoMoreData(true);
     }
 
     if (recordCount > 0) {
-      maxPartitionWithDataPerTable.put(sourceContext, tableContext.getPartitionSequence());
+      maxPartitionWithDataPerTable.put(sourceContext, tableRuntimeContext.getPartitionSequence());
     }
 
-    boolean tableExhausted = removePartitionIfNeeded(tableContext);
+    boolean tableExhausted = removePartitionIfNeeded(tableRuntimeContext);
 
     if (noMoreData) {
       if (tableExhausted) {
-        tablesWithNoMoreData.add(tableContext.getSourceTableContext());
+        tablesWithNoMoreData.add(tableRuntimeContext.getSourceTableContext());
       }
     } else {
       //When we see a table with data, we mark isNoMoreDataEventGeneratedAlready to false
       //so we can generate event again if we don't see data from all tables.
       isNoMoreDataEventGeneratedAlready = false;
-      tablesWithNoMoreData.remove(tableContext.getSourceTableContext());
+      tablesWithNoMoreData.remove(tableRuntimeContext.getSourceTableContext());
     }
     if (LOG.isTraceEnabled()) {
       LOG.trace(
           "Just released table {}; Number of Tables With No More Data {}",
-          tableContext.getDescription(),
+          tableRuntimeContext.getDescription(),
           tablesWithNoMoreData.size()
       );
     }

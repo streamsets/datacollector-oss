@@ -38,6 +38,7 @@ public final class TableReadContext {
   private final PreparedStatement ps;
   private final String query;
   private final ResultSet rs;
+  private final boolean neverEvict;
   private int numberOfBatches;
 
   public TableReadContext(
@@ -45,6 +46,16 @@ public final class TableReadContext {
       String query,
       List<Pair<Integer, String>> paramValuesToSet,
       int fetchSize
+  ) throws SQLException, StageException {
+    this(connection, query, paramValuesToSet, fetchSize, false);
+  }
+
+  public TableReadContext(
+      Connection connection,
+      String query,
+      List<Pair<Integer, String>> paramValuesToSet,
+      int fetchSize,
+      boolean neverEvict
   ) throws SQLException, StageException {
     this.query = query;
     ps = connection.prepareStatement(query);
@@ -54,6 +65,7 @@ public final class TableReadContext {
     LOGGER.debug("Parameter Types And Values {}", paramValuesToSet);
     rs = ps.executeQuery();
     numberOfBatches = 0;
+    this.neverEvict = neverEvict;
   }
 
   private void setPreparedStParameters(List<Pair<Integer, String>> paramValuesToSet) throws SQLException, StageException {
@@ -116,6 +128,10 @@ public final class TableReadContext {
 
   public void setNumberOfBatches(int numberOfBatches) {
     this.numberOfBatches = numberOfBatches;
+  }
+
+  public boolean isNeverEvict() {
+    return neverEvict;
   }
 
   public void destroy() {
