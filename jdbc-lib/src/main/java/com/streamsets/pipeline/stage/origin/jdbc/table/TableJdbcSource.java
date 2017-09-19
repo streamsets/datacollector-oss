@@ -352,6 +352,7 @@ public class TableJdbcSource extends BasePushSource {
 
       ExecutorCompletionService<Future> completionService = new ExecutorCompletionService<>(executorService);
 
+      List<Future> allFutures = new LinkedList<>();
       IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
         JdbcBaseRunnable runnable = new JdbcRunnableBuilder()
             .context(getContext())
@@ -364,12 +365,33 @@ public class TableJdbcSource extends BasePushSource {
             .tableJdbcConfigBean(tableJdbcConfigBean)
             .build();
         toBeInvalidatedThreadCaches.add(runnable.getTableReadContextCache());
-        completionService.submit(runnable, null);
+        allFutures.add(completionService.submit(runnable, null));
       });
 
       while (!getContext().isStopped()) {
         checkWorkerStatus(completionService);
         JdbcUtil.generateNoMoreDataEventIfNeeded(tableOrderProvider.shouldGenerateNoMoreDataEvent(), getContext());
+      }
+
+      for (Future future : allFutures) {
+        try {
+          future.get();
+        } catch (ExecutionException e) {
+          LOG.error(
+              "ExecutionException when attempting to wait for all table JDBC runnables to complete, after context was" +
+                  " stopped: {}",
+              e.getMessage(),
+              e
+          );
+        } catch (InterruptedException e) {
+          LOG.error(
+              "InterruptedException when attempting to wait for all table JDBC runnables to complete, after context " +
+                  "was stopped: {}",
+              e.getMessage(),
+              e
+          );
+          Thread.currentThread().interrupt();
+        }
       }
     } finally {
       shutdownExecutorIfNeeded();
