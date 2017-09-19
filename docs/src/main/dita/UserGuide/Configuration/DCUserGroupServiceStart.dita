@@ -21,16 +21,19 @@
  <title>User and Group for Service Start</title>
     <shortdesc>When you run <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
-        service, you must create a system user and group named sdc, or you must edit the values of
-        the SDC_USER and SDC_GROUP environment variables to point to an existing system user or
-        group.</shortdesc>
+        service,  <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs
+        as the system user account and group defined in the SDC_USER and SDC_GROUP environment
+        variables. The default system user and group are named sdc.</shortdesc>
  <conbody>
      <p><indexterm>SDC_USER<indexterm>environment
                     variable</indexterm></indexterm><indexterm>SDC_GROUP<indexterm>environment
                     variable</indexterm></indexterm><indexterm>environment
                     variables<indexterm>system user</indexterm></indexterm><indexterm>environment
-                    variables<indexterm>system group</indexterm></indexterm>The
-                <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file includes the following user and
+                    variables<indexterm>system group</indexterm></indexterm>You must create a system
+            user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP
+            environment variables to point to an existing system user or group. </p>
+        <p>The <codeph>$SDC_DIST/libexec/sdcd-env.sh</codeph> file includes the following user and
             group environment variables: <ul id="ul_gpg_4jt_3v">
                 <li>SDC_USER - Defines the system user used to run <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -39,5 +42,12 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> as a service. Default is sdc.</li>
             </ul></p>
+        <note>When you run <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            manually, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            runs as the system user account logged into the command prompt when the launch command
+            is run. To run as another user account, see <xref
+                href="../Installation/Installing_the_DC.dita#task_bt1_zcp_kq"/>.</note>
  </conbody>
 </concept>

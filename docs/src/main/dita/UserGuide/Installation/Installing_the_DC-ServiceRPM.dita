@@ -21,7 +21,7 @@
     <title>Installing from the RPM Package</title>
     <shortdesc>When you install from the RPM package, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
-        the default directories and the default system user and group. </shortdesc>
+        the default directories and runs as the default system user and group. </shortdesc>
     <taskbody>
         <prereq>
             <p>The default system user and group are named sdc. If an sdc user and an sdc group do

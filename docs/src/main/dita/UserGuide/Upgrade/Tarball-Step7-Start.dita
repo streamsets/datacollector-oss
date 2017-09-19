@@ -28,12 +28,18 @@
                 <dt>To start <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> manually</dt>
-                <dd>Use the following
-                    command:<codeblock>$SDC_DIST/bin/streamsets dc</codeblock></dd>
-                <dd>Or, use the following command to launch <ph
+                <dd>Use the following command to run <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> and run it in the
+                    /> as the system user account logged into the command
+                    prompt:<codeblock>$SDC_DIST/bin/streamsets dc</codeblock></dd>
+                <dd>Or, use the following command to run <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> in the
                     background:<codeblock>nohup $SDC_DIST/bin/streamsets dc &amp;</codeblock></dd>
+                <dd>Use the following command to run <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> as another system user
+                    account:<codeblock>sudo -u &lt;user> $SDC_DIST/bin/streamsets dc</codeblock></dd>
             </dlentry>
             <dlentry>
                 <dt>To start <ph

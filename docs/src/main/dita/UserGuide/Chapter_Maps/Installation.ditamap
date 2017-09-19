@@ -81,6 +81,7 @@
     <topicref href="../Installation/MapR-PrerequisitesStep2Interactive.dita"/>
     <topicref href="../Installation/MapR-PrerequisitesStep2NonInteractive.dita"/>
    </topicref>
+   <topicref href="../Installation/MapR-PrerequisitesStep3.dita"/>
   </topicref>
   <topicref href="../Installation/CreateAnotherDC.dita" chunk="to-content">
    <topicmeta>
