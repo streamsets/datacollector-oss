@@ -72,7 +72,7 @@ public class OpcUaClientSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Mode",
+      label = "Processing Mode",
       defaultValue = "POLLING",
       displayPosition = 50,
       group = "OPC_UA"
@@ -148,9 +148,9 @@ public class OpcUaClientSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Node Id Configs File Path",
+      label = "NodeId File Path",
       defaultValue = "${runtime:loadResource('nodeIdConfigs.json', false)}",
-      description = "Specify the OPC UA resource URL",
+      description = "File path to the NodeId file. Or an expression that points to the correct runtime resource file.",
       displayPosition = 220,
       group = "NODE_IDS",
       dependsOn = "nodeIdFetchMode",
@@ -202,7 +202,7 @@ public class OpcUaClientSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Refresh Node IDs Interval (s)",
+      label = "NodeId Refresh Interval (sec)",
       description = "Refresh interval for updating Node IDs by browsing root Node ID.",
       defaultValue = "3600",
       displayPosition = 240,
