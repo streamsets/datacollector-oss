@@ -473,7 +473,7 @@
         "dataRules": "Data Rules",
         "deleteRuleTooltip": "Delete Rule",
         "emailIds": "Email IDs",
-        "enterEmailIdMsg": "Enter Email IDs in Pipeline Configuration > Email IDs tab",
+        "enterEmailIdMsg": ". Enter Email IDs in Pipeline Configuration Email IDs tab",
         "enableAlert": "Enable Alert",
         "enableMeter": "Enable Meter",
         "enabled": "Active",
