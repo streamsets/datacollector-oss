@@ -25,10 +25,10 @@
         previous version. </shortdesc>
     <taskbody>
         <context>
-            <p>For example, let's assume that the previous version of <ph
+            <p>For example, your previous <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> used the directory <codeph>/var/lib/sdc</codeph> to store the data files for
-                pipeline configuration and run details. When you upgrade, you configure the new
+                /> version used the directory <codeph>/var/lib/sdc</codeph> to store the data files
+                for pipeline configuration and run details. When you upgrade, you configure the new
                 version of <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to use the same working directory <codeph>/var/lib/sdc</codeph> for the data
@@ -74,7 +74,7 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
-                                        configuration directory to <codeph>/etc/sdc2600</codeph>,
+                                        configuration directory to <codeph>/etc/sdc2700</codeph>,
                                         use the value <codeph>/etc/sdc</codeph>.</entry>
                                 </row>
                                 <row>

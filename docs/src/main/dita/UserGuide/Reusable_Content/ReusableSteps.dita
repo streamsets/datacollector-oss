@@ -5178,6 +5178,7 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</codeblock></info>
                     <ul>
                         <li>The appropriate realm.properties file, based on the authentication type
                             that you use.</li>
+                        <li>credential stores properties file</li>
                         <li><codeph>email-password.txt</codeph></li>
                         <li>keystore files</li>
                         <li>LDAP files</li>
@@ -5186,8 +5187,9 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</codeblock></info>
                         <li>Vault properties file<p>As of version 2.7.0.0, most of the Vault
                                 configuration properties have been moved to the new credential
                                 stores properties file. The properties use the same name, with an
-                                added "credentialStore.vault.config" prefix. Copy any values that
-                                you customized in the previous Vault properties file into the same
+                                added "credentialStore.vault.config" prefix. If you are upgrading
+                                from a version earlier than 2.7.0.0, copy any values that you
+                                customized in the previous Vault properties file into the same
                                 property names in the credential stores properties file.</p></li>
                     </ul>
                 </info>

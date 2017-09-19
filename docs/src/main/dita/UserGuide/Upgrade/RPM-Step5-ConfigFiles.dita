@@ -52,7 +52,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> instance requires to issue authenticated requests to <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"
-                    />. As a result, we'll need <ph
+                    />. As a result, you'll need <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> to use the previous version of the file.</info>
             </step>

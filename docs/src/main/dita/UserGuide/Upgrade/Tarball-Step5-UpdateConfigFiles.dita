@@ -23,17 +23,18 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         version can include new properties and configuration files required for <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        start or function properly. In the previous step, we updated the environment configuration
+        start or function properly. In the previous step, you updated the environment configuration
         file so that the new version of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
         the new configuration files stored in the <codeph>$SDC_CONF</codeph> directory. In this
-        step, we’ll compare the previous and new versions of the configuration files, and update the
-        new files as needed with the same customized property values.</shortdesc>
+        step, you’ll compare the previous and new versions of the configuration files, and update
+        the new files as needed with the same customized property values.</shortdesc>
     <taskbody>
         <context>
-            <p>For example, we'll compare the files in the /etc/sdc2600 directory with the files in
-                the /etc/sdc directory. We'll update the new files in the /etc/sdc directory with
-                any customizations made in the previous files in the /etc/sdc2600 directory.</p>
+            <p>For example when upgrading from version 2.7.0.0, you'd compare the files in your back
+                up directory, /etc/sdc2700, with the files in the /etc/sdc directory. Then update
+                the new files in the /etc/sdc directory with any customizations made in the previous
+                files in the /etc/sdc2700 directory.</p>
         </context>
         <steps>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/MainConfigFile">
@@ -62,7 +63,7 @@
                             that this <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             /> instance requires to issue authenticated requests to DPM. As a
-                            result, we'll need <ph
+                            result, you'll need <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             /> to use the previous version of the file.</info>
                     </substep>

@@ -33,9 +33,9 @@
                     /> directory for runtime resource files.</li>
             </ul>
         </p>
-        <p>For example, if you are upgrading version 2.6.0.0, copy the <ph
+        <p>For example, if you are upgrading version 2.7.0.0, copy the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration directory and rename it as follows: <codeph>/etc/sdc2600</codeph>.</p>
+            configuration directory and rename it as follows: <codeph>/etc/sdc2700</codeph>.</p>
         <p>If you need to roll back to the previous version, you must restore the previous
             directories on every Cloudera Manager node that runs <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

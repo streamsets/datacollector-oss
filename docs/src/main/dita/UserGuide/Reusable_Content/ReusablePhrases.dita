@@ -40,8 +40,8 @@
             <p><ph id="HiveDrift-ph">Drift Synchronization Solution for Hive</ph></p>
             <draft-comment author="alisontaylor">The following ph's for the current version are used
                   in the install and upgrade steps:</draft-comment>
-            <p><ph id="version">2.7.0.0</ph></p>
-            <p><ph id="version_DirName">2700</ph></p>
+            <p><ph id="version">2.8.0.0</ph></p>
+            <p><ph id="version_DirName">2800</ph></p>
             <p>
                   <draft-comment author="Loretta">Data Collector max buffer size for records,
                         overridden by the parser.limit SDC property. used in Configuring SDC and
