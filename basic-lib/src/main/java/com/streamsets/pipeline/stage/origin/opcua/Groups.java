@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   OPC_UA("OPC UA"),
-  NODE_IDS("Node IDs"),
+  NODE_IDS("NodeIds"),
   CHANNEL_CONFIG("Channel Config"),
   SECURITY("Security")
   ;
