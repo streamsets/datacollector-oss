@@ -94,6 +94,15 @@
           <dd>For example, ${str:indexOf("tomorrow", "row")} returns: 5.</dd>
         </dlentry>
         <dlentry>
+          <dt>str:isNullOrEmpty(&lt;string>)</dt>
+          <dd>Returns true or false based on whether a string is null or is the empty string.</dd>
+          <dd>Uses the following argument: <ul id="ul_y42_sgn_gbb">
+              <li>string - The string to evaluate.</li>
+            </ul></dd>
+          <dd>For example, ${str:isNullOrEmpty(record:value("/work_phone"))} returns true if the
+            work_phone field is the empty string.</dd>
+        </dlentry>
+        <dlentry>
           <dt>str:length(&lt;string>)</dt>
           <dd>Returns the length of a string.</dd>
           <dd>Return type: Integer.</dd>
