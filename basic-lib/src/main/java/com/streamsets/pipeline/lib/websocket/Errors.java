@@ -22,7 +22,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum Errors implements ErrorCode {
   WEB_SOCKET_01("Failed to connect : {}"),
   WEB_SOCKET_02("Invalid Resource URI. Reason : {}"),
-  WEB_SOCKET_03("Error when disconnecting MQTT Client. Reason: {}"),
+  WEB_SOCKET_03("Error when disconnecting WebSocket Client. Reason: {}"),
   ;
 
   private final String msg;

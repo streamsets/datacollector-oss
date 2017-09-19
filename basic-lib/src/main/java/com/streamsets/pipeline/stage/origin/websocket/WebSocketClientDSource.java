@@ -28,11 +28,11 @@ import com.streamsets.pipeline.lib.websocket.Groups;
 @StageDef(
     version = 1,
     label = "WebSocket Client",
-    description = "Uses an WebSocket client to subscribe to a channel",
+    description = "Uses a WebSocket client to read from a resource URL",
     icon = "websockets.png",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     recordsByRef = true,
-    onlineHelpRefUrl = "TODO"
+    onlineHelpRefUrl = "index.html#Origins/WebSocketClient.html#task_u4n_rzk_fbb"
 )
 @HideConfigs({
     "conf.dataFormatConfig.jsonContent",

@@ -76,7 +76,7 @@ public class WebSocketClientSourceConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
-      description = "MQTT payload data format",
+      description = "WebSocket payload data format",
       displayPosition = 1,
       group = "DATA_FORMAT"
   )
