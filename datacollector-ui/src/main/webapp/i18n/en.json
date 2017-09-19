@@ -26,6 +26,7 @@
       "dpm": "Dataflow Performance Manager",
       "help": {
         "about": "About",
+        "askStreamSets": "Ask StreamSets",
         "chatOnSlack": "Chat on Slack",
         "joinUserGroup": "Join our User Group",
         "main": "Help",
