@@ -24,8 +24,9 @@ import com.streamsets.datacollector.restapi.StageLibraryResource;
 import com.streamsets.datacollector.restapi.StageLibraryResourceConfig;
 import com.streamsets.datacollector.restapi.StartupAuthorizationFeature;
 import com.streamsets.datacollector.restapi.WebServerAgentCondition;
-import com.streamsets.lib.security.http.CredentialsBeanJson;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.CredentialsBeanJson;
+import org.apache.commons.lang3.StringUtils;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -46,7 +47,9 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.security.Signature;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 import java.util.Properties;
 
 import static com.streamsets.datacollector.publicrestapi.CredentialsDeploymentResource.DPM_AGENT_PUBLIC_KEY;
@@ -113,10 +116,16 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
     Signature sig = Signature.getInstance("SHA256withRSA");
     sig.initSign(keys.getPrivate());
     sig.update(token.getBytes(Charsets.UTF_8));
+    List<String> labels = Arrays.asList("deployment-prod-1", "deployment-prod-2");
     CredentialsBeanJson json =
-        new CredentialsBeanJson(token, "streamsets/172.1.1.0@EXAMPLE.COM",
+        new CredentialsBeanJson(token,
+            "streamsets/172.1.1.0@EXAMPLE.COM",
             Base64.getEncoder().encodeToString("testKeytab".getBytes(Charsets.UTF_8)),
-            Base64.getEncoder().encodeToString(sig.sign()), "https://dpm.streamsets.com:18631");
+            Base64.getEncoder().encodeToString(sig.sign()),
+            "https://dpm.streamsets.com:18631",
+            Arrays.asList("deployment-prod-1", "deployment-prod-2"),
+            "deployment1:org"
+        );
 
     try {
       response = target("/v1/deployment/deployCredentials").request().post(Entity.json(json));
@@ -147,6 +156,10 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
       Assert.assertEquals(Configuration.FileRef.PREFIX + "application-token.txt" + Configuration.FileRef.SUFFIX,
           dpmProps.getProperty("dpm.appAuthToken"));
       Assert.assertEquals("https://dpm.streamsets.com:18631", dpmProps.getProperty("dpm.base.url"));
+
+      Assert.assertEquals(StringUtils.join(labels.toArray(), ","), dpmProps.getProperty(CredentialsDeploymentResource.DPM_REMOTE_CONTROL_JOB_LABELS));
+      Assert.assertEquals("deployment1:org", dpmProps.getProperty(CredentialsDeploymentResource.DPM_DEPLOYMENT_ID));
+
 
       File tokenFile = new File(RuntimeInfoTestInjector.confDir, "application-token.txt");
       try (FileInputStream fr = new FileInputStream(tokenFile)) {

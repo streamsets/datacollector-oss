@@ -17,11 +17,11 @@ package com.streamsets.datacollector.main;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.security.SecurityContext;
+import com.streamsets.datacollector.security.SecurityUtil;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.datacollector.security.SecurityUtil;
 import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,22 +30,29 @@ import javax.crypto.Cipher;
 import java.net.Authenticator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivilegedExceptionAction;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
   private final ObjectGraph dagger;
   private final Task task;
+  private final Callable<Boolean> taskStopCondition;
 
   @VisibleForTesting
-  protected Main(Class moduleClass) {
-    this(ObjectGraph.create(moduleClass), null);
+  protected Main(Class moduleClass, Callable<Boolean> taskStopCondition) {
+    this(ObjectGraph.create(moduleClass), null, taskStopCondition);
   }
+
   @VisibleForTesting
-  public Main(ObjectGraph dagger, Task task) {
+  public Main(ObjectGraph dagger, Task task, Callable<Boolean> taskStopCondition) {
     this.dagger = dagger;
     if (task == null) {
       task = dagger.get(TaskWrapper.class);
     }
     this.task = task;
+    this.taskStopCondition = taskStopCondition;
   }
 
   @VisibleForTesting
@@ -96,7 +103,8 @@ public class Main {
 
       final Logger finalLog = log;
       final ShutdownHandler.ShutdownStatus shutdownStatus = new ShutdownHandler.ShutdownStatus();
-      PrivilegedExceptionAction action = () -> {
+      final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+      PrivilegedExceptionAction<Void> action = () -> {
         task.init();
         Thread shutdownHookThread = new Thread("Main.shutdownHook") {
           @Override
@@ -107,8 +115,22 @@ public class Main {
         };
         getRuntime().addShutdownHook(shutdownHookThread);
         dagger.get(RuntimeInfo.class).setShutdownHandler(new ShutdownHandler(finalLog, task, shutdownStatus));
+        if (taskStopCondition != null) {
+          //Check every second for the condition to stop the task
+          scheduledExecutorService.scheduleAtFixedRate(() -> {
+            try {
+              if (taskStopCondition.call()) {
+                task.stop();
+              }
+            } catch (Exception e) {
+              finalLog.error("Error evaluating task stop condition : {}", e);
+              throw new RuntimeException(e);
+            }
+          }, 1,1, TimeUnit.SECONDS);
+        }
         task.run();
         task.waitWhileRunning();
+        scheduledExecutorService.shutdown();
         try {
           getRuntime().removeShutdownHook(shutdownHookThread);
         } catch (IllegalStateException ignored) {
@@ -134,6 +156,4 @@ public class Main {
       return 1;
     }
   }
-
-
 }

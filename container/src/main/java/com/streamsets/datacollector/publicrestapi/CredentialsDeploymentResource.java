@@ -21,6 +21,7 @@ import com.streamsets.datacollector.restapi.WebServerAgentCondition;
 import com.streamsets.lib.security.http.CredentialsBeanJson;
 import com.streamsets.datacollector.util.Configuration;
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -59,12 +61,20 @@ import static java.nio.file.StandardOpenOption.WRITE;
 @Api(value = "deployment")
 @PermitAll
 public class CredentialsDeploymentResource {
-
   private static final Logger LOG = LoggerFactory.getLogger(CredentialsDeploymentResource.class);
-  public static final String DPM_AGENT_PUBLIC_KEY = "streamsets.cluster.manager.public.key";
+  private static final String DPM_BASE_URL = "dpm.base.url";
+  private static final String DPM_ENABLED = "dpm.enabled";
+  private static final String DPM_APP_AUTH_TOKEN = "dpm.appAuthToken";
+  private static final String APPLICATION_TOKEN_TXT = "application-token.txt";
+  private static final int MAX_FAILURES_ALLOWED = 100;
+
+  static final String DPM_AGENT_PUBLIC_KEY = "streamsets.cluster.manager.public.key";
+  static final String DPM_DEPLOYMENT_ID = "dpm.remote.deployment.id";
+  static final String DPM_REMOTE_CONTROL_JOB_LABELS = "dpm.remote.control.job.labels";
+
+
   private final RuntimeInfo runtimeInfo;
   private final AtomicInteger failedCount = new AtomicInteger(0);
-  private static final int MAX_FAILURES_ALLOWED = 100;
 
   @Inject
   public CredentialsDeploymentResource(RuntimeInfo runtimeInfo) {
@@ -140,13 +150,30 @@ public class CredentialsDeploymentResource {
     try (FileReader reader = new FileReader(dpmProperties)) {
       conf.load(reader);
     }
-    conf.unset("dpm.base.url");
-    conf.set("dpm.enabled", true);
-    conf.set("dpm.appAuthToken", Configuration.FileRef.PREFIX + "application-token.txt" + Configuration.FileRef.SUFFIX);
+
+    conf.unset(DPM_BASE_URL);
+    conf.set(DPM_ENABLED, true);
+
+    conf.set(
+        DPM_APP_AUTH_TOKEN,
+        Configuration.FileRef.PREFIX + APPLICATION_TOKEN_TXT + Configuration.FileRef.SUFFIX
+    );
+
+    conf.set(DPM_DEPLOYMENT_ID, credentialsBeanJson.getDeploymentId());
+
+    if(!CollectionUtils.isEmpty(credentialsBeanJson.getLabels())) {
+      String labelsString = StringUtils.join(credentialsBeanJson.getLabels().toArray(), ",");
+      LOG.info("SDC will have the following Labels: {}", labelsString);
+      conf.set(DPM_REMOTE_CONTROL_JOB_LABELS, labelsString);
+    }
     try (FileWriter writer = new FileWriter(dpmProperties)) {
       conf.save(writer);
     }
-    Files.write(Paths.get(dpmProperties.getPath()) , ("dpm.base.url=" + credentialsBeanJson.getDpmUrl()).getBytes(), StandardOpenOption.APPEND);
+    Files.write(
+        Paths.get(dpmProperties.getPath()) ,
+        (DPM_BASE_URL + "=" + credentialsBeanJson.getDpmUrl()).getBytes(),
+        StandardOpenOption.APPEND
+    );
     runtimeInfo.setDPMEnabled(true);
     LOG.info("DPM token deployed");
   }

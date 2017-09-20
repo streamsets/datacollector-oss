@@ -17,33 +17,36 @@ package com.streamsets.lib.security.http;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public class CredentialsBeanJson {
 
   private final String token;
   private final String principal;
   private final String keytab;
   private final String tokenSignature;
-
-
-  public String getDpmUrl() {
-    return dpmUrl;
-  }
-
   private final String dpmUrl;
+  private final List<String> labels;
+  private final String deploymentId;
 
   public CredentialsBeanJson(
       @JsonProperty("token") String token,
       @JsonProperty("principal") String principal,
       @JsonProperty("keytab") String keytab,
       @JsonProperty("tokenSignature") String tokenSignature,
-      @JsonProperty("dpmUrl") String dpmUrl
+      @JsonProperty("dpmUrl") String dpmUrl,
+      @JsonProperty("labels") List<String> labels,
+      @JsonProperty("deploymentId") String deploymentId
   ) {
     this.token = token;
     this.principal = principal;
     this.keytab = keytab;
     this.tokenSignature = tokenSignature;
     this.dpmUrl = dpmUrl;
+    this.labels = labels;
+    this.deploymentId = deploymentId;
   }
+
 
   public String getToken() {
     return token;
@@ -55,13 +58,26 @@ public class CredentialsBeanJson {
   }
 
 
+  public String getPrincipal() {
+    return principal;
+  }
+
+
   public String getTokenSignature() {
     return tokenSignature;
   }
 
 
-  public String getPrincipal() {
-    return principal;
+  public String getDpmUrl() {
+    return dpmUrl;
   }
 
+
+  public List<String> getLabels() {
+    return labels;
+  }
+
+  public String getDeploymentId() {
+    return deploymentId;
+  }
 }

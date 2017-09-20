@@ -225,7 +225,7 @@ public abstract class WebServerTask extends AbstractTask {
 
     synchronized (getRuntimeInfo()) {
       if (!getRuntimeInfo().hasAttribute(SSO_SERVICES_ATTR)) {
-        getRuntimeInfo().setAttribute(SSO_SERVICES_ATTR, Collections.synchronizedList(new ArrayList<Object>()));
+        getRuntimeInfo().setAttribute(SSO_SERVICES_ATTR, Collections.synchronizedList(new ArrayList<>()));
       }
     }
 
@@ -269,12 +269,9 @@ public abstract class WebServerTask extends AbstractTask {
       redirector = createRedirectorServer();
     }
 
-    addToPostStart(new Runnable() {
-      @Override
-      public void run() {
-        for (WebAppProvider appProvider : webAppProviders) {
-          appProvider.postStart();
-        }
+    addToPostStart(() -> {
+      for (WebAppProvider appProvider : webAppProviders) {
+        appProvider.postStart();
       }
     });
 
@@ -493,13 +490,10 @@ public abstract class WebServerTask extends AbstractTask {
       ssoService = remoteSsoService;
     }
 
-    addToPostStart(new Runnable() {
-      @Override
-      public void run() {
-        LOG.debug("Validating application token for DPM component ID '{}'", componentId);
-        ssoService.register(getRegistrationAttributes());
-        runtimeInfo.setRemoteRegistrationStatus(true);
-      }
+    addToPostStart(() -> {
+      LOG.debug("Validating application token for DPM component ID '{}'", componentId);
+      ssoService.register(getRegistrationAttributes());
+      runtimeInfo.setRemoteRegistrationStatus(true);
     });
 
     SSOService proxySsoService = new ProxySSOService(ssoService);
@@ -734,13 +728,6 @@ public abstract class WebServerTask extends AbstractTask {
     runTaskInternal();
     try {
       WebServerAgentCondition.waitForCredentials();
-      if (WebServerAgentCondition.getReceivedCredentials()) {
-        LOG.info("Restarting web server task");
-        RuntimeInfo.loadOrReloadConfigs(runtimeInfo, conf);
-        stopTask();
-        initTask();
-        runTaskInternal();
-      }
     } catch (InterruptedException ex) {
       LOG.error("Interrupted while waiting for credentials to be deployed", ex);
     }
@@ -911,9 +898,7 @@ public abstract class WebServerTask extends AbstractTask {
         String[] map = mapping.split(":", 2);
         String ldapRole = map[0].trim();
         String[] streamSetsRoles = map[1].split(",");
-        if (roleMapping.get(ldapRole) == null) {
-          roleMapping.put(ldapRole, new HashSet<String>());
-        }
+        roleMapping.computeIfAbsent(ldapRole, k -> new HashSet<>());
         final Set<String> streamSetsRolesSet = roleMapping.get(ldapRole);
         for (String streamSetsRole : streamSetsRoles) {
           streamSetsRolesSet.add(streamSetsRole.trim());
@@ -927,7 +912,7 @@ public abstract class WebServerTask extends AbstractTask {
   }
 
   protected Set<String> tryMappingRole(String role) {
-    Set<String> roles = new HashSet<String>();
+    Set<String> roles = new HashSet<>();
     if (roleMapping == null || roleMapping.isEmpty()) {
       return roles;
     }

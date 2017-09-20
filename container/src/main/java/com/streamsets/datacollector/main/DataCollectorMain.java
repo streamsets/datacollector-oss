@@ -15,31 +15,45 @@
  */
 package com.streamsets.datacollector.main;
 
-import com.streamsets.datacollector.main.Main;
 import com.streamsets.datacollector.memory.MemoryUsageCollector;
+import com.streamsets.datacollector.restapi.WebServerAgentCondition;
 
 import java.lang.instrument.Instrumentation;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 //TODO - Make this implement DataCollector interface
 public class DataCollectorMain extends Main {
 
   public DataCollectorMain() {
-    super(MainStandalonePipelineManagerModule.class);
+    super(MainStandalonePipelineManagerModule.class, null);
   }
 
-  public DataCollectorMain(Class moduleClass) {
-    super(moduleClass);
+  public DataCollectorMain(Class moduleClass, Callable<Boolean> taskStopCondition) {
+    super(moduleClass, taskStopCondition);
   }
 
-  public static void setContext(ClassLoader apiCL, ClassLoader containerCL,
-                                List<? extends ClassLoader> moduleCLs, Instrumentation instrumentation) {
+  public static void setContext(
+      ClassLoader apiCL,
+      ClassLoader containerCL,
+      List<? extends ClassLoader> moduleCLs,
+      Instrumentation instrumentation
+  ) {
     MemoryUsageCollector.initialize(instrumentation);
     RuntimeModule.setStageLibraryClassLoaders(moduleCLs);
   }
 
   public static void main(String[] args) throws Exception {
-    System.exit(new DataCollectorMain().doMain());
+    int exitStatus = 0;
+    if(!WebServerAgentCondition.canContinue()) {
+      exitStatus = new DataCollectorMain(
+          MainStandalonePipelineManagerModule.class,
+          WebServerAgentCondition::getReceivedCredentials
+      ).doMain();
+    }
+    if (exitStatus == 0) {
+      exitStatus = new DataCollectorMain().doMain();
+    }
+    System.exit(exitStatus);
   }
-
 }

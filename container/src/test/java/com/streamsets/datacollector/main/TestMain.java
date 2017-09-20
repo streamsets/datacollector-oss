@@ -80,7 +80,7 @@ public class TestMain {
   public static class TMain extends DataCollectorMain {
 
     public TMain() {
-      super(TPipelineAgentModule.class);
+      super(TPipelineAgentModule.class, null);
     }
 
     @Override
