@@ -594,6 +594,12 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
+    // Firstly destroy the runner, to make sure that any potential run away thread from origin will be denied
+    // further processing.
+    if(runnerPool != null) {
+      runnerPool.destroy();
+    }
+
     int batchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
     long lastBatchTime = offsetTracker.getLastBatchTime();
     long start = System.currentTimeMillis();

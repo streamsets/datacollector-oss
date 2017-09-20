@@ -85,7 +85,7 @@ public class ProductionPipeline {
     boolean errorWhileRunning = false;
     boolean errorWhileDestroying = false;
     boolean isRecoverable = true;
-    String runningErrorMsg = "";
+    String runningErrorMsg = null;
     try {
       try {
         LOG.debug("Initializing");
@@ -94,6 +94,7 @@ public class ProductionPipeline {
           issues = getPipeline().init(true);
         } catch (Throwable e) {
           if (!wasStopped()) {
+            runningErrorMsg = e.toString();
             LOG.warn("Error while starting: {}", e.toString(), e);
             errorWhileInitializing = true;
             stateChanged(PipelineStatus.STARTING_ERROR, e.toString(), null);
@@ -152,6 +153,11 @@ public class ProductionPipeline {
           LOG.warn("Error while calling destroy: " + e.toString(), e);
           stateChanged(PipelineStatus.STOPPING_ERROR, e.toString(), null);
           errorWhileDestroying = true;
+          // If this is the first error that happened during the execution, persist the reasoning in the message, otherwise
+          // keep the original message so that terminal state have the original error rather then any subsequent one.
+          if(runningErrorMsg == null) {
+            runningErrorMsg = e.toString();
+          }
           throw e;
         } finally {
           // If there was any problem, we will consider retry
