@@ -27,10 +27,11 @@
                     authentication. Requires that you install the DSE Java driver.</li>
                 <li>Kerberos (DSE) - Uses Kerberos authentication. Requires that you install the DSE
                     Java driver.</li>
-            </ul><p>Before selecting one of the DSE authentication providers, install the <xref
-                href="http://docs.datastax.com/en/developer/java-driver-dse/1.2/" format="html"
-                scope="external">DSE Java driver version 1.2.4</xref> or later. For information
-            about installing drivers, see <xref
+            </ul><p>Before selecting one of the DSE authentication providers, install the DSE Java driver version
+            1.2.4 or later. For a compatibility matrix, see the <xref
+                href="http://docs.datastax.com/en/developer/java-driver/3.3/manual/native_protocol/"
+                format="html" scope="external">Cassandra documentation</xref>. For information about
+            installing drivers, see <xref
                 href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p>
  </conbody>
 </concept>
