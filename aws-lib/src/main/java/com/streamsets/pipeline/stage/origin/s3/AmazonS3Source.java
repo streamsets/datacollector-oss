@@ -151,6 +151,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
           if (record != null) {
             setHeaders(record, object);
             batchMaker.addRecord(record);
+            noMoreDataRecordCount++;
             i++;
             offset = parser.getOffset();
           } else {
@@ -160,6 +161,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
               object.close();
               object = null;
             }
+            noMoreDataFileCount++;
             offset = S3Constants.MINUS_ONE;
             break;
           }
@@ -167,6 +169,7 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
           String exOffset = offset;
           offset = S3Constants.MINUS_ONE;
           errorRecordHandler.onError(Errors.S3_SPOOLDIR_02, s3Object.getKey(), exOffset, ex);
+          noMoreDataErrorCount++;
         }
       }
     } catch (AmazonClientException e) {

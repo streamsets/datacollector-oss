@@ -25,6 +25,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -222,6 +223,69 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
       records = output.getRecords().get("lane");
       Assert.assertEquals(0, records.size());
 
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testNoMoreDataEvent() throws Exception {
+    AmazonS3Source source = createSource();
+    SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+
+      BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+      String offset = source.produce(null, 60000, batchMaker);
+      Assert.assertNotNull(offset);
+      Assert.assertTrue(offset.contains("file1.log::-1::"));
+
+      StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertEquals(1, records.size());
+
+      Assert.assertEquals(0, runner.getEventRecords().size());
+
+      //produce records from next file
+      batchMaker = SourceRunner.createTestBatchMaker("lane");
+      offset = source.produce(offset, 60000, batchMaker);
+      Assert.assertNotNull(offset);
+      Assert.assertTrue(offset.contains("file2.log::-1::"));
+
+      output = SourceRunner.getOutput(batchMaker);
+      records = output.getRecords().get("lane");
+      Assert.assertEquals(1, records.size());
+
+      Assert.assertEquals(0, runner.getEventRecords().size());
+
+      //produce records from next file
+      batchMaker = SourceRunner.createTestBatchMaker("lane");
+      offset = source.produce(offset, 60000, batchMaker);
+      Assert.assertNotNull(offset);
+      Assert.assertTrue(offset.contains("file3.log::-1::"));
+
+      output = SourceRunner.getOutput(batchMaker);
+      records = output.getRecords().get("lane");
+      Assert.assertEquals(1, records.size());
+
+      Assert.assertEquals(0, runner.getEventRecords().size());
+
+      batchMaker = SourceRunner.createTestBatchMaker("lane");
+      offset = source.produce(offset, 60000, batchMaker);
+      Assert.assertNotNull(offset);
+      Assert.assertTrue(offset.contains("file3.log::-1::"));
+
+      output = SourceRunner.getOutput(batchMaker);
+      records = output.getRecords().get("lane");
+      Assert.assertEquals(0, records.size());
+
+      Assert.assertEquals(1, runner.getEventRecords().size());
+
+      Record eventRecord = runner.getEventRecords().get(0);
+      Assert.assertEquals("no-more-data", eventRecord.getHeader().getAttribute(EventRecord.TYPE));
+      Assert.assertEquals("3", eventRecord.get("/file-count").getValueAsString());
+      Assert.assertEquals("3", eventRecord.get("/record-count").getValueAsString());
+      Assert.assertEquals("0", eventRecord.get("/error-count").getValueAsString());
     } finally {
       runner.runDestroy();
     }

@@ -33,6 +33,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
+    producesEvents = true,
     upgrader = AmazonS3SourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/AmazonS3.html#task_gfj_ssv_yq"
 )

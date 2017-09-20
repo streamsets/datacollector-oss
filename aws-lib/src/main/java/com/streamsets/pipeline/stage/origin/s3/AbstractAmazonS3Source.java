@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
+import com.streamsets.pipeline.lib.event.CommonEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,10 @@ public abstract class AbstractAmazonS3Source extends BaseSource {
 
   private static final String OFFSET_SEPARATOR = "::";
   private static final String ZERO = "0";
+
+  protected long noMoreDataRecordCount;
+  protected long noMoreDataErrorCount;
+  protected long noMoreDataFileCount;
 
   protected final S3ConfigBean s3ConfigBean;
   protected S3Spooler spooler;
@@ -97,6 +102,10 @@ public abstract class AbstractAmazonS3Source extends BaseSource {
       spooler.init();
     }
 
+    noMoreDataRecordCount = 0;
+    noMoreDataErrorCount = 0;
+    noMoreDataFileCount = 0;
+
     return issues;
   }
 
@@ -154,6 +163,17 @@ public abstract class AbstractAmazonS3Source extends BaseSource {
         // from the spooler
         s3Offset.setOffset(S3Constants.MINUS_ONE);
       }
+    } else if (noMoreDataRecordCount > 0 || noMoreDataErrorCount > 0) {
+      LOG.info("sending no-more-data event.  records {} errors {} files {} ",
+          noMoreDataRecordCount, noMoreDataErrorCount, noMoreDataFileCount);
+      CommonEvents.NO_MORE_DATA.create(getContext())
+          .with("record-count", noMoreDataRecordCount)
+          .with("error-count", noMoreDataErrorCount)
+          .with("file-count", noMoreDataFileCount)
+          .createAndSend();
+      noMoreDataRecordCount = 0;
+      noMoreDataErrorCount = 0;
+      noMoreDataFileCount = 0;
     }
     return s3Offset.toString();
   }

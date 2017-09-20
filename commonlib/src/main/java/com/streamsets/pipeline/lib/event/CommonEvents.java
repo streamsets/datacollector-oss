@@ -23,6 +23,8 @@ public class CommonEvents {
    */
   public static EventCreator NO_MORE_DATA = new EventCreator.Builder(CommonEvents.NO_MORE_DATA_TAG, 2)
     .withOptionalField("record-count")
+    .withOptionalField("error-count")
+    .withOptionalField("file-count")
     .build();
 
   private CommonEvents() {
