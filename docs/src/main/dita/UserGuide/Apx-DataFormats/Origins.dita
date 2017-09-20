@@ -562,6 +562,29 @@
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
             <row>
+              <entry>WebSocket Client</entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_pwl_sjr_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qwl_sjr_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_rwl_sjr_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_swl_sjr_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_twl_sjr_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_uwl_sjr_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_vwl_sjr_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_wwl_sjr_fbb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_xwl_sjr_fbb"
+                /></entry>
+            </row>
+            <row>
               <entry>WebSocket Server</entry>
               <entry/>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_lzk_jvf_3z"

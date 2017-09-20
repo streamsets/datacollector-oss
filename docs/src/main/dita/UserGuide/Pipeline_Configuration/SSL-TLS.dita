@@ -43,7 +43,8 @@
                 <li>SDC RPC to Kafka origin</li>
                 <li>Spark executor</li>
                 <li>TCP Server origin</li>
-                <li>Websocket Server origin and Websocket Client destination</li>
+                <li>WebSocket Client origin and destination</li>
+                <li>WebSocket Server origin </li>
                 <li>Pipeline error handling, when writing error records to another pipeline</li>
             </ul></p>
         <p>The MongoDB and MongoDB Oplog origins and the MongoDB destination allow you to enable SSL

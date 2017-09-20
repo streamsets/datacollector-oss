@@ -110,9 +110,12 @@
           more UDP ports. </li>
         <li><xref href="UDPtoKafka.dita#concept_jzq_jcz_pw">UDP to Kafka</xref> - Reads messages
           from one or more UDP ports and writes the data to Kafka.</li>
+        <li><xref href="WebSocketClient.dita#concept_unk_nzk_fbb">WebSocket Client</xref> - Reads
+          data from a WebSocket server endpoint.</li>
         <li><xref href="WebSocketServer.dita#concept_u2r_gpc_3z">WebSocket Server</xref> - Listens
-          on a WebSocket endpoint and processes the contents of all authorized WebSocket requests.
-          Creates multiple threads to enable parallel processing in a multithreaded pipeline.</li>
+          on a WebSocket endpoint and processes the contents of all authorized WebSocket client
+          requests. Creates multiple threads to enable parallel processing in a multithreaded
+          pipeline.</li>
       </ul></p>
     <p>In cluster pipelines, you can use the following origins:<ul id="ul_unr_xhb_ws">
         <li><xref href="HadoopFS-origin.dita#concept_lw2_tnm_vs">Hadoop FS</xref> - Reads data from

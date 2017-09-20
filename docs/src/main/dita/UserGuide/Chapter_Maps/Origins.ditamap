@@ -23,6 +23,7 @@
   <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
     <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Origins-HTTPComparison.dita"/>
+   <topicref href="../Origins/Origins-WebSocketComparison.dita"/>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
    <topicref href="../Origins/MaxRecordSize.dita"/>
    <topicref href="../Origins/FileCompressionFormats.dita"/>
@@ -490,6 +491,12 @@
     <topicref href="../Origins/UDPtoKafka-EnableSSLKerb.dita"/>
    </topicref>
    <topicref href="../Origins/UDPtoKafka-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Origins/WebSocketClient.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/WebSocketClient-SDCRestResponse.dita"/>
+   <topicref href="../Origins/WebSocketClient-DataFormat.dita"/>
+   <topicref href="../Origins/WebSocketClient-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/WebSocketServer.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>

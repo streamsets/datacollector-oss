@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_wz5_jqm_gbb">
+ <title>Comparing WebSocket Origins</title>
+ <conbody>
+  <p>We have two WebSocket origins, make sure to use the best one for your needs. Here's a quick
+            breakdown of some key differences: </p>
+                <table frame="all" rowsep="1" colsep="1" id="table_pw5_npv_qy">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.5*"/>
+                        <thead>
+                            <row>
+                                <entry>Origin</entry>
+                                <entry>Description</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry><xref href="WebSocketClient.dita#concept_unk_nzk_fbb"
+                                >WebSocket Client</xref></entry>
+                                <entry>
+                                    <ul id="ul_ixb_t5v_qy">
+                                        <li>Initiates a connection to a WebSocket server endpoint
+                                    and then waits for the WebSocket server to push data.</li>
+                                    </ul>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry><xref href="WebSocketServer.dita#concept_u2r_gpc_3z"
+                                >WebSocket Server</xref></entry>
+                                <entry>
+                                    <ul id="ul_vsb_x5v_qy">
+                                        <li>Listens for incoming WebSocket requests and processes
+                                    them while the sender waits for confirmation.</li>
+                                        <li>Creates multithreaded pipelines, thus suitable for high
+                                            throughput of incoming data.</li>
+                                    </ul>
+                                </entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            
+        </conbody>
+</concept>

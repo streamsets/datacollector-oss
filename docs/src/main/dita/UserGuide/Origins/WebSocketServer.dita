@@ -20,8 +20,9 @@
 <concept id="concept_u2r_gpc_3z">
  <title>WebSocket Server</title>
  <shortdesc>The WebSocket Server origin is a multithreaded origin that listens on a WebSocket
-        endpoint and processes the contents of all authorized WebSocket requests. Use the WebSocket
-        Server origin to read high volumes of WebSocket requests using multiple threads. </shortdesc>
+        endpoint and processes the contents of all authorized WebSocket client requests. Use the
+        WebSocket Server origin to read high volumes of WebSocket client requests using multiple
+        threads. </shortdesc>
  <conbody>
   <p><indexterm>WebSocket Server
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>WebSocket
@@ -36,5 +37,7 @@
             application ID, and the maximum message size. <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/TLS-overview-ph"
             /></p>
+        <note
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip-CompareWebSocketOrigins"/>
  </conbody>
 </concept>

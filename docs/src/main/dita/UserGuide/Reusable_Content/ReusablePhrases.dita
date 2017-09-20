@@ -160,6 +160,7 @@
                         <li>SFTP/FTP Client</li>
                         <li>TCP Server</li>
                         <li>UDP Source</li>
+                        <li>WebSocket Client</li>
                         <li>WebSocket Server</li>
                   </ul>
             </p>
@@ -1089,6 +1090,16 @@ web-0011.log</codeblock></dd>
                               href="../Origins/Origins-HTTPComparison.dita#concept_rsz_cnw_qy"
                         />.</note>
             </p>
+            <draft-comment author="alisontaylor"><uicontrol>TIP-CompareWebSocketOrigins</uicontrol>
+                  used in both WebSocket origin overviews</draft-comment>
+           <p>
+            <note type="tip" id="Tip-CompareWebSocketOrigins"><ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                  /> provides two WebSocket origins to address different needs. For a quick
+                  comparison chart to help you choose the right one, see <xref
+                        href="../Origins/Origins-WebSocketComparison.dita#concept_wz5_jqm_gbb"
+                  />.</note>
+           </p>
             <p>
                   <draft-comment author="Loretta">Avro-HeaderAttribute - Used in Record Header
                         Attribute type topics for origins with the topic (that process Avro

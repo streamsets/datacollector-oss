@@ -53,6 +53,7 @@
         <li>Redis Consumer origin</li>
         <li>SFTP/FTP Client origin</li>
         <li>TCP Server origin</li>
+        <li>WebSocket Client origin</li>
         <li>WebSocket Server origin</li>
         <li>Data Parser processor</li>
         <li>HTTP Client processor</li>

@@ -653,8 +653,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>O-Datagram</uicontrol> - just Kafka
-                        Consumer right now.</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>O-Datagram</uicontrol> - Kafka
+                        Consumer, WebSocket Server, WebSocket Client, COaP Server, HTTP Server, MQTT
+                        Subscriber</draft-comment>
                 </cmd>
             </step>
             <step id="O-Datagram">
@@ -673,11 +674,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format <xref
-                                            href="../Origins/KConsumer-DataFormats.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_bmy_h8q_ds"
-                                        /></xref></entry>
+                                    <entry>Data Format</entry>
                                     <entry>Message type: <ul
                                             conref="#task_kzs_5vz_sq/ul-UDPDataFormat"
                                             id="ul_q1q_yp4_4x">
@@ -1272,8 +1269,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Amazon S3,
-                        Directory, Kafka Consumer, Kinesis Consumer, JMS Consumer. HTTP Client. Non
-                        compression origins using rows - JMS</draft-comment>
+                        Directory, Kafka Consumer, Kinesis Consumer, JMS Consumer. HTTP Client.
+                        WebSocket Client. Non compression origins using rows - JMS</draft-comment>
                 </cmd>
             </step>
             <step id="Text">
@@ -1431,9 +1428,9 @@
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>XML data </uicontrol>- step used by
                         message and file based origins: Kafka Consumer, Hadoop FS, Kinesis Consumer,
-                        Directory, S3, HTTP Client, maybe more. Origins without compression uses
-                        almost all the rows - JMS Consumer, Kafka Consumer, Rabbit MQ Consumer,
-                        Redis Consumer</draft-comment>
+                        Directory, S3, HTTP Client, WebSocket Client, maybe more. Origins without
+                        compression uses almost all the rows - JMS Consumer, Kafka Consumer, Rabbit
+                        MQ Consumer, Redis Consumer</draft-comment>
                 </cmd>
             </step>
             <step id="XMLprops">

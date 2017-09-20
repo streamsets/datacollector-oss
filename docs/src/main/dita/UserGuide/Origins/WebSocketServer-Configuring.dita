@@ -24,7 +24,7 @@
             <p><indexterm>WebSocket Server
                 origin<indexterm>configuring</indexterm></indexterm>Configure a WebSocket Server
                 origin to generate multiple threads for parallel processing of WebSocket client
-                requests.</p>
+                requests. </p>
         </context>
         <steps>
             <step
@@ -176,6 +176,14 @@
                                 </row>
                             </thead>
                             <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FilePatternCompressed">
+                                    <entry/>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-LogFormat">
                                     <entry/>
