@@ -24,7 +24,8 @@
                 generation</indexterm></indexterm><indexterm>event generating
                     stages<indexterm>overview</indexterm></indexterm>You can configure certain
             stages to generate events. Event generation differs from stage to stage, based on the
-            way the stage processes data. </p>
+            way the stage processes data. For details about each the event generation for each
+            stage, see "Event Generation" in the stage documentation.</p>
         <p>The following table lists event-generating stages and when they can generate events:
                 <table frame="all" rowsep="1" colsep="1" id="table_pzz_thf_lx">
                 <tgroup cols="2">
@@ -46,6 +47,9 @@
                                     <li>Completes processing all available files and the configured
                                         batch wait time has elapsed.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/Directory-EventGeneration.dita#concept_ttg_vgn_qx"
+                                        >"Event Generation" for the Directory origin</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -55,6 +59,9 @@
                                     <li>Starts processing a file.</li>
                                     <li>Completes processing a file. </li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/FileTail-EventGeneration.dita"
+                                        >"Event Generation" for the File Tail origin</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -63,6 +70,9 @@
                                 <ul id="ul_rns_2jx_q1b">
                                     <li>Successfully completes a query.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/BigQuery-EventGen.dita">"Event
+                                        Generation" for the Google BigQuery origin</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -73,6 +83,9 @@
                                     <li>Successfully completes a query.</li>
                                     <li>Fails to complete a query.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/JDBCConsumer-EventGen.dita">"Event Generation"
+                                        for the JDBC Query Consumer origin</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -82,6 +95,9 @@
                                     <li>Completes processing the data returned by the queries for
                                         all tables.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/MultiTableJDBCConsumer-EventGen.dita">"Event
+                                        Generation" for the JDBC Multitable Consumer origin</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -90,6 +106,9 @@
                                 <ul id="ul_brj_zv1_vy">
                                     <li>Reads DDL statements in the redo log. </li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/OracleCDC-EventGeneration.dita">"Event
+                                        Generation" for the Oracle CDC Client origin</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -98,6 +117,9 @@
                                 <ul id="ul_djn_rfb_mz">
                                     <li>Completes processing all data returned by a query. </li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/Salesforce-EventGen.dita">"Event
+                                    Generation" for the Salesforce origin</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -107,6 +129,9 @@
                                     <li>Completes processing the data in the associated CDC
                                         tables.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/SQLServerCDC-EventGeneration.dita">"Event
+                                    Generation" for the SQL Server CDC Client origin</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -116,6 +141,9 @@
                                     <li>Completes processing the data in all specified change
                                         tracking tables.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/SQLServerChange-EventGeneration.dita">"Event
+                                    Generation" for the SQL Server Change Tracking origin</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -124,6 +152,9 @@
                                 <ul id="ul_cj5_tnp_1y">
                                     <li>Runs a script that generates events.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Processors/Groovy-EventGeneration.dita">"Event
+                                    Generation" for the Groovy Evaluator processor</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -132,6 +163,9 @@
                                 <ul id="ul_qtz_vnp_1y">
                                     <li>Runs a script that generates events.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Processors/JavaScript-EventGeneration.dita">"Event
+                                    Generation" for the JavaScript Evaluator processor</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -140,6 +174,9 @@
                                 <ul id="ul_ujt_wnp_1y">
                                     <li>Runs a script that generates events.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Processors/Jython-EventGeneration.dita">"Event
+                                    Generation" for the Jython Evaluator processor</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -149,6 +186,9 @@
                                     <li>Completes writing to an object.</li>
                                     <li>Completes streaming a whole file.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Destinations/AmazonS3-EventGeneration.dita">"Event
+                                    Generation" for the Amazon S3 destination</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -158,6 +198,9 @@
                                     <li>Closes a file.</li>
                                     <li>Completes streaming a whole file.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Destinations/DataLakeStore-EventGeneration.dita">"Event
+                                    Generation" for the Azure Data Lake Store destination</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -167,6 +210,9 @@
                                     <li>Closes a file.</li>
                                     <li>Completes streaming a whole file.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Destinations/HadoopFS-EventGeneration.dita">"Event
+                                    Generation" for the Hadoop FS destination</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -177,6 +223,9 @@
                                         columns, or creating a partition. </li>
                                     <li>Generates and writes a new Avro schema file.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                    href="../Destinations/HiveMetastore-EventGeneration.dita">"Event
+                                    Generation" for the Hive Metastore destination</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -186,6 +235,9 @@
                                     <li>Closes a file.</li>
                                     <li>Completes streaming a whole file.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Destinations/LocalFS-EventGeneration.dita">"Event
+                                    Generation" for the Local FS destination</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -195,6 +247,9 @@
                                     <li>Closes a file.</li>
                                     <li>Completes streaming a whole file.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Destinations/MapRFS-EventGeneration.dita">"Event
+                                    Generation" for the MapR FS destination</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -206,6 +261,9 @@
                                     <li>Creates an empty file.</li>
                                     <li>Removes a file or directory.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Executors/HDFSFileMeta-EventGeneration.dita">"Event
+                                    Generation" for the HDFS File Metadata executor</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -216,6 +274,9 @@
                                         successfully.</li>
                                     <li>Determines that the submitted query failed to complete.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Executors/HiveQuery-EventGeneration.dita">"Event
+                                    Generation" for the Hive Query executor</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -227,6 +288,9 @@
                                     <li>Creates an empty file.</li>
                                     <li>Removes a file or directory.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Executors/MapRFSFileMeta-EventGeneration.dita">"Event
+                                    Generation" for the MapR FS File Metadata executor</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -235,6 +299,9 @@
                                 <ul id="ul_fy2_qt4_qx">
                                     <li>Starts a MapReduce job.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Executors/MapReduce-EventGeneration.dita">"Event
+                                    Generation" for the MapReduce executor</xref>. </p>
                             </entry>
                         </row>
                         <row>
@@ -243,6 +310,9 @@
                                 <ul id="ul_xyc_hyg_gz">
                                     <li>Starts a Spark application.</li>
                                 </ul>
+                                <p>For more information, see <xref
+                                        href="../Executors/Spark-EventGeneration.dita">"Event
+                                    Generation" for the Spark executor</xref>. </p>
                             </entry>
                         </row>
                     </tbody>

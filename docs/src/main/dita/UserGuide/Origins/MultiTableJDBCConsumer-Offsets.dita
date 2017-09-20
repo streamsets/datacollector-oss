@@ -101,6 +101,10 @@
                         condition to ensure that the origin reads from all offset columns with a
                         timestamp less than the current
                         time:<codeblock>${offset:column(0)} &lt; ${time:now()}</codeblock></dd>
+                    <dd>If your database requires the datetime in a specific format, you can use the
+                            <ph>time:extractStringFromDate</ph> function to specify the format. For
+                        example:
+                        <pre>${offset:column(0)} &lt; '${time:extractStringFromDate(time:now(), "yyyy-MM-dd HH:mm:ss")}'</pre></dd>
                 </dlentry>
             </dl></p>
     </conbody>
