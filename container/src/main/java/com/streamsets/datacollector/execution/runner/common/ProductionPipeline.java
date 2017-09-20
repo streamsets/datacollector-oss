@@ -52,6 +52,7 @@ public class ProductionPipeline {
   private final String rev;
   private final boolean isExecutingInSlave;
   private final boolean shouldRetry;
+  private boolean executionFailed;
 
   public ProductionPipeline(String name, String rev, PipelineConfiguration pipelineConf,
                             Configuration conf, Pipeline pipeline, boolean shouldRetry) {
@@ -85,6 +86,7 @@ public class ProductionPipeline {
     boolean errorWhileRunning = false;
     boolean errorWhileDestroying = false;
     boolean isRecoverable = true;
+    executionFailed = false;
     String runningErrorMsg = null;
     try {
       try {
@@ -160,8 +162,11 @@ public class ProductionPipeline {
           }
           throw e;
         } finally {
-          // If there was any problem, we will consider retry
           if(errorWhileInitializing || errorWhileRunning || errorWhileDestroying) {
+            // In case of any error, persist that information
+            executionFailed = true;
+
+            // If there was any problem, we will consider retry
             if (shouldRetry && !pipeline.shouldStopOnStageError() && !isExecutingInSlave && isRecoverable && !wasStopped()) {
               stateChanged(PipelineStatus.RETRY, runningErrorMsg, null);
             } else if(errorWhileInitializing) {
@@ -215,6 +220,10 @@ public class ProductionPipeline {
 
   public boolean wasStopped() {
     return pipelineRunner.wasStopped();
+  }
+
+  public boolean isExecutionFailed() {
+    return executionFailed;
   }
 
   /**
