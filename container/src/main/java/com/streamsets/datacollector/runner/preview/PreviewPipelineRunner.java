@@ -368,6 +368,12 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
     BadRecordsHandler badRecordsHandler,
     StatsAggregationHandler statsAggregationHandler
   ) throws StageException, PipelineRuntimeException {
+    // Firstly destroy the runner, to make sure that any potential run away thread from origin will be denied
+    // further processing.
+    if(runnerPool != null) {
+      runnerPool.destroy();
+    }
+
     // We're not doing any special event propagation during preview destroy phase
 
     // Destroy origin on it's own

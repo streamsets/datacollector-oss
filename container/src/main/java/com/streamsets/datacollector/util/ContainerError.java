@@ -138,6 +138,8 @@ public enum ContainerError implements ErrorCode {
   //Runner
   CONTAINER_0800("Pipeline '{}' validation error : {}"),
   CONTAINER_0801("Thread unexpectedly interrupted"),
+  CONTAINER_0802("Detected run away pipeline runners (only {} out of {} runners have finished)"),
+  CONTAINER_0803("Trying to acquire pipeline runner after the pool was destroyed."),
 
   //PipelineConfigurationUpgrader
   CONTAINER_0900("Error while upgrading stage configuration from version '{}' to version '{}': {}"),

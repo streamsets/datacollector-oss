@@ -20,6 +20,7 @@ import com.streamsets.datacollector.util.ContainerError;
 
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Small abstraction on top of blocking queue to model a pool of runners.
@@ -42,6 +43,11 @@ public class RunnerPool <T> {
   private final Histogram histogram;
 
   /**
+   * Internal flag keeping state of the runner.
+   */
+  private final AtomicBoolean destroyed;
+
+  /**
    * Create new runner pool.
    *
    * @param runners Runners that this pool object should manage
@@ -54,6 +60,7 @@ public class RunnerPool <T> {
     this.runtimeStats.setTotalRunners(queue.size());
     this.runtimeStats.setAvailableRunners(queue.size());
     this.histogram = histogram;
+    this.destroyed = new AtomicBoolean(false);
   }
 
   /**
@@ -63,6 +70,8 @@ public class RunnerPool <T> {
    * @throws PipelineRuntimeException Thrown in case that current thread is unexpectedly interrupted
    */
   public T getRunner() throws PipelineRuntimeException {
+    validateNotDestroyed();
+
     try {
       return queue.take();
     } catch (InterruptedException e) {
@@ -78,9 +87,41 @@ public class RunnerPool <T> {
    *
    * @param runner Runner to be returned
    */
-  public void returnRunner(T runner) {
+  public void returnRunner(T runner) throws PipelineRuntimeException {
+    validateNotDestroyed();
+
     queue.add(runner);
     runtimeStats.setAvailableRunners(queue.size());
     histogram.update(queue.size());
+  }
+
+  /**
+   * Destroy only the pool itself - not the individual pipe runners.
+   *
+   * This method will also validate that all runners were properly returned to the pool. PipelineRuntimeException will
+   * be thrown if some runners are still running.
+   *
+   * @throws PipelineRuntimeException
+   */
+  public void destroy() throws PipelineRuntimeException {
+    // Firstly set this runner as destroyed
+    destroyed.set(true);
+
+    // Validate that this thread pool have all runners back, otherwise we're missing something and that is sign of
+    // a trouble.
+    if(queue.size() < runtimeStats.getTotalRunners()) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0802, queue.size(), runtimeStats.getTotalRunners());
+    }
+  }
+
+  /**
+   * Throw an exception if the runner was already destroyed.
+   *
+   * @throws PipelineRuntimeException
+   */
+  private void validateNotDestroyed() throws PipelineRuntimeException {
+    if(destroyed.get()) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0803, queue.size(), runtimeStats.getTotalRunners());
+    }
   }
 }
