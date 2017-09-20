@@ -136,7 +136,7 @@ public class ProductionPipelineRunnable implements Runnable {
   private void postStop() {
     Thread.currentThread().setName(Thread.currentThread().getName());
     //Update pipeline state accordingly
-    if (pipeline.wasStopped()) {
+    if (pipeline.wasStopped() && !pipeline.isExecutionFailed()) {
       try {
         Map<String, String> offset = pipeline.getCommittedOffsets();
         String offsetStatus = "";
