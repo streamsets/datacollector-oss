@@ -155,13 +155,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.streamsets</groupId>
-            <artifactId>streamsets-datacollector-navigator-protolib</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.10</artifactId>
             <version>${spark.version}</version>

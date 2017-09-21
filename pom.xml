@@ -141,8 +141,6 @@
     <module>httpcommonlib</module>
     <module>net-commonlib</module>
 
-    <module>navigator-protolib</module>
-
     <module>lookup-protolib</module>
 
     <module>hdfs-protolib</module>
