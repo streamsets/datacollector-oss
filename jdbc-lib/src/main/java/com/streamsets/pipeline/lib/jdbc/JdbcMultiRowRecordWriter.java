@@ -17,18 +17,15 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
-import com.google.common.base.Joiner;
 import com.google.common.hash.Funnel;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import com.google.common.hash.PrimitiveSink;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,23 +33,22 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedList;
 import java.util.SortedMap;
-import java.util.Collection;
-import java.util.TreeMap;
+
+import static com.streamsets.pipeline.lib.operation.OperationType.DELETE_CODE;
+import static com.streamsets.pipeline.lib.operation.OperationType.INSERT_CODE;
 
 public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcMultiRowRecordWriter.class);
 
   private static final HashFunction columnHashFunction = Hashing.goodFastHash(64);
-  private static final Funnel<Map<String, String>> stringMapFunnel = new Funnel<Map<String, String>>() {
-    @Override
-    public void funnel(Map<String, String> map, PrimitiveSink into) {
-      for (Map.Entry<String, String> entry : map.entrySet()) {
-        into.putString(entry.getKey(), Charsets.UTF_8).putString(entry.getValue(), Charsets.UTF_8);
-      }
+  private static final Funnel<Map<String, String>> stringMapFunnel = (map, into) -> {
+    for (Map.Entry<String, String> entry : map.entrySet()) {
+      into.putString(entry.getKey(), Charsets.UTF_8).putString(entry.getValue(), Charsets.UTF_8);
     }
   };
 
@@ -162,22 +158,30 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       LinkedList<Record> queue = new LinkedList<>();
       for (Record record : batch) {
         int opCode = recordReader.getOperationFromRecord(record, defaultOp, unsupportedAction, errorRecords);
-        if (opCode <= 0) { // sent to errorRecords
-          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_70, opCode));
-          continue;
-        }
+
         // Need to consider the number of columns in query. If different, process saved records in queue.
         HashCode columnHash = getColumnHash(record, opCode);
-        if (prevOpCode == opCode && (opCode == OperationType.DELETE_CODE ||
-            (opCode == OperationType.INSERT_CODE && columnHash.equals(prevColumnHash)))) {
+
+        boolean opCodeValid = opCode > 0;
+        boolean opCodeUnchanged = opCode == prevOpCode;
+        boolean supportedOpCode = opCode == DELETE_CODE || opCode == INSERT_CODE && columnHash.equals(prevColumnHash);
+        boolean canEnqueue = opCodeValid && opCodeUnchanged && supportedOpCode;
+
+        if (canEnqueue) {
           queue.add(record);
+        }
+
+        if (!opCodeValid || canEnqueue) {
           continue;
         }
-        // Execute the records in queue.
+
+        // Process enqueued records.
+        processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode, perRecord);
+
         if (!queue.isEmpty()) {
-          processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode, perRecord);
+          throw new IllegalStateException("Queue processed, but was not empty upon completion.");
         }
-        queue.clear();
+
         queue.add(record);
         prevOpCode = opCode;
         prevColumnHash = columnHash;
@@ -185,9 +189,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
 
 
       // Check if any records are left in queue unprocessed
-      if (!queue.isEmpty()) {
-        processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode, perRecord);
-      }
+      processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode, perRecord);
       connection.commit();
     } catch (SQLException e) {
       handleSqlException(e);
@@ -216,7 +218,6 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
    * @param queue
    * @return
    * @throws OnRecordErrorException
-   * @throws SQLException
    */
   private void processQueue(
       LinkedList<Record> queue,
@@ -226,11 +227,13 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       int opCode,
       boolean perRecord
   ) throws StageException {
+    if (queue.isEmpty()) {
+      return;
+    }
+
     int rowCount = 0;
-    PreparedStatement statement = null;
-    String query;
-    //Assume that columns are all same for the same operation to the same table
-    //If some columns are missing in record, the record goes to error.
+    // Assume that columns are all same for the same operation to the same table
+    // If some columns are missing in record, the record goes to error.
     SortedMap<String, String> columnsToParameters = recordReader.getColumnsToParameters(
         queue.getFirst(),
         opCode,
@@ -238,32 +241,31 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields()
     );
 
-    try {
+    String query = generateQueryForMultiRow(
+        opCode,
+        columnsToParameters,
+        getPrimaryKeyColumns(),
+        // the next batch will have either the max number of records, or however many are left.
+        Math.min(maxRowsPerBatch, queue.size())
+    );
+
+    // Need to store removed records from queue, because we might need to add newly generated columns
+    // to records for Jdbc Tee Processor.
+    LinkedList<Record> removed = new LinkedList<>();
+
+    try (PreparedStatement statement = JdbcUtil.getPreparedStatement(getGeneratedColumnMappings(), query, connection)) {
       int paramIdx = 1;
-      // Need to store removed records from queue, because we might need to add newly generated columns
-      // to records for Jdbc Tee Processor.
-      LinkedList<Record> removed = new LinkedList<>();
       // Start processing records in queue. All records have the same operation to the same table.
       while (!queue.isEmpty()) {
-        if (statement == null) {
-          query = generateQueryForMultiRow(
-              opCode,
-              columnsToParameters,
-              getPrimaryKeyColumns(),
-              // the next batch will have either the max number of records, or however many are left.
-              Math.min(maxRowsPerBatch, queue.size())
-          );
-          statement = JdbcUtil.getPreparedStatement(getGeneratedColumnMappings(), query, connection);
-        }
         Record r = queue.removeFirst();
-        if (opCode != OperationType.DELETE_CODE) {
+        if (opCode != DELETE_CODE) {
           paramIdx = setParamsToStatement(paramIdx, statement, columnsToParameters, r, connection, opCode);
         }
         if (opCode != OperationType.INSERT_CODE) {
           paramIdx = setPrimaryKeys(paramIdx, r, statement, opCode);
         }
-        rowCount++;
         removed.add(r);
+        ++rowCount;
         if (rowCount == maxRowsPerBatch) {
           // time to execute the current batch
           processBatch(removed, errorRecords, statement, connection, perRecord);
@@ -273,13 +275,40 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
           removed.clear();
         }
       }
-      // Process the rest of the records that are removed from queue but haven't processed yet
-      // this happens when rowCount is still less than maxRowsPerBatch.
-      if (rowCount != 0) {
-        processBatch(removed, errorRecords, statement, connection, perRecord);
-      }
     } catch (SQLException e) {
       handleSqlException(e);
+    }
+
+    // Process the rest of the records that are removed from queue but haven't processed yet
+    // this happens when rowCount is still less than maxRowsPerBatch.
+    // This is a bit of an ugly fix as its not very DRY but sufficient until there's a larger
+    // refactoring of this code.
+    if (!removed.isEmpty()) {
+      query = generateQueryForMultiRow(
+          opCode,
+          columnsToParameters,
+          getPrimaryKeyColumns(),
+          removed.size() // always the remainder
+      );
+
+      try (PreparedStatement statement = JdbcUtil.getPreparedStatement(
+          getGeneratedColumnMappings(),
+          query,
+          connection
+      )) {
+        int paramIdx = 1;
+        for (Record r : removed) {
+          if (opCode != DELETE_CODE) {
+            paramIdx = setParamsToStatement(paramIdx, statement, columnsToParameters, r, connection, opCode);
+          }
+          if (opCode != OperationType.INSERT_CODE) {
+            paramIdx = setPrimaryKeys(paramIdx, r, statement, opCode);
+          }
+        }
+        processBatch(removed, errorRecords, statement, connection, perRecord);
+      } catch (SQLException e) {
+        handleSqlException(e);
+      }
     }
   }
 
@@ -292,7 +321,9 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       ) throws SQLException
   {
     try {
-      LOG.debug("Executing query: " + statement.toString());
+      if (LOG.isDebugEnabled()) {
+        LOG.debug("Executing query: {}", statement.toString());
+      }
       if (!perRecord) {
         statement.addBatch();
         statement.executeBatch();
@@ -318,7 +349,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       SortedMap<String, String> columns,
       List<String> primaryKeys,
       int numRecords
-  ) throws OnRecordErrorException, SQLException {
+  ) throws OnRecordErrorException {
 
     String query = JdbcUtil.generateQuery(opCode, getTableName(), primaryKeys, getPrimaryKeyParams(), columns, numRecords, caseSensitive, true);
 

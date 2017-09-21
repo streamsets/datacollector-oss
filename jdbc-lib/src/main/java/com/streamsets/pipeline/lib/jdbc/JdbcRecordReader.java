@@ -16,18 +16,19 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JdbcRecordReader {
 
@@ -49,33 +50,32 @@ public class JdbcRecordReader {
 
     String op = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
     int opCode = -1; // unsupported
+
+    if (Strings.isNullOrEmpty(op)) {
+      return defaultOp.code;
+    }
+
     // Check if the operation code from header attribute is valid
-    if (op != null && !op.isEmpty()) {
-      try {
-        opCode = JDBCOperationType.convertToIntCode(op);
-      } catch (NumberFormatException | UnsupportedOperationException ex) {
-        LOG.debug(
-            "Operation obtained from record is not supported. Handle by UnsupportedOpertaionAction {}. {}",
-            unsupportedAction.getLabel(),
-            ex
-        );
-        switch (unsupportedAction) {
-          case DISCARD:
-            LOG.debug("Discarding record with unsupported operation {}", op);
-            break;
-          case SEND_TO_ERROR:
-            LOG.debug("Sending record to error due to unsupported operation {}", op);
-            errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_70, op));
-            break;
-          case USE_DEFAULT:
-            opCode = defaultOp.code;
-            break;
-          default: //unknown action
-            LOG.debug("Sending record to error due to unknown operation {}", op);
-        }
+    try {
+      opCode = JDBCOperationType.convertToIntCode(op);
+    } catch (NumberFormatException | UnsupportedOperationException ex) {
+      LOG.debug(
+          "Operation obtained from record is not supported. Handle by UnsupportedOperationAction {}. {}",
+          unsupportedAction.getLabel(),
+          ex
+      );
+      switch (unsupportedAction) {
+        case SEND_TO_ERROR:
+          LOG.debug("Sending record to error due to unsupported operation {}", op);
+          errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_70, op));
+          break;
+        case USE_DEFAULT:
+          opCode = defaultOp.code;
+          break;
+        case DISCARD:
+        default: // unknown action
+          LOG.debug("Discarding record with unsupported operation {}", op);
       }
-    } else {
-      opCode = defaultOp.code;
     }
     return opCode;
   }
