@@ -17,6 +17,8 @@ package com.streamsets.datacollector.restapi;
 
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.config.CredentialStoreDefinition;
+import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
@@ -208,6 +210,30 @@ public class StageLibraryResource {
         installedLibraries.add(new StageLibraryJson(
             stageDefinition.getLibrary(),
             stageDefinition.getLibraryLabel(),
+            true
+        ));
+      }
+    }
+
+    List<CredentialStoreDefinition> credentialStoreDefinitions = stageLibrary.getCredentialStoreDefinitions();
+    for(CredentialStoreDefinition credentialStoreDefinition: credentialStoreDefinitions) {
+      if (!installedLibrariesMap.containsKey(credentialStoreDefinition.getStageLibraryDefinition().getName())) {
+        installedLibrariesMap.put(credentialStoreDefinition.getStageLibraryDefinition().getName(), true);
+        installedLibraries.add(new StageLibraryJson(
+            credentialStoreDefinition.getStageLibraryDefinition().getName(),
+            credentialStoreDefinition.getStageLibraryDefinition().getLabel(),
+            true
+        ));
+      }
+    }
+
+    List<LineagePublisherDefinition> lineagePublisherDefinitions = stageLibrary.getLineagePublisherDefinitions();
+    for(LineagePublisherDefinition lineagePublisherDefinition: lineagePublisherDefinitions) {
+      if (!installedLibrariesMap.containsKey(lineagePublisherDefinition.getLibraryDefinition().getName())) {
+        installedLibrariesMap.put(lineagePublisherDefinition.getLibraryDefinition().getName(), true);
+        installedLibraries.add(new StageLibraryJson(
+            lineagePublisherDefinition.getLibraryDefinition().getName(),
+            lineagePublisherDefinition.getLibraryDefinition().getLabel(),
             true
         ));
       }

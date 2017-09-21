@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.credential.CredentialStore;
 /**
  * Encapsulates the information and the implementation of a credential store.
  * <p/>
- * The returned store always executeds in the context of the classloader that declared that implementation.
+ * The returned store always executed in the context of the classloader that declared that implementation.
  */
 public class CredentialStoreDefinition {
   private final String name;
