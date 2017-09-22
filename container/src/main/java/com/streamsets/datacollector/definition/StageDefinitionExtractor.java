@@ -67,7 +67,7 @@ public abstract class StageDefinitionExtractor {
     return klass.getName().replace(".", "_").replace("$", "_");
   }
 
-  public static List<String> getGroups(Class<? extends Stage> klass) {
+  public static List<String> getGroups(Class klass) {
     Set<String> set = new LinkedHashSet<>();
     addGroupsToList(klass, set);
     List<Class<?>> allSuperclasses = ClassUtils.getAllSuperclasses(klass);

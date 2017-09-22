@@ -84,7 +84,7 @@ public enum DefinitionError implements ErrorCode {
   DEF_230("{}, ComplexField configuration must be a list"),
 
   //StageDefinitionExtractor
-  DEF_300("{} does not have a StageDef annotation"),
+  DEF_300("{} does not have a proper annotation"),
   DEF_301("{} version cannot be empty"),
   DEF_302("{} does not implement Source, Processor nor Target"),
   DEF_303("{} a SOURCE cannot be an ErrorStage"),
@@ -102,6 +102,9 @@ public enum DefinitionError implements ErrorCode {
 
   DEF_400("Stage library '{}', file '{}' not found"),
   DEF_401("Stage library '{}', could not read file '{}': {}"),
+
+  // ServiceDefinitionExtractor
+  DEF_500("{} does not implement service interface {}"),
 
   ;
 

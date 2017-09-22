@@ -39,7 +39,7 @@ public abstract class ConfigGroupExtractor {
     return EXTRACTOR;
   }
 
-  public List<ErrorMessage> validate(Class<? extends Stage> klass, Object contextMsg) {
+  public List<ErrorMessage> validate(Class klass, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
     List<ConfigGroups> allConfigGroups = getAllConfigGroups(klass);
     Set<String> allGroupNames = new HashSet<>();
@@ -62,7 +62,7 @@ public abstract class ConfigGroupExtractor {
     return errors;
   }
 
-  public ConfigGroupDefinition extract(Class<? extends Stage> klass, Object contextMsg) {
+  public ConfigGroupDefinition extract(Class klass, Object contextMsg) {
     List<ErrorMessage> errors = validate(klass, contextMsg);
     if (errors.isEmpty()) {
       List<ConfigGroups> allConfigGroups = getAllConfigGroups(klass);
