@@ -19,6 +19,7 @@ package com.streamsets.datacollector.restapi;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
+import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
@@ -29,6 +30,7 @@ import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.ServiceDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryExtrasJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryJson;
@@ -143,6 +145,10 @@ public class StageLibraryResource {
     List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
     pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
     definitions.setPipeline(pipeline);
+
+    // Populate service definitions
+    List<ServiceDefinition> serviceDefinitions = stageLibrary.getServiceDefinitions();
+    definitions.setServices(BeanHelper.wrapServiceDefinitions(serviceDefinitions));
 
     //Populate the definitions with the PipelineRulesDefinition
     List<PipelineRulesDefinitionJson> pipelineRules = new ArrayList<>(1);

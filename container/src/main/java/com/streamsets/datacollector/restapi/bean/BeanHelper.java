@@ -30,6 +30,7 @@ import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -57,6 +58,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BeanHelper {
   private BeanHelper() {}
@@ -365,6 +367,16 @@ public class BeanHelper {
       stageDefinitionJsonList.add(new StageDefinitionJson(s));
     }
     return stageDefinitionJsonList;
+  }
+
+  public static List<ServiceDefinitionJson> wrapServiceDefinitions(List<ServiceDefinition> serviceDefinitions) {
+    if(serviceDefinitions == null) {
+      return null;
+    }
+
+    return serviceDefinitions.stream()
+      .map(ServiceDefinitionJson::new)
+      .collect(Collectors.toCollection(ArrayList::new));
   }
 
   public static List<RuleIssueJson> wrapRuleIssues(List<com.streamsets.datacollector.validation.RuleIssue> ruleIssues) {

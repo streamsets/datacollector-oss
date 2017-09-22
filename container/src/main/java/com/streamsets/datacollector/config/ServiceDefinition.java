@@ -70,6 +70,10 @@ public class ServiceDefinition {
     return klass;
   }
 
+  public String getClassName() {
+    return klass.getName();
+  }
+
   public Class getProvides() {
     return provides;
   }

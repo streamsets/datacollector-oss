@@ -23,6 +23,7 @@ public class DefinitionsJson {
   private List<PipelineDefinitionJson> pipeline;
   private List<PipelineRulesDefinitionJson> pipelineRules;
   private List<StageDefinitionJson> stages;
+  private List<ServiceDefinitionJson> services;
   private Map<String,Map<String, List<String>>> rulesElMetadata;
   private Map<String, Object> elCatalog;
   private Set<Object> runtimeConfigs;
@@ -82,5 +83,13 @@ public class DefinitionsJson {
 
   public void setStageIcons(Map<String, String> stageIcons) {
     this.stageIcons = stageIcons;
+  }
+
+  public List<ServiceDefinitionJson> getServices() {
+    return services;
+  }
+
+  public void setServices(List<ServiceDefinitionJson> services) {
+    this.services = services;
   }
 }
