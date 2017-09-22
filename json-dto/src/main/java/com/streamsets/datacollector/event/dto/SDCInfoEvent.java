@@ -25,6 +25,7 @@ public class SDCInfoEvent implements Event {
   private List<StageInfo> stageInfoList;
   private SDCBuildInfo sdcBuildInfo;
   private List<String> labels;
+  private boolean edge = false;
   private int offsetProtocolVersion;
 
   public SDCInfoEvent() {
@@ -100,6 +101,14 @@ public class SDCInfoEvent implements Event {
 
   public void setLabels(List<String> labels) {
     this.labels = labels;
+  }
+
+  public boolean isEdge() {
+    return edge;
+  }
+
+  public void setEdge(boolean edge) {
+    this.edge = edge;
   }
 
   public int getOffsetProtocolVersion() {

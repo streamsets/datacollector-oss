@@ -25,6 +25,7 @@ public class SDCInfoEventJson implements EventJson {
   private List<StageInfoJson> stageInfoList;
   private SDCBuildInfoJson sdcBuildInfo;
   private List<String> labels;
+  private boolean edge = false;
   // default for sdc 2.4 and below is 1
   private int offsetProtocolVersion = 1;
 
@@ -82,6 +83,14 @@ public class SDCInfoEventJson implements EventJson {
 
   public void setLabels(List<String> labels) {
     this.labels = labels;
+  }
+
+  public boolean isEdge() {
+    return edge;
+  }
+
+  public void setEdge(boolean edge) {
+    this.edge = edge;
   }
 
   public int getOffsetProtocolVersion() {
