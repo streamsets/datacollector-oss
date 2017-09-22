@@ -29,11 +29,13 @@ import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineLifecycleStageChooserValues;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
+import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtractor;
 import com.streamsets.datacollector.definition.LineagePublisherDefinitionExtractor;
+import com.streamsets.datacollector.definition.ServiceDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
@@ -96,6 +98,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private Map<String, LineagePublisherDefinition> lineagePublisherDefinitionMap;
   private List<CredentialStoreDefinition> credentialStoreDefinitions;
   private LoadingCache<Locale, List<StageDefinition>> localizedStageList;
+  private List<ServiceDefinition> serviceList;
+  private Map<Class, ServiceDefinition> serviceMap;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
 
@@ -195,12 +199,16 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     lineagePublisherDefinitions = new ArrayList<>();
     lineagePublisherDefinitionMap = new HashMap<>();
     credentialStoreDefinitions = new ArrayList<>();
+    serviceList = new ArrayList<>();
+    serviceMap = new HashMap<>();
     loadStages();
     stageList = ImmutableList.copyOf(stageList);
     stageMap = ImmutableMap.copyOf(stageMap);
     lineagePublisherDefinitions = ImmutableList.copyOf(lineagePublisherDefinitions);
     lineagePublisherDefinitionMap = ImmutableMap.copyOf(lineagePublisherDefinitionMap);
     credentialStoreDefinitions = ImmutableList.copyOf(credentialStoreDefinitions);
+    serviceList = ImmutableList.copyOf(serviceList);
+    serviceMap = ImmutableMap.copyOf(serviceMap);
 
     // localization cache for definitions
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
@@ -214,6 +222,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       }
     });
     validateStageVersions(stageList);
+    validateServices(stageList, serviceList);
 
     // initializing the list of targets that can be used for error handling
     ErrorHandlingChooserValues.setErrorHandlingOptions(this);
@@ -307,6 +316,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       int stages = 0;
       int lineagePublishers = 0;
       int credentialStores = 0;
+      int services = 0;
       long start = System.currentTimeMillis();
       LocaleInContext.set(Locale.getDefault());
       for (ClassLoader cl : stageClassLoaders) {
@@ -356,16 +366,25 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             credentialStoreDefinitions.add(def);
           }
 
+          // Load Services
+          for(Class klass : loadClassesFromResource(libDef, cl, SERVICE_DEFINITION_RESOURCE)) {
+            services++;
+            ServiceDefinition def = ServiceDefinitionExtractor.get().extract(libDef, klass);
+            LOG.debug("Loaded service for '{}'", def.getProvides().getCanonicalName());
+            serviceList.add(def);
+            serviceMap.put(def.getProvides(), def);
+          }
         } catch (IOException | ClassNotFoundException ex) {
           throw new RuntimeException(
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.toString()), ex);
         }
       }
       LOG.debug(
-        "Loaded '{}' libraries with a total of '{}' stages, '{}' lineage publishers and '{}' credentialStores in '{}ms'",
+        "Loaded '{}' libraries with a total of '{}' stages, '{}' lineage publishers, '{}' services and '{}' credentialStores in '{}ms'",
         libs,
         stages,
         lineagePublishers,
+        services,
         credentialStores,
         System.currentTimeMillis() - start
       );
@@ -433,6 +452,26 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     }
   }
 
+  void validateServices(List<StageDefinition> stages, List<ServiceDefinition> services) {
+    List<String> errors = new ArrayList<>();
+
+    // Firstly validate that there are no duplicate providers for each service
+    Set<Class> duplicates = new HashSet<>();
+    for(ServiceDefinition def: services) {
+      if(duplicates.contains(def.getProvides())) {
+        errors.add(Utils.format("Service {} have multiple implementations.", def.getProvides()));
+      }
+
+      duplicates.add(def.getProvides());
+    }
+
+    // TBD: Validate that we have services for all stage dependencies
+
+    if(!errors.isEmpty()) {
+      throw new RuntimeException(Utils.format("Validate errors when loading services: {}", errors));
+    }
+  }
+
   private String createKey(String library, String name) {
     return library + ":" + name;
   }
@@ -470,6 +509,16 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @Override
   public List<CredentialStoreDefinition> getCredentialStoreDefinitions() {
     return credentialStoreDefinitions;
+  }
+
+  @Override
+  public List<ServiceDefinition> getServiceDefinitions() {
+    return serviceList;
+  }
+
+  @Override
+  public ServiceDefinition getServiceDefinition(Class serviceInterface) {
+    return serviceMap.get(serviceInterface);
   }
 
   @Override

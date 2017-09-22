@@ -26,6 +26,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
+import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
@@ -677,6 +678,16 @@ public class MockStages {
     @Override
     public List<CredentialStoreDefinition> getCredentialStoreDefinitions() {
       return Collections.emptyList();
+    }
+
+    @Override
+    public List<ServiceDefinition> getServiceDefinitions() {
+      return Collections.emptyList();
+    }
+
+    @Override
+    public ServiceDefinition getServiceDefinition(Class serviceInterface) {
+      return null;
     }
 
     @Override

@@ -20,6 +20,7 @@ import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
+import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -108,6 +109,16 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   @Override
   public List<CredentialStoreDefinition> getCredentialStoreDefinitions() {
     return Collections.emptyList();
+  }
+
+  @Override
+  public List<ServiceDefinition> getServiceDefinitions() {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public ServiceDefinition getServiceDefinition(Class serviceInterface) {
+    return null;
   }
 
   @Override

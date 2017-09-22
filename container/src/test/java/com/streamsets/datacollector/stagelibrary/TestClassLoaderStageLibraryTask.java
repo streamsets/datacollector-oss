@@ -18,6 +18,7 @@ package com.streamsets.datacollector.stagelibrary;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.el.ElConstantDefinition;
@@ -128,7 +129,15 @@ public class TestClassLoaderStageLibraryTask {
 
     List<String> stageListWithIgnores = ImmutableList.of("a", "bar", "b", "c", "foo");
     Assert.assertEquals(stageList, library.removeIgnoreStagesFromList(libDef, stageListWithIgnores));
-
   }
 
+  @Test(expected = RuntimeException.class)
+  public void testDuplicateServices() throws Exception {
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, new Configuration());
+
+    ServiceDefinition definition = Mockito.mock(ServiceDefinition.class);
+    Mockito.when(definition.getProvides()).thenReturn(Runnable.class);
+
+    library.validateServices(Collections.emptyList(), ImmutableList.of(definition, definition));
+  }
 }
