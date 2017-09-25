@@ -19,7 +19,10 @@
  <title>Viewing Published Metadata</title>
  <shortdesc>You can view published pipeline metadata in near real time in Cloudera Navigator.
         Cloudera Navigator lists each pipeline by pipeline title and displays supported origins as
-        inputs and supported destinations as outputs.</shortdesc>
+        inputs and supported destinations as outputs. Cloudera Navigator also includes a URL to the
+        pipeline within <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        />.</shortdesc>
  <conbody>
         <p><indexterm>Cloudera Navigator<indexterm>viewing pipeline
             metadata</indexterm></indexterm>For example, let's assume that you run a pipeline that

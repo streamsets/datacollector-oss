@@ -2192,12 +2192,6 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
         are running the Navigator Metadata Server role. <codeph>&lt;port number></codeph> is the
         port configured for the role. The default port number is 7187.</p></entry>
      </row>
-     <row id="row_NavParentURI">
-      <entry>lineage.publisher.navigator.config.metadata_parent_uri</entry>
-      <entry>Navigator Metadata Parent URI. For example:<p>
-        <codeblock>http://&lt;Navigator Metadata Server host>:&lt;port number>/</codeblock>
-       </p></entry>
-     </row>
      <row id="row_NavNamespace">
       <entry>lineage.publisher.navigator.config.namespace</entry>
       <entry>Namespace that Cloudera Navigator uses to uniquely identify <ph
@@ -2210,7 +2204,17 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
      </row>
      <row id="row_NavPassword">
       <entry>lineage.publisher.navigator.config.password</entry>
-      <entry>Password for the Cloudera Navigator account.</entry>
+      <entry>Password for the Cloudera Navigator account.<p>Enter one of the following:<ul
+         id="ul_zlz_zlk_fbb">
+         <li>Password value.</li>
+         <li>File that contains the password value. For increased security, store the password in a
+          separate file located in the <systemoutput>$SDC_CONF</systemoutput> directory and
+          reference the file in this property as follows: ${file("&lt;filename>")}. For
+           example:<codeblock>lineage.publisher.navigator.config.password=${file("NavigatorPassword.txt")}</codeblock><p>For
+           more information, see <xref
+            href="../Configuration/StoringLoadingSensitiveInformation.dita#concept_aqc_dbt_zr"
+           />.</p></li>
+        </ul></p></entry>
      </row>
      <row id="row_NavAutoCommit">
       <entry>lineage.publisher.navigator.config.autocommit</entry>
