@@ -197,7 +197,7 @@ public class NetflowV5Decoder implements VersionSpecificNetflowDecoder<NetflowV5
       msg.setdOctets(octets);
 
       // 46-47 is "pad2" (unused zero bytes)
-      buf.readBytes(2);
+      buf.skipBytes(2);
       result.add(msg);
       readIndex++;
       parentDecoder.doCheckpoint();
