@@ -92,14 +92,14 @@
                 </info>
             </step>
             <step>
-                <cmd>On the <wintitle>Node IDs</wintitle> tab, select the <uicontrol>NodeId
+                <cmd>On the <wintitle>NodeIds</wintitle> tab, select the <uicontrol>NodeId Fetch
                         Mode</uicontrol>.</cmd>
                 <info>For more information about the different ways you can provide node
                     information, see <xref href="OPCUAClient-NodeIDs.dita#concept_p25_wm2_dbb"
                     />.</info>
             </step>
             <step>
-                <cmd>When using the Manual NodeId mode, use <xref
+                <cmd>When using the Manual mode, use <xref
                         href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
                         >simple or bulk edit mode</xref> to enter the nodes that you want to use.
                     Click the <uicontrol>Add</uicontrol> icon to add additional nodes. </cmd>
@@ -145,7 +145,7 @@
                 </info>
             </step>
             <step>
-                <cmd>When using the File NodeId mode, configure the following property: </cmd>
+                <cmd>When using the File mode, configure the following property: </cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_hk5_2qk_dbb">
                         <tgroup cols="2">
@@ -180,7 +180,7 @@
                 </info>
             </step>
             <step>
-                <cmd>When using Browse NodeId mode, configure the following properties:</cmd>
+                <cmd>When using Browse mode, configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_xb5_yxk_dbb">
                         <tgroup cols="2">
