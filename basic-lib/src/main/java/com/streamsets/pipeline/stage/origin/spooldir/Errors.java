@@ -50,6 +50,8 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_30("RegEx {} contains {} groups but the field Path to group mapping specifies group {}."),
   SPOOLDIR_31("Error parsing grok pattern {}, reason {}"),
   SPOOLDIR_32("File Pattern cannot be empty"),
+  SPOOLDIR_33("Cannot Serialize Offset: {}"),
+  SPOOLDIR_34("Cannot Deserialize Offset: {}"),
   ;
 
   private final String msg;

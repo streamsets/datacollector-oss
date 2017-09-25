@@ -114,26 +114,6 @@ public class TestSpoolDirSourceSubDirectories {
   }
 
   @Test
-  public void getOffsetMethods() throws Exception {
-    TSpoolDirSource source = createSource("/dir1/file-0.log");
-    Assert.assertNull(source.getFileFromSourceOffset(null));
-    Assert.assertTrue(source.getFileFromSourceOffset(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, "/dir1/x")).endsWith("/dir1/x"));
-    Assert.assertEquals("0", source.getOffsetFromSourceOffset(null));
-    Assert.assertEquals("0", source.getOffsetFromSourceOffset(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, "/dir1/x")));
-    Assert.assertTrue(source.getFileFromSourceOffset(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, source.createSourceOffset("/dir1/x", "1"))).endsWith("/dir1/x"));
-    Assert.assertEquals("1", source.getOffsetFromSourceOffset(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, source.createSourceOffset("/dir1/x", "1"))));
-  }
-
-  @Test
-  public void testOffsetMethods() throws Exception {
-    TSpoolDirSource source = createSource(null);
-    Assert.assertEquals(NULL_FILE_OFFSET, source.createSourceOffset(null, "0"));
-    Assert.assertTrue(source.createSourceOffset("/dir1/file1", "0").endsWith("/dir1/file1::0"));
-    Assert.assertEquals("0", source.getOffsetFromSourceOffset(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, NULL_FILE_OFFSET)));
-    Assert.assertNull(source.getFileFromSourceOffset(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, NULL_FILE_OFFSET)));
-  }
-
-  @Test
   public void testAllowLateDirectory() throws Exception {
     File f = new File("target", UUID.randomUUID().toString());
 
@@ -171,7 +151,7 @@ public class TestSpoolDirSourceSubDirectories {
     //Late Directories allowed, wait and should be able to detect the file and read.
     conf.allowLateDirectory = true;
     source = new TSpoolDirSource(conf);
-    //runner = new PushSourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
+
     List<Record> records = Collections.synchronizedList(new ArrayList<>(10));
     AtomicInteger batchCount = new AtomicInteger(0);
 
@@ -186,7 +166,7 @@ public class TestSpoolDirSourceSubDirectories {
       });
       runner.waitOnProduce();
 
-      Assert.assertEquals(NULL_FILE_OFFSET, runner.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
+      TestOffsetUtil.compare(NULL_FILE_OFFSET, runner.getOffsets());
 
       Assert.assertTrue(f.mkdirs());
 
@@ -201,16 +181,21 @@ public class TestSpoolDirSourceSubDirectories {
       Thread.sleep(1000);
 
       records.clear();
-      runner.runProduce(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, source.createSourceOffset("/dir1/file-0.log", "1")), 10, output -> {
+
+      PushSourceRunner runner2 = new PushSourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
+
+      String offset = "/dir1/file-0.log::1";
+      runner2.runInit();
+      runner2.runProduce(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, offset), 10, output -> {
         synchronized (records) {
           records.addAll(output.getRecords().get("lane"));
         }
         batchCount.incrementAndGet();
+        runner2.setStop();
       });
-      runner.waitOnProduce();
+      runner2.waitOnProduce();
 
-      Assert.assertEquals(source.createSourceOffset("/dir1/file-0.log", "1"), runner.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
-
+      TestOffsetUtil.compare(offset, runner2.getOffsets());
     } finally {
       runner.runDestroy();
     }
@@ -234,7 +219,7 @@ public class TestSpoolDirSourceSubDirectories {
       });
       runner.waitOnProduce();
 
-      Assert.assertEquals(source.createSourceOffset("dir1/file-0.log", "0"), runner.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
+      TestOffsetUtil.compare("dir1/file-0.log::0", runner.getOffsets());
       Assert.assertTrue(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -249,12 +234,13 @@ public class TestSpoolDirSourceSubDirectories {
 
     runner.runInit();
     try {
-      runner.runProduce(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, source.createSourceOffset("/dir1/file-0.log", "0")), 10, output -> {
+      String offset = "/dir1/file-0.log::0";
+      runner.runProduce(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, offset), 10, output -> {
         runner.setStop();
       });
       runner.waitOnProduce();
 
-      Assert.assertEquals(source.createSourceOffset("/dir1/file-0.log", "0"), runner.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
+      TestOffsetUtil.compare(offset, runner.getOffsets());
       Assert.assertFalse(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -277,7 +263,8 @@ public class TestSpoolDirSourceSubDirectories {
     source.offset = 0;
     source.maxBatchSize = 10;
     try {
-      runner.runProduce(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, source.createSourceOffset("/dir1/file-0.log", "0")), 10, output -> {
+      String offset = "/dir1/file-1.log::0";
+      runner.runProduce(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, offset), 10, output -> {
         synchronized (records) {
           records.addAll(output.getRecords().get("lane"));
         }
@@ -286,8 +273,8 @@ public class TestSpoolDirSourceSubDirectories {
       });
       runner.waitOnProduce();
 
-      Assert.assertEquals(source.createSourceOffset("/dir1/file-0.log", "0"), runner.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
-      //Assert.assertTrue(source.produceCalled);
+      TestOffsetUtil.compare("dir1/file-0.log::0", runner.getOffsets());
+      Assert.assertTrue(source.produceCalled);
     } finally {
       runner.runDestroy();
     }
@@ -306,12 +293,13 @@ public class TestSpoolDirSourceSubDirectories {
     source.offset = 1;
     source.maxBatchSize = 10;
     try {
-      runner.runProduce(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, source.createSourceOffset("/dir1/file-0.log", "1")), 10, output -> {
+      String offset = "/dir1/file-0.log::1";
+      runner.runProduce(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, offset), 10, output -> {
         runner.setStop();
       });
       runner.waitOnProduce();
 
-      Assert.assertEquals(source.createSourceOffset("/dir1/file-0.log", "1"), runner.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
+      TestOffsetUtil.compare(offset, runner.getOffsets());
       //Assert.assertTrue(source.produceCalled);
     } finally {
       runner.runDestroy();
@@ -339,7 +327,8 @@ public class TestSpoolDirSourceSubDirectories {
         batchCount.incrementAndGet();
 
         if (batchCount.get() < 2) {
-          Assert.assertEquals(source.createSourceOffset("dir1/file-0.log", "-1"), output.getNewOffset());
+          Assert.assertEquals("dir1/file-0.log", output.getOffsetEntity());
+          Assert.assertEquals("{\"POS\":\"-1\"}", output.getNewOffset());
           Assert.assertTrue(source.produceCalled);
 
           source.produceCalled = false;
@@ -351,7 +340,8 @@ public class TestSpoolDirSourceSubDirectories {
       runner.waitOnProduce();
 
       Assert.assertEquals(2, batchCount.get());
-      Assert.assertEquals(source.createSourceOffset("dir1/file-0.log", "-1"), runner.getOffsets().get(Source.POLL_SOURCE_OFFSET_KEY));
+      TestOffsetUtil.compare("dir1/file-0.log::-1", runner.getOffsets());
+
       //Produce will not be called as this file-0.log will not be eligible for produce
       Assert.assertFalse(source.produceCalled);
     } finally {

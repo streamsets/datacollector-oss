@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.FileRef;
@@ -59,6 +58,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,12 +66,14 @@ import java.util.concurrent.TimeUnit;
 
 public class SpoolDirSource extends BasePushSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
-  private static final String OFFSET_SEPARATOR = "::";
   private static final String MINUS_ONE = "-1";
   private static final String ZERO = "0";
-  private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
   private static final int ONE = 1;
+  public static final String OFFSET_VERSION =
+      "$com.streamsets.pipeline.stage.origin.spooldir.SpoolDirSource.offset.version$";
+  public static final String OFFSET_VERSION_ONE = "1";
   static final String PERMISSIONS = "permissions";
+
 
   private static final String BASE_DIR = "baseDir";
 
@@ -101,6 +103,7 @@ public class SpoolDirSource extends BasePushSource {
 
   private long totalFiles;
 
+  private HashMap<String, Offset> allOffsets;
 
   public SpoolDirSource(SpoolDirConfigBean conf) {
     this.conf = conf;
@@ -260,6 +263,8 @@ public class SpoolDirSource extends BasePushSource {
 
     totalFiles = 0;
 
+    allOffsets = new HashMap<>();
+
     return issues;
   }
 
@@ -360,54 +365,6 @@ public class SpoolDirSource extends BasePushSource {
     return spooler;
   }
 
-  protected String getFileFromSourceOffset(Map<String, String> sourceOffset) throws StageException {
-    String sourceOffsetFile = null;
-    if (sourceOffset != null && sourceOffset.size() > 0) {
-      sourceOffsetFile = sourceOffset.get(Source.POLL_SOURCE_OFFSET_KEY);
-      int separator = sourceOffsetFile.indexOf(OFFSET_SEPARATOR);
-      if (separator > -1) {
-        sourceOffsetFile = sourceOffsetFile.substring(0, separator);
-        if (NULL_FILE.equals(sourceOffsetFile)) {
-          sourceOffsetFile = null;
-        }
-      }
-    }
-    return sourceOffsetFile;
-  }
-
-  protected String getOffsetFromSourceOffset(Map<String, String> sourceOffset) throws StageException {
-    String offset = ZERO;
-    if (sourceOffset != null && sourceOffset.size() > 0) {
-      int separator = sourceOffset.get(Source.POLL_SOURCE_OFFSET_KEY).indexOf(OFFSET_SEPARATOR);
-      if (separator > -1) {
-        offset = sourceOffset.get(Source.POLL_SOURCE_OFFSET_KEY).substring(separator + OFFSET_SEPARATOR.length());
-      }
-
-      if (offset == null || offset.length() < 1 ) {
-        offset = ZERO;
-      }
-    }
-    return offset;
-  }
-
-  protected String createSourceOffset(String file, String fileOffset) {
-    StringBuilder newOffset = new StringBuilder();
-
-    if (file == null) {
-      newOffset.append(NULL_FILE);
-    } else {
-      newOffset.append(file);
-    }
-
-    if (fileOffset != null && fileOffset.isEmpty()) {
-      newOffset.append(OFFSET_SEPARATOR + MINUS_ONE);
-    } else if (fileOffset != null) {
-      newOffset.append(OFFSET_SEPARATOR + fileOffset);
-    }
-
-    return newOffset.toString();
-  }
-
   private boolean hasToFetchNextFileFromSpooler(String file, String offset) {
     return
         // we don't have a current file half way processed in the current agent execution
@@ -462,25 +419,58 @@ public class SpoolDirSource extends BasePushSource {
     this.errorRecordHandler = errorRecordHandler;
   }
 
+  private Offset handleLastSourceOffset(Map<String, String> lastSourceOffset) throws StageException {
+    Offset offset = null;
+    if (lastSourceOffset != null && lastSourceOffset.size() > 0) {
+      if (lastSourceOffset.containsKey(Source.POLL_SOURCE_OFFSET_KEY)) {
+        // version one
+        offset = new Offset(Offset.VERSION_ONE, lastSourceOffset.get(Source.POLL_SOURCE_OFFSET_KEY));
+        //Remove Poll Source Offset key from the offset.
+        getContext().commitOffset(Source.POLL_SOURCE_OFFSET_KEY, null);
+        // commit the offset version
+        getContext().commitOffset(OFFSET_VERSION, OFFSET_VERSION_ONE);
+        getContext().commitOffset(offset.getFile(), offset.getOffsetString());
+      } else {
+        String version = lastSourceOffset.get(OFFSET_VERSION);
+        // remove the offset key from the list
+        lastSourceOffset.remove(OFFSET_VERSION);
+        Set<String> key = lastSourceOffset.keySet();
+        Iterator iterator = key.iterator();
+
+        // the source offset should have one key
+        if (iterator.hasNext()) {
+          String keyString = (String) iterator.next();
+          offset = new Offset(version, keyString, lastSourceOffset.get(keyString));
+        }
+      }
+    } else {
+      offset = new Offset(Offset.VERSION_ONE, null);
+    }
+    return offset;
+  }
+
   @Override
   public void produce(Map<String, String> lastSourceOffset, int maxBatchSize) throws StageException {
     int batchSize = Math.min(conf.batchSize, maxBatchSize);
+
+    Offset newSourceOffset = handleLastSourceOffset(lastSourceOffset);
+
     while (!getContext().isStopped()) {
       BatchContext batchContext = getContext().startBatch();
       BatchMaker batchMaker = batchContext.getBatchMaker();
       errorRecordHandler = new DefaultErrorRecordHandler(getContext(), batchContext);
 
-      String newSourceOffset = produceBatch(lastSourceOffset, batchSize, batchContext, batchMaker);
-      lastSourceOffset = ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, newSourceOffset);
+      newSourceOffset = produceBatch(newSourceOffset, batchSize, batchContext, batchMaker);
     }
   }
 
-  private String produceBatch(Map<String, String> lastSourceOffset, int batchSize, BatchContext batchContext, BatchMaker batchMaker) throws StageException {
+  private Offset produceBatch(Offset lastSourceOffset, int batchSize, BatchContext batchContext, BatchMaker batchMaker) throws StageException {
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
-    String file = getFileFromSourceOffset(lastSourceOffset);
+    String file = lastSourceOffset.getFile();
+    String lastSourceFile = file;
     String fullPath = (file != null) ? getSpooler().getSpoolDir() + "/" + file : null;
     // if lastSourceOffset is NULL (beginning of source) it returns 0
-    String offset = getOffsetFromSourceOffset(lastSourceOffset);
+    String offset = lastSourceOffset.getOffset();
 
     if (hasToFetchNextFileFromSpooler(fullPath, offset)) {
       currentFile = null;
@@ -602,11 +592,17 @@ public class SpoolDirSource extends BasePushSource {
       noMoreDataFileCount = 0;
     }
 
+    Offset newOffset = new Offset(Offset.VERSION_TWO, file, offset);
 
-    //Process And Commit offsets
-    getContext().processBatch(batchContext, Source.POLL_SOURCE_OFFSET_KEY, createSourceOffset(file, offset));
+    // reset the offset
+    if (lastSourceFile != null) {
+      getContext().commitOffset(lastSourceFile, null);
+    }
 
-    return createSourceOffset(file, offset);
+    // Process And Commit offsets
+    getContext().processBatch(batchContext, newOffset.getFile(), newOffset.getOffsetString());
+
+    return newOffset;
   }
 
   /**
