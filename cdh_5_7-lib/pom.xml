@@ -40,7 +40,7 @@
         <hive.version>1.1.0-cdh5.7.6</hive.version>
         <solr.version>4.10.3-cdh5.7.6</solr.version>
         <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
-        <thrift.version>0.9.3</thrift.version>
+        <thrift.version>0.9.2</thrift.version>
         <avro.version>1.7.7</avro.version>
         <spark.version>1.6.0-cdh5.7.6</spark.version>
     </properties>
