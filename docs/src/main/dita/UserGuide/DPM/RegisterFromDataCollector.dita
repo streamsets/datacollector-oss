@@ -114,7 +114,7 @@
                 </info>
             </step>
             <step>
-                <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
+                <cmd>Click <uicontrol>Enable DPM</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>If the <ph
