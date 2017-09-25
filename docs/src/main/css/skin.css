@@ -208,6 +208,9 @@ a.navheader_parent_path:hover {
 	font-family: 'Lato', Helvetica, Arial, Lucida, sans-serif;
 	margin-top: -10px;
 }
+#splitterContainer #tree ul>li ul>li span.ph {
+    padding-left: 0;
+}
 #splitterContainer #tree ul>li span, #splitterContainer #tree ul>li span.hasSubMenuClosed, #splitterContainer #tree ul>li span.hasSubMenuOpened, #splitterContainer #tree ul>li span.topic {
 	padding-left: 22px;
 }
