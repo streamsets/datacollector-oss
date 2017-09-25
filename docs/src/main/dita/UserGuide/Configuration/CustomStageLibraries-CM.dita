@@ -35,9 +35,9 @@
                         sdc-env.sh</uicontrol> field, add the USER_LIBRARIES_DIR environment
                     variable and point it to the custom stage library directory, as follows:</cmd>
                 <info>
-                    <codeblock>USER_LIBRARIES_DIR="&lt;custom stage library directory>"</codeblock>
+                    <codeblock>export USER_LIBRARIES_DIR="&lt;custom stage library directory>"</codeblock>
                     <p>For
-                        example:<codeblock>USER_LIBRARIES_DIR="/opt/sdc-user-libs/"</codeblock></p>
+                        example:<codeblock>export USER_LIBRARIES_DIR="/opt/sdc-user-libs/"</codeblock></p>
                 </info>
             </step>
             <step>
