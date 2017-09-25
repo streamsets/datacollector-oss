@@ -2245,7 +2245,7 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
        used by the <xref href="../Expression_Language/CredentialFunctions.dita#concept_yvc_3qs_r1b"
         >credential functions</xref>.<p>You use the following format for the name
         argument:<codeblock>&lt;path>&lt;separator>&lt;key></codeblock></p><p>For example, if you
-        keep the default of &amp;, the format for the name argument
+        keep the default ampersand (&amp;), the format for the name argument
         is:<codeblock>&lt;path>&amp;&lt;key></codeblock></p></entry>
      </row>
      <row id="row_VaultAddr">

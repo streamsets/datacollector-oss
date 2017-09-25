@@ -491,6 +491,10 @@
                                     </ul></p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-cyberark-credentialstore-lib</entry>
+                            <entry>For the CyberArk credential store system.</entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-elasticsearch_5-lib</entry>
                             <entry>For Elasticsearch 1.x, 2.x, and 5.x.<p>Includes the Elasticsearch
                                     origin and destination.</p></entry>

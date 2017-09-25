@@ -112,6 +112,11 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Configuration/CredentialStores-Groups.dita"/>
+   <topicref href="../Configuration/CredentialStores-CyberArk.dita">
+    <topicref href="../Configuration/CredentialStores-CyberArk-Step1-StageLib.dita"/>
+    <topicref href="../Configuration/CredentialStores-CyberArk-Step2-PropertiesFile.dita"/>
+    <topicref href="../Configuration/CredentialStores-CyberArk-Step3-Functions.dita"/>
+   </topicref>
    <topicref href="../Configuration/CredentialStores-JKS.dita">
     <topicref href="../Configuration/CredentialStores-JKS-Step1-StageLib.dita"/>
     <topicref href="../Configuration/CredentialStores-JKS-Step2-PropertiesFile.dita"/>
