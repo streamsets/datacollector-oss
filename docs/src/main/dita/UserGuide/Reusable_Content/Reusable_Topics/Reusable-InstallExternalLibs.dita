@@ -67,9 +67,9 @@ grant codebase "file:///opt/sdc-extras/-" {
                     <uicontrol>Data Collector Advanced Configuration Snippet (Safety Valve) for
                     sdc-env.sh</uicontrol> field, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment
                 variable and point it to the external directory, as
-                    follows:<codeblock>STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory>"</codeblock><p>For
+                    follows:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;external directory>"</codeblock><p>For
                     example:
-                </p><codeblock>STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock>By
+                </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock>By
                 default, the path is <codeph>/var/lib/sdc</codeph>. </li>
             <li id="CM_Security">When using the Java Security Manager, which is enabled by default, update the
                     <uicontrol>Data Collector Advanced Configuration Snippet (Safety Valve) for
