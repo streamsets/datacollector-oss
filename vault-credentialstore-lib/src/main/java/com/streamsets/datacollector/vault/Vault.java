@@ -112,6 +112,8 @@ public class Vault {
 
     // Initial config that doesn't contain auth token
     config = parseVaultConfigs(configuration);
+    // Trigger an initial login
+    config = getConfig();
     LOG.debug("CredentialStore '{}' Vault, scheduling renewal every '{}' seconds", csId, renewalInterval);
     scheduledFuture = EXECUTOR.scheduleWithFixedDelay(
         new VaultRenewalTask(leases, secrets),
