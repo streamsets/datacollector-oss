@@ -117,8 +117,9 @@ public class TestKuduRecordConverter {
   public void testBasic() throws Exception {
     kuduRecordConverter.convert(record, partialRow, KuduOperationType.INSERT.code);
     Assert.assertEquals(
-      "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 123, 0, 123, 0, 0, 0, 123, 0, 0, 0, 0, 0, 0, 0, 0, 0, -10, " +
-        "66, 0, 0, 0, 0, 0, -64, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -128, 48, 19, 69, 124, 87, 5, 0, 0, 0]",
+      "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 123, 0, 123, 0, 0, 0, 123, " +
+          "0, 0, 0, 0, 0, 0, 0, 0, 0, -10, 66, 0, 0, 0, 0, 0, -64, 94, 64, 0, 0, 0, 0, 0, 0, 0, 0, " +
+          "0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 116, -11, -46, 109, -67, -35, 20, 0, 0]",
       PartialRowHelper.toString(partialRow));
     List<ByteBuffer> varLengthData = PartialRowHelper.getVarLengthData(partialRow);
     Assert.assertEquals(10, varLengthData.size());
