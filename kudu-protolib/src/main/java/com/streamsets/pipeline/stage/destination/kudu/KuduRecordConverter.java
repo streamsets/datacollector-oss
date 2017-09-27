@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
+import org.apache.kudu.Type;
 import org.apache.kudu.client.PartialRow;
 
 import java.util.Map;
@@ -83,7 +84,12 @@ public class KuduRecordConverter {
               row.addInt(column, field.getValueAsInteger());
               break;
             case LONG:
-              row.addLong(column, field.getValueAsLong());
+              if (columnSchema.getType() == Type.UNIXTIME_MICROS) {
+                // Convert millisecond to microsecond
+                row.addLong(column, field.getValueAsLong() * 1000);
+              } else {
+                row.addLong(column, field.getValueAsLong());
+              }
               break;
             case FLOAT:
               row.addFloat(column, field.getValueAsFloat());
