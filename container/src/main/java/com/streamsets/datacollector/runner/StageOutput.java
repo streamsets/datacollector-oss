@@ -31,19 +31,21 @@ public class StageOutput {
 
   @SuppressWarnings("unchecked")
   public StageOutput(String instanceName, Map<String, List<Record>> output, ErrorSink errorSink, EventSink eventSink) {
-    this(instanceName,
-      (Map) output,
-      (List) errorSink.getErrorRecords(instanceName),
-      errorSink.getStageErrors().get(instanceName),
-      eventSink.getStageEvents(instanceName)
+    this(
+        instanceName,
+        output,
+        errorSink.getErrorRecords(instanceName),
+        errorSink.getStageErrors().get(instanceName),
+        eventSink.getStageEvents(instanceName)
     );
   }
 
-  public StageOutput(String instanceName,
-                     Map<String, List<Record>> output,
-                     List<Record> errorRecords,
-                     List<ErrorMessage> stageErrors,
-                     List<Record> eventRecords
+  public StageOutput(
+      String instanceName,
+      Map<String, List<Record>> output,
+      List<Record> errorRecords,
+      List<ErrorMessage> stageErrors,
+      List<Record> eventRecords
   ) {
     this.instanceName = instanceName;
     this.output = output;

@@ -204,11 +204,12 @@ public class FullPipeBatch implements PipeBatch {
       fullPayload.put(pipe.getEventLanes().get(0), stageOutput.getEventRecords());
     }
     if (stageOutputSnapshot != null) {
-      stageOutputSnapshot.add(new StageOutput(stageOutput.getInstanceName(),
-                                              (Map) createSnapshot(stageOutput.getOutput()),
-                                              (List) stageOutput.getErrorRecords(),
-                                              stageOutput.getStageErrors(),
-                                              stageOutput.getEventRecords()
+      stageOutputSnapshot.add(new StageOutput(
+          stageOutput.getInstanceName(),
+          createSnapshot(stageOutput.getOutput()),
+          stageOutput.getErrorRecords(),
+          stageOutput.getStageErrors(),
+          stageOutput.getEventRecords()
       ));
     }
   }
