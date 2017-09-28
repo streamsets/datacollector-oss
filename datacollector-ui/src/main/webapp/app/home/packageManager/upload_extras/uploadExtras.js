@@ -20,53 +20,59 @@
 angular
   .module('dataCollectorApp.home')
   .controller('UploadExtrasModalInstanceController',
-      function ($scope, $rootScope, $modalInstance, installedLibraries, api) {
-    angular.extend($scope, {
-      common: {
-        errors: []
-      },
-      operationStatus: 'incomplete',
-      installedLibraries: installedLibraries,
-      libraryInfo: {
-        library: '',
-        uploadFile: {}
-      },
+    function ($scope, $rootScope, $modalInstance, installedLibraries, api) {
+      angular.extend($scope, {
+        common: {
+          errors: []
+        },
+        operationStatus: 'incomplete',
+        installedLibraries: installedLibraries,
+        libraryInfo: {
+          library: '',
+          uploadFile: {}
+        },
 
-      uploadExtras: function() {
-        if (!$scope.libraryInfo.library) {
-          $scope.common.errors = ['Please Select Library'];
-          return;
+        uploadExtras: function() {
+          if (!$scope.libraryInfo.library) {
+            $scope.common.errors = ['Please Select Library'];
+            return;
+          }
+
+          if (!$scope.libraryInfo.uploadFile.name) {
+            $scope.common.errors = ['Please Select File to Upload'];
+            return;
+          }
+
+          $scope.operationStatus = 'uploading';
+          api.pipelineAgent.installExtras($scope.libraryInfo.library.id, $scope.libraryInfo.uploadFile)
+            .then(
+              function(res) {
+                $scope.operationStatus = 'complete';
+              },
+              function(res) {
+                $scope.common.errors = [res.data];
+              }
+            );
+        },
+
+        restart: function() {
+          $scope.operationStatus = 'restarting';
+          api.admin.restartDataCollector();
+        },
+
+        cancel: function() {
+          $modalInstance.dismiss('cancel');
         }
+      });
 
-        if (!$scope.libraryInfo.uploadFile.name) {
-          $scope.common.errors = ['Please Select File to Upload'];
-          return;
-        }
+      $scope.libraryInfo.library = _.find(installedLibraries, function (library) {
+        return library.id === 'streamsets-datacollector-jdbc-lib';
+      });
 
-        $scope.operationStatus = 'uploading';
-        api.pipelineAgent.installExtras($scope.libraryInfo.library.id, $scope.libraryInfo.uploadFile)
-          .then(
-            function(res) {
-              $scope.operationStatus = 'complete';
-            },
-            function(res) {
-              $scope.common.errors = [res.data];
-            }
-          );
-      },
-
-      restart: function() {
-        $scope.operationStatus = 'restarting';
-        api.admin.restartDataCollector();
-      },
-
-      cancel: function() {
-        $modalInstance.dismiss('cancel');
-      }
+      $scope.installedLibraries = _.chain(installedLibraries)
+        .filter(function(stageLibrary) {
+          return stageLibrary.library !== 'streamsets-datacollector-stats-lib';
+        })
+        .sortBy('label')
+        .value();
     });
-
-    $scope.libraryInfo.library = _.find(installedLibraries, function (library) {
-      return library.id === 'streamsets-datacollector-jdbc-lib';
-    })
-
-  });
