@@ -44,7 +44,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   private static final String[] PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES = {
       "com.streamsets.pipeline.api.",
       "com.streamsets.pipeline.container.",
-      "com.codehale.metrics.",
+      "com.codahale.metrics.",
       "org.slf4j.",
       "org.apache.log4j."
   };
