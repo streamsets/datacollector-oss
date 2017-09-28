@@ -231,6 +231,7 @@
   <topicref href="../Processors/KuduLookup.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/KuduLookup-ColumnMappings.dita"/>
+   <topicref href="../Processors/KuduLookup-DataTypes.dita"/>
    <topicref href="../Processors/KuduLookup-Cache.dita">
     <topicref href="../Processors/KuduLookup-CacheTableInfo.dita"/>
     <topicref href="../Processors/KuduLookup-CacheValues.dita"/>

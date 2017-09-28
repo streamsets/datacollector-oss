@@ -262,6 +262,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Destinations/Kudu-DefineOperation.dita"/>
+   <topicref href="../Destinations/Kudu-DataTypes.dita"/>
    <topicref href="../Destinations/Kudu-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/LocalFS.dita" chunk="to-content">

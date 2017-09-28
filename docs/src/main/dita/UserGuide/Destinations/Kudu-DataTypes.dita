@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_gjj_dg3_jbb">
+ <title>Kudu Data Types</title>
+ <conbody>
+        <p><indexterm>Kudu destination<indexterm>data types</indexterm></indexterm><indexterm>data
+                    types<indexterm>Kudu destination</indexterm></indexterm>The Kudu destination
+            converts <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            data types to the following compatible Kudu data types:</p>
+        <p>
+            <table frame="all" rowsep="1" colsep="1" id="table_ljg_nsr_cy">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                    <thead>
+                        <row>
+                            <entry>Data Collector Data Type</entry>
+                            <entry>Kudu Data Type</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Boolean</entry>
+                            <entry>Bool</entry>
+                        </row>
+                        <row>
+                            <entry>Byte</entry>
+                            <entry>Int8</entry>
+                        </row>
+                        <row>
+                            <entry>Byte Array</entry>
+                            <entry>Binary </entry>
+                        </row>
+                        <row>
+                            <entry>Double</entry>
+                            <entry>Double</entry>
+                        </row>
+                        <row>
+                            <entry>Float</entry>
+                            <entry>Float</entry>
+                        </row>
+                        <row>
+                            <entry>Integer</entry>
+                            <entry>Int32</entry>
+                        </row>
+                        <row>
+                            <entry>Long</entry>
+                            <entry>Int64 or Unixtime_micros<p>The destination determines the data
+                                    type to use based on the mapped Kudu column. </p><p>The <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> Long data type stores millisecond values. The Kudu
+                                    Unixtime_micros data type stores microsecond values. When
+                                    converting to the Unixtime_micros data type, the destination
+                                    multiplies the field value by 1,000 to convert the value to
+                                    microseconds.</p></entry>
+                        </row>
+                        <row>
+                            <entry>Short</entry>
+                            <entry>Int16</entry>
+                        </row>
+                        <row>
+                            <entry>String</entry>
+                            <entry>String</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </p>
+  <p>The destination cannot convert the following <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            data types. Use a Field Type Converter processor earlier in the pipeline to convert
+            these <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            data types to ones that are compatible with Kudu:<ul id="ul_hfp_sg3_jbb">
+                <li>Character</li>
+                <li>Date</li>
+                <li>Datetime</li>
+                <li>Decimal</li>
+                <li>List</li>
+                <li>List-Map</li>
+                <li>Map</li>
+                <li>Time</li>
+            </ul></p>
+ </conbody>
+</concept>
