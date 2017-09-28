@@ -256,6 +256,25 @@
    </topicref>
    <topicref href="../Origins/KConsumer-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/KafkaMultiConsumer.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Origins/KafkaMultiConsumer-Offsets.dita"/>
+   <topicref href="../Origins/KafkaMultiConsumer-ExistingData.dita"/>
+   <topicref href="../Origins/KafkaMultiConsumer-MultithreadProcessing.dita"/>
+   <topicref href="../Origins/KafkaMultiConsumer-AdditionalKProp.dita"/>
+   <topicref href="../Origins/KafkaMultiConsumer-RecordHeaderAtts.dita"/>
+   <topicref href="../Origins/KafkaMultiConsumer-EnablingSecurity.dita">
+    <topicref href="../Origins/KafkaMultiConsumer-EnablingSSL.dita"/>
+    <topicref href="../Origins/KafkaMultiConsumer-EnablingKerberos.dita"/>
+    <topicref href="../Origins/KafkaMultiConsumer-EnablingSSLKerb.dita"/>
+   </topicref>
+   <topicref href="../Origins/KafkaMultiConsumer-DataFormats.dita">
+    <topicref href="../Origins/LogFormats.dita"/>
+   </topicref>
+   <topicref href="../Origins/KafkaMultiConsumer-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/KinConsumer.dita" chunk="to-content">  
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/KinConsumer-MultithreadProc.dita"/>

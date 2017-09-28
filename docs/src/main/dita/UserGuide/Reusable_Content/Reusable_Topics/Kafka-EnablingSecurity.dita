@@ -20,14 +20,12 @@
 <concept id="concept_nrg_5mb_t5">
  <title>Enabling Security</title>
  <conbody>
-  <p id="P1"><draft-comment author="Loretta">P1, P2, and P3 are used by Kafka Producer. P2 and P3
-                are conrefed by Kafka Consumer, SDC RPC to Kafka, and UDP to Kafka.
-                </draft-comment><indexterm>enabling security<indexterm>Kafka
-                Producer</indexterm></indexterm>When using <ph
+  <p id="P1"><draft-comment author="Loretta">Various paragraphs used by HTTP to Kafka, Kafka
+                Producer, Kafka Consumer, Kafka Multitopic Consumer, SDC RPC to Kafka, and UDP to
+                Kafka. </draft-comment><indexterm>enabling security<indexterm>Kafka
+                    Producer</indexterm></indexterm>When using <ph
                 conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>, you can configure
             the Kafka Producer to connect securely through SSL/TLS, Kerberos, or both. </p>
-        <p id="P2">These versions provide features to support secure connections through SSL/TLS or
-            Kerberos (SASL). The Kafka community considers these features beta quality. </p>
         <p id="P3">Earlier versions of Kafka do not support security. </p>
  </conbody>
 </concept>

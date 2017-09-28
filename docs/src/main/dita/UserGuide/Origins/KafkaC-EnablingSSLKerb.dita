@@ -23,7 +23,7 @@
         <p><indexterm>Kafka Consumer origin<indexterm>enabling SSL/TLS and Kerberos
                     security</indexterm></indexterm><indexterm>SSL/TLS and Kerberos
                     authentication<indexterm>using with Kafka Consumer</indexterm></indexterm>You
-            can enable Kafka Consumer to use SSL/TLS and Kerberos to connect to <ph
+            can enable the Kafka Consumer origin to use SSL/TLS and Kerberos to connect to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
             />.</p>
         <p

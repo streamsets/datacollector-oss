@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xgs_nlc_wr">
+ <title>Data Formats</title>
+ <conbody>
+  <p><indexterm>data formats<indexterm>Kafka Multitopic
+        Consumer</indexterm></indexterm><indexterm>Kafka Multitopic Consumer origin<indexterm>data
+          formats</indexterm></indexterm>The Kafka Multitopic Consumer origin processes data
+      differently based on the data format. Kafka Multitopic Consumer can process the following
+      types of data:</p>
+  <dl>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO-Kafka">
+        <dt/>
+        <dd/>
+      </dlentry>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-Binary">
+        <dt/>
+        <dd/>
+      </dlentry>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-DF-Datagram">
+        <dt/>
+        <dd/>
+      </dlentry>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-DELIM">
+        <dt/>
+        <dd/>
+      </dlentry>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-JSON">
+        <dt/>
+        <dd/>
+      </dlentry>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-LOG">
+        <dt/>
+        <dd/>
+      </dlentry>
+      <dlentry
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-ProtoMessage">
+        <dt/>
+        <dd/>
+      </dlentry>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-SDC">
+        <dt/>
+        <dd/>
+      </dlentry>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-TEXT">
+        <dt/>
+        <dd/>
+      </dlentry>
+      <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XML">
+        <dt/>
+        <dd/>
+      </dlentry>
+    </dl>
+ </conbody>
+</concept>

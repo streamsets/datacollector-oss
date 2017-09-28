@@ -64,9 +64,10 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_10-lib</entry>
-                            <entry>For Kafka version 0.10.<p>Includes:<ul id="ul_jyh_nml_zw">
+                            <entry>For Kafka version 0.10.x.<p>Includes:<ul id="ul_jyh_nml_zw">
                                         <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
+                                        <li>Kafka Multitopic Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>Kafka Producer destination</li>

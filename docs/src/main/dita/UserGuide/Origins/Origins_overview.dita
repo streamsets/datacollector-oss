@@ -60,7 +60,10 @@
           database data using a user-defined SQL query through a JDBC connection. </li>
         <li><xref href="JMS.dita#concept_rhh_4nj_dt">JMS Consumer</xref> - Reads messages from JMS. </li>
         <li><xref href="KConsumer.dita#concept_msz_wnr_5q">Kafka Consumer</xref> - Reads messages
-          from Kafka.</li>
+          from a single Kafka topic.</li>
+        <li><xref href="KafkaMultiConsumer.dita#concept_ccs_fn4_x1b">Kafka Multitopic
+            Consumer</xref> - Reads messages from multiple Kafka topics. Creates multiple threads to
+          enable parallel processing in a multithreaded pipeline.</li>
         <li><xref href="KinConsumer.dita#concept_anh_4y3_yr">Kinesis Consumer</xref> - Reads data
           from Kinesis Streams. Creates multiple threads to enable parallel processing in a
           multithreaded pipeline.</li>

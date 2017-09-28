@@ -35,10 +35,10 @@
             Kafka. </p>
         <p id="P2-steps">
             <ol>
-                <li>To use Kerberos, first make sure Kafka is configured for Kerberos as described
-                    in the Kafka documentation: <xref
+                <li id="Kerb-ConfigKafka">To use Kerberos, first make sure Kafka is configured for
+                    Kerberos as described in the <xref
                         href="http://kafka.apache.org/documentation.html#security_sasl"
-                        format="html" scope="external"/>.</li>
+                        format="html" scope="external">Kafka documentation</xref>.</li>
                 <li id="step-KafkaKERBsdcprops">In the <ph
                         conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
                     configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, make sure the
@@ -49,7 +49,7 @@
                     </ul></li>
                 <li>On the <wintitle>General</wintitle> tab of the stage, set the Stage Library
                     property to Apache Kafka 0.9.0.0 or a later version.</li>
-                <li>On the <wintitle>Kafka</wintitle> tab, add the
+                <li id="Kerb-KafkaTab">On the <wintitle>Kafka</wintitle> tab, add the
                         <uicontrol>security.protocol</uicontrol> Kafka configuration property, and
                     set it to <uicontrol>SASL_PLAINTEXT</uicontrol>.</li>
                 <li id="step-KafkaKERBservicename">Then, add the

@@ -19,12 +19,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_msz_wnr_5q">
  <title>Kafka Consumer</title>
- <shortdesc>The Kafka Consumer origin reads data from an Apache Kafka cluster.</shortdesc>
  <conbody>
   <p><indexterm>Kafka Consumer
           origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Kafka
-          Consumer</indexterm></indexterm>When you configure a Kafka Consumer, you configure the
-      consumer group name, topic, and ZooKeeper connection information. </p>
+          Consumer</indexterm></indexterm>The Kafka Consumer origin reads data from a single topic
+      in an Apache Kafka cluster. To use multiple threads to read from multiple topics, use the
+        <xref href="KafkaMultiConsumer.dita#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</xref>. </p>
+    <p>When you configure a Kafka Consumer, you configure the consumer group name, topic, and
+      ZooKeeper connection information. </p>
     <p>When using Kafka version 0.8.2 or later to consume messages in the Avro format, you can
       configure the Kafka Consumer to work with the Confluent Schema Registry. The Confluent Schema
       Registry is a distributed storage layer for Avro schemas which uses Kafka as its underlying
@@ -32,7 +34,7 @@
     <p>You can add additional Kafka configuration properties as needed. When using <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>, you can
       also configure the origin to use Kafka security features.</p>
-    <p>Kafka Consumer includes record header attributes that enable you to use the origins of a
+    <p>Kafka Consumer includes record header attributes that enable you to use information about the
       record in pipeline processing. </p>
  </conbody>
 </concept>

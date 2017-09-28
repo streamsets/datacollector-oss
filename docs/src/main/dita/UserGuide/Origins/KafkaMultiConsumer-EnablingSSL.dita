@@ -20,15 +20,19 @@
 <concept id="concept_ann_l2b_t5">
     <title>Enabling SSL/TLS</title>
     <conbody>
-        <p><indexterm>Kafka Consumer origin<indexterm>enabling SSL/TLS
-                security</indexterm></indexterm>Perform the following steps to enable the Kafka
-            Consumer origin to use SSL/TLS to connect to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.
-            You can use the same steps to configure a Kafka Producer. </p>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P2-SSLlist"/>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P3-example"/>
+        <p><indexterm>Kafka Multitopic Consumer origin<indexterm>enabling SSL/TLS
+                    security</indexterm></indexterm>Perform the following steps to enable the Kafka
+            Multitopic Consumer origin to use SSL/TLS to connect to Kafka:<ol id="ol_lnb_dc4_gbb">
+                <li
+                    conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/SSL-ConfigKafka"/>
+                <li
+                    conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/SSL-KafkaTab"/>
+                <li
+                    conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/step-KafkaSSLprops"
+                />
+            </ol></p>
+        <p>For example, the following properties allow the stage to use SSL/TLS to connect to Kafka
+            0.10.1 with client authentication:</p>
         <image
             conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSSL.dita#concept_vcx_bnb_t5/P4-image"
             id="image_w3r_mzc_rw"/>

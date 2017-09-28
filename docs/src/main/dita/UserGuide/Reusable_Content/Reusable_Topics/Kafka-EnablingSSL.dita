@@ -30,14 +30,14 @@
             same steps to configure a Kafka Consumer.</p>
         <p id="P2-SSLlist">
             <ol id="KAFKA-SSL-list">
-                <li>To use SSL/TLS to connect, first make sure Kafka is configured for SSL/TLS as
-                    described in the Kafka documentation: <xref
+                <li id="SSL-ConfigKafka">To use SSL/TLS to connect, first make sure Kafka is
+                    configured for SSL/TLS as described in the <xref
                         href="http://kafka.apache.org/documentation.html#security_ssl" format="html"
-                        scope="external"/>. </li>
+                        scope="external">Kafka documentation</xref>. </li>
                 <li id="KAFKASetStage">On the <uicontrol>General</uicontrol> tab of the stage, set
                     the <uicontrol>Stage Library</uicontrol> property to Apache Kafka 0.9.0.0 or a
                     later version.</li>
-                <li>On the <wintitle>Kafka</wintitle> tab, add the
+                <li id="SSL-KafkaTab">On the <wintitle>Kafka</wintitle> tab, add the
                         <uicontrol>security.protocol</uicontrol> Kafka configuration property and
                     set it to <uicontrol>SSL</uicontrol>.</li>
                 <li id="step-KafkaSSLprops">Then, add the following SSL Kafka configuration

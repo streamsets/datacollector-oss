@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_w4j_3vb_t5">
+ <title>Enabling Kerberos (SASL)</title>
+ <conbody>
+  <p><indexterm>Kafka Multitopic Consumer origin<indexterm>Kerberos
+                authentication</indexterm></indexterm><indexterm>Kerberos
+                    authentication<indexterm>using with Kafka Multitopic
+                Consumer</indexterm></indexterm>When you use Kerberos authentication, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            uses the Kerberos principal and keytab. </p>
+        <p>Perform the following steps to enable the Kafka Multitopic Consumer origin to use
+            Kerberos to connect to Kafka:<ol id="ol_vrj_rb4_gbb">
+                <li
+                    conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingKerberos.dita#concept_axt_5gf_55/Kerb-ConfigKafka"/>
+                <li
+                    conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingKerberos.dita#concept_axt_5gf_55/step-KafkaKERBsdcprops"/>
+                <li
+                    conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingKerberos.dita#concept_axt_5gf_55/Kerb-KafkaTab"/>
+                <li
+                    conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingKerberos.dita#concept_axt_5gf_55/step-KafkaKERBservicename"
+                />
+            </ol></p>
+        <p>For example, the following Kafka properties enable connecting to Kafka 0.10.1 with
+            Kerberos:</p>
+        <p
+            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingKerberos.dita#concept_axt_5gf_55/P4-image"/>
+ </conbody>
+</concept>
