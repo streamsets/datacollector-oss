@@ -37,7 +37,6 @@
     <flume.version>1.5.2.2.4.2.0-258</flume.version>
     <hadoop.version>2.7.1.2.4.2.0-258</hadoop.version>
     <hbase.version>1.1.2.2.4.2.0-258</hbase.version>
-    <hive.version>1.2.1000.2.4.2.0-258</hive.version>
     <kafka.version>0.9.0.2.4.2.0-258</kafka.version>
     <spark.version>1.6.1.2.4.2.0-258</spark.version>
     <thrift.version>0.9.0</thrift.version>
@@ -213,59 +212,6 @@
         <exclusion>
           <groupId>com.fasterxml.jackson.core</groupId>
           <artifactId>jackson-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <!-- Hive related -->
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-hive-protolib</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-client</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hive.hcatalog</groupId>
-          <artifactId>hive-hcatalog-streaming</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hive.hcatalog</groupId>
-          <artifactId>hive-hcatalog-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hive.hcatalog</groupId>
-      <artifactId>hive-hcatalog-streaming</artifactId>
-      <version>${hive.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.hive.hcatalog</groupId>
-      <artifactId>hive-hcatalog-core</artifactId>
-      <version>${hive.version}</version>
-      <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.codehaus.jettison</groupId>
-          <artifactId>jettison</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hive</groupId>
-      <artifactId>hive-jdbc</artifactId>
-      <version>${hive.version}</version>
-      <scope>runtime</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -526,15 +472,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire.version}</version>
-        <configuration>
-          <classpathDependencyExcludes>
-            <!-- Hive-exec have un-relocated copy of protobuf 2.x that is not compatible with our test
-                 jars that require protobuf 3.x. Our runtime libraries seems to be fine with having just
-                 2.x jar and hence we're excluding hive-exec only for tests.
-                 -->
-            <classpathDependencyExcludes>org.apache.hive:hive-exec</classpathDependencyExcludes>
-          </classpathDependencyExcludes>
-        </configuration>
         <executions>
           <execution>
             <id>single-fork-unit-test</id>
@@ -542,11 +479,6 @@
             <goals>
               <goal>test</goal>
             </goals>
-            <configuration>
-              <classpathDependencyExcludes>
-                <classpathDependencyExcludes>org.apache.hive:hive-exec</classpathDependencyExcludes>
-              </classpathDependencyExcludes>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -564,7 +496,6 @@
               <sources>
                 <source>${basedir}/../hdfs-protolib/src/test/java</source>
                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
-                <source>${basedir}/../hive-protolib/src/test/java</source>
                 <source>${basedir}/../hbase-protolib/src/test/java</source>
                 <source>${basedir}/../flume-protolib/src/test/java</source>
                 <source>${basedir}/../kafka_source-protolib/src/test/java</source>
@@ -586,9 +517,6 @@
                 </resource>
                 <resource>
                   <directory>${basedir}/../mapreduce-protolib/src/test/resources</directory>
-                </resource>
-                <resource>
-                  <directory>${basedir}/../hive-protolib/src/test/resources</directory>
                 </resource>
                 <resource>
                   <directory>${basedir}/../hbase-protolib/src/test/resources</directory>
