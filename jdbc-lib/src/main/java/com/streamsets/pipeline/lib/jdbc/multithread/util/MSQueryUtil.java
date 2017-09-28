@@ -66,7 +66,7 @@ public final class MSQueryUtil {
           "%6$s";
 
   private static final String SELECT_CT_CLAUSE = "SELECT TOP %s * FROM CHANGETABLE(CHANGES %s, %s) AS CT %s %s";
-  private static final String SELECT_CLAUSE = "SELECT TOP %s * FROM %s WITH(NOLOCK) ";
+  private static final String SELECT_CLAUSE = "SELECT * FROM %s ";
 
   private static final Joiner COMMA_SPACE_JOINER = Joiner.on(", ");
   private static final Joiner AND_JOINER = Joiner.on(" AND ");
@@ -162,7 +162,7 @@ public final class MSQueryUtil {
 
   public static String buildCDCQuery(Map<String, String> offsetMap, int maxBatchSize, String tableName, Map<String, String> startOffset) {
     StringBuilder query = new StringBuilder();
-    query.append(String.format(SELECT_CLAUSE, maxBatchSize, tableName));
+    query.append(String.format(SELECT_CLAUSE, tableName));
 
     if (offsetMap == null || offsetMap.size() < 1) {
       // initial offset
