@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jrc_xl3_jbb">
+ <title>Kudu Data Types</title>
+ <conbody>
+  <p><indexterm>Kudu Lookup processor<indexterm>data types</indexterm></indexterm><indexterm>data
+                    types<indexterm>Kudu Lookup processor</indexterm></indexterm>The Kudu Lookup
+            processor converts Kudu data types to the following compatible <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            data types:</p>
+        <p>
+            <table frame="all" rowsep="1" colsep="1" id="table_ljg_nsr_cy">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                    <thead>
+                        <row>
+                            <entry>Kudu Data Type</entry>
+                            <entry>Data Collector Data Type</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Binary</entry>
+                            <entry>Byte Array</entry>
+                        </row>
+                        <row>
+                            <entry>Bool</entry>
+                            <entry>Boolean</entry>
+                        </row>
+                        <row>
+                            <entry>Double</entry>
+                            <entry>Double</entry>
+                        </row>
+                        <row>
+                            <entry>Float</entry>
+                            <entry>Float</entry>
+                        </row>
+                        <row>
+                            <entry>Int8</entry>
+                            <entry>Byte</entry>
+                        </row>
+                        <row>
+                            <entry>Int16</entry>
+                            <entry>Short</entry>
+                        </row>
+                        <row>
+                            <entry>Int32</entry>
+                            <entry>Integer</entry>
+                        </row>
+                        <row>
+                            <entry>Int64</entry>
+                            <entry>Long</entry>
+                        </row>
+                        <row>
+                            <entry>String</entry>
+                            <entry>String</entry>
+                        </row>
+                        <row>
+                            <entry>Unixtime_micros</entry>
+                            <entry>Datetime<p>The Kudu Unixtime_micros data type stores microsecond
+                                    values. When converting to the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> Datetime data type, the processor divides the field value by
+                                    1,000 to convert the value to milliseconds, and then converts
+                                    the value to Datetime.</p></entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </p>
+ </conbody>
+</concept>
