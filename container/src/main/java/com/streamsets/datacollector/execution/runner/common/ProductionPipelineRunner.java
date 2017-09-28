@@ -171,10 +171,15 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private PipelineConfiguration pipelineConfiguration = null;
 
   @Inject
-  public ProductionPipelineRunner(@Named("name") String pipelineName, @Named("rev") String revision,
-                                  Configuration configuration,
-                                  RuntimeInfo runtimeInfo, MetricRegistry metrics, SnapshotStore snapshotStore,
-                                  ThreadHealthReporter threadHealthReporter) {
+  public ProductionPipelineRunner(
+      @Named("name") String pipelineName,
+      @Named("rev") String revision,
+      Configuration configuration,
+      RuntimeInfo runtimeInfo,
+      MetricRegistry metrics,
+      SnapshotStore snapshotStore,
+      ThreadHealthReporter threadHealthReporter
+  ) {
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.metrics = metrics;

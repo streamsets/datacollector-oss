@@ -71,7 +71,6 @@ angular
 
     //Clear potentially remaining notifications from previous page views
     $rootScope.common.errors = [];
-    // $rootScope.common.infoList = [];
     $rootScope.common.successList = [];
 
     angular.extend($scope, {
@@ -1776,7 +1775,7 @@ angular
 
     $scope.$watch('activeConfigStatus.status', function (newValue) {
       if (newValue === 'FINISHED') {
-        $rootScope.common.infoList = [{message:'Pipeline Job has been finished'}];
+        $rootScope.common.successList = [{message:'Pipeline Job has been finished'}];
       }
     });
 
