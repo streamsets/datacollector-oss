@@ -306,6 +306,30 @@
                 /></entry>
             </row>
             <row>
+              <entry>Kafka Multitopic Consumer</entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_qgt_nx3_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_mht_nx3_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_e3t_nx3_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_x3t_nx3_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_sjt_nx3_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_lkt_nx3_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_clt_nx3_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_ylt_nx3_fbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_omt_nx3_fbb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_mnt_nx3_fbb"
+                /></entry>
+            </row>
+            <row>
               <entry>Kinesis Consumer</entry>
               <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_mhp_x2c_kv"
                 /></entry>

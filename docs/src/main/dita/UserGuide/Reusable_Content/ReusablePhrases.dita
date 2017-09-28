@@ -339,12 +339,12 @@
                         <li>Delimited</li>
                         <li>JSON</li>
                         <li>Log</li>
-                        <li>Text</li>
                         <li>Protobuf</li>
                         <li>SDC Record <xref
                                     href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                     <image href="../Graphics/icon_moreInfo.png" scale="11"
                                           id="image_drz_1nf_qw"/></xref></li>
+                        <li>Text</li>
                         <li>XML</li>
                   </ul>
             </p>
@@ -386,8 +386,8 @@
                   </dl>
             </p>
             <p>
-                  <draft-comment author="Loretta">Avro-Kafka - ONLY FOR KAFKA CONSUMER because of
-                        the Kafka property.</draft-comment>
+                  <draft-comment author="Loretta">Avro-Kafka - ONLY FOR KAFKA CONSUMER and Kafka
+                        Multitopic Consumer because of the Kafka property.</draft-comment>
                   <dl>
                         <dlentry id="OriginDF-AVRO-Kafka">
                               <dt>Avro</dt>
@@ -416,10 +416,10 @@
                                                 Schema Registry by the schema ID embedded in the
                                                 message or by the schema ID or subject specified in
                                                 the stage configuration.<p>You must specify the
-                                                  method that the Kafka Consumer uses to deserialize
-                                                  the message. If the Avro schema ID is embedded in
-                                                  each message, set the key and value deserializers
-                                                  to Confluent on the <uicontrol>Kafka</uicontrol>
+                                                  method that the origin uses to deserialize the
+                                                  message. If the Avro schema ID is embedded in each
+                                                  message, set the key and value deserializers to
+                                                  Confluent on the <uicontrol>Kafka</uicontrol>
                                                   tab.</p></li>
                                     </ul></dd>
                               <dd>Using a schema in the stage configuration or retrieving a schema
@@ -1283,6 +1283,9 @@ web-0011.log</codeblock></dd>
                         <li><xref href="../Origins/MultiTableJDBCConsumer.dita#concept_zp3_wnw_4y"
                                     >JDBC Multitable Consumer</xref> - Reads database data from
                               multiple tables through a JDBC connection.</li>
+                        <li><xref href="../Origins/KafkaMultiConsumer.dita#concept_ccs_fn4_x1b"
+                                    >Kafka Multitopic Consumer</xref> - Reads data from multiple
+                              topics in a Kafka cluster.</li>
                         <li><xref href="../Origins/KinConsumer.dita#concept_anh_4y3_yr">Kinesis
                                     Consumer</xref> - Reads data from a Kinesis cluster.</li>
                         <li><xref href="../Origins/SQLServerCDC.dita#concept_ut3_ywc_v1b">SQL Server
@@ -1323,10 +1326,12 @@ web-0011.log</codeblock></dd>
                         HTTP Server > Multithreaded Processing and JDBC Multitable Consumer >
                         Multithreaded Processing</draft-comment>
             </p>
-            <p><ph id="HTTPServer-process-ph">the origin creates five threads, and by default <ph
-                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> creates a matching number of pipeline runners. Upon receiving data, the
-                        origin passes a batch to each of the pipeline runners for processing.
+            <p><ph id="HTTPServer-process-ph"><ph id="ph-createsthreads">the origin creates five
+                              threads, and by default <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> creates a matching number of pipeline runners.</ph>
+                        <ph id="ph-Passesbatch">Upon receiving data, the origin passes a batch to
+                              each of the pipeline runners for processing.</ph>
                   </ph></p>
             <p id="HTTPServer-process-p">At any given moment, the five pipeline runners can each
                   process a batch, so this multithreaded pipeline processes up to five batches at a

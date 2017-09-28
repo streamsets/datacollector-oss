@@ -27,8 +27,6 @@
             you can configure the SDC RPC to Kafka origin to connect securely through SSL/TLS,
             Kerberos, or both. </p>
         <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P2"/>
-        <p
             conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P3"/>
  </conbody>
 </concept>

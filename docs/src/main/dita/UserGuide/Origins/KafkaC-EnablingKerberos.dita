@@ -26,9 +26,9 @@
             you use Kerberos authentication, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             uses the Kerberos principal and keytab to connect to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.
-            Perform the following steps to enable the Kafka Consumer origin to use Kerberos to
-            connect to Kafka.</p>
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>. </p>
+        <p>Perform the following steps to enable the Kafka Consumer origin to use Kerberos to
+            connect to Kafka:</p>
         <p
             conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingKerberos.dita#concept_axt_5gf_55/P2-steps"/>
         <p

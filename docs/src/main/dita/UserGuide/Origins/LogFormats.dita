@@ -23,8 +23,8 @@
   read. </shortdesc>
  <conbody>
   <p><draft-comment author="Loretta">This topic is used for Amazon S3, Directory, File Tail, JMS
-    Consumer, Kafka Consumer. Hadoop FS origin has a slightly different version. </draft-comment>You
-   can read log files that use the following log formats:</p>
+    Consumer, Kafka Consumer, Kafka Multitopic Consumer. Hadoop FS origin has a slightly different
+    version. </draft-comment>You can read log files that use the following log formats:</p>
   <p>
    <dl>
     <dlentry>

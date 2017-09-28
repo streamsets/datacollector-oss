@@ -17,13 +17,13 @@
 
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_znr_b3c_rw">
+<concept id="concept_yg3_k31_t5">
  <title>Enabling Security</title>
     <conbody>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P1"/>
-        <p
-            conref="../Reusable_Content/Reusable_Topics/Kafka-EnablingSecurity.dita#concept_nrg_5mb_t5/P3"
-        />
+        <p><indexterm>Kafka Multitopic Consumer origin<indexterm>enabling
+                security</indexterm></indexterm><indexterm>enabling security<indexterm>Kafka
+                    Multitopic Consumer</indexterm></indexterm>You can configure the Kafka
+            Multitopic Consumer origin to connect securely to Kafka through SSL/TLS, Kerberos, or
+            both. </p>
     </conbody>
 </concept>

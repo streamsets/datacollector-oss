@@ -30,9 +30,10 @@
                         origin<indexterm>raw source preview</indexterm></indexterm><indexterm>raw
                     source
                         data<indexterm>preview</indexterm></indexterm><indexterm>origins<indexterm>previewing
-                        raw source data</indexterm></indexterm>When you preview file data, you can
-                use the real directory and actual source file. Or when appropriate, you might use a
-                different file that is similar to the source. </p>
+                        raw source data</indexterm></indexterm><indexterm>Kafka Multitopic Consumer
+                        origin<indexterm>raw source preview</indexterm></indexterm>When you preview
+                file data, you can use the real directory and actual source file. Or when
+                appropriate, you might use a different file that is similar to the source. </p>
             <p>When you preview Kafka data, you enter the connection information for the Kafka
                 cluster.</p>
             <p>The data used for the raw source preview in an origin stage is not used when

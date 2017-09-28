@@ -27,10 +27,12 @@
                     authentication<indexterm>using with Kafka Producer</indexterm></indexterm>You
             can enable Kafka Producer to use SSL/TLS and Kerberos to connect to <ph
                 conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.</p>
-        <p id="P2">To use SSL/TLS and Kerberos, combine the steps required to enable each and set
-            the security.protocol property as follows: <ol id="KAFKA-SSLandKerberos">
-                <li>Make sure Kafka is configured to use SSL/TLS and Kerberos (SASL) as described in
-                    the following Kafka documentation:<ul id="ul_gx4_1sk_55">
+        <p id="P2"><ph id="SSLTLS_Kerb-phOverview">To use SSL/TLS and Kerberos, combine the
+            required steps to enable each and set the security.protocol property as follows:</ph>
+            <ol id="KAFKA-SSLandKerberos">
+                <li id="SSLTLS_Kerb_ConfigKafka">Make sure Kafka is configured to use SSL/TLS and
+                    Kerberos (SASL) as described in the following Kafka documentation:<ul
+                        id="ul_gx4_1sk_55">
                         <li><xref href="http://kafka.apache.org/documentation.html#security_ssl"
                                 format="html" scope="external"/></li>
                         <li><xref href="http://kafka.apache.org/documentation.html#security_sasl"
@@ -39,7 +41,7 @@
                 <li conref="Kafka-EnablingKerberos.dita#concept_axt_5gf_55/step-KafkaKERBsdcprops"/>
                 <li>On the <wintitle>General</wintitle> tab of the stage, set the Stage Library
                     property to Apache Kafka 0.9.0.0 or a later version.</li>
-                <li>On the <wintitle>Kafka</wintitle> tab, add the
+                <li id="SSLTLS_Kerb_KafkaTab">On the <wintitle>Kafka</wintitle> tab, add the
                         <uicontrol>security.protocol</uicontrol> property and set it to
                         <uicontrol>SASL_SSL</uicontrol>.</li>
                 <li

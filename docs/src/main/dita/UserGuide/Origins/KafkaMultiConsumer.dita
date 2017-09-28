@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ccs_fn4_x1b">
+ <title>Kafka Multitopic Consumer</title>
+ <conbody>
+  <p><indexterm>origins<indexterm>Kafka Multitopic Consumer</indexterm><indexterm>Kafka Multitopic
+                        Consumer<indexterm>overview</indexterm></indexterm></indexterm>The Kafka
+            Multitopic Consumer origin reads data from multiple topics in an Apache Kafka cluster.
+            The origin can use multiple threads to enable parallel processing of data. When
+            preferred, you can use the <xref href="KConsumer.dita#concept_msz_wnr_5q">Kafka
+                Consumer</xref> to read from a single topic using a single thread. </p>
+        <p>When you configure a Kafka Multitopic Consumer, you configure the consumer group name and
+            the brokers to use. You also specify the topics to process and the number of threads to
+            use. In Kafka, make sure that the <xref
+                href="KafkaMultiConsumer-MultithreadProcessing.dita#concept_ifs_wtm_3z">partition
+                assignment strategy</xref> is configured appropriately. </p>
+        <p>You can configure the origin to produce a single record when a message includes multiple
+            objects. And you can add additional Kafka configuration properties as needed, including
+            Kafka security features.</p>
+        <p>When processing Avro data, you can configure the Kafka Multitopic Consumer to work with
+            the Confluent Schema Registry. The Confluent Schema Registry is a distributed storage
+            layer for Avro schemas which uses Kafka as its underlying storage mechanism.</p>
+        <p>Kafka Multitopic Consumer includes record header attributes that enable you to use
+            information about the record in pipeline processing. </p>
+ </conbody>
+</concept>

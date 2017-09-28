@@ -2183,7 +2183,7 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_mwv_b52_zq"/></xref>
                                     </entry>
-                                    <entry>
+                                    <entry id="entry-AddKafkaConfigs">
                                         <p id="p-KafkaConfig1">Additional Kafka configuration
                                             properties to use. Using <xref
                                                 href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
