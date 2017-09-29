@@ -159,6 +159,23 @@
               start with "shoes" with "footwear".</p></dd>
         </dlentry>
         <dlentry>
+          <dt>str:splitKV(&lt;string>, &lt;pairSeparator>, &lt;keyValueSeparator>)</dt>
+          <dd>Splits key-value pairs in a string into a map of string values.</dd>
+          <dd>Uses the following arguments:<ul id="ul_a5f_g53_jbb">
+              <li>string - The string containing the key-value pairs. </li>
+              <li>pairSeparator - The set of characters that separate the key-value pairs.</li>
+              <li>keyValueSeparator - The set of characters that separate each key and value.</li>
+            </ul><p>For example, let's say that a record contains a "dimensions" string field that
+              records the height, width, and length as follows: "height=32 width=24 length=36". The
+              function ${str:splitKV(record:value("/dimensions"), " ", "=")} returns the following
+              map of string
+              values:<codeblock>"dimensions": {
+      "height": "32",
+      "width": "24",
+      "length": "36"
+    }</codeblock></p></dd>
+        </dlentry>
+        <dlentry>
           <dt>str:startsWith(&lt;string>, &lt;subset>)</dt>
           <dd>Returns true or false based on whether the string starts with the configured subset of
             characters.</dd>

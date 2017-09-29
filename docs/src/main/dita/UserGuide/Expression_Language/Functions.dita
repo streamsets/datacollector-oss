@@ -180,6 +180,7 @@
           <li>str:regexCapture(&lt;string>, &lt;regEx>, &lt;group>)</li>
           <li>str:replace(&lt;string>, &lt;oldChar>, &lt;newChar>)</li>
           <li>str:replaceAll(&lt;string>, &lt;regEx>, &lt;newString>)</li>
+          <li>str:splitKV(&lt;string>, &lt;pairSeparator>, &lt;keyValueSeparator>)</li>
           <li>str:startsWith(&lt;string>, &lt;subset>)</li>
           <li>str:substring(&lt;string>, &lt;beginIndex>, &lt;endIndex>)</li>
           <li>str:toLower(&lt;string>)</li>
