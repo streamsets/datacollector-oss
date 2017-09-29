@@ -26,10 +26,10 @@
   <conbody>
     <p><indexterm>pipelines<indexterm>monitoring</indexterm></indexterm><indexterm>monitoring
           <indexterm>overview</indexterm></indexterm>When you access the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console as
-      the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs
-      a pipeline, the console displays the pipeline in Monitor mode. In Monitor mode, you can
-      perform the following tasks:<ul id="ul_c4s_w13_tq">
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI as the
+        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs a
+      pipeline, the UI displays the pipeline in Monitor mode. In Monitor mode, you can perform the
+      following tasks:<ul id="ul_c4s_w13_tq">
         <li>View real-time stage and pipeline statistics </li>
         <li>View stage and pipeline error information, including error records for each stage</li>
         <li>Take and review a snapshot of data</li>

@@ -23,8 +23,8 @@
   <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
             custom metrics for some stages. When a pipeline includes the stages below, you can view
             custom metrics for the stages in the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            console in Monitor mode or when you view JMX metrics using an external tool:</p>
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI
+            in Monitor mode or when you view JMX metrics using an external tool:</p>
         <p>
             <dl>
                 <dlentry>

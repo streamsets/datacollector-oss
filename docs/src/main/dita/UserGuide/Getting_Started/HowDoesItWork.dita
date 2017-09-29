@@ -22,9 +22,9 @@
  <shortdesc>Let's walk through it...</shortdesc>
  <conbody>
   <p>After you install and launch <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you access
-   the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-   console, log in, and create your first pipeline. </p>
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you use the
+    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI to log
+   in and create your first pipeline. </p>
   <p>What do you want it to do? Let's say you want to read XML files from a directory and remove the
    newline characters before moving it into HDFS. To do this, you start with a Directory origin
    stage and configure it to point to the source file directory. (You can also have the stage
@@ -42,12 +42,12 @@
    configure an email alert to let you know when the pipeline generates more than 100 error records.
    Then, you start the pipeline and <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> goes to work. </p>
-  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-   console goes into Monitor mode and displays summary and error statistics immediately. To get a
-   closer look at the activity, you take a snapshot of the pipeline so you can examine how a set of
-   data passed through the pipeline. You see some unexpected data in the pipeline, so you create a
-   data rule for a link between two stages to gather information about similar data and set an alert
-   to notify you when the numbers get too high.</p>
+  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> goes
+   into Monitor mode and displays summary and error statistics immediately. To get a closer look at
+   the activity, you take a snapshot of the pipeline so you can examine how a set of data passed
+   through the pipeline. You see some unexpected data in the pipeline, so you create a data rule for
+   a link between two stages to gather information about similar data and set an alert to notify you
+   when the numbers get too high.</p>
   <p>And what about those error records being written to file? They're saved with error details, so
    you can create an error pipeline to reprocess that data. Et voila!</p>
   <p>StreamSets <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

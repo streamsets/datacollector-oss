@@ -88,8 +88,8 @@
                                 <row>
                                     <entry>Remember the Configuration</entry>
                                     <entry>Select to use these properties each time you run data
-                                        preview. <p>When you select this option, the console enters
-                                            data preview without showing this dialog box again.
+                                        preview. <p>When you select this option, the UI enters data
+                                            preview without showing this dialog box again.
                                         </p></entry>
                                 </row>
                             </tbody>

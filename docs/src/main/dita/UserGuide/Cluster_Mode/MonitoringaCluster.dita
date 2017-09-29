@@ -23,11 +23,11 @@
     <p><indexterm>cluster mode<indexterm>monitoring and
         snapshot</indexterm></indexterm><indexterm>metrics and alerts<indexterm>for cluster
           pipelines</indexterm></indexterm>The <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
-      allows you to monitor each <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI allows
+      you to monitor each <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker. </p>
     <p>After you start a pipeline, the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI
       displays basic monitoring information for the pipeline and links to each <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker.
       For monitoring details for a <ph

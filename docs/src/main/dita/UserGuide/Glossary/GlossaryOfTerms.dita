@@ -128,8 +128,9 @@
       </dlentry>
       <dlentry>
         <dt>implicit validation</dt>
-        <dd>Lists missing or incomplete configuration. Occurs by default as the Data Collector
-          console saves your changes.</dd>
+        <dd>Lists missing or incomplete configuration. Occurs by default as <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> saves
+          your changes in the pipeline canvas.</dd>
       </dlentry>
       <dlentry>
         <dt>late directories</dt>

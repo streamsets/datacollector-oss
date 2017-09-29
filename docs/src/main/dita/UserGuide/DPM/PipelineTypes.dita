@@ -117,10 +117,10 @@
                 </dlentry>
             </dl></p>
         <note>A <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> administrator can use the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            console to stop DPM controlled pipelines. Otherwise, you cannot modify or manage DPM
-            controlled pipelines in <ph
+            /> administrator can use <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            stop DPM controlled pipelines. Otherwise, you cannot modify or manage DPM controlled
+            pipelines in <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</note>
  </conbody>

@@ -24,8 +24,8 @@
             href="../Graphics/icon_ConfigStartPipeline.png" id="image_lgp_rxp_ts" scale="75"
         />.</shortdesc>
     <taskbody>
-        <context>The console enters Monitor mode and shows summary statistics in the Monitor panel.
-            At some point as the pipeline runs, the data alert triggers and the location of the
+        <context>The UI enters Monitor mode and shows summary statistics in the Monitor panel. At
+            some point as the pipeline runs, the data alert triggers and the location of the
             triggered data alert turns red:<p><image href="../Graphics/Tutorial-RunPipeline.png"
                     id="image_gc3_vyr_ps" scale="55"/></p>Click the data alert icon to view the data
             alert notification. Then, close the notification and explore the information available

@@ -37,9 +37,9 @@
         <dlentry>
           <dt>Send to Error </dt>
           <dd>With a buffer limit error, Directory cannot send the record to the pipeline for error
-            handling because it is unable to fully process the record. <p>Instead, Directory sends a
-              message to the Monitor console to indicate that a buffer overrun error occurred. The
-              message includes the file and offset where the buffer overrun error occurred. The
+            handling because it is unable to fully process the record. <p>Instead, Directory
+              displays a message to Monitor mode indicating that a buffer overrun error occurred.
+              The message includes the file and offset where the buffer overrun error occurred. The
               information displays in the pipeline history and displays as an alert when you monitor
               the pipeline. </p><p>If an error directory is configured for the stage, Directory
               moves the file to the error directory and continues processing the next file.
@@ -47,9 +47,9 @@
         </dlentry>
         <dlentry>
           <dt>Stop Pipeline</dt>
-          <dd>Directory stops the pipeline and sends a message to the Monitor console to indicate
-            that a buffer overrun error occurred. The message includes the file and offset where the
-            buffer overrun error occurred. The information displays as an alert and in the pipeline
+          <dd>Directory stops the pipeline and sends a message to Monitor mode indicating that a
+            buffer overrun error occurred. The message includes the file and offset where the buffer
+            overrun error occurred. The information displays as an alert and in the pipeline
             history. </dd>
         </dlentry>
       </dl></p>

@@ -37,12 +37,12 @@
                     <choice>To use the command line for shutdown, use the following
                         command:<codeblock>service sdc stop</codeblock></choice>
                     <choice>To use the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> console for shutdown, click <menucascade>
-                        <uicontrol>Administration</uicontrol>
-                        <uicontrol> Shut Down</uicontrol>
-                    </menucascade>. When the confirmation dialog box appears, click
-                        <uicontrol>Yes</uicontrol>.</choice>
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> UI for shutdown, click <menucascade>
+                            <uicontrol>Administration</uicontrol>
+                            <uicontrol> Shut Down</uicontrol>
+                        </menucascade>. When the confirmation dialog box appears, click
+                            <uicontrol>Yes</uicontrol>.</choice>
                 </choices>
             </step>
         </steps>

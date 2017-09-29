@@ -26,10 +26,9 @@
         <dlentry>
           <dt>Implicit validation</dt>
           <dd>Implicit validation occurs by default as the <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            console saves your changes. Implicit validation lists missing or incomplete
-            configuration, such as an unconnected stage or a required property that has not been
-            configured. </dd>
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI
+            saves your changes. Implicit validation lists missing or incomplete configuration, such
+            as an unconnected stage or a required property that has not been configured. </dd>
           <dd>Errors found by implicit validation display in the Issues list. An error icons display
             on stages with undefined required properties and on the canvas for pipeline issues. </dd>
         </dlentry>

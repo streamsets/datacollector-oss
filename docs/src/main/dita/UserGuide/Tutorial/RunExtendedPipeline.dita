@@ -23,13 +23,15 @@
         pipeline again. </shortdesc>
     <taskbody>
         <context>
-            <p>Reset the origin when you want the Data Collector to process all available data
-                instead of processing data from the last-saved offset. Not all origins can be reset,
-                but you can reset the origin for Directory.</p>
+            <p>Reset the origin when you want <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> to process all available data instead of processing data from the last-saved
+                offset. Not all origins can be reset, but you can reset the origin for
+                Directory.</p>
         </context>
         <steps id="steps_qhq_bwj_rs">
             <step>
-                <cmd>In the console menu bar, click the <uicontrol>More</uicontrol> icon: <image
+                <cmd>In the UI menu bar, click the <uicontrol>More</uicontrol> icon: <image
                         href="../Graphics/icon_ConfigMore.png" id="image_c5c_pkk_zs" scale="70"/>.
                     Then, click <uicontrol>Reset Origin</uicontrol>.</cmd>
             </step>
@@ -41,14 +43,14 @@
                 <cmd>To start the pipeline, click the <uicontrol>Start</uicontrol> icon.</cmd>
             </step>
         </steps>
-        <result>The console goes into monitor mode and the data alert triggers again. Before long,
-            you'll see some error records in the Jython Evaluator and the Field Type Converter.
-                <p>For each stage, you can see the error messages for latest error records.
-                </p><p>To look at all the error records, you can review the error record files in
-                the directory that you specified. Error records are written in the SDC Record data
-                format so you can create an error pipeline to process error records. We'll show you
-                how to create an error pipeline to process these error records in a future
-                tutorial.</p><p>That's it for this tutorial. Hope you found it helpful!
-            </p></result>
+        <result><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> goes into Monitor mode and the data alert triggers again. Before long, you'll see
+            some error records in the Jython Evaluator and the Field Type Converter. <p>For each
+                stage, you can see the error messages for latest error records. </p><p>To look at
+                all the error records, you can review the error record files in the directory that
+                you specified. Error records are written in the SDC Record data format so you can
+                create an error pipeline to process error records. We'll show you how to create an
+                error pipeline to process these error records in a future tutorial.</p><p>That's it
+                for this tutorial. Hope you found it helpful! </p></result>
     </taskbody>
 </task>

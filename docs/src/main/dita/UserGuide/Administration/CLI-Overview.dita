@@ -22,7 +22,7 @@
  <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
     provides a command line interface that includes a basic <codeph>cli</codeph> command. Use the
     command to perform some of the same actions that you can complete from the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console. <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI. <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> must be
     running before you can use the <codeph>cli</codeph> command.</shortdesc>
  <conbody>

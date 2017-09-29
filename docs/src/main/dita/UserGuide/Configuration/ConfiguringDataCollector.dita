@@ -86,15 +86,15 @@
                                 <entry>http.port</entry>
                                 <entry>Port number to use for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> console. <p>Default is 18630.</p></entry>
+                                    /> UI. <p>Default is 18630.</p></entry>
                             </row>
                             <row>
                                 <entry>https.port</entry>
                                 <entry>Secure port number for the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> console. Any number besides -1 enables the secure port
-                                    number. <p>If you use both port properties, the HTTP port
-                                        bounces to the HTTPS port.</p><p>Default is -1.</p></entry>
+                                    /> UI. Any number besides -1 enables the secure port number.
+                                        <p>If you use both port properties, the HTTP port bounces to
+                                        the HTTPS port.</p><p>Default is -1.</p></entry>
                             </row>
                             <row>
                                 <entry>http.enable.forwarded.requests</entry>
@@ -182,8 +182,8 @@
                                 <entry>http.session.max.inactive.interval</entry>
                                 <entry>Maximum amount of time that the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> console can remain inactive before the user is logged out.
-                                    Use -1 to allow user sessions to remain inactive
+                                    /> UI can remain inactive before the user is logged out. Use -1
+                                    to allow user sessions to remain inactive
                                         indefinitely.<p>Default is 86,400 seconds (24
                                     hours).</p></entry>
                             </row>
@@ -323,7 +323,7 @@
                             <row>
                                 <entry>production.maxErrorRecordsPerStage</entry>
                                 <entry>Maximum number of error records to save in memory for each
-                                    stage to display in monitor mode. When the limit is reached,
+                                    stage to display in Monitor mode. When the limit is reached,
                                     older error records are discarded.<p>Default is 100.
                                     </p></entry>
                             </row>
@@ -370,11 +370,10 @@
                                 <entry>ui.header.title</entry>
                                 <entry>Optional custom header to display in the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> console next to the StreamSets logo. You can create a header
-                                    using HTML and include an additional image. <p>To use an image,
-                                        place the file in a directory local to the following
-                                        directory:
-                                        <codeph>$SDC_DIST/sdc-static-web/</codeph></p><p>For
+                                    /> UI next to the StreamSets logo. You can create a header using
+                                    HTML and include an additional image. <p>To use an image, place
+                                        the file in a directory local to the following directory:
+                                            <codeph>$SDC_DIST/sdc-static-web/</codeph></p><p>For
                                         example, to add custom text, you might use the following
                                         HTML: </p><p>
                                         <codeblock>&lt;span class="navbar-brand">Dev Data Collector&lt;/span></codeblock>
@@ -402,7 +401,7 @@
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> waits before refreshing the <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> console.<p>Default is 2000.</p></entry>
+                                    /> UI.<p>Default is 2000.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.jvmMetrics.refresh.interval.ms</entry>

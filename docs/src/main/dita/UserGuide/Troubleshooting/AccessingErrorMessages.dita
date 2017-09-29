@@ -29,7 +29,7 @@
     <dlentry>
      <dt>Pipeline configuration issues</dt>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      console provides guidance and error details in the console as follows:<ul id="ul_ht3_cml_2s">
+      UI provides guidance and error details as follows:<ul id="ul_ht3_cml_2s">
        <li>Issues found by implicit validation display in the Issues list.</li>
        <li>An error icon displays at the stage where the problem occurs or on the canvas for
         pipeline configuration issues. </li>
@@ -39,8 +39,8 @@
     </dlentry>
     <dlentry>
      <dt>Runtime error information</dt>
-     <dd>You can view error information when you monitor a running pipeline. On the pipeline, the
-      console displays error record counts for each stage generating error records. </dd>
+     <dd>You can view error information when you monitor a running pipeline. In the canvas, the
+      pipeline displays error record counts for each stage generating error records. </dd>
      <dd>On the Errors tab, you can view error record statistics and the latest set of error records
       with error messages. If the error was produced by an exception, you can click <uicontrol>View
        Stack Trace</uicontrol> to view the full stack trace.</dd>
@@ -67,8 +67,8 @@
       functionality in the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log. You
       can view or download the logs from the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console.
-      For details, see <xref href="../Administration/ViewingLogData.dita#task_gbm_s3k_br"/>.</dd>
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI. For
+      details, see <xref href="../Administration/ViewingLogData.dita#task_gbm_s3k_br"/>.</dd>
      <dd>By default, <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> logs
       messages at the INFO severity level. You can modify the log level to display messages at

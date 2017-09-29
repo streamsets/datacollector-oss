@@ -42,7 +42,7 @@
         <result id="result_srq_2lf_5y">
             <p>The following image shows the <uicontrol>OAuth 2</uicontrol> tab configured for
                 Microsoft Azure AD version 1.0: </p>
-            <p><image href="../Graphics/HTTPClientOrigin_OAuth2AzureAD.png" scale="60"
+            <p><image href="../Graphics/HTTPClientOrigin_OAuth2AzureAD.png" scale="55"
                     id="image_mlg_mn2_5y"/></p>
         </result>
     </taskbody>

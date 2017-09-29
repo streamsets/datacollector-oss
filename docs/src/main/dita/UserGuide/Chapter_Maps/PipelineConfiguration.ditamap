@@ -20,7 +20,7 @@
 <map collection-type="sequence">
  <title>Pipeline Configuration</title>
  <topicref href="../Pipeline_Configuration/PipelineConfiguration_title.dita" chunk="to-content">
-  <topicref href="../Pipeline_Configuration/DataCollectorWindow-Config.dita">
+  <topicref href="../Pipeline_Configuration/DataCollectorUI-Config.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Configuration/Retry.dita">
    <topicmeta>

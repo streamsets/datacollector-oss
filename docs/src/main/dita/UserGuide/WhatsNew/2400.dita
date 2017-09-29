@@ -129,8 +129,8 @@
                                 ui.header.title configuration property to configure a custom header
                                 for the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> console. This allows you to specify the look and feel for any
-                                text that you use, and to include small images in the header. </li>
+                                /> UI. This allows you to specify the look and feel for any text
+                                that you use, and to include small images in the header. </li>
                             <li><xref href="../Processors/Groovy-Configuring.dita#task_asl_bpt_gv"
                                     >Groovy enhancement</xref> - You can configure the processor to
                                 use the invokedynamic bytecode instruction.</li>
