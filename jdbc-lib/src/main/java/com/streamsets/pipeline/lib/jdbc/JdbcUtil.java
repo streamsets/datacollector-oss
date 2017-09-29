@@ -689,8 +689,10 @@ public class JdbcUtil {
     });
 
     config.setJdbcUrl(hikariConfigBean.connectionString);
-    config.setUsername(hikariConfigBean.username.get());
-    config.setPassword(hikariConfigBean.password.get());
+    if (hikariConfigBean.useCredentials){
+       config.setUsername(hikariConfigBean.username.get());
+       config.setPassword(hikariConfigBean.password.get());
+    }
     config.setAutoCommit(autoCommit);
     config.setReadOnly(readOnly);
     config.setMaximumPoolSize(hikariConfigBean.maximumPoolSize);

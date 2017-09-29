@@ -101,6 +101,7 @@ public class TestJdbcLookup {
   private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
     HikariPoolConfigBean bean = new HikariPoolConfigBean();
     bean.connectionString = connectionString;
+    bean.useCredentials = true;
     bean.username = () -> username;
     bean.password = () -> password;
 
