@@ -21,6 +21,212 @@
  <title>Reusable Tables of Information</title>
  <shortdesc/>
  <conbody>
+  <p>
+   <draft-comment author="Loretta">rows from the following table are used in the Data Collector UI
+    topics (getting started, all pipelines, monitoring, data preview). The whole table used by the
+    configuring topic.</draft-comment>
+  </p>
+  <p>
+   <simpletable frame="all" id="table-configUI" relcolwidth="1.0* 1.62* 5.08*">
+    <sthead>
+     <stentry>Area / Icon</stentry>
+     <stentry>Name</stentry>
+     <stentry>Description</stentry>
+    </sthead>
+    <strow>
+     <stentry>1</stentry>
+     <stentry>Pipeline canvas</stentry>
+     <stentry>Displays the pipeline. Use to configure the pipeline data flow.</stentry>
+    </strow>
+    <strow>
+     <stentry>2</stentry>
+     <stentry>Pipeline Creation Help Bar</stentry>
+     <stentry>Offers lists of stages to help complete the pipeline. <p>You can use the help bar to
+       connect a stage to an open node. You can also add a stage between linked stages by clicking
+       the link. </p></stentry>
+    </strow>
+    <strow>
+     <stentry>3</stentry>
+     <stentry>Stage list</stentry>
+     <stentry>Lists the stages in the pipeline. Use to select a stage to configure. You can also
+      select the stage in the canvas.</stentry>
+    </strow>
+    <strow>
+     <stentry>4</stentry>
+     <stentry>Properties panel</stentry>
+     <stentry>Displays the properties of the pipeline or selected stage when you configure a
+      pipeline. </stentry>
+    </strow>
+    <strow>
+     <stentry>5</stentry>
+     <stentry>Stage library</stentry>
+     <stentry>List of available stages. Use to add stages to the pipeline. You can drag a stage to a
+      location on canvas or click a stage to add it to the end of the pipeline. <p>You can view all
+       stages, stages by type, or stages by library. You can also search for a stage by
+      name.</p></stentry>
+    </strow>
+    <strow id="icon-DPM">
+     <stentry><image href="../Graphics/icon_DPM.png" scale="70" id="image_vk5_ryk_nx"/></stentry>
+     <stentry>Dataflow Performance Manager icon</stentry>
+     <stentry>Provides information about StreamSets <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-LongOnly"/> (<ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>) and lets
+      you register this <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>.</stentry>
+    </strow>
+    <strow id="icon-Home">
+     <stentry><image href="../Graphics/icon_OverHome.png" id="image_lw2_h23_ts"/></stentry>
+     <stentry>Home icon</stentry>
+     <stentry>Displays a home page with a list of pipelines and their statuses, allowing you to
+      perform pipeline maintenance and navigate to individual pipelines.</stentry>
+    </strow>
+    <strow id="icon-PackageManager">
+     <stentry><image href="../Graphics/icon_PackageManager.png" scale="80" id="image_o51_szk_nx"
+      /></stentry>
+     <stentry>Package Manager icon</stentry>
+     <stentry>Displays the Package Manager which allows you to install additional stage libraries
+      for a core <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+      /> installation.</stentry>
+    </strow>
+    <strow id="icon-Notifications">
+     <stentry><image href="../Graphics/icon_MonAlert.png" id="image_mfs_2xd_zs"/></stentry>
+     <stentry>Notifications icon</stentry>
+     <stentry>Displays notifications.</stentry>
+    </strow>
+    <strow id="icon-Administration">
+     <stentry><image href="../Graphics/icon_OverAdministration.png" id="image_gqn_5yd_zs"
+      /></stentry>
+     <stentry>Administration icon</stentry>
+     <stentry>Provides access to <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration properties, directories, and log. Also allows you to shut down <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</stentry>
+    </strow>
+    <strow id="icon-User">
+     <stentry><image href="../Graphics/icon_OverUser.png" id="image_gvc_kzd_zs"/></stentry>
+     <stentry>User icon</stentry>
+     <stentry>Displays the active user and the roles assigned to the user. Also allows you to log
+      out of <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+      />.</stentry>
+    </strow>
+    <strow id="icon-Help">
+     <stentry><image href="../Graphics/icon_OverCHelp.png" id="image_bkz_wk3_ts"/></stentry>
+     <stentry>Help icon</stentry>
+     <stentry>Provides context-sensitive help based on the information in the panel. Allows you to
+      configure display settings and to specify whether to use a local or hosted version of the
+       help.<p>Provides access to the REST API and the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+       version.</p></stentry>
+    </strow>
+    <strow id="link-Pipelines">
+     <stentry><image href="../Graphics/icon_PipelineList.png" id="image_hvv_4tc_hbb" scale="70"
+      /></stentry>
+     <stentry>Link to a pipeline list</stentry>
+     <stentry>Link to a <xref
+       href="../Getting_Started/DataCollectorUI_Home-Pipelines.dita#concept_wc5_ysp_1w">pipeline
+       list on the Home page</xref>. Use to view a list of available pipelines, perform pipeline
+      maintenance like starting or sharing a pipeline, and navigate to individual pipelines. </stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigMore.png" id="image_prb_4l3_ts"/></stentry>
+     <stentry>More icon</stentry>
+     <stentry>Provides additional actions for the pipeline. Use to reset the origin for the
+      pipeline. Or to view or delete snapshot data.</stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_Issues.png" id="image_t1h_rl3_ts" scale="80"/></stentry>
+     <stentry>Issues icon</stentry>
+     <stentry>Displays the number of implicit validation issues in the pipeline. Click to view a
+      detailed list of issues found during implicit validation.</stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon-ViewLogs.png" id="image_s3t_flt_3bb" scale="80"
+      /></stentry>
+     <stentry>View Log icon</stentry>
+     <stentry>Displays the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log. The
+      equivalent to selecting Administration > Logs.</stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigUndo.png" id="image_dqr_tl3_ts"/></stentry>
+     <stentry>Undo icon</stentry>
+     <stentry>Reverts recent changes. On Mac, you can also use Command+Z. On Windows, you can use
+      Ctrl+Z. </stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigRedo.png" id="image_pzj_vl3_ts"/></stentry>
+     <stentry>Redo icon</stentry>
+     <stentry>Restores changes that were reverted. On Mac, you can also use Command+Shift+Z. On
+      Windows, you can use Ctrl+Y. </stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigDelete.png" id="image_lqt_wl3_ts"/></stentry>
+     <stentry>Delete icon</stentry>
+     <stentry>Deletes the selected stage or link.</stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigCopy.png" id="image_nd1_zl3_ts"/></stentry>
+     <stentry>Duplicate Stage icon</stentry>
+     <stentry>Duplicates the selected stage. You can duplicate processors and destinations. Because
+      a pipeline can include only one origin, you cannot duplicate an origin stage.</stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigArrange.png" id="image_e25_vm3_ts"/></stentry>
+     <stentry>Auto Arrange icon</stentry>
+     <stentry>Arranges the stages in the pipeline.</stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigDataPreview.png" id="image_t1h_xm3_ts"/></stentry>
+     <stentry>Preview icon</stentry>
+     <stentry>Starts a data preview. </stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigValidate.png" id="image_e3d_mn3_ts"/></stentry>
+     <stentry>Validate icon</stentry>
+     <stentry>Validates the pipeline. Performs explicit validation.</stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon-Share.png" id="image_eqt_wbv_xy" scale="90"/></stentry>
+     <stentry>Share icon</stentry>
+     <stentry>Shares the pipeline with users and groups. Use to configure pipeline
+      permissions.</stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigStartPipeline.png" id="image_kyk_4n3_ts"
+      /></stentry>
+     <stentry>Start icon</stentry>
+     <stentry>Starts the pipeline.</stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigStageLibrary.png" id="image_hbw_pn3_ts"
+      /></stentry>
+     <stentry>Stage Library icon</stentry>
+     <stentry>Toggles the display of the stage library.</stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigLink.png" scale="85" id="image_ctp_sn3_ts"
+      /></stentry>
+     <stentry>Stream Link icon</stentry>
+     <stentry>Indicates the flow of data through the pipeline. Select to configure data rules and
+      alerts. </stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigStageIssue.png" id="image_ndf_5n3_ts"/></stentry>
+     <stentry>Error icon</stentry>
+     <stentry>Indicates that one or more required properties are not defined. Can display on a stage
+      for stage properties or in the canvas for pipeline properties. <p>Related error messages
+       display when you hover over the icon. You can also view the messages in the Issues
+       list.</p><p>The icon can also display on tabs in the properties panel to indicate the
+       location of missing properties. </p></stentry>
+    </strow>
+    <strow>
+     <stentry><image href="../Graphics/icon_ConfigMaximize.png" id="image_lfb_l43_ts"/></stentry>
+     <stentry>Maximize Pane icon</stentry>
+     <stentry>Maximizes the configuration panel. </stentry>
+    </strow>
+   </simpletable>
+  </p>
   <draft-comment author="Loretta">Data Collector configs > The info in these tables used in
    Configuring Data Collector and Shell Impersonation &amp; Security</draft-comment>
   <p>
@@ -289,17 +495,6 @@
     </tgroup>
    </table>
   </p>
-  <p>
-   <draft-comment author="Loretta">The following rows are used in the Data Collector Console -
-    Overview, </draft-comment>
-  </p>
-  <simpletable>
-   <strow id="Icon-Help">
-    <stentry><image href="../Graphics/icon_OverCHelp.png" id="image_bkz_wk3_ts"/></stentry>
-    <stentry>Help icon</stentry>
-    <stentry>Provides context-sensitive help based on the information in the panel. </stentry>
-   </strow>
-  </simpletable>
   <p>
    <draft-comment author="Loretta">The following row is used in Configuring Hive
     Streaming</draft-comment>

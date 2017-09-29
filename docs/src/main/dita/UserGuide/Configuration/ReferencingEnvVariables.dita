@@ -28,8 +28,8 @@
           file</indexterm></indexterm><indexterm>Data Collector configuration
           file<indexterm>referencing environment variables</indexterm></indexterm>For example, you
       want to display text in the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
-      next to the StreamSets logo indicating whether <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI next to
+      the StreamSets logo indicating whether <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is running
       in a development, test, or production environment. You create an environment variable named
       ENVIRONMENT and populate the variable with the appropriate value: development, test, or

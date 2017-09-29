@@ -20,11 +20,6 @@
 <map>
  <title>Pipeline Maintenance</title>
  <topicref href="../Pipeline_Maintenance/PipelineMaintenance_title.dita" chunk="to-content">
-  <topicref href="../Pipeline_Maintenance/DataCollectorWindow_AllPipelines.dita">
-  <topicmeta>
-   <shortdesc/>
-  </topicmeta>
- </topicref>
   <topicref href="../Pipeline_Maintenance/PipelineStates-Understanding.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Maintenance/PipelineStates-Examples.dita"/>

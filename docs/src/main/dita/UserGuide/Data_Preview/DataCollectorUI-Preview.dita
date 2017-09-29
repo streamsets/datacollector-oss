@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_l4q_pbl_sq">
+ <title>Data Collector UI - Preview Mode</title>
+ <shortdesc>You can use <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to view how
+    data passes through the pipeline.</shortdesc>
+ <conbody>
+  <p><indexterm>Data Collector UI<indexterm>Preview mode</indexterm></indexterm>The following image
+      shows <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in
+      Preview mode:</p>
+  <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="65"/><simpletable
+        frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 1.55* 3.85*">
+        <sthead>
+          <stentry>Area/Icon</stentry>
+          <stentry>Name</stentry>
+          <stentry>Description</stentry>
+        </sthead>
+        <strow>
+          <stentry>1</stentry>
+          <stentry>Pipeline canvas</stentry>
+          <stentry>Displays the pipeline.</stentry>
+        </strow>
+        <strow>
+          <stentry>2</stentry>
+          <stentry>Preview panel</stentry>
+          <stentry>
+            <p>Displays the data that enters and exits the selected stage or group of stages. It can
+              also display stage properties and preview configuration.</p>
+          </stentry>
+        </strow>
+        <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-DPM"/>
+        <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Home"/>
+        <strow
+          conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-PackageManager"/>
+        <strow
+          conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Notifications"/>
+        <strow
+          conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Administration"/>
+        <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-User"/>
+        <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Help"/>
+        <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/link-Pipelines"/>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevRecords.png" id="image_cf1_lw1_jbb"/></stentry>
+          <stentry>Records icon</stentry>
+          <stentry>Displays data preview records.</stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevStageConfig.png" id="image_ydt_m1v_cs"
+            /></stentry>
+          <stentry>Stage Configuration icon</stentry>
+          <stentry>Displays stage properties.</stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevPreviewConfig.png" id="image_h2c_f1v_cs"
+            /></stentry>
+          <stentry>Preview Configuration icon</stentry>
+          <stentry>Displays data preview properties. </stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevSingle.png" id="image_arm_fd5_cs"/></stentry>
+          <stentry>Single button</stentry>
+          <stentry>Displays input and output data for a single stage.</stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevMultiple.png" id="image_hqh_gd5_cs"/></stentry>
+          <stentry>Multiple button</stentry>
+          <stentry>Displays input and output data for a group of stages.</stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevListView.png" id="image_dmf_d25_cs"/></stentry>
+          <stentry>List View icon</stentry>
+          <stentry>Displays preview data in a list.</stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevTableView.png" id="image_epx_d25_cs"
+            /></stentry>
+          <stentry>Table View icon</stentry>
+          <stentry>Displays preview data in a table. </stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevPrevStage.png" id="image_usm_kxn_tq"
+            /></stentry>
+          <stentry>Previous Stage icon</stentry>
+          <stentry>Moves the preview to the previous stage.</stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevNextStage.png" id="image_jf4_3xn_tq"
+            /></stentry>
+          <stentry>Next Stage icon</stentry>
+          <stentry>Moves the preview to the next stage.</stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevRefresh.png" id="image_cfn_5mr_br"/></stentry>
+          <stentry>Refresh Preview icon</stentry>
+          <stentry>Provides a fresh set of data from the origin.</stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PreviewRerun.png" id="image_nzs_2nr_br"/></stentry>
+          <stentry>Run Preview with Changes icon</stentry>
+          <stentry>Runs the data preview using changed data. Use to see how edited data is processed
+            by the pipeline. </stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevRevertChanges.png" id="image_xnr_f4r_br"
+            /></stentry>
+          <stentry>Revert Changes icon</stentry>
+          <stentry>Reverts all changes to preview data and returns the preview to the origin.
+          </stentry>
+        </strow>
+        <strow>
+          <stentry><image href="../Graphics/icon_PrevClose.png" id="image_cjl_jmr_br" scale="90"
+            /></stentry>
+          <stentry>Close Preview icon</stentry>
+          <stentry>Closes the data preview.</stentry>
+        </strow>
+      </simpletable></p>
+    <note conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"/>
+    <p>For information about maintaining pipelines on the Home page, see <xref
+        href="../Getting_Started/DataCollectorUI_Home-Pipelines.dita#concept_wc5_ysp_1w"/>.</p>
+    <p>For information about configuring pipelines, see <xref
+        href="../Pipeline_Configuration/DataCollectorUI-Config.dita#concept_izr_f2p_rq"/>.</p>
+    <p>For information about pipeline monitoring options, see <xref
+        href="../Pipeline_Monitoring/DataCollectorUI-Monitor.dita#concept_t1c_mf4_tq"/>.</p>
+ </conbody>
+</concept>

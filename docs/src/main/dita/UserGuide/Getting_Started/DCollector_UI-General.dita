@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_yth_5n5_jq">
+ <title>Data Collector User Interface</title>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    provides a web-based user interface (UI) to configure pipelines, preview data, monitor
+    pipelines, and review snapshots of data. </shortdesc>
+ <conbody>
+  <p><indexterm>Data Collector UI<indexterm>overview</indexterm></indexterm>The <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI
+      includes the following general areas and icons:</p>
+  <p><image href="../Graphics/CanvasOverview.png" id="image_k5j_5pz_sq" scale="70"/></p>
+  <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 1.55* 3.85*">
+      <sthead>
+        <stentry>Area/Icon</stentry>
+        <stentry>Name</stentry>
+        <stentry>Description</stentry>
+      </sthead>
+      <strow>
+        <stentry>1</stentry>
+        <stentry>Pipeline canvas</stentry>
+        <stentry>Canvas for configuring, previewing, or monitoring a pipeline. </stentry>
+      </strow>
+      <strow>
+        <stentry>2</stentry>
+        <stentry>Properties panel / Preview panel / Monitor panel </stentry>
+        <stentry>When you configure a pipeline, the Properties panel displays the properties of the
+          pipeline or selected stage. You can resize, minimize and maximize the panel.<p>When you
+            preview data, the Preview panel displays the data that enters and exits the selected
+            stage or group of stages. It can also display stage properties and preview
+            configuration.</p><p>When you monitor a running pipeline, the Monitor panel displays
+            real-time metrics and statistics. </p><p>
+            <note
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"
+            />
+          </p></stentry>
+      </strow>
+      <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-DPM"/>
+      <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Home"/>
+      <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-PackageManager"/>
+      <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Notifications"/>
+      <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Administration"/>
+      <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-User"/>
+      <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Help"/>
+      <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/link-Pipelines"/>
+      <strow>
+        <stentry><image href="../Graphics/icon_MonMore.png" id="image_wsc_zvp_1w"/></stentry>
+        <stentry>More icon</stentry>
+        <stentry>
+          <p>Provides additional actions for the pipeline.</p>
+        </stentry>
+      </strow>
+    </simpletable>
+  <p>For information about configuring pipelines, see <xref
+        href="../Pipeline_Configuration/DataCollectorUI-Config.dita#concept_izr_f2p_rq"/>.</p>
+  <p>For information about data preview options, see <xref
+        href="../Data_Preview/DataCollectorUI-Preview.dita#concept_l4q_pbl_sq"/>.</p>
+  <p>For information about pipeline monitoring options, see <xref
+        href="../Pipeline_Monitoring/DataCollectorUI-Monitor.dita#concept_t1c_mf4_tq"/>.</p>
+ </conbody>
+</concept>

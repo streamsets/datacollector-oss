@@ -18,19 +18,26 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wc5_ysp_1w">
- <title>Data Collector Console - All Pipelines on the Home Page</title>
- <shortdesc>You can display all pipelines in the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        console when you click the Home icon or the Pipelines link in the pipeline path when
-        configuring or monitoring a pipeline. View all pipelines on the Home page to perform
-        pipeline maintenance.</shortdesc>
+ <title>Data Collector UI - Pipelines on the Home Page</title>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        displays a list of all available pipelines and related information on the Home page. You can
+        select a category of pipelines, such as Running Pipelines, to view a subset of all available
+        pipelines. </shortdesc>
  <conbody>
-        <p><indexterm>Data Collector console<indexterm>pipelines
-                view</indexterm></indexterm><indexterm>Data Collector console<indexterm>Home
-                    page</indexterm></indexterm><indexterm>Home page<indexterm>Data Collector
-                    console</indexterm></indexterm>The following image shows the <ph
+        <p><indexterm>Data Collector UI<indexterm>pipelines view on the Home
+                page</indexterm></indexterm><indexterm>Home page<indexterm>Data Collector
+                    UI</indexterm></indexterm>Pipelines display on the Home page when you or your
+            user group has read permission on the pipeline or when you created the piepline. </p>
+        <p>View pipelines on the Home page to perform <xref
+                href="../Pipeline_Maintenance/PipelineMaintenance_overview.dita#concept_zf1_3tr_5q"
+                >pipeline maintenance</xref>, such as copying or sharing a pipeline. You can access
+            the Home page when when you click the Home icon (<image
+                href="../Graphics/icon_OverHome.png" id="image_lw2_h23_ts" scale="80"/>) in the
+            top-level set of icons on the page. You can also access the Home page by clicking the
+            Pipelines link in the pipeline path when you are configuring or monitoring a pipeline. </p>
+        <p>The following image shows the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            console when you display all pipelines on the Home page:</p>
+            Home page:</p>
         <image href="../Graphics/DCConsoleAllPipelines.png" scale="60" id="image_a41_tlq_1w"/>
         <simpletable frame="all" id="simpletable_v4t_zhc_pq" relcolwidth="1.0* 1.55* 3.85*">
             <sthead>
@@ -67,6 +74,16 @@
                 <stentry>Displays details about error messages and alert texts for each pipeline in
                     the list.</stentry>
             </strow>
+            <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-DPM"/>
+            <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Home"/>
+            <strow
+                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-PackageManager"/>
+            <strow
+                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Notifications"/>
+            <strow
+                conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Administration"/>
+            <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-User"/>
+            <strow conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/icon-Help"/>
             <strow>
                 <stentry><image href="../Graphics/icon_OverLibraryToggle.png" id="image_kgq_klq_rq"
                         scale="70"/></stentry>
@@ -146,5 +163,13 @@
                     pipeline.</stentry>
             </strow>
         </simpletable>
+        <p>For information about configuring pipelines, see <xref
+                href="../Pipeline_Configuration/DataCollectorUI-Config.dita#concept_izr_f2p_rq"
+            />.</p>
+        <p>For information about data preview options, see <xref
+                href="../Data_Preview/DataCollectorUI-Preview.dita#concept_l4q_pbl_sq"/>.</p>
+        <p>For information about pipeline monitoring options, see <xref
+                href="../Pipeline_Monitoring/DataCollectorUI-Monitor.dita#concept_t1c_mf4_tq"
+            />.</p>
     </conbody>
 </concept>

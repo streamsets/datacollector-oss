@@ -28,7 +28,7 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> runs a pipeline, it displays in the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> console in Monitor mode by default. </p>
+                /> UI in Monitor mode by default. </p>
         </context>
         <steps id="steps_zjh_4bs_5q">
             <step>

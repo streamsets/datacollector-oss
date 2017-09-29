@@ -33,7 +33,7 @@
             <step>
                 <cmd>In the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> console, click <menucascade>
+                    /> UI, click <menucascade>
                         <uicontrol>Administration</uicontrol>
                         <uicontrol> Shut Down</uicontrol>
                     </menucascade>.</cmd>

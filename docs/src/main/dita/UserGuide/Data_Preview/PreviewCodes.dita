@@ -19,10 +19,11 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qqc_s3h_tq">
  <title>Preview Codes</title>
- <shortdesc>In preview mode, the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console uses
-  different colors to represent different types of data. The console uses other codes and formatting
-  to highlight changed fields.</shortdesc>
+ <shortdesc>In Preview mode, <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> displays
+  different colors for different types of data. <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses other
+  codes and formatting to highlight changed fields.</shortdesc>
  <conbody>
   <p><indexterm>data preview<indexterm>color codes</indexterm></indexterm>The following table
    describes the color and asterisk coding:<simpletable frame="all" id="simpletable_ryj_wjh_tq">

@@ -37,7 +37,7 @@
                 /> process ID in the following
                 command:<codeblock>kill -15 &lt;process ID></codeblock></p><p>To use the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> console for shutdown:</p></context>
+                /> UI for shutdown:</p></context>
         <steps id="steps_hqp_kjk_br">
             <step>
                 <cmd>Click <menucascade>

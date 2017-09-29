@@ -18,21 +18,21 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_r3q_fnx_pr">
-    <title>Configuring Console Settings</title>
+    <title>Configuring the Display</title>
     <taskbody>
         <context>
-            <p><indexterm>help<indexterm>local or hosted</indexterm></indexterm><indexterm>console
+            <p><indexterm>help<indexterm>local or hosted</indexterm></indexterm><indexterm>display
                         settings<indexterm>configuring</indexterm></indexterm>You can configure how
                 information in the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> console displays, such as the online help version, information density in the
-                panel, and the pipeline creation help bar.</p>
+                /> UI displays, such as the online help version, information density in the panel,
+                and the pipeline creation help bar.</p>
         </context>
         <steps id="steps_zgq_dpx_pr">
             <step>
                 <cmd>In the top right corner of the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> console, click <menucascade>
+                    /> UI, click <menucascade>
                         <uicontrol>Help</uicontrol>
                         <uicontrol>Settings</uicontrol>
                     </menucascade>.</cmd>
@@ -46,7 +46,7 @@
                             <colspec colname="c2" colnum="2" colwidth="2.39*"/>
                             <thead>
                                 <row>
-                                    <entry>Console Setting</entry>
+                                    <entry>Display Setting</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -56,9 +56,9 @@
                                     <entry>Display time zone. Used to display dates and times in the
                                             <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> console, such as datetime data in data preview or
-                                        snapshot data. <p>You can choose between the following
-                                                options:<ul id="ul_oxv_nq4_cy">
+                                        /> UI, such as datetime data in data preview or snapshot
+                                        data. <p>You can choose between the following options:<ul
+                                                id="ul_oxv_nq4_cy">
                                                 <li>UTC</li>
                                                 <li>The browser time zone, which usually uses the
                                                   operating system time zone.</li>

@@ -26,9 +26,9 @@
           alerts<indexterm>overview</indexterm></indexterm><indexterm>monitoring<indexterm>metric
           rules and alerts</indexterm></indexterm>When <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs a
-      pipeline, the console displays the pipeline in Monitor mode and displays real-time statistics
-      about the pipeline. You can define and enable metric rules so that you are sent an alert when
-      a statistic reaches a certain threshold. </p>
+      pipeline, the UI displays the pipeline in Monitor mode and displays real-time statistics about
+      the pipeline. You can define and enable metric rules so that you are sent an alert when a
+      statistic reaches a certain threshold. </p>
     <p>For example, the Record Count and Record Throughput statistics in Monitor mode display the
       number of input, output, and error records that the pipeline has processed:</p>
     <p><image href="../Graphics/MetricStatistics.png" id="image_h55_gc1_qv" scale="50"/></p>
@@ -37,12 +37,12 @@
       default rule for the Pipeline Error Records Counter metric to send an alert when the pipeline
       encounters more than 100 error records. When you enable the metric rule and the alert
       triggers, the alert displays in the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console as
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI as
       follows: </p>
     <p><image href="../Graphics/MetricAlert.png" scale="40" id="image_ukv_rf1_qv"/></p>
-    <p>When you enable a metric rule, it automatically enables an alert for the rule that displays
-      in the console. You can also configure a metric rule to send email alerts to all email
-      addresses associated with the pipeline. </p>
+    <p>When you enable a metric rule, it automatically enables an alert for the rule. You can also
+      configure a metric rule to send email alerts to all email addresses associated with the
+      pipeline. </p>
     <p>You configure metric rules when you configure or monitor the pipeline. <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides a
       set of default metric rules that you can edit and enable for any pipeline. Metric rules take

@@ -32,11 +32,16 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Getting_Started/DCollector_Window.dita" >
+  <topicref href="../Getting_Started/DCollector_UI-General.dita" >
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Getting_Started/ConfiguringConsoleSettings.dita"/>
+  </topicref>
+  <topicref href="../Getting_Started/DataCollectorUI_Home-Pipelines.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
   </topicref>
   </topicref>
 </map>

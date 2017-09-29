@@ -165,8 +165,8 @@ chown sdc:sdc /var/lib/sdc-resources</codeblock>
                 </choices>
             </step>
             <step>
-                <cmd id="AccessDC">To access the <ph>Data Collector</ph> console, enter the
-                    following URL in the address bar of your browser: </cmd>
+                <cmd id="AccessDC">To access the <ph>Data Collector</ph> UI, enter the following URL
+                    in the address bar of your browser: </cmd>
                 <info>
                     <codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCBaseURL"/>
                 </info>

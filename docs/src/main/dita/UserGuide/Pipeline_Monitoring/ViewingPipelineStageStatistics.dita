@@ -26,7 +26,7 @@
             <p><indexterm>monitoring<indexterm>viewing statistics</indexterm></indexterm>By default,
                 the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> console displays pipeline monitoring information when it runs a pipeline. You can
+                /> UI displays pipeline monitoring information when it runs a pipeline. You can
                 select a stage to view the statistics about the stage. Similarly, you can view error
                 information for the pipeline and its stages. </p>
             <p>The Monitor panel displays statistics on the following tabs:<dl>

@@ -42,7 +42,7 @@
         </steps>
         <result id="result_frp_hcg_5y">The following image shows the <uicontrol>OAuth 2</uicontrol>
             tab configured for Microsoft Azure AD version 1.0: <p><image
-                    href="../Graphics/HTTPClientProcessor_OAuth2AzureAD.png" scale="65"
+                    href="../Graphics/HTTPClientProcessor_OAuth2AzureAD.png" scale="55"
                     id="image_ik4_2kg_5y"/></p></result>
     </taskbody>
 </task>

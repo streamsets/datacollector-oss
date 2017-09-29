@@ -21,9 +21,9 @@
     <title>Logging In and Creating a Pipeline</title>
     <shortdesc>After you start <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
-        can log in to the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        console and create your first pipeline.</shortdesc>
+        can log in to <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
+        create your first pipeline.</shortdesc>
     <taskbody>
         <context>
             <p><indexterm>Data Collector<indexterm>logging in and creating a
@@ -35,7 +35,7 @@
         </context>
         <steps id="steps_gsd_wsf_tq">
             <step>
-                <cmd id="AccessDC">To access the <ph>Data Collector</ph> console, enter the
+                <cmd id="AccessDC">To access <ph>Data Collector</ph> using the UI, enter the
                     following URL in the address bar of your browser: </cmd>
                 <info>
                     <codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCBaseURL"/>
@@ -59,8 +59,10 @@
             <step>
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a name for the pipeline,
                     optionally enter a description, and click <uicontrol>Save</uicontrol>.</cmd>
-                <info>The <wintitle>Data Collector</wintitle> console appears. The Properties panel
-                    displays pipeline properties. </info>
+                <info>The pipeline canvas appears. The Properties panel displays pipeline
+                    properties. For a description of the icons and areas, see <xref
+                        href="../Pipeline_Configuration/DataCollectorUI-Config.dita#concept_izr_f2p_rq"
+                    />.</info>
             </step>
         </steps>
         <postreq>For the steps to configure a pipeline, continue with step <xref

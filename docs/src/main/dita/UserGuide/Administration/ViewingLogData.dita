@@ -34,8 +34,9 @@
                         <uicontrol>Administration</uicontrol>
                         <uicontrol>Logs</uicontrol>
                     </menucascade>. </cmd>
-                <info>The console displays roughly 50,000 characters of the most recent log
-                    information. </info>
+                <info>The <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> UI displays roughly 50,000 characters of the most recent log information. </info>
             </step>
             <step>
                 <cmd>To stop the automatic refresh of log data, click <uicontrol>Stop Auto

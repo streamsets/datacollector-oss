@@ -38,20 +38,20 @@
         <dlentry>
           <dt>Send to Error </dt>
           <dd>With a buffer limit error, the origin cannot send the record to the pipeline for error
-            handling because it is unable to fully process the record. <p>Instead, the origin sends
-              a message to the Monitor console to indicate that a buffer overrun error occurred. The
-              message includes the object and offset where the buffer overrun error occurred. The
-              information displays in the pipeline history and displays as an alert when you monitor
-              the pipeline. </p><p>If an error directory is configured for the stage, the origin
-              moves the object to the error directory and continues processing the next object.
-            </p></dd>
+            handling because it is unable to fully process the record. <p>Instead, the origin
+              displays a message in Monitor mode indicating that a buffer overrun error occurred.
+              The message includes the object and offset where the buffer overrun error occurred.
+              The information displays in the pipeline history and displays as an alert when you
+              monitor the pipeline. </p><p>If an error directory is configured for the stage, the
+              origin moves the object to the error directory and continues processing the next
+              object. </p></dd>
         </dlentry>
         <dlentry>
           <dt>Stop Pipeline</dt>
-          <dd>The origin stops the pipeline and sends a message to the Monitor console to indicate
-            that a buffer overrun error occurred. The message includes the object and offset where
-            the buffer overrun error occurred. The information displays as an alert and in the
-            pipeline history. </dd>
+          <dd>The origin stops the pipeline and displays a message in Monitor mode indicating that a
+            buffer overrun error occurred. The message includes the object and offset where the
+            buffer overrun error occurred. The information displays as an alert and in the pipeline
+            history. </dd>
         </dlentry>
       </dl></p>
   <p>

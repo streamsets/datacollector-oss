@@ -27,8 +27,8 @@
       <dl>
         <dlentry>
           <dt>When I go to the <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            console, I get a "Webpage not available" error message.</dt>
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI,
+            I get a "Webpage not available" error message.</dt>
           <dd>The <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
             not running. Start the <ph

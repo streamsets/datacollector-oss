@@ -173,7 +173,7 @@
                             <li><xref
                                     href="../Getting_Started/ConfiguringConsoleSettings.dita#task_r3q_fnx_pr"
                                     >New time zone property</xref> - You can configure the Data
-                                Collector console to use UTC, the browser time zone, or the Data
+                                Collector UI to use UTC, the browser time zone, or the Data
                                 Collector time zone. The time zone property affects how dates and
                                 times display in the UI. The default is the browser time zone.</li>
                         </ul>

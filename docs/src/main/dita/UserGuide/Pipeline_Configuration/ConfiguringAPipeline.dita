@@ -202,15 +202,14 @@
                                         configured Max Pipeline Memory:<ul id="ul_vsf_3k4_1s">
                                             <li>Log - Logs a message in the pipeline history.</li>
                                             <li>Log and Alert - Logs a message and triggers an alert
-                                                that displays in monitor mode and sends an alert
+                                                that displays in Monitor mode and sends an alert
                                                 email to any provided email addresses.</li>
                                         </ul><ul id="ul_mtf_3k4_1s">
                                             <li>Log, Alert and Stop Pipeline - Logs a message,
-                                                triggers an alert that displays in monitor mode and
+                                                triggers an alert that displays in Monitor mode and
                                                 sends an alert email to any provided email
                                                 addresses. Stops the pipeline. This option is not
-                                                supported for cluster mode pipelines at this time.
-                                            </li>
+                                                supported for cluster mode pipelines at this time. </li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -894,8 +893,8 @@
         </steps>
         <result>When <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            starts the pipeline, the Monitor console displays real-time statistics for the pipeline.
-            For more information about monitoring, see <xref
+            starts the pipeline, Monitor mode displays real-time statistics for the pipeline. For
+            more information about monitoring, see <xref
                 href="../Pipeline_Monitoring/PipelineMonitoring.dita#concept_hsp_tnt_lq"/>.</result>
     </taskbody>
 </task>

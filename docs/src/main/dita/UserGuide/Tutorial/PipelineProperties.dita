@@ -97,18 +97,16 @@
                                     <entry>Properties panel / Preview panel / Monitor panel
                                     </entry>
                                     <entry>When you configure a pipeline, the Properties panel
-                                            displays the properties of the pipeline or selected
-                                            stage. You can resize, minimize and maximize the panel. 
-                                        <p>When you preview data, the Preview panel displays the
-                                            input and output data for the selected stage or group of
-                                            stages. </p>
-                                        <p>When you monitor a running pipeline, the Monitor panel
-                                            displays real-time metrics and statistics. </p>
-                                        <note>Some icons and options might not display in the
-                                            console. The items that display are based on the task
+                                        displays the properties of the pipeline or selected stage.
+                                        You can resize, minimize and maximize the panel. <p>When you
+                                            preview data, the Preview panel displays the input and
+                                            output data for the selected stage or group of stages.
+                                            </p><p>When you monitor a running pipeline, the Monitor
+                                            panel displays real-time metrics and statistics.
+                                            </p><note>Some icons and options might not display in
+                                            the UI. The items that display are based on the task
                                             that you are performing and roles assigned to your user
-                                            account. </note>
-                                    </entry>
+                                            account. </note></entry>
                                 </row>
                                 <row>
                                     <entry><image href="../Graphics/icon_ConfigStageLibrary.png"
