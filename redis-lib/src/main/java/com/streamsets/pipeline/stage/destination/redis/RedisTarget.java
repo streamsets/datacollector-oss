@@ -23,9 +23,11 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -184,6 +186,45 @@ public class RedisTarget extends BaseTarget {
     jedis.ping();
   }
 
+  private int getOperationFromHeader(Record record) {
+    String op = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
+    if (StringUtils.isEmpty(op)) {
+      return OperationType.UNSUPPORTED_CODE;
+    }
+
+    int opCode;
+    try {
+      opCode = Integer.parseInt(op);
+    } catch (Exception e) {
+      opCode = OperationType.UNSUPPORTED_CODE;
+    }
+    return opCode;
+  }
+
+  private String getDeleteKey(Record record, RedisFieldMappingConfig parameters) {
+    if (record.has(parameters.keyExpr)) {
+      return record.get(parameters.keyExpr).getValueAsString();
+    } else {
+      return null;
+    }
+  }
+
+  private void doDeleteRecord(Record record, List<ErrorRecord> tempRecords, Pipeline pipeline, String key)
+          throws StageException {
+    if (!StringUtils.isEmpty(key)) {
+      pipeline.del(key);
+      tempRecords.add(new ErrorRecord(record, "Delete", key, ""));
+    } else {
+      LOG.error(Errors.REDIS_09.getMessage(), key);
+      errorRecordHandler.onError(
+              new OnRecordErrorException(
+                      record,
+                      Errors.REDIS_09
+              )
+      );
+    }
+  }
+
   private void doBatch(Batch batch) throws StageException {
     Iterator<Record> records = batch.getRecords();
     List<ErrorRecord> tempRecord = new ArrayList<>();
@@ -196,6 +237,14 @@ public class RedisTarget extends BaseTarget {
         Record record = records.next();
         for (RedisFieldMappingConfig parameters : conf.redisFieldMapping) {
           String key = null;
+          // Special treatment is only given to deletes -
+          // all other records will be handled as an upsert.
+          if (OperationType.DELETE_CODE == getOperationFromHeader(record)) {
+            key = getDeleteKey(record, parameters);
+            doDeleteRecord(record, tempRecord, p, key);
+            continue;
+          }
+
           if (record.has(parameters.keyExpr)) {
             key = record.get(parameters.keyExpr).getValueAsString();
           }
