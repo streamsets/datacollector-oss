@@ -31,6 +31,7 @@ public enum Errors implements ErrorCode {
   OPC_UA_09("Failed to process data : {}"),
   OPC_UA_10("Failed during browsing nodeId={} failed: {}"),
   OPC_UA_11("Failed to initialize Node IDs, values cannot be empty or null: {}"),
+  OPC_UA_12("Failed to read data : {}"),
   ;
 
   private final String msg;

@@ -217,6 +217,7 @@ public class OpcUaClientSource implements PushSource {
     OpcUaClientConfig config = clientConfigBuilder.setEndpoint(endpoint)
         .setIdentityProvider(new AnonymousProvider())
         .setRequestTimeout(uint(conf.requestTimeoutMillis))
+        .setSessionTimeout(uint(conf.sessionTimeoutMillis))
         .build();
 
     return new OpcUaClient(config);
@@ -340,9 +341,6 @@ public class OpcUaClientSource implements PushSource {
         stopwatch = Stopwatch.createStarted();
       } else if (stopwatch.elapsed(TimeUnit.SECONDS) > conf.refreshNodeIdsInterval) {
         try {
-          opcUaClient.disconnect().get();
-          opcUaClient = createClient();
-          opcUaClient.connect().get();
           List<NodeId> newNodeIds = new ArrayList<>();
           browseNode(rootNodeId, newNodeIds, new ArrayList<>());
           if (!newNodeIds.isEmpty()) {
@@ -350,11 +348,22 @@ public class OpcUaClientSource implements PushSource {
           }
         } catch (Exception ex) {
           errorQueue.offer(new StageException(Errors.OPC_UA_08, ex.getMessage(), ex));
+          reConnect();
         } finally {
           stopwatch.reset()
               .start();
         }
       }
+    }
+  }
+
+  private void reConnect() {
+    try {
+      opcUaClient.disconnect().get();
+      opcUaClient = createClient();
+      opcUaClient.connect().get();
+    } catch (Exception ex) {
+      LOG.error(Errors.OPC_UA_02.getMessage(), ex.getMessage(), ex);
     }
   }
 
@@ -374,6 +383,12 @@ public class OpcUaClientSource implements PushSource {
           if (ThreadUtil.sleep(conf.pollingInterval)) {
             pollForData();
           }
+        })
+        .exceptionally(ex -> {
+          LOG.warn(Errors.OPC_UA_12.getMessage(), ex.getMessage());
+          reConnect();
+          pollForData();
+          return null;
         });
   }
 

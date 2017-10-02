@@ -67,7 +67,18 @@ public class OpcUaClientSourceConfigBean {
       displayPosition = 40,
       group = "OPC_UA"
   )
-  public int requestTimeoutMillis = 0;
+  public int requestTimeoutMillis = 5000;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Session Timeout",
+      defaultValue = "120000",
+      description = "OPC UA session timeout in milliseconds.",
+      displayPosition = 45,
+      group = "OPC_UA"
+  )
+  public int sessionTimeoutMillis = 120000;
 
   @ConfigDef(
       required = true,

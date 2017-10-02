@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DPushSource;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "OPC UA Client",
     description = "Uses an OPC UA Client to read data from an OPC UA Server.",
     icon = "opcua.png",
