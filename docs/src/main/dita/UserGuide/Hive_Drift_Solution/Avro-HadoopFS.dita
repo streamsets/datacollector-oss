@@ -34,5 +34,8 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HD-CStudy-HDFSprocessing-p"/>
         <p>Note that the destination can also use Max Records in File, Max Files Size, and Idle
             Timeout to determine when to roll files.</p>
+        <p>Also, if you want to compress the Avro files, use the Avro Compression Codec property on
+            the Data Formats tab, instead of the general compression option on the Output Files
+            tab.</p>
  </conbody>
 </concept>

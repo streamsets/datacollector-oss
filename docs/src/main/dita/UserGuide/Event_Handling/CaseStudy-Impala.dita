@@ -75,14 +75,29 @@
                         logs.server1weblog.</p><p><image href="../Graphics/Event-HDS-Expression.png"
                             id="image_pcc_3zm_5x" scale="55"/></p></li>
                 <li>Add the Hive Query executor and connect the Hive Metastore destination and the
-                    Expression Evaluator to the executor. Then configure the Hive Query
-                        executor.<p>In the Hive Query executor, on the <wintitle>Hive</wintitle>
-                        tab, configure the Hive configuration details. Then, on the
-                            <wintitle>Query</wintitle> tab, enter the following
+                    Expression Evaluator to the executor. Then configure the Hive Query executor.<p>
+                        <note>To use the Hive Query executor with Impala, you need to use the Impala
+                            JDBC driver. By default, <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> uses an open source Hive JDBC driver. So if you haven't already,
+                                <xref
+                                href="https://www.cloudera.com/downloads/connectors/impala/jdbc/2-5-37.html"
+                                format="html" scope="external">download the driver from Cloudera
+                            </xref>, then <xref
+                                href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft">install
+                                the driver</xref>. Note that the download page also includes a link
+                            to documentation for the driver. </note>
+                    </p><p>Once the Impala JDBC driver is installed, in the Hive Query executor,
+                        configure the Hive configuration details on the <wintitle>Hive</wintitle>
+                        tab. If you have any trouble configuring the URL, see the Impala driver
+                        information in our <xref
+                            href="https://ask.streamsets.com/question/7/how-do-you-configure-a-hive-impala-jdbc-driver-for-data-collector/"
+                            format="html" scope="external">Ask StreamSets post</xref>. </p><p>Then,
+                        on the <wintitle>Query</wintitle> tab, enter the following
                         query:<codeblock>invalidate metadata ${record:value('/table')}</codeblock></p><p>This
                         query refreshes the Impala cache for the specified table. And the table is
                         either the table in the Hive Metastore event record that was just updated or
-                        the table where Hadoop FS wrote a file.  </p><p>Here's the final
+                        the table where Hadoop FS wrote a file. </p><p>Here's the final
                         pipeline:</p><p><image href="../Graphics/Event-HDS-HiveQueryDeets.png"
                             id="image_ccr_hpr_mx" scale="70"/></p><p>With these new event streams,
                         each time the Hive Metastore destination creates a table, partition or
