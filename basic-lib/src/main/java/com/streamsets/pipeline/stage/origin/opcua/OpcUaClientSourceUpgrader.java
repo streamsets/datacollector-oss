@@ -36,6 +36,9 @@ public class OpcUaClientSourceUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        //fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -58,5 +61,26 @@ public class OpcUaClientSourceUpgrader implements StageUpgrader {
         "conf.nodeIdConfigsFilePath",
         "${runtime:loadResource(\'nodeIdConfigs.json\', false)}"
     ));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "conf.rootIdentifier":
+        case "conf.rootIdentifierType":
+        case "conf.rootNamespaceIndex":
+        case "conf.refreshNodeIdsInterval":
+        case "conf.sessionTimeoutMillis":
+          configsToRemove.add(config);
+      }
+    }
+    configs.removeAll(configsToRemove);
+    configs.add(new Config("conf.rootIdentifier", ""));
+    configs.add(new Config("conf.rootIdentifierType", "NUMERIC"));
+    configs.add(new Config("conf.rootNamespaceIndex", 0));
+    configs.add(new Config("conf.refreshNodeIdsInterval", 3600));
+    configs.add(new Config("conf.sessionTimeoutMillis", 120000));
+
   }
 }
