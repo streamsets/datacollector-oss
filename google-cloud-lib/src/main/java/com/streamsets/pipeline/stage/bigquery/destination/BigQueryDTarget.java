@@ -24,11 +24,12 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.bigquery.lib.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Google BigQuery",
     description = "Executes a streaming insert to Google Big Query",
     icon="bigquery.png",
-    producesEvents = true,
+    producesEvents = false,
+    upgrader = BigQueryTargetUpgrader.class,
     onlineHelpRefUrl = "index.html#Destinations/BigQuery.html#task_gxn_dsk_dbb"
 )
 @ConfigGroups(Groups.class)

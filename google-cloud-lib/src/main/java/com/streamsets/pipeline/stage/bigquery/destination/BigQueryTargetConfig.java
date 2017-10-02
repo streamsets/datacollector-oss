@@ -64,42 +64,30 @@ public class BigQueryTargetConfig {
   )
   public String rowIdExpression;
 
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Implicit field mapping",
-      description = "If set, field paths will be implicitly mapped to Big Query columns",
-      displayPosition = 40,
-      group = "BIGQUERY"
-  )
-  public boolean implicitFieldMapping;
-
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Ignore Invalid Column",
       description = "If enabled, field paths that cannot be mapped to column will be ignored",
-      displayPosition = 30,
+      displayPosition = 40,
       group = "BIGQUERY"
   )
   public boolean ignoreInvalidColumn;
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
-      label = "Fields",
-      description = "Column names, their values and storage type",
+      required =  true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "-1",
+      label = "Table cache",
+      description = "Configures the cache size for storing TableId entries." +
+          " Use -1 for unlimited number of tableId entries in the cache.",
       displayPosition = 50,
       group = "BIGQUERY",
-      dependsOn = "implicitFieldMapping",
-      triggeredByValue = "false"
+      min = -1,
+      max = Integer.MAX_VALUE
   )
-  @ListBeanModel
-  public List<BigQueryFieldMappingConfig> bigQueryFieldMappingConfigs;
-
+  public int maxCacheSize = -1;
 
   @ConfigDefBean(groups = "CREDENTIALS")
   public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();

@@ -27,16 +27,12 @@ public class BigQueryTargetConfigBuilder {
   private String tableNameEL;
   private String rowIdExpression;
 
-  private boolean implicitFieldMapping;
   private boolean ignoreInvalidColumns;
-  private Map<String, String> columnToFieldMapping;
 
   BigQueryTargetConfigBuilder() {
-    this.implicitFieldMapping = false;
     this.ignoreInvalidColumns = true;
-    this.columnToFieldMapping = new LinkedHashMap<>();
-    this.datasetEL = "sample";
-    this.tableNameEL = "sample";
+    this.datasetEL = "correctDataset";
+    this.tableNameEL = "correctTable";
     this.projectId = "sample";
     this.rowIdExpression = "";
   }
@@ -61,18 +57,8 @@ public class BigQueryTargetConfigBuilder {
     return this;
   }
 
-  public BigQueryTargetConfigBuilder implicitFieldMapping(boolean implicitFieldMapping) {
-    this.implicitFieldMapping = implicitFieldMapping;
-    return this;
-  }
-
   public BigQueryTargetConfigBuilder ignoreInvalidColumns(boolean ignoreInvalidColumns) {
     this.ignoreInvalidColumns = ignoreInvalidColumns;
-    return this;
-  }
-
-  public BigQueryTargetConfigBuilder columnToFieldNameMapping(Map<String, String> columnToFieldMapping) {
-    this.columnToFieldMapping =  columnToFieldMapping;
     return this;
   }
 
@@ -82,16 +68,8 @@ public class BigQueryTargetConfigBuilder {
     config.datasetEL = datasetEL;
     config.tableNameEL = tableNameEL;
     config.ignoreInvalidColumn = ignoreInvalidColumns;
-    config.implicitFieldMapping = implicitFieldMapping;
     config.rowIdExpression = rowIdExpression;
     config.credentials.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
-    config.bigQueryFieldMappingConfigs =
-        columnToFieldMapping.entrySet().stream().map(e ->  {
-          BigQueryFieldMappingConfig fieldMappingConfig = new BigQueryFieldMappingConfig();
-          fieldMappingConfig.columnName = e.getKey();
-          fieldMappingConfig.fieldPath = e.getValue();
-          return fieldMappingConfig;
-        }).collect(Collectors.toList());
     return config;
   }
 

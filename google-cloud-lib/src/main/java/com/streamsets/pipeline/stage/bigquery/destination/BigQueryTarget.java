@@ -17,10 +17,15 @@ package com.streamsets.pipeline.stage.bigquery.destination;
 
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.BigQueryError;
+import com.google.cloud.bigquery.BigQueryException;
 import com.google.cloud.bigquery.InsertAllRequest;
 import com.google.cloud.bigquery.InsertAllResponse;
 import com.google.cloud.bigquery.TableId;
 import com.google.common.base.Joiner;
+import com.google.common.base.Throwables;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -30,6 +35,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
 import com.streamsets.pipeline.stage.bigquery.lib.Errors;
@@ -47,9 +53,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class BigQueryTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(BigQueryTarget.class);
@@ -65,7 +74,7 @@ public class BigQueryTarget extends BaseTarget {
   private ELEval dataSetEval;
   private ELEval tableNameELEval;
   private ELEval rowIdELEval;
-
+  private LoadingCache<TableId, Boolean> tableIdExistsCache;
 
   BigQueryTarget(BigQueryTargetConfig conf) {
     this.conf = conf;
@@ -78,6 +87,7 @@ public class BigQueryTarget extends BaseTarget {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
@@ -99,30 +109,50 @@ public class BigQueryTarget extends BaseTarget {
     dataSetEval = getContext().createELEval("datasetEL");
     tableNameELEval = getContext().createELEval("tableNameEL");
     rowIdELEval = getContext().createELEval("rowIdExpression");
+
+    CacheBuilder tableIdExistsCacheBuilder = CacheBuilder.newBuilder();
+    if (conf.maxCacheSize != -1) {
+      tableIdExistsCacheBuilder.maximumSize(conf.maxCacheSize);
+    }
+
+    tableIdExistsCache = tableIdExistsCacheBuilder.build(new CacheLoader<TableId, Boolean>() {
+      @Override
+      public Boolean load(TableId key) throws Exception {
+        return bigQuery.getTable(key) != null;
+      }
+    });
+
     return issues;
   }
 
   @Override
   public void write(Batch batch) throws StageException {
     Map<TableId, List<Record>> tableIdToRecords = new LinkedHashMap<>();
-    Map<Long, Record> indexToRecords = new LinkedHashMap<>();
+    Map<Long, Record> requestIndexToRecords = new LinkedHashMap<>();
+    final AtomicLong index = new AtomicLong(0);
     final AtomicBoolean areThereRecordsToWrite = new AtomicBoolean(false);
 
     if (batch.getRecords().hasNext()) {
-      final AtomicLong index = new AtomicLong(0);
       ELVars elVars = getContext().createELVars();
       batch.getRecords().forEachRemaining(record -> {
-        indexToRecords.put(index.getAndIncrement(), record);
         RecordEL.setRecordInContext(elVars, record);
         try {
           String datasetName = dataSetEval.eval(elVars, conf.datasetEL, String.class);
           String tableName = tableNameELEval.eval(elVars, conf.tableNameEL, String.class);
           TableId tableId = TableId.of(datasetName, tableName);
-          List<Record> tableIdRecords = tableIdToRecords.computeIfAbsent(tableId, t -> new ArrayList<>());
-          tableIdRecords.add(record);
+          if (tableIdExistsCache.get(tableId)) {
+            List<Record> tableIdRecords = tableIdToRecords.computeIfAbsent(tableId, t -> new ArrayList<>());
+            tableIdRecords.add(record);
+          } else {
+            getContext().toError(record, Errors.BIGQUERY_17, datasetName, tableName, conf.credentials.projectId);
+          }
         } catch (ELEvalException e) {
           LOG.error("Error evaluating DataSet/TableName EL", e);
           getContext().toError(record, Errors.BIGQUERY_10, e);
+        } catch (ExecutionException e){
+          LOG.error("Error when checking exists for tableId, Reason : {}", e);
+          Throwable rootCause = Throwables.getRootCause(e);
+          getContext().toError(record, Errors.BIGQUERY_13, rootCause);
         }
       });
 
@@ -130,21 +160,20 @@ public class BigQueryTarget extends BaseTarget {
         InsertAllRequest.Builder insertAllRequestBuilder = InsertAllRequest.newBuilder(tableId);
         records.forEach(record -> {
               try {
-                String recordId  = getRowIdForRecord(elVars, record);
-                Map<String, ?> rowContent = conf.implicitFieldMapping ?
-                    covertToRowObjectFromRecordImplicitly(record) :
-                    covertToRowObjectFromRecordExplicitly(
-                        record,
-                        conf.bigQueryFieldMappingConfigs,
-                        conf.ignoreInvalidColumn
-                    );
+                String insertId  = getInsertIdForRecord(elVars, record);
+                Map<String, ?> rowContent = convertToRowObjectFromRecord(record);
                 if (rowContent.isEmpty()) {
                   throw new OnRecordErrorException(record, Errors.BIGQUERY_14);
                 }
-                insertAllRequestBuilder.addRow(recordId, rowContent);
+                insertAllRequestBuilder.addRow(insertId, rowContent);
                 areThereRecordsToWrite.set(true);
+                requestIndexToRecords.put(index.getAndIncrement(), record);
               } catch (OnRecordErrorException e) {
-                LOG.error("Error when converting record {} to row, Reason : {} ", record.getHeader().getSourceId(), e.getMessage());
+                LOG.error(
+                    "Error when converting record {} to row, Reason : {} ",
+                    record.getHeader().getSourceId(),
+                    e.getMessage()
+                );
                 getContext().toError(record, e.getErrorCode(), e.getParams());
               }
             }
@@ -157,15 +186,37 @@ public class BigQueryTarget extends BaseTarget {
           InsertAllRequest request = insertAllRequestBuilder.build();
 
           if (!request.getRows().isEmpty()) {
-            InsertAllResponse response = bigQuery.insertAll(request);
-            if (response.hasErrors()) {
-              response.getInsertErrors().forEach((recordId, errors) -> {
-                Record record = indexToRecords.get(recordId);
-                String messages = COMMA_JOINER.join(errors.stream().map(BigQueryError::getMessage).collect(Collectors.toList()));
-                String reasons = COMMA_JOINER.join(errors.stream().map(BigQueryError::getReason).collect(Collectors.toList()));
-                LOG.error("Error when inserting record {}, Reasons : {}, Messages : {}", record.getHeader().getSourceId(), reasons, messages);
-                getContext().toError(record, Errors.BIGQUERY_11, reasons, messages);
-              });
+            try {
+              InsertAllResponse response = bigQuery.insertAll(request);
+              if (response.hasErrors()) {
+                response.getInsertErrors().forEach((requestIdx, errors) -> {
+                  Record record = requestIndexToRecords.get(requestIdx);
+                  String messages = COMMA_JOINER.join(
+                      errors.stream()
+                          .map(BigQueryError::getMessage)
+                          .collect(Collectors.toList())
+                  );
+                  String reasons = COMMA_JOINER.join(
+                      errors.stream()
+                          .map(BigQueryError::getReason)
+                          .collect(Collectors.toList())
+                  );
+                  LOG.error(
+                      "Error when inserting record {}, Reasons : {}, Messages : {}",
+                      record.getHeader().getSourceId(),
+                      reasons,
+                      messages
+                  );
+                  getContext().toError(record, Errors.BIGQUERY_11, reasons, messages);
+                });
+              }
+            } catch (BigQueryException e) {
+              LOG.error(Errors.BIGQUERY_13.getMessage(), e);
+              //Put all records to error.
+              for (long i = 0; i < request.getRows().size(); i++) {
+                Record record = requestIndexToRecords.get(i);
+                getContext().toError(record, Errors.BIGQUERY_13, e);
+              }
             }
           }
         }
@@ -176,7 +227,7 @@ public class BigQueryTarget extends BaseTarget {
   /**
    * Evaluate and obtain the row id if the expression is present or return null.
    */
-  private String getRowIdForRecord(ELVars elVars, Record record) throws OnRecordErrorException {
+  private String getInsertIdForRecord(ELVars elVars, Record record) throws OnRecordErrorException {
     String recordId = null;
     RecordEL.setRecordInContext(elVars, record);
     try {
@@ -198,7 +249,7 @@ public class BigQueryTarget extends BaseTarget {
    * @param record record to be converted
    * @return Java row representation for the record
    */
-  private Map<String, Object> covertToRowObjectFromRecordImplicitly(Record record) throws OnRecordErrorException {
+  private Map<String, Object> convertToRowObjectFromRecord(Record record) throws OnRecordErrorException {
     Field rootField = record.get();
     Map<String, Object> rowObject = new LinkedHashMap<>();
     if (rootField.getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
@@ -206,7 +257,13 @@ public class BigQueryTarget extends BaseTarget {
       for (Map.Entry<String, Field> fieldEntry : fieldMap.entrySet()) {
         Field field = fieldEntry.getValue();
         //Skip null value fields
-        Optional.ofNullable(field.getValue()).ifPresent(v -> rowObject.put(fieldEntry.getKey(), getValueFromField(field)));
+        if (field.getValue() != null){
+          try {
+            rowObject.put(fieldEntry.getKey(), getValueFromField("/" + fieldEntry.getKey(), field));
+          } catch (IllegalArgumentException e) {
+            throw new OnRecordErrorException(record, Errors.BIGQUERY_13, e.getMessage());
+          }
+        }
       }
     } else {
       throw new OnRecordErrorException(record,  Errors.BIGQUERY_16);
@@ -215,43 +272,37 @@ public class BigQueryTarget extends BaseTarget {
   }
 
   /**
-   * Convert the root field to a java map object explicitly mapping the columns defined (only non nested objects)
-   * @param record record to be converted
-   * @return Java row representation for the record
-   */
-  private Map<String, Object> covertToRowObjectFromRecordExplicitly(
-      Record record,
-      List<BigQueryFieldMappingConfig> fieldMappingConfigs,
-      boolean ignoreInvalidColumn
-  ) throws OnRecordErrorException {
-    Map<String, Object> rowObject = new LinkedHashMap<>();
-    for (BigQueryFieldMappingConfig mappingConfig : fieldMappingConfigs) {
-      if (!record.has(mappingConfig.fieldPath)) {
-        if (!ignoreInvalidColumn) {
-          throw new OnRecordErrorException(record, Errors.BIGQUERY_13, mappingConfig.fieldPath);
-        }
-      } else {
-        Field field = record.get(mappingConfig.fieldPath);
-        //Skip null value fields
-        Optional.ofNullable(field.getValue()).ifPresent( v -> rowObject.put(mappingConfig.columnName, getValueFromField(field)));
-      }
-    }
-    return rowObject;
-  }
-
-  /**
    * Convert the sdc Field to an object for row content
    */
-  private Object getValueFromField(Field field) {
+  private Object getValueFromField(String fieldPath, Field field) {
+    LOG.trace("Visiting Field Path '{}' of type '{}'", fieldPath, field.getType());
     switch (field.getType()) {
       case LIST:
         //REPEATED
-        return field.getValueAsList().stream().filter(le -> le.getValue() != null).map(this::getValueFromField).collect(Collectors.toList());
+        List<Field> listField = field.getValueAsList();
+        //Convert the list to map with indices as key and Field as value (Map<Integer, Field>)
+        Map<Integer, Field> fields =
+            IntStream.range(0, listField.size()).boxed()
+                .collect(Collectors.toMap(Function.identity(), listField::get));
+        //filter map to remove fields with null value
+        fields = fields.entrySet().stream()
+            .filter(e -> e.getValue().getValue() != null)
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        //now use the map index to generate field path and generate object for big query write
+        return fields.entrySet().stream()
+            .map(e -> getValueFromField(fieldPath + "[" + e.getKey() + "]", e.getValue()))
+            .collect(Collectors.toList());
       case MAP:
       case LIST_MAP:
         //RECORD
-        return field.getValueAsMap().entrySet().stream().filter(me -> me.getValue().getValue() != null)
-            .collect(Collectors.toMap(Map.Entry::getKey, e -> getValueFromField(e.getValue())));
+        return field.getValueAsMap().entrySet().stream()
+            .filter(me -> me.getValue().getValue() != null)
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> getValueFromField(fieldPath + "/" + e.getKey(), e.getValue())
+                )
+            );
       case DATE:
         return DATE_FORMAT.format(field.getValueAsDate());
       case TIME:
@@ -260,8 +311,16 @@ public class BigQueryTarget extends BaseTarget {
         return DATE_TIME_FORMAT.format(field.getValueAsDatetime());
       case BYTE_ARRAY:
         return Base64.getEncoder().encodeToString(field.getValueAsByteArray());
-      //TODO: SDC-7293 -> Throw errors for decimal and other unsupported types
+      case DECIMAL:
+      case BYTE:
+      case CHAR:
+      case FILE_REF:
+        throw new IllegalArgumentException(Utils.format(Errors.BIGQUERY_12.getMessage(), fieldPath, field.getType()));
       default:
+        //Boolean -> Map to Boolean in big query
+        //Float, Double -> Map to Float in big query
+        //String -> maps to String in big query
+        //Short, Integer, Long -> Map to integer in big query
         return field.getValue();
     }
   }
