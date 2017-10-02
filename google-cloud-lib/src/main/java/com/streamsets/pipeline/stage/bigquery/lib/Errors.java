@@ -27,10 +27,11 @@ public enum Errors implements ErrorCode {
   BIGQUERY_10("Error evaluating expression for the record. Reason : {}"),
   BIGQUERY_11("Error inserting record. Reasons : {}, Messages : {}"),
   BIGQUERY_12("Unsupported field '{}' of type '{}'"),
-  BIGQUERY_13("Field Path '{}' not present in the record"),
+  BIGQUERY_13("Big Query insert failed. Reason : {}"),
   BIGQUERY_14("Empty row generated for the record"),
   BIGQUERY_15("Error evaluated Row Id, value evaluates to empty"),
   BIGQUERY_16("Root field of record should be a Map or a List Map"),
+  BIGQUERY_17("Data set '{}' or Table '{}' does not exist in Big Query under project '{}'"),
   ;
 
   private final String msg;

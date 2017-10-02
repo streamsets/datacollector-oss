@@ -19,22 +19,29 @@ import com.google.auth.Credentials;
 import com.google.cloud.bigquery.BigQuery;
 import com.google.cloud.bigquery.InsertAllRequest;
 import com.google.cloud.bigquery.InsertAllResponse;
+import com.google.cloud.bigquery.Table;
+import com.google.cloud.bigquery.TableId;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
+import com.streamsets.pipeline.stage.bigquery.lib.Errors;
 import com.streamsets.pipeline.stage.lib.GoogleCloudCredentialsConfig;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
@@ -42,14 +49,20 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -65,6 +78,7 @@ import static com.streamsets.pipeline.stage.bigquery.destination.BigQueryTarget.
     BigQueryTarget.class,
     InsertAllResponse.class,
     BigQueryDelegate.class,
+    Table.class,
     Credentials.class,
     GoogleCloudCredentialsConfig.class
 })
@@ -97,15 +111,20 @@ public class TestBigQueryTarget {
 
   private void mockBigQueryInsertAllRequest(Answer<InsertAllResponse> insertAllResponseAnswer) {
     PowerMockito.doAnswer(insertAllResponseAnswer).when(bigQuery).insertAll(Mockito.any(InsertAllRequest.class));
+    PowerMockito.doAnswer((Answer<Table>) invocationOnMock -> {
+      TableId tableId = (TableId) invocationOnMock.getArguments()[0];
+      return tableId.equals(TableId.of("correctDataset", "correctTable")) ?
+          Mockito.mock(Table.class) : null;
+    }).when(bigQuery).getTable(Mockito.any(TableId.class));
   }
-
 
   @SuppressWarnings("unchecked")
   private Field createField(Object object) {
     Field field;
     if (object instanceof Map) {
       Map<String, Object> mapObject = (Map<String, Object>)object;
-      return Field.create(mapObject.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> createField(e.getValue()))));
+      return Field.create(mapObject.entrySet().stream()
+          .collect(Collectors.toMap(Map.Entry::getKey, e -> createField(e.getValue()))));
     } else if (object instanceof List) {
       List<Object> listObject = (List<Object>)object;
       return Field.create(listObject.stream().map(this::createField).collect(Collectors.toList()));
@@ -133,6 +152,8 @@ public class TestBigQueryTarget {
       field = Field.create((String) object);
     } else if (object instanceof byte[]) {
       field = Field.create((byte[]) object);
+    } else if (object instanceof FileRef){
+      field = Field.create((FileRef)object);
     } else {
       throw new IllegalArgumentException(Utils.format("Cannot convert object type '{}' to field", object.getClass()));
     }
@@ -175,108 +196,11 @@ public class TestBigQueryTarget {
       Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
       Mockito.doReturn(false).when(response).hasErrors();
       return response;
-  });
-
-    BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
-    configBuilder.implicitFieldMapping(true);
-
-    createAndRunner(configBuilder.build(), records);
-  }
-
-  @Test
-  public void testExplicitMappingCorrect() throws Exception {
-    List<Record> records = new ArrayList<>();
-    records.add(
-        createRecord(
-            ImmutableMap.of("a", "1", "b", ImmutableMap.of("a1", 1, "b1", 1, "c1", 1), "c", 1.0)
-        )
-    );
-
-    final Map<String, String> columnToFieldMapping =
-        ImmutableMap.of("a", "/a", "ba1", "/b/a1", "bb1", "/b/b1", "bc1", "/b/c1", "c", "/c");
-
-    mockBigQueryInsertAllRequest(invocationOnMock -> {
-      InsertAllRequest insertAllRequest = (InsertAllRequest)invocationOnMock.getArguments()[0];
-
-      List<InsertAllRequest.RowToInsert> rows = insertAllRequest.getRows();
-
-      final AtomicInteger recordIdx = new AtomicInteger(0);
-      rows.forEach(row -> {
-        int idx = recordIdx.getAndIncrement();
-        Record record = records.get(idx);
-        Map<String, ?> rowContent = row.getContent();
-        columnToFieldMapping.forEach(
-            (c, f) -> Assert.assertEquals(record.get(f).getValue(), rowContent.get(c)));
-      });
-
-      InsertAllResponse response = PowerMockito.mock(InsertAllResponse.class);
-      Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
-      Mockito.doReturn(false).when(response).hasErrors();
-      return response;
     });
 
     BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
-    configBuilder.implicitFieldMapping(false);
-    configBuilder.columnToFieldNameMapping(columnToFieldMapping);
+
     createAndRunner(configBuilder.build(), records);
-  }
-
-  private void testExplicitMappingNonExistingFields(boolean ignoreMissingFields) throws Exception {
-    List<Record> records = new ArrayList<>();
-    records.add(
-        createRecord(
-            ImmutableMap.of("a", "1", "b", ImmutableMap.of("a1", 1, "b1", 1, "c1", 1), "c", 1.0)
-        )
-    );
-
-    records.add(
-        createRecord(
-            ImmutableMap.of("a", "2", "b", ImmutableMap.of("a1", 2), "c", 2.0)
-        )
-    );
-
-    final Map<String, String> columnToFieldMapping =
-        ImmutableMap.of("a", "/a", "ba1", "/b/a1", "bb1", "/b/b1", "bc1", "/b/c1", "c", "/c");
-
-    mockBigQueryInsertAllRequest(invocationOnMock -> {
-      InsertAllRequest insertAllRequest = (InsertAllRequest)invocationOnMock.getArguments()[0];
-
-      List<InsertAllRequest.RowToInsert> rows = insertAllRequest.getRows();
-
-      final AtomicInteger recordIdx = new AtomicInteger(0);
-      rows.forEach(row -> {
-        int idx = recordIdx.getAndIncrement();
-        Record record = records.get(idx);
-        Map<String, ?> rowContent = row.getContent();
-        rowContent.forEach((k, v) -> Assert.assertEquals(record.get(columnToFieldMapping.get(k)).getValue(), v));
-      });
-
-      InsertAllResponse response = PowerMockito.mock(InsertAllResponse.class);
-      Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
-      Mockito.doReturn(false).when(response).hasErrors();
-      return response;
-    });
-
-    BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
-    configBuilder.implicitFieldMapping(false);
-    configBuilder.ignoreInvalidColumns(ignoreMissingFields);
-    configBuilder.columnToFieldNameMapping(columnToFieldMapping);
-    TargetRunner runner = createAndRunner(configBuilder.build(), records);
-    if (ignoreMissingFields) {
-      Assert.assertEquals(0, runner.getErrorRecords().size());
-    } else {
-      Assert.assertEquals(1, runner.getErrorRecords().size());
-    }
-  }
-
-  @Test
-  public void testExplicitMappingNonExistingFieldsError() throws Exception {
-    testExplicitMappingNonExistingFields(false);
-  }
-
-  @Test
-  public void testExplicitMappingNonExistingFieldsNoError() throws Exception {
-    testExplicitMappingNonExistingFields(true);
   }
 
   @Test
@@ -322,7 +246,6 @@ public class TestBigQueryTarget {
     });
 
     BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
-    configBuilder.implicitFieldMapping(true);
     configBuilder.ignoreInvalidColumns(true);
     createAndRunner(configBuilder.build(), Collections.singletonList(record));
   }
@@ -366,7 +289,6 @@ public class TestBigQueryTarget {
 
 
     BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
-    configBuilder.implicitFieldMapping(true);
     configBuilder.ignoreInvalidColumns(true);
     //Set value of a has row id
     configBuilder.rowIdExpression("${record:value('/a')}");
@@ -484,8 +406,107 @@ public class TestBigQueryTarget {
     });
 
     BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
-    configBuilder.implicitFieldMapping(true);
     createAndRunner(configBuilder.build(), Collections.singletonList(record));
   }
 
+  @Test
+  public void testUnsupportedFields() throws Exception {
+    List<Record> records = new ArrayList<>();
+
+    records.add(
+        createRecord(
+            ImmutableMap.of("a",  new BigDecimal(1.0))
+        )
+    );
+
+    records.add(
+        createRecord(
+            ImmutableMap.of("a", 2, "b", new FileRef(1000) {
+              @Override
+              @SuppressWarnings("unchecked")
+              public <T extends AutoCloseable> Set<Class<T>> getSupportedStreamClasses() {
+                return ImmutableSet.of((Class<T>)InputStream.class);
+              }
+
+              @Override
+              @SuppressWarnings("unchecked")
+              public <T extends AutoCloseable> T createInputStream(Stage.Context context, Class<T> streamClassType) throws IOException {
+                return (T)new ByteArrayInputStream("abc".getBytes());
+              }
+            })
+        )
+    );
+
+    Map<String, Field> innerLevelMap = new LinkedHashMap<>();
+    innerLevelMap.put("aMapDecimal", Field.create(new BigDecimal(1)));
+    Map<String, Field> rootMap3 = new HashMap<>();
+    rootMap3.put("a", Field.create(innerLevelMap));
+    Record record3 = RecordCreator.create();
+    record3.set(Field.create(rootMap3));
+    records.add(record3);
+
+
+    List<Field> innerLevelList = new ArrayList<>();
+    innerLevelList.add(Field.create(new BigDecimal(1)));
+    Map<String, Field> rootMap4 = new HashMap<>();
+    rootMap4.put("a", Field.create(innerLevelList));
+    Record record4 = RecordCreator.create();
+    record4.set(Field.create(rootMap4));
+    records.add(record4);
+
+    records.add(createRecord(ImmutableMap.of("c", 'c')));
+    records.add(createRecord(ImmutableMap.of("b", "b".getBytes()[0])));
+
+
+    PowerMockito.doReturn(PowerMockito.mock(Table.class)).when(bigQuery).getTable(Mockito.any(TableId.class));
+
+    BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
+    TargetRunner targetRunner = createAndRunner(configBuilder.build(), records);
+    Assert.assertEquals(6, targetRunner.getErrorRecords().size());
+    for (Record record : targetRunner.getErrorRecords()) {
+      String errorCode = record.getHeader().getErrorCode();
+      Assert.assertEquals(Errors.BIGQUERY_13.getCode(), errorCode);
+      String errorMessage = record.getHeader().getErrorMessage();
+      Assert.assertTrue(errorMessage.contains("Unsupported field "));
+    }
+  }
+  @Test
+  public void testDataSetOrTableExistence() throws Exception {
+    List<Record> records = new ArrayList<>();
+
+    Record record1 = createRecord(ImmutableMap.of("a", 1));
+    Record record2 = createRecord(ImmutableMap.of("a",  2));
+    Record record3 = createRecord(ImmutableMap.of("a",  3));
+
+    record1.getHeader().setAttribute("dataSet", "correctDataset");
+    record1.getHeader().setAttribute("table", "wrongTable");
+
+    record2.getHeader().setAttribute("dataSet", "wrongDataset");
+    record2.getHeader().setAttribute("table", "correctTable");
+
+    record3.getHeader().setAttribute("dataSet", "correctDataset");
+    record3.getHeader().setAttribute("table", "correctTable");
+
+    records.add(record1);
+    records.add(record2);
+    records.add(record3);
+
+    mockBigQueryInsertAllRequest(invocationOnMock -> {
+      InsertAllResponse response = PowerMockito.mock(InsertAllResponse.class);
+      Mockito.doReturn(Collections.emptyMap()).when(response).getInsertErrors();
+      Mockito.doReturn(false).when(response).hasErrors();
+      return response;
+    });
+
+    BigQueryTargetConfigBuilder configBuilder = new BigQueryTargetConfigBuilder();
+    configBuilder.datasetEL("${record:attribute('dataSet')}");
+    configBuilder.tableNameEL("${record:attribute('table')}");
+    TargetRunner targetRunner = createAndRunner(configBuilder.build(), records);
+
+    Assert.assertEquals(2, targetRunner.getErrorRecords().size());
+    for (Record errorRecord : targetRunner.getErrorRecords()) {
+      String errorCode = errorRecord.getHeader().getErrorCode();
+      Assert.assertEquals(Errors.BIGQUERY_17.getCode(), errorCode);
+    }
+  }
 }
