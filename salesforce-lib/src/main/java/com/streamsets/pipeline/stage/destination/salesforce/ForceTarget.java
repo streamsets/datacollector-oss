@@ -136,7 +136,11 @@ public class ForceTarget extends BaseTarget {
     if (issues.isEmpty()) {
       fieldMappings = new TreeMap<>();
       for (ForceFieldMapping mapping : conf.fieldMapping) {
-        fieldMappings.put(mapping.salesforceField, mapping.sdcField);
+        // SDC-7446 Allow colon as well as period as field separator
+        String salesforceField = conf.useBulkAPI
+            ? mapping.salesforceField.replace(':', '.')
+            : mapping.salesforceField;
+        fieldMappings.put(salesforceField, mapping.sdcField);
       }
 
       try {
