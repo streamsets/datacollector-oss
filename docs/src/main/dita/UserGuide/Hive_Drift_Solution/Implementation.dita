@@ -78,7 +78,11 @@
                             Location property, select In Record Header.</li>
                     </ol><p>For more information about using record header attributes, see <xref
                             href="../Pipeline_Design/RecordBasedWrites-overview.dita#concept_lmn_gdc_1w"
-                        />.</p></li>
+                        />.</p><p>
+                        <note>To compress Avro data, use the Avro compression option on the Data
+                            Formats tab, rather than the compression codec property on the Output
+                            Files tab.</note>
+                    </p></li>
                 <li>When processing Parquet data, perform the following additional steps: <ol
                         id="ul_bsd_v52_wz">
                         <li>On the General tab of the data-processing destination, select Produce

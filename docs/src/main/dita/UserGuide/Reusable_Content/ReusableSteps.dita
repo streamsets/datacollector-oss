@@ -4199,7 +4199,11 @@
                                             <li>Snappy</li>
                                             <li>LZ4</li>
                                             <li>Other</li>
-                                        </ul></entry>
+                                        </ul><p>
+                                            <note>Do not use with Avro data. To compress Avro data,
+                                                use the Avro Compression Codec property on the Data
+                                                Formats tab.</note>
+                                        </p></entry>
                                 </row>
                                 <row id="row-CCodecClass">
                                     <entry>Compression Codec Class</entry>
