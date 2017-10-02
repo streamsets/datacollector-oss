@@ -339,7 +339,9 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
       tableProvider.releaseOwnedTable(tableRuntimeContext, threadNumber);
 
       tableRuntimeContext = null;
-    } else if (tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
+    } else if (
+        tableJdbcConfigBean.batchTableStrategy == BatchTableStrategy.SWITCH_TABLES
+            && !tableRuntimeContext.isUsingNonIncrementalLoad()) {
       tableRuntimeContext = null;
     }
 

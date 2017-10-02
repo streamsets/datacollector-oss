@@ -629,7 +629,7 @@ public final class MultithreadedTableProvider {
       if (containsActiveEntry || sharedAvailableTablesQueue.isEmpty()) {
         if (tableRuntimeContext.isUsingNonIncrementalLoad()) {
           if (LOG.isDebugEnabled()) {
-            LOG.debug("Not re-adding table {} because it is non-incremental");
+            LOG.debug("Not re-adding table {} because it is non-incremental", removedPartition.getDescription());
           }
           return;
         }

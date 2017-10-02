@@ -183,8 +183,6 @@ public class TestMultithreadedTableProvider {
     // mark partition 3, then 2 as finished
   }
 
-
-  // TODO: finish this up
   @Test
   public void nonIncremental() throws InterruptedException {
 
@@ -220,6 +218,8 @@ public class TestMultithreadedTableProvider {
     assertThat(provider.shouldGenerateNoMoreDataEvent(), equalTo(false));
 
     provider.reportDataOrNoMoreData(part1, 900, 1000, true);
+    provider.releaseOwnedTable(part1, threadNumber);
+    assertThat(activePartitions.size(), equalTo(1));
 
     assertThat(provider.shouldGenerateNoMoreDataEvent(), equalTo(true));
     assertThat(provider.getSharedAvailableTablesQueue(), empty());
