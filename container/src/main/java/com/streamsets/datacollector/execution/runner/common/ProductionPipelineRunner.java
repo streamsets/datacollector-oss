@@ -98,6 +98,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 
 public class ProductionPipelineRunner implements PipelineRunner, PushSourceContextDelegate, ReportErrorDelegate {
@@ -342,7 +343,13 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
     // Pipeline lifecycle stage generating error record is fatal error
     if(!errorSink.getErrorRecords().isEmpty()) {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0792);
+      // Generate list of error string describing what is wrong (in most cases this will be exactly one string - since
+      // input is exactly one record).
+      String errorMessages = errorSink.getErrorRecords().values().stream()
+        .flatMap(List::stream)
+        .map(record -> record.getHeader().getErrorMessage())
+        .collect(Collectors.joining(", "));
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0792, errorMessages);
     }
   }
 
