@@ -27,11 +27,11 @@
         <p><indexterm>Data Collector UI<indexterm>pipelines view on the Home
                 page</indexterm></indexterm><indexterm>Home page<indexterm>Data Collector
                     UI</indexterm></indexterm>Pipelines display on the Home page when you or your
-            user group has read permission on the pipeline or when you created the piepline. </p>
+            user group has read permission on the pipeline or when you created the pipeline. </p>
         <p>View pipelines on the Home page to perform <xref
                 href="../Pipeline_Maintenance/PipelineMaintenance_overview.dita#concept_zf1_3tr_5q"
                 >pipeline maintenance</xref>, such as copying or sharing a pipeline. You can access
-            the Home page when when you click the Home icon (<image
+            the Home page when you click the Home icon (<image
                 href="../Graphics/icon_OverHome.png" id="image_lw2_h23_ts" scale="80"/>) in the
             top-level set of icons on the page. You can also access the Home page by clicking the
             Pipelines link in the pipeline path when you are configuring or monitoring a pipeline. </p>

@@ -20,6 +20,7 @@
 <map>
  <title>What's New</title>
     <topicref href="../WhatsNew/WhatsNew_Title.dita" chunk="to-content">
+        <topicref href="../WhatsNew/2720.dita"/>
         <topicref href="../WhatsNew/2711.dita"/>
         <topicref href="../WhatsNew/2710.dita"/>
         <topicref href="../WhatsNew/2700.dita"/>

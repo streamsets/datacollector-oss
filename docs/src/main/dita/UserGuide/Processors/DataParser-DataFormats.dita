@@ -41,7 +41,7 @@
                 </dlentry>
                 <dlentry>
                     <dt>NetFlow messages</dt>
-                    <dd>The Data Parser processor can process Netflow Version 5 messages embedded in
+                    <dd>The Data Parser processor can process NetFlow Version 5 messages embedded in
                         a byte array field.</dd>
                 </dlentry>
                 <dlentry

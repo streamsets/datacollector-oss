@@ -28,7 +28,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> expressions in a script: <ul id="ul_g2y_rxm_z1b">
                         <li>Use the Environment Variables property in the stage to declare
-                            environment variables for the script. Create an enviroment variable for
+                            environment variables for the script. Create an environment variable for
                             each expression that you want to use. </li>
                         <li>Use the environment variables as needed in the script. </li>
                     </ul><p>For example, say you want to perform an action on a file that was closed

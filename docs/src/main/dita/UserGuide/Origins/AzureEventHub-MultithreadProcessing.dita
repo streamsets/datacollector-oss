@@ -20,7 +20,7 @@
 <concept id="concept_ldf_chp_qy">
  <title>Multithreaded Processing</title>
  <conbody>
-        <p><indexterm>Azure Event Hub Consumerorigin<indexterm>multithreaded
+        <p><indexterm>Azure Event Hub Consumer origin<indexterm>multithreaded
                 processing</indexterm></indexterm><indexterm>Max Threads<indexterm>Azure Event Hub
                     Consumer</indexterm></indexterm>The Azure Event Hub Consumer origin performs
             parallel processing and enables the creation of a multithreaded pipeline. </p>
