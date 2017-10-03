@@ -23,11 +23,11 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-cloudera-integration</artifactId>
-    <version>2.8.0.0-SNAPSHOT</version>
+    <version>3.0.0.0-SNAPSHOT</version>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-parcel</artifactId>
-  <version>2.8.0.0-SNAPSHOT</version>
+  <version>3.0.0.0-SNAPSHOT</version>
   <description>StreamSets Parcel</description>
   <name>StreamSets Parcel for Cloudera Manager</name>
   <packaging>jar</packaging>

@@ -22,14 +22,14 @@
   <parent>
     <artifactId>streamsets-datacollector-root</artifactId>
     <groupId>com.streamsets</groupId>
-    <version>2.8.0.0-SNAPSHOT</version>
+    <version>3.0.0.0-SNAPSHOT</version>
     <relativePath>../root</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-e2e-tests</artifactId>
-  <version>2.8.0.0-SNAPSHOT</version>
+  <version>3.0.0.0-SNAPSHOT</version>
   <description>StreamSets Data Collector End to End Tests</description>
   <name>StreamSets Data Collector End to End tests</name>
   <packaging>jar</packaging>

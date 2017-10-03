@@ -22,7 +22,7 @@
   <parent>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
     <groupId>com.streamsets</groupId>
-    <version>2.8.0.0-SNAPSHOT</version>
+    <version>3.0.0.0-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
