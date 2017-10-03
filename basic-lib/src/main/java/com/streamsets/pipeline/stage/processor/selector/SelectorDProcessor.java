@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.selector;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.PredicateModel;
 import com.streamsets.pipeline.api.Processor;
@@ -35,7 +36,14 @@ import java.util.Map;
     icon="laneSelector.png",
     outputStreams = StageDef.VariableOutputStreams.class,
     outputStreamsDrivenByConfig = "lanePredicates",
-    onlineHelpRefUrl = "index.html#Processors/StreamSelector.html#task_iss_2zx_wq"
+    onlineHelpRefUrl = "index.html#Processors/StreamSelector.html#task_iss_2zx_wq",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE
+    }
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
