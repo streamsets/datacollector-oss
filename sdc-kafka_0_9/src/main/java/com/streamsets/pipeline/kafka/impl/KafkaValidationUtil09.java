@@ -89,15 +89,17 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
       valid = false;
     } else {
       List<PartitionInfo> partitionInfos;
+      KafkaProducer<String, String> kafkaProducer = null;
+      KafkaConsumer<String, String> kafkaConsumer = null;
       try {
         if (producer) {
-          KafkaProducer<String, String> kafkaProducer = createProducerTopicMetadataClient(
+          kafkaProducer = createProducerTopicMetadataClient(
               metadataBrokerList,
               kafkaClientConfigs
           );
           partitionInfos = kafkaProducer.partitionsFor(topic);
         } else {
-          KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(
+          kafkaConsumer = createTopicMetadataClient(
               metadataBrokerList,
               kafkaClientConfigs
           );
@@ -119,6 +121,13 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
         LOG.error(KafkaErrors.KAFKA_68.getMessage(), topic, metadataBrokerList, e.toString(), e);
         issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_68, topic, metadataBrokerList, e.toString()));
         valid = false;
+      } finally {
+        if (kafkaProducer != null) {
+          kafkaProducer.close();
+        }
+        if (kafkaConsumer != null) {
+          kafkaConsumer.close();
+        }
       }
     }
     return valid;
