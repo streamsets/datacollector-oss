@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Informational and error messages display in different locations based on the type of information: Pipeline configuration issues The Data Collector console provides guidance and error details in the ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Troubleshooting" /><meta name="DC.Relation" scheme="URI" content="../Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls" /><meta name="DC.Relation" scheme="URI" content="../Glossary/Glossary_title.html#concept_xbx_rs1_tq" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_sh3_frm_tq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Troubleshooting</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="Informational and error messages display in different locations based on the type of information: Pipeline configuration issues The Data Collector UI provides guidance and error details as follows: ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Troubleshooting" /><meta name="DC.Relation" scheme="URI" content="../Tutorial/ExtendedTutorial.html#concept_w4n_gjt_ls" /><meta name="DC.Relation" scheme="URI" content="../Glossary/Glossary_title.html#concept_xbx_rs1_tq" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_sh3_frm_tq" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Troubleshooting</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -45,7 +45,7 @@
 
      <dd class="dd">The <span class="ph">Data
                   Collector</span>
-      console provides guidance and error details in the console as follows:<ul class="ul" id="concept_ivc_mll_2s__ul_ht3_cml_2s">
+      UI provides guidance and error details as follows:<ul class="ul" id="concept_ivc_mll_2s__ul_ht3_cml_2s">
        <li class="li">Issues found by implicit validation display in the Issues list.</li>
 
        <li class="li">An error icon displays at the stage where the problem occurs or on the canvas for
@@ -61,8 +61,8 @@
     
      <dt class="dt dlterm">Runtime error information</dt>
 
-     <dd class="dd">You can view error information when you monitor a running pipeline. On the pipeline, the
-      console displays error record counts for each stage generating error records. </dd>
+     <dd class="dd">You can view error information when you monitor a running pipeline. In the canvas, the
+      pipeline displays error record counts for each stage generating error records. </dd>
 
      <dd class="dd">On the Errors tab, you can view error record statistics and the latest set of error records
       with error messages. If the error was produced by an exception, you can click <span class="ph uicontrol">View
@@ -96,8 +96,8 @@
       functionality in the <span class="ph">Data
                   Collector</span> log. You
       can view or download the logs from the <span class="ph">Data
-                  Collector</span> console.
-      For details, see <a class="xref" href="../Administration/Administration_title.html#task_gbm_s3k_br" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Viewing Data Collector Logs</a>.</dd>
+                  Collector</span> UI. For
+      details, see <a class="xref" href="../Administration/Administration_title.html#task_gbm_s3k_br" title="If the Data Collector logs do not provide enough troubleshooting information, you can modify the log level to display messages at another severity level.">Viewing Data Collector Logs</a>.</dd>
 
      <dd class="dd">By default, <span class="ph">Data
                   Collector</span> logs
@@ -122,8 +122,8 @@
       <dl class="dl">
         
           <dt class="dt dlterm">When I go to the <span class="ph">Data
-                  Collector</span>
-            console, I get a "Webpage not available" error message.</dt>
+                  Collector</span> UI,
+            I get a "Webpage not available" error message.</dt>
 
           <dd class="dd">The <span class="ph">Data
                   Collector</span> is
@@ -524,7 +524,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested2" id="unique_344794924">
+<div class="topic concept nested2" id="unique_1754135012">
  <h3 class="title topictitle3">Hadoop FS</h3>
 
  <div class="body conbody">
@@ -963,10 +963,10 @@ nc: connectx to 1.2.3.4 port 1234 (tcp) failed: Connection refused</pre>
      <dt class="dt dlterm">How can I tell what's slowing down my pipeline?</dt>
 
      <dd class="dd">Review the information available in the <span class="ph">Data
-                  Collector</span> console in
-      Monitor mode. Charts provide information about the record count,  record throughput, and batch
-      throughput for the pipeline. To determine where processing slows, you can click each stage to
-      view the count and throughput details for the stage.</dd>
+                  Collector</span> UI
+            in Monitor mode. Charts provide information about the record count, record throughput,
+            and batch throughput for the pipeline. To determine where processing slows, you can
+            click each stage to view the count and throughput details for the stage.</dd>
 
      <dd class="dd">If the origin is the issue, you might tune the batch size or batch wait time properties or
       adjust related properties in the origin system. If the destinations cause the problem, try

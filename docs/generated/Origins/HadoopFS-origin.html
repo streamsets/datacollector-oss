@@ -122,7 +122,7 @@
                         <a class="xref" href="../Configuration/DCConfig.html#concept_pmr_sy5_nz">Hadoop Impersonation Mode</a>. </p>
 
     <p class="p">Note that the origin <span class="ph">uses a different user account to
-                        connect to HDFS. <span class="ph" id="concept_u4h_lwt_ls__d36044e3151">By default, <span class="ph">Data
+                        connect to HDFS. <span class="ph" id="concept_u4h_lwt_ls__d37034e3161">By default, <span class="ph">Data
                   Collector</span> uses the user account who started it to connect to external
                               systems. When using Kerberos, <span class="ph">Data
                   Collector</span> uses the Kerberos principal.</span>
@@ -215,7 +215,7 @@
                                     see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>. </dd>
 
                               <dd class="dd">You can use one of the following methods to specify the location
-                                    of the Avro schema definition:<ul class="ul" id="concept_jx4_zym_vs__d36044e855">
+                                    of the Avro schema definition:<ul class="ul" id="concept_jx4_zym_vs__d37034e855">
                                           <li class="li"><span class="ph uicontrol">Message/Data Includes Schema</span> -
                                                 Use the schema in the file.</li>
 
@@ -246,7 +246,7 @@
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul class="ul" id="concept_jx4_zym_vs__d36044e953">
+                                    following delimited format types:<ul class="ul" id="concept_jx4_zym_vs__d37034e953">
                                           <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
                                                 includes comma-separated values. Ignores empty lines
                                                 in the file.</li>
@@ -321,14 +321,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hgl_vgn_vs__d36142e429" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hgl_vgn_vs__d37132e429" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d241823e502">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d245492e502">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d241823e505">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d245492e505">Description</th>
 
                                 </tr>
 
@@ -336,31 +336,31 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d241823e502 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d245492e502 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d241823e505 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d241823e502 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d241823e505 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d245492e505 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d241823e502 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d245492e502 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d241823e505 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d245492e505 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d241823e502 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_hgl_vgn_vs__d36142e484" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d245492e502 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d241823e505 ">Error record handling for the stage: <ul class="ul" id="task_hgl_vgn_vs__d36142e488">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d245492e505 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d245492e502 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_hgl_vgn_vs__d37132e484" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d245492e505 ">Error record handling for the stage: <ul class="ul" id="task_hgl_vgn_vs__d37132e488">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -391,9 +391,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d241823e590">Hadoop FS Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d245492e590">Hadoop FS Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d241823e593">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d245492e593">Description</th>
 
                                 </tr>
 
@@ -401,9 +401,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d241823e590 ">Hadoop FS URI</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d245492e590 ">Hadoop FS URI</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d241823e593 ">URI to use. To read from HDFS, include the HDFS scheme
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d245492e593 ">URI to use. To read from HDFS, include the HDFS scheme
                                         and authority as follows:
                                             <samp class="ph codeph">&lt;scheme&gt;://&lt;authority&gt;</samp>.<div class="p">For
                                             example:<pre class="pre codeblock">hdfs://nameservice</pre>
@@ -417,9 +417,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d241823e590 ">Input Paths</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d245492e590 ">Input Paths</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d241823e593 ">Location of the input data to be read. Enter the path as
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d245492e593 ">Location of the input data to be read. Enter the path as
                                         follows: <samp class="ph codeph">/&lt;path&gt;</samp>.<div class="p">For
                                             example:<pre class="pre codeblock">/user/hadoop/directory</pre>
 </div>
@@ -428,26 +428,26 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d241823e590 ">Include All Subdirectories</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d245492e590 ">Include All Subdirectories</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d241823e593 ">Reads from all directories within the specified input
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d245492e593 ">Reads from all directories within the specified input
                                         path.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d241823e590 ">Produce Single Record</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d245492e590 ">Produce Single Record</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d241823e593 ">Generates a single record when a record includes multiple
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d245492e593 ">Generates a single record when a record includes multiple
                                         objects. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d241823e590 ">Kerberos Authentication <a class="xref" href="HadoopFS-origin.html#concept_xy5_4tm_vs">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d245492e590 ">Kerberos Authentication <a class="xref" href="HadoopFS-origin.html#concept_xy5_4tm_vs">
                                             <img class="image" id="task_hgl_vgn_vs__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d241823e593 ">Uses Kerberos credentials to connect to HDFS. <p class="p">When
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d245492e593 ">Uses Kerberos credentials to connect to HDFS. <p class="p">When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <span class="ph">Data
                   Collector</span> configuration file,
@@ -458,10 +458,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d241823e590 ">Hadoop FS Configuration Directory  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d245492e590 ">Hadoop FS Configuration Directory  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br">
                                             <img class="image" id="task_hgl_vgn_vs__image_ocv_4qg_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d241823e593 ">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d245492e593 ">
                                         <p class="p">Location of the Hadoop configuration files. </p>
 
                                         <p class="p">For a Cloudera Manager installation, enter
@@ -494,10 +494,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d241823e590 ">Hadoop FS User <a class="xref" href="HadoopFS-origin.html#concept_u4h_lwt_ls">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d245492e590 ">Hadoop FS User <a class="xref" href="HadoopFS-origin.html#concept_u4h_lwt_ls">
                                             <img class="image" id="task_hgl_vgn_vs__image_t3x_4qg_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d241823e593 ">The Hadoop user to use to read from HDFS. When using this
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d245492e593 ">The Hadoop user to use to read from HDFS. When using this
                                         property, make sure HDFS is configured appropriately.<p class="p">When
                                             not configured, the pipeline uses the currently logged
                                             in <span class="ph">Data
@@ -510,10 +510,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d241823e590 ">Hadoop FS Configuration  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d245492e590 ">Hadoop FS Configuration  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br">
                                             <img class="image" id="task_hgl_vgn_vs__image_if3_4hl_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d241823e593 ">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d245492e593 ">
                                         <p class="p">Additional Hadoop configuration properties to use. To add
                                             properties, click <span class="ph uicontrol">Add</span> and define
                                             the property name and value. </p>
@@ -526,9 +526,9 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="27.77777777777778%" headers="d241823e590 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d245492e590 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="72.22222222222221%" headers="d241823e593 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d245492e593 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
                   Collector</span> maximum
         batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default
@@ -554,9 +554,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d241823e822">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d245492e822">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d241823e825">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d245492e825">Description</th>
 
                                 </tr>
 
@@ -564,10 +564,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e822 ">Data Format <a class="xref" href="HadoopFS-origin.html#concept_jx4_zym_vs">
+                                    <td class="entry" valign="top" width="30%" headers="d245492e822 ">Data Format <a class="xref" href="HadoopFS-origin.html#concept_jx4_zym_vs">
                                             <img class="image" id="task_hgl_vgn_vs__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e825 ">
+                                    <td class="entry" valign="top" width="70%" headers="d245492e825 ">
                                         <div class="p">Type of data to be read. Use one of the following
                                             options: <ul class="ul" id="task_hgl_vgn_vs__ul_czf_y14_vs">
                                                 <li class="li">Avro</li>
@@ -600,9 +600,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d241823e886">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d245492e886">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d241823e889">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d245492e889">Description</th>
 
                                 </tr>
 
@@ -610,10 +610,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e886 ">Avro Schema Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e886 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e889 ">Location of the Avro schema definition to use when
-                                        processing data:<ul class="ul" id="task_hgl_vgn_vs__d36142e655">
+                                    <td class="entry" valign="top" width="70%" headers="d245492e889 ">Location of the Avro schema definition to use when
+                                        processing data:<ul class="ul" id="task_hgl_vgn_vs__d37132e655">
                                             <li class="li">Message/Data Includes Schema - Use the schema in the
                                                 file.</li>
 
@@ -632,9 +632,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e886 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e886 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e889 ">Avro schema definition used to process the data.
+                                    <td class="entry" valign="top" width="70%" headers="d245492e889 ">Avro schema definition used to process the data.
                                         Overrides any existing schema definitions associated with
                                         the data. <p class="p">You can optionally use the runtime:loadResource
                                             function to use a schema definition stored in a runtime
@@ -644,9 +644,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e886 ">Schema Registry URLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e886 ">Schema Registry URLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e889 ">Confluent Schema Registry URLs used to look up the
+                                    <td class="entry" valign="top" width="70%" headers="d245492e889 ">Confluent Schema Registry URLs used to look up the
                                         schema. To add a URL, click <span class="ph uicontrol">Add</span>. Use
                                         the following format to enter the
                                         URL:<pre class="pre codeblock">http://&lt;host name&gt;:&lt;port number&gt;</pre>
@@ -655,10 +655,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e886 ">Lookup Schema By</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e886 ">Lookup Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e889 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_hgl_vgn_vs__d36142e702">
+                                    <td class="entry" valign="top" width="70%" headers="d245492e889 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_hgl_vgn_vs__d37132e702">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -672,9 +672,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e886 ">Schema Subject</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e886 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e889 ">Avro schema subject to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d245492e889 ">Avro schema subject to look up in the Confluent Schema
                                             Registry.<p class="p">If the specified subject has multiple schema
                                             versions, the origin uses the latest schema version for
                                             that subject. To use an older version, find the
@@ -686,9 +686,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e886 ">Schema ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e886 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e889 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d245492e889 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
@@ -710,9 +710,9 @@ Overrides any existing schema definitions associated
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d241823e1012">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d245492e1012">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d241823e1015">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d245492e1015">Description</th>
 
                                 </tr>
 
@@ -720,9 +720,9 @@ Overrides any existing schema definitions associated
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Delimiter Format Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_hgl_vgn_vs__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -747,26 +747,26 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Allow Extra Columns</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Allow Extra Columns</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">When processing data with a header line, allows
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">When processing data with a header line, allows
                                         processing records with more columns than exist in the
                                         header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Extra Column Prefix</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Extra Column Prefix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Prefix to use for any additional columns. Extra columns
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Prefix to use for any additional columns. Extra columns
                                         are named using the prefix and sequential increasing
                                         integers as follows:
                                             <samp class="ph codeph">&lt;prefix&gt;&lt;integer&gt;</samp>. <p class="p">For
@@ -776,9 +776,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Max Record Length (chars)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Maximum length of a record in characters. Longer records
                                         are not read. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data
                   Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
@@ -787,9 +787,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -804,24 +804,24 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Escape Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Escape Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Escape character for a custom file type.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Quote Character</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Quote character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Escape character for a custom file type.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Root Field Type <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html">
-                                            <img class="image" id="task_hgl_vgn_vs__d36142e1387" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Root field type to use:<ul class="ul" id="task_hgl_vgn_vs__d36142e1391">
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Root Field Type <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html">
+                                            <img class="image" id="task_hgl_vgn_vs__d37132e1387" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Root field type to use:<ul class="ul" id="task_hgl_vgn_vs__d37132e1391">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -837,39 +837,39 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Lines to Skip</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Lines to Skip</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Lines to skip before reading data. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Lines to skip before reading data. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Parse NULLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Parse NULLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Replaces the specified string constant with null
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Replaces the specified string constant with null
                                         values.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1012 ">NULL Constant</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1012 ">NULL Constant</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1015 ">String constant to replace with null values.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1015 ">String constant to replace with null values.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d241823e1012 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_hgl_vgn_vs__d36155e318" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d245492e1012 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_hgl_vgn_vs__d37145e728" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d241823e1015 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d245492e1015 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -886,14 +886,14 @@ Overrides any existing schema definitions associated
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hgl_vgn_vs__d36142e2083" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hgl_vgn_vs__d37132e2083" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d241823e1255">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d245492e1255">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d241823e1258">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d245492e1258">Description</th>
 
                                 </tr>
 
@@ -901,9 +901,9 @@ Overrides any existing schema definitions associated
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1255 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1255 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1258 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1258 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -915,33 +915,33 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1255 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
-                                            <img class="image" id="task_hgl_vgn_vs__d36142e2124" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1255 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_hgl_vgn_vs__d37132e2124" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1258 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1258 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d241823e1255 ">Custom Delimiter</td>
+                                    <td class="entry" valign="top" width="30%" headers="d245492e1255 ">Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d241823e1258 ">One or more characters to use to define records. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d245492e1258 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d241823e1255 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d245492e1255 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d241823e1258 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d245492e1258 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d241823e1255 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_hgl_vgn_vs__d36155e318" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d245492e1255 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_hgl_vgn_vs__d37145e728" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d241823e1258 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d245492e1258 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>

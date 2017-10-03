@@ -34,7 +34,7 @@
             on JavaScript code. Use the JavaScript processor to use JavaScript code to perform
             custom processing.</p>
 
-        <div class="p">You can develop the following scripts for the processor: <ul class="ul" id="concept_n2p_jgf_lr__d66850e18">
+        <div class="p">You can develop the following scripts for the processor: <ul class="ul" id="concept_n2p_jgf_lr__d69495e18">
                 <li class="li">Initialization script - Optional initialization script that sets up resources or
                     connections required by the processor. The initialization script is run once
                     when the pipeline starts. </li>
@@ -130,9 +130,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="30%" id="d394471e157">Script Type</th>
+                        <th class="entry" valign="top" width="30%" id="d403687e157">Script Type</th>
 
-                        <th class="entry" valign="top" width="70%" id="d394471e160">Valid Scripting Objects</th>
+                        <th class="entry" valign="top" width="70%" id="d403687e160">Valid Scripting Objects</th>
 
                     </tr>
 
@@ -140,10 +140,10 @@
 
                 <tbody class="tbody">
                     <tr>
-                     <td class="entry" valign="top" width="30%" headers="d394471e157 ">Init</td>
+                     <td class="entry" valign="top" width="30%" headers="d403687e157 ">Init</td>
 
-                     <td class="entry" valign="top" width="70%" headers="d394471e160 ">You can use the following scripting objects in the initialization
-                         script:<ul class="ul" id="concept_mqn_5vk_sr__d66850e65">
+                     <td class="entry" valign="top" width="70%" headers="d403687e160 ">You can use the following scripting objects in the initialization
+                         script:<ul class="ul" id="concept_mqn_5vk_sr__d69495e65">
                              <li class="li">state</li>
 
                              <li class="li">log</li>
@@ -157,10 +157,10 @@
                  </tr>
 
                     <tr>
-                     <td class="entry" valign="top" width="30%" headers="d394471e157 ">Main</td>
+                     <td class="entry" valign="top" width="30%" headers="d403687e157 ">Main</td>
 
-                     <td class="entry" valign="top" width="70%" headers="d394471e160 ">You can use the following scripting objects in the main
-                         script:<ul class="ul" id="concept_mqn_5vk_sr__d66850e122">
+                     <td class="entry" valign="top" width="70%" headers="d403687e160 ">You can use the following scripting objects in the main
+                         script:<ul class="ul" id="concept_mqn_5vk_sr__d69495e122">
                              <li class="li">records</li>
 
                              <li class="li">state</li>
@@ -179,10 +179,10 @@
                  </tr>
 
                     <tr>
-                     <td class="entry" valign="top" width="30%" headers="d394471e157 ">Destroy</td>
+                     <td class="entry" valign="top" width="30%" headers="d403687e157 ">Destroy</td>
 
-                     <td class="entry" valign="top" width="70%" headers="d394471e160 ">You can use the following scripting objects in the destroy
-                         script:<ul class="ul" id="concept_mqn_5vk_sr__d66850e154">
+                     <td class="entry" valign="top" width="70%" headers="d403687e160 ">You can use the following scripting objects in the destroy
+                         script:<ul class="ul" id="concept_mqn_5vk_sr__d69495e154">
                              <li class="li">state</li>
 
                              <li class="li">log</li>
@@ -240,7 +240,7 @@
                                     cache data such as lookups, counters, or a connection to an
                                     external system.</dd>
 
-                              <dd class="dd">The state object functions much like a member variable: <ul class="ul" id="concept_mqn_5vk_sr__d65689e2356">
+                              <dd class="dd">The state object functions much like a member variable: <ul class="ul" id="concept_mqn_5vk_sr__d68334e2366">
                                           <li class="li">The information is transient and is lost when the
                                                 pipeline stops or restarts.</li>
 
@@ -439,13 +439,13 @@ for(var i = 0; i &lt; records.length; i++) {
             destination for event storage or to any executor that can be configured to use the
             event. For more information about events and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</p>
 
-     <div class="p">To generate events:<ol class="ol" id="concept_mkv_wgh_cy__d66850e235">
+     <div class="p">To generate events:<ol class="ol" id="concept_mkv_wgh_cy__d69495e235">
                 <li class="li">On the <span class="keyword wintitle">General</span> tab, select the <span class="ph uicontrol">Produce
                         Events</span> property.<p class="p">This enables the event output stream for use.
                     </p>
 </li>
 
-                <li class="li">In the script, include both of the following scripting objects:<ul class="ul" id="concept_mkv_wgh_cy__d66850e250">
+                <li class="li">In the script, include both of the following scripting objects:<ul class="ul" id="concept_mkv_wgh_cy__d69495e250">
                         <li class="li"> sdcFunctions.createEvent(String type, int version) - Creates an event
                             record with the specified event type and version number. You can create
                             a new event type or use an existing event type. Existing event types are
@@ -489,7 +489,7 @@ for(var i = 0; i &lt; records.length; i++) {
                 <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</p>
 
      <div class="p">The processor provides the following record header variables to work with
-            header attributes:<ul class="ul" id="concept_sh1_khh_cy__d66850e289">
+            header attributes:<ul class="ul" id="concept_sh1_khh_cy__d69495e289">
                 <li class="li"><samp class="ph codeph">record.&lt;header name&gt;</samp> - Use to return the value of a
                     read-only header attribute.</li>
 
@@ -515,14 +515,14 @@ for(var i = 0; i &lt; records.length; i++) {
      <p class="p">For example, the following image shows a record generated by the
             Directory origin in data preview. </p>
 
-     <p class="p"><img class="image" id="concept_zvs_whh_cy__d66850e320" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
+     <p class="p"><img class="image" id="concept_zvs_whh_cy__d69495e320" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
 
-     <p class="p"><span class="ph" id="concept_zvs_whh_cy__d66850e323">The "Record Header" list displays the set of
+     <p class="p"><span class="ph" id="concept_zvs_whh_cy__d69495e323">The "Record Header" list displays the set of
                 read-only internal attributes in the record at this point of the pipeline.</span> You
             can use the <samp class="ph codeph">record.&lt;header name&gt;</samp> variable to return values for these
             attributes. </p>
 
-     <p class="p"><span class="ph" id="concept_zvs_whh_cy__d66850e331">The header attributes under "values" are the
+     <p class="p"><span class="ph" id="concept_zvs_whh_cy__d69495e331">The header attributes under "values" are the
                 attributes created by the Directory origin.</span> You can use the
                 <samp class="ph codeph">record.attributes</samp> variable to return or modify these attributes.
             When you use the <samp class="ph codeph">record.attributes</samp> variable to create a header
@@ -613,9 +613,9 @@ input_stream.read()</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d394471e837">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d403687e837">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d394471e840">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d403687e840">Description</th>
 
                                 </tr>
 
@@ -623,34 +623,34 @@ input_stream.read()</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d394471e837 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d403687e837 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d394471e840 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d394471e837 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d394471e840 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d403687e840 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d394471e837 ">Produce Events <a class="xref" href="JavaScript.html#concept_mkv_wgh_cy">
+                                    <td class="entry" valign="top" width="30%" headers="d403687e837 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d403687e840 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d403687e837 ">Produce Events <a class="xref" href="JavaScript.html#concept_mkv_wgh_cy">
                                             <img class="image" id="task_mzc_1by_nr__image_fnz_31h_cy" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d394471e840 ">Generates event records when
+                                    <td class="entry" valign="top" width="70%" headers="d403687e840 ">Generates event records when
                                         events occur. Use for event handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-                                            <img class="image" id="task_mzc_1by_nr__d65589e4868" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_mzc_1by_nr__d68234e4868" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d394471e837 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_mzc_1by_nr__d65589e4877" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d403687e837 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_mzc_1by_nr__d68234e4877" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d394471e840 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d403687e840 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -662,10 +662,10 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d394471e837 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_mzc_1by_nr__d65589e4893" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d403687e837 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_mzc_1by_nr__d68234e4893" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d394471e840 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d403687e840 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -676,10 +676,10 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d394471e837 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_mzc_1by_nr__d65589e4911" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d403687e837 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_mzc_1by_nr__d68234e4911" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d394471e840 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d65589e4915">
+                                    <td class="entry" valign="top" width="70%" headers="d403687e840 ">Error record handling for the stage: <ul class="ul" id="task_mzc_1by_nr__d68234e4915">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -710,9 +710,9 @@ input_stream.read()</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d394471e969">JavaScript Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d403687e969">JavaScript Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d394471e972">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d403687e972">Description</th>
 
                                 </tr>
 
@@ -720,9 +720,9 @@ input_stream.read()</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d394471e969 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d403687e969 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d394471e972 ">Determines how the JavaScript Evaluator processes
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d403687e972 ">Determines how the JavaScript Evaluator processes
                                             data:<ul class="ul" id="task_mzc_1by_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
@@ -737,25 +737,25 @@ input_stream.read()</pre>
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="22.22222222222222%" headers="d394471e969 ">Init Script</td>
+      <td class="entry" valign="top" width="22.22222222222222%" headers="d403687e969 ">Init Script</td>
 
-      <td class="entry" valign="top" width="77.77777777777779%" headers="d394471e972 ">Optional initialization script to use in the processor.<p class="p">Use to set up connections or
+      <td class="entry" valign="top" width="77.77777777777779%" headers="d403687e972 ">Optional initialization script to use in the processor.<p class="p">Use to set up connections or
        resources required by the processor. Runs once when the pipeline starts.</p>
 </td>
 
      </tr>
 <tr>
-     <td class="entry" valign="top" width="22.22222222222222%" headers="d394471e969 ">Script</td>
+     <td class="entry" valign="top" width="22.22222222222222%" headers="d403687e969 ">Script</td>
 
-     <td class="entry" valign="top" width="77.77777777777779%" headers="d394471e972 ">Main processing script to use in the processor.<p class="p">Runs for each record or each batch of
+     <td class="entry" valign="top" width="77.77777777777779%" headers="d403687e972 ">Main processing script to use in the processor.<p class="p">Runs for each record or each batch of
        data, based on the configured processing mode.</p>
 </td>
 
     </tr>
 <tr>
-     <td class="entry" valign="top" width="22.22222222222222%" headers="d394471e969 ">Destroy Script</td>
+     <td class="entry" valign="top" width="22.22222222222222%" headers="d403687e969 ">Destroy Script</td>
 
-     <td class="entry" valign="top" width="77.77777777777779%" headers="d394471e972 ">Optional destroy script to use in the processor.<p class="p">Use to close any connections or
+     <td class="entry" valign="top" width="77.77777777777779%" headers="d403687e972 ">Optional destroy script to use in the processor.<p class="p">Use to close any connections or
        resources required by the processor. Runs once when the pipeline stops.</p>
 </td>
 

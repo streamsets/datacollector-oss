@@ -140,7 +140,7 @@
                               <dt class="dt dlterm">Configure the YARN Minimum User ID property, min.user.id</dt>
 
                               <dd class="dd">The min.user.id property is set to 1000 by default. To allow job
-                                          submission:<ol class="ol" id="concept_pyb_gsg_gz__d28905e4511">
+                                          submission:<ol class="ol" id="concept_pyb_gsg_gz__d29425e4521">
                                           <li class="li">Verify the user ID being used by the <span class="ph">Data
                   Collector</span> user, typically named "sdc".</li>
 
@@ -159,7 +159,7 @@
                                     allowed.system.users</dt>
 
                               <dd class="dd">The allowed.system.users property lists allowed user names. To
-                                    allow job submission: <ol class="ol" id="concept_pyb_gsg_gz__d28905e4534">
+                                    allow job submission: <ol class="ol" id="concept_pyb_gsg_gz__d29425e4544">
                                           <li class="li"> In Hadoop, configure the YARN allowed.system.users
                                                 property. <p class="p">Add the <span class="ph">Data
                   Collector</span> user name, typically "sdc", to the list of
@@ -405,9 +405,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d175516e602">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d178174e602">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d175516e605">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d178174e605">Description</th>
 
                         </tr>
 
@@ -415,9 +415,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d175516e602 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d178174e602 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d175516e605 ">Event type. Uses one of the following types:<ul class="ul" id="concept_qk2_3wg_gz__ul_tmk_gp5_sx">
+                            <td class="entry" valign="top" width="70%" headers="d178174e605 ">Event type. Uses one of the following types:<ul class="ul" id="concept_qk2_3wg_gz__ul_tmk_gp5_sx">
                                     <li class="li">AppSubmittedEvent - Generated when the executor starts a
                                         Spark application.</li>
 
@@ -427,16 +427,16 @@
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d175516e602 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d178174e602 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d175516e605 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d178174e605 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d175516e602 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d178174e602 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_qk2_3wg_gz__d28994e1694" valign="top" width="70%" headers="d175516e605 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_qk2_3wg_gz__d29514e2083" valign="top" width="70%" headers="d178174e605 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -453,9 +453,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d175516e661">Event Field Name</th>
+                            <th class="entry" valign="top" width="30%" id="d178174e661">Event Field Name</th>
 
-                            <th class="entry" valign="top" width="70%" id="d175516e664">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d178174e664">Description</th>
 
                         </tr>
 
@@ -463,9 +463,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d175516e661 ">APP_ID</td>
+                            <td class="entry" valign="top" width="30%" headers="d178174e661 ">APP_ID</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d175516e664 ">Application ID for the Spark application:<ul class="ul" id="concept_qk2_3wg_gz__ul_g53_4wg_gz">
+                            <td class="entry" valign="top" width="70%" headers="d178174e664 ">Application ID for the Spark application:<ul class="ul" id="concept_qk2_3wg_gz__ul_g53_4wg_gz">
                                     <li class="li">For Databricks, returns the run ID of the job.</li>
 
                                     <li class="li">For YARN, returns the YARN application ID.</li>
@@ -527,9 +527,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d175516e766">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d178174e766">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175516e769">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d178174e769">Description</th>
 
                                 </tr>
 
@@ -537,41 +537,41 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d175516e766 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d178174e766 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d175516e769 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d175516e766 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d175516e769 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d178174e769 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d175516e766 ">Stage Library</td>
+       <td class="entry" valign="top" width="30%" headers="d178174e766 ">Description</td>
 
-       <td class="entry" valign="top" width="70%" headers="d175516e769 ">Library version that you want to use. </td>
+       <td class="entry" valign="top" width="70%" headers="d178174e769 ">Optional description.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e766 ">Produce Events <a class="xref" href="Spark.html#concept_xmx_1wg_gz">
+       <td class="entry" valign="top" width="30%" headers="d178174e766 ">Stage Library</td>
+
+       <td class="entry" valign="top" width="70%" headers="d178174e769 ">Library version that you want to use. </td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e766 ">Produce Events <a class="xref" href="Spark.html#concept_xmx_1wg_gz">
                                             <img class="image" id="task_cdw_wxb_1z__image_qqz_cxs_5x" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e769 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d178174e769 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_cdw_wxb_1z__d28994e1563" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_cdw_wxb_1z__d29514e1952" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d175516e766 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-         <img class="image" id="task_cdw_wxb_1z__d28994e1572" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d178174e766 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+         <img class="image" id="task_cdw_wxb_1z__d29514e1961" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d175516e769 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+       <td class="entry" valign="top" width="70%" headers="d178174e769 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
 <p class="p">Records
          that do not include all required fields are processed based on the error handling
          configured for the pipeline.</p>
@@ -580,10 +580,10 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d175516e766 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-         <img class="image" id="task_cdw_wxb_1z__d28994e1589" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d178174e766 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+         <img class="image" id="task_cdw_wxb_1z__d29514e1978" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d175516e769 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+       <td class="entry" valign="top" width="70%" headers="d178174e769 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
         processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. <p class="p">Records
          that do not meet all preconditions are processed based on the error handling configured for
          the stage.</p>
@@ -608,9 +608,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d175516e889">Databricks Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d178174e889">Databricks Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175516e892">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d178174e892">Description</th>
 
                                 </tr>
 
@@ -618,9 +618,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e889 ">Cluster Base URL</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e889 ">Cluster Base URL</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e892 ">The Databricks URL for your company. The URL uses the
+                                    <td class="entry" valign="top" width="70%" headers="d178174e892 ">The Databricks URL for your company. The URL uses the
                                         following format:
                                         <pre class="pre codeblock">https://&lt;your domain&gt;.cloud.databricks.com</pre>
 </td>
@@ -639,9 +639,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d175516e930">YARN Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d178174e930">YARN Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175516e933">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d178174e933">Description</th>
 
                                 </tr>
 
@@ -649,9 +649,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Deploy Mode</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Deploy Mode</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">Deploy mode for the application:<ul class="ul" id="task_cdw_wxb_1z__ul_swj_n5l_gz">
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">Deploy mode for the application:<ul class="ul" id="task_cdw_wxb_1z__ul_swj_n5l_gz">
                                             <li class="li">Client - Runs the application in Spark client mode.
                                                 Use only when resources are not a concern.</li>
 
@@ -665,9 +665,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Driver Memory</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Driver Memory</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">Maximum amount of memory the driver can use for the
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">Maximum amount of memory the driver can use for the
                                             application.<p class="p">Enter the number and a standard Java unit
                                             of measure without additional spaces. For example, 10m.
                                             </p>
@@ -678,9 +678,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Executor Memory</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Executor Memory</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">Maximum amount of memory the executor can use. <p class="p">Enter
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">Maximum amount of memory the executor can use. <p class="p">Enter
                                             the number and a standard Java unit of measure without
                                             additional spaces. For example, 100k. </p>
 <p class="p">You can use
@@ -690,42 +690,42 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Dynamic Allocation</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Dynamic Allocation</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">Enables the dynamic allocation of executors to start an
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">Enables the dynamic allocation of executors to start an
                                         applications.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Number of Worker Nodes</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Number of Worker Nodes</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">The exact number of worker nodes for Spark to use.
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">The exact number of worker nodes for Spark to use.
                                         Configure when not using dynamic allocation.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Minimum Number of Worker Nodes</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Minimum Number of Worker Nodes</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">The minimum number of worker nodes for Spark to use.
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">The minimum number of worker nodes for Spark to use.
                                         Configure when using dynamic allocation.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Maximum Number of Worker Nodes</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Maximum Number of Worker Nodes</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">The maximum number of worker nodes for Spark to use.
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">The maximum number of worker nodes for Spark to use.
                                         Configure when using dynamic allocation.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Proxy User <a class="xref" href="Spark.html#concept_twh_wsg_gz">
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Proxy User <a class="xref" href="Spark.html#concept_twh_wsg_gz">
                                             <img class="image" id="task_cdw_wxb_1z__image_xqm_fjm_zx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">Hadoop user to connect to the external system and run the
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">Hadoop user to connect to the external system and run the
                                         application. When using this property, make sure the
                                         external system is configured appropriately. <p class="p">By default,
                                             the pipeline uses the Data Collector user. </p>
@@ -734,10 +734,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Custom Spark Home <a class="xref" href="Spark.html#concept_aht_p4h_c1b">
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Custom Spark Home <a class="xref" href="Spark.html#concept_aht_p4h_c1b">
                                             <img class="image" id="task_cdw_wxb_1z__image_crp_srh_c1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">Use to enter a custom Spark home directory. By default,
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">Use to enter a custom Spark home directory. By default,
                                         the origin uses the directory specified in the SPARK_HOME
                                         environment variable on the <span class="ph">Data
                   Collector</span> machine. <p class="p">This property overrides the SPARK_HOME
@@ -755,9 +755,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Custom Java Home</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Custom Java Home</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">Use to enter a custom Java home directory. By default,
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">Use to enter a custom Java home directory. By default,
                                         the origin uses the directory specified in the JAVA_HOME
                                         environment variable on the <span class="ph">Data
                   Collector</span> machine. <p class="p">This property overrides the <span class="ph">Data
@@ -770,9 +770,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Additional Spark Arguments</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Additional Spark Arguments</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">Additional arguments to pass to Spark. Overrides any
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">Additional arguments to pass to Spark. Overrides any
                                         previous configuration for the specified arguments. For a
                                         list of available arguments, see the Spark documentation.
                                     </td>
@@ -780,9 +780,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Additional Spark Arguments and Values</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Additional Spark Arguments and Values</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">Additional arguments with values to pass to Spark.
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">Additional arguments with values to pass to Spark.
                                         Overrides any previous configuration for the specified
                                         arguments. For a list of available arguments, see the Spark
                                         documentation.</td>
@@ -790,9 +790,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e930 ">Environment Variables</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e930 ">Environment Variables</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e933 ">Additional environment variables to use. Overrides any
+                                    <td class="entry" valign="top" width="70%" headers="d178174e933 ">Additional environment variables to use. Overrides any
                                         previous configuration for the specified arguments. For a
                                         list of valid environment variables, see the Spark
                                         documentation.</td>
@@ -816,9 +816,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d175516e1136">Databricks Application Details Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d178174e1136">Databricks Application Details Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175516e1139">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d178174e1139">Description</th>
 
                                 </tr>
 
@@ -826,25 +826,25 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1136 ">Job Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1136 ">Job Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1139 ">Job type to run: Notebook or JAR.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1139 ">Job type to run: Notebook or JAR.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1136 ">Job ID <a class="xref" href="Spark.html#concept_esz_x3d_kz">
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1136 ">Job ID <a class="xref" href="Spark.html#concept_esz_x3d_kz">
                                             <img class="image" id="task_cdw_wxb_1z__image_tw4_jn2_kz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1139 ">Job ID generated by Databricks after the job was
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1139 ">Job ID generated by Databricks after the job was
                                         submitted.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1136 ">Parameters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1136 ">Parameters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1139 ">Parameters to pass to the job. Enter the parameters
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1139 ">Parameters to pass to the job. Enter the parameters
                                         exactly as expected, and in the expected order. The executor
                                         does not validate the parameters.<div class="p">You can use the
                                             expression language in job parameters. For example, when
@@ -875,9 +875,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d175516e1214">Java/Scala Application Properties</th>
+                                    <th class="entry" valign="top" width="30%" id="d178174e1214">Java/Scala Application Properties</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175516e1217">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d178174e1217">Description</th>
 
                                 </tr>
 
@@ -885,12 +885,12 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1214 ">Application Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1214 ">Application Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1217 ">Name to display in YARN resource manager and logs. Also
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1217 ">Name to display in YARN resource manager and logs. Also
                                         displays in Spark server history pages.<div class="p">
                   <div class="note tip"><span class="tiptitle">Tip:</span> Use a name that distinguishes the application from those started
-                        by other processes and other pipelines, such as <span class="ph" id="task_cdw_wxb_1z__d28905e4579">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>.</div>
+                        by other processes and other pipelines, such as <span class="ph" id="task_cdw_wxb_1z__d29425e4589">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>.</div>
 
             </div>
 </td>
@@ -898,25 +898,25 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1214 ">Application Resource</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1214 ">Application Resource</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1217 ">The full path to the JAR that contains the main
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1217 ">The full path to the JAR that contains the main
                                         class.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1214 ">Main Class</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1214 ">Main Class</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1217 ">The full path to the main class for the Spark
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1217 ">The full path to the main class for the Spark
                                         application. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1214 ">Application Arguments</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1214 ">Application Arguments</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1217 ">You can add additional arguments to pass to the
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1217 ">You can add additional arguments to pass to the
                                         application. <p class="p">Enter the arguments exactly as expected, and
                                             in the expected order. The executor does not validate
                                             the arguments.</p>
@@ -925,17 +925,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1214 ">Additional JARs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1214 ">Additional JARs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1217 ">You can specify additional JARs to use. Enter the full
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1217 ">You can specify additional JARs to use. Enter the full
                                         path to the JAR.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1214 ">Additional Files</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1214 ">Additional Files</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1217 ">Additional files to pass to the application using the
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1217 ">Additional files to pass to the application using the
                                             <samp class="ph codeph">--files</samp> protocol. Enter the full path
                                         to the files. <p class="p">For information about the protocol, see the
                                             Spark documentation.</p>
@@ -944,9 +944,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1214 ">Enable Verbose Logging</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1214 ">Enable Verbose Logging</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1217 ">Enables logging additional information to the <span class="ph">Data
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1217 ">Enables logging additional information to the <span class="ph">Data
                   Collector</span> log. <p class="p">To avoid filling the log with unnecessary
                                             information, enable this property only when testing the
                                             pipeline. </p>
@@ -966,9 +966,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d175516e1327">Python Application Properties </th>
+                                    <th class="entry" valign="top" width="30%" id="d178174e1327">Python Application Properties </th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175516e1330">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d178174e1330">Description</th>
 
                                 </tr>
 
@@ -976,12 +976,12 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1327 ">Application Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1327 ">Application Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1330 ">Name to display in YARN resource manager and logs. Also
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1330 ">Name to display in YARN resource manager and logs. Also
                                         displays in Spark server history pages.<div class="p">
                   <div class="note tip"><span class="tiptitle">Tip:</span> Use a name that distinguishes the application from those started
-                        by other processes and other pipelines, such as <span class="ph" id="task_cdw_wxb_1z__d28905e4579">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>.</div>
+                        by other processes and other pipelines, such as <span class="ph" id="task_cdw_wxb_1z__d29425e4589">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>.</div>
 
             </div>
 </td>
@@ -989,16 +989,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1327 ">Application Resource</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1327 ">Application Resource</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1330 ">The full path to the Python file to run. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1330 ">The full path to the Python file to run. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1327 ">Application Arguments</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1327 ">Application Arguments</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1330 ">You can add additional arguments to pass to the
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1330 ">You can add additional arguments to pass to the
                                         application. <p class="p">Enter the arguments exactly as expected, and
                                             in the expected order. The executor does not validate
                                             the arguments.</p>
@@ -1007,17 +1007,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1327 ">Dependencies</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1327 ">Dependencies</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1330 ">Full path to any files the Python application resource
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1330 ">Full path to any files the Python application resource
                                         requires. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1327 ">Additional Files</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1327 ">Additional Files</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1330 ">Additional files to pass to the application using the
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1330 ">Additional files to pass to the application using the
                                             <samp class="ph codeph">--files</samp> protocol. Enter the full path
                                         to the files. <p class="p">For information about the protocol, see the
                                             Spark documentation.</p>
@@ -1026,9 +1026,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1327 ">Enable Verbose Logging</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1327 ">Enable Verbose Logging</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1330 ">Enables logging additional information to the <span class="ph">Data
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1330 ">Enables logging additional information to the <span class="ph">Data
                   Collector</span> log. <p class="p">To avoid filling the log with unnecessary
                                             information, enable this property only when testing the
                                             pipeline. </p>
@@ -1051,9 +1051,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d175516e1438">Databricks Credentials</th>
+                                    <th class="entry" valign="top" width="30%" id="d178174e1438">Databricks Credentials</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175516e1441">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d178174e1441">Description</th>
 
                                 </tr>
 
@@ -1061,16 +1061,16 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1438 ">Username</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1438 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1441 ">Databricks user name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1441 ">Databricks user name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1438 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1438 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1441 ">Password for the account.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1441 ">Password for the account.</td>
 
                                 </tr>
 
@@ -1086,10 +1086,10 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d175516e1483">YARN Kerberos Properties <a class="xref" href="Spark.html#concept_bhk_fhg_gz">
+                                    <th class="entry" valign="top" width="30%" id="d178174e1483">YARN Kerberos Properties <a class="xref" href="Spark.html#concept_bhk_fhg_gz">
                                             <img class="image" id="task_cdw_wxb_1z__image_hlh_jzj_kz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175516e1490">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d178174e1490">Description</th>
 
                                 </tr>
 
@@ -1097,17 +1097,17 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1483 ">Kerberos Principal</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1483 ">Kerberos Principal</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1490 ">Kerberos principal for the YARN cluster where the
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1490 ">Kerberos principal for the YARN cluster where the
                                         application runs. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1483 ">Kerberos Keytab</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1483 ">Kerberos Keytab</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1490 ">Kerberos keytab for the YARN cluster where the
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1490 ">Kerberos keytab for the YARN cluster where the
                                         application runs. </td>
 
                                 </tr>
@@ -1131,9 +1131,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d175516e1559">SSL/TLS Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d178174e1559">SSL/TLS Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175516e1562">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d178174e1562">Description</th>
 
                                 </tr>
 
@@ -1141,30 +1141,30 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1559 ">Path to Truststore</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1559 ">Path to Truststore</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1562 ">Absolute path to the truststore. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1559 ">Password</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1562 ">Truststore password.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1562 ">Absolute path to the truststore. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1559 ">Path to Keystore</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1559 ">Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1562 ">Absolute path to the keystore. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1562 ">Truststore password.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1559 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1559 ">Path to Keystore</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1562 ">Keystore password.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1562 ">Absolute path to the keystore. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1559 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1562 ">Keystore password.</td>
 
                                 </tr>
 
@@ -1185,9 +1185,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d175516e1632">HTTP Proxy Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d178174e1632">HTTP Proxy Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d175516e1635">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d178174e1635">Description</th>
 
                                 </tr>
 
@@ -1195,23 +1195,23 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1632 ">Proxy URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1632 ">Proxy URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1635 ">Proxy URI.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1632 ">Username</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1635 ">Proxy user name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1635 ">Proxy URI.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d175516e1632 ">Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1632 ">Username</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d175516e1635 ">Proxy password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1635 ">Proxy user name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d178174e1632 ">Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d178174e1635 ">Proxy password.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Hashicorp
                         Vault secrets</a> or <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a>. </div>
 </td>

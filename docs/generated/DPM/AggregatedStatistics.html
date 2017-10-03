@@ -430,9 +430,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d53096e695">SDC RPC Properties</th>
+                                    <th class="entry" valign="top" width="30%" id="d53696e695">SDC RPC Properties</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d53096e698">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d53696e698">Description</th>
 
                                 </tr>
 
@@ -440,9 +440,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">SDC RPC Connection</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">SDC RPC Connection</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">Host and port where the system pipeline runs. The host
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">Host and port where the system pipeline runs. The host
                                         must be a machine with a registered <span class="ph">Data
                   Collector</span> that runs a pipeline instance for the job. <p class="p">Use the
                                             following format: <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.
@@ -452,9 +452,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">Retries per Batch</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">Retries per Batch</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">Number of times the SDC RPC destination tries to write a
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">Number of times the SDC RPC destination tries to write a
                                         batch to the Dev SDC RPC with Buffering origin in the system
                                         pipeline. <p class="p">When the SDC RPC destination cannot write the
                                             batch within the configured number of retries, it fails
@@ -465,9 +465,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">Back off Period</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">Back off Period</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">Milliseconds to wait before retrying writing a batch to
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">Milliseconds to wait before retrying writing a batch to
                                         the Dev SDC RPC with Buffering origin in the system
                                             pipeline.<p class="p">The value that you enter increases
                                             exponentially after each retry. For example, if you set
@@ -483,9 +483,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">SDC RPC ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">SDC RPC ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">User-defined ID to allow the SDC RPC destination to pass
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">User-defined ID to allow the SDC RPC destination to pass
                                         statistics to the system pipeline. To avoid mixing
                                         statistics from different jobs, use a unique ID for each
                                             job.<p class="p">You cannot define an expression that evaluates to
@@ -495,9 +495,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">Connection Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">Connection Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">Milliseconds to establish a connection to the system
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">Milliseconds to establish a connection to the system
                                         pipeline. <p class="p">The SDC RPC destination retries the connection
                                             based on the Retries Per Batch property.</p>
 <p class="p">Default
@@ -507,16 +507,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">TLS Enabled</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">TLS Enabled</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">Enables the secure transfer of data using TLS. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">Enables the secure transfer of data using TLS. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">Truststore File</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">Truststore File</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">Truststore file for TLS. Required if the keystore file is
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">Truststore file for TLS. Required if the keystore file is
                                         a self-signed certificate.<p class="p">Must be stored in the <span class="ph">Data
                   Collector</span> resources directory,
                                                 <span class="ph filepath">$SDC_RESOURCES</span>, on each <span class="ph">Data
@@ -527,9 +527,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">Truststore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">Truststore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">Password for the truststore file.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">Password for the truststore file.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as usernames
                   and passwords, you can use <a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Hashicorp
                         Vault secrets</a> or <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">runtime resources</a>. </div>
 </td>
@@ -537,9 +537,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">Read Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">Read Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">Milliseconds to wait for the Dev SDC RPC with Buffering
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">Milliseconds to wait for the Dev SDC RPC with Buffering
                                         origin in the system pipeline to read data from a batch.
                                             <p class="p">The SDC RPC destination retries the write based on
                                             the Retries Per Batch property.</p>
@@ -550,18 +550,18 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">Use Compression</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">Use Compression</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">Enables the SDC RPC destination to use compression to
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">Enables the SDC RPC destination to use compression to
                                         pass data to the Dev SDC RPC with Buffering origin in the
                                         system pipeline. Enabled by default. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e695 ">Verify Host in Server Certificate</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e695 ">Verify Host in Server Certificate</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e698 ">Verifies the host in the keystore file on the <span class="ph">Data
+                                    <td class="entry" valign="top" width="70%" headers="d53696e698 ">Verifies the host in the keystore file on the <span class="ph">Data
                   Collector</span> machine that runs the system pipeline. </td>
 
                                 </tr>
@@ -583,9 +583,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d53096e888">Kafka Properties</th>
+                                    <th class="entry" valign="top" width="30%" id="d53696e888">Kafka Properties</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d53096e891">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d53696e891">Description</th>
 
                                 </tr>
 
@@ -593,9 +593,9 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d53096e888 ">Broker URI</td>
+                                        <td class="entry" valign="top" width="30%" headers="d53696e888 ">Broker URI</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53096e891 ">Connection string for the Kafka broker. Use the
+                                        <td class="entry" valign="top" width="70%" headers="d53696e891 ">Connection string for the Kafka broker. Use the
                                             following format:
                                                 <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -605,16 +605,16 @@
                                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e888 ">Runtime Topic Resolution </td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e888 ">Runtime Topic Resolution </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e891 ">Do not use at this time. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d53696e891 ">Do not use at this time. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e888 ">Topic</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e888 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e891 ">Topic to use. To avoid mixing statistics from different
+                                    <td class="entry" valign="top" width="70%" headers="d53696e891 ">Topic to use. To avoid mixing statistics from different
                                         jobs, use a unique topic name for each job.<p class="p">You cannot
                                             define an expression that evaluates to the topic name.
                                         </p>
@@ -623,10 +623,10 @@
                                 </tr>
 
                                 <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d53096e888 ">Partition Strategy  <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_lcd_ng5_xw__d9758e7932" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                        <td class="entry" valign="top" width="30%" headers="d53696e888 ">Partition Strategy  <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                                <img class="image" id="task_lcd_ng5_xw__d9820e7937" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d53096e891 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d9758e7936">
+                                        <td class="entry" valign="top" width="70%" headers="d53696e891 ">Strategy to use to write to partitions:<ul class="ul" id="task_lcd_ng5_xw__d9820e7941">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -647,9 +647,9 @@
                                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e888 ">Partition Expression </td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e888 ">Partition Expression </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e891 ">Expression to use when using the expression partition
+                                    <td class="entry" valign="top" width="70%" headers="d53696e891 ">Expression to use when using the expression partition
                                             strategy.<p class="p">Define the expression to evaluate to the
                                             partition where you want statistics written. Partition
                                             numbers start with 0.</p>
@@ -661,9 +661,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e888 ">Kafka Configuration</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e888 ">Kafka Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e891 ">Additional Kafka properties to use. Using <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                    <td class="entry" valign="top" width="70%" headers="d53696e891 ">Additional Kafka properties to use. Using <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon and define the Kafka
                                         property name and value.<p class="p">Use the property names and values
                                             as expected by Kafka. Do not use the broker.list
@@ -673,9 +673,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e888 ">ZooKeeper URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e888 ">ZooKeeper URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e891 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                    <td class="entry" valign="top" width="70%" headers="d53696e891 ">Connection string for the ZooKeeper of the Kafka cluster.
                                         Use the following format:
                                             <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To use a
                                             ZooKeeper quorum, enter a comma-separated list.
@@ -706,9 +706,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d53096e1042">Kinesis Properties</th>
+                                    <th class="entry" valign="top" width="30%" id="d53696e1042">Kinesis Properties</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d53096e1045">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d53696e1045">Description</th>
 
                                 </tr>
 
@@ -716,10 +716,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e1042 ">Access Key ID <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x9g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d53696e1042 ">Access Key ID <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x9g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e1045 ">
+                                    <td class="entry" valign="top" width="70%" headers="d53696e1045 ">
         <p class="p">AWS access key ID.</p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials.</p>
@@ -729,10 +729,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e1042 ">Secret Access Key <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
+                                    <td class="entry" valign="top" width="30%" headers="d53696e1042 ">Secret Access Key <a class="xref" href="AggregatedStatistics.html#concept_m3j_2kb_fx" title="When the pipeline writes aggregated statistics to Amazon Kinesis Streams, it must pass credentials to Amazon Web Services."><img class="image" id="task_lcd_ng5_xw__image_ekt_x6g_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e1045 ">
+                                    <td class="entry" valign="top" width="70%" headers="d53696e1045 ">
         <p class="p">AWS secret access key. </p>
 
         <p class="p">Required when not using IAM roles with IAM instance profile credentials. </p>
@@ -742,24 +742,24 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d53096e1042 ">Region</td>
+      <td class="entry" valign="top" width="30%" headers="d53696e1042 ">Region</td>
 
-      <td class="entry" valign="top" width="70%" headers="d53096e1045 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
+      <td class="entry" valign="top" width="70%" headers="d53696e1045 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
 
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d53096e1042 ">Endpoint</td>
+      <td class="entry" valign="top" width="30%" headers="d53696e1042 ">Endpoint</td>
 
-      <td class="entry" valign="top" width="70%" headers="d53096e1045 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+      <td class="entry" valign="top" width="70%" headers="d53696e1045 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
        name.</td>
 
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e1042 ">Stream Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e1042 ">Stream Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e1045 ">Kinesis stream name. To avoid mixing statistics from
+                                    <td class="entry" valign="top" width="70%" headers="d53696e1045 ">Kinesis stream name. To avoid mixing statistics from
                                         different jobs, use a unique stream name for each job.<p class="p">You
                                             cannot define an expression that evaluates to the stream
                                             name. </p>
@@ -768,9 +768,9 @@
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d53096e1042 ">Partitioning Strategy</td>
+      <td class="entry" valign="top" width="30%" headers="d53696e1042 ">Partitioning Strategy</td>
 
-      <td class="entry" valign="top" width="70%" headers="d53096e1045 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_lcd_ng5_xw__d9787e955">
+      <td class="entry" valign="top" width="70%" headers="d53696e1045 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_lcd_ng5_xw__d9849e1344">
         <li class="li">Random - Generates a random partition key.</li>
 
         <li class="li">
@@ -784,18 +784,18 @@
      </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="30%" headers="d53096e1042 ">Partition Expression</td>
+      <td class="entry" valign="top" width="30%" headers="d53696e1042 ">Partition Expression</td>
 
-      <td class="entry" valign="top" width="70%" headers="d53096e1045 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
+      <td class="entry" valign="top" width="70%" headers="d53696e1045 ">Expression to generate the partition key used to pass data to different shards. <p class="p">Use
         for the expression partition strategy. </p>
 </td>
 
      </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d53096e1042 ">Kinesis Producer Configuration</td>
+                                    <td class="entry" valign="top" width="30%" headers="d53696e1042 ">Kinesis Producer Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d53096e1045 ">Additional Kinesis properties.<p class="p">When you add a
+                                    <td class="entry" valign="top" width="70%" headers="d53696e1045 ">Additional Kinesis properties.<p class="p">When you add a
                                             configuration property, enter the exact property name
                                             and the value. The pipeline does not validate the
                                             property names or values.</p>

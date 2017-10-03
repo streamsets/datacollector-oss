@@ -150,9 +150,11 @@
                         batches are processed by different pipeline instances, the order that
                         batches are written to destinations is not ensured.</span></p>
 
-        <p class="p">For example, say you set the Max Threads property to 5. When you start the pipeline, <span class="ph">the origin creates five threads, and by default <span class="ph">Data
-                  Collector</span> creates a matching number of pipeline runners. Upon receiving data, the
-                        origin passes a batch to each of the pipeline runners for processing.
+        <p class="p">For example, say you set the Max Threads property to 5. When you start the pipeline, <span class="ph"><span class="ph" id="concept_ldf_chp_qy__d37034e2000">the origin creates five
+                              threads, and by default <span class="ph">Data
+                  Collector</span> creates a matching number of pipeline runners.</span>
+                        <span class="ph" id="concept_ldf_chp_qy__d37034e2005">Upon receiving data, the origin passes a batch to
+                              each of the pipeline runners for processing.</span>
                   </span>
         </p>
 
@@ -256,14 +258,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t14_c5q_1bb__d36142e340" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t14_c5q_1bb__d37132e340" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d206763e356">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d210396e361">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d206763e359">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d210396e364">Description</th>
 
                                 </tr>
 
@@ -271,24 +273,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d206763e356 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d210396e361 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d206763e359 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d206763e356 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d206763e359 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d210396e364 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d206763e356 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_t14_c5q_1bb__d36142e386" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d210396e361 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d206763e359 ">Error record handling for the stage: <ul class="ul" id="task_t14_c5q_1bb__d36142e390">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d210396e364 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d210396e361 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_t14_c5q_1bb__d37132e386" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d210396e364 ">Error record handling for the stage: <ul class="ul" id="task_t14_c5q_1bb__d37132e390">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -318,9 +320,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d206763e435">Event Hub Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d210396e440">Event Hub Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d206763e438">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d210396e443">Description</th>
 
                                 </tr>
 
@@ -328,24 +330,24 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e435 ">Namespace Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d210396e440 ">Namespace Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e438 ">The name of the namespace that contains the event hub
+                                    <td class="entry" valign="top" width="70%" headers="d210396e443 ">The name of the namespace that contains the event hub
                                         that you want to use.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e435 ">Event Hub Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d210396e440 ">Event Hub Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e438 ">The event hub name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d210396e443 ">The event hub name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e435 ">Shared Access Policy Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d210396e440 ">Shared Access Policy Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e438 ">The policy name associated with the namespace. <p class="p">To
+                                    <td class="entry" valign="top" width="70%" headers="d210396e443 ">The policy name associated with the namespace. <p class="p">To
                                             retrieve the policy name, when logged into the Azure
                                             portal, navigate to your namespace and event hub, and
                                             then click Shared Access Policies for a list of
@@ -358,9 +360,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e435 ">Connection String Key </td>
+                                    <td class="entry" valign="top" width="30%" headers="d210396e440 ">Connection String Key </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e438 ">One of the connection string keys associated with the
+                                    <td class="entry" valign="top" width="70%" headers="d210396e443 ">One of the connection string keys associated with the
                                         specified shared access policy. <p class="p">To retrieve a connection
                                             string key, after accessing the list of shared access
                                             policies, click the policy name, and then copy the
@@ -372,9 +374,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e435 ">Consumer Group</td>
+                                    <td class="entry" valign="top" width="30%" headers="d210396e440 ">Consumer Group</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e438 ">Consumer group to use. Enter a consumer group associated
+                                    <td class="entry" valign="top" width="70%" headers="d210396e443 ">Consumer group to use. Enter a consumer group associated
                                         with the specified event hub. <p class="p">You can use the default
                                             consumer group, $Default.</p>
 <p class="p">To view a list of
@@ -385,9 +387,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e435 ">Event Processor Prefix</td>
+                                    <td class="entry" valign="top" width="30%" headers="d210396e440 ">Event Processor Prefix</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e438 ">A prefix to identify the pipeline. Use a different prefix
+                                    <td class="entry" valign="top" width="70%" headers="d210396e443 ">A prefix to identify the pipeline. Use a different prefix
                                         for each pipeline that includes the origin. <p class="p">Used to
                                             communicate with Azure Event Hub.</p>
 </td>
@@ -395,18 +397,18 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e435 ">Storage Account Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d210396e440 ">Storage Account Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e438 ">Name of the storage account to use.<p class="p">For information
+                                    <td class="entry" valign="top" width="70%" headers="d210396e443 ">Name of the storage account to use.<p class="p">For information
                                             about creating a storage account, see <a class="xref" href="AzureEventHub.html#concept_byn_5rf_bbb">Storage Account and Container Prerequisite</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e435 ">Storage Account Key</td>
+                                    <td class="entry" valign="top" width="30%" headers="d210396e440 ">Storage Account Key</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e438 ">One of the keys for the storage account. <p class="p">To retrieve
+                                    <td class="entry" valign="top" width="70%" headers="d210396e443 ">One of the keys for the storage account. <p class="p">To retrieve
                                             the storage account key, when viewing the storage
                                             account details in the Azure portal, click Access Keys.
                                             Then copy one of the default key values.</p>
@@ -415,19 +417,19 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e435 ">Container Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d210396e440 ">Container Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e438 ">The name of the container to use for the pipeline. <p class="p">For
+                                    <td class="entry" valign="top" width="70%" headers="d210396e443 ">The name of the container to use for the pipeline. <p class="p">For
                                             information about creating a container, see <a class="xref" href="AzureEventHub.html#concept_byn_5rf_bbb">Storage Account and Container Prerequisite</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e435 ">Max Threads <a class="xref" href="AzureEventHub.html#concept_ldf_chp_qy">
+                                    <td class="entry" valign="top" width="30%" headers="d210396e440 ">Max Threads <a class="xref" href="AzureEventHub.html#concept_ldf_chp_qy">
                                             <img class="image" id="task_t14_c5q_1bb__image_z4j_byn_lw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e438 ">Number of threads the origin generates and uses for
+                                    <td class="entry" valign="top" width="70%" headers="d210396e443 ">Number of threads the origin generates and uses for
                                         multithreaded processing.</td>
 
                                 </tr>
@@ -449,9 +451,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d206763e595">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d210396e600">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d206763e598">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d210396e603">Description</th>
 
                                 </tr>
 
@@ -459,11 +461,11 @@
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d206763e595 ">Data Format <a class="xref" href="AzureEventHub.html#concept_zpk_wsx_1bb">
+                                    <td class="entry" valign="top" width="30%" headers="d210396e600 ">Data Format <a class="xref" href="AzureEventHub.html#concept_zpk_wsx_1bb">
                                             <img class="image" id="task_t14_c5q_1bb__image_ohs_4fj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" />
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e598 ">Format of data to be written. Use one of the following
+                                    <td class="entry" valign="top" width="70%" headers="d210396e603 ">Format of data to be written. Use one of the following
                                             options:<ul class="ul" id="task_t14_c5q_1bb__ul_ffs_xxw_zx">
                                             <li class="li">Binary</li>
 
@@ -491,14 +493,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t14_c5q_1bb__d36142e1072" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t14_c5q_1bb__d37132e1072" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d206763e673">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d210396e678">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d206763e676">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d210396e681">Description</th>
 
                                 </tr>
 
@@ -506,10 +508,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d206763e673 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_t14_c5q_1bb__d36155e823" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d210396e678 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_t14_c5q_1bb__d37145e1212" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d206763e676 ">The compression format of the files:<ul class="ul" id="task_t14_c5q_1bb__d36155e827">
+       <td class="entry" valign="top" width="70%" headers="d210396e681 ">The compression format of the files:<ul class="ul" id="task_t14_c5q_1bb__d37145e1216">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -525,19 +527,19 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d206763e673 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d210396e678 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d206763e676 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d210396e681 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_t14_c5q_1bb__d36142e1104">
-                                    <td class="entry" valign="top" width="30%" headers="d206763e673 ">Max Data Size (bytes)</td>
+                                <tr id="task_t14_c5q_1bb__d37132e1104">
+                                    <td class="entry" valign="top" width="30%" headers="d210396e678 ">Max Data Size (bytes)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e676 ">Maximum number of bytes in the message. Larger messages
+                                    <td class="entry" valign="top" width="70%" headers="d210396e681 ">Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </td>
 
                                 </tr>
@@ -554,14 +556,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t14_c5q_1bb__d36142e1465" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t14_c5q_1bb__d37132e1465" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d206763e760">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d210396e765">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d206763e763">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d210396e768">Description</th>
 
                                 </tr>
 
@@ -569,10 +571,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d206763e760 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_t14_c5q_1bb__d36155e823" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d210396e765 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_t14_c5q_1bb__d37145e1212" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d206763e763 ">The compression format of the files:<ul class="ul" id="task_t14_c5q_1bb__d36155e827">
+       <td class="entry" valign="top" width="70%" headers="d210396e768 ">The compression format of the files:<ul class="ul" id="task_t14_c5q_1bb__d37145e1216">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -588,20 +590,20 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d206763e760 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d210396e765 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d206763e763 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d210396e768 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_t14_c5q_1bb__d36142e1497">
-                                    <td class="entry" valign="top" width="30%" headers="d206763e760 ">JSON Content</td>
+                                <tr id="task_t14_c5q_1bb__d37132e1497">
+                                    <td class="entry" valign="top" width="30%" headers="d210396e765 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e763 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_t14_c5q_1bb__d36142e1506">
+                                    <td class="entry" valign="top" width="70%" headers="d210396e768 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_t14_c5q_1bb__d37132e1506">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -613,10 +615,10 @@
 
                                 </tr>
 
-                                <tr id="task_t14_c5q_1bb__d36142e1517">
-                                    <td class="entry" valign="top" width="30%" headers="d206763e760 ">Maximum Object Length (chars)</td>
+                                <tr id="task_t14_c5q_1bb__d37132e1517">
+                                    <td class="entry" valign="top" width="30%" headers="d210396e765 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e763 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="70%" headers="d210396e768 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                                 </p>
 <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data
@@ -627,17 +629,17 @@
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d206763e760 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d210396e765 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d206763e763 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d210396e768 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d206763e760 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_t14_c5q_1bb__d36155e318" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d210396e765 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_t14_c5q_1bb__d37145e728" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d206763e763 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d210396e768 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
@@ -654,14 +656,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t14_c5q_1bb__d36142e2175" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t14_c5q_1bb__d37132e2175" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d206763e906">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d210396e911">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d206763e909">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d210396e914">Description</th>
 
                                 </tr>
 
@@ -669,10 +671,10 @@
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d206763e906 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
-         <img class="image" id="task_t14_c5q_1bb__d36155e823" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d210396e911 ">Compression Format <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="Origins that read files can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_t14_c5q_1bb__d37145e1212" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d206763e909 ">The compression format of the files:<ul class="ul" id="task_t14_c5q_1bb__d36155e827">
+       <td class="entry" valign="top" width="70%" headers="d210396e914 ">The compression format of the files:<ul class="ul" id="task_t14_c5q_1bb__d37145e1216">
          <li class="li">None - Processes only uncompressed files.</li>
 
          <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
@@ -688,19 +690,19 @@
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d206763e906 ">File Name Pattern within Compressed Directory</td>
+       <td class="entry" valign="top" width="30%" headers="d210396e911 ">File Name Pattern within Compressed Directory</td>
 
-       <td class="entry" valign="top" width="70%" headers="d206763e909 ">File name pattern that represents the files to process within the compressed
+       <td class="entry" valign="top" width="70%" headers="d210396e914 ">File name pattern that represents the files to process within the compressed
         directory. You can use UNIX-style wildcards, such as an asterisk or question mark. For
         example, *.json.<p class="p">Default is *, which processes all files.</p>
 </td>
 
       </tr>
 
-                                <tr id="task_t14_c5q_1bb__d36142e2207">
-                                    <td class="entry" valign="top" width="30%" headers="d206763e906 ">Max Line Length</td>
+                                <tr id="task_t14_c5q_1bb__d37132e2207">
+                                    <td class="entry" valign="top" width="30%" headers="d210396e911 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e909 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="70%" headers="d210396e914 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -711,41 +713,41 @@
 
                                 </tr>
 
-                                <tr id="task_t14_c5q_1bb__d36142e2220">
-                                    <td class="entry" valign="top" width="30%" headers="d206763e906 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
-                                            <img class="image" id="task_t14_c5q_1bb__d36142e2226" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                <tr id="task_t14_c5q_1bb__d37132e2220">
+                                    <td class="entry" valign="top" width="30%" headers="d210396e911 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_t14_c5q_1bb__d37132e2226" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e909 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry" valign="top" width="70%" headers="d210396e914 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
-                                <tr id="task_t14_c5q_1bb__d36142e2232">
-                                    <td class="entry" valign="top" width="30%" headers="d206763e906 ">Custom Delimiter</td>
+                                <tr id="task_t14_c5q_1bb__d37132e2232">
+                                    <td class="entry" valign="top" width="30%" headers="d210396e911 ">Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e909 ">One or more characters to use to define records. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d210396e914 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
-                                <tr id="task_t14_c5q_1bb__d36142e2242">
-                                    <td class="entry" valign="top" width="30%" headers="d206763e906 ">Include Custom Delimiter</td>
+                                <tr id="task_t14_c5q_1bb__d37132e2242">
+                                    <td class="entry" valign="top" width="30%" headers="d210396e911 ">Include Custom Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d206763e909 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d210396e914 ">Includes delimiter characters in the record.</td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d206763e906 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d210396e911 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d206763e909 ">Character encoding of the files to be processed.</td>
+       <td class="entry" valign="top" width="70%" headers="d210396e914 ">Character encoding of the files to be processed.</td>
 
       </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d206763e906 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
-         <img class="image" id="task_t14_c5q_1bb__d36155e318" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d210396e911 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_t14_c5q_1bb__d37145e728" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d206763e909 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="70%" headers="d210396e914 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>

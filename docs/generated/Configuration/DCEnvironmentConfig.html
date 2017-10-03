@@ -117,9 +117,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="35%" id="d46482e194">Environment Variable</th>
+                        <th class="entry" valign="top" width="35%" id="d47052e194">Environment Variable</th>
 
-                        <th class="entry" valign="top" width="65%" id="d46482e197">Description</th>
+                        <th class="entry" valign="top" width="65%" id="d47052e197">Description</th>
 
                     </tr>
 
@@ -127,11 +127,11 @@
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d46482e194 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
+                        <td class="entry" valign="top" width="35%" headers="d47052e194 ">SDC_CONF<a class="xref" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, $SDC_CONF/sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d46482e197 ">
+                        <td class="entry" valign="top" width="65%" headers="d47052e197 ">
                             <p class="p">Defines the configuration directory for the Data Collector
                                 configuration file, <samp class="ph codeph">sdc.properties</samp>, and related
                                 realm properties files and keystore files. Also includes the logj4
@@ -151,9 +151,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d46482e194 ">SDC_DATA</td>
+                        <td class="entry" valign="top" width="35%" headers="d47052e194 ">SDC_DATA</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d46482e197 ">
+                        <td class="entry" valign="top" width="65%" headers="d47052e197 ">
                             <p class="p">Defines the data directory for pipeline configuration and run
                                 details. </p>
 
@@ -171,9 +171,9 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d46482e194 ">SDC_LOG</td>
+                        <td class="entry" valign="top" width="35%" headers="d47052e194 ">SDC_LOG</td>
 
-                        <td class="entry" valign="top" width="65%" headers="d46482e197 ">
+                        <td class="entry" valign="top" width="65%" headers="d47052e197 ">
                             <p class="p">Defines the log directory. </p>
 
                             <p class="p">Default values:</p>
@@ -190,11 +190,11 @@
                     </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="35%" headers="d46482e194 ">SDC_RESOURCES <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
+                        <td class="entry" valign="top" width="35%" headers="d47052e194 ">SDC_RESOURCES <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">
                                 <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
                         </td>
 
-                        <td class="entry" valign="top" width="65%" headers="d46482e197 ">Defines the directory for runtime resource files. <p class="p">Default
+                        <td class="entry" valign="top" width="65%" headers="d47052e197 ">Defines the directory for runtime resource files. <p class="p">Default
                                 values:</p>
 <ul class="ul">
                                 <li class="li">Manual start: <samp class="ph codeph">$SDC_DIST/resources</samp></li>
@@ -220,12 +220,16 @@
     
  <div class="body conbody"><p class="shortdesc">When you run <span class="ph">Data
                   Collector</span> as a
-        service, you must create a system user and group named sdc, or you must edit the values of
-        the SDC_USER and SDC_GROUP environment variables to point to an existing system user or
-        group.</p>
+        service,  <span class="ph">Data
+                  Collector</span> runs
+        as the system user account and group defined in the SDC_USER and SDC_GROUP environment
+        variables. The default system user and group are named sdc.</p>
 
-     <div class="p">The
-                <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file includes the following user and
+     <p class="p">You must create a system
+            user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP
+            environment variables to point to an existing system user or group. </p>
+
+        <div class="p">The <samp class="ph codeph">$SDC_DIST/libexec/sdcd-env.sh</samp> file includes the following user and
             group environment variables: <ul class="ul" id="concept_htz_t1s_3v__ul_gpg_4jt_3v">
                 <li class="li">SDC_USER - Defines the system user used to run <span class="ph">Data
                   Collector</span> as a service. Default is sdc.</li>
@@ -235,6 +239,13 @@
 
             </ul>
 </div>
+
+        <div class="note note"><span class="notetitle">Note:</span> When you run <span class="ph">Data
+                  Collector</span>
+            manually, <span class="ph">Data
+                  Collector</span>
+            runs as the system user account logged into the command prompt when the launch command
+            is run. To run as another user account, see <a class="xref" href="../Installation/Installing_the_DC.html#task_bt1_zcp_kq" title="To install the full Data Collector and start it manually, download the full Data Collector tarball.">Full Installation and Launch (Manual Start)</a>.</div>
 
  </div>
 
@@ -602,9 +613,9 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d46482e1005">Heap Dump Property</th>
+                            <th class="entry" valign="top" width="30%" id="d47052e1033">Heap Dump Property</th>
 
-                            <th class="entry" valign="top" width="70%" id="d46482e1008">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d47052e1036">Description</th>
 
                         </tr>
 
@@ -612,9 +623,9 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d46482e1005 ">SDC_HEAPDUMP_ON_OOM </td>
+                            <td class="entry" valign="top" width="30%" headers="d47052e1033 ">SDC_HEAPDUMP_ON_OOM </td>
 
-                            <td class="entry" valign="top" width="70%" headers="d46482e1008 ">Specifies whether <span class="ph">Data
+                            <td class="entry" valign="top" width="70%" headers="d47052e1036 ">Specifies whether <span class="ph">Data
                   Collector</span> generates a heap dump upon encountering an out of memory error.
                                     <p class="p">Default is true.</p>
 </td>
@@ -622,9 +633,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d46482e1005 ">SDC_HEAPDUMP_PATH</td>
+                            <td class="entry" valign="top" width="30%" headers="d47052e1033 ">SDC_HEAPDUMP_PATH</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d46482e1008 ">Specifies the file name and location to use for heap dump files.
+                            <td class="entry" valign="top" width="70%" headers="d47052e1036 ">Specifies the file name and location to use for heap dump files.
                                     <p class="p">By default, heap dumps are written to
                                         <samp class="ph codeph">$SDC_LOG/sdc_heapdump_${timestamp}.hprof</samp>.
                                     </p>

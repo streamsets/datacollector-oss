@@ -37,7 +37,14 @@
                   Collector</span>
         tarball. </p>
 
-        <div class="section context"></div>
+        <div class="section context">
+            <p class="p">When you start <span class="ph">Data
+                  Collector</span> manually, <span class="ph">Data
+                  Collector</span> runs as the system user account logged into the command prompt when you run the
+                launch command. You can alternatively impersonate another user account when you run
+                the command.</p>
+
+        </div>
 
         <ol class="ol steps" id="task_bt1_zcp_kq__steps_g53_l3p_kq"><li class="li step stepexpand">
                 <span class="ph cmd">Use the
@@ -99,19 +106,24 @@
 
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Use the following command to launch <span class="ph">Data Collector</span>:</span>
-                <div class="itemgroup info">
-                    <pre class="pre codeblock">$SDC_DIST/bin/streamsets dc</pre>
+                <span class="ph cmd">Use the following command to launch <span class="ph">Data Collector</span> so that it runs as
+                    the system user account logged into the command prompt:</span>
+                <div class="itemgroup info"><pre class="pre codeblock">$SDC_DIST/bin/streamsets dc</pre>
+<p class="p">Or, use the following
+                        command to launch <span class="ph">Data Collector</span> and run it in the
+                    background:</p>
+<pre class="pre codeblock">nohup $SDC_DIST/bin/streamsets dc &amp;</pre>
+<p class="p">Use
+                    the following command to launch <span class="ph">Data
+                  Collector</span> so that it runs as another system user account:</p>
 
-                </div>
-                <div class="itemgroup info">Or, use the following command to launch <span class="ph">Data Collector</span> and run it in
-                    the
-                    background:<pre class="pre codeblock">nohup $SDC_DIST/bin/streamsets dc &amp;</pre>
-</div>
+                        <pre class="pre codeblock">sudo -u &lt;user&gt; $SDC_DIST/bin/streamsets dc</pre>
+
+                    </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd" id="task_bt1_zcp_kq__AccessDC">To access the <span class="ph">Data Collector</span> console, enter the
-                    following URL in the address bar of your browser: </span>
+                <span class="ph cmd" id="task_bt1_zcp_kq__AccessDC">To access the <span class="ph">Data Collector</span> UI, enter the following URL
+                    in the address bar of your browser: </span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">http://&lt;hostname&gt;:18630/</pre>
 
@@ -122,7 +134,7 @@
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>

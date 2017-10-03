@@ -75,7 +75,7 @@
         <p class="p">When you start the pipeline, the origin creates a number of threads based on the
             multithreaded property configured in the origin. <span class="ph">And <span class="ph">Data
                   Collector</span> creates a number of pipeline runners based on the pipeline Max Runners
-                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d35811e1883">Each
+                        property to perform pipeline processing. <span class="ph" id="concept_xl3_ncd_py__d36801e1883">Each
                               thread connects to the origin system and creates a batch of data, and
                               passes the batch to an available pipeline runner.</span></span></p>
 
@@ -150,6 +150,9 @@
 
                         <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="When you configure JDBC Multitable Consumer, you define a table configuration for each group of tables that you want to read. A table configuration defines a group of tables from the same schema, that have the same table name pattern, and that have proper primary keys or have the same user-defined offset columns.You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer</a> - Reads database data from
                               multiple tables through a JDBC connection.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.When you use an origin to read log data, you define the format of the log files to be read.">Kafka Multitopic Consumer</a> - Reads data from multiple
+                              topics in a Kafka cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis
                                     Consumer</a> - Reads data from a Kinesis cluster.</li>
@@ -366,6 +369,9 @@
 
                         <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="When you configure JDBC Multitable Consumer, you define a table configuration for each group of tables that you want to read. A table configuration defines a group of tables from the same schema, that have the same table name pattern, and that have proper primary keys or have the same user-defined offset columns.You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer</a> - Reads database data from
                               multiple tables through a JDBC connection.</li>
+
+                        <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.When you use an origin to read log data, you define the format of the log files to be read.">Kafka Multitopic Consumer</a> - Reads data from multiple
+                              topics in a Kafka cluster.</li>
 
                         <li class="li"><a class="xref" href="../Origins/KinConsumer.html#concept_anh_4y3_yr" title="The Kinesis Consumer origin reads data from Amazon Kinesis Streams.">Kinesis
                                     Consumer</a> - Reads data from a Kinesis cluster.</li>

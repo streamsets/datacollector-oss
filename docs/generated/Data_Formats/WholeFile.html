@@ -134,7 +134,7 @@
             pipeline to read the file data in the fileref field or to modify file information in the
             fileInfo field, such as the file owner or permissions.</p>
 
-        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d14607e2986">You can use
+        <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="concept_kgs_msy_yw__d14669e2996">You can use
                               data preview to determine the information and field names that are
                               included in the fileInfo field.</span> The information and field names
                         can differ based on the origin system.</div>
@@ -239,11 +239,11 @@
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d62337e326">Origin</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d62937e326">Origin</th>
 
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d62337e329">File Name Field Path</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d62937e329">File Name Field Path</th>
 
-                            <th class="entry" valign="top" width="33.33333333333333%" id="d62337e332">Base Expression</th>
+                            <th class="entry" valign="top" width="33.33333333333333%" id="d62937e332">Base Expression</th>
 
                         </tr>
 
@@ -251,34 +251,34 @@
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62337e326 ">Directory</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62937e326 ">Directory</td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62337e329 ">/fileInfo/filename</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62937e329 ">/fileInfo/filename</td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62337e332 ">${record:value('/fileInfo/filename')}</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62337e326 ">SFTP/FTP</td>
-
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62337e329 ">/fileInfo/filename</td>
-
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62337e332 ">${record:value('/fileInfo/filename')}</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62937e332 ">${record:value('/fileInfo/filename')}</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62337e326 ">Amazon S3</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62937e326 ">SFTP/FTP</td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62337e329 ">/fileInfo/objectKey</td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62937e329 ">/fileInfo/filename</td>
 
-                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62337e332 ">${record:value('/fileInfo/objectKey')}* </td>
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62937e332 ">${record:value('/fileInfo/filename')}</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" colspan="3" valign="top" headers="d62337e326 d62337e329 d62337e332 ">* Note that the objectKey field can
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62937e326 ">Amazon S3</td>
+
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62937e329 ">/fileInfo/objectKey</td>
+
+                            <td class="entry" valign="top" width="33.33333333333333%" headers="d62937e332 ">${record:value('/fileInfo/objectKey')}* </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" colspan="3" valign="top" headers="d62937e326 d62937e329 d62937e332 ">* Note that the objectKey field can
                                 include a field path as well as a file name. Use this expression
                                 when the objectKey is just a file name.</td>
 

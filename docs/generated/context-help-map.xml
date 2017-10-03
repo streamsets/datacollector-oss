@@ -14,14 +14,18 @@
                path="Getting_Started/GettingStarted_Title.html#concept_yth_5n5_jq"/>
    <appContext helpID="task_r3q_fnx_pr"
                path="Getting_Started/GettingStarted_Title.html#task_r3q_fnx_pr"/>
+   <appContext helpID="concept_wc5_ysp_1w"
+               path="Getting_Started/GettingStarted_Title.html#concept_wc5_ysp_1w"/>
    <appContext helpID="concept_hz3_5fk_fy"
                path="WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy"/>
+   <appContext helpID="concept_rrq_v3k_kbb"
+               path="WhatsNew/WhatsNew_Title.html#concept_rrq_v3k_kbb"/>
    <appContext helpID="concept_rr2_mbz_w1b"
                path="WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="WhatsNew/WhatsNew_Title.html#unique_95713685"/>
+               path="WhatsNew/WhatsNew_Title.html#unique_1140602391"/>
    <appContext helpID="concept_rr2_mbz_w1b"
-               path="WhatsNew/WhatsNew_Title.html#unique_1010667802"/>
+               path="WhatsNew/WhatsNew_Title.html#unique_315305848"/>
    <appContext helpID="concept_avm_x1y_h1b"
                path="WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b"/>
    <appContext helpID="concept_bsw_cky_11b"
@@ -84,7 +88,7 @@
    <appContext helpID="task_opg_yrm_25"
                path="Installation/CMInstall-Overview.html#task_opg_yrm_25"/>
    <appContext helpID="task_opg_yrm_25"
-               path="Installation/CMInstall-Overview.html#unique_958890633"/>
+               path="Installation/CMInstall-Overview.html#unique_233348351"/>
    <appContext helpID="task_u1v_nkt_25"
                path="Installation/CMInstall-Overview.html#task_u1v_nkt_25"/>
    <appContext helpID="task_zn4_qrn_25"
@@ -99,6 +103,8 @@
                path="Installation/MapR-Prerequisites.html#concept_sfq_jyp_xz"/>
    <appContext helpID="concept_umx_15q_xz"
                path="Installation/MapR-Prerequisites.html#concept_umx_15q_xz"/>
+   <appContext helpID="concept_kpp_4zp_fbb"
+               path="Installation/MapR-Prerequisites.html#concept_kpp_4zp_fbb"/>
    <appContext helpID="concept_p2w_x3z_yx"
                path="Installation/CreateAnotherDC.html#concept_p2w_x3z_yx"/>
    <appContext helpID="concept_fc3_vly_py"
@@ -875,6 +881,32 @@
    <appContext helpID="concept_tr1_spd_sr"
                path="Origins/KConsumer.html#concept_tr1_spd_sr"/>
    <appContext helpID="task_npx_xgf_vq" path="Origins/KConsumer.html#task_npx_xgf_vq"/>
+   <appContext helpID="concept_ccs_fn4_x1b"
+               path="Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b"/>
+   <appContext helpID="concept_zlc_ppn_js"
+               path="Origins/KafkaMultiConsumer.html#concept_zlc_ppn_js"/>
+   <appContext helpID="concept_hdc_fvn_sx"
+               path="Origins/KafkaMultiConsumer.html#concept_hdc_fvn_sx"/>
+   <appContext helpID="concept_ifs_wtm_3z"
+               path="Origins/KafkaMultiConsumer.html#concept_ifs_wtm_3z"/>
+   <appContext helpID="concept_d5f_n2g_vq"
+               path="Origins/KafkaMultiConsumer.html#concept_d5f_n2g_vq"/>
+   <appContext helpID="concept_tlj_3g1_2z"
+               path="Origins/KafkaMultiConsumer.html#concept_tlj_3g1_2z"/>
+   <appContext helpID="concept_yg3_k31_t5"
+               path="Origins/KafkaMultiConsumer.html#concept_yg3_k31_t5"/>
+   <appContext helpID="concept_ann_l2b_t5"
+               path="Origins/KafkaMultiConsumer.html#concept_ann_l2b_t5"/>
+   <appContext helpID="concept_w4j_3vb_t5"
+               path="Origins/KafkaMultiConsumer.html#concept_w4j_3vb_t5"/>
+   <appContext helpID="concept_qzq_jrk_55"
+               path="Origins/KafkaMultiConsumer.html#concept_qzq_jrk_55"/>
+   <appContext helpID="concept_xgs_nlc_wr"
+               path="Origins/KafkaMultiConsumer.html#concept_xgs_nlc_wr"/>
+   <appContext helpID="concept_tr1_spd_sr"
+               path="Origins/KafkaMultiConsumer.html#concept_tr1_spd_sr"/>
+   <appContext helpID="task_ost_3n4_x1b"
+               path="Origins/KafkaMultiConsumer.html#task_ost_3n4_x1b"/>
    <appContext helpID="concept_anh_4y3_yr"
                path="Origins/KinConsumer.html#concept_anh_4y3_yr"/>
    <appContext helpID="concept_jhh_psb_mz"
@@ -1477,6 +1509,8 @@
                path="Processors/KuduLookup.html#concept_a1x_3wl_p1b"/>
    <appContext helpID="concept_cs4_vj1_s1b"
                path="Processors/KuduLookup.html#concept_cs4_vj1_s1b"/>
+   <appContext helpID="concept_jrc_xl3_jbb"
+               path="Processors/KuduLookup.html#concept_jrc_xl3_jbb"/>
    <appContext helpID="concept_vnx_h4r_p1b"
                path="Processors/KuduLookup.html#concept_vnx_h4r_p1b"/>
    <appContext helpID="concept_eqf_dh3_x1b"
@@ -1667,6 +1701,18 @@
    <appContext helpID="concept_dbh_2xp_yr"
                path="Destinations/Flume.html#concept_dbh_2xp_yr"/>
    <appContext helpID="task_vft_g5p_yr" path="Destinations/Flume.html#task_vft_g5p_yr"/>
+   <appContext helpID="concept_hj4_brk_dbb"
+               path="Destinations/BigQuery.html#concept_hj4_brk_dbb"/>
+   <appContext helpID="concept_edg_kwm_3bb"
+               path="Destinations/BigQuery.html#concept_edg_kwm_3bb"/>
+   <appContext helpID="concept_ym2_mww_hbb"
+               path="Destinations/BigQuery.html#concept_ym2_mww_hbb"/>
+   <appContext helpID="concept_ajg_dxw_hbb"
+               path="Destinations/BigQuery.html#concept_ajg_dxw_hbb"/>
+   <appContext helpID="concept_ecs_3xw_hbb"
+               path="Destinations/BigQuery.html#concept_ecs_3xw_hbb"/>
+   <appContext helpID="task_gxn_dsk_dbb"
+               path="Destinations/BigQuery.html#task_gxn_dsk_dbb"/>
    <appContext helpID="concept_pl5_tmq_tx"
                path="Destinations/Bigtable.html#concept_pl5_tmq_tx"/>
    <appContext helpID="concept_f5v_11l_1y"
@@ -1849,6 +1895,8 @@
                path="Destinations/Kudu.html#concept_chy_xxg_4v"/>
    <appContext helpID="concept_dvg_vvj_wx"
                path="Destinations/Kudu.html#concept_dvg_vvj_wx"/>
+   <appContext helpID="concept_gjj_dg3_jbb"
+               path="Destinations/Kudu.html#concept_gjj_dg3_jbb"/>
    <appContext helpID="task_c4x_tmh_4v" path="Destinations/Kudu.html#task_c4x_tmh_4v"/>
    <appContext helpID="concept_zvc_bv5_1r"
                path="Destinations/LocalFS.html#concept_zvc_bv5_1r"/>
@@ -2491,8 +2539,6 @@
                path="Pipeline_Monitoring/PipelineMonitoring_title.html#task_cj2_xbw_rr"/>
    <appContext helpID="concept_o3l_dtr_5q"
                path="Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q"/>
-   <appContext helpID="concept_wc5_ysp_1w"
-               path="Pipeline_Maintenance/PipelineMaintenance_title.html#concept_wc5_ysp_1w"/>
    <appContext helpID="concept_s4p_ns5_nz"
                path="Pipeline_Maintenance/PipelineMaintenance_title.html#concept_s4p_ns5_nz"/>
    <appContext helpID="concept_ijz_5s5_nz"
@@ -2640,7 +2686,7 @@
    <appContext helpID="concept_a3w_z3m_js"
                path="Troubleshooting/Troubleshooting_title.html#concept_a3w_z3m_js"/>
    <appContext helpID="concept_a3w_z3m_js"
-               path="Troubleshooting/Troubleshooting_title.html#unique_344794924"/>
+               path="Troubleshooting/Troubleshooting_title.html#unique_1754135012"/>
    <appContext helpID="concept_rp1_ghd_zs"
                path="Troubleshooting/Troubleshooting_title.html#concept_rp1_ghd_zs"/>
    <appContext helpID="concept_mth_cjm_js"
