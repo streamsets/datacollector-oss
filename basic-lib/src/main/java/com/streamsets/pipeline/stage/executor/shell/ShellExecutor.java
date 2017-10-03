@@ -132,6 +132,7 @@ public class ShellExecutor extends BaseExecutor {
       ImmutableList.Builder<String> commandBuilder = new ImmutableList.Builder<>();
       if(impersonationMode != ImpersonationMode.DISABLED) {
         commandBuilder.add(sudo);
+        commandBuilder.add("-E");
         commandBuilder.add("-u");
         commandBuilder.add(user);
       }
