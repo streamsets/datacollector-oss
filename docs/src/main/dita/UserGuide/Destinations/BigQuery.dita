@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hj4_brk_dbb">
+ <title>Google BigQuery</title>
+ <shortdesc>The Google BigQuery destination streams data into Google BigQuery. </shortdesc>
+ <conbody>
+        <p><indexterm>Google BigQuery
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Google
+                    BigQuery</indexterm></indexterm>When you configure the destination, you define
+            the existing BigQuery dataset and table to stream data into. The destination streams
+            each record into a row in a BigQuery table. You can optionally define an expression to
+            specify the insert ID to insert or update. The insert ID is a unique ID for each row. If
+            you do not specify an insert ID, the destination inserts each record into a new row. </p>
+        <p>The destination maps fields from records to BigQuery columns based on matching names and
+            compatible data types. You can configure the destination to ignore invalid columns when
+            the destination cannot map a field to an existing BigQuery column. You can also
+            configure the table cache size for the destination.</p>
+        <p>You also define the project and credentials provider to use to connect to Google
+            BigQuery. The destination can retrieve credentials from the Google Application Default
+            Credentials or from a Google Cloud service account credentials file.</p>
+        <p>For more information about streaming data into Google BigQuery, see the <xref
+                href="https://cloud.google.com/bigquery/streaming-data-into-bigquery" format="html"
+                scope="external">Google BigQuery documentation</xref>.</p>
+    </conbody>
+</concept>

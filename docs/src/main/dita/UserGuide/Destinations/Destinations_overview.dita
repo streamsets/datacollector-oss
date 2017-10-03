@@ -40,6 +40,8 @@
           an Elasticsearch cluster.</li>
         <li><xref href="Flume.dita#concept_pzn_hl4_yr">Flume</xref> - Writes data to a Flume
           source.</li>
+        <li><xref href="BigQuery.dita#concept_hj4_brk_dbb">Google BigQuery</xref> - Streams data
+          into Google BigQuery.</li>
         <li><xref href="Bigtable.dita#concept_pl5_tmq_tx">Google Bigtable</xref> - Writes data to
           Google Cloud Bigtable.</li>
         <li><xref href="PubSubPublisher.dita#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</xref> -

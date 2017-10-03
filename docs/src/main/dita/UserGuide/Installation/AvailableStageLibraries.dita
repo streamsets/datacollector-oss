@@ -501,6 +501,7 @@
                             <entry>For Google Cloud.<p>Includes: <ul id="ul_dzd_5rq_v1b">
                                         <li>Google BigQuery origin</li>
                                         <li>Google Pub/Sub Subscriber origin</li>
+                                        <li>Google BigQuery destination</li>
                                         <li>Google Pub/Sub Publisher destination</li>
                                     </ul></p></entry>
                         </row>

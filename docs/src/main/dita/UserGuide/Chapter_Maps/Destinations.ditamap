@@ -107,6 +107,17 @@
    <topicref href="../Destinations/Flume-DataFormats.dita"/>
    <topicref href="../Destinations/Flume-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/BigQuery.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/BigQuery-Datatypes.dita"/>
+   <topicref href="../Destinations/BigQuery-Credentials.dita">
+    <topicref href="../Destinations/BigQuery-CredentialsDefault.dita"/>
+    <topicref href="../Destinations/BigQuery-CredentialsFile.dita"/>
+   </topicref>
+   <topicref href="../Destinations/BigQuery-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/Bigtable.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

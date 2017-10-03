@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="task_gxn_dsk_dbb">
+    <title>Configuring a Google BigQuery Destination</title>
+    <taskbody>
+        <context>
+            <p><indexterm>Google BigQuery
+                destination<indexterm>configuring</indexterm></indexterm>Configure a Google BigQuery
+                destination to stream data into Google BigQuery.</p>
+        </context>
+        <steps>
+            <step>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_yxz_pvs_6f">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Name">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Desc">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-ReqFields">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Precond">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-1stStep-Error">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>BigQuery</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_opv_k2n_3bb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>BigQuery Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Dataset</entry>
+                                    <entry>BigQuery dataset to write to. <p>Enter the name of an
+                                            existing dataset or an expression that evaluates to the
+                                            name of an existing dataset. For example, if the dataset
+                                            name is stored in the 'dataset' record attribute, enter
+                                            the following
+                                            expression:<codeblock>${record:attribute('dataset')}</codeblock></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Table Name</entry>
+                                    <entry>Name of the BigQuery table to write to.<p>Enter the name
+                                            of an existing table or an expression that evaluates to
+                                            the name of an existing table. For example, if the table
+                                            name is stored in the 'table' record attribute, enter
+                                            the following
+                                            expression:<codeblock>${record:attribute('table')}</codeblock></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Insert ID Expression</entry>
+                                    <entry>Expression that evaluates to the BigQuery insert ID to
+                                        insert or update. The insert ID is a unique ID for each row.
+                                        Leave blank to insert each record into a new row.<p>For more
+                                            information about the insert ID property used to stream
+                                            data into BigQuery, see the <xref
+                                                href="https://cloud.google.com/bigquery/streaming-data-into-bigquery#dataconsistency"
+                                                format="html" scope="external">Google BigQuery
+                                                documentation</xref>.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Ignore Invalid Column</entry>
+                                    <entry>Ignores invalid columns.<p>If selected and the
+                                            destination encounters a field path that cannot be
+                                            mapped to a BigQuery column with the same name and a
+                                            compatible data type, the destination ignores the
+                                            invalid column and writes the remaining fields in the
+                                            record to BigQuery. If cleared and the destination
+                                            encounters an invalid column, the record is sent to the
+                                            stage for error handling.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Table Cache Size</entry>
+                                    <entry>Maximum number of table ID entries to cache
+                                            locally.<p>When the destination evaluates the dataset
+                                            and table name to write to, it checks that the table ID
+                                            exists in BigQuery and then caches the table ID. When
+                                            possible, the destination uses the cache to avoid
+                                            unnecessary retrievals from BigQuery. When the cache
+                                            reaches the maximum size, the oldest cached entries are
+                                            evicted to allow for new data.</p><p>Default is -1, an
+                                            unlimited cache size. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>Credentials</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ffd_w3p_v1b">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Project ID</entry>
+                                    <entry>Google BigQuery project ID to connect to.</entry>
+                                </row>
+                                <row>
+                                    <entry>Credentials Provider <xref
+                                            href="BigQuery-Credentials.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_d3x_vhk_lz"
+                                        /></xref></entry>
+                                    <entry>Credentials provider to use to connect to Google
+                                            BigQuery:<ul id="ul_tmm_2rp_v1b">
+                                            <li>Default credentials provider</li>
+                                            <li>Service account credentials file (JSON) </li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Credentials File Path (JSON)</entry>
+                                    <entry>When using a Google Cloud service account credentials
+                                        file, path to the file that the destination uses to connect
+                                        to Google BigQuery. The credentials file must be a JSON
+                                            file.<p>Enter a path relative to the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> resources directory, <codeph>$SDC_RESOURCES</codeph>,
+                                            or enter an absolute path. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

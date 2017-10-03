@@ -164,6 +164,10 @@
               <entry/>
             </row>
             <row>
+              <entry>Google BigQuery</entry>
+              <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+            </row>
+            <row>
               <entry>Google Bigtable</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>
