@@ -340,6 +340,10 @@ public class StringEL {
       @ElParam("list") List<Field> list,
       @ElParam("separator") String separator
   ) {
+    if(list == null) {
+      return "";
+    }
+
     List<String> listOfStrings = list.stream()
         .map(field -> field.getValue() == null ? "null" : field.getValueAsString())
         .collect(Collectors.toList());
@@ -356,6 +360,10 @@ public class StringEL {
       @ElParam("list") List<Field> list,
       @ElParam("separator") String separator
   ) {
+    if(list == null) {
+      return "";
+    }
+
     List<String> listOfStrings = list.stream()
         .map(field -> field.getValue() == null ? null : field.getValueAsString())
         .collect(Collectors.toList());
@@ -372,6 +380,10 @@ public class StringEL {
       @ElParam("separator") String separator,
       @ElParam("keyValueSeparator") String kvSeparator
   ) {
+    if(map == null) {
+      return "";
+    }
+
     Map<String, String> mapOfStrings = map.entrySet().stream()
         .collect(Collectors.toMap(
             Map.Entry::getKey,

@@ -375,6 +375,7 @@ public class TestStringEL {
     when(record.get("/list")).thenReturn(Field.create(listField));
     RecordEL.setRecordInContext(variables, record);
     Assert.assertEquals("1,2,null,4", eval.eval(variables, "${list:join(record:value('/list'), ',')}", String.class));
+    Assert.assertEquals("", eval.eval(variables, "${list:join(record:value('/not-there'), ',')}", String.class));
   }
 
   @Test
@@ -387,6 +388,7 @@ public class TestStringEL {
     when(record.get("/list")).thenReturn(Field.create(listField));
     RecordEL.setRecordInContext(variables, record);
     Assert.assertEquals("1,2,4", eval.eval(variables, "${list:joinSkipNulls(record:value('/list'), ',')}", String.class));
+    Assert.assertEquals("", eval.eval(variables, "${list:joinSkipNulls(record:value('/not-there'), ',')}", String.class));
   }
 
   @Test
@@ -407,6 +409,8 @@ public class TestStringEL {
     Assert.assertEquals(
         "a=1,b=null,c=xyz",
         eval.eval(variables, "${map:join(record:value('/map'), ',', '=')}", String.class)
+    );
+    Assert.assertEquals("", eval.eval(variables, "${map:join(record:value('/not-there'), ',', '=')}", String.class)
     );
   }
 
