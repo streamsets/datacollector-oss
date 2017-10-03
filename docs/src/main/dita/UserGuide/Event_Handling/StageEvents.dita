@@ -39,9 +39,21 @@
                     </thead>
                     <tbody>
                         <row>
-                            <entry>Directory origin</entry>
+                            <entry>Amazon S3 origin</entry>
                             <entry>
                                 <ul id="ul_opf_5ck_px">
+                                    <li>Completes processing all available objects and the
+                                        configured batch wait time has elapsed.</li>
+                                </ul>
+                                <p>For more information, see <xref
+                                        href="../Origins/AmazonS3-EventGeneration.dita#concept_ttg_vgn_qx"
+                                        >"Event Generation" for the Amazon S3 origin</xref>. </p>
+                            </entry>
+                        </row>
+                        <row>
+                            <entry>Directory origin</entry>
+                            <entry>
+                                <ul id="ul_hyl_sy4_jbb">
                                     <li>Starts processing a file.</li>
                                     <li>Completes processing a file. </li>
                                     <li>Completes processing all available files and the configured

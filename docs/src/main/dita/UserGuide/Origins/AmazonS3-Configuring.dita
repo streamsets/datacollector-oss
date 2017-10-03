@@ -23,9 +23,46 @@
         <context><indexterm>Amazon S3 origin<indexterm>configuring</indexterm></indexterm>Configure
             an Amazon S3 origin to read data from objects in Amazon S3.</context>
         <steps id="steps_tvn_b5v_yq">
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
-                <cmd/>
+            <step>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ac1_hss_5x">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Name">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Desc">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Produce Events <xref
+                                            href="AmazonS3-EventGeneration.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_plp_tp2_px"/></xref></entry>
+                                    <entry
+                                        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-entry-Events"
+                                    />
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/O-1stStep-Error">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
            
             <step>
@@ -287,6 +324,10 @@
                             <tbody>
                                 <row><entry>Connection Timeout</entry><entry>Seconds to wait for a response before closing the connection. <p>Default is 10
                                         seconds.</p></entry></row>
+                                <row>
+                                    <entry>Socket Timeout</entry>
+                                    <entry>Seconds to wait for a response to a query.</entry>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/row-UseProxy">
                                     <entry/>

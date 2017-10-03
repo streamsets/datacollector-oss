@@ -13,21 +13,22 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_byp_dgv_s1b">
+<concept id="concept_vtn_ty4_jbb">
  <title>Event Generation</title>
- <conbody>
-        <p><indexterm>SQL Server CDC Client origin<indexterm>event
-                generation</indexterm></indexterm><indexterm>event generation<indexterm>SQL Server
-                    CDC Client origin</indexterm></indexterm>The SQL Server CDC Client origin can
-            generate events that you can use in an event stream. When you enable event generation,
-            the origin generates an event when it completes processing the data returned by the
-            specified queries for all tables. </p>
-        <p>SQL Server CDC Client events can be used in any logical way. For example: <ul
-                id="ul_j5y_bkv_s1b">
+    <conbody>
+        <p><indexterm>Amazon S3 origin<indexterm>event
+                generation</indexterm></indexterm><indexterm>the event framework<indexterm>Amazon S3
+                    origin event generation</indexterm></indexterm>The Amazon S3 origin can generate
+            events when it completes processing all available data and the configured batch wait
+            time has elapsed.</p>
+        <p>Amazon S3 events can be used in any logical way. For example: <ul id="ul_v2q_qdp_jbb">
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li-UseCase-PipelineFinisher"/>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"
+                />
             </ul></p>
         <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
             /></p>
- </conbody>
+    </conbody>
 </concept>

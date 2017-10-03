@@ -1174,8 +1174,9 @@ web-0011.log</codeblock></dd>
                         applications after the Hadoop FS, MapR FS, or Amazon S3 destination closes
                         files.</ph></p>
             <p>
-                  <draft-comment author="Loretta">Event Generation topic.  Hadoop FS and MapR FS use
-                        ph and ul. Local FS uses ph and some bullets in the list.</draft-comment>
+                  <draft-comment author="Loretta">Event Generation topic. Hadoop FS uses the whole
+                        ul. Local FS uses ph and some bullets in the list. MapR FS uses all bullets
+                        in the list. Other </draft-comment>
             </p>
             <p><ph id="D-ph-EventGen1">can generate events that you can use in an event stream. When
                         you enable event generation, the destination generates event records each
@@ -1206,6 +1207,25 @@ web-0011.log</codeblock></dd>
                                     />.</p></li>
                   </ul>
             </p>
+            <p>
+                  <draft-comment author="Loretta">Used by most origins that generate no-more-data in
+                        the Event Generation topic.  Including S3, Directory, JDBC multitable, SQL
+                        Server origins. But Salesforce and JDBC Query have their own
+                        versions.</draft-comment>
+            </p>
+            <p>
+                  <ul>
+                        <li id="li-UseCase-PipelineFinisher">With the Pipeline Finisher executor to
+                              stop the pipeline and transition the pipeline to a Finished state when
+                              the origin completes processing available data.<p>When you restart a
+                                    pipeline stopped by the Pipeline Finisher executor, the origin
+                                    continues processing from the last-saved offset unless you reset
+                                    the origin.</p><p>For an example, see <xref
+                                          href="../Event_Handling/CaseStudy-StopPipeline.dita#concept_kff_ykv_lz"
+                                    />.</p></li>
+                  </ul>
+            </p>
+            <p/>
             <p>
                   <draft-comment author="Loretta">Event Generation topic - Used for JDBC Query and
                         Salesforce, JDBC Multitable uses the mini ph.</draft-comment>
@@ -2979,6 +2999,7 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             </p>
             <p id="p-PFinisher-nomoredataOrigins">The following origins generate no-more-data
                         events:<ul id="ul_l51_mvd_nx">
+                        <li>Amazon S3 origin</li>
                         <li>Directory origin</li>
                         <li>JDBC Query Consumer origin</li>
                         <li>JDBC Multitable Consumer origin</li>

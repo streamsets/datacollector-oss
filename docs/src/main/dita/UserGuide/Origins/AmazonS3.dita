@@ -35,5 +35,7 @@
         <p>You can configure the origin to decrypt data stored on Amazon S3 with server-side
             encryption and customer-provided encryption keys. You can optionally use a proxy to
             connect to Amazon S3.</p>
+        <p
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventHandling-overview"/>
  </conbody>
 </concept>

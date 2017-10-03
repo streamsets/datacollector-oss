@@ -22,15 +22,11 @@
             generate events that you can use in an event stream. When you enable event generation,
             the origin generates an event when it completes processing the data returned by the
             specified queries for all tables. </p>
-        <p>SQL Server Change Tracking  events can be used in any logical way. For example: <ul
+        <p>SQL Server Change Tracking events can be used in any logical way. For example: <ul
                 id="ul_j5y_bkv_s1b">
-                <li>With the Pipeline Finisher executor to stop the pipeline and transition the
-                    pipeline to a Finished state when the origin completes processing available
-                        data.<p>When you restart a pipeline stopped by the Pipeline Finisher
-                        executor, the origin continues processing from the last-saved offsets unless
-                        you reset the origin.</p><p>For an example, see <xref
-                            href="../Event_Handling/CaseStudy-StopPipeline.dita#concept_kff_ykv_lz"
-                        />.</p></li>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li-UseCase-PipelineFinisher"
+                />
             </ul></p>
         <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
             /></p>

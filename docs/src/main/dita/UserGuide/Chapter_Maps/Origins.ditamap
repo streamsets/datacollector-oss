@@ -38,6 +38,9 @@
    <topicref href="../Origins/AmazonS3-ReadOrder.dita"/>
    <topicref href="../Origins/AmazonS3-BufferLimit.dita"/>
    <topicref href="../Origins/AmazonS3-SSE.dita"/>
+   <topicref href="../Origins/AmazonS3-EventGeneration.dita">
+    <topicref href="../Origins/AmazonS3-EventRecords.dita"/>
+   </topicref>
    <topicref href="../Origins/AmazonS3-DataFormat.dita"/>
    <topicref href="../Origins/AmazonS3-Configuring.dita"/>
   </topicref>

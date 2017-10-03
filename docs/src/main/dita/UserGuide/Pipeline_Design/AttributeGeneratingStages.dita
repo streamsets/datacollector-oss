@@ -44,7 +44,12 @@
                                 object metadata in record header attributes. <xref
                                     href="../Origins/AmazonS3-RecordHeaderAttrs-ObjectMeta.dita#concept_inh_qjx_yw">
                                     <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                        id="image_kjt_3m4_2z"/></xref></entry>
+                                        id="image_kjt_3m4_2z"/></xref><p>Includes event header
+                                    attributes when generating events. <xref
+                                        href="../Origins/AmazonS3-EventRecords.dita#concept_z2k_b3n_qx">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            id="image_v4v_lz4_jbb"/></xref>
+                                </p></entry>
                         </row>
                         <row>
                             <entry>Directory origin</entry>

@@ -26,21 +26,15 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-ph-EventGen1"
             /> It can also generate events when it completes processing all available data and the
             configured batch wait time has elapsed.</p>
-        <p>Directory can be used in any logical way. For example: <ul>
+        <p>Directory events can be used in any logical way. For example: <ul>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li-UseCase-PipelineFinisher"/>
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"
                 />
             </ul><ul id="ul_xcz_dx4_vz">
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"/>
-                <li>With the Pipeline Finisher executor to stop the pipeline and transition the
-                    pipeline to a Finished state after the origin completes processing available
-                    data and the configured batch wait time has elapsed.<p>When you restart a
-                        pipeline stopped by the Pipeline Finisher executor, the origin continues
-                        processing from the last-saved offset unless you reset the origin.
-                        </p><p>For an example of how to use the Pipeline Finisher, see <xref
-                            href="../Event_Handling/CaseStudy-StopPipeline.dita#concept_kff_ykv_lz"
-                        />.</p></li>
             </ul></p>
      <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
             /></p>

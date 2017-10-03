@@ -28,21 +28,17 @@
             /> queries for all tables.</p>
         <p>JDBC Multitable Consumer events can be used in any logical way. For example: <ul
                 id="ul_xjk_kf1_4z">
-                <li>With the Pipeline Finisher executor to stop the pipeline and transition the
-                    pipeline to a Finished state when the origin completes processing available
-                        data.<p>When you restart a pipeline stopped by the Pipeline Finisher
-                        executor, the origin continues processing from the last-saved offset unless
-                        you reset the origin.</p><p>For an example, see <xref
-                            href="../Event_Handling/CaseStudy-StopPipeline.dita#concept_kff_ykv_lz"
-                        />.</p></li> <li
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"/>
-               
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li-UseCase-PipelineFinisher"/>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-Email"
+                />
             </ul><ul
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EventGen-UseCase-ul"
                 id="ul_fjm_fhs_kz">
                 <li/>
             </ul></p>
         <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
-        /></p>
+            /></p>
     </conbody>
 </concept>

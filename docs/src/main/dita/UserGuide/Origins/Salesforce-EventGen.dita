@@ -27,15 +27,16 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EventGen-PipeFin-Ph1"
             /></p>
         <p>Salesforce events can be used in any logical way. For example: <ul id="ul_znq_hf1_4z">
-                <li>With the Pipeline Finisher executor to stop the pipeline and transition the
-                    pipeline to a Finished state when the origin completes processing available
-                        data.<p>When you restart a pipeline stopped by the Pipeline Finisher
-                        executor, the origin processes data based on how you configured the origin.
-                        For example, if you configure the origin to repeat an incremental query, the
-                        origin saves the offset when the executor stops the pipeline. When it
-                        restarts, the origin continues processing from the last-saved offset. If you
-                        configure the origin to repeat a full query, when you restart the pipeline,
-                        the origin uses the initial offset.</p><p>For an example, see <xref
+                <li id="li-UseCase-PFinisher-IncrementalOrigins">With the Pipeline Finisher executor
+                    to stop the pipeline and transition the pipeline to a Finished state when the
+                    origin completes processing available data.<p>When you restart a pipeline
+                        stopped by the Pipeline Finisher executor, the origin processes data based
+                        on how you configured the origin. For example, if you configure the origin
+                        to repeat an incremental query, the origin saves the offset when the
+                        executor stops the pipeline. When it restarts, the origin continues
+                        processing from the last-saved offset. If you configure the origin to repeat
+                        a full query, when you restart the pipeline, the origin uses the initial
+                        offset.</p><p>For an example, see <xref
                             href="../Event_Handling/CaseStudy-StopPipeline.dita#concept_kff_ykv_lz"
                         />.</p></li>
                 <li
@@ -46,6 +47,6 @@
                 <li/>
             </ul></p>
         <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
-        /></p>
+            /></p>
     </conbody>
 </concept>

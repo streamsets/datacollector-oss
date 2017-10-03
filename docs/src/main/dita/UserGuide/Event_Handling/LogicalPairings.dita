@@ -77,9 +77,19 @@
                         </thead>
                         <tbody>
                             <row>
-                                <entry>Directory</entry>
+                                <entry>Amazon S3</entry>
                                 <entry>
                                     <ul id="ul_wvy_h4p_1y">
+                                        <li>Pipeline Finisher executor to stop the pipeline after
+                                            processing all available files.</li>
+                                        <li>Any destination for event storage.</li>
+                                    </ul>
+                                </entry>
+                            </row>
+                            <row>
+                                <entry>Directory</entry>
+                                <entry>
+                                    <ul id="ul_fqy_bz4_jbb">
                                         <li>Email executor to send email each time the origin starts
                                             or completes processing a file. </li>
                                         <li>Pipeline Finisher executor to stop the pipeline after
