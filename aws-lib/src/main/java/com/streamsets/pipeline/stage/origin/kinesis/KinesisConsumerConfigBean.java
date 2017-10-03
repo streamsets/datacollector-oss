@@ -56,6 +56,20 @@ public class KinesisConsumerConfigBean extends KinesisConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.NUMBER,
+      min = 0,
+      label = "Initial Timestamp",
+      defaultValue = "${time:now()}",
+      description = "Timestamp in milliseconds to set when using AT_TIMESTAMP for the initial position in a stream",
+      dependsOn = "initialPositionInStream",
+      triggeredByValue = "AT_TIMESTAMP",
+      displayPosition = 45,
+      group = "#0"
+  )
+  public long initialTimestamp;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "JSON",
       label = "Data Format",

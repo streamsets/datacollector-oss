@@ -28,6 +28,7 @@ import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
 import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
 import com.amazonaws.services.kinesis.clientlibrary.types.UserRecord;
@@ -52,6 +53,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -191,6 +193,10 @@ public class KinesisSource extends BasePushSource {
         .withIdleTimeBetweenReadsInMillis(conf.idleTimeBetweenReads)
         .withInitialPositionInStream(conf.initialPositionInStream)
         .withKinesisClientConfig(clientConfiguration);
+
+    if (conf.initialPositionInStream == InitialPositionInStream.AT_TIMESTAMP) {
+      kclConfig.withTimestampAtInitialPositionInStream(new Date(conf.initialTimestamp));
+    }
 
     if (conf.region == AWSRegions.OTHER) {
       kclConfig.withKinesisEndpoint(conf.endpoint);
