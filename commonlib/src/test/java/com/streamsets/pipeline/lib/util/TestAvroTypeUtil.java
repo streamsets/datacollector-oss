@@ -265,6 +265,20 @@ public class TestAvroTypeUtil {
   }
 
   @Test
+  public void testCreateUnionWithNullAndLogicalType() throws Exception {
+    String schema = "[\"null\", {\"name\": \"name\", \"type\": \"int\", \"logicalType\": \"date\"}]";
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Field field = AvroTypeUtil.avroToSdcField(record, avroSchema, null);
+    Assert.assertEquals(Field.Type.DATE, field.getType());
+    Assert.assertEquals(null, field.getValue());
+
+    record.set(field);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, Collections.emptyMap());
+    Assert.assertNull(avroObject);
+  }
+
+  @Test
   public void testToAndFromAvroDate() throws Exception {
     String schema = "{\"name\": \"name\", \"type\": \"int\", \"logicalType\": \"date\"}";
 

@@ -149,7 +149,7 @@ public class AvroTypeUtil {
 
       // Special case for unions of [null, actual type]
       if(unionTypes.size() == 2 && unionTypes.get(0).getType() == Schema.Type.NULL && value == null) {
-        return Field.create(getFieldType(unionTypes.get(1).getType()), null);
+        return Field.create(getFieldType(unionTypes.get(1)), null);
       }
 
       // By default try to resolve index of the union bby the data itself
@@ -158,7 +158,7 @@ public class AvroTypeUtil {
       record.getHeader().setAttribute(AVRO_UNION_TYPE_INDEX_PREFIX + fieldPath, String.valueOf(typeIndex));
     }
     if(value == null) {
-      return Field.create(getFieldType(schema.getType()), null);
+      return Field.create(getFieldType(schema), null);
     }
     Field f = null;
 
@@ -537,8 +537,26 @@ public class AvroTypeUtil {
     return obj;
   }
 
-  private static Field.Type getFieldType(Schema.Type type) {
-    switch(type) {
+  private static Field.Type getFieldType(Schema schema) {
+    String logicalType = schema.getProp(LOGICAL_TYPE);
+    if(logicalType != null && !logicalType.isEmpty()) {
+      switch (logicalType) {
+        case LOGICAL_TYPE_DECIMAL:
+          return Field.Type.DECIMAL;
+        case LOGICAL_TYPE_DATE:
+          return Field.Type.DATE;
+        case LOGICAL_TYPE_TIME_MILLIS:
+          return Field.Type.TIME;
+        case LOGICAL_TYPE_TIME_MICROS:
+          return Field.Type.LONG;
+        case LOGICAL_TYPE_TIMESTAMP_MILLIS:
+          return Field.Type.DATETIME;
+        case LOGICAL_TYPE_TIMESTAMP_MICROS:
+          return Field.Type.LONG;
+      }
+    }
+
+    switch(schema.getType()) {
       case ARRAY:
         return Field.Type.LIST;
       case BOOLEAN:
@@ -566,7 +584,7 @@ public class AvroTypeUtil {
       case STRING:
         return Field.Type.STRING;
       default:
-        throw new IllegalStateException(Utils.format("Unexpected schema type {}", type.getName()));
+        throw new IllegalStateException(Utils.format("Unexpected schema type {}", schema.getType().getName()));
     }
   }
 
