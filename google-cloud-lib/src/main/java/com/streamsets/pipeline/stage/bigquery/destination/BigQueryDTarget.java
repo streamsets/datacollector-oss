@@ -26,7 +26,7 @@ import com.streamsets.pipeline.stage.bigquery.lib.Groups;
 @StageDef(
     version = 2,
     label = "Google BigQuery",
-    description = "Executes a streaming insert to Google Big Query",
+    description = "Streams data into Google Big Query",
     icon="bigquery.png",
     producesEvents = false,
     upgrader = BigQueryTargetUpgrader.class,
