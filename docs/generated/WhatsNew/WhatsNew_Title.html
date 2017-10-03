@@ -3,7 +3,7 @@
   SYSTEM "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
 <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
-      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="What's New" /><meta name="abstract" content="" /><meta name="description" content="Data Collector version 2.7.1.1 includes the following new features and enhancements: Origins Amazon S3 origin enhancement - You can now specify a Connection Timeout advanced property. JDBC Multitable ..." /><meta name="DC.Relation" scheme="URI" content="../Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" /><meta name="DC.Relation" scheme="URI" content="../Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hz3_5fk_fy" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>What's New</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="What's New" /><meta name="abstract" content="" /><meta name="description" content="Data Collector version 2.7.2.0 includes the following new features: Origins New Kafka Multitopic Consumer origin - A new origin that reads messages from multiple Kafka topics. Creates multiple threads ..." /><meta name="DC.Relation" scheme="URI" content="../Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq" /><meta name="DC.Relation" scheme="URI" content="../Installation/Install_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hz3_5fk_fy" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>What's New</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
             
             var prefix = "../index.html";
             
@@ -39,6 +39,47 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_rrq_v3k_kbb">
+ <h2 class="title topictitle2">What's New in 2.7.2.0</h2>
+
+ <div class="body conbody">
+  <div class="p"><span class="ph">Data
+                  Collector</span>
+            version 2.7.2.0 includes the following new features:<dl class="dl">
+                
+                    <dt class="dt dlterm">Origins</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_rrq_v3k_kbb__ul_ibg_djk_kbb">
+                            <li class="li"><a class="xref" href="../Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.When you use an origin to read log data, you define the format of the log files to be read.">New Kafka Multitopic Consumer origin</a> - A new origin that
+                                reads messages from multiple Kafka topics. Creates multiple threads
+                                to enable parallel processing in a multithreaded pipeline. </li>
+
+                        </ul>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Destinations</dt>
+
+                    <dd class="dd">
+                        <ul class="ul" id="concept_rrq_v3k_kbb__ul_crw_frk_kbb">
+                            <li class="li"><a class="xref" href="../Destinations/BigQuery.html#concept_hj4_brk_dbb" title="The Google BigQuery destination streams data into Google BigQuery.">New
+                                    Google BigQuery destination</a> - A new destination that
+                                streams data into Google BigQuery.</li>
+
+                        </ul>
+
+                    </dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_rr2_mbz_w1b">
     <h2 class="title topictitle2">What's New in 2.7.1.1</h2>
 
@@ -92,7 +133,7 @@
     </div>
 
 </div>
-<div class="topic concept nested1" id="unique_95713685">
+<div class="topic concept nested1" id="unique_1140602391">
     <h2 class="title topictitle2">What's New in 2.7.1.0</h2>
 
     <div class="body conbody">
@@ -102,7 +143,7 @@
                 
                     <dt class="dt dlterm">Stage Libraries</dt>
 
-                    <dd class="dd">Data Collector includes the following upgraded stage library:<ul class="ul" id="unique_95713685__ul_s1w_cvr_1bb">
+                    <dd class="dd">Data Collector includes the following upgraded stage library:<ul class="ul" id="unique_1140602391__ul_s1w_cvr_1bb">
                             <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">Jython 2.7.1</a></li>
 
                         </ul>
@@ -113,7 +154,7 @@
                     <dt class="dt dlterm">Origins</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_95713685__ul_gr5_hvr_1bb">
+                        <ul class="ul" id="unique_1140602391__ul_gr5_hvr_1bb">
                             <li class="li"><a class="xref" href="../Origins/AzureEventHub.html#concept_c1z_15q_1bb">New
                                     Azure Event Hub Consumer origin</a> - A multithreaded origin
                                 that reads data from Microsoft Azure Event Hub.</li>
@@ -131,7 +172,7 @@
                     <dt class="dt dlterm">Processors</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_95713685__ul_rh5_3vr_1bb">
+                        <ul class="ul" id="unique_1140602391__ul_rh5_3vr_1bb">
                             <li class="li"><a class="xref" href="../Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">New Schema Generator processor</a> - A processor that
                                 generates a schema for each record and writes the schema to a record
                                 header attribute. </li>
@@ -145,7 +186,7 @@
                     <dt class="dt dlterm">Destinations</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_95713685__ul_s22_lvr_1bb">
+                        <ul class="ul" id="unique_1140602391__ul_s22_lvr_1bb">
                             <li class="li"><a class="xref" href="../Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">New Azure Event Hub Producer destination</a> - A destination
                                 that writes data to Microsoft Azure Event Hub.</li>
 
@@ -163,7 +204,7 @@
     </div>
 
 </div>
-<div class="topic concept nested1" id="unique_1010667802">
+<div class="topic concept nested1" id="unique_315305848">
  <h2 class="title topictitle2">What's New in 2.7.0.0</h2>
 
  <div class="body conbody">
@@ -178,7 +219,7 @@
                 <dd class="dd"><span class="ph">Data
                   Collector</span> now has a <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential
                         store</a> API that integrates with the following credential store
-                        systems:<ul class="ul" id="unique_1010667802__ul_vgr_3cz_w1b">
+                        systems:<ul class="ul" id="unique_315305848__ul_vgr_3cz_w1b">
                         <li class="li">Java keystore</li>
 
                         <li class="li">Hashicorp Vault</li>
@@ -196,7 +237,7 @@
                 </dd>
 
                 <dd class="dd">
-                    <div class="p">The following JDBC stages can use the new credential functions:<ul class="ul" id="unique_1010667802__ul_ezm_4cz_w1b">
+                    <div class="p">The following JDBC stages can use the new credential functions:<ul class="ul" id="unique_315305848__ul_ezm_4cz_w1b">
                             <li class="li">JDBC Multitable Consumer origin</li>
 
                             <li class="li">JDBC Query Consumer origin</li>
@@ -241,7 +282,7 @@
                 <dt class="dt dlterm">Stage Libraries</dt>
 
                 <dd class="dd">
-                    <div class="p">Data Collector includes the following new stage libraries:<ul class="ul" id="unique_1010667802__ul_cxp_d2z_w1b">
+                    <div class="p">Data Collector includes the following new stage libraries:<ul class="ul" id="unique_315305848__ul_cxp_d2z_w1b">
                             <li class="li">Apache Kudu version 1.4.0</li>
 
                             <li class="li">Cloudera CDH version 5.12 distribution of Hadoop</li>
@@ -265,7 +306,7 @@
                 <dt class="dt dlterm">Data Collector Configuration</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1010667802__ul_hc5_q2z_w1b">
+                    <ul class="ul" id="unique_315305848__ul_hc5_q2z_w1b">
                         <li class="li"><a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Access  Hashicorp Vault secrets</a> - The Data Collector Vault
                             integration now relies on Vault's App Role authentication backend.
                             Previously, Data Collector relied on Vault's App ID authentication
@@ -302,7 +343,7 @@
                 <dt class="dt dlterm">Dataflow Triggers</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1010667802__ul_fg2_gfz_w1b">
+                    <ul class="ul" id="unique_315305848__ul_fg2_gfz_w1b">
                         <li class="li"><a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_amg_2qr_t1b">Pipeline events</a> - The event framework now generates pipeline
                             lifecycle events when the pipeline stops and starts. You can pass each
                             pipeline event to an executor or to another pipeline for more complex
@@ -318,7 +359,7 @@
                 <dt class="dt dlterm">Origins</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1010667802__ul_tpp_sfz_w1b">
+                    <ul class="ul" id="unique_315305848__ul_tpp_sfz_w1b">
                         <li class="li"><a class="xref" href="../Origins/BigQuery.html#concept_cg3_y3v_q1b" title="The Google BigQuery origin executes a query job and reads the result from Google BigQuery.">New Google
                                 BigQuery origin</a> - An origin that executes a query job and
                             reads the result from Google BigQuery.</li>
@@ -364,7 +405,7 @@
                             configure the behavior for the origin when it encounters data of an
                             unknown data type.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="When you configure JDBC Multitable Consumer, you define a table configuration for each group of tables that you want to read. A table configuration defines a group of tables from the same schema, that have the same table name pattern, and that have proper primary keys or have the same user-defined offset columns.You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer origin enhancements</a>:<ul class="ul" id="unique_1010667802__ul_gnl_rhz_w1b">
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y" title="When you configure JDBC Multitable Consumer, you define a table configuration for each group of tables that you want to read. A table configuration defines a group of tables from the same schema, that have the same table name pattern, and that have proper primary keys or have the same user-defined offset columns.You define the group of tables that the JDBC Multitable Consumer origin reads by defining a table name pattern for the table configuration. The origin reads all tables whose names match the pattern. The JDBC Multitable Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.The JDBC Multitable Consumer origin can read from views in addition to tables. You can define the initial order that the origin uses to read the tables.">JDBC Multitable Consumer origin enhancements</a>:<ul class="ul" id="unique_315305848__ul_gnl_rhz_w1b">
                                 <li class="li">You can now use the origin to perform multithreaded processing
                                     of partitions within a table. Use partition processing to handle
                                     even larger volumes of data. This enhancement also includes new
@@ -381,7 +422,7 @@
 </li>
 
                         <li class="li"><a class="xref" href="../Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC
-                                Client origin enhancements</a>:<ul class="ul" id="unique_1010667802__ul_ych_yhz_w1b">
+                                Client origin enhancements</a>:<ul class="ul" id="unique_315305848__ul_ych_yhz_w1b">
                                 <li class="li">The origin can now buffer data locally rather than utilizing
                                     Oracle LogMiner buffers.</li>
 
@@ -430,7 +471,7 @@
                 <dt class="dt dlterm">Processors</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1010667802__ul_py4_vmz_w1b">
+                    <ul class="ul" id="unique_315305848__ul_py4_vmz_w1b">
                         <li class="li"><a class="xref" href="../Processors/DataParser.html#concept_xw3_4xk_r1b">New Data
                                 Parser processor</a> - Use the new processor to extract NetFlow
                             or syslog messages as well as other supported data formats that are
@@ -456,7 +497,7 @@
                 <dt class="dt dlterm">Destinations</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1010667802__ul_wdl_lnz_w1b">
+                    <ul class="ul" id="unique_315305848__ul_wdl_lnz_w1b">
                         <li class="li"><a class="xref" href="../Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b" title="The Google Pub/Sub Publisher destination publishes messages to a Google Pub/Sub topic.">New Google Pub/Sub Publisher destination</a> - A destination
                             that publishes messages to Google Pub/Sub.</li>
 
@@ -464,7 +505,7 @@
                                 JMS Producer destination</a> - A destination that writes data to
                             JMS.</li>
 
-                        <li class="li">Amazon S3 destination enhancements:<ul class="ul" id="unique_1010667802__ul_ls3_d4z_w1b">
+                        <li class="li">Amazon S3 destination enhancements:<ul class="ul" id="unique_315305848__ul_ls3_d4z_w1b">
                                 <li class="li">You can now use expressions in the <a class="xref" href="../Destinations/AmazonS3.html#concept_bnp_gwp_f1b">Bucket property</a> for the Amazon S3 destination. This
                                     enables you to write records dynamically based expression
                                     evaluation.</li>
@@ -510,7 +551,7 @@
                 <dt class="dt dlterm">Executors</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1010667802__ul_gqx_fpz_w1b">
+                    <ul class="ul" id="unique_315305848__ul_gqx_fpz_w1b">
                         <li class="li"><a class="xref" href="../Executors/AmazonS3.html#concept_mvh_bnm_f1b" title="When Data Collector uses the Amazon S3 executor, it must pass credentials to Amazon Web Services.">New Amazon
                                 S3 executor</a> - Use the Amazon S3 executor to create new Amazon
                             S3 objects for the specified content or add tags to existing objects
@@ -528,7 +569,7 @@
                 <dt class="dt dlterm">Dataflow Performance Manager</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1010667802__ul_dwx_lpz_w1b">
+                    <ul class="ul" id="unique_315305848__ul_dwx_lpz_w1b">
                         <li class="li"><a class="xref" href="../DPM/PipelineManagement.html#task_c4x_vff_p1b">Revert changes to published pipelines</a> - If you update a
                             published pipeline but decide not to publish the updates to <span class="ph">DPM</span> as a new version, you can revert the changes made to the pipeline
                             configuration.</li>
@@ -542,8 +583,8 @@
                 <dt class="dt dlterm">Pipelines</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1010667802__ul_ngb_qpz_w1b">
-                        <li class="li"><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">Pipeline error handling enhancements</a>: <ul class="ul" id="unique_1010667802__ul_rq1_tpz_w1b">
+                    <ul class="ul" id="unique_315305848__ul_ngb_qpz_w1b">
+                        <li class="li"><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">Pipeline error handling enhancements</a>: <ul class="ul" id="unique_315305848__ul_rq1_tpz_w1b">
                                 <li class="li">Use the new Error Record Policy to specify the version of the
                                     record to include in error records. </li>
 
@@ -568,14 +609,14 @@
                 <dt class="dt dlterm">Data Formats</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1010667802__ul_btq_yqz_w1b">
+                    <ul class="ul" id="unique_315305848__ul_btq_yqz_w1b">
                         <li class="li"><a class="xref" href="../Data_Formats/WritingXML.html#concept_t2m_hhx_41b">Writing
                                 XML</a> - You can now use the Google Pub/Sub Publisher, JMS
                             Producer, and Kafka Producer destinations to write XML documents to
                             destination systems. Note the record structure requirement before you
                             use this data format. </li>
 
-                        <li class="li">Avro:<ul class="ul" id="unique_1010667802__ul_k4b_yrz_w1b">
+                        <li class="li">Avro:<ul class="ul" id="unique_315305848__ul_k4b_yrz_w1b">
                                 <li class="li">Origins now write the Avro schema to an avroSchema record header
                                     attribute.</li>
 
@@ -600,7 +641,7 @@
                 <dt class="dt dlterm">Cluster Pipelines</dt>
 
                 <dd class="dd">
-                    <div class="p">This release includes the following <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using the cluster batch or the cluster streaming execution mode.">Cluster Yarn Streaming enhancements</a>:<ul class="ul" id="unique_1010667802__ul_b14_nsz_w1b">
+                    <div class="p">This release includes the following <a class="xref" href="../Cluster_Mode/ClusterPipelines_title.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using the cluster batch or the cluster streaming execution mode.">Cluster Yarn Streaming enhancements</a>:<ul class="ul" id="unique_315305848__ul_b14_nsz_w1b">
                             <li class="li">Use a new Worker Count property to limit the number of worker nodes
                                 used in Cluster Yarn Streaming pipelines. By default, a Data
                                 Collector worker is spawned for each partition in the topic. </li>
@@ -618,7 +659,7 @@
                 <dt class="dt dlterm">Expression Language</dt>
 
                 <dd class="dd">
-                    <div class="p">This release includes the following new functions:<ul class="ul" id="unique_1010667802__ul_abf_qsz_w1b">
+                    <div class="p">This release includes the following new functions:<ul class="ul" id="unique_315305848__ul_abf_qsz_w1b">
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential:get()</a> - Returns credential values from a
                                 credential store.</li>
 
@@ -643,7 +684,7 @@
 
                 <dd class="dd">
                     <div class="p">
-                        <ul class="ul" id="unique_1010667802__ul_k5c_rg4_z1b">
+                        <ul class="ul" id="unique_315305848__ul_k5c_rg4_z1b">
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_ahp_f4v_1r">str:indexOf()</a> - Returns the index within a string of the
                                 first occurrence of the specified subset of characters.</li>
 
@@ -658,7 +699,7 @@
                 <dt class="dt dlterm">Miscellaneous</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_1010667802__ul_y2k_htz_w1b">
+                    <ul class="ul" id="unique_315305848__ul_y2k_htz_w1b">
                         <li class="li"><a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">Global bulk edit mode</a> - In any property where you would
                             previously click an Add icon to add additional configurations, you can
                             now switch to bulk edit mode to enter a list of configurations in JSON
@@ -1018,7 +1059,7 @@ See the documentation for implementation details and a <a class="xref" href="../
 
                     <dd class="dd">
                         <ul class="ul" id="concept_bsw_cky_11b__ul_ktv_k5y_11b">
-                            <li class="li">Offset management - Both the REST API and <a class="xref" href="../Administration/Administration_title.html#concept_ywx_d5x_pt" title="Data Collector provides a command line interface that includes a basic cli command. Use the command to perform some of the same actions that you can complete from the Data Collector console. Data Collector must be running before you can use the cli command.">command line interface</a> can now retrieve the last-saved
+                            <li class="li">Offset management - Both the REST API and <a class="xref" href="../Administration/Administration_title.html#concept_ywx_d5x_pt" title="Data Collector provides a command line interface that includes a basic cli command. Use the command to perform some of the same actions that you can complete from the Data Collector UI. Data Collector must be running before you can use the cli command.">command line interface</a> can now retrieve the last-saved
                                 offset for a pipeline and set the offset for a pipeline when it is
                                 not running. Use these commands to implement pipeline failover using
                                 an external storage system. Otherwise, pipeline offsets are managed
@@ -1349,7 +1390,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                                 pipeline.</p>
 </li>
 
-                        <li class="li"><a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="The Kafka Consumer origin reads data from an Apache Kafka cluster.">Kinesis
+                        <li class="li"><a class="xref" href="../Origins/KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.When you use an origin to read log data, you define the format of the log files to be read. Configure a Kafka Consumer to read data from a Kafka cluster.">Kinesis
                                 Consumer origin enhancement</a> - The origin now performs
                             parallel processing and can generate mulitithreaded pipelines. </li>
 
@@ -1660,7 +1701,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 
                     <dd class="dd">
                         <ul class="ul" id="concept_kzc_4sd_yy__ul_f3t_zs1_cz">
-                            <li class="li"><a class="xref" href="../DPM/RegisterSDCwithDPM.html#task_a4y_v1g_xw" title="You can register a Data Collector with DPM from the Data Collector console.">Register Data Collectors with DPM</a> - If Data Collector
+                            <li class="li"><a class="xref" href="../DPM/RegisterSDCwithDPM.html#task_a4y_v1g_xw" title="You can register a Data Collector with DPM from the Data Collector UI.">Register Data Collectors with DPM</a> - If Data Collector
                                 uses file-based authentication and if you register the Data
                                 Collector from the Data Collector UI, you can now create DPM user
                                 accounts and groups during the registration process.</li>
@@ -1729,8 +1770,8 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
                             <li class="li"><a class="xref" href="../Configuration/DCConfig.html#task_lxk_kjw_1r" title="You can customize Data Collector by editing the Data Collector configuration file, sdc.properties.">Custom header enhancement</a> - You can now use HTML in the
                                 ui.header.title configuration property to configure a custom header
                                 for the <span class="ph">Data
-                  Collector</span> console. This allows you to specify the look and feel for any
-                                text that you use, and to include small images in the header. </li>
+                  Collector</span> UI. This allows you to specify the look and feel for any text
+                                that you use, and to include small images in the header. </li>
 
                             <li class="li"><a class="xref" href="../Processors/Groovy.html#task_asl_bpt_gv">Groovy enhancement</a> - You can configure the processor to
                                 use the invokedynamic bytecode instruction.</li>
@@ -2498,7 +2539,7 @@ To avoid upgrade impact, all SSL/TLS/HTTPS properties in
 </li>
 
                             <li class="li"><a class="xref" href="../Getting_Started/GettingStarted_Title.html#task_r3q_fnx_pr">New time zone property</a> - You can configure the Data
-                                Collector console to use UTC, the browser time zone, or the Data
+                                Collector UI to use UTC, the browser time zone, or the Data
                                 Collector time zone. The time zone property affects how dates and
                                 times display in the UI. The default is the browser time zone.</li>
 

@@ -41,7 +41,12 @@
         prerequisites.</p>
 
         <p class="p">MapR prerequisites include
-            installing the required client libraries and then running the command to set up MapR. </p>
+            installing the required client libraries and then running the command to set up MapR. To
+            connect to a secure MapR cluster enabled for wire-level security and username/password
+            authentication, you also must configure <span class="ph">Data
+                  Collector</span> to
+            run as the user account that is granted access to the cluster in the MapR user or
+            service ticket. </p>
 
         <div class="p">
             <div class="note note"><span class="notetitle">Note:</span> The MapR FS destination supports MapR versions 5.0.0, 5.1.0 and 5.2.0. All other
@@ -111,7 +116,7 @@ For
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -148,9 +153,9 @@ For
                         
                         <thead class="thead" align="left">
                             <tr>
-                                <th class="entry" valign="top" width="30%" id="d197787e228">Environment Variable</th>
+                                <th class="entry" valign="top" width="30%" id="d201219e234">Environment Variable</th>
 
-                                <th class="entry" valign="top" width="70%" id="d197787e231">Description</th>
+                                <th class="entry" valign="top" width="70%" id="d201219e237">Description</th>
 
                             </tr>
 
@@ -158,9 +163,9 @@ For
 
                         <tbody class="tbody">
                             <tr>
-                        <td class="entry" valign="top" width="30%" headers="d197787e228 ">SDC_HOME</td>
+                        <td class="entry" valign="top" width="30%" headers="d201219e234 ">SDC_HOME</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d197787e231 "><span class="ph">Data
+                        <td class="entry" valign="top" width="70%" headers="d201219e237 "><span class="ph">Data
                   Collector</span>
                             home directory.<div class="p">
                                 <div class="note note"><span class="notetitle">Note:</span> The default home directory for an RPM installation is
@@ -174,9 +179,9 @@ For
                     </tr>
 
                             <tr>
-                        <td class="entry" valign="top" width="30%" headers="d197787e228 ">SDC_CONF</td>
+                        <td class="entry" valign="top" width="30%" headers="d201219e234 ">SDC_CONF</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d197787e231 "><span class="ph">Data
+                        <td class="entry" valign="top" width="70%" headers="d201219e237 "><span class="ph">Data
                   Collector</span>
                             configuration directory.</td>
 
@@ -214,7 +219,7 @@ export SDC_CONF=/etc/sdc</pre>
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -233,9 +238,9 @@ export SDC_CONF=/etc/sdc</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d197787e371">Environment Variable</th>
+                                    <th class="entry" valign="top" width="30%" id="d201219e380">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d197787e374">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d201219e383">Description</th>
 
                                 </tr>
 
@@ -243,9 +248,9 @@ export SDC_CONF=/etc/sdc</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                        <td class="entry" valign="top" width="30%" headers="d197787e371 ">SDC_HOME</td>
+                        <td class="entry" valign="top" width="30%" headers="d201219e380 ">SDC_HOME</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d197787e374 "><span class="ph">Data
+                        <td class="entry" valign="top" width="70%" headers="d201219e383 "><span class="ph">Data
                   Collector</span>
                             home directory.<div class="p">
                                 <div class="note note"><span class="notetitle">Note:</span> The default home directory for an RPM installation is
@@ -258,25 +263,25 @@ export SDC_CONF=/etc/sdc</pre>
 
                     </tr>
 <tr>
-                        <td class="entry" valign="top" width="30%" headers="d197787e371 ">SDC_CONF</td>
+                        <td class="entry" valign="top" width="30%" headers="d201219e380 ">SDC_CONF</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d197787e374 "><span class="ph">Data
+                        <td class="entry" valign="top" width="70%" headers="d201219e383 "><span class="ph">Data
                   Collector</span>
                             configuration directory.</td>
 
                     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d197787e371 ">MAPR_HOME</td>
+                                    <td class="entry" valign="top" width="30%" headers="d201219e380 ">MAPR_HOME</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d197787e374 ">MapR home directory, usually /opt/mapr.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d201219e383 ">MapR home directory, usually /opt/mapr.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d197787e371 ">MAPR_VERSION</td>
+                                    <td class="entry" valign="top" width="30%" headers="d201219e380 ">MAPR_VERSION</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d197787e374 ">MapR version: 5.0.0, 5.1.0, or 5.2.0.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d201219e383 ">MapR version: 5.0.0, 5.1.0, or 5.2.0.</td>
 
                                 </tr>
 
@@ -312,10 +317,109 @@ export MAPR_VERSION=5.2.0</pre>
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
+</div>
+<div class="topic concept nested1" id="concept_kpp_4zp_fbb">
+ <h2 class="title topictitle2">Step 3. Connect to a Secure MapR Cluster</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">To connect to a secure MapR cluster enabled for wire-level security and
+        username/password authentication, you must configure <span class="ph">Data
+                  Collector</span> to run
+        as the user account granted access to the cluster in the MapR user or service ticket. </p>
+
+        <p class="p">A secure MapR cluster implements authentication with the following types of tickets: </p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">User tickets</dt>
+
+                <dd class="dd">Each user account uses a generated user ticket to authenticate with the cluster.
+                    To run MapR commands in the cluster, <span class="ph">Data
+                  Collector</span> can run as a user account granted access in a MapR user ticket. For example,
+                    if a user ticket is generated for the "myuser" user account, then configure <span class="ph">Data
+                  Collector</span> to run as the "myuser" user account.</dd>
+
+            
+            
+                <dt class="dt dlterm">Service tickets</dt>
+
+                <dd class="dd">Applications that run outside of the MapR cluster - such as <span class="ph">Data
+                  Collector</span> - can use service tickets to authenticate with the cluster. To run MapR
+                    commands in the cluster, <span class="ph">Data
+                  Collector</span> can run as the user account granted access in the MapR service ticket.</dd>
+
+                <dd class="dd">
+                    <div class="p">For example, let's say that you ran the following MapR command to generate
+                        the service ticket for applications running outside of the
+                        cluster:<pre class="pre codeblock">maprlogin generateticket -type service -out /tmp/longlived_ticket -duration 30:0:0 -renewal 90:0:0
+MapR credentials of user 'myappuser' for cluster 'mycluster' are written to '/tmp/longlived_ticket'</pre>
+</div>
+
+                    <p class="p">You then configure <span class="ph">Data
+                  Collector</span> to run as the "myappuser" user account.</p>
+
+                </dd>
+
+            
+        </dl>
+
+        <p class="p">For more information about MapR user and service tickets, see the <a class="xref" href="https://maprdocs.mapr.com/home/SecurityGuide/Tickets.html" target="_blank">MapR documentation</a>.</p>
+
+        <p class="p">Configure <span class="ph">Data
+                  Collector</span> to
+            run as the required user account based on your installation type:</p>
+
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">Tarball (manual start)</dt>
+
+                    <dd class="dd">When <span class="ph">Data
+                  Collector</span> is installed from the tarball and started manually, <span class="ph">Data
+                  Collector</span> runs as the system user account logged into the command prompt when you
+                        use the following launch
+                        command:<pre class="pre codeblock">$SDC_DIST/bin/streamsets dc</pre>
+To connect to a
+                        secure MapR cluster enabled for wire-level security and username/password
+                        authentication, you can log into the command prompt as the user account
+                        granted access in the MapR user or service ticket. Or, you can impersonate
+                        the required user account by using the following launch command, where
+                        &lt;user&gt; is the user account granted access in the MapR user or service
+                            ticket:<pre class="pre codeblock">sudo -u &lt;user&gt; $SDC_DIST/bin/streamsets dc</pre>
+<div class="p">For
+                            example:<pre class="pre codeblock">sudo -u myappuser /opt/streamsets-datacollector-<span class="ph">2.7.0.0</span>/bin/streamsets dc</pre>
+</div>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">RPM package or tarball (service start)</dt>
+
+                    <dd class="dd">When <span class="ph">Data
+                  Collector</span> is installed from the RPM package or from the tarball and started as a
+                        service, <span class="ph">Data
+                  Collector</span> runs as the system user account and group defined in the SDC_USER and
+                        SDC_GROUP environment variables configured in the
+                            <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file. The
+                        default system user and group are named sdc.</dd>
+
+                    <dd class="dd">To connect to a secure MapR cluster enabled for wire-level security and
+                        username/password authentication, set the SDC_USER environment variable to
+                        the system user account granted access in the MapR user or service ticket.
+                        Set the SDC_GROUP environment variable to the system group that the user
+                        account belongs to.</dd>
+
+                
+            </dl>
+
+        </div>
+
+    </div>
+
 </div>
 </div>
 <div class="navfooter"><!---->

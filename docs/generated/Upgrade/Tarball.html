@@ -86,7 +86,7 @@
 </li>
 
                     <li class="li choice">To use the <span class="ph">Data
-                  Collector</span> console for shutdown, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol"> Shut Down</span></span>. When the confirmation dialog box appears, click
+                  Collector</span> UI for shutdown, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol"> Shut Down</span></span>. When the confirmation dialog box appears, click
                             <span class="ph uicontrol">Yes</span>.</li>
 
                 </ul>
@@ -125,7 +125,7 @@
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -262,9 +262,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d424683e562">Environment Variable</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d434309e565">Environment Variable</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d424683e565">Value</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d434309e568">Value</th>
 
                                 </tr>
 
@@ -272,9 +272,9 @@ chown sdc:sdc /etc/init.d/sdc</pre>
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d424683e562 ">SDC_CONF</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d434309e565 ">SDC_CONF</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d424683e565 ">New location outside of the base <span class="ph">Data
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d434309e568 ">New location outside of the base <span class="ph">Data
                   Collector</span> runtime directory and unique from the previous renamed
                                         directory. For example, if you renamed the previous
                                         configuration directory to <samp class="ph codeph">/etc/sdc2600</samp>,
@@ -283,23 +283,23 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d424683e562 ">SDC_DATA</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d434309e565 ">SDC_DATA</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d424683e565 ">Same directory that the previous version used.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d424683e562 ">SDC_LOG</td>
-
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d424683e565 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d434309e568 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d424683e562 ">SDC_RESOURCES</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d434309e565 ">SDC_LOG</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d424683e565 ">Same directory that the previous version used.</td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d434309e568 ">Same directory that the previous version used.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d434309e565 ">SDC_RESOURCES</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d434309e568 ">Same directory that the previous version used.</td>
 
                                 </tr>
 
@@ -359,7 +359,7 @@ chown sdc:sdc /etc/init.d/sdc</pre>
     </div>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a></div>
 </div>
 </div>
 </div>
@@ -475,13 +475,19 @@ chown sdc:sdc /etc/init.d/sdc</pre>
                 <dt class="dt dlterm">To start <span class="ph">Data
                   Collector</span> manually</dt>
 
-                <dd class="dd">Use the following
-                    command:<pre class="pre codeblock">$SDC_DIST/bin/streamsets dc</pre>
+                <dd class="dd">Use the following command to run <span class="ph">Data
+                  Collector</span> as the system user account logged into the command
+                    prompt:<pre class="pre codeblock">$SDC_DIST/bin/streamsets dc</pre>
 </dd>
 
-                <dd class="dd">Or, use the following command to launch <span class="ph">Data
-                  Collector</span> and run it in the
+                <dd class="dd">Or, use the following command to run <span class="ph">Data
+                  Collector</span> in the
                     background:<pre class="pre codeblock">nohup $SDC_DIST/bin/streamsets dc &amp;</pre>
+</dd>
+
+                <dd class="dd">Use the following command to run <span class="ph">Data
+                  Collector</span> as another system user
+                    account:<pre class="pre codeblock">sudo -u &lt;user&gt; $SDC_DIST/bin/streamsets dc</pre>
 </dd>
 
             

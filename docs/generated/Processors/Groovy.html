@@ -33,7 +33,7 @@
       Use the Groovy Evaluator processor to use Groovy code to perform custom processing. The Groovy
       Evaluator supports Groovy version 2.4.</p>
 
-    <div class="p">You can develop the following scripts for the processor: <ul class="ul" id="concept_ldh_sct_gv__d66850e18">
+    <div class="p">You can develop the following scripts for the processor: <ul class="ul" id="concept_ldh_sct_gv__d69495e18">
                 <li class="li">Initialization script - Optional initialization script that sets up resources or
                     connections required by the processor. The initialization script is run once
                     when the pipeline starts. </li>
@@ -123,9 +123,9 @@
                 
                 <thead class="thead" align="left">
                     <tr>
-                        <th class="entry" valign="top" width="30%" id="d378940e150">Script Type</th>
+                        <th class="entry" valign="top" width="30%" id="d388156e150">Script Type</th>
 
-                        <th class="entry" valign="top" width="70%" id="d378940e153">Valid Scripting Objects</th>
+                        <th class="entry" valign="top" width="70%" id="d388156e153">Valid Scripting Objects</th>
 
                     </tr>
 
@@ -133,10 +133,10 @@
 
                 <tbody class="tbody">
                     <tr>
-                        <td class="entry" valign="top" width="30%" headers="d378940e150 ">Init</td>
+                        <td class="entry" valign="top" width="30%" headers="d388156e150 ">Init</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d378940e153 ">You can use the following scripting objects in the initialization
-                                script:<ul class="ul" id="concept_hzt_zjt_gv__d66850e93">
+                        <td class="entry" valign="top" width="70%" headers="d388156e153 ">You can use the following scripting objects in the initialization
+                                script:<ul class="ul" id="concept_hzt_zjt_gv__d69495e93">
                                 <li class="li">state</li>
 
                                 <li class="li">log</li>
@@ -151,10 +151,10 @@
                     </tr>
 
                     <tr>
-                     <td class="entry" valign="top" width="30%" headers="d378940e150 ">Main</td>
+                     <td class="entry" valign="top" width="30%" headers="d388156e150 ">Main</td>
 
-                     <td class="entry" valign="top" width="70%" headers="d378940e153 ">You can use the following scripting objects in the main
-                         script:<ul class="ul" id="concept_hzt_zjt_gv__d66850e122">
+                     <td class="entry" valign="top" width="70%" headers="d388156e153 ">You can use the following scripting objects in the main
+                         script:<ul class="ul" id="concept_hzt_zjt_gv__d69495e122">
                              <li class="li">records</li>
 
                              <li class="li">state</li>
@@ -173,9 +173,9 @@
                  </tr>
 
                     <tr>
-                        <td class="entry" valign="top" width="30%" headers="d378940e150 ">Destroy</td>
+                        <td class="entry" valign="top" width="30%" headers="d388156e150 ">Destroy</td>
 
-                        <td class="entry" valign="top" width="70%" headers="d378940e153 ">You can use the following scripting objects in the destroy script:<ul class="ul" id="concept_hzt_zjt_gv__d66850e188">
+                        <td class="entry" valign="top" width="70%" headers="d388156e153 ">You can use the following scripting objects in the destroy script:<ul class="ul" id="concept_hzt_zjt_gv__d69495e188">
                                 <li class="li">state</li>
 
                                 <li class="li">log</li>
@@ -228,7 +228,7 @@
                                     cache data such as lookups, counters, or a connection to an
                                     external system.</dd>
 
-                              <dd class="dd">The state object functions much like a member variable: <ul class="ul" id="concept_hzt_zjt_gv__d65689e2356">
+                              <dd class="dd">The state object functions much like a member variable: <ul class="ul" id="concept_hzt_zjt_gv__d68334e2366">
                                           <li class="li">The information is transient and is lost when the
                                                 pipeline stops or restarts.</li>
 
@@ -418,13 +418,13 @@ for (record in records) {
             destination for event storage or to any executor that can be configured to use the
             event. For more information about events and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</p>
 
-        <div class="p">To generate events:<ol class="ol" id="concept_qcz_ssq_1y__d66850e235">
+        <div class="p">To generate events:<ol class="ol" id="concept_qcz_ssq_1y__d69495e235">
                 <li class="li">On the <span class="keyword wintitle">General</span> tab, select the <span class="ph uicontrol">Produce
                         Events</span> property.<p class="p">This enables the event output stream for use.
                     </p>
 </li>
 
-                <li class="li">In the script, include both of the following scripting objects:<ul class="ul" id="concept_qcz_ssq_1y__d66850e250">
+                <li class="li">In the script, include both of the following scripting objects:<ul class="ul" id="concept_qcz_ssq_1y__d69495e250">
                         <li class="li"> sdcFunctions.createEvent(String type, int version) - Creates an event
                             record with the specified event type and version number. You can create
                             a new event type or use an existing event type. Existing event types are
@@ -468,7 +468,7 @@ for (record in records) {
                 <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</p>
 
         <div class="p">The processor provides the following record header variables to work with
-            header attributes:<ul class="ul" id="concept_uw4_kqw_1y__d66850e289">
+            header attributes:<ul class="ul" id="concept_uw4_kqw_1y__d69495e289">
                 <li class="li"><samp class="ph codeph">record.&lt;header name&gt;</samp> - Use to return the value of a
                     read-only header attribute.</li>
 
@@ -494,14 +494,14 @@ for (record in records) {
         <p class="p">For example, the following image shows a record generated by the
             Directory origin in data preview. </p>
 
-        <p class="p"><img class="image" id="concept_jsz_qdy_1y__d66850e320" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
+        <p class="p"><img class="image" id="concept_jsz_qdy_1y__d69495e320" src="../Reusable_Content/Reusable_Topics/../../Graphics/HeaderAttribute-Preview.png" height="241" width="335" /></p>
 
-        <p class="p"><span class="ph" id="concept_jsz_qdy_1y__d66850e323">The "Record Header" list displays the set of
+        <p class="p"><span class="ph" id="concept_jsz_qdy_1y__d69495e323">The "Record Header" list displays the set of
                 read-only internal attributes in the record at this point of the pipeline.</span> You
             can use the <samp class="ph codeph">record.&lt;header name&gt;</samp> variable to return values for these
             attributes. </p>
 
-        <p class="p"><span class="ph" id="concept_jsz_qdy_1y__d66850e331">The header attributes under "values" are the
+        <p class="p"><span class="ph" id="concept_jsz_qdy_1y__d69495e331">The header attributes under "values" are the
                 attributes created by the Directory origin.</span> You can use the
                 <samp class="ph codeph">record.attributes</samp> variable to return or modify these attributes.
             When you use the <samp class="ph codeph">record.attributes</samp> variable to create a header
@@ -641,9 +641,9 @@ grant codebase "file:///groovy/script" {
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d378940e895">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d388156e895">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d378940e898">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d388156e898">Description</th>
 
                                 </tr>
 
@@ -651,34 +651,34 @@ grant codebase "file:///groovy/script" {
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d378940e895 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d388156e895 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d378940e898 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d378940e895 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d378940e898 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d388156e898 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d378940e895 ">Produce Events <a class="xref" href="Groovy.html#concept_qcz_ssq_1y">
+                                    <td class="entry" valign="top" width="30%" headers="d388156e895 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d388156e898 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d388156e895 ">Produce Events <a class="xref" href="Groovy.html#concept_qcz_ssq_1y">
                                             <img class="image" id="task_asl_bpt_gv__image_fnz_31h_cy" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d378940e898 ">Generates event records when
+                                    <td class="entry" valign="top" width="70%" headers="d388156e898 ">Generates event records when
                                         events occur. Use for event handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-                                            <img class="image" id="task_asl_bpt_gv__d65589e4868" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                            <img class="image" id="task_asl_bpt_gv__d68234e4868" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d378940e895 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_asl_bpt_gv__d65589e4877" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d388156e895 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_asl_bpt_gv__d68234e4877" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d378940e898 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d388156e898 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -690,10 +690,10 @@ grant codebase "file:///groovy/script" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d378940e895 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_asl_bpt_gv__d65589e4893" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d388156e895 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_asl_bpt_gv__d68234e4893" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d378940e898 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d388156e898 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -704,10 +704,10 @@ grant codebase "file:///groovy/script" {
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d378940e895 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_asl_bpt_gv__d65589e4911" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d388156e895 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_asl_bpt_gv__d68234e4911" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d378940e898 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d65589e4915">
+                                    <td class="entry" valign="top" width="70%" headers="d388156e898 ">Error record handling for the stage: <ul class="ul" id="task_asl_bpt_gv__d68234e4915">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -738,9 +738,9 @@ grant codebase "file:///groovy/script" {
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d378940e1027">Groovy Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d388156e1027">Groovy Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d378940e1030">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d388156e1030">Description</th>
 
                                 </tr>
 
@@ -748,11 +748,11 @@ grant codebase "file:///groovy/script" {
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d378940e1027 ">Record Processing Mode
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d388156e1027 ">Record Processing Mode
                                         <a class="xref" href="Groovy.html#concept_ljq_z2t_gv" title="You can choose the processing mode that the Groovy Evaluator uses to process the main script. You can use the same script in each processing mode. However, you should include error handling in the main script before you run in batch mode.">
                                             <img class="image" id="task_asl_bpt_gv__image_jet_15l_hw" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d378940e1030 ">Determines how the Groovy Evaluator processes the main
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d388156e1030 ">Determines how the Groovy Evaluator processes the main
                                         script: <ul class="ul" id="task_asl_bpt_gv__ul_vqy_kqt_gv">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
@@ -767,34 +767,34 @@ grant codebase "file:///groovy/script" {
                                 </tr>
 
                                 <tr>
-      <td class="entry" valign="top" width="22.22222222222222%" headers="d378940e1027 ">Init Script</td>
+      <td class="entry" valign="top" width="22.22222222222222%" headers="d388156e1027 ">Init Script</td>
 
-      <td class="entry" valign="top" width="77.77777777777779%" headers="d378940e1030 ">Optional initialization script to use in the processor.<p class="p">Use to set up connections or
+      <td class="entry" valign="top" width="77.77777777777779%" headers="d388156e1030 ">Optional initialization script to use in the processor.<p class="p">Use to set up connections or
        resources required by the processor. Runs once when the pipeline starts.</p>
 </td>
 
      </tr>
 <tr>
-     <td class="entry" valign="top" width="22.22222222222222%" headers="d378940e1027 ">Script</td>
+     <td class="entry" valign="top" width="22.22222222222222%" headers="d388156e1027 ">Script</td>
 
-     <td class="entry" valign="top" width="77.77777777777779%" headers="d378940e1030 ">Main processing script to use in the processor.<p class="p">Runs for each record or each batch of
+     <td class="entry" valign="top" width="77.77777777777779%" headers="d388156e1030 ">Main processing script to use in the processor.<p class="p">Runs for each record or each batch of
        data, based on the configured processing mode.</p>
 </td>
 
     </tr>
 <tr>
-     <td class="entry" valign="top" width="22.22222222222222%" headers="d378940e1027 ">Destroy Script</td>
+     <td class="entry" valign="top" width="22.22222222222222%" headers="d388156e1027 ">Destroy Script</td>
 
-     <td class="entry" valign="top" width="77.77777777777779%" headers="d378940e1030 ">Optional destroy script to use in the processor.<p class="p">Use to close any connections or
+     <td class="entry" valign="top" width="77.77777777777779%" headers="d388156e1030 ">Optional destroy script to use in the processor.<p class="p">Use to close any connections or
        resources required by the processor. Runs once when the pipeline stops.</p>
 </td>
 
     </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d378940e1027 ">Enable invokedynamic Compiler Option</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d388156e1027 ">Enable invokedynamic Compiler Option</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d378940e1030 ">Enables the use of the invokedynamic bytecode
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d388156e1030 ">Enables the use of the invokedynamic bytecode
                                         instruction. <p class="p">This can affect performance differently
                                             depending on the use case. For more information about
                                             Groovy invokedynamic support, see <a class="xref" href="http://groovy-lang.org/indy.html" target="_blank">http://groovy-lang.org/indy.html</a>.</p>

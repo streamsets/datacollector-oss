@@ -57,20 +57,20 @@
 
         <div class="p">The origin generates the following records, with the data in a single text
                 field:<table cellpadding="4" cellspacing="0" summary="" id="concept_lg2_gcg_jx__simpletable_qcp_tjn_jx" border="1" class="simpletable"><tr class="sthead">
-                    <th valign="bottom" align="left" id="d61984e50" class="stentry" width="100%">Text</th>
+                    <th valign="bottom" align="left" id="d62584e50" class="stentry" width="100%">Text</th>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d61984e50" class="stentry">8/12/2016 6:01:00 unspecified error message</td>
+                    <td valign="top" headers="d62584e50" class="stentry">8/12/2016 6:01:00 unspecified error message</td>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d61984e50" class="stentry">8/12/2016 <p class="p">6:01:04 another error message</p>
+                    <td valign="top" headers="d62584e50" class="stentry">8/12/2016 <p class="p">6:01:04 another error message</p>
 </td>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d61984e50" class="stentry">8/12/2016 6:01:09 just a warning message</td>
+                    <td valign="top" headers="d62584e50" class="stentry">8/12/2016 6:01:09 just a warning message</td>
 
                 </tr>
 </table>
@@ -132,16 +132,16 @@
         <div class="p">When origins process text data, they write record data into a single text field named
             "text". When Directory processes the invalid XML document, it creates two
                 records:<table cellpadding="4" cellspacing="0" summary="" id="concept_okt_kmg_jx__simpletable_bhf_tnh_jx" border="1" class="simpletable"><tr class="sthead">
-                    <th valign="bottom" align="left" id="d61984e140" class="stentry" width="100%">text</th>
+                    <th valign="bottom" align="left" id="d62584e140" class="stentry" width="100%">text</th>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d61984e140" class="stentry">&lt;msg&gt; &lt;time&gt;8/12/2016 6:01:00&lt;/time&gt; &lt;request&gt;GET
+                    <td valign="top" headers="d62584e140" class="stentry">&lt;msg&gt; &lt;time&gt;8/12/2016 6:01:00&lt;/time&gt; &lt;request&gt;GET
                         /index.html 200&lt;/request&gt; &lt;/msg&gt;</td>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d61984e140" class="stentry">&lt;msg&gt; &lt;time&gt;8/12/2016 6:03:43&lt;/time&gt; &lt;request&gt;GET
+                    <td valign="top" headers="d62584e140" class="stentry">&lt;msg&gt; &lt;time&gt;8/12/2016 6:03:43&lt;/time&gt; &lt;request&gt;GET
                         /images/sponsored.gif 304&lt;/request&gt; &lt;/msg&gt;</td>
 
                 </tr>
@@ -154,11 +154,11 @@ You can configure the XML Parser to parse the XML data as follows: </div>
         <div class="p">The XML Parser converts the time and request attributes to list fields within the text
             map field, as shown. The table displays data types in angle brackets ( &lt; &gt; ):
                 <table cellpadding="4" cellspacing="0" summary="" id="concept_okt_kmg_jx__simpletable_jrl_vnh_jx" border="1" class="simpletable"><tr class="sthead">
-                    <th valign="bottom" align="left" id="d61984e168" class="stentry" width="100%">text &lt;map&gt;</th>
+                    <th valign="bottom" align="left" id="d62584e168" class="stentry" width="100%">text &lt;map&gt;</th>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d61984e168" class="stentry">- time &lt;list&gt;:<ul class="ul" id="concept_okt_kmg_jx__ul_c14_f4h_jx">
+                    <td valign="top" headers="d62584e168" class="stentry">- time &lt;list&gt;:<ul class="ul" id="concept_okt_kmg_jx__ul_c14_f4h_jx">
                             <li class="li">0 &lt;map&gt;:<p class="p">- value &lt;string&gt;: 8/12/2016 6:01:00</p>
 </li>
 
@@ -173,7 +173,7 @@ You can configure the XML Parser to parse the XML data as follows: </div>
 
                 </tr>
 <tr class="strow">
-                    <td valign="top" headers="d61984e168" class="stentry">- time &lt;list&gt;:<ul class="ul" id="concept_okt_kmg_jx__ul_dqp_tqh_jx">
+                    <td valign="top" headers="d62584e168" class="stentry">- time &lt;list&gt;:<ul class="ul" id="concept_okt_kmg_jx__ul_dqp_tqh_jx">
                             <li class="li">0 &lt;map&gt;:<p class="p">- value &lt;string&gt;:: 8/12/2016 6:03:43</p>
 </li>
 

@@ -164,11 +164,12 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
  <h2 class="title topictitle2">BigQuery Data Types</h2>
 
  
- <div class="body conbody"><p class="shortdesc">The Google BigQuery origin converts the Google BigQuery data types to Data Collector
-        data types. </p>
+ <div class="body conbody"><p class="shortdesc">The Google BigQuery origin converts the Google BigQuery data types to <span class="ph">Data
+                  Collector</span> data
+        types. </p>
 
-        <p class="p">The data types supported by Google BigQuery
-            depend on whether you use standard SQL or legacy SQL syntax to define the query:</p>
+        <p class="p">The data types supported by Google BigQuery depend
+            on whether you use standard SQL or legacy SQL syntax to define the query:</p>
 
         <dl class="dl">
             
@@ -185,9 +186,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="50%" id="d208892e266">BigQuery Standard SQL Data Type</th>
+                                    <th class="entry" valign="top" width="50%" id="d212533e269">BigQuery Standard SQL Data Type</th>
 
-                                    <th class="entry" valign="top" width="50%" id="d208892e269">Data Collector Data Type</th>
+                                    <th class="entry" valign="top" width="50%" id="d212533e272">Data Collector Data Type</th>
 
                                 </tr>
 
@@ -195,79 +196,79 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">Array</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">Array</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">List</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">Boolean</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">Boolean</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">List</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">Bytes</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">Boolean</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">Byte Array</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">Date</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">Date</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">Boolean</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">Bytes</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">Datetime</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">Float</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">Double</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">Byte Array</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">Integer</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">Date</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">Long</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">String</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">String</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">Date</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">Struct</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">Datetime</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">List-Map</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">Time</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">Datetime</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e266 ">Timestamp</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">Float</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e269 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">Double</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">Integer</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">Long</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">String</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">String</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">Struct</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">List-Map</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">Time</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">Datetime</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e269 ">Timestamp</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d212533e272 ">Datetime</td>
 
                                 </tr>
 
@@ -294,9 +295,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="50%" id="d208892e408">BigQuery Legacy SQL Data Type</th>
+                                    <th class="entry" valign="top" width="50%" id="d212533e411">BigQuery Legacy SQL Data Type</th>
 
-                                    <th class="entry" valign="top" width="50%" id="d208892e411">Data Collector Data Type</th>
+                                    <th class="entry" valign="top" width="50%" id="d212533e414">Data Collector Data Type</th>
 
                                 </tr>
 
@@ -304,72 +305,72 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e408 ">Boolean</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e411 ">Boolean</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e411 ">Boolean</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e408 ">Bytes</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d208892e411 ">Byte Array</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e414 ">Boolean</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e408 ">Date</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e411 ">Bytes</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e411 ">Date</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e408 ">Datetime</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d208892e411 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e414 ">Byte Array</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e408 ">Float</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e411 ">Date</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e411 ">Double</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e408 ">Integer</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d208892e411 ">Long</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e414 ">Date</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e408 ">Record</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e411 ">Datetime</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e411 ">List-Map</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e408 ">String</td>
-
-                                    <td class="entry" valign="top" width="50%" headers="d208892e411 ">String</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e414 ">Datetime</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e408 ">Time</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e411 ">Float</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e411 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e414 ">Double</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="50%" headers="d208892e408 ">Timestamp</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e411 ">Integer</td>
 
-                                    <td class="entry" valign="top" width="50%" headers="d208892e411 ">Datetime</td>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e414 ">Long</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e411 ">Record</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d212533e414 ">List-Map</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e411 ">String</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d212533e414 ">String</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e411 ">Time</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d212533e414 ">Datetime</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="50%" headers="d212533e411 ">Timestamp</td>
+
+                                    <td class="entry" valign="top" width="50%" headers="d212533e414 ">Datetime</td>
 
                                 </tr>
 
@@ -428,9 +429,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="30%" id="d208892e609">Record Header Attribute</th>
+                            <th class="entry" valign="top" width="30%" id="d212533e612">Record Header Attribute</th>
 
-                            <th class="entry" valign="top" width="70%" id="d208892e612">Description</th>
+                            <th class="entry" valign="top" width="70%" id="d212533e615">Description</th>
 
                         </tr>
 
@@ -438,9 +439,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="30%" headers="d208892e609 ">sdc.event.type</td>
+                            <td class="entry" valign="top" width="30%" headers="d212533e612 ">sdc.event.type</td>
 
-                            <td class="entry" valign="top" width="70%" headers="d208892e612 ">Event type. Uses the following type:<ul class="ul" id="concept_zrl_p3x_q1b__ul_m12_mgp_qx">
+                            <td class="entry" valign="top" width="70%" headers="d212533e615 ">Event type. Uses the following type:<ul class="ul" id="concept_zrl_p3x_q1b__ul_m12_mgp_qx">
                                     <li class="li">big-query-success - Generated when the origin successfully
                                         completes a query.</li>
 
@@ -450,16 +451,16 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                         </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d208892e609 ">sdc.event.version</td>
+       <td class="entry" valign="top" width="30%" headers="d212533e612 ">sdc.event.version</td>
 
-       <td class="entry" valign="top" width="70%" headers="d208892e612 ">An integer that indicates the version of the event record type.</td>
+       <td class="entry" valign="top" width="70%" headers="d212533e615 ">An integer that indicates the version of the event record type.</td>
 
       </tr>
 
                         <tr>
-       <td class="entry" valign="top" width="30%" headers="d208892e609 ">sdc.event.creation_timestamp</td>
+       <td class="entry" valign="top" width="30%" headers="d212533e612 ">sdc.event.creation_timestamp</td>
 
-       <td class="entry" id="concept_zrl_p3x_q1b__d36155e1694" valign="top" width="70%" headers="d208892e612 ">Epoch timestamp when the stage created the event.
+       <td class="entry" id="concept_zrl_p3x_q1b__d37145e2083" valign="top" width="70%" headers="d212533e615 ">Epoch timestamp when the stage created the event.
        </td>
 
       </tr>
@@ -486,9 +487,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 
                                 <thead class="thead" align="left">
                                     <tr>
-                                        <th class="entry" valign="top" width="30%" id="d208892e687">Field</th>
+                                        <th class="entry" valign="top" width="30%" id="d212533e690">Field</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d208892e690">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d212533e693">Description</th>
 
                                     </tr>
 
@@ -496,30 +497,30 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                                 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d208892e687 ">query</td>
+                                        <td class="entry" valign="top" width="30%" headers="d212533e690 ">query</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208892e690 ">Query that completed successfully.</td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d208892e687 ">timestamp</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d208892e690 ">Timestamp when the query completed.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d212533e693 ">Query that completed successfully.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d208892e687 ">row-count</td>
+                                        <td class="entry" valign="top" width="30%" headers="d212533e690 ">timestamp</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208892e690 ">Number of processed rows.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d212533e693 ">Timestamp when the query completed.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry" valign="top" width="30%" headers="d208892e687 ">source-offset</td>
+                                        <td class="entry" valign="top" width="30%" headers="d212533e690 ">row-count</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d208892e690 ">Offset after the query completed.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d212533e693 ">Number of processed rows.</td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry" valign="top" width="30%" headers="d212533e690 ">source-offset</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d212533e693 ">Offset after the query completed.</td>
 
                                     </tr>
 
@@ -557,9 +558,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d208892e784">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d212533e787">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d208892e787">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d212533e790">Description</th>
 
                                 </tr>
 
@@ -567,34 +568,34 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d208892e784 ">Name</td>
+       <td class="entry" valign="top" width="30%" headers="d212533e787 ">Name</td>
 
-       <td class="entry" valign="top" width="70%" headers="d208892e787 ">Stage name.</td>
-
-      </tr>
-
-                                <tr>
-       <td class="entry" valign="top" width="30%" headers="d208892e784 ">Description</td>
-
-       <td class="entry" valign="top" width="70%" headers="d208892e787 ">Optional description.</td>
+       <td class="entry" valign="top" width="70%" headers="d212533e790 ">Stage name.</td>
 
       </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d208892e784 ">Produce Events <a class="xref" href="BigQuery.html#concept_vsm_khx_q1b">
+       <td class="entry" valign="top" width="30%" headers="d212533e787 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d212533e790 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d212533e787 ">Produce Events <a class="xref" href="BigQuery.html#concept_vsm_khx_q1b">
                                             <img class="image" id="task_n5w_ykv_q1b__image_plp_tp2_px" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d208892e787 ">Generates event records when events occur. Use for event
+                                    <td class="entry" valign="top" width="70%" headers="d212533e790 ">Generates event records when events occur. Use for event
         handling. <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">
-         <img class="image" id="task_n5w_ykv_q1b__d36155e385" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+         <img class="image" id="task_n5w_ykv_q1b__d37145e795" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d208892e784 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-         <img class="image" id="task_n5w_ykv_q1b__d36155e394" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+       <td class="entry" valign="top" width="30%" headers="d212533e787 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_n5w_ykv_q1b__d37145e804" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-       <td class="entry" valign="top" width="70%" headers="d208892e787 ">Error record handling for the stage: <ul class="ul" id="task_n5w_ykv_q1b__d36155e398">
+       <td class="entry" valign="top" width="70%" headers="d212533e790 ">Error record handling for the stage: <ul class="ul" id="task_n5w_ykv_q1b__d37145e808">
          <li class="li">Discard - Discards the record.</li>
 
          <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -623,9 +624,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d208892e880">BigQuery Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d212533e883">BigQuery Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d208892e883">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d212533e886">Description</th>
 
                                 </tr>
 
@@ -633,9 +634,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d208892e880 ">Query</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212533e883 ">Query</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d208892e883 ">SQL query to use for the query job. Write the query using
+                                    <td class="entry" valign="top" width="70%" headers="d212533e886 ">SQL query to use for the query job. Write the query using
                                         valid BigQuery standard SQL or legacy SQL syntax. <p class="p">Do not
                                             include the <samp class="ph codeph">#legacySql</samp> or
                                                 <samp class="ph codeph">#standardSql</samp> prefix in the query.
@@ -647,9 +648,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d208892e880 ">Use Legacy SQL</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212533e883 ">Use Legacy SQL</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d208892e883 ">Specifies whether the query uses standard SQL or legacy
+                                    <td class="entry" valign="top" width="70%" headers="d212533e886 ">Specifies whether the query uses standard SQL or legacy
                                         SQL syntax. <p class="p">Clear to use standard SQL. Select to use
                                             legacy SQL. </p>
 </td>
@@ -657,9 +658,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d208892e880 ">Use Query Cache</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212533e883 ">Use Query Cache</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d208892e883 ">Determines whether Google BigQuery retrieves cached
+                                    <td class="entry" valign="top" width="70%" headers="d212533e886 ">Determines whether Google BigQuery retrieves cached
                                         results if they are present.<p class="p">Select to retrieve cached
                                             results. Clear to disable retrieving cached
                                         results.</p>
@@ -668,9 +669,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d208892e880 ">Query Timeout (sec)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212533e883 ">Query Timeout (sec)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d208892e883 ">Maximum number of seconds to wait for the query to
+                                    <td class="entry" valign="top" width="70%" headers="d212533e886 ">Maximum number of seconds to wait for the query to
                                         finish. If the query fails to complete within the timeout,
                                         the origin aborts the query and the pipeline fails. <p class="p">Enter
                                             a time in seconds or use the
@@ -685,9 +686,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d208892e880 ">Max Batch Size (records)</td>
+       <td class="entry" valign="top" width="30%" headers="d212533e883 ">Max Batch Size (records)</td>
 
-       <td class="entry" valign="top" width="70%" headers="d208892e883 ">Maximum number of records to include in a batch.</td>
+       <td class="entry" valign="top" width="70%" headers="d212533e886 ">Maximum number of records to include in a batch.</td>
 
       </tr>
 
@@ -708,9 +709,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d208892e990">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d212533e993">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d208892e993">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d212533e996">Description</th>
 
                                 </tr>
 
@@ -718,17 +719,17 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d208892e990 ">Project ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d212533e993 ">Project ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d208892e993 ">Google BigQuery project ID to connect to.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d212533e996 ">Google BigQuery project ID to connect to.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d208892e990 ">Credentials Provider <a class="xref" href="BigQuery.html#concept_vl2_bbx_q1b" title="When configured to use the Google Application Default Credentials, the origin checks for the credentials file defined in the GOOGLE_APPLICATION_CREDENTIALS environment variable. If the environment variable doesn't exist and Data Collector is running on a virtual machine (VM) in Google Cloud, the origin uses the built-in service account associated with the virtual machine instance. When configured to use the Google Cloud service account credentials file, the origin checks for the file defined in the origin properties.">
+                                    <td class="entry" valign="top" width="30%" headers="d212533e993 ">Credentials Provider <a class="xref" href="BigQuery.html#concept_vl2_bbx_q1b" title="When configured to use the Google Application Default Credentials, the origin checks for the credentials file defined in the GOOGLE_APPLICATION_CREDENTIALS environment variable. If the environment variable doesn't exist and Data Collector is running on a virtual machine (VM) in Google Cloud, the origin uses the built-in service account associated with the virtual machine instance. When configured to use the Google Cloud service account credentials file, the origin checks for the file defined in the origin properties.">
                                             <img class="image" id="task_n5w_ykv_q1b__image_pls_tp4_hj" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d208892e993 ">Credentials provider to use to connect to Google
+                                    <td class="entry" valign="top" width="70%" headers="d212533e996 ">Credentials provider to use to connect to Google
                                             BigQuery:<ul class="ul" id="task_n5w_ykv_q1b__ul_tmm_2rp_v1b">
                                             <li class="li">Default credentials provider</li>
 
@@ -740,9 +741,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d208892e990 ">Credentials File Path (JSON) </td>
+                                    <td class="entry" valign="top" width="30%" headers="d212533e993 ">Credentials File Path (JSON) </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d208892e993 ">When using a Google Cloud service account credentials
+                                    <td class="entry" valign="top" width="70%" headers="d212533e996 ">When using a Google Cloud service account credentials
                                         file, path to the file that the origin uses to connect to
                                         Google BigQuery. The credentials file must be a JSON
                                             file.<p class="p">Enter a path relative to the <span class="ph">Data

@@ -43,7 +43,7 @@
     
     <div class="body taskbody"><p class="shortdesc">When you install from the RPM package, <span class="ph">Data
                   Collector</span> uses
-        the default directories and the default system user and group. </p>
+        the default directories and runs as the default system user and group. </p>
 
         <div class="section prereq p">
             <p class="p">The default system user and group are named sdc. If an sdc user and an sdc group do
@@ -94,8 +94,8 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd" id="task_th5_1yj_dx__AccessDC">To access the <span class="ph">Data Collector</span> console, enter the
-                    following URL in the address bar of your browser: </span>
+                <span class="ph cmd" id="task_th5_1yj_dx__AccessDC">To access the <span class="ph">Data Collector</span> UI, enter the following URL
+                    in the address bar of your browser: </span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">http://&lt;hostname&gt;:18630/</pre>
 
@@ -264,8 +264,8 @@ chown sdc:sdc /var/lib/sdc-resources</pre>
 
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd" id="task_pnf_344_1r__AccessDC">To access the <span class="ph">Data Collector</span> console, enter the
-                    following URL in the address bar of your browser: </span>
+                <span class="ph cmd" id="task_pnf_344_1r__AccessDC">To access the <span class="ph">Data Collector</span> UI, enter the following URL
+                    in the address bar of your browser: </span>
                 <div class="itemgroup info">
                     <pre class="pre codeblock">http://&lt;hostname&gt;:18630/</pre>
 
@@ -277,7 +277,7 @@ chown sdc:sdc /var/lib/sdc-resources</pre>
 
     <div class="related-links"><div class="relinfo"><strong>Related information</strong><br />
 <div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_mnx_j3r_3v" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.">Data Collector Directories</a></div>
-<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.">User and Group for Service Start</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Configuration/DCEnvironmentConfig.html#concept_htz_t1s_3v" title="When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.">User and Group for Service Start</a></div>
 </div>
 </div>
 </div>

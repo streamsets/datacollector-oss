@@ -1,0 +1,1960 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="description" content="The Kafka Multitopic Consumer origin reads data from multiple topics in an Apache Kafka cluster. The origin can use multiple threads to enable parallel processing of data. When preferred, you can use ..." /><meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Kafka Multitopic Consumer" /><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ccs_fn4_x1b" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Multitopic Consumer</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_ccs_fn4_x1b">
+ <h1 class="title topictitle1">Kafka Multitopic Consumer</h1>
+
+ <div class="body conbody">
+  <p class="p">The Kafka
+            Multitopic Consumer origin reads data from multiple topics in an Apache Kafka cluster.
+            The origin can use multiple threads to enable parallel processing of data. When
+            preferred, you can use the <a class="xref" href="KConsumer.html#concept_msz_wnr_5q" title="You can add custom Kafka configuration properties to the Kafka Consumer.When you use an origin to read log data, you define the format of the log files to be read. Configure a Kafka Consumer to read data from a Kafka cluster.">Kafka
+                Consumer</a> to read from a single topic using a single thread. </p>
+
+        <p class="p">When you configure a Kafka Multitopic Consumer, you configure the consumer group name and
+            the brokers to use. You also specify the topics to process and the number of threads to
+            use. In Kafka, make sure that the <a class="xref" href="KafkaMultiConsumer.html#concept_ifs_wtm_3z">partition
+                assignment strategy</a> is configured appropriately. </p>
+
+        <p class="p">You can configure the origin to produce a single record when a message includes multiple
+            objects. And you can add additional Kafka configuration properties as needed, including
+            Kafka security features.</p>
+
+        <p class="p">When processing Avro data, you can configure the Kafka Multitopic Consumer to work with
+            the Confluent Schema Registry. The Confluent Schema Registry is a distributed storage
+            layer for Avro schemas which uses Kafka as its underlying storage mechanism.</p>
+
+        <p class="p">Kafka Multitopic Consumer includes record header attributes that enable you to use
+            information about the record in pipeline processing. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_zlc_ppn_js">
+ <h2 class="title topictitle2">Initial and Subsequent Offsets</h2>
+
+ <div class="body conbody">
+  <p class="p">When you start a
+      pipeline for the first time, the Kafka Multitopic Consumer becomes a new consumer group for
+      each specified topic.</p>
+
+    <p class="p">By default, the origin reads only incoming data, processing data from all partitions and
+      ignoring any existing data in the topic. After the origin passes data to destinations, it
+      saves the offset with Kafka. When you stop and restart the pipeline, processing continues
+      based on the offset. </p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_hdc_fvn_sx">
+ <h2 class="title topictitle2">Processing All Unread Data</h2>
+
+ <div class="body conbody">
+  <p class="p">You can configure the Kafka Multitopic Consumer origin
+            to read all unread data in a topic. By default, the Kafka Multitopic Consumer origin
+            reads only incoming data. </p>
+
+        <div class="p">To read all unread data in the topic, add the auto.offset.reset Kafka configuration
+            property to the origin:<ol class="ol" id="concept_hdc_fvn_sx__ol_n4r_rvn_sx">
+                <li class="li">On the <span class="keyword wintitle">Kafka</span> tab, click the <span class="ph uicontrol">Add</span> icon
+                    to add a new Kafka configuration property.<p class="p">You can use <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add configuration
+                    properties.</p>
+</li>
+
+                <li class="li">For the property name, enter <span class="ph uicontrol">auto.offset.reset</span>.</li>
+
+                <li class="li">Set the value for the auto.offset.reset property to
+                        <span class="ph uicontrol">earliest</span>.</li>
+
+            </ol>
+</div>
+
+        <p class="p">For more information about auto.offset.reset, see the Apache Kafka documentation. For
+            more information about adding custom Kafka configuration properties, see <a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">Additional Kafka Properties</a>.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ifs_wtm_3z">
+ <h2 class="title topictitle2">Multithreaded Processing</h2>
+
+ <div class="body conbody">
+  <p class="p">The Kafka Multitopic Consumer
+            origin performs parallel processing and enables the creation of a multithreaded
+            pipeline. The Kafka Multitopic Consumer origin uses multiple concurrent threads based on
+            the Number of Threads property and the partition assignment strategy defined in the
+            Kafka cluster. </p>
+
+        <div class="p">
+            <div class="note important"><span class="importanttitle">Important:</span> In Kafka, make sure that the partition assignment strategy is set
+                to the strategy you want to use. For example, in Kafka 0.10.1, you can set
+                partition.assignment.property to range or roundrobin. For more information about the
+                strategies, see <a class="xref" href="https://kafka.apache.org/documentation/" target="_blank">the Kafka documentation</a>.</div>
+
+        </div>
+
+        <p class="p">When performing multithreaded processing, the Kafka Multitopic Consumer origin checks the
+            list of topics to process and creates the specified number of threads. Each thread
+            connects to Kafka and creates a batch of data from a partition assigned by the broker
+            based on the Kafka partition assignment strategy. Then, it passes the batch to an
+            available pipeline runner. </p>
+
+        <p class="p"><span class="ph">A pipeline runner is a <dfn class="term">sourceless
+                              pipeline instance</dfn> - an instance of the pipeline that includes
+                        all of the processors and destinations in the pipeline and represents all
+                        pipeline processing after the origin.</span>
+            <span class="ph"> Each pipeline runner processes one batch at a time,
+                        just like a pipeline that runs on a single thread. When the flow of data
+                        slows, the pipeline runners wait idly until they are needed.</span></p>
+
+        <p class="p"><span class="ph">Multithreaded pipelines preserve the order of
+                        records within each batch, just like a single-threaded pipeline. But since
+                        batches are processed by different pipeline instances, the order that
+                        batches are written to destinations is not ensured.</span></p>
+
+        <p class="p">For example, say you set the Number of Threads property to 5. When you start the
+            pipeline, <span class="ph">the origin creates five
+                              threads, and by default <span class="ph">Data
+                  Collector</span> creates a matching number of pipeline runners.</span> The threads are assigned to different partitions based on the Kafka partition
+            assignment strategy. <span class="ph">Upon receiving data, the origin passes a batch to
+                              each of the pipeline runners for processing.</span></p>
+
+        <p class="p">At any given moment, the five pipeline runners can each
+                  process a batch, so this multithreaded pipeline processes up to five batches at a
+                  time. When incoming data slows, the pipeline runners sit idle, available for use
+                  as soon as the data flow increases.</p>
+
+        <p class="p">For more information about multithreaded pipelines, see <a class="xref" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_zpp_2xc_py">Multithreaded Pipeline Overview</a>. For more information about the Kafka partition assignment strategies, see the <a class="xref" href="https://kafka.apache.org/documentation/" target="_blank">Kafka
+                documentation</a>.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_d5f_n2g_vq">
+ <h2 class="title topictitle2">Additional Kafka Properties</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can add custom Kafka configuration properties to the Kafka Multitopic
+        Consumer.</p>
+
+  <p class="p">When you add the
+            Kafka configuration property, enter the exact property name and the value. The Kafka
+            Multitopic Consumer does not validate the property names or values.</p>
+
+  <div class="p">
+   <div class="note note"><span class="notetitle">Note:</span> The Kafka Multitopic Consumer origin uses the following Kafka configuration properties. The
+                origin ignores user-defined values for these properties:<div class="p">
+                    <ul class="ul" id="concept_d5f_n2g_vq__ul_ajb_c3g_vq">
+                        <li class="li">auto.commit.interval.ms</li>
+
+                        <li class="li">bootstrap.servers</li>
+
+                        <li class="li">enable.auto.commit</li>
+
+                        <li class="li">group.id</li>
+
+                        <li class="li">max.poll.records</li>
+
+                    </ul>
+
+                </div>
+</div>
+
+  </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_tlj_3g1_2z">
+ <h2 class="title topictitle2">Record Header Attributes</h2>
+
+ <div class="body conbody">
+        <p class="p">The
+            Kafka Multitopic Consumer origin <span class="ph">creates record header
+                attributes that include <span class="ph" id="concept_tlj_3g1_2z__d40621e19">information about the originating file for
+                    the record</span>.</span> When the origin <span class="ph">processes Avro data, it includes the Avro schema in
+                        an avroSchema record header attribute.</span></p>
+
+        <p class="p">You can use the record:attribute or record:attributeOrDefault functions to
+            access the information in the attributes. For more information about working with record
+            header attributes, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_rd2_ghz_dz">Working with Header Attributes</a>.</p>
+
+        <div class="p">The Kafka Multitopic Consumer origin <span class="ph">creates the following record header
+                attributes:</span><ul class="ul" id="concept_tlj_3g1_2z__ul_i4q_2qv_jw">
+                <li class="li">avroSchema - When processing Avro data, provides the
+                              Avro schema.</li>
+
+                <li class="li">offset - The offset where the record originated.</li>
+
+                <li class="li">partition - The partition where the record originated.</li>
+
+                <li class="li">topic - The topic where the record originated.</li>
+
+            </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_yg3_k31_t5">
+ <h2 class="title topictitle2">Enabling Security</h2>
+
+    <div class="body conbody">
+        <p class="p">You can configure the Kafka
+            Multitopic Consumer origin to connect securely to Kafka through SSL/TLS, Kerberos, or
+            both. </p>
+
+    </div>
+
+<div class="topic concept nested2" id="concept_ann_l2b_t5">
+    <h3 class="title topictitle3">Enabling SSL/TLS</h3>
+
+    <div class="body conbody">
+        <div class="p">Perform the following steps to enable the Kafka
+            Multitopic Consumer origin to use SSL/TLS to connect to Kafka:<ol class="ol" id="concept_ann_l2b_t5__ol_lnb_dc4_gbb">
+                <li class="li">To use SSL/TLS to connect, first make sure Kafka is
+                    configured for SSL/TLS as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">Kafka documentation</a>. </li>
+
+                <li class="li">On the <span class="keyword wintitle">Kafka</span> tab, add the
+                        <span class="ph uicontrol">security.protocol</span> Kafka configuration property and
+                    set it to <span class="ph uicontrol">SSL</span>.</li>
+
+                <li class="li">Then, add the following SSL Kafka configuration
+                        properties:<ul class="ul" id="concept_ann_l2b_t5__d43699e58">
+                        <li class="li">ssl.truststore.location</li>
+
+                        <li class="li">ssl.truststore.password</li>
+
+                    </ul>
+<div class="p">When the Kafka broker requires client authentication - when the
+                        ssl.client.auth broker property is set to "required" - add and configure the
+                        following properties: <ul class="ul" id="concept_ann_l2b_t5__d43699e68">
+                            <li class="li">ssl.keystore.location</li>
+
+                            <li class="li">ssl.keystore.password</li>
+
+                            <li class="li">ssl.key.password</li>
+
+                        </ul>
+</div>
+<div class="p">Some brokers might require adding the following properties as
+                            well:<ul class="ul" id="concept_ann_l2b_t5__d43699e81">
+                            <li class="li">ssl.enabled.protocols</li>
+
+                            <li class="li">ssl.truststore.type</li>
+
+                            <li class="li">ssl.keystore.type</li>
+
+                        </ul>
+</div>
+<p class="p">For details about these properties, see the Kafka
+                        documentation.</p>
+</li>
+
+            </ol>
+</div>
+
+        <p class="p">For example, the following properties allow the stage to use SSL/TLS to connect to Kafka
+            0.10.1 with client authentication:</p>
+
+        <img class="image" id="concept_ann_l2b_t5__image_w3r_mzc_rw" src="../Reusable_Content/Reusable_Topics/../../Graphics/Kafka-SSLoptions.png" height="179" width="549" />
+    </div>
+
+</div>
+<div class="topic concept nested2" id="concept_w4j_3vb_t5">
+ <h3 class="title topictitle3">Enabling Kerberos (SASL)</h3>
+
+ <div class="body conbody">
+  <p class="p">When you use Kerberos authentication, <span class="ph">Data
+                  Collector</span>
+            uses the Kerberos principal and keytab. </p>
+
+        <div class="p">Perform the following steps to enable the Kafka Multitopic Consumer origin to use
+            Kerberos to connect to Kafka:<ol class="ol" id="concept_w4j_3vb_t5__ol_vrj_rb4_gbb">
+                <li class="li">To use Kerberos, first make sure Kafka is configured for
+                    Kerberos as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">Kafka documentation</a>.</li>
+
+                <li class="li">In the <span class="ph">Data
+                  Collector</span>
+                    configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, make sure the
+                    following Kerberos properties are configured: <ul class="ul" id="concept_w4j_3vb_t5__ul_epq_gbd_rw">
+                        <li class="li">kerberos.client.enabled</li>
+
+                        <li class="li">kerberos.client.principal</li>
+
+                        <li class="li">kerberos.client.keytab</li>
+
+                  </ul>
+</li>
+
+                <li class="li">On the <span class="keyword wintitle">Kafka</span> tab, add the
+                        <span class="ph uicontrol">security.protocol</span> Kafka configuration property, and
+                    set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
+
+                <li class="li">Then, add the
+                        <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
+                    and set it to the Kerberos principal name that Kafka runs as. </li>
+
+            </ol>
+</div>
+
+        <p class="p">For example, the following Kafka properties enable connecting to Kafka 0.10.1 with
+            Kerberos:</p>
+
+        <p class="p"><img class="image" id="concept_w4j_3vb_t5__d43791e89" src="../Reusable_Content/Reusable_Topics/../../Graphics/Kafka-Kerberos.png" height="58" width="561" /></p>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_qzq_jrk_55">
+ <h3 class="title topictitle3">Enabling SSL/TLS and Kerberos</h3>
+
+ <div class="body conbody">
+        <p class="p">You can enable the Kafka Multitopic Consumer origin
+            to use SSL/TLS and Kerberos to connect to Kafka. </p>
+
+        <div class="p"><span class="ph">To use SSL/TLS and Kerberos, combine the
+            required steps to enable each and set the security.protocol property as follows:</span><ol class="ol" id="concept_qzq_jrk_55__ol_grw_v14_gbb">
+                <li class="li">Make sure Kafka is configured to use SSL/TLS and
+                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_qzq_jrk_55__d43930e37">
+                        <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
+
+                        <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
+
+                    </ul>
+</li>
+
+                    <li class="li">In the <span class="ph">Data
+                  Collector</span>
+                    configuration file, <samp class="ph codeph">$SDC_CONF/sdc.properties</samp>, make sure the
+                    following Kerberos properties are configured: <ul class="ul" id="concept_qzq_jrk_55__ul_epq_gbd_rw">
+                        <li class="li">kerberos.client.enabled</li>
+
+                        <li class="li">kerberos.client.principal</li>
+
+                        <li class="li">kerberos.client.keytab</li>
+
+                  </ul>
+</li>
+
+                <li class="li">On the <span class="keyword wintitle">Kafka</span> tab, add the
+                        <span class="ph uicontrol">security.protocol</span> property and set it to
+                        <span class="ph uicontrol">SASL_SSL</span>.</li>
+
+                    <li class="li">Then, add the
+                        <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
+                    and set it to the Kerberos principal name that Kafka runs as. </li>
+
+                    <li class="li">Then, add the following SSL Kafka configuration
+                        properties:<ul class="ul" id="concept_qzq_jrk_55__d43699e58">
+                        <li class="li">ssl.truststore.location</li>
+
+                        <li class="li">ssl.truststore.password</li>
+
+                    </ul>
+<div class="p">When the Kafka broker requires client authentication - when the
+                        ssl.client.auth broker property is set to "required" - add and configure the
+                        following properties: <ul class="ul" id="concept_qzq_jrk_55__d43699e68">
+                            <li class="li">ssl.keystore.location</li>
+
+                            <li class="li">ssl.keystore.password</li>
+
+                            <li class="li">ssl.key.password</li>
+
+                        </ul>
+</div>
+<div class="p">Some brokers might require adding the following properties as
+                            well:<ul class="ul" id="concept_qzq_jrk_55__d43699e81">
+                            <li class="li">ssl.enabled.protocols</li>
+
+                            <li class="li">ssl.truststore.type</li>
+
+                            <li class="li">ssl.keystore.type</li>
+
+                        </ul>
+</div>
+<p class="p">For details about these properties, see the Kafka
+                        documentation.</p>
+</li>
+
+            </ol>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic concept nested1" id="concept_xgs_nlc_wr">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <p class="p">The Kafka Multitopic Consumer origin processes data
+      differently based on the data format. Kafka Multitopic Consumer can process the following
+      types of data:</p>
+
+  <dl class="dl">
+      
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">Generates a record for every message. Includes a "precision" and
+                                    "scale" field attribute for each Decimal field. For more
+                                    information about field attributes, see <a class="xref" href="../Pipeline_Design/FieldAttributes.html#concept_xfm_wtp_1z" title="Field attributes are attributes that provide additional information about each field that you can use in pipeline logic, as needed.">Field Attributes</a>.</dd>
+
+                              <dd class="dd">The origin writes the Avro schema to an avroSchema record header
+                                    attribute. For more information about record header attributes,
+                                    see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>. </dd>
+
+                              <dd class="dd">You can use one of the following methods to specify the location
+                                    of the Avro schema definition:<ul class="ul" id="concept_xgs_nlc_wr__d37034e696">
+                                          <li class="li"><span class="ph uicontrol">Message/Data Includes Schema</span> -
+                                                Use the schema in the message.</li>
+
+                                          <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
+                                                the schema that you provide in the stage
+                                                configuration.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Confluent Schema Registry</span> -
+                                                Retrieve the schema from Confluent Schema Registry.
+                                                The Confluent Schema Registry is a distributed
+                                                storage layer for Avro schemas. You can configure
+                                                the origin to look up the schema in the Confluent
+                                                Schema Registry by the schema ID embedded in the
+                                                message or by the schema ID or subject specified in
+                                                the stage configuration.<p class="p">You must specify the
+                                                  method that the origin uses to deserialize the
+                                                  message. If the Avro schema ID is embedded in each
+                                                  message, set the key and value deserializers to
+                                                  Confluent on the <span class="ph uicontrol">Kafka</span>
+                                                  tab.</p>
+</li>
+
+                                    </ul>
+</dd>
+
+                              <dd class="dd">Using a schema in the stage configuration or retrieving a schema
+                                    from the Confluent Schema Registry overrides any schema that
+                                    might be included in the message and can improve
+                                    performance.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">Binary</dt>
+
+                              <dd class="dd">Generates a record with a single byte array field at the root of
+                                    the record. </dd>
+
+                              <dd class="dd">When the data exceeds the user-defined maximum data size, the
+                                    origin cannot process the data. Because the record is not
+                                    created, the origin cannot pass the record to the pipeline to be
+                                    written as an error record. Instead, the origin generates a
+                                    stage error. </dd>
+
+                        
+      
+                              <dt class="dt dlterm">Datagram</dt>
+
+                              <dd class="dd">Generates a record for every message. The origin <span class="ph">can read <a class="xref" href="https://collectd.org/" target="_blank">collectd</a> messages, Netflow messages from
+                        NetFlow Version 5, and the following types of syslog messages:</span><ul class="ul" id="concept_xgs_nlc_wr__ul_fj2_3q4_4x">
+                        <li class="li">RFC 5424 (<a class="xref" href="https://tools.ietf.org/html/rfc5424" target="_blank">https://tools.ietf.org/html/rfc5424</a>)</li>
+
+                        <li class="li">RFC 3164 (<a class="xref" href="https://tools.ietf.org/html/rfc3164" target="_blank">https://tools.ietf.org/html/rfc3164</a>)</li>
+
+                        <li class="li">Non-standard common messages, such as RFC 3339 dates with no version
+                              digit</li>
+
+                  </ul>
+</dd>
+
+                        
+      
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">Generates a record for each delimited line. You can use the
+                                    following delimited format types:<ul class="ul" id="concept_xgs_nlc_wr__d37034e953">
+                                          <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
+                                                includes comma-separated values. Ignores empty lines
+                                                in the file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated
+                                                file that strictly follows RFC4180 guidelines.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel
+                                                comma-separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma
+                                                separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File
+                                                that includes tab-separated values.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Custom</span> - File that uses
+                                                user-defined delimiter, escape, and quote
+                                                characters.</li>
+
+                                    </ul>
+</dd>
+
+                              <dd class="dd">You can use a list or list-map root field type for delimited data,
+                                    optionally including the header information when available. For
+                                    more information about the root field types, see <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</dd>
+
+                              <dd class="dd">When using a header line, you can allow processing records with
+                                    additional columns. The additional columns are named using a
+                                    custom prefix and integers in sequential increasing order, such
+                                    as  _extra_1, _extra_2. When you disallow additional columns
+                                    when using a header line, records that include additional
+                                    columns are sent to error.</dd>
+
+                              <dd class="dd">You can also replace a string constant with null values.</dd>
+
+                              <dd class="dd">When a record exceeds the maximum record length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">Generates a record for each JSON object. You can process JSON
+                                    files that include multiple JSON objects or a single JSON
+                                    array.</dd>
+
+                              <dd class="dd">When an object exceeds the maximum object length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage. </dd>
+
+                        
+      
+                              <dt class="dt dlterm">Log</dt>
+
+                              <dd class="dd">Generates a record for every log line. </dd>
+
+                              <dd class="dd">When a line exceeds the user-defined maximum line length, the
+                                    origin truncates longer lines. </dd>
+
+                              <dd class="dd">You can include the processed log line as a field in the record.
+                                    If the log line is truncated, and you request the log line in
+                                    the record, the origin includes the truncated line.</dd>
+
+                              <dd class="dd">You can define the log format or type to be read.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">Protobuf</dt>
+
+                              <dd class="dd">Generates a record for every protobuf message. By default, the
+                                    origin assumes messages contain multiple protobuf messages.</dd>
+
+                              <dd class="dd">Protobuf messages must match the specified message type and be
+                                    described in the descriptor file. </dd>
+
+                              <dd class="dd">When the data for a record exceeds 1 MB, the origin cannot
+                                    continue processing data in the message. The origin handles the
+                                    message based on the stage error handling property and continues
+                                    reading the next message. </dd>
+
+                              <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">SDC Record</dt>
+
+                              <dd class="dd">Generates a record for every record. Use to process records
+                                    generated by a <span class="ph">Data
+                  Collector</span> pipeline using the SDC Record data format.</dd>
+
+                              <dd class="dd">For error records, the origin provides the original record as read
+                                    from the origin in the original pipeline, as well as error
+                                    information that you can use to correct the record. </dd>
+
+                              <dd class="dd">When processing error records, the origin expects the error file
+                                    names and contents as generated by the original pipeline.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">Generates a record for each line of text or for each section of
+                                    text based on a custom delimiter.</dd>
+
+                              <dd class="dd">When a line or section exceeds the maximum line length defined for
+                                    the origin, the origin truncates it. The origin adds a boolean
+                                    field named Truncated to indicate if the line was
+                                    truncated.</dd>
+
+                              <dd class="dd">For more information about processing text with a custom
+                                    delimiter, see <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">Text Data Format with Custom Delimiters</a>.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">XML</dt>
+
+                              <dd class="dd">Generates records based on a user-defined delimiter element. Use
+                                    an XML element directly under the root element or define a
+                                    simplified XPath expression. If you do not define a delimiter
+                                    element, the origin treats the XML file as a single record.</dd>
+
+                              <dd class="dd">Generated records include XML attributes and namespace
+                                    declarations as fields in the record by default. You can
+                                    configure the stage to include them in the record as field
+                                    attributes. </dd>
+
+                              <dd class="dd">You can include XPath information for each parsed XML element and
+                                    XML attribute in field attributes. This also places each
+                                    namespace in an xmlns record header attribute. <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes and record header attributes are
+                        written to destination systems automatically only when you use the SDC RPC
+                        data format in destinations. For more information about working with field
+                        attributes and record header attributes, and how to include them in records,
+                        see <a class="xref" href="../Pipeline_Design/FieldAttributes.html#concept_xfm_wtp_1z" title="Field attributes are attributes that provide additional information about each field that you can use in pipeline logic, as needed.">Field Attributes</a> and <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</span></div>
+</dd>
+
+                              <dd class="dd">When a record exceeds the user-defined maximum record length, the
+                                    origin skips the record and continues processing with the next
+                                    record. It sends the skipped record to the pipeline for error
+                                    handling. </dd>
+
+                              <dd class="dd">Use the XML data format to process valid XML documents. For more
+                                    information about XML processing, see <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_lty_42b_dy">Reading and Processing XML Data</a>.</dd>
+
+                              <dd class="dd">
+                                    <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph">If you want to process invalid XML
+                                                documents, you can try using the text data format
+                                                with custom delimiters. For more information, see
+                                                  <a class="xref" href="../Data_Formats/TextCDelim.html#concept_okt_kmg_jx">Processing XML Data with Custom Delimiters</a>.</span>
+                                    </div>
+
+                              </dd>
+
+                        
+    </dl>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_tr1_spd_sr">
+ <h3 class="title topictitle3">Log Formats</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you use an origin to read log data, you define the format of the log files to be
+  read. </p>
+
+  <p class="p">You can read log files that use the following log formats:</p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Common Log Format</dt>
+
+     <dd class="dd">A standardized text format used by web servers to generate log files. Also known as the
+      NCSA (National Center for Supercomputing Applications) Common Log format.</dd>
+
+    
+    
+     <dt class="dt dlterm">Combined Log Format</dt>
+
+     <dd class="dd">A standardized text format based on the common log format that includes additional
+      information. Also known as the Apache/NCSA Combined Log Format.</dd>
+
+    
+    
+     <dt class="dt dlterm">Apache Error Log Format</dt>
+
+     <dd class="dd">The standardized error log format generated by the Apache HTTP Server 2.2.</dd>
+
+    
+    
+     <dt class="dt dlterm">Apache Access Log Custom Format</dt>
+
+     <dd class="dd">A customizable access log generated by the Apache HTTP Server 2.2. Use the Apache HTTP
+      Server version 2.2 syntax to define the format of the log file. </dd>
+
+    
+    
+     <dt class="dt dlterm">Regular Expression</dt>
+
+     <dd class="dd">Use a regular expression to define the structure of log data, and then assign the field or
+      fields represented by each group.  </dd>
+
+     <dd class="dd">Use any valid regular expression.</dd>
+
+    
+    
+     <dt class="dt dlterm">Grok Pattern</dt>
+
+     <dd class="dd">Use a grok pattern to define the structure of log data. You can use the grok patterns
+      supported by <span class="ph">Data
+                  Collector</span>. You can
+      also define a custom grok pattern and then use it as part of the log format. </dd>
+
+     <dd class="dd">For more information about supported grok patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns_title.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data.">Defining Grok Patterns</a>.</dd>
+
+    
+    
+     <dt class="dt dlterm">log4j</dt>
+
+     <dd class="dd">A customizable format generated by the Apache Log4j 1.2 logging utility. You can use the
+      default format or specify a custom format. Use the Apache Log4j version 1.2 syntax to define
+      the format of the log file.</dd>
+
+     <dd class="dd">You can also specify the action to take when the origin encounters an error when parsing a
+      line. You can skip the line and optionally log an error. If you know that the unparsable
+      information is part of a stack trace, you can have the origin include the unparsable
+      information as a stack trace to the previous parsable line.</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_ost_3n4_x1b">
+    <h2 class="title topictitle2">Configuring a Kafka Multitopic Consumer</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc"></p>
+
+        <div class="section context">Configure a Kafka Multitopic
+            Consumer to use multiple threads to read data from multiple topics in a Kafka cluster. </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__d37132e340" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d261495e1112">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d261495e1115">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d261495e1112 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d261495e1115 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d261495e1112 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d261495e1115 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d261495e1112 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_ost_3n4_x1b__d37132e386" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d261495e1115 ">Error record handling for the stage: <ul class="ul" id="task_ost_3n4_x1b__d37132e390">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Kafka</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_v4j_qhw_yq" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d261495e1191">Kafka Property</th>
+
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d261495e1194">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d261495e1191 ">Broker URI</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d261495e1194 ">Connection string for the Kafka broker. Use the following
+                                        format: <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To ensure a
+                                            connection, enter a comma-separated list of additional
+                                            broker URIs.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d261495e1191 ">Consumer Group</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d261495e1194 ">Kafka consumer group that the <span class="ph">Data
+                  Collector</span> belongs to.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d261495e1191 ">Topic List</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d261495e1194 ">The Kafka topics to read. Click
+                                            <span class="ph uicontrol">Add</span> to add additional topics. <div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> You can use <a class="xref" href="Origins_overview.html#task_jp5_ql1_tq" title="You can preview raw source data for Directory, File Tail, and Kafka Consumer origins. Preview raw source data when reviewing the data might help with origin configuration.">Raw Preview</a> to generate a list of topics
+                                                associated with a broker. The list displays in a
+                                                format that you can use to list the topics in <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">bulk edit mode</a>. </div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d261495e1191 ">Produce Single Record</td>
+
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d261495e1194 ">For each partition, generates a single record for records that include multiple
+        objects. <p class="p">When not selected, the origin generates multiple records when a record includes
+         multiple objects.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d261495e1191 ">Number of Threads  </td>
+ <td class="entry" valign="top" width="72.22222222222221%" headers="d261495e1194 ">The number of threads the origin generates and uses for multithreaded processing. The origin
+                                        uses threads as defined by the Kafka partition assignment
+                                        strategy. For more information, see <a class="xref" href="KafkaMultiConsumer.html#concept_ifs_wtm_3z">Multithreaded Processing</a>.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d261495e1191 ">Max Batch Size (records)</td>
+
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d261495e1194 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+                  Collector</span> maximum
+        batch size. <p class="p">Default is 1000. The <span class="ph">Data
+                  Collector</span> default
+         is 1000.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d261495e1191 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_ost_3n4_x1b__d37145e892" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d261495e1194 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+
+      </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d261495e1191 ">Kafka Configuration <a class="xref" href="KafkaMultiConsumer.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Multitopic Consumer.">
+                                            <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a>
+                                    </td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d261495e1194 ">
+                                        <p class="p">Additional Kafka configuration
+                                            properties to use. Using <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                                <span class="ph uicontrol">Add</span> icon to add properties.
+                                            Define the Kafka property name and value.</p>
+
+                                        <p class="p">Use the property names and values as
+                                            expected by Kafka.</p>
+
+                                        <p class="p" id="task_ost_3n4_x1b__p-KafkaConfig3">For information about enabling secure
+                                            connections to Kafka, see <a class="xref" href="KafkaMultiConsumer.html#concept_yg3_k31_t5">Enabling Security</a>.</p>
+</td>
+
+                                                                           
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Format</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d261495e1376">Data Format Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d261495e1379">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1376 ">Data Format <a class="xref" href="KafkaMultiConsumer.html#concept_xgs_nlc_wr" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                            <img class="image" id="task_ost_3n4_x1b__image_bmy_h5q_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1379 ">Type of data to be read. Use one of the following
+                                            options:<ul class="ul" id="task_ost_3n4_x1b__ul_l1j_hnf_qw">
+                        <li class="li">Avro</li>
+
+                        <li class="li">Binary</li>
+
+                        <li class="li">Datagram</li>
+
+                        <li class="li">Delimited</li>
+
+                        <li class="li">JSON</li>
+
+                        <li class="li">Log</li>
+
+                        <li class="li">Protobuf</li>
+
+                        <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that Data Collector uses to generate error records. Data Collector can also use the data format to read and write data.">
+                                    <img class="image" id="task_ost_3n4_x1b__d37034e605" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="14" width="14" /></a></li>
+
+                        <li class="li">Text</li>
+
+                        <li class="li">XML</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_ost_3n4_x1b__O-AVRO-Mess">
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_acd_2qd_3t" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d261495e1475">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d261495e1478">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1475 ">Avro Schema Location</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1478 ">Location of the Avro schema definition to use when
+                                        processing data:<ul class="ul" id="task_ost_3n4_x1b__d37132e792">
+                                            <li class="li">Message/Data Includes Schema - Use the schema in the
+                                                message.</li>
+
+                                            <li class="li">In Pipeline Configuration - Use the schema provided
+                                                in the stage configuration.</li>
+
+                                            <li class="li">Confluent Schema Registry - Retrieve the schema from
+                                                the Confluent Schema Registry.</li>
+
+                                        </ul>
+<p class="p">Using a schema in the stage configuration or in the
+                                            Confluent Schema Registry can improve
+                                        performance.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1475 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1478 ">Avro schema definition used to process the data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. <p class="p">You can optionally use the runtime:loadResource
+                                            function to use a schema definition stored in a runtime
+                                            resource file. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1475 ">Schema Registry URLs</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1478 ">Confluent Schema Registry URLs used to look up the
+                                        schema. To add a URL, click <span class="ph uicontrol">Add</span>. Use
+                                        the following format to enter the
+                                        URL:<pre class="pre codeblock">http://&lt;host name&gt;:&lt;port number&gt;</pre>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1475 ">Lookup Schema By</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1478 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_ost_3n4_x1b__d37132e839">
+                                            <li class="li">Subject - Look up the specified Avro schema
+                                                subject.</li>
+
+                                            <li class="li">Schema ID - Look up the specified Avro schema ID. </li>
+
+                                            <li class="li">Embedded Schema ID - Look up the Avro schema ID
+                                                embedded in each message.</li>
+
+                                        </ul>
+Overrides any existing schema definitions associated
+                                        with the message. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1475 ">Schema Subject</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1478 ">Avro schema subject to look up in the Confluent Schema
+                                            Registry.<p class="p">If the specified subject has multiple schema
+                                            versions, the origin uses the latest schema version for
+                                            that subject. To use an older version, find the
+                                            corresponding schema ID, and then set the
+                                                <span class="ph uicontrol">Look Up Schema By</span> property to
+                                            Schema ID.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1475 ">Schema ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1478 ">Avro schema ID to look up in the Confluent Schema
+                                        Registry.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_ost_3n4_x1b__O-Binary">
+                <span class="ph cmd">For binary data, on the <span class="keyword wintitle">Data Format</span> tab and configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_dpx_kdm_35" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d261495e1604">Binary Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d261495e1607">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1604 ">Max Data Size (bytes)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1607 ">Maximum number of bytes in the message. Larger messages
+                                        cannot be processed or written to error. </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For datagram data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_rwp_sp4_gbb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d261495e1651">Datagram Properties</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d261495e1654">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1651 ">Data Format <a class="xref" href="KafkaMultiConsumer.html#concept_xgs_nlc_wr" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                            <img class="image" id="task_ost_3n4_x1b__image_swp_sp4_gbb" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1654 ">Message type: <ul class="ul" id="task_ost_3n4_x1b__ul_twp_sp4_gbb">
+                                            <li class="li">collectd</li>
+
+                                            <li class="li">NetFlow</li>
+
+                                            <li class="li">syslog </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1651 ">TypesDB File Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1654 "><span class="ph">Path to a user-provided types.db
+                                            file. Overrides the default types.db file.</span><p class="p">For collectd data only.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1651 ">Convert Hi-Res Time &amp;
+                                        Interval</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1654 "><span class="ph">Converts the collectd high
+                                            resolution time format interval and timestamp to UNIX
+                                            time, in milliseconds.</span><p class="p">For collectd data only.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1651 ">Exclude Interval</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1654 "><span class="ph">Excludes the interval field from
+                                            output record.</span><p class="p">For collectd data only.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1651 ">Auth File</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1654 "><span class="ph">Path to an optional authentication
+                                            file. Use an authentication file to accept signed and
+                                            encrypted data.</span><p class="p">For collectd data only.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e1651 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e1654 ">Character encoding of the messages to be processed.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e1651 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_ost_3n4_x1b__d37145e728" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e1654 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_wbk_jvs_wx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d261495e1789">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d261495e1792">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Delimiter Format Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Delimiter format type. Use one of the following options:
+                                            <ul class="ul" id="task_ost_3n4_x1b__ul_s5z_b3z_3r">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Indicates whether a file contains a header line, and
+                                        whether to use the header line.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Allow Extra Columns</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">When processing data with a header line, allows
+                                        processing records with more columns than exist in the
+                                        header line.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Extra Column Prefix</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Prefix to use for any additional columns. Extra columns
+                                        are named using the prefix and sequential increasing
+                                        integers as follows:
+                                            <samp class="ph codeph">&lt;prefix&gt;&lt;integer&gt;</samp>. <p class="p">For
+                                            example, _extra_1.  Default is _extra_.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Max Record Length (chars)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Maximum length of a record in characters. Longer records
+                                        are not read. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data
+                  Collector</span> parser
+                        buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                            character.<p class="p">You can enter a Unicode control character
+                                            using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
+                                            hexadecimal digit from the numbers 0-9 or the letters
+                                            A-F. For example, enter \u0000 to use the null character
+                                            as the delimiter or \u2028 to use a line separator as
+                                            the delimiter.</p>
+<p class="p">Default is the pipe character ( |
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Escape Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Escape character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Root Field Type <a class="xref" href="../Data_Formats/DelimitedDataRootFieldTypes.html">
+                                            <img class="image" id="task_ost_3n4_x1b__d37132e1387" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Root field type to use:<ul class="ul" id="task_ost_3n4_x1b__d37132e1391">
+                                            <li class="li">List-Map - Generates an indexed list of data.
+                                                Enables you to use standard functions to process
+                                                data. Use for new pipelines.</li>
+
+                                            <li class="li">List - Generates a record with an indexed list with
+                                                a map for header and value. Requires the use of
+                                                delimited data functions to process data. Use only
+                                                to maintain pipelines created before 1.1.0.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Lines to Skip</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Lines to skip before reading data. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Parse NULLs</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Replaces the specified string constant with null
+                                        values.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e1789 ">NULL Constant</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e1792 ">String constant to replace with null values.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Character encoding of the files to be processed.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e1789 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_ost_3n4_x1b__d37145e728" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e1792 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_c1h_wls_wx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d261495e2031">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d261495e2034">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2031 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2034 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_ost_3n4_x1b__d37132e1506">
+                                                <li class="li">Array of Objects </li>
+
+                                                <li class="li">Multiple Objects</li>
+
+                                            </ul>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2031 ">Maximum Object Length (chars)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2034 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                            objects are diverted to the pipeline for error handling.
+                                                </p>
+<p class="p"><span class="ph">This property can be limited by the <span class="ph">Data
+                  Collector</span> parser
+                        buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e2031 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e2034 ">Character encoding of the files to be processed.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e2031 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_ost_3n4_x1b__d37145e728" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e2034 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For log data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_mgz_ydm_wx" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d261495e2134">Log Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d261495e2137">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2134 ">Log Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2137 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_ost_3n4_x1b__d37132e1616">
+                                            <li class="li">Common Log Format</li>
+
+                                            <li class="li">Combined Log Format</li>
+
+                                            <li class="li">Apache Error Log Format</li>
+
+                                            <li class="li">Apache Access Log Custom Format</li>
+
+                                            <li class="li">Regular Expression</li>
+
+                                            <li class="li">Grok Pattern</li>
+
+                                            <li class="li">Log4j</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2134 ">Max Line Length</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2137 ">Maximum length of a log line. The origin truncates longer
+                                        lines. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data
+                  Collector</span> parser
+                        buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2134 ">Retain Original Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2137 ">Determines how to treat the original log line. Select to
+                                        include the original log line as a field in the resulting
+                                            record.<p class="p">By default, the original line is
+                                            discarded.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e2134 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e2137 ">Character encoding of the files to be processed.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e2134 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_ost_3n4_x1b__d37145e728" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e2137 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                    <ul class="ul" id="task_ost_3n4_x1b__ul_hx5_k2m_wx">
+                        <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
+                            use Apache log format strings to define the <span class="ph uicontrol">Custom Log
+                                Format</span>.</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Regular Expression</span>, enter the
+                            regular expression that describes the log format, and then map the
+                            fields that you want to include to each regular expression group.</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Grok Pattern</span>, you can use the
+                                <span class="ph uicontrol">Grok Pattern Definition</span> field to define
+                            custom grok patterns. You can define a pattern on each line. <p class="p">In the
+                                    <span class="ph uicontrol">Grok Pattern</span> field, enter the pattern to
+                                use to parse the log. You can use a predefined grok patterns or
+                                create a custom grok pattern using patterns defined in
+                                    <span class="ph uicontrol">Grok Pattern Definition</span>.</p>
+<p class="p">For more
+                                information about defining grok patterns and supported grok
+                                patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns_title.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data.">Defining Grok Patterns</a>.</p>
+</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
+                                
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__d37132e1723" class="table" frame="border" border="1" rules="all">
+                                        
+                                        
+                                        <thead class="thead" align="left">
+                                            <tr>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d261495e2297">Log4j Property</th>
+
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d261495e2300">Description</th>
+
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody class="tbody">
+                                            <tr>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d261495e2297 ">On Parse Error</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d261495e2300 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_ost_3n4_x1b__d37132e1752">
+                                                  <li class="li">Skip and Log Error - Skips reading the line
+                                                  and logs a stage error.</li>
+
+                                                  <li class="li">Skip, No Error - Skips reading the line and
+                                                  does not log an error.</li>
+
+                                                  <li class="li">Include as Stack Trace - Includes information
+                                                  that cannot be parsed as a stack trace to the
+                                                  previously-read log line. The information is added
+                                                  to the message field for the last valid log
+                                                  line.</li>
+
+                                                  </ul>
+</td>
+
+                                            </tr>
+
+                                            <tr>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d261495e2297 ">Use Custom Log Format</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d261495e2300 ">Allows you to define a custom log
+                                                  format.</td>
+
+                                            </tr>
+
+                                            <tr>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d261495e2297 ">Custom Format</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d261495e2300 ">Use log4j variables to define a custom log
+                                                  format. </td>
+
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+</div>
+
+                            </div>
+</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_ost_3n4_x1b__O-PROTO-Mess">
+                <span class="ph cmd">For protobuf data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_s3c_mz4_45" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d261495e2374">Protobuf Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d261495e2377">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2374 ">Protobuf Descriptor File </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2377 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data
+                  Collector</span> resources directory,
+                                            <samp class="ph codeph">$SDC_RESOURCES</samp>.<p class="p">For information about
+                                            generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>. For more information about environment variables,
+                                            see <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2374 ">Message Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2377 ">The fully-qualified name for the message type to use when
+                                        reading data.<p class="p">Use the following format:
+                                                <samp class="ph codeph">&lt;package name&gt;.&lt;message
+                                            type&gt;</samp>. </p>
+Use a message type defined in the
+                                        descriptor file.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2374 ">Delimited Messages</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2377 ">Indicates if a message might include more than one
+                                        protobuf message.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_ost_3n4_x1b__Text">
+                <span class="ph cmd">For text data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_ngy_vcc_fv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d261495e2497">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d261495e2500">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2497 ">Max Line Length</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2500 ">Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.<p class="p">Adds a boolean field to the record to
+                                            indicate if it was truncated. The field name is
+                                            Truncated. </p>
+<p class="p"><span class="ph">This property can be limited by the <span class="ph">Data
+                  Collector</span> parser
+                        buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2497 ">Use Custom Delimiter <a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">
+                                            <img class="image" id="task_ost_3n4_x1b__d37132e2226" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2500 ">Uses custom delimiters to define records instead of line
+                                        breaks. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2497 ">Custom Delimiter</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2500 ">One or more characters to use to define records. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2497 ">Include Custom Delimiter</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2500 ">Includes delimiter characters in the record.</td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e2497 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e2500 ">Character encoding of the files to be processed.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e2497 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_ost_3n4_x1b__d37145e728" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e2500 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_ost_3n4_x1b__XMLprops">
+                <span class="ph cmd">For XML data, on the <span class="keyword wintitle">Data Format</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ost_3n4_x1b__table_pmz_mcj_45" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d261495e2613">XML Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d261495e2616">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2613 ">Delimiter Element <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">
+                                            <img class="image" id="task_ost_3n4_x1b__d37132e2476" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2616 ">
+                                        <div class="p">Delimiter to use to generate records. Omit a delimiter to
+                                            treat the entire XML document as one record. Use one of
+                                            the following:<ul class="ul" id="task_ost_3n4_x1b__d37132e2482">
+                                                <li class="li">An XML element directly under the root element.
+                                                  <p class="p">Use the XML element name without surrounding
+                                                  angle brackets ( &lt; &gt; ) . For example, msg
+                                                  instead of &lt;msg&gt;. </p>
+</li>
+
+                                                <li class="li">A simplified XPath expression that specifies the
+                                                  data to use.<p class="p">Use a simplified XPath expression
+                                                  to access data deeper in the XML document or data
+                                                  that requires a more complex access
+                                                  method.</p>
+<p class="p">For more information about valid
+                                                  syntax, see <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">Simplified XPath Syntax</a>.</p>
+</li>
+
+                                            </ul>
+</div>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2613 ">Include Field XPaths <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">
+                                            <img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2616 ">Includes the XPath to each parsed XML element and XML
+                                        attribute in field attributes. Also includes each namespace
+                                        in an xmlns record header attribute. <p class="p">When not selected,
+                                            this information is not included in the record. By
+                                            default, the property is not selected.</p>
+<div class="p">
+                                            <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes and record header attributes are
+                        written to destination systems automatically only when you use the SDC RPC
+                        data format in destinations. For more information about working with field
+                        attributes and record header attributes, and how to include them in records,
+                        see <a class="xref" href="../Pipeline_Design/FieldAttributes.html#concept_xfm_wtp_1z" title="Field attributes are attributes that provide additional information about each field that you can use in pipeline logic, as needed.">Field Attributes</a> and <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_wn2_jcz_dz">Record Header Attributes</a>.</span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2613 ">Namespaces </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2616 ">Namespace prefix and URI to use when parsing the XML
+                                        document. Define namespaces when the XML element being used
+                                        includes a namespace prefix or when the XPath expression
+                                        includes namespaces.<p class="p">For information about using
+                                            namespaces with an XML element, see <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_ilc_r3g_2y">Using XML Elements with Namespaces</a>.</p>
+<p class="p">For information about using namespaces with
+                                            XPath expressions, see <a class="xref" href="../Data_Formats/XMLDFormat.html#concept_mkk_3zj_dy">Using XPath Expressions with Namespaces</a>.</p>
+<p class="p">Using <a class="xref" href="../Pipeline_Configuration/PipelineConfiguration_title.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                                <span class="ph uicontrol">Add</span> icon to add additional
+                                            namespaces.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2613 ">Output Field Attributes</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2616 ">Includes XML attributes and namespace declarations in the
+                                        record as field attributes. When not selected, XML
+                                        attributes and namespace declarations are included in the
+                                        record as fields.<div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes are automatically included in
+                        records written to destination systems only when you use the SDC RPC data
+                        format in the destination.</span> For more information about working with field
+                                            attributes, see <a class="xref" href="../Pipeline_Design/FieldAttributes.html#concept_xfm_wtp_1z" title="Field attributes are attributes that provide additional information about each field that you can use in pipeline logic, as needed.">Field Attributes</a>.</div>
+<p class="p">By default, the property is not
+                                            selected.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d261495e2613 ">Max Record Length (chars) </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d261495e2616 ">
+                                        <p class="p">The maximum number of characters in a record. Longer
+                                            records are diverted to the pipeline for error handling.
+                                        </p>
+
+                                        <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data
+                  Collector</span> parser
+                        buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e2613 ">Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e2616 ">Character encoding of the files to be processed.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d261495e2613 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_ost_3n4_x1b__d37145e728" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d261495e2616 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>

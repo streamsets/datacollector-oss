@@ -174,7 +174,7 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                     of the Avro schema definition:</dd>
 
                               <dd class="dd">
-                                    <ul class="ul" id="concept_qwl_lyq_v1b__d15332e2640">
+                                    <ul class="ul" id="concept_qwl_lyq_v1b__d15575e2650">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -231,7 +231,7 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_qwl_lyq_v1b__d15332e2744">
+                                    the following formats:<ul class="ul" id="concept_qwl_lyq_v1b__d15575e2754">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -284,7 +284,7 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                     destination requires the record to have a single root field that
                                     contains the rest of the record data. For details and
                                     suggestions for how to accomplish this, see <a class="xref" href="../Data_Formats/WritingXML.html#concept_cmn_hml_r1b">Record Structure Requirement</a>.<p class="p">The destination can include indentation to produce
-                                          human-readable documents. It can also validate <span class="ph" id="concept_qwl_lyq_v1b__d15332e2964">that the generated
+                                          human-readable documents. It can also validate <span class="ph" id="concept_qwl_lyq_v1b__d15575e2974">that the generated
                                                 XML conforms to the specified schema definition.
                                                 Records with invalid schemas are handled based on
                                                 the error handling configured for the
@@ -312,14 +312,14 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15542e4569" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15785e4569" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e420">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e420">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e423">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e423">Description</th>
 
                                 </tr>
 
@@ -327,24 +327,24 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e420 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e420 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e423 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e420 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d138398e423 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d140792e423 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e420 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
-                                            <img class="image" id="task_n1k_sk1_v1b__d15542e4615" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e420 ">Description</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e423 ">Fields that must include data for the record to be passed
+                                    <td class="entry" valign="top" width="70%" headers="d140792e423 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e420 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+                                            <img class="image" id="task_n1k_sk1_v1b__d15785e4615" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d140792e423 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -356,10 +356,10 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e420 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
-                                            <img class="image" id="task_n1k_sk1_v1b__d15542e4631" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e420 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+                                            <img class="image" id="task_n1k_sk1_v1b__d15785e4631" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e423 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d140792e423 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -370,10 +370,10 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e420 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
-                                            <img class="image" id="task_n1k_sk1_v1b__d15542e4648" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e420 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+                                            <img class="image" id="task_n1k_sk1_v1b__d15785e4648" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e423 ">Error record handling for the stage: <ul class="ul" id="task_n1k_sk1_v1b__d15542e4652">
+                                    <td class="entry" valign="top" width="70%" headers="d140792e423 ">Error record handling for the stage: <ul class="ul" id="task_n1k_sk1_v1b__d15785e4652">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -404,9 +404,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e534">Pub/Sub Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e534">Pub/Sub Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e537">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e537">Description</th>
 
                                 </tr>
 
@@ -414,9 +414,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e534 ">Topic ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e534 ">Topic ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e537 ">Google Pub/Sub topic ID to write messages to.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d140792e537 ">Google Pub/Sub topic ID to write messages to.</td>
 
                                 </tr>
 
@@ -437,9 +437,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e580">Credentials Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e580">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e583">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e583">Description</th>
 
                                 </tr>
 
@@ -447,18 +447,18 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e580 ">Project ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e580 ">Project ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e583 ">Google Pub/Sub project ID to connect to.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d140792e583 ">Google Pub/Sub project ID to connect to.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e580 ">Credentials Provider
+                                    <td class="entry" valign="top" width="30%" headers="d140792e580 ">Credentials Provider
                                         <a class="xref" href="PubSubPublisher.html#concept_snf_1wq_v1b" title="When configured to use the Google Application Default Credentials, the destination checks for the credentials file defined in the GOOGLE_APPLICATION_CREDENTIALS environment variable. If the environment variable doesn't exist and Data Collector is running on a virtual machine (VM) in Google Cloud, the destination uses the built-in service account associated with the virtual machine instance. When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">
                                             <img class="image" id="task_n1k_sk1_v1b__image_d3x_vhk_lz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e583 ">Credentials provider to use to connect to Google
+                                    <td class="entry" valign="top" width="70%" headers="d140792e583 ">Credentials provider to use to connect to Google
                                         Pub/Sub:<ul class="ul" id="task_n1k_sk1_v1b__ul_tmm_2rp_v1b">
                                             <li class="li">Default credentials provider</li>
 
@@ -471,9 +471,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e580 ">Credentials File Path (JSON)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e580 ">Credentials File Path (JSON)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e583 ">When using a Google Cloud service account credentials
+                                    <td class="entry" valign="top" width="70%" headers="d140792e583 ">When using a Google Cloud service account credentials
                                         file, path to the file that the destination uses to connect
                                         to Google Pub/Sub. The credentials file must be a JSON
                                             file.<p class="p">Enter a path relative to the <span class="ph">Data
@@ -500,9 +500,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e673">Data Format Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e673">Data Format Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e676">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e676">Description</th>
 
                                 </tr>
 
@@ -510,10 +510,10 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e673 ">Data Format <a class="xref" href="PubSubPublisher.html#concept_qwl_lyq_v1b">
+                                    <td class="entry" valign="top" width="30%" headers="d140792e673 ">Data Format <a class="xref" href="PubSubPublisher.html#concept_qwl_lyq_v1b">
                                         <img class="image" id="task_n1k_sk1_v1b__image_ahh_tgj_vx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e676 ">Format of data to be written. Use one of the following
+                                    <td class="entry" valign="top" width="70%" headers="d140792e676 ">Format of data to be written. Use one of the following
                                         options:<ul class="ul" id="task_n1k_sk1_v1b__ul_un2_cqd_br">
                                             <li class="li">Avro</li>
 
@@ -549,14 +549,14 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15542e5792" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15785e5792" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e763">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e763">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e766">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e766">Description</th>
 
                                 </tr>
 
@@ -564,10 +564,10 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e763 ">Avro Schema Location</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e763 ">Avro Schema Location</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e766 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_n1k_sk1_v1b__d15542e5821">
+                                    <td class="entry" valign="top" width="70%" headers="d140792e766 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_n1k_sk1_v1b__d15785e5821">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -575,7 +575,7 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                                 record header attribute. Use only when the
                                                 avroSchema attribute is defined for all records.
                                                   <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">
-                                                  <img class="image" id="task_n1k_sk1_v1b__d15542e5830" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
+                                                  <img class="image" id="task_n1k_sk1_v1b__d15785e5830" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></li>
 
                                             <li class="li">Confluent Schema Registry - Retrieve the schema from
                                                 the Confluent Schema Registry. </li>
@@ -586,9 +586,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e763 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e763 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e766 ">Avro schema definition used to write the data. <p class="p">You can
+                                    <td class="entry" valign="top" width="70%" headers="d140792e766 ">Avro schema definition used to write the data. <p class="p">You can
                                             optionally use the runtime:loadResource function to use
                                             a schema definition stored in a runtime resource file.
                                         </p>
@@ -597,17 +597,17 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e763 ">Register Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e763 ">Register Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e766 ">Select to register a new Avro schema with the Confluent
+                                    <td class="entry" valign="top" width="70%" headers="d140792e766 ">Select to register a new Avro schema with the Confluent
                                         Schema Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e763 ">Schema Registry URLs</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e763 ">Schema Registry URLs</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e766 ">Confluent Schema Registry URLs used to look up the schema
+                                    <td class="entry" valign="top" width="70%" headers="d140792e766 ">Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <span class="ph uicontrol">Add</span>. Use the following format to
                                         enter the
@@ -617,10 +617,10 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e763 ">Look Up Schema By</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e763 ">Look Up Schema By</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e766 ">Method used to look up the schema in the Confluent Schema
-                                            Registry:<ul class="ul" id="task_n1k_sk1_v1b__d15542e5878">
+                                    <td class="entry" valign="top" width="70%" headers="d140792e766 ">Method used to look up the schema in the Confluent Schema
+                                            Registry:<ul class="ul" id="task_n1k_sk1_v1b__d15785e5878">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -633,9 +633,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e763 ">Schema Subject</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e763 ">Schema Subject</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e766 ">Avro schema subject to look up or to register in the
+                                    <td class="entry" valign="top" width="70%" headers="d140792e766 ">Avro schema subject to look up or to register in the
                                         Confluent Schema Registry.<p class="p">If the specified subject to
                                             look up has multiple schema versions, the origin uses
                                             the latest schema version for that subject. To use an
@@ -647,17 +647,17 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e763 ">Schema ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e763 ">Schema ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e766 ">Avro schema ID to look up in the Confluent Schema
+                                    <td class="entry" valign="top" width="70%" headers="d140792e766 ">Avro schema ID to look up in the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e763 ">Include Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e763 ">Include Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e766 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                    <td class="entry" valign="top" width="70%" headers="d140792e766 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
                                             schema definition can improve performance, but requires
                                             the appropriate schema management to avoid losing track
                                             of the schema associated with the data.</div>
@@ -666,9 +666,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e763 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e763 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e766 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry" valign="top" width="70%" headers="d140792e766 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -687,14 +687,14 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15542e6129" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15785e6129" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e922">Binary Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e922">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e925">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e925">Description</th>
 
                                 </tr>
 
@@ -702,9 +702,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e922 ">Binary Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e922 ">Binary Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e925 ">Field that contains the binary data.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d140792e925 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -720,14 +720,14 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15542e6186" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15785e6186" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e968">Delimited Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e968">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e971">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e971">Description</th>
 
                                 </tr>
 
@@ -735,9 +735,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e968 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e968 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e971 ">Format for delimited data:<ul class="ul" id="task_n1k_sk1_v1b__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="70%" headers="d140792e971 ">Format for delimited data:<ul class="ul" id="task_n1k_sk1_v1b__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -761,16 +761,16 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e968 ">Header Line</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e968 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e971 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d140792e971 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e968 ">Replace New Line Characters</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e968 ">Replace New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e971 ">Replaces new line characters with the configured
+                                    <td class="entry" valign="top" width="70%" headers="d140792e971 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -778,9 +778,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e968 ">New Line Character Replacement</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e968 ">New Line Character Replacement</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e971 ">String to replace each new line character. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d140792e971 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -789,9 +789,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e968 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e968 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e971 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d140792e971 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -806,9 +806,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e968 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e968 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e971 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="70%" headers="d140792e971 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -817,9 +817,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e968 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e968 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e971 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="70%" headers="d140792e971 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -828,9 +828,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d138398e968 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d140792e968 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d138398e971 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d140792e971 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -846,14 +846,14 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15542e6325" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15785e6325" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e1129">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e1129">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e1132">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e1132">Description</th>
 
                                 </tr>
 
@@ -861,9 +861,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e1129 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e1129 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e1132 ">Determines how JSON data is written:<ul class="ul" id="task_n1k_sk1_v1b__d15542e6354">
+                                    <td class="entry" valign="top" width="70%" headers="d140792e1132 ">Determines how JSON data is written:<ul class="ul" id="task_n1k_sk1_v1b__d15785e6354">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -878,9 +878,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d138398e1129 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d140792e1129 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d138398e1132 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d140792e1132 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -896,14 +896,14 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15542e6481" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15785e6481" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e1192">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e1192">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e1195">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e1195">Description</th>
 
                                 </tr>
 
@@ -911,22 +911,22 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e1192 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e1192 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e1195 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d140792e1195 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
                                             <p class="p">For more information about environment variables, see
-                                                <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, you must create a system user and group named sdc, or you must edit the values of the SDC_USER and SDC_GROUP environment variables to point to an existing system user or group.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>. For information about generating the descriptor
+                                                <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can edit the Data Collector environment configuration file to modify the directories used to store configuration, data, log, and resource files.When you run Data Collector as a service, Data Collector runs as the system user account and group defined in the SDC_USER and SDC_GROUP environment variables. The default system user and group are named sdc.Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB. You can enable remote debugging to debug a Data Collector instance running on a remote machine. You can define the Java garbage collector that Data Collector uses. By default, Data Collector uses the Concurrent Mark Sweep (CMS) garbage collector.Data Collector includes a Java Security Manager that is enabled by default. You can edit the Data Collector environment configuration file to configure the path to JAR files to be added to the Data Collector root classloader.">Data Collector Environment Configuration</a>. For information about generating the descriptor
                                             file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e1192 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e1192 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e1195 ">The fully-qualified name for the message type to use when
+                                    <td class="entry" valign="top" width="70%" headers="d140792e1195 ">The fully-qualified name for the message type to use when
                                         writing data.<p class="p">Use the following format:
                                                 <samp class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</samp>. </p>
@@ -936,9 +936,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e1192 ">Write Delimiter</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e1192 ">Write Delimiter</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e1195 ">Writes a delimiter after each message. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d140792e1195 ">Writes a delimiter after each message. </td>
 
                                 </tr>
 
@@ -954,14 +954,14 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15542e6632" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15785e6632" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e1312">Text Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e1315">Text Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e1315">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e1318">Description</th>
 
                                 </tr>
 
@@ -969,17 +969,17 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e1312 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e1315 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e1315 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="70%" headers="d140792e1318 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e1312 ">Record Separator</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e1315 ">Record Separator</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e1315 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry" valign="top" width="70%" headers="d140792e1318 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
                                         might use \r\n to separate records. <p class="p">By default, the
                                             destination uses \n.</p>
@@ -988,9 +988,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e1312 ">Insert Record Separator if No Text</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e1315 ">Insert Record Separator if No Text</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e1315 ">When a record does not include the text field, inserts
+                                    <td class="entry" valign="top" width="70%" headers="d140792e1318 ">When a record does not include the text field, inserts
                                         the configured record separator string to create an empty
                                             line.<p class="p">When not selected, records without the text
                                             field are discarded.</p>
@@ -999,9 +999,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-       <td class="entry" valign="top" width="30%" headers="d138398e1312 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d140792e1315 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d138398e1315 ">Character set to use when writing data. </td>
+       <td class="entry" valign="top" width="70%" headers="d140792e1318 ">Character set to use when writing data. </td>
 
       </tr>
 
@@ -1017,14 +1017,14 @@ Use a message type defined in the
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15542e6839" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_n1k_sk1_v1b__d15785e6839" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr>
-                                    <th class="entry" valign="top" width="30%" id="d138398e1389">XML Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d140792e1392">XML Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d138398e1392">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d140792e1395">Description</th>
 
                                 </tr>
 
@@ -1032,18 +1032,18 @@ Use a message type defined in the
 
                             <tbody class="tbody">
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e1389 ">Pretty Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e1392 ">Pretty Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e1392 ">Adds indentation to make the resulting XML document
+                                    <td class="entry" valign="top" width="70%" headers="d140792e1395 ">Adds indentation to make the resulting XML document
                                         easier to read. Increases the record size
                                         accordingly.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e1389 ">Validate Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e1392 ">Validate Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e1392 ">Validates <span class="ph">that the generated
+                                    <td class="entry" valign="top" width="70%" headers="d140792e1395 ">Validates <span class="ph">that the generated
                                                 XML conforms to the specified schema definition.
                                                 Records with invalid schemas are handled based on
                                                 the error handling configured for the
@@ -1059,9 +1059,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry" valign="top" width="30%" headers="d138398e1389 ">XML Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d140792e1392 ">XML Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d138398e1392 ">The XML schema to use to validate records.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d140792e1395 ">The XML schema to use to validate records.</td>
 
                                 </tr>
 

@@ -176,12 +176,12 @@
                 
                     <dt class="dt dlterm">Uses temporary directories for Avro output files</dt>
 
-                    <dd class="dd"><p class="p">When processing Parquet data, the Hive Metadata processor <span class="ph" id="concept_ndg_3zw_vz__d32981e2200">adds .avro to the target directory that it
+                    <dd class="dd"><p class="p">When processing Parquet data, the Hive Metadata processor <span class="ph" id="concept_ndg_3zw_vz__d33798e2210">adds .avro to the target directory that it
                         generates for each record. This allows the data-processing destination to
                         write the Avro files to a directory that Hive ignores as a temporary
                         directory.</span></p>
 <p class="p">As a result, the destination writes files to the following
-                  directories: <samp class="ph codeph" id="concept_ndg_3zw_vz__d32981e2205">&lt;generated
+                  directories: <samp class="ph codeph" id="concept_ndg_3zw_vz__d33798e2215">&lt;generated
                   directory&gt;/.avro</samp>.</p>
 <span class="ph">You can configure
                               the MapReduce executor to write the Parquet files to the parent
@@ -395,6 +395,12 @@
 
                     </ol>
 <p class="p">For more information about using record header attributes, see <a class="xref" href="../Pipeline_Design/RecordHeaderAttributes.html#concept_lmn_gdc_1w">Record Header Attributes for Record-Based Writes</a>.</p>
+<div class="p">
+                        <div class="note note"><span class="notetitle">Note:</span> To compress Avro data, use the Avro compression option on the Data
+                            Formats tab, rather than the compression codec property on the Output
+                            Files tab.</div>
+
+                    </div>
 </li>
 
                 <li class="li">When processing Parquet data, perform the following additional steps: <ol class="ol" type="a" id="concept_y5w_dj3_fw__ul_bsd_v52_wz">
@@ -587,7 +593,7 @@
 
         <p class="p"><img class="image" id="concept_jzr_ypn_fw__image_wzp_1sn_fw" src="../Graphics/HiveMeta-Ex-HDFS-Avro.png" height="327" width="478" /></p>
 
-        <p class="p"><span class="ph" id="concept_jzr_ypn_fw__d32981e3033">With this
+        <p class="p"><span class="ph" id="concept_jzr_ypn_fw__d33798e3043">With this
                         configuration, the destination uses the information in record header
                         attributes to write data to HDFS. It writes each record to the directory in
                         the targetDirectory header attribute, using the Avro schema in the
@@ -596,6 +602,10 @@
 
         <p class="p">Note that the destination can also use Max Records in File, Max Files Size, and Idle
             Timeout to determine when to roll files.</p>
+
+        <p class="p">Also, if you want to compress the Avro files, use the Avro Compression Codec property on
+            the Data Formats tab, instead of the general compression option on the Output Files
+            tab.</p>
 
  </div>
 
@@ -783,7 +793,7 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
                         directory.</span></p>
 
         <p class="p">As a result, the destination writes files to the following
-                  directories: <samp class="ph codeph" id="concept_kt2_zrf_zz__d32981e2205">&lt;generated
+                  directories: <samp class="ph codeph" id="concept_kt2_zrf_zz__d33798e2215">&lt;generated
                   directory&gt;/.avro</samp>.</p>
 
  </div>
@@ -983,10 +993,10 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
                     
                     <thead class="thead" align="left">
                         <tr>
-                            <th class="entry" valign="top" width="50%" id="d187066e1151"><span class="ph">Data
+                            <th class="entry" valign="top" width="50%" id="d190451e1159"><span class="ph">Data
                   Collector</span> Data Type</th>
 
-                            <th class="entry" valign="top" width="50%" id="d187066e1156">Hive Data Type</th>
+                            <th class="entry" valign="top" width="50%" id="d190451e1164">Hive Data Type</th>
 
                         </tr>
 
@@ -994,114 +1004,114 @@ ${record:attribute(str:concat(str:concat('jdbc.', field:field()), '.precision'))
 
                     <tbody class="tbody">
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Boolean</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Boolean</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Boolean</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Byte</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Not supported</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Boolean</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Char</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Byte</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">String</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Date</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Date </td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Not supported</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Datetime</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Char</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">String</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Decimal</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Decimal</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">String</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Double</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Date</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Double</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Float</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Float</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Date </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Integer</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Datetime</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Int</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Long</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Bigint</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">String</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">List</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Decimal</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Not supported</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">List-Map</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Not supported</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Decimal</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Map</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Double</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Not supported</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Short</td>
-
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">Int</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Double</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">String</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Float</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">String</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Float</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry" valign="top" width="50%" headers="d187066e1151 ">Time</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Integer</td>
 
-                            <td class="entry" valign="top" width="50%" headers="d187066e1156 ">String</td>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Int</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Long</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Bigint</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">List</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Not supported</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">List-Map</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Not supported</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Map</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Not supported</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Short</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">Int</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">String</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">String</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d190451e1159 ">Time</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d190451e1164 ">String</td>
 
                         </tr>
 

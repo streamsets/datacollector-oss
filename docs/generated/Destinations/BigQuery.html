@@ -1,0 +1,592 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />        
+      <meta name="copyright" content="(C) Copyright 2005" /><meta name="DC.rights.owner" content="(C) Copyright 2005" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Google BigQuery" /><meta name="abstract" content="The Google BigQuery destination streams data into Google BigQuery." /><meta name="description" content="The Google BigQuery destination streams data into Google BigQuery." /><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_hj4_brk_dbb" /><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Google BigQuery</title><!--  Generated with Oxygen version 18.1, build number 2016112217.  --><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css" /><link rel="stylesheet" type="text/css" href="../skin.css" /><script type="text/javascript"><!--
+            
+            var prefix = "../index.html";
+            
+            --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.11.3.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>
+<!--
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+</head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td style="width:75%;"><span class="topic_breadcrumb_links"><span class="topic_breadcrumb_link"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></span></span></td><td><span id="topic_navigation_links" class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </span></td></tr></tbody></table>
+<div class="nested0" id="concept_hj4_brk_dbb">
+ <h1 class="title topictitle1">Google BigQuery</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Google BigQuery destination streams data into Google BigQuery. </p>
+
+        <p class="p">When you configure the destination, you define
+            the existing BigQuery dataset and table to stream data into. The destination streams
+            each record into a row in a BigQuery table. You can optionally define an expression to
+            specify the insert ID to insert or update. The insert ID is a unique ID for each row. If
+            you do not specify an insert ID, the destination inserts each record into a new row. </p>
+
+        <p class="p">The destination maps fields from records to BigQuery columns based on matching names and
+            compatible data types. You can configure the destination to ignore invalid columns when
+            the destination cannot map a field to an existing BigQuery column. You can also
+            configure the table cache size for the destination.</p>
+
+        <p class="p">You also define the project and credentials provider to use to connect to Google
+            BigQuery. The destination can retrieve credentials from the Google Application Default
+            Credentials or from a Google Cloud service account credentials file.</p>
+
+        <p class="p">For more information about streaming data into Google BigQuery, see the <a class="xref" href="https://cloud.google.com/bigquery/streaming-data-into-bigquery" target="_blank">Google BigQuery documentation</a>.</p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_edg_kwm_3bb">
+ <h2 class="title topictitle2">BigQuery Data Types</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Google BigQuery destination maps fields from records to BigQuery columns in existing
+        tables based on matching names and compatible data types. If needed, the destination
+        converts <span class="ph">Data
+                  Collector</span> data types to BigQuery data types.</p>
+
+  <p class="p">The following table lists the <span class="ph">Data
+                  Collector</span>
+            data types and the BigQuery data types that the destination converts them to:</p>
+
+        <div class="p">
+            
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_edg_kwm_3bb__table_jdf_5wm_3bb" class="table" frame="border" border="1" rules="all">
+                    
+                    
+                    <thead class="thead" align="left">
+                        <tr>
+                            <th class="entry" valign="top" width="50%" id="d75073e96">Data Collector Data Type</th>
+
+                            <th class="entry" valign="top" width="50%" id="d75073e99">BigQuery Data Type</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody class="tbody">
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Boolean</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Boolean</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Byte Array</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Bytes</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Date</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Date</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Datetime</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Datetime or Timestamp</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Double</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Float</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Float</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Float</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Integer</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Integer</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">List</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Array</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">List-Map</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Record with repeated fields</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Long</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Integer</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Map</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Record </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Short</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Integer</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">String</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">String</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry" valign="top" width="50%" headers="d75073e96 ">Time</td>
+
+                            <td class="entry" valign="top" width="50%" headers="d75073e99 ">Time</td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+</div>
+
+        </div>
+
+        <div class="p">The Google BigQuery destination cannot convert the following <span class="ph">Data
+                  Collector</span>
+            data types:<ul class="ul" id="concept_edg_kwm_3bb__ul_zkp_pdm_kbb">
+                <li class="li">Byte</li>
+
+                <li class="li">Character</li>
+
+                <li class="li">Decimal</li>
+
+            </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ym2_mww_hbb">
+ <h2 class="title topictitle2">Credentials</h2>
+
+ <div class="body conbody">
+        <p class="p">When the Google BigQuery destination
+            streams data into Google BigQuery, it must pass credentials to BigQuery. Configure the
+            destination to retrieve the credentials from the Google Application Default Credentials
+            or from a Google Cloud service account credentials file.</p>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_ajg_dxw_hbb">
+ <h3 class="title topictitle3">Default Credentials Provider</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When configured to use the Google Application Default Credentials, the destination
+        checks for the credentials file defined in the
+            <samp class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</samp> environment variable. If the environment
+        variable doesn't exist and <span class="ph">Data
+                  Collector</span> is
+        running on a virtual machine (VM) in Google Cloud, the destination uses the built-in service
+        account associated with the virtual machine instance.</p>
+
+        <p class="p">For more information about the default credentials, see <a class="xref" href="https://developers.google.com/identity/protocols/application-default-credentials" target="_blank">Google Application Default Credentials</a> in the
+            Google Developer documentation.</p>
+
+        <p class="p">Complete the following steps to define the credentials file in the environment
+            variable:</p>
+
+     <ol class="ol" id="concept_ajg_dxw_hbb__ol_o51_ttq_v1b">
+                                    <li class="li">Use the Google Cloud Platform Console or the
+                                                <samp class="ph codeph">gcloud</samp> command-line tool to create
+                                          a Google service account and have your application use it
+                                          for API access.<div class="p">For example, to use the command line
+                                                tool, run the following
+                                                commands:<pre class="pre codeblock">gcloud iam service-accounts create my-account
+gcloud iam service-accounts keys create key.json --iam-account=my-account@my-project.iam.gserviceaccount.com</pre>
+</div>
+</li>
+
+                                    <li class="li">Store the generated credentials file on the <span class="ph">Data
+                  Collector</span> machine. </li>
+
+                                    <li class="li">In the <span class="ph">Data
+                  Collector</span> environment configuration file, add the
+                                                <samp class="ph codeph">GOOGLE_APPLICATION_CREDENTIALS</samp>
+                                          environment variable and point it to the credentials
+                                                file.<p class="p">If you start Data Collector as a service, set the environment
+                  variable in the <samp class="ph systemoutput">$SDC_DIST/libexec/sdcd-env.sh</samp> file.
+                  If you start Data Collector manually, set the variable in the
+                        <samp class="ph systemoutput">$SDC_DIST/libexec/sdc-env.sh</samp> file.</p>
+<p class="p">Set the environment variable as
+                                          follows:</p>
+<pre class="pre codeblock">export GOOGLE_APPLICATION_CREDENTIALS="/var/lib/sdc-resources/keyfile.json"</pre>
+</li>
+
+                                    <li class="li">Restart <span class="ph">Data
+                  Collector</span> to enable the changes.</li>
+
+                                    <li class="li">On the <span class="ph uicontrol">Credentials</span> tab for the stage,
+                                          select <span class="ph uicontrol">Default Credentials Provider</span>
+                                          for the credentials provider. </li>
+
+                              </ol>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_ecs_3xw_hbb">
+ <h3 class="title topictitle3">Service Account Credentials File (JSON)</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When configured to use the Google Cloud service account credentials file, the
+        destination checks for the file defined in the destination properties. </p>
+
+        <p class="p">Complete the following steps to use the service account credentials file:</p>
+
+     <ol class="ol" id="concept_ecs_3xw_hbb__ol_ztr_wtq_v1b">
+                                    <li class="li">Generate a service account credentials file in JSON
+                                                format.<p class="p">Use the Google Cloud Platform Console or
+                                                the <samp class="ph codeph">gcloud</samp> command-line tool to
+                                                generate and download the credentials file. For more
+                                                information, see <a class="xref" href="https://cloud.google.com/storage/docs/authentication#generating-a-private-key" target="_blank">generating a
+                                                  service account credential</a> in the Google
+                                                Cloud Platform documentation.</p>
+</li>
+
+                                    <li class="li">Store the generated credentials file on the <span class="ph">Data
+                  Collector</span> machine. <p class="p">As a best practice, store the file in the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>.
+                                    </p>
+</li>
+
+                                    <li class="li">On the <span class="ph uicontrol">Credentials</span> tab for the stage,
+                                          select <span class="ph uicontrol">Service Account Credentials
+                                                File</span> for the credentials provider and
+                                          enter the path to the credentials file.</li>
+
+                              </ol>
+
+ </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_gxn_dsk_dbb">
+    <h2 class="title topictitle2">Configuring a Google BigQuery Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a Google BigQuery
+                destination to stream data into Google BigQuery.</p>
+
+        </div>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gxn_dsk_dbb__table_yxz_pvs_6f" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d75073e463">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d75073e466">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d75073e463 ">Name</td>
+
+       <td class="entry" valign="top" width="70%" headers="d75073e466 ">Stage name.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d75073e463 ">Description</td>
+
+       <td class="entry" valign="top" width="70%" headers="d75073e466 ">Optional description.</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d75073e463 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">
+         <img class="image" id="task_gxn_dsk_dbb__d15647e1961" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d75073e466 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage uses.</div>
+<p class="p">Records
+         that do not include all required fields are processed based on the error handling
+         configured for the pipeline.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d75073e463 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">
+         <img class="image" id="task_gxn_dsk_dbb__d15647e1978" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d75073e466 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+        processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions. <p class="p">Records
+         that do not meet all preconditions are processed based on the error handling configured for
+         the stage.</p>
+</td>
+
+      </tr>
+
+                                <tr>
+       <td class="entry" valign="top" width="30%" headers="d75073e463 ">On Record Error <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">
+         <img class="image" id="task_gxn_dsk_dbb__d15647e1995" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d75073e466 ">Error record handling for the stage: <ul class="ul" id="task_gxn_dsk_dbb__d15647e1999">
+         <li class="li">Discard - Discards the record.</li>
+
+         <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
+
+         <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">BigQuery</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gxn_dsk_dbb__table_opv_k2n_3bb" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d75073e577">BigQuery Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d75073e580">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d75073e577 ">Dataset</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d75073e580 ">BigQuery dataset to write to. <div class="p">Enter the name of an
+                                            existing dataset or an expression that evaluates to the
+                                            name of an existing dataset. For example, if the dataset
+                                            name is stored in the 'dataset' record attribute, enter
+                                            the following
+                                            expression:<pre class="pre codeblock">${record:attribute('dataset')}</pre>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d75073e577 ">Table Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d75073e580 ">Name of the BigQuery table to write to.<div class="p">Enter the name
+                                            of an existing table or an expression that evaluates to
+                                            the name of an existing table. For example, if the table
+                                            name is stored in the 'table' record attribute, enter
+                                            the following
+                                            expression:<pre class="pre codeblock">${record:attribute('table')}</pre>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d75073e577 ">Insert ID Expression</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d75073e580 ">Expression that evaluates to the BigQuery insert ID to
+                                        insert or update. The insert ID is a unique ID for each row.
+                                        Leave blank to insert each record into a new row.<p class="p">For more
+                                            information about the insert ID property used to stream
+                                            data into BigQuery, see the <a class="xref" href="https://cloud.google.com/bigquery/streaming-data-into-bigquery#dataconsistency" target="_blank">Google BigQuery
+                                                documentation</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d75073e577 ">Ignore Invalid Column</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d75073e580 ">Ignores invalid columns.<p class="p">If selected and the
+                                            destination encounters a field path that cannot be
+                                            mapped to a BigQuery column with the same name and a
+                                            compatible data type, the destination ignores the
+                                            invalid column and writes the remaining fields in the
+                                            record to BigQuery. If cleared and the destination
+                                            encounters an invalid column, the record is sent to the
+                                            stage for error handling.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d75073e577 ">Table Cache Size</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d75073e580 ">Maximum number of table ID entries to cache
+                                            locally.<p class="p">When the destination evaluates the dataset
+                                            and table name to write to, it checks that the table ID
+                                            exists in BigQuery and then caches the table ID. When
+                                            possible, the destination uses the cache to avoid
+                                            unnecessary retrievals from BigQuery. When the cache
+                                            reaches the maximum size, the oldest cached entries are
+                                            evicted to allow for new data.</p>
+<p class="p">Default is -1, an
+                                            unlimited cache size. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Credentials</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gxn_dsk_dbb__table_ffd_w3p_v1b" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr>
+                                    <th class="entry" valign="top" width="30%" id="d75073e679">Credentials Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d75073e682">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d75073e679 ">Project ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d75073e682 ">Google BigQuery project ID to connect to.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d75073e679 ">Credentials Provider <a class="xref" href="BigQuery.html#concept_ym2_mww_hbb" title="When configured to use the Google Application Default Credentials, the destination checks for the credentials file defined in the GOOGLE_APPLICATION_CREDENTIALS environment variable. If the environment variable doesn't exist and Data Collector is running on a virtual machine (VM) in Google Cloud, the destination uses the built-in service account associated with the virtual machine instance.When configured to use the Google Cloud service account credentials file, the destination checks for the file defined in the destination properties.">
+                                            <img class="image" id="task_gxn_dsk_dbb__image_d3x_vhk_lz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d75073e682 ">Credentials provider to use to connect to Google
+                                            BigQuery:<ul class="ul" id="task_gxn_dsk_dbb__ul_tmm_2rp_v1b">
+                                            <li class="li">Default credentials provider</li>
+
+                                            <li class="li">Service account credentials file (JSON) </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry" valign="top" width="30%" headers="d75073e679 ">Credentials File Path (JSON)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d75073e682 ">When using a Google Cloud service account credentials
+                                        file, path to the file that the destination uses to connect
+                                        to Google BigQuery. The credentials file must be a JSON
+                                            file.<p class="p">Enter a path relative to the <span class="ph">Data
+                  Collector</span> resources directory, <samp class="ph codeph">$SDC_RESOURCES</samp>,
+                                            or enter an absolute path. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer" id="webhelp_copyright_information"><!--
+
+    Copyright 2017 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+--><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script></div>
+</body>
+</html>
