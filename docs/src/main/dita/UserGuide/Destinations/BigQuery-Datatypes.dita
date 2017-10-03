@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_edg_kwm_3bb">
+ <title>BigQuery Data Types</title>
+ <shortdesc>The Google BigQuery destination maps fields from records to BigQuery columns in existing
+        tables based on matching names and compatible data types. If needed, the destination
+        converts <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        /> data types to BigQuery data types.</shortdesc>
+ <conbody>
+  <p><indexterm>Google BigQuery destination<indexterm>data
+                types</indexterm></indexterm><indexterm>data types<indexterm>Google BigQuery
+                    destination</indexterm></indexterm>The following table lists the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            data types and the BigQuery data types that the destination converts them to:</p>
+        <p>
+            <table frame="all" rowsep="1" colsep="1" id="table_jdf_5wm_3bb">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="2.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.5*"/>
+                    <thead>
+                        <row>
+                            <entry>Data Collector Data Type</entry>
+                            <entry>BigQuery Data Type</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Boolean</entry>
+                            <entry>Boolean</entry>
+                        </row>
+                        <row>
+                            <entry>Byte Array</entry>
+                            <entry>Bytes</entry>
+                        </row>
+                        <row>
+                            <entry>Date</entry>
+                            <entry>Date</entry>
+                        </row>
+                        <row>
+                            <entry>Datetime</entry>
+                            <entry>Datetime or Timestamp</entry>
+                        </row>
+                        <row>
+                            <entry>Double</entry>
+                            <entry>Float</entry>
+                        </row>
+                        <row>
+                            <entry>Float</entry>
+                            <entry>Float</entry>
+                        </row>
+                        <row>
+                            <entry>Integer</entry>
+                            <entry>Integer</entry>
+                        </row>
+                        <row>
+                            <entry>List</entry>
+                            <entry>Array</entry>
+                        </row>
+                        <row>
+                            <entry>List-Map</entry>
+                            <entry>Record with repeated fields</entry>
+                        </row>
+                        <row>
+                            <entry>Long</entry>
+                            <entry>Integer</entry>
+                        </row>
+                        <row>
+                            <entry>Map</entry>
+                            <entry>Record </entry>
+                        </row>
+                        <row>
+                            <entry>Short</entry>
+                            <entry>Integer</entry>
+                        </row>
+                        <row>
+                            <entry>String</entry>
+                            <entry>String</entry>
+                        </row>
+                        <row>
+                            <entry>Time</entry>
+                            <entry>Time</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </p>
+        <p>The Google BigQuery destination cannot convert the following <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            data types:<ul id="ul_zkp_pdm_kbb">
+                <li>Byte</li>
+                <li>Character</li>
+                <li>Decimal</li>
+            </ul></p>
+ </conbody>
+</concept>

@@ -17,13 +17,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ypg_qdx_q1b">
  <title>BigQuery Data Types</title>
- <shortdesc>The Google BigQuery origin converts the Google BigQuery data types to Data Collector
-        data types. </shortdesc>
+ <shortdesc>The Google BigQuery origin converts the Google BigQuery data types to <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> data
+        types. </shortdesc>
  <conbody>
         <p><indexterm>Google BigQuery origin<indexterm>data
-                types</indexterm></indexterm><indexterm>data types<indexterm>Google
-                    BigQuery</indexterm></indexterm>The data types supported by Google BigQuery
-            depend on whether you use standard SQL or legacy SQL syntax to define the query:</p>
+                types</indexterm></indexterm><indexterm>data types<indexterm>Google BigQuery
+                    origin</indexterm></indexterm>The data types supported by Google BigQuery depend
+            on whether you use standard SQL or legacy SQL syntax to define the query:</p>
         <dl>
             <dlentry>
                 <dt>Standard SQL Data Types</dt>
