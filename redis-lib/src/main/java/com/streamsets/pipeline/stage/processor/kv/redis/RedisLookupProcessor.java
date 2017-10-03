@@ -83,7 +83,7 @@ public class RedisLookupProcessor extends BaseProcessor {
     JedisPool pool = null;
 
     try {
-      pool = new JedisPool(poolConfig, URI.create(conf.uri), conf.connectionTimeout);
+      pool = new JedisPool(poolConfig, URI.create(conf.uri), conf.connectionTimeout * 1000); // connectionTimeout value is in seconds
       Jedis jedis = pool.getResource();
       jedis.ping();
       jedis.close();

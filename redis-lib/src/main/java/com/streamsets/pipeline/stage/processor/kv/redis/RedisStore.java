@@ -41,7 +41,7 @@ public class RedisStore extends CacheLoader<Pair<String, DataType>, LookupValue>
     final JedisPoolConfig poolConfig = new JedisPoolConfig();
     poolConfig.setBlockWhenExhausted(true);
 
-    pool = new JedisPool(poolConfig, URI.create(conf.uri), conf.connectionTimeout);
+    pool = new JedisPool(poolConfig, URI.create(conf.uri), conf.connectionTimeout * 1000); // connectionTimeout value is in seconds
   }
 
   @Override

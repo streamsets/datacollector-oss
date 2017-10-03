@@ -53,6 +53,8 @@ public class RedisTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(RedisTarget.class);
   private final RedisTargetConfig conf;
   private int retries;
+  
+  private final int MILLIS = 1000;
 
   public RedisTarget(RedisTargetConfig conf) {
     this.conf = conf;
@@ -177,7 +179,7 @@ public class RedisTarget extends BaseTarget {
 
   private void getRedisConnection() {
     JedisPoolConfig poolConfig = new JedisPoolConfig();
-    pool = new JedisPool(poolConfig, URI.create(conf.uri), conf.connectionTimeout);
+    pool = new JedisPool(poolConfig, URI.create(conf.uri), conf.connectionTimeout * MILLIS); // connectionTimeout value is in seconds
     String userInfo = URI.create(conf.uri).getUserInfo();
     jedis = pool.getResource();
     if (userInfo != null && userInfo.split(":", 2).length > 0) {
@@ -314,8 +316,8 @@ public class RedisTarget extends BaseTarget {
         retries++;
         LOG.debug("Redis connection retry: " + retries);
         try {
-          LOG.trace("Sleeping for: {}", conf.connectionTimeout);
-          ThreadUtil.sleep(conf.connectionTimeout);
+          LOG.trace("Sleeping for: {}", conf.connectionTimeout * MILLIS);
+          ThreadUtil.sleep(conf.connectionTimeout * MILLIS);
           getRedisConnection();
         } catch (JedisException e) {
           //no-op

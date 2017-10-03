@@ -42,13 +42,13 @@ public class RedisTargetConfig {
   @ConfigDef(
       type = ConfigDef.Type.NUMBER,
       label = "Connection Timeout (sec)",
-      defaultValue = "1000",
+      defaultValue = "60",
       required = true,
       min = 1,
       displayPosition = 20,
       group = "REDIS"
   )
-  public int connectionTimeout = 1000;
+  public int connectionTimeout = 60;
 
   @ConfigDef(
       type = ConfigDef.Type.NUMBER,
