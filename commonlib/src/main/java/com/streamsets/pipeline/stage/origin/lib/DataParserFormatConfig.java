@@ -838,7 +838,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    label = "Data Format",
+    label = "Datagram Packet Format",
     defaultValue = "SYSLOG",
     group = "DATA_FORMAT",
     displayPosition = 800,

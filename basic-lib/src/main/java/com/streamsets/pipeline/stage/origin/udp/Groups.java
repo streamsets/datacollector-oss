@@ -24,7 +24,7 @@ public enum Groups implements Label {
   SYSLOG("syslog"),
   COLLECTD("collectd"),
   RAW_DATA("Raw/Separated data"),
-  NETFLOW_V9("Netflow v9"),
+  NETFLOW_V9("NetFlow 9"),
   ;
 
   private final String label;

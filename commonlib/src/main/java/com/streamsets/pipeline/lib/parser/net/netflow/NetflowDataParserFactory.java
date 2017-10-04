@@ -46,19 +46,19 @@ public class NetflowDataParserFactory extends DataParserFactory {
       DEFAULT_OUTPUT_VALUES_MODE_STR
   );
 
-  public static final String OUTPUT_VALUES_MODE_LABEL = "Output Values Mode";
-  public static final String OUTPUT_VALUES_MODE_TOOLTIP = "Controls whether to store raw and/or interpreted values in" +
-      " the record generated from a flow. Only applies to Netflow v9.";
+  public static final String OUTPUT_VALUES_MODE_LABEL = "Record Generation Mode";
+  public static final String OUTPUT_VALUES_MODE_TOOLTIP = "Determines the data that is included in the record" +
+      " generated from a flow. Only applies to NetFlow 9.";
 
-  public static final String MAX_TEMPLATE_CACHE_SIZE_LABEL = "Max Template Cache Size";
-  public static final String MAX_TEMPLATE_CACHE_SIZE_TOOLTIP = "Controls the maximum size of the template cache (i.e." +
-      " the number of flow templates to keep cached across all export packets). Leave as -1 for unlimited. Only" +
-      " applies to Netflow v9.";
+  public static final String MAX_TEMPLATE_CACHE_SIZE_LABEL = "Max Templates in Cache";
+  public static final String MAX_TEMPLATE_CACHE_SIZE_TOOLTIP = "Controls the maximum number of templates to cache" +
+      " from all sources. Additional templates received when this limit is reached cause the eviction of existing" +
+      " templates, least recently used first. Leave as -1 for unlimited. Only applies to NetFlow 9.";
 
   public static final String TEMPLATE_CACHE_TIMEOUT_MS_LABEL = "Template Cache Timeout (ms)";
   public static final String TEMPLATE_CACHE_TIMEOUT_MS_TOOLTIP = "Controls the maximum length of time flow" +
       " templates are cached, after last being used to parse a data flow. Leave as -1 for unlimited (never expires)." +
-      " Only applies to Netflow v9.";
+      " Only applies to NetFlow 9.";
 
   public static final Map<String, Object> CONFIGS;
 

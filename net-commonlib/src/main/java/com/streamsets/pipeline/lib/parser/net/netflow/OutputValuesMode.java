@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.Label;
 public enum OutputValuesMode implements Label {
   RAW_ONLY("Raw only"),
   INTERPRETED_ONLY("Interpreted only"),
-  RAW_AND_INTERPRETED("Both raw and interpreted"),
+  RAW_AND_INTERPRETED("Raw and interpreted"),
   ;
 
   private final String label;
