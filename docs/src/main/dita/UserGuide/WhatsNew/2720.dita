@@ -27,6 +27,10 @@
                                     >New Kafka Multitopic Consumer origin</xref> - A new origin that
                                 reads messages from multiple Kafka topics. Creates multiple threads
                                 to enable parallel processing in a multithreaded pipeline. </li>
+                            <li><xref href="../Origins/KinConsumer-Configuring.dita#task_p4b_vv4_yr"
+                                    >Kinesis Consumer origin enhancement</xref> - You can now
+                                configure the origin to start reading messages from a specified
+                                timestamp.</li>
                         </ul>
                     </dd>
                 </dlentry>
