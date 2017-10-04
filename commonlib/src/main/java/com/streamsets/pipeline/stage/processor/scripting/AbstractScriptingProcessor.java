@@ -188,7 +188,9 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
   @Override
   public void destroy() {
     try {
-      engine.eval(destroyScript, createBindings());
+      if(engine != null) {
+        engine.eval(destroyScript, createBindings());
+      }
     } catch (ScriptException e) {
       log.error(Errors.SCRIPTING_09.getMessage(), e.toString(), e);
     }
