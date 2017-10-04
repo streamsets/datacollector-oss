@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.processor.fieldfilter;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
@@ -33,7 +34,14 @@ import java.util.List;
     label="Field Remover",
     description="Removes fields from a record",
     icon="filter.png",
-    onlineHelpRefUrl = "index.html#Processors/FieldRemover.html#task_c1j_btr_wq"
+    onlineHelpRefUrl = "index.html#Processors/FieldRemover.html#task_c1j_btr_wq",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE
+    }
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(onErrorRecord = true)
