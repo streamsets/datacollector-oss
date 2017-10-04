@@ -24,6 +24,7 @@ public enum Groups implements Label {
   UDP("UDP"),
   ADVANCED("Advanced"),
   DATA_FORMAT("Data Format"),
+  NETFLOW_V9("NetFlow 9"),
   ;
 
   private final String label;
