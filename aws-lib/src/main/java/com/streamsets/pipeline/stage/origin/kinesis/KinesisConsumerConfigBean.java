@@ -60,12 +60,11 @@ public class KinesisConsumerConfigBean extends KinesisConfigBean {
       type = ConfigDef.Type.NUMBER,
       min = 0,
       label = "Initial Timestamp",
-      defaultValue = "${time:now()}",
+      defaultValue = "",
       description = "Timestamp in milliseconds to set when using AT_TIMESTAMP for the initial position in a stream",
       dependsOn = "initialPositionInStream",
       triggeredByValue = "AT_TIMESTAMP",
       displayPosition = 45,
-      elDefs = TimeNowEL.class,
       group = "#0"
   )
   public long initialTimestamp;
