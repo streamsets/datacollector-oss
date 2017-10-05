@@ -102,10 +102,7 @@
                                     <entry>Initial Timestamp</entry>
                                     <entry>Timestamp in milliseconds since epoch to start reading
                                         messages from when the initial position is set to
-                                        AT_TIMESTAMP. <p>Enter a timestamp in milliseconds since
-                                            epoch or enter an expression that evaluates to a
-                                            timestamp such as ${time:now() - 86400000} which
-                                            evaluates to 24 hours ago.</p></entry>
+                                        AT_TIMESTAMP. </entry>
                                 </row>
                                 <row>
                                     <entry>Max Batch Size (messages)</entry>
