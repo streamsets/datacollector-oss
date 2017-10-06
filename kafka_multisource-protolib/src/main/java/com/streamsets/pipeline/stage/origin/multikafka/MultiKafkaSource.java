@@ -64,7 +64,6 @@ public class MultiKafkaSource extends BasePushSource {
   private int batchSize;
 
   private MultiKafkaConsumerFactory consumerFactory;
-  private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
   private ExecutorService executor;
 
@@ -106,11 +105,13 @@ public class MultiKafkaSource extends BasePushSource {
         // only 2 conditions that we want to halt execution. must handle gracefully
         while(!getContext().isStopped() && !Thread.interrupted()) {
           BatchContext batchContext = getContext().startBatch();
+          ErrorRecordHandler errorRecordHandler = new DefaultErrorRecordHandler(getContext(), batchContext);
 
           ConsumerRecords<String, byte[]> messages = consumer.poll(conf.batchWaitTime);
           if(!messages.isEmpty()) {
             for(ConsumerRecord<String, byte[]> message : messages) {
               createRecord(
+                  errorRecordHandler,
                   message.topic(),
                   message.partition(),
                   message.offset(),
@@ -135,7 +136,13 @@ public class MultiKafkaSource extends BasePushSource {
       return messagesProcessed;
     }
 
-    private List<Record> createRecord(String topic, int partition, long offset, byte[] payload) throws StageException {
+    private List<Record> createRecord(
+      ErrorRecordHandler errorRecordHandler,
+      String topic,
+      int partition,
+      long offset,
+      byte[] payload
+    ) throws StageException {
       String messageId = getMessageId(topic, partition, offset);
       List<Record> records = new ArrayList<>();
       try(DataParser parser = Utils.checkNotNull(parserFactory, "Initialization failed").getParser(messageId, payload)) {
@@ -185,7 +192,6 @@ public class MultiKafkaSource extends BasePushSource {
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    errorRecordHandler = new DefaultErrorRecordHandler((Source.Context)getContext());
 
     conf.init(getContext(), issues);
 
