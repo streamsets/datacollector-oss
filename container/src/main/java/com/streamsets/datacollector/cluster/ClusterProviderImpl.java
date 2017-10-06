@@ -651,6 +651,9 @@ public class ClusterProviderImpl implements ClusterProvider {
         executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
       LOG.info("Execution Mode is CLUSTER_STREAMING. Adding container jar and API jar to spark-submit");
       addJarsToJarsList(containerCL, jarsToShip, "streamsets-datacollector-container-[0-9]+.*");
+      // EscapeUtil is required by RecordImpl#get() and RecordImpl#set(), and has no additional dependencies, so
+      // ship this as well.
+      addJarsToJarsList(containerCL, jarsToShip, "streamsets-datacollector-common-[0-9]+.*");
       addJarsToJarsList(apiCL, jarsToShip, "streamsets-datacollector-api-[0-9]+.*");
     }
 
