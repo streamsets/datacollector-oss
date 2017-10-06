@@ -77,10 +77,10 @@ public class MultiKafkaSource extends BasePushSource {
   public class MultiTopicCallable implements Callable<Long> {
     private KafkaConsumer<String, byte[]> consumer;
     private final long threadID;
-    private final Collection<String> topicList;
+    private final List<String> topicList;
     private final CountDownLatch startProcessingGate;
 
-    public MultiTopicCallable(long threadID, Collection<String> topicList, KafkaConsumer<String, byte[]> consumer,
+    public MultiTopicCallable(long threadID, List<String> topicList, KafkaConsumer<String, byte[]> consumer,
         CountDownLatch startProcessingGate
     ) {
       Thread.currentThread().setName("kafkaConsumerThread-"+threadID);
