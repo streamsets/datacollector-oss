@@ -275,6 +275,36 @@ public class DataParserFormatConfig implements DataFormatConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Allow Extra Columns",
+      description = "When false, rows with more columns than the header are sent to error.",
+      displayPosition = 385,
+      group = "DATA_FORMAT",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "DELIMITED"),
+          @Dependency(configName = "csvHeader", triggeredByValues = "WITH_HEADER")
+      }
+  )
+  public boolean csvAllowExtraColumns = false;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.STRING,
+    defaultValue = DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX,
+    label = "Extra Column Prefix",
+    description = "Each extra column is labeled with this prefix followed by an integer",
+    displayPosition = 386,
+    group = "DATA_FORMAT",
+    dependencies = {
+        @Dependency(configName = "dataFormat^", triggeredByValues = "DELIMITED"),
+        @Dependency(configName = "csvAllowExtraColumns", triggeredByValues = "true")
+    }
+  )
+  public String csvExtraColumnPrefix = DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1024",
       label = "Max Record Length (chars)",
@@ -287,34 +317,6 @@ public class DataParserFormatConfig implements DataFormatConfig {
       max = Integer.MAX_VALUE
   )
   public int csvMaxObjectLen = 1024;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Allow Extra Columns",
-      description = "When false, rows with more columns than the header are sent to error.",
-      displayPosition = 395,
-      group = "DATA_FORMAT",
-      dependsOn = "dataFormat^",
-      triggeredByValue = "DELIMITED"
-  )
-  public boolean csvAllowExtraColumns = false;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      defaultValue = DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX,
-      label = "Extra Column Prefix",
-      description = "Each extra column is labeled with this prefix followed by an integer",
-      displayPosition = 396,
-      group = "DATA_FORMAT",
-      dependencies = {
-          @Dependency(configName = "dataFormat^", triggeredByValues = "DELIMITED"),
-          @Dependency(configName = "csvAllowExtraColumns", triggeredByValues = "true")
-      }
-  )
-  public String csvExtraColumnPrefix = DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX;
 
   @ConfigDef(
       required = false,
