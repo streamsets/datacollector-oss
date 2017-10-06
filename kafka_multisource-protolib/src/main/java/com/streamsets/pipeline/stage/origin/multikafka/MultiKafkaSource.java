@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.multikafka;
 
+import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -254,9 +255,10 @@ public class MultiKafkaSource extends BasePushSource {
         shutdown();
         Thread.currentThread().interrupt();
       } catch (ExecutionException e) {
-        LOG.info("Multi kafka thread halted unexpectedly: {}", future, e.getCause().getMessage());
+        LOG.info("Multi kafka thread halted unexpectedly: {}", future, e.getCause().getMessage(), e);
         shutdown();
-        throw (StageException) e.getCause();
+        Throwables.propagateIfPossible(e.getCause(), StageException.class);
+        Throwables.propagate(e.getCause());
       }
     }
 
