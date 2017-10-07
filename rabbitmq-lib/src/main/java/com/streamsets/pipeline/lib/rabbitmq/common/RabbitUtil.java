@@ -19,6 +19,7 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConnectionFactory;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.rabbitmq.config.BaseRabbitConfigBean;
@@ -81,7 +82,7 @@ public final class RabbitUtil {
           Errors.RABBITMQ_03,
           e.toString()
       ));
-    } catch (TimeoutException | IOException e) {
+    } catch (TimeoutException | IOException | StageException e) {
       // Connecting to RabbitMQ timed out or some other issue.
       LOG.error("Rabbit MQ issue ", e);
       String reason = (e.getCause() == null) ? e.toString() : e.getCause().toString() ;
@@ -95,12 +96,12 @@ public final class RabbitUtil {
   }
 
 
-  public static ConnectionFactory createConnectionFactory (BaseRabbitConfigBean conf) {
+  public static ConnectionFactory createConnectionFactory(BaseRabbitConfigBean conf) throws StageException {
     RabbitCxnFactoryBuilder builder =
         new RabbitCxnFactoryBuilder(
             conf.uri,
-            conf.credentialsConfig.username,
-            conf.credentialsConfig.password,
+            conf.credentialsConfig.username.get(),
+            conf.credentialsConfig.password.get(),
             conf.rabbitmqProperties
         ).setConnectionTimeout(conf.advanced.connectionTimeout)
             .setAutomaticRecoveryEnabled(conf.advanced.automaticRecoveryEnabled)

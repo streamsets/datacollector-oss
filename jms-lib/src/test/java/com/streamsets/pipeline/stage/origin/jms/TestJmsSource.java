@@ -110,8 +110,8 @@ public class TestJmsSource {
     messageConfig = new MessageConfig();
     jmsSourceConfig = new JmsSourceConfig();
     credentialsConfig.useCredentials = true;
-    credentialsConfig.username = USERNAME;
-    credentialsConfig.password = PASSWORD;
+    credentialsConfig.username = () -> USERNAME;
+    credentialsConfig.password = () -> PASSWORD;
     dataFormat = DataFormat.JSON;
     dataFormatConfig.removeCtrlChars = true;
     jmsSourceConfig.initialContextFactory = INITIAL_CONTEXT_FACTORY;
@@ -205,7 +205,7 @@ public class TestJmsSource {
 
   @Test
   public void testInvalidCreds() throws Exception {
-    credentialsConfig.username = "invalid";
+    credentialsConfig.username = () -> "invalid";
     runInit("JMS_04");
   }
 

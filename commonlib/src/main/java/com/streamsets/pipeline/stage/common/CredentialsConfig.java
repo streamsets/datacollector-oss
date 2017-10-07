@@ -15,8 +15,8 @@
  */
 package com.streamsets.pipeline.stage.common;
 
-import com.streamsets.pipeline.lib.el.VaultEL;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 public class CredentialsConfig {
 
@@ -32,25 +32,23 @@ public class CredentialsConfig {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.STRING,
+    type = ConfigDef.Type.CREDENTIAL,
     dependsOn = "useCredentials",
     triggeredByValue = "true",
     label = "Username",
     displayPosition = 10,
-    elDefs = VaultEL.class,
     group = "CREDENTIALS"
   )
-  public String username = "";
+  public CredentialValue username = () -> "";
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.STRING,
+    type = ConfigDef.Type.CREDENTIAL,
     dependsOn = "useCredentials",
     triggeredByValue = "true",
     label = "Password",
     displayPosition = 20,
-    elDefs = VaultEL.class,
     group = "CREDENTIALS"
   )
-  public String password = "";
+  public CredentialValue password = () -> "";
 }

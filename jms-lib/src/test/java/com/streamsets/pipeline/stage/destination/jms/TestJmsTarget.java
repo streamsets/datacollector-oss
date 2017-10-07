@@ -117,8 +117,8 @@ public class TestJmsTarget {
     dataFormatConfig = new DataGeneratorFormatConfig();
     jmsTargetConfig = new JmsTargetConfig();
     credentialsConfig.useCredentials = true;
-    credentialsConfig.username = USERNAME;
-    credentialsConfig.password = PASSWORD;
+    credentialsConfig.username = () -> USERNAME;
+    credentialsConfig.password = () -> PASSWORD;
     jmsTargetConfig.destinationName = JNDI_PREFIX + DESTINATION_NAME;
     jmsTargetConfig.initialContextFactory = INITIAL_CONTEXT_FACTORY;
     jmsTargetConfig.connectionFactory = CONNECTION_FACTORY;
@@ -209,7 +209,7 @@ public class TestJmsTarget {
 
   @Test
   public void testInvalidCreds() throws Exception {
-    credentialsConfig.username = "invalid";
+    credentialsConfig.username = () -> "invalid";
     runInit("JMS_04");
   }
 

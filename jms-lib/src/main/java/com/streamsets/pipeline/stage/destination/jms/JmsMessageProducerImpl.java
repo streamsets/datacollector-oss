@@ -85,17 +85,20 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     try {
       if(credentialsConfig.useCredentials) {
-        connection = connectionFactory.createConnection(credentialsConfig.username, credentialsConfig.password);
+        connection = connectionFactory.createConnection(credentialsConfig.username.get(), credentialsConfig.password.get());
       } else {
         connection = connectionFactory.createConnection();
       }
-    } catch (JMSException ex) {
+    } catch (JMSException|StageException ex) {
       if (credentialsConfig.useCredentials) {
         issues.add(context.createConfigIssue(
-            JmsGroups.JMS.name(), CONN_FACTORY_CONFIG_NAME, JmsErrors.JMS_03,
-            connectionFactory.getClass().getName(), credentialsConfig.username, ex.toString()));
-        LOG.info(Utils.format(JmsErrors.JMS_03.getMessage(), connectionFactory.getClass().getName(),
-            credentialsConfig.username, ex.toString()), ex);
+            JmsGroups.JMS.name(),
+            CONN_FACTORY_CONFIG_NAME,
+            JmsErrors.JMS_03,
+            connectionFactory.getClass().getName(),
+            ex.toString()
+        ));
+        LOG.info(Utils.format(JmsErrors.JMS_03.getMessage(), connectionFactory.getClass().getName(), ex.toString()), ex);
       } else {
         issues.add(context.createConfigIssue(JmsGroups.JMS.name(), CONN_FACTORY_CONFIG_NAME, JmsErrors.JMS_02,
             connectionFactory.getClass().getName(), ex.toString()));

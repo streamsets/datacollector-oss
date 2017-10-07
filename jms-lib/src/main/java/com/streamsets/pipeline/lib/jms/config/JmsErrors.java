@@ -24,7 +24,7 @@ public enum JmsErrors implements ErrorCode {
   JMS_00("Could not create initial context '{}' with provider URL '{}' : {}"),
   JMS_01("Could not create connection factory '{}' : {}"),
   JMS_02("Unable to create connection using '{}': {}"),
-  JMS_03("Unable to create connection using '{}' with credentials '{}': {}"),
+  JMS_03("Unable to create connection using '{}' with credentials: {}"),
   JMS_04("Unable to start connection: {}"),
   JMS_05("Unable to find destination '{}': {}"),
   JMS_06("Unable to create session: {}"),

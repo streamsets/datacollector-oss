@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.rabbitmq.common;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.rabbitmq.config.BaseRabbitConfigBean;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class RabbitCxnManager {
   private Connection connection = null;
   private Channel channel = null;
 
-  public void init(BaseRabbitConfigBean conf) throws IOException, TimeoutException {
+  public void init(BaseRabbitConfigBean conf) throws IOException, StageException, TimeoutException {
     ConnectionFactory connectionFactory = RabbitUtil.createConnectionFactory(conf);
     this.connection = connectionFactory.newConnection();
     this.channel = this.connection.createChannel();
