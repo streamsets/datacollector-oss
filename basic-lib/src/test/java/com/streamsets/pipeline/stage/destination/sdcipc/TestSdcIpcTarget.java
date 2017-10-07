@@ -61,7 +61,7 @@ public class TestSdcIpcTarget {
   public void testSingleHost() throws Exception {
     HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
     Configs config = new ForTestConfigs(conn);
-    config.appId = "appId";
+    config.appId = () -> "appId";
     config.connectionTimeOutMs = 100;
     config.readTimeOutMs = 200;
     config.hostPorts = ImmutableList.of("localhost:10000");
@@ -82,7 +82,7 @@ public class TestSdcIpcTarget {
   public void testMultipleHosts() throws Exception {
     HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
     Configs config = new ForTestConfigs(conn);
-    config.appId = "appId";
+    config.appId = () -> "appId";
     config.connectionTimeOutMs = 100;
     config.readTimeOutMs = 200;
     config.hostPorts = Arrays.asList("localhost:10000", "localhost:10001");
@@ -144,7 +144,7 @@ public class TestSdcIpcTarget {
   public void testWriteOK() throws Exception {
     HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
     Configs config = new ForTestConfigs(conn);
-    config.appId = "appId";
+    config.appId = () -> "appId";
     config.connectionTimeOutMs = 100;
     config.readTimeOutMs = 200;
     config.hostPorts = ImmutableList.of("localhost:10000");
@@ -186,7 +186,7 @@ public class TestSdcIpcTarget {
 
     HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
     Configs config = new ForTestConfigs(conn);
-    config.appId = "appId";
+    config.appId = () -> "appId";
     config.connectionTimeOutMs = 100;
     config.readTimeOutMs = 200;
     config.hostPorts = ImmutableList.of("localhost:10000");
@@ -323,7 +323,7 @@ public class TestSdcIpcTarget {
       server.start();
 
       Configs config = new Configs();
-      config.appId = "appId";
+      config.appId = () -> "appId";
       config.connectionTimeOutMs = 1000;
       config.readTimeOutMs = 2000;
       config.hostPorts = ImmutableList.of("localhost:" + server.getURI().getPort());
@@ -376,7 +376,7 @@ public class TestSdcIpcTarget {
         runner.runInit();
 
         // to force the error
-        config.appId = "invalid";
+        config.appId = () -> "invalid";
 
         List<Record> records = ImmutableList.of(RecordCreator.create(), RecordCreator.create());
         runner.runWrite(records);
@@ -426,7 +426,7 @@ public class TestSdcIpcTarget {
       server.start();
 
       Configs config = new Configs();
-      config.appId = "appId";
+      config.appId = () -> "appId";
       config.connectionTimeOutMs = 1000;
       config.readTimeOutMs = 2000;
       config.hostPorts = ImmutableList.of(hostname + ":" + server.getURI().getPort());
@@ -469,7 +469,7 @@ public class TestSdcIpcTarget {
   public void testBackOff() throws Exception {
     HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
     Configs config = new ForTestConfigs(conn);
-    config.appId = "appId";
+    config.appId = () -> "appId";
     config.hostPorts = ImmutableList.of("localhost:10000");
     config.retriesPerBatch = 3;
     config.backOff = 10;

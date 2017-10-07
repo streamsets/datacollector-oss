@@ -113,7 +113,7 @@ public class SdcIpcTarget extends BaseTarget {
     }
   }
 
-  HttpURLConnection createWriteConnection(boolean isRetry) throws IOException {
+  HttpURLConnection createWriteConnection(boolean isRetry) throws IOException, StageException {
     HttpURLConnection  conn = config.createConnection(getHostPort(isRetry));
     conn.setRequestMethod("POST");
     conn.setRequestProperty(Constants.CONTENT_TYPE_HEADER, Constants.APPLICATION_BINARY);

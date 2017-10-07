@@ -162,7 +162,7 @@ public class TestSdcIpcSource {
     com.streamsets.pipeline.stage.destination.sdcipc.Configs config =
         new com.streamsets.pipeline.stage.destination.sdcipc.Configs();
     // always valid to be able to init the config
-    config.appId = "appId";
+    config.appId = () -> "appId";
     config.connectionTimeOutMs = 1000;
     config.readTimeOutMs = 1000;
     config.hostPorts = ImmutableList.of(hostPort);
@@ -174,7 +174,7 @@ public class TestSdcIpcSource {
     config.tlsConfigBean.cipherSuites.add("TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256");
     List<Stage.ConfigIssue> issues = config.init(context);
     // now setting the appId we want to test
-    config.appId = appId.get();
+    config.appId = appId;
     if (issues.isEmpty()) {
         return config.createConnection(hostPort, path);
     } else {
