@@ -165,6 +165,7 @@
     <module>maprstreams-common</module>
     <module>maprstreams-target-protolib</module>
     <module>maprstreams-source-protolib</module>
+    <module>maprstreams-multisource-protolib</module>
     <module>jython-protolib</module>
     <module>groovy-protolib</module>
 
