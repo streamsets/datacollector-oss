@@ -20,7 +20,6 @@ import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.ext.io.ObjectLengthException;
 import com.streamsets.pipeline.api.ext.io.OverrunException;
-import com.streamsets.pipeline.api.ext.io.OverrunReader;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;

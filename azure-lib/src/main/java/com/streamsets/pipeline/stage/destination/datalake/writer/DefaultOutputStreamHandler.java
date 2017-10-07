@@ -21,7 +21,6 @@ import com.microsoft.azure.datalake.store.IfExists;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 import org.apache.commons.io.output.CountingOutputStream;
 

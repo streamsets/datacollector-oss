@@ -22,7 +22,6 @@ import com.streamsets.lib.security.http.CredentialsBeanJson;
 import com.streamsets.datacollector.util.Configuration;
 import io.swagger.annotations.Api;
 import org.apache.commons.io.Charsets;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -20,7 +20,6 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.parser.net.netflow.Errors;
 import com.streamsets.pipeline.lib.parser.net.netflow.NetflowCommonDecoder;
-import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
 import com.streamsets.pipeline.lib.parser.net.netflow.UUIDs;
 import com.streamsets.pipeline.lib.parser.net.netflow.VersionSpecificNetflowDecoder;
 import io.netty.buffer.ByteBuf;

@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.activation.NopActivation;
 import com.streamsets.datacollector.http.TestWebServerTaskHttpHttps.PingServlet;
 import com.streamsets.datacollector.main.DataCollectorBuildInfo;

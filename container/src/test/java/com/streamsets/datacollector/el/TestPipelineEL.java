@@ -17,10 +17,8 @@ package com.streamsets.datacollector.el;
 
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.runner.UserContext;
 import com.streamsets.datacollector.store.PipelineInfo;
-import com.streamsets.pipeline.api.Config;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.lib.parser;
 
 import com.streamsets.pipeline.api.FileRef;
-import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;

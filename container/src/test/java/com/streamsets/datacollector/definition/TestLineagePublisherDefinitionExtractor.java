@@ -25,7 +25,6 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.BlockingQueue;
 
 public class TestLineagePublisherDefinitionExtractor {
 

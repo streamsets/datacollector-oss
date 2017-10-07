@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

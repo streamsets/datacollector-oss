@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.processor.lookup;
 
 import com.google.common.cache.CacheLoader;
-import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;

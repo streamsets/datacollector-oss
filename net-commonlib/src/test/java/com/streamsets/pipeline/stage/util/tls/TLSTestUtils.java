@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.util.tls;
 
-import org.apache.commons.io.IOUtils;
 import org.bouncycastle.x509.X509V1CertificateGenerator;
 
 import javax.security.auth.x500.X500Principal;

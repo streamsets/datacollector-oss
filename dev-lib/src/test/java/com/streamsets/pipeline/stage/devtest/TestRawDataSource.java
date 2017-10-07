@@ -29,9 +29,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TestRawDataSource {

@@ -19,7 +19,6 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class LaneResolver {

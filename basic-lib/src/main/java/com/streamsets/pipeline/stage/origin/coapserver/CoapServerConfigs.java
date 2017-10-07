@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.origin.coapserver;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.lib.el.VaultEL;
 
 import java.util.Collections;
 import java.util.Map;

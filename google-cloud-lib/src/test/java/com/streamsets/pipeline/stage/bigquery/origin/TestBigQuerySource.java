@@ -27,7 +27,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
-import com.streamsets.pipeline.stage.bigquery.lib.Errors;
 import com.streamsets.pipeline.stage.bigquery.lib.TestBigQueryDelegate;
 import com.streamsets.pipeline.stage.lib.CredentialsProviderType;
 import org.junit.Before;

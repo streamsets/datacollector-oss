@@ -17,8 +17,6 @@ package com.streamsets.pipeline.lib.parser.net.netflow;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.ext.io.OverrunReader;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;

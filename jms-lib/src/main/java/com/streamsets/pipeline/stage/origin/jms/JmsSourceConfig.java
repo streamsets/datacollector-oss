@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.jms;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.jms.config.BaseJmsConfig;
 
 public class JmsSourceConfig extends BaseJmsConfig {

@@ -25,9 +25,7 @@ import com.streamsets.pipeline.stage.destination.http.DataFormatChooserValues;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Bean specifying the configuration for an WebSocket Client Target instance.

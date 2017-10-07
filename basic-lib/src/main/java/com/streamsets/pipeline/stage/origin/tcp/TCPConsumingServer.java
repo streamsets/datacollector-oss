@@ -18,8 +18,6 @@ package com.streamsets.pipeline.stage.origin.tcp;
 import com.streamsets.pipeline.lib.network.BaseNettyServer;
 import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;

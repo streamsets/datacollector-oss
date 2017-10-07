@@ -18,7 +18,6 @@ package com.streamsets.pipeline.lib.event;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import org.junit.Before;
 import org.junit.Test;

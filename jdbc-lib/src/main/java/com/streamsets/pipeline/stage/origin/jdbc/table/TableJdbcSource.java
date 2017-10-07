@@ -41,7 +41,6 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProviderFactory;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
-import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.lib.util.OffsetUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.zaxxer.hikari.HikariDataSource;

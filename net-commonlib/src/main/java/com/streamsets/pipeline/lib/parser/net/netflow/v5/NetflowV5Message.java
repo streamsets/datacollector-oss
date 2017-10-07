@@ -17,7 +17,6 @@ package com.streamsets.pipeline.lib.parser.net.netflow.v5;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.lib.parser.net.MessageToRecord;
 import com.streamsets.pipeline.lib.parser.net.netflow.BaseNetflowMessage;
 
 import java.util.HashMap;

@@ -17,10 +17,6 @@ package com.streamsets.pipeline.stage.bigquery.destination;
 
 import com.streamsets.pipeline.stage.lib.CredentialsProviderType;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 public class BigQueryTargetConfigBuilder {
   private String projectId;
   private String datasetEL;

@@ -48,7 +48,6 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -17,8 +17,6 @@ package com.streamsets.datacollector.credential.javakeystore.cli;
 
 import io.airlift.airline.Cli;
 import io.airlift.airline.Help;
-import io.airlift.airline.ParseArgumentsUnexpectedException;
-import io.airlift.airline.ParseOptionMissingException;
 
 import java.util.Arrays;
 

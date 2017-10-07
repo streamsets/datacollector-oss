@@ -18,7 +18,6 @@ package com.streamsets.pipeline.lib.parser.net.syslog;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import org.apache.commons.lang3.StringUtils;
 
 import java.net.InetSocketAddress;
 import java.time.Clock;

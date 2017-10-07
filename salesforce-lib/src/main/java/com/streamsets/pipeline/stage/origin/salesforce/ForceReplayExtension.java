@@ -18,9 +18,7 @@ package com.streamsets.pipeline.stage.origin.salesforce;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.TimeUnit;
 
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;

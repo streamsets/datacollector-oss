@@ -15,10 +15,8 @@
  */
 package com.streamsets.pipeline.stage.destination.datalake.writer;
 
-import com.microsoft.azure.datalake.store.ADLFileOutputStream;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.lib.generator.StreamCloseEventHandler;
 
 import java.io.IOException;

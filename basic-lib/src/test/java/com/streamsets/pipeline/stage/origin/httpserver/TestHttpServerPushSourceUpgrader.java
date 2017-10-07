@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.origin.httpserver;
 
-import com.streamsets.pipeline.stage.destination.sdcipc.SdcIpcTargetUpgrader;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import org.junit.Test;
 

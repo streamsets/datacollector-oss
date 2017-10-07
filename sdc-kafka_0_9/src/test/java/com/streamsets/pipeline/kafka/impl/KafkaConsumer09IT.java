@@ -18,44 +18,23 @@ package com.streamsets.pipeline.kafka.impl;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.kafka.api.ConsumerFactorySettings;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
-import com.streamsets.pipeline.kafka.api.SdcKafkaConsumerFactory;
-import com.streamsets.pipeline.lib.kafka.KafkaConstants;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.testing.NetworkUtils;
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaServer;
 import kafka.utils.ZkUtils;
 import kafka.zk.EmbeddedZookeeper;
-import org.apache.kafka.clients.consumer.OffsetAndMetadata;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.security.JaasUtils;
-import org.apache.kafka.common.serialization.ByteArrayDeserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
-import org.apache.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 public class KafkaConsumer09IT extends KafkaNewConsumerITBase {
 

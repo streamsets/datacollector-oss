@@ -19,11 +19,9 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
-import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.validation.Issue;
-import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 
 import org.junit.Assert;

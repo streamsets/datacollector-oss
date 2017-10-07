@@ -17,8 +17,6 @@ package com.streamsets.datacollector.activation;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
 
-import java.util.List;
-
 public class NopActivation implements Activation {
   @Override
   public void init(RuntimeInfo runtimeInfo) {

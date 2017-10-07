@@ -30,12 +30,10 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

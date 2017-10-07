@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.credential;
 
 import com.streamsets.datacollector.task.Task;
-import com.streamsets.pipeline.api.lineage.LineageEvent;
 
 public interface CredentialStoresTask extends Task {
 

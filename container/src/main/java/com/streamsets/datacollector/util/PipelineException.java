@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.util;
 
 import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.impl.ErrorMessage;
 
 public class PipelineException extends ErrorCodeException {
   public PipelineException(ErrorCode errorCode, Object... params) {

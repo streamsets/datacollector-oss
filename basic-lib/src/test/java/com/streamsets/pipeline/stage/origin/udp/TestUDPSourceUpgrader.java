@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.origin.udp;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.stage.origin.tcp.TCPServerSourceUpgrader;
 import org.junit.Test;
 
 import java.util.LinkedList;

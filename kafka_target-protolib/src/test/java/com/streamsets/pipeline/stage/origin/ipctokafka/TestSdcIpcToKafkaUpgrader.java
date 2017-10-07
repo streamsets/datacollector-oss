@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.origin.ipctokafka;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.stage.origin.httptokafka.HttpToKafkaSourceUpgrader;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import org.junit.Assert;
 import org.junit.Test;

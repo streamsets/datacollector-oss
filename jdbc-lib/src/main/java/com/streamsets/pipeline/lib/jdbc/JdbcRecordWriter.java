@@ -18,9 +18,6 @@ package com.streamsets.pipeline.lib.jdbc;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.lib.operation.OperationType;
-import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
-import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 
 import java.util.Collection;
 import java.util.List;

@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.lib.parser.net.raw;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.lib.parser.net.syslog.SyslogFramingMode;
 
 public class RawDataModeChooserValues extends BaseEnumChooserValues<RawDataMode> {
   public RawDataModeChooserValues() {

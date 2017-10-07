@@ -22,9 +22,6 @@ import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtracto
 import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.lib.security.http.HeadlessSSOPrincipal;
-import com.streamsets.lib.security.http.SSOPrincipal;
-import com.streamsets.lib.security.http.SSOPrincipalJson;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialStoreDef;
@@ -35,8 +32,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
-import javax.security.auth.Subject;
-import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

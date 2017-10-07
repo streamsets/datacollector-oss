@@ -21,7 +21,6 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.metrics.MetricsModule;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.impl.Utils;
 import dagger.Module;
 import dagger.Provides;
@@ -30,11 +29,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Module(library = true, injects = {
     BuildInfo.class,

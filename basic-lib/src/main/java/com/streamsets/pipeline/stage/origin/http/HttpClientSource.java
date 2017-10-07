@@ -80,7 +80,6 @@ import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_22;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_24;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_30;
-import static com.streamsets.pipeline.lib.http.Errors.HTTP_31;
 import static com.streamsets.pipeline.lib.parser.json.Errors.JSON_PARSER_00;
 
 /**

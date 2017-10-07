@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.lib.http;
 
-import com.streamsets.pipeline.lib.sdcipc.SdcIpcRequestFragmenter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;

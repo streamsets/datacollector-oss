@@ -17,17 +17,14 @@ package com.streamsets.datacollector.runner.production;
 
 import com.streamsets.datacollector.config.ErrorRecordPolicy;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.datacollector.runner.ErrorSink;
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.Target;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -18,11 +18,8 @@ package com.streamsets.datacollector.credential;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
-import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 

@@ -15,12 +15,10 @@
  */
 package com.streamsets.pipeline.stage.util.tls;
 
-import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 
 import java.util.ArrayList;

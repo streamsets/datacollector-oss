@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * CredentialStore proxy that enforces group belonging.

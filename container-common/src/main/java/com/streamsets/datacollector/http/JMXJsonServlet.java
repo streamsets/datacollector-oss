@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.http;
 
-import com.codahale.metrics.JmxReporter;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 

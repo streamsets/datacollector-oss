@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.destination.mapreduce;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.datacollector.stage.HadoopConfigurationUtils;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;

@@ -17,11 +17,8 @@ package com.streamsets.pipeline.stage.bigquery.destination;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.lib.GoogleCloudCredentialsConfig;
-
-import java.util.List;
 
 public class BigQueryTargetConfig {
 

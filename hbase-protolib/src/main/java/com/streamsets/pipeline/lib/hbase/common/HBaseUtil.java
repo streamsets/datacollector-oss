@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.lib.hbase.common;
 
 import com.google.common.base.Splitter;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.datacollector.security.HadoopSecurityUtil;

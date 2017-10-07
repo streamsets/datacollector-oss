@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.configurablestage;
 
 import com.streamsets.pipeline.api.PushSource;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 

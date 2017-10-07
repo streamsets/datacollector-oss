@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 public class KuduLookupLoader extends CacheLoader<KuduLookupKey, List<Map<String, Field>>> {
   private static final Logger LOG = LoggerFactory.getLogger(KuduLookupLoader.class);

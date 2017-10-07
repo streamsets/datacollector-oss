@@ -17,10 +17,8 @@ package com.streamsets.pipeline.lib.http;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.SslConfigurator;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;

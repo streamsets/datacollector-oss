@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.event.handler.remote;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
@@ -35,7 +34,6 @@ import com.streamsets.lib.security.acl.dto.SubjectType;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class AclCacheHelper {

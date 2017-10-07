@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.processor.jdbclookup;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Timer;
 import com.google.common.cache.CacheLoader;
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;

@@ -18,7 +18,6 @@ package com.streamsets.pipeline.lib.parser.net.netflow;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.parser.net.BaseNetworkMessageDataParser;
-import com.streamsets.pipeline.lib.parser.net.netflow.v5.NetflowV5Message;
 import io.netty.buffer.ByteBuf;
 
 import java.io.InputStream;

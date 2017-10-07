@@ -22,7 +22,6 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
-import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
 import com.streamsets.pipeline.lib.parser.udp.collectd.CollectdParser;
 import com.streamsets.pipeline.lib.parser.udp.netflow.NetflowParser;
 import com.streamsets.pipeline.lib.parser.udp.syslog.SyslogParser;

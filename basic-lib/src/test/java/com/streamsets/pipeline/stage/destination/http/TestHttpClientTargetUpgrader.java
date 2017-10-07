@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.destination.http;
 
-import com.streamsets.pipeline.stage.destination.mqtt.MqttClientTargetUpgrader;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import org.junit.Test;
 
