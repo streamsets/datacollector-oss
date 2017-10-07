@@ -33,6 +33,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
+import com.streamsets.pipeline.stage.origin.multikafka.loader.KafkaConsumerLoader;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -63,23 +64,24 @@ public class MultiKafkaSource extends BasePushSource {
   private AtomicBoolean shutdownCalled = new AtomicBoolean(false);
   private int batchSize;
 
-  private MultiKafkaConsumerFactory consumerFactory;
   private DataParserFactory parserFactory;
   private ExecutorService executor;
 
   public MultiKafkaSource(MultiKafkaBeanConfig conf) {
     this.conf = conf;
     batchSize = conf.maxBatchSize;
-    consumerFactory = new MultiKafkaConsumerFactory();
   }
 
   public class MultiTopicCallable implements Callable<Long> {
-    private KafkaConsumer<String, byte[]> consumer;
+    private MultiSdcKafkaConsumer<String, byte[]> consumer;
     private final long threadID;
     private final List<String> topicList;
     private final CountDownLatch startProcessingGate;
 
-    public MultiTopicCallable(long threadID, List<String> topicList, KafkaConsumer<String, byte[]> consumer,
+    public MultiTopicCallable(
+        long threadID,
+        List<String> topicList,
+        MultiSdcKafkaConsumer<String, byte[]> consumer,
         CountDownLatch startProcessingGate
     ) {
       Thread.currentThread().setName("kafkaConsumerThread-"+threadID);
@@ -242,7 +244,7 @@ public class MultiKafkaSource extends BasePushSource {
       try {
         futures.add(executor.submit(new MultiTopicCallable(i,
             conf.topicList,
-            consumerFactory.create(getKafkaProperties()),
+            KafkaConsumerLoader.createConsumer(getKafkaProperties()),
             startProcessingGate
         )));
       } catch (Exception e) {
@@ -290,10 +292,6 @@ public class MultiKafkaSource extends BasePushSource {
 
   private String getMessageId(String topic, int partition, long offset) {
     return topic + "::" + partition + "::" + offset;
-  }
-
-  public void setKafkaConsumerFactory(MultiKafkaConsumerFactory consumerFactory) {
-    this.consumerFactory = consumerFactory;
   }
 
   public void await() throws InterruptedException {

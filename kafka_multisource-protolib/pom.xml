@@ -35,8 +35,6 @@
 
   <properties>
     <kafka.version>0.10.1.0</kafka.version>
-    <confluent.version>2.0.1</confluent.version>
-    <tec.version>0.3</tec.version>
   </properties>
 
   <dependencies>
@@ -56,10 +54,10 @@
       <artifactId>kafka-schema-registry-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-kafka-api</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>${kafka.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -99,40 +97,11 @@
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-cluster-bootstrap-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    -->
 
     <!-- Test Dependencies -->
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-commonlib</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <!--
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-kafka-08</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-kafka-08</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    -->
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-kafka-common</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
@@ -166,12 +135,7 @@
       <version>${protobuf.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka-clients</artifactId>
-      <version>${kafka.version}</version>
-      <scope>provided</scope>
-    </dependency>
+
   </dependencies>
 
   <build>

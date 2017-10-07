@@ -15,12 +15,22 @@
  */
 package com.streamsets.pipeline.stage.origin.multikafka;
 
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 
-import java.util.Properties;
+import java.util.List;
 
-public class MultiKafkaConsumerFactory {
-  public KafkaConsumer<String, byte[]> create(Properties props) {
-    return new KafkaConsumer<>(props);
-  }
+/**
+ * This is very thin wrapper on top of KafkaConsumer (Kafka native class) that is abstracting method calls that
+ * the MultiKafkaSource needs. The wrapper should be very thin - most likely just delegating calls, any advanced
+ * logic needs to be inside the source itself.
+ */
+public interface MultiSdcKafkaConsumer<K, V> {
+
+  public void subscribe(List<String> topics);
+
+  public ConsumerRecords<K, V> poll(long timeout);
+
+  public void unsubscribe();
+
+  public void close();
 }
