@@ -155,8 +155,8 @@ public class WebSocketTarget extends BaseTarget {
       webSocketClient.start();
       URI webSocketUri = new URI(conf.resourceUrl);
       ClientUpgradeRequest request = new ClientUpgradeRequest();
-      for (String key : conf.headers.keySet()) {
-        request.setHeader(key, conf.headers.get(key));
+      for(HeaderBean header : conf.headers) {
+        request.setHeader(header.key, header.value.get());
       }
       Future<Session> connectFuture = webSocketClient.connect(webSocketTargetSocket, webSocketUri, request);
       wsSession = connectFuture.get();
