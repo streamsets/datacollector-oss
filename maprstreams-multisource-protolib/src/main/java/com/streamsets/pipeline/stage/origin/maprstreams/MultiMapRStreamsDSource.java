@@ -30,7 +30,7 @@ import com.streamsets.pipeline.stage.origin.multikafka.MultiKafkaRawSourcePrevie
     execution = ExecutionMode.STANDALONE,
     icon = "mapr.png",
     recordsByRef = true,
-    onlineHelpRefUrl = "" // TODO(real link)
+    onlineHelpRefUrl = "index.html#Origins/MapRStreamsMultiConsumer.html#task_pkc_lww_lbb"
 )
 @RawSource(rawSourcePreviewer = MultiKafkaRawSourcePreviewer.class,  mimeType = "*/*")
 @GenerateResourceBundle
