@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.parser.net.netflow.v5.NetflowV5Decoder;
 import com.streamsets.pipeline.lib.parser.net.netflow.v5.NetflowV5Message;
 import com.streamsets.pipeline.lib.parser.net.netflow.v9.NetflowV9Decoder;
+import com.streamsets.pipeline.lib.parser.net.netflow.v9.NetflowV9TemplateCacheProvider;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
@@ -55,17 +56,22 @@ public class NetflowCommonDecoder extends ReplayingDecoder<Void> {
 
   // Netflow v9 decoder parameters
   private final OutputValuesMode outputValuesMode;
-  private final int maxTemplateCacheSize;
-  private final int templateCacheTimeoutMs;
+  private final NetflowV9TemplateCacheProvider templateCacheProvider;
 
   public NetflowCommonDecoder(
       OutputValuesMode outputValuesMode,
       int maxTemplateCacheSize,
-      int templateCacheTimeoutMs) {
+      int templateCacheTimeoutMs
+  ) {
+    this(outputValuesMode, () -> NetflowV9Decoder.buildTemplateCache(maxTemplateCacheSize, templateCacheTimeoutMs));
+  }
 
+  public NetflowCommonDecoder(
+      OutputValuesMode outputValuesMode,
+      NetflowV9TemplateCacheProvider templateCacheProvider
+  ) {
     this.outputValuesMode = outputValuesMode;
-    this.maxTemplateCacheSize = maxTemplateCacheSize;
-    this.templateCacheTimeoutMs = templateCacheTimeoutMs;
+    this.templateCacheProvider = templateCacheProvider;
   }
 
   /**
@@ -154,7 +160,7 @@ public class NetflowCommonDecoder extends ReplayingDecoder<Void> {
       case 9:
         if (netflowV9Decoder == null) {
           // lazy instantiation of the version specific decoder
-          netflowV9Decoder = new NetflowV9Decoder(this, outputValuesMode, maxTemplateCacheSize, templateCacheTimeoutMs);
+          netflowV9Decoder = new NetflowV9Decoder(this, outputValuesMode, templateCacheProvider);
         }
         versionSpecificNetflowDecoder = netflowV9Decoder;
         break;

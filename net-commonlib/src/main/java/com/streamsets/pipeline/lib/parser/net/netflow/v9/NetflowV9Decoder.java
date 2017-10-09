@@ -122,24 +122,39 @@ public class NetflowV9Decoder implements VersionSpecificNetflowDecoder<NetflowV9
       int maxTemplateCacheSize,
       int templateCacheTimeoutMs
   ) {
+    this(parentDecoder, outputValuesMode, () -> buildTemplateCache(maxTemplateCacheSize, templateCacheTimeoutMs));
+  }
+
+  public NetflowV9Decoder(
+      NetflowCommonDecoder parentDecoder,
+      OutputValuesMode outputValuesMode,
+      NetflowV9TemplateCacheProvider templateCacheProvider
+
+  ) {
     this.parentDecoder = parentDecoder;
     this.outputValuesMode = outputValuesMode;
+    flowSetTemplateCache = templateCacheProvider.getFlowSetTemplateCache();
+  }
 
+  public static Cache<FlowSetTemplateCacheKey, FlowSetTemplate> buildTemplateCache(
+      int maxTemplateCacheSize,
+      int templateCacheTimeoutMs
+  ) {
     CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder();
     if (maxTemplateCacheSize > 0) {
-      cacheBuilder.maximumSize(maxTemplateCacheSize);
+      cacheBuilder = cacheBuilder.maximumSize(maxTemplateCacheSize);
     }
     if (templateCacheTimeoutMs > 0) {
-      cacheBuilder.expireAfterAccess(templateCacheTimeoutMs, TimeUnit.MILLISECONDS);
+      cacheBuilder = cacheBuilder.expireAfterAccess(templateCacheTimeoutMs, TimeUnit.MILLISECONDS);
     }
     if (LOG.isTraceEnabled()) {
-      cacheBuilder = cacheBuilder.removalListener(notification -> LOG.trace(
+      cacheBuilder = cacheBuilder.removalListener((notification) -> LOG.trace(
           "Removing flow set template entry {} for cause: {} ",
           notification.getKey(),
           notification.getCause()
       ));
     }
-    flowSetTemplateCache = cacheBuilder.build();
+    return cacheBuilder.build();
   }
 
   @Override
@@ -191,6 +206,7 @@ public class NetflowV9Decoder implements VersionSpecificNetflowDecoder<NetflowV9
       if (currentFlowsetId == null) {
         currentFlowsetId = readUnsignedShortAndCheckpoint(buf);
       }
+
       if (currentFlowsetId < 255) {
         if (currentTemplateLength == null) {
           currentTemplateLength = readUnsignedShortAndCheckpoint(buf);
@@ -236,12 +252,20 @@ public class NetflowV9Decoder implements VersionSpecificNetflowDecoder<NetflowV9
                   currentTemplateId,
                   currentTemplateFields
               );
-              flowSetTemplateCache.put(new FlowSetTemplateCacheKey(
+              final FlowSetTemplateCacheKey flowsetTemplateCacheKey = new FlowSetTemplateCacheKey(
                   FlowKind.FLOWSET,
                   sourceIdBytes,
                   sender,
                   currentTemplateId
-              ), template);
+              );
+              flowSetTemplateCache.put(flowsetTemplateCacheKey, template);
+              if (LOG.isTraceEnabled()) {
+                LOG.trace(
+                    "Cached new flowset template {} with {} fields",
+                    flowsetTemplateCacheKey.toString(),
+                    currentTemplateFieldCount
+                );
+              }
 
               readIndex++;
               currentTemplateFieldCount = null;
@@ -376,6 +400,7 @@ public class NetflowV9Decoder implements VersionSpecificNetflowDecoder<NetflowV9
 
           // data fields
           msg.setFields(currentDataFlowFields);
+          msg.setFlowTemplateId(templateId);
 
           result.add(msg);
           readIndex++;

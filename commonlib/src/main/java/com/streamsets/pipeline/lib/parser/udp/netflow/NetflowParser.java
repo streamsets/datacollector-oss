@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.parser.udp.netflow;
 
+import com.google.common.cache.Cache;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -23,6 +24,9 @@ import com.streamsets.pipeline.lib.parser.net.netflow.BaseNetflowMessage;
 import com.streamsets.pipeline.lib.parser.net.netflow.Errors;
 import com.streamsets.pipeline.lib.parser.net.netflow.NetflowCommonDecoder;
 import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
+import com.streamsets.pipeline.lib.parser.net.netflow.v9.FlowSetTemplate;
+import com.streamsets.pipeline.lib.parser.net.netflow.v9.FlowSetTemplateCacheKey;
+import com.streamsets.pipeline.lib.parser.net.netflow.v9.NetflowV9Decoder;
 import com.streamsets.pipeline.lib.parser.udp.AbstractParser;
 import io.netty.buffer.ByteBuf;
 
@@ -44,8 +48,7 @@ public class NetflowParser extends AbstractParser {
 
   private final AtomicLong recordId;
   private final OutputValuesMode outputValuesMode;
-  private final int maxTemplateCacheSize;
-  private final int templateCacheTimeoutMs;
+  private final Cache<FlowSetTemplateCacheKey, FlowSetTemplate> flowSetTemplateCache;
 
   public NetflowParser(
       Stage.Context context,
@@ -56,8 +59,7 @@ public class NetflowParser extends AbstractParser {
     super(context);
     recordId = new AtomicLong(0L);
     this.outputValuesMode = outputValuesMode;
-    this.maxTemplateCacheSize = maxTemplateCacheSize;
-    this.templateCacheTimeoutMs = templateCacheTimeoutMs;
+    flowSetTemplateCache = NetflowV9Decoder.buildTemplateCache(maxTemplateCacheSize, templateCacheTimeoutMs);
   }
 
   public Record buildRecord(BaseNetflowMessage message) {
@@ -82,8 +84,11 @@ public class NetflowParser extends AbstractParser {
     // create new instance to handle multithreading
     final NetflowCommonDecoder decoder = new NetflowCommonDecoder(
         outputValuesMode,
-        maxTemplateCacheSize,
-        templateCacheTimeoutMs
+        // return instance of template cache held by this NetflowParser instance,
+        // so it's shared across multiple invocations of parse
+        // this is necessary because for this parser, we recreate the NetflowCommonDecoder
+        // every time, which would otherwise wipe out the cache across multiple packets
+        () -> flowSetTemplateCache
     );
     decoder.decodeStandaloneBuffer(buf, messages, sender, recipient);
     for (BaseNetflowMessage message : messages) {
