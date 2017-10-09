@@ -709,6 +709,33 @@
                                             conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-Authinfo"
                                             /><p>For collectd data only.</p></entry>
                                 </row>
+                                <row>
+                                    <entry><ph conref="#task_kzs_5vz_sq/ph-NetFlowMode-prop"> </ph>
+                                    </entry>
+                                    <entry><ph conref="#task_kzs_5vz_sq/ph-NetFlowMode-desc"/><ul
+                                            conref="#task_kzs_5vz_sq/ph-NetFlowMode-ul"
+                                            id="ul_zgh_m4l_3bb">
+                                            <li/>
+                                        </ul><p>For NetFlow 9 data only.</p></entry>
+                                </row>
+                                <row>
+                                    <entry><ph conref="#task_kzs_5vz_sq/ph-Netflow-CacheSize-prop"
+                                        /></entry>
+                                    <entry><ph conref="#task_kzs_5vz_sq/ph-NetflowCache-desc1"
+                                                /><p><ph
+                                                conref="#task_kzs_5vz_sq/ph-NetflowCache-desc2"
+                                            /></p><p>For NetFlow 9 data only.</p></entry>
+                                </row>
+                                <row>
+                                    <entry><ph
+                                            conref="#task_kzs_5vz_sq/ph-NetFlow-CacheTimeout-prop"
+                                        /></entry>
+                                    <entry><ph
+                                            conref="#task_kzs_5vz_sq/ph-Netflow-CacheTimeout-desc1"
+                                                /><p><ph
+                                                conref="#task_kzs_5vz_sq/ph-Netflow-CacheTimeout-desc2"
+                                            /></p><p>For NetFlow 9 data only.</p></entry>
+                                </row>
                                 <row conref="ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">
                                     <entry/>
                                 </row>
@@ -778,7 +805,7 @@
                                         are named using the prefix and sequential increasing
                                         integers as follows:
                                             <codeph>&lt;prefix>&lt;integer></codeph>. <p>For
-                                            example, _extra_1.  Default is _extra_.</p></entry>
+                                            example, _extra_1. Default is _extra_.</p></entry>
                                 </row>
                                 <row id="O-row-Del-MaxRecLength">
                                     <entry>Max Record Length (chars)</entry>
@@ -1481,8 +1508,7 @@
                                     <entry>Include Field XPaths <xref
                                             href="../Data_Formats/XMLDF-FieldXPathExp.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline"
-                                        /></xref></entry>
+                                                placement="inline"/></xref></entry>
                                     <entry>Includes the XPath to each parsed XML element and XML
                                         attribute in field attributes. Also includes each namespace
                                         in an xmlns record header attribute. <p>When not selected,
@@ -1527,8 +1553,7 @@
                                     <entry>Max Record Length (chars) </entry>
                                     <entry>
                                         <p>The maximum number of characters in a record. Longer
-                                            records are diverted to the pipeline for error handling.
-                                        </p>
+                                            records are diverted to the pipeline for error handling. </p>
                                         <p><ph
                                                 conref="ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MaxRecordSize"
                                             /></p>
@@ -1574,7 +1599,8 @@
                             <tbody>
                                 <row>
                                     <entry>Username</entry>
-                                    <entry>User name for basic, digest, or universal authentication. </entry>
+                                    <entry>User name for basic, digest, or universal authentication.
+                                    </entry>
                                 </row>
                                 <row>
                                     <entry>Password</entry>
@@ -1751,7 +1777,8 @@
                                     <entry>Password to the keystore file. A password is optional,
                                         but recommended.<p>
                                             <note
-                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"/>
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
+                                            />
                                         </p></entry>
                                 </row>
                                 <row id="TLS-KeystoreKeyAlgo-row">
@@ -1786,7 +1813,8 @@
                                     <entry>Password to the truststore file. A password is optional,
                                         but recommended.<p>
                                             <note
-                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"/>
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
+                                            />
                                         </p></entry>
                                 </row>
                                 <row id="TLS-TruststoreKeyAlgo-row">
@@ -2643,6 +2671,69 @@
                     </table>
                 </info>
             </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">O-Netflow9only used by UDP Source and probably
+                        UDP to Kafka? </draft-comment>
+                </cmd>
+            </step>
+            <step id="step-Netflow9only">
+                <cmd>For NetFlow 9 data, on the <uicontrol>NetFlow 9</uicontrol> tab, configure the
+                    following properties:</cmd>
+                <info id="info-Netflow9only">When processing earlier versions of NetFlow data, these
+                    properties are ignored. <table frame="all" rowsep="1" colsep="1"
+                        id="table_ug3_pv1_hbb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Netflow 9 Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry><ph id="ph-NetFlowMode-prop">Record Generation Mode <xref
+                                                href="../Data_Formats/NetFlow9_Records.dita">
+                                                <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" placement="inline"
+                                                  id="image_jrf_wqm_3bb"/></xref></ph></entry>
+                                    <entry><ph id="ph-NetFlowMode-desc">Determines the type of
+                                            values to include in the record. Select one of the
+                                            following options:</ph><ul id="ph-NetFlowMode-ul">
+                                            <li>Raw Only</li>
+                                            <li>Interpreted Only</li>
+                                            <li>Both Raw and Interpreted</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry><ph id="ph-Netflow-CacheSize-prop">Max Templates in
+                                            Cache</ph></entry>
+                                    <entry><ph id="ph-NetflowCache-desc1">The maximum number of
+                                            templates to store in the template cache. For more
+                                            information about templates, see <xref
+                                                href="../Data_Formats/NetFlow_CachingTemplates.dita#concept_ivr_j1l_3bb"
+                                            />.</ph><p><ph id="ph-NetflowCache-desc2">Default is -1
+                                                for an unlimited cache size.</ph></p></entry>
+                                </row>
+                                <row>
+                                    <entry><ph id="ph-NetFlow-CacheTimeout-prop">Template Cache
+                                            Timeout (ms)</ph></entry>
+                                    <entry><ph id="ph-Netflow-CacheTimeout-desc1">The maximum number
+                                            of milliseconds to cache an idle template. Templates
+                                            unused for more than the specified time are evicted from
+                                            the cache.  For more information about templates, see
+                                                <xref
+                                                href="../Data_Formats/NetFlow_CachingTemplates.dita#concept_ivr_j1l_3bb"
+                                            />.</ph><p><ph id="ph-Netflow-CacheTimeout-desc2"
+                                                >Default is -1 for caching templates
+                                                indefinitely.</ph></p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
+            </step>
             <step id="PROCESSORS">
                 <cmd>
                     <draft-comment author="Loretta"
@@ -2994,7 +3085,6 @@
                                         preconditions. <p>Records that do not meet all preconditions
                                             are processed based on the error handling configured for
                                             the stage.</p></entry>
-                                       
                                 </row>
                                 <row>
                                     <entry>On Record Error <xref
@@ -4661,7 +4751,7 @@
                                                 By default, all topic names are valid.</p></entry>
                                     </row>
                                     <row id="KPPartStrategy">
-                                        <entry>Partition Strategy  <xref
+                                        <entry>Partition Strategy <xref
                                                 href="../Destinations/KProducer-PartitionStrategy.dita#concept_qpm_xp4_4r">
                                                 <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_l3j_vpb_h1b"/></xref></entry>
@@ -4676,7 +4766,8 @@
                                                   expression.</li>
                                                 <li>Default - Uses an expression to extract a
                                                   partition key from the record. Writes records to
-                                                  partitions based on a hash of the partition key. </li>
+                                                  partitions based on a hash of the partition key.
+                                                </li>
                                             </ul></entry>
                                     </row>
                                     <row id="KPPartExpr">
@@ -4883,9 +4974,10 @@
                                 <row id="row-RetriesBatch">
                                     <entry>Retries Per Batch</entry>
                                     <entry>Number of times the destination tries to write a batch to
-                                        the SDC RPC origin. <p id="p-RetriesBatch">When the destination cannot write the
-                                            batch within the configured number of retries, it fails
-                                            the batch.</p><p id="p-RetriesBatchDefault">Default is 3.</p></entry>
+                                        the SDC RPC origin. <p id="p-RetriesBatch">When the
+                                            destination cannot write the batch within the configured
+                                            number of retries, it fails the batch.</p><p
+                                            id="p-RetriesBatchDefault">Default is 3.</p></entry>
                                 </row>
                                 <row id="row-BackOffPeriod">
                                     <entry>Back Off Period</entry>
@@ -4911,8 +5003,9 @@
                                 <row id="row-ReadTimeout">
                                     <entry>Read Timeout (ms)</entry>
                                     <entry>Milliseconds to wait for the SDC RPC origin to read data
-                                        from a batch. <p id="p-ReadTimeout">The destination retries the write based on
-                                            the Retries Per Batch property.</p><p id="p-ReadTimeoutDefault">Default is 2000
+                                        from a batch. <p id="p-ReadTimeout">The destination retries
+                                            the write based on the Retries Per Batch property.</p><p
+                                            id="p-ReadTimeoutDefault">Default is 2000
                                             milliseconds.</p></entry>
                                 </row>
                                 <row id="row-UseCompression">

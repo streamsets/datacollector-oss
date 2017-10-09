@@ -271,6 +271,13 @@
                     </ul>
                 </info>
             </step>
+            <step>
+                <cmd>For NetFlow data, on the <uicontrol>Data Format</uicontrol> tab, configure the
+                    following properties:</cmd>
+                <info
+                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/info-Netflow9only"
+                />
+            </step>
             <step id="O-PROTO-Mess">
                 <cmd>For protobuf data, on the <wintitle>Data Format</wintitle> tab, configure the
                     following properties:</cmd>

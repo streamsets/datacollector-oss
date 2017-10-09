@@ -583,15 +583,15 @@
                                           conref="#concept_vhs_5tz_xp/UDP-syslog" id="ul_fj2_3q4_4x">
                                           <li/>
                                     </ul></dd>
-                        </dlentry>
+                        
+                              <dd><ph conref="#concept_vhs_5tz_xp/ph-NetFlowInfo"/></dd></dlentry>
                   </dl>
             </p>
-            <p>
+            
                   <draft-comment author="Loretta"> - from Directory. DLEntries are conrefed by all
                         origins except HTTP Client. <note> Content for JSON, Text, and HTML copied
                               to HTTP Client and altered. When making changes here, check there as
                               well.</note></draft-comment>
-            </p>
             <p>
                   <dl id="ORIGIN-DFormats">
                         <dlentry id="OriginDF-DELIM">
@@ -1439,10 +1439,10 @@ web-0011.log</codeblock></dd>
                   <draft-comment author="Loretta">UDP Source and UDP to Kafka use the following ph
                         and ul:</draft-comment>
             </p>
-            <p><ph id="UDP-messagetypes">can read <xref href="https://collectd.org/" format="html"
-                              scope="external">collectd</xref> messages, Netflow messages from
-                        NetFlow Version 5, and the following types of syslog messages:</ph><ul
-                        id="UDP-syslog">
+            <p><ph id="UDP-messagetypes">can process <xref href="https://collectd.org/"
+                              format="html" scope="external">collectd</xref> messages, <ph
+                              id="ph-NetFlowVersions">NetFlow 5 and NetFlow 9 messages</ph>, and the
+                        following types of syslog messages:</ph><ul id="UDP-syslog">
                         <li>RFC 5424 (<xref href="https://tools.ietf.org/html/rfc5424" format="html"
                                     scope="external"
                               >https://tools.ietf.org/html/rfc5424</xref>)</li>
@@ -1452,6 +1452,12 @@ web-0011.log</codeblock></dd>
                         <li>Non-standard common messages, such as RFC 3339 dates with no version
                               digit</li>
                   </ul></p>
+            <p><ph id="ph-NetFlowInfo">When processing NetFlow messages, the stage generates
+                        different records based on the NetFlow version. When processing NetFlow 9,
+                        the records are generated based on the NetFlow 9 configuration properties.
+                        For more information, see <xref
+                              href="../Data_Formats/NetFlow_Overview.dita#concept_thl_nnr_hbb"
+                        />.</ph></p>
             <p>
                   <draft-comment author="Loretta">UDP to Kafka origin and SDC RPC to Kafka origins
                         use the following text in the Pipeline Configuration topics.

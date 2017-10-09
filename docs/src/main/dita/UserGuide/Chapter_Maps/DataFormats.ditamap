@@ -19,6 +19,12 @@
         <topicref href="../Data_Formats/DataFormats-Overview.dita"/>
         <topicref href="../Data_Formats/DelimitedDataRootFieldTypes.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+        <topicref href="../Data_Formats/NetFlow_Overview.dita" chunk="to-content">
+            <topicmeta><shortdesc></shortdesc></topicmeta>
+            <topicref href="../Data_Formats/NetFlow_CachingTemplates.dita"/>
+            <topicref href="../Data_Formats/NetFlow5_Records.dita"/>
+            <topicref href="../Data_Formats/NetFlow9_Records.dita"/>
+        </topicref>
         <topicref href="../Data_Formats/Protobuf-Prerequisites.dita">
             <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
         <topicref href="../Pipeline_Design/SDCRecordFormat.dita">

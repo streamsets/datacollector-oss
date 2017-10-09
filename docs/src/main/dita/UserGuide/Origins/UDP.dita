@@ -20,16 +20,21 @@
 <concept id="concept_rst_2y5_1s">
  <title>UDP Source</title>
  <conbody>
-  <p><indexterm>origins<indexterm>UDP Source</indexterm></indexterm><indexterm>UDP Source
-          origin<indexterm>overview</indexterm></indexterm>The UDP Source origin reads messages from
-      one or more UDP ports. UDP Source generates a record for every message. UDP Source <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UDP-messagetypes"/><ul
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UDP-syslog"
-        id="ul_fcp_mm4_4x">
-        <li/>
-      </ul></p>
+        <p><indexterm>origins<indexterm>UDP Source</indexterm></indexterm><indexterm>UDP Source
+                    origin<indexterm>overview</indexterm></indexterm>The UDP Source origin reads
+            messages from one or more UDP ports. UDP Source generates a record for every message.
+            UDP Source <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UDP-messagetypes"
+                /><ul
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UDP-syslog"
+                id="ul_fcp_mm4_4x">
+                <li/>
+            </ul></p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-NetFlowInfo"
+            /></p>
         <p>The origin can also read binary or character-based raw data. </p>
-    <p>When you configure UDP Source, you specify the ports to use and the batch size and wait time.
-            You specify the data format for the data, then configure any related properties. </p>
- </conbody>
+        <p>When you configure UDP Source, you specify the ports to use and the batch size and wait
+            time. You specify the data format for the data, then configure any related properties.
+        </p>
+    </conbody>
 </concept>

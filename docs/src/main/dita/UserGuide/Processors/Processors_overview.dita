@@ -30,7 +30,7 @@
         <li><xref href="Base64Encoder.dita#concept_wtr_mpy_kv">Base64 Field Encoder</xref> - Encodes
           binary data using Base64.</li>
         <li><xref href="DataParser.dita#concept_xw3_4xk_r1b">Data Parser</xref> - Parses NetFlow or
-          syslog data embedded in a field</li>
+          syslog data embedded in a field.</li>
         <li><xref href="Expression.dita#concept_zm2_pp3_wq">Expression Evaluator</xref> - Performs
           calculations on data. Can also add or modify record header attributes.</li>
         <li><xref href="FieldFlattener.dita#concept_njn_3kk_fx">Field Flattener</xref> - Flattens

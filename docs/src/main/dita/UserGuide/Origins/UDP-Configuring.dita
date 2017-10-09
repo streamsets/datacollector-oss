@@ -96,7 +96,7 @@
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Raw/Separated Data property</entry>
+                                    <entry>Raw/Separated Data Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -142,6 +142,9 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-Netflow9only">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

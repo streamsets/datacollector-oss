@@ -38,9 +38,10 @@
                 id="ul_zwj_rm4_4x">
                 <li/>
             </ul></p>
-     <p>When you configure UDP to Kafka, you specify the UDP ports to use, Kafka
-            configuration information, and advanced properties such as the maximum number of write
-            requests.</p>
+     <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-NetFlowInfo"
+            /></p>
+        <p>When you configure UDP to Kafka, you specify the UDP ports to use, Kafka configuration
+            information, and advanced properties such as the maximum number of write requests.</p>
         <p>You can add Kafka configuration properties and enable Kafka security as needed. </p>
     </conbody>
 </concept>

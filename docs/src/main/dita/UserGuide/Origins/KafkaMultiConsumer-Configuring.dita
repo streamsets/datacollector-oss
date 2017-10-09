@@ -203,72 +203,8 @@
                     </table>
                 </info>
             </step>
-            <step>
-                <cmd>For datagram data, on the <wintitle>Data Format</wintitle> tab, configure the
-                    following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_rwp_sp4_gbb">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Datagram Properties</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Data Format <xref
-                                            href="../Origins/KafkaMultiConsumer-DataFormats.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_swp_sp4_gbb"
-                                        /></xref></entry>
-                                    <entry>Message type: <ul
-                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ul-UDPDataFormat"
-                                            id="ul_twp_sp4_gbb">
-                                            <li/>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-TypesDBname"/>
-                                    <entry><ph
-                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-TypesDBinfo"
-                                            /><p>For collectd data only.</p></entry>
-                                </row>
-                                <row>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-HiRestitle"/>
-                                    <entry><ph
-                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-HiResinfo"
-                                            /><p>For collectd data only.</p></entry>
-                                </row>
-                                <row>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-Exludename"/>
-                                    <entry><ph
-                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-Excludeinfo"
-                                            /><p>For collectd data only.</p></entry>
-                                </row>
-                                <row>
-                                    <entry
-                                        conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/entry-Authname"/>
-                                    <entry><ph
-                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ph-Authinfo"
-                                            /><p>For collectd data only.</p></entry>
-                                </row>
-                                <row conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-Datagram">
+                <cmd/>
             </step>
             <step>
                 <cmd>For delimited data, on the <wintitle>Data Format</wintitle> tab, configure the

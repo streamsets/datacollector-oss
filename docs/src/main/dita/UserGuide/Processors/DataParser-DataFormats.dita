@@ -40,9 +40,13 @@
                     <dd/>
                 </dlentry>
                 <dlentry>
-                    <dt>NetFlow messages</dt>
-                    <dd>The Data Parser processor can process NetFlow Version 5 messages embedded in
-                        a byte array field.</dd>
+                    <dt>NetFlow</dt>
+                    <dd>The Data Parser processor can process <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-NetFlowVersions"
+                        /> messages embedded in a byte array field.</dd>
+                    <dd><ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-NetFlowInfo"
+                        /></dd>
                 </dlentry>
                 <dlentry
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-ProtoMessage">

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jdh_hxk_3bb">
+ <title>NetFlow 9 Generated Records</title>
+ <conbody>
+        <p><indexterm>NetFlow 9<indexterm>generated
+                records</indexterm></indexterm><indexterm>generated records<indexterm>NetFlow
+                    9</indexterm></indexterm>NetFlow 9 records are generated based on the Record
+            Generation Mode that you select for the NetFlow 9 stage properties. You can include
+            "interpreted" or processed values, raw data, or both in NetFlow 9 records. </p>
+        <p>NetFlow 9 records can include the following fields:<table frame="all" rowsep="1"
+                colsep="1" id="table_ggs_xxk_3bb">
+                <tgroup cols="3">
+                    <colspec colname="c1" colnum="1" colwidth="1*"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.5*"/>
+                    <colspec colname="c3" colnum="3" colwidth="1.5*"/>
+                    <thead>
+                        <row>
+                            <entry>NetFlow 9 Field Name</entry>
+                            <entry>Description</entry>
+                            <entry>Included... </entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>flowKind</entry>
+                            <entry>Indicates the type of flow to be processed:<ul
+                                    id="ul_nxp_fzs_kbb">
+                                    <li>FLOWSET for data from a flowset.</li>
+                                    <li>OPTIONS for data from an options flow.</li>
+                                </ul></entry>
+                            <entry>In all NetFlow 9 records.</entry>
+                        </row>
+                        <row>
+                            <entry>values</entry>
+                            <entry>A map field with field names and values as processed by the stage
+                                based on the template specified in the packet header. </entry>
+                            <entry>In NetFlow 9 records when you configure the Record Generation
+                                Mode property to include “interpreted” data in the record.</entry>
+                        </row>
+                        <row>
+                            <entry>packetHeader</entry>
+                            <entry>A map field containing information about the packet. Typically
+                                includes information such as the source ID and the number of records
+                                in the packet.</entry>
+                            <entry>In all NetFlow 9 records.</entry>
+                        </row>
+                        <row>
+                            <entry>rawValues</entry>
+                            <entry>A map field with the fields defined by the associated template
+                                and the raw, unprocessed, bytes for those fields. </entry>
+                            <entry>In NetFlow 9 records when you configure the Record Generation
+                                Mode property to include raw data in the record.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+        <section id="section_c1v_rzk_3bb">
+            <title><b>Sample Raw and Interpreted Record</b></title>
+            <p>When you set the Record Generation Mode property to Raw and Interpreted Data, the
+                resulting record includes all of the possible NetFlow 9 fields, as
+                follows:<codeblock>{
+      "flowKind" : "FLOWSET",
+      "values" : {
+         "ICMP_TYPE" : 0,
+         "L4_DST_PORT" : 9995,
+         "TCP_FLAGS" : 0,
+         "L4_SRC_PORT" : 52767,
+         "INPUT_SNMP" : 0,
+         "FIRST_SWITCHED" : 86400042,
+         "PROTOCOL" : 17,
+         "IN_BYTES" : 34964,
+         "OUTPUT_SNMP" : 0,
+         "LAST_SWITCHED" : 86940154,
+         "IPV4_SRC_ADDR" : "127.0.0.1",
+         "SRC_AS" : 0,
+         "IN_PKTS" : 29,
+         "IPV4_DST_ADDR" : "127.0.0.1",
+         "DST_AS" : 0,
+         "SRC_TOS" : 0,
+         "FORWARDING_STATUS" : 0
+      },
+      "packetHeader" : {
+         "flowRecordCount" : 8,
+         "sourceIdRaw" : "AAAAAQ==",
+         "version" : 9,
+         "sequenceNumber" : 0,
+         "unixSeconds" : 1503002821,
+         "sourceId" : 1,
+         "sysUptimeMs" : 0
+      },
+      "rawValues" : {
+         "OUTPUT_SNMP" : "AAA=",
+         "IN_BYTES" : "AACIlA==",
+         "LAST_SWITCHED" : "BS6Z+g==",
+         "IPV4_SRC_ADDR" : "fwAAAQ==",
+         "SRC_AS" : "AAA=",
+         "IPV4_DST_ADDR" : "fwAAAQ==",
+         "IN_PKTS" : "AAAAHQ==",
+         "DST_AS" : "AAA=",
+         "FORWARDING_STATUS" : "AA==",
+         "SRC_TOS" : "AA==",
+         "ICMP_TYPE" : "AAA=",
+         "TCP_FLAGS" : "AA==",
+         "L4_DST_PORT" : "Jws=",
+         "L4_SRC_PORT" : "zh8=",
+         "INPUT_SNMP" : "AAA=",
+         "FIRST_SWITCHED" : "BSZcKg==",
+         "PROTOCOL" : "EQ=="
+      }
+   }</codeblock></p>
+        </section>
+        <section id="section_r4p_xzk_3bb">
+            <title>Sample Interpreted Record</title>
+            <p>When you set the Record Generation Mode property to Interpreted Only, the resulting
+                record omits the rawValues field from the record, as follows:
+                <codeblock>{
+      "flowKind" : "FLOWSET",
+      "values" : {
+         "ICMP_TYPE" : 0,
+         "L4_DST_PORT" : 9995,
+         "TCP_FLAGS" : 0,
+         "L4_SRC_PORT" : 52767,
+         "INPUT_SNMP" : 0,
+         "FIRST_SWITCHED" : 86400042,
+         "PROTOCOL" : 17,
+         "IN_BYTES" : 34964,
+         "OUTPUT_SNMP" : 0,
+         "LAST_SWITCHED" : 86940154,
+         "IPV4_SRC_ADDR" : "127.0.0.1",
+         "SRC_AS" : 0,
+         "IN_PKTS" : 29,
+         "IPV4_DST_ADDR" : "127.0.0.1",
+         "DST_AS" : 0,
+         "SRC_TOS" : 0,
+         "FORWARDING_STATUS" : 0
+      },
+      "packetHeader" : {
+         "flowRecordCount" : 8,
+         "sourceIdRaw" : "AAAAAQ==",
+         "version" : 9,
+         "sequenceNumber" : 0,
+         "unixSeconds" : 1503002821,
+         "sourceId" : 1,
+         "sysUptimeMs" : 0
+      },
+   }</codeblock></p>
+        </section>
+        <section id="section_ggc_21l_3bb">
+            <title>Sample Raw Record</title>
+            <p>When you set the Record Generation Mode property to Raw Only, the resulting record
+                omits the values field that contains processed data, as follows:
+                <codeblock>{
+      "flowKind" : "FLOWSET",
+       "packetHeader" : {
+         "flowRecordCount" : 8,
+         "sourceIdRaw" : "AAAAAQ==",
+         "version" : 9,
+         "sequenceNumber" : 0,
+         "unixSeconds" : 1503002821,
+         "sourceId" : 1,
+         "sysUptimeMs" : 0
+      },
+      "rawValues" : {
+         "OUTPUT_SNMP" : "AAA=",
+         "IN_BYTES" : "AACIlA==",
+         "LAST_SWITCHED" : "BS6Z+g==",
+         "IPV4_SRC_ADDR" : "fwAAAQ==",
+         "SRC_AS" : "AAA=",
+         "IPV4_DST_ADDR" : "fwAAAQ==",
+         "IN_PKTS" : "AAAAHQ==",
+         "DST_AS" : "AAA=",
+         "FORWARDING_STATUS" : "AA==",
+         "SRC_TOS" : "AA==",
+         "ICMP_TYPE" : "AAA=",
+         "TCP_FLAGS" : "AA==",
+         "L4_DST_PORT" : "Jws=",
+         "L4_SRC_PORT" : "zh8=",
+         "INPUT_SNMP" : "AAA=",
+         "FIRST_SWITCHED" : "BSZcKg==",
+         "PROTOCOL" : "EQ=="
+      }
+   }</codeblock></p>
+        </section>
+    </conbody>
+</concept>

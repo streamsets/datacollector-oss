@@ -25,12 +25,14 @@
             the following modes: <dl>
                 <dlentry>
                     <dt>NetFlow messages</dt>
-                    <dd>The TCP Server origin can process NetFlow Version 5 messages. The origin
-                        processes flow records based on information in the packet header. So it
-                        expects multiple packets with header and flow records sent on the same
-                        connection, with no bytes in between. As a result, when processing NetFlow
-                        messages, you have no data-related properties to configure. </dd>
-                    <dd>To process NetFlow messages, set the TCP Mode property to NetFlow.</dd>
+                    <dd>The TCP Server origin can process <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-NetFlowVersions"
+                        />. <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-NetFlowInfo"
+                        /></dd>
+                    <dd>To process NetFlow messages, set the TCP Mode property to NetFlow. Then, for
+                        NetFlow 9 data, configure the properties on the NetFlow 9 tab. NetFlow 5
+                        data does not require additional configuration.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>syslog messages</dt>

@@ -294,6 +294,9 @@
                     </table>
                 </info>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/step-Netflow9only">
+                <cmd/>
+            </step>
         </steps>
     </taskbody>
 </task>

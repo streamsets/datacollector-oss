@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_thl_nnr_hbb">
+ <title>NetFlow Data Processing</title>
+ <conbody>
+  <p><indexterm>NetFlow
+                    messages<indexterm>processing</indexterm></indexterm><indexterm>messages<indexterm>processing
+                    NetFlow messages</indexterm></indexterm>You can use <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            process NetFlow 5 and NetFlow 9 data. </p>
+        <p>When processing NetFlow 5 data, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            processes flow records based on information in the packet header. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            expects multiple packets with header and flow records sent on the same connection, with
+            no bytes in between. As a result, when processing NetFlow 5 messages, you have no
+            data-related properties to configure. </p>
+        <p>When processing template-based NetFlow 9 messages, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            generates records based on cached templates, information in the packet header, and
+            NetFlow 9 configuration properties in the stage. The NetFlow 9 properties display in
+            different locations depending on the type of stage that you use:<ul id="ul_en2_hbm_3bb">
+                <li>For origins that process messages directly from the network, such as the UDP
+                    Source origin, you configure the NetFlow 9 properties on a NetFlow 9 tab. </li>
+                <li>For most origins and processors that process other types of data, such as JSON
+                    or protobuf, you configure NetFlow 9 properties on a Data Formats tab after you
+                    select Datagram or NetFlow as the data format. </li>
+                <li>For the TCP Server, you specify the NetFlow TCP mode, and then configure NetFlow
+                    9 properties on a NetFlow 9 tab.</li>
+            </ul></p>
+        <p>When processing NetFlow 5 messages, the stage ignores any configured NetFlow 9
+            properties. </p>
+ </conbody>
+</concept>
