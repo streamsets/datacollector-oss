@@ -139,7 +139,7 @@ public class SpoolDirConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "600",
+      defaultValue = "60",
       label = "Batch Wait Time (secs)",
       description = "Max time to wait for new files before sending an empty batch",
       displayPosition = 48,
