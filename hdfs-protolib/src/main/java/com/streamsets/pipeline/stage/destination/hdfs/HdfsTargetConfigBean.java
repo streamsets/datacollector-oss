@@ -23,6 +23,7 @@ import com.streamsets.datacollector.stage.HadoopConfigurationUtils;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
@@ -120,13 +121,14 @@ public class HdfsTargetConfigBean {
 
   @ConfigDef(
     required = false,
-    type = ConfigDef.Type.MAP,
+    type = ConfigDef.Type.MODEL,
     label = "Hadoop FS Configuration",
     description = "Additional Hadoop properties to pass to the underlying Hadoop FileSystem. These properties " +
       "have precedence over properties loaded via the 'Hadoop FS Configuration Directory' property.",
     displayPosition = 60,
     group = "HADOOP_FS"
   )
+  @ListBeanModel
   public List<HadoopConfigBean> hdfsConfigs;
 
   @ConfigDef(
