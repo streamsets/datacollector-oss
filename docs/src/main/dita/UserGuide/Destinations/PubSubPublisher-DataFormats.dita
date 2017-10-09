@@ -24,10 +24,11 @@
             data to Google Pub/Sub based on the data format that you select. You can use the
             following data formats:</p>
      <dl>
-         <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-DF-AvroKafka">
-             <dt/>
-             <dd/>
-         </dlentry>
+            <dlentry
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-DF-AvroMess">
+                <dt/>
+                <dd/>
+            </dlentry>
          <dlentry
              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataFormat-Binary">
              <dt/>

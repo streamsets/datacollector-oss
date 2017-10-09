@@ -24,7 +24,7 @@
         formats</indexterm></indexterm><indexterm>data formats<indexterm>JMS Producer
           destinations</indexterm></indexterm>The JMS Producer destination writes data to JMS based
       on the data format that you select. You can use the following data formats:<dl>
-        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-DF-AvroKafka">
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-DF-AvroMess">
           <dt/>
           <dd/>
         </dlentry>

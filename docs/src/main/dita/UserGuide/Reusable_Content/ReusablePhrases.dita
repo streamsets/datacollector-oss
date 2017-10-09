@@ -1702,9 +1702,7 @@ input_stream.read()</codeblock></p>
                                           is used only by Flume. <b>AvroFile</b> used by Hadoop FS,
                                           Local and S3, and other file destinations.
                                                 <b>AvroKafka</b> used by Kafka. <b>AvroMess</b> used
-                                          by Kinesis Producer and other message destinations. When
-                                          making changes to these, add updates to the Flume data
-                                          formats topic when necessary. </draft-comment>
+                                          by Kinesis Producer and other message destinations. </draft-comment>
                               </dd>
                         </dlentry>
                   </dl>
@@ -1742,8 +1740,7 @@ input_stream.read()</codeblock></p>
                                     </ul>
                               </dd>
                               <dd>You can also compress data with an Avro-supported compression
-                                    codec. When using Avro compression, do not use other compression
-                                    available in the destination. </dd>
+                                    codec. </dd>
                         </dlentry>
                   </dl>
                   <draft-comment author="alisontaylor">Avro File</draft-comment>
@@ -1777,10 +1774,11 @@ input_stream.read()</codeblock></p>
                               <dd>The destination includes the schema definition in each file.</dd>
                               <dd>You can compress data with an Avro-supported compression codec.
                                     When using Avro compression, avoid using other compression
-                                    available in the destination. </dd>
+                                    properties in the destination. </dd>
                         </dlentry>
                   </dl>
-                  <draft-comment author="alisontaylor">Avro Kafka</draft-comment>
+                  <draft-comment author="alisontaylor">Avro Kafka – for Kafka only because of the
+                        Kafka producer mention.</draft-comment>
                   <dl>
                         <dlentry id="D-DF-AvroKafka">
                               <dt>Avro</dt>
@@ -1815,13 +1813,12 @@ input_stream.read()</codeblock></p>
                                                 message.</p></li>
                                     </ul>
                               </dd>
-                              <dd>You can compress data with an Avro-supported compression codec.
-                                    When using Avro compression, avoid using other compression
-                                    available in the destination. </dd>
+                              <dd>You can compress data with an Avro-supported compression codec. </dd>
                         </dlentry>
                   </dl>
-                  <draft-comment author="alisontaylor">Avro other message
-                        destinations</draft-comment>
+                  <draft-comment author="alisontaylor">Avro other message destinations. LC: removed
+                        reference to not-using other compression options in the destination because
+                        I didn't see any. Checked all destinations using this. 9/29/2017. </draft-comment>
                   <dl>
                         <dlentry id="D-DF-AvroMess">
                               <dt>Avro</dt>
@@ -1854,8 +1851,8 @@ input_stream.read()</codeblock></p>
                                     </ul>
                               </dd>
                               <dd>You can compress data with an Avro-supported compression codec.
-                                    When using Avro compression, avoid using other compression
-                                    available in the destination. </dd>
+                                    When using Avro compression, avoid using any other compression
+                                    properties in the destination. </dd>
                         </dlentry>
                   </dl>
                   <draft-comment author="Loretta"><b>DESTDataFormat-Binary</b> - the following is

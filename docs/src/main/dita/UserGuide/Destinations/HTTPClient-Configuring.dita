@@ -256,8 +256,11 @@
                                 <row id="KP-DataFormats">
                                     <entry>Data Format</entry>
                                     <entry>Data format for messages:<ul id="ul_wlj_353_br">
+                                            <li>Avro</li>
                                         <li>Binary</li>
+                                            <li>Delimited</li>
                                         <li>JSON</li>
+                                            <li>Protobuf</li>
                                         <li>SDC Record <xref
                                             href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                             <image href="../Graphics/icon_moreInfo.png"
@@ -270,10 +273,19 @@
                     </table>
                 </info>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-Mess">
+                <cmd/>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-Binary">
                 <cmd/>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
+                <cmd/>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-PROTO-props">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
