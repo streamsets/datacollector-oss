@@ -51,7 +51,7 @@ public class MultiKafkaBeanConfig {
       displayPosition = 10,
       group = "KAFKA"
   )
-  public String brokerURI;
+  public String brokerURI = "localhost:9092";
 
   @ConfigDef(
       required = true,

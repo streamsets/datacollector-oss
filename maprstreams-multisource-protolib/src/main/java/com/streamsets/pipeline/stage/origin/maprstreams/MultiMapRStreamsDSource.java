@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.maprstreams;
 
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
 
@@ -33,6 +34,9 @@ import com.streamsets.pipeline.stage.origin.multikafka.MultiKafkaRawSourcePrevie
     onlineHelpRefUrl = "index.html#Origins/MapRStreamsMultiConsumer.html#task_pkc_lww_lbb"
 )
 @RawSource(rawSourcePreviewer = MultiKafkaRawSourcePreviewer.class,  mimeType = "*/*")
+@HideConfigs({
+  "conf.brokerURI"
+})
 @GenerateResourceBundle
 public class MultiMapRStreamsDSource extends MultiKafkaDSource {
 }
