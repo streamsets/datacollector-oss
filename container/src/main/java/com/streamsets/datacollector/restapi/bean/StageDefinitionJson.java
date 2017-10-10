@@ -140,4 +140,8 @@ public class StageDefinitionJson {
   public boolean isProducingEvents() {
     return stageDefinition.isProducingEvents();
   }
+
+  public List<ServiceDependencyDefinitionJson> getServices() {
+    return BeanHelper.wrapServiceDependencyDefinitions(stageDefinition.getServices());
+  }
 }

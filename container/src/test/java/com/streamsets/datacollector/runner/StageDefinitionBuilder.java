@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
+import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -66,6 +67,7 @@ public class StageDefinitionBuilder {
   boolean pipelineLifecycleStage = false;
   boolean offsetCommitTrigger = false;
   boolean producesEvents = false;
+  List<ServiceDependencyDefinition> services = Collections.emptyList();
 
   public StageDefinitionBuilder(ClassLoader cl, Class<? extends Stage> klass, String name) {
     this.libraryDefinition = createLibraryDef(cl);
@@ -157,6 +159,11 @@ public class StageDefinitionBuilder {
     return this;
   }
 
+  public StageDefinitionBuilder withServices(ServiceDependencyDefinition ...defs) {
+    this.services = Arrays.asList(defs);
+    return this;
+  }
+
   public StageDefinition build() {
     return new StageDefinition(
       libraryDefinition,
@@ -186,7 +193,8 @@ public class StageDefinitionBuilder {
       statsAggregatorStage,
       pipelineLifecycleStage,
       offsetCommitTrigger,
-      producesEvents
+      producesEvents,
+      services
     );
   }
 

@@ -68,6 +68,7 @@ public class StageDefinition {
   private final String onlineHelpRefUrl;
   private final boolean offsetCommitTrigger;
   private final boolean producesEvents;
+  private final List<ServiceDependencyDefinition> services;
 
   // localized version
   private StageDefinition(
@@ -99,7 +100,8 @@ public class StageDefinition {
       boolean statsAggregatorStage,
       boolean pipelineLifecycleStage,
       boolean offsetCommitTrigger,
-      boolean producesEvents
+      boolean producesEvents,
+      List<ServiceDependencyDefinition> services
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
@@ -144,6 +146,7 @@ public class StageDefinition {
     this.resetOffset = resetOffset;
     this.offsetCommitTrigger = offsetCommitTrigger;
     this.producesEvents = producesEvents;
+    this.services = Collections.unmodifiableList(services);
   }
 
   @SuppressWarnings("unchecked")
@@ -183,6 +186,7 @@ public class StageDefinition {
     offsetCommitTrigger = def.offsetCommitTrigger;
     producesEvents = def.producesEvents;
     pipelineLifecycleStage = def.pipelineLifecycleStage;
+    services = def.services;
   }
 
   public StageDefinition(
@@ -213,7 +217,8 @@ public class StageDefinition {
       boolean statsAggregatorStage,
       boolean pipelineLifecycleStage,
       boolean offsetCommitTrigger,
-      boolean producesEvents
+      boolean producesEvents,
+      List<ServiceDependencyDefinition> services
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
@@ -257,6 +262,7 @@ public class StageDefinition {
     this.pipelineLifecycleStage = pipelineLifecycleStage;
     this.offsetCommitTrigger = offsetCommitTrigger;
     this.producesEvents = producesEvents;
+    this.services = Collections.unmodifiableList(services);
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -534,7 +540,8 @@ public class StageDefinition {
         statsAggregatorStage,
         pipelineLifecycleStage,
         offsetCommitTrigger,
-        producesEvents
+        producesEvents,
+        services
     );
   }
 
@@ -570,6 +577,10 @@ public class StageDefinition {
 
   public boolean isProducingEvents() {
     return producesEvents;
+  }
+
+  public List<ServiceDependencyDefinition> getServices() {
+    return services;
   }
 }
 

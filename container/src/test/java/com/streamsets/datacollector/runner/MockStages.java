@@ -965,7 +965,8 @@ public class MockStages {
               false,
               false,
               false,
-              false
+              false,
+              Collections.emptyList()
           );
           stages.put(name, newDef);
         } else {

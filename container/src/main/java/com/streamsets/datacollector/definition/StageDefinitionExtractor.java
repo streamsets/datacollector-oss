@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
+import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -44,15 +45,20 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.service.ServiceConfiguration;
+import com.streamsets.pipeline.api.service.ServiceDependency;
 import org.apache.commons.lang3.ClassUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class StageDefinitionExtractor {
@@ -219,6 +225,7 @@ public abstract class StageDefinitionExtractor {
         }
         List<String> libJarsRegex = ImmutableList.copyOf(sDef.libJarsRegex());
         boolean recordsByRef = sDef.recordsByRef();
+        List<ServiceDependencyDefinition> services = extractServiceDependencies(sDef);
 
         // If not a stage library, then dont add stage system configs
         if (!PipelineBeanCreator.PIPELINE_LIB_DEFINITION.equals(libraryDef.getName())) {
@@ -300,7 +307,8 @@ public abstract class StageDefinitionExtractor {
             statsAggregatorStage,
             pipelineLifecycleStage,
             offsetCommitController,
-            producesEvents
+            producesEvents,
+            services
         );
       } catch (Exception e) {
         throw new IllegalStateException("Exception while extracting stage definition for " + getStageName(klass), e);
@@ -358,6 +366,19 @@ public abstract class StageDefinitionExtractor {
       type = null;
     }
     return type;
+  }
+
+  private List<ServiceDependencyDefinition> extractServiceDependencies(StageDef stageDef) {
+    List<ServiceDependencyDefinition> services = new LinkedList<>();
+    for (ServiceDependency dependency : stageDef.services()) {
+      Map<String, String> configuration = new HashMap<>();
+      for (ServiceConfiguration conf : dependency.configuration()) {
+        configuration.put(conf.name(), conf.value());
+      }
+
+      services.add(new ServiceDependencyDefinition(dependency.service(), configuration));
+    }
+    return services;
   }
 
   private List<ErrorMessage> validateConfigGroups(List<ConfigDefinition> configs, ConfigGroupDefinition

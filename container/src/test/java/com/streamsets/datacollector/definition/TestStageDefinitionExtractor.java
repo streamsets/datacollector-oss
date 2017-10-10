@@ -17,6 +17,7 @@ package com.streamsets.datacollector.definition;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
+import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -42,6 +43,8 @@ import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.BaseExecutor;
+import com.streamsets.pipeline.api.service.ServiceConfiguration;
+import com.streamsets.pipeline.api.service.ServiceDependency;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -85,7 +88,11 @@ public class TestStageDefinitionExtractor {
       description = "D",
       icon = "TargetIcon.svg",
       libJarsRegex = {ClusterModeConstants.AVRO_JAR_REGEX, ClusterModeConstants.AVRO_MAPRED_JAR_REGEX},
-      onlineHelpRefUrl = ""
+      onlineHelpRefUrl = "",
+      services = @ServiceDependency(service = Runnable.class, configuration = {
+        @ServiceConfiguration(name = "country", value = "Czech"),
+        @ServiceConfiguration(name = "importance", value = "high"),
+      })
   )
   public static class Source1 extends BaseSource {
 
@@ -302,6 +309,16 @@ public class TestStageDefinitionExtractor {
     Assert.assertFalse(def.getRecordsByRef());
     Assert.assertTrue(def.getUpgrader() instanceof StageUpgrader.Default);
     Assert.assertFalse(def.isProducingEvents());
+
+    Assert.assertEquals(1, def.getServices().size());
+    ServiceDependencyDefinition service = def.getServices().get(0);
+    Assert.assertNotNull(service);
+    Assert.assertEquals(Runnable.class, service.getService());
+    Assert.assertEquals(2, service.getConfiguration().size());
+    Assert.assertTrue(service.getConfiguration().containsKey("country"));
+    Assert.assertTrue(service.getConfiguration().containsKey("importance"));
+    Assert.assertEquals("Czech", service.getConfiguration().get("country"));
+    Assert.assertEquals("high", service.getConfiguration().get("importance"));
   }
 
   @Test
