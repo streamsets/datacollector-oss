@@ -940,9 +940,15 @@ public abstract class PipelineBeanCreator {
         ElUtil.isElString(value)) {
       try {
         value = ElUtil.evaluate(value, stageDef, configDef, pipelineConstants);
-      } catch (ELEvalException ex) {
-        errors.add(issueCreator.create(configDef.getGroup(), configDef.getName(), CreationError.CREATION_005,
-                                       value, ex.toString()));
+      } catch (Exception ex) {
+        LOG.error(CreationError.CREATION_005.getMessage(), value, ex.toString(), ex);
+        errors.add(issueCreator.create(
+          configDef.getGroup(),
+          configDef.getName(),
+          CreationError.CREATION_005,
+          value,
+          ex.toString()
+        ));
         value = null;
       }
     }
