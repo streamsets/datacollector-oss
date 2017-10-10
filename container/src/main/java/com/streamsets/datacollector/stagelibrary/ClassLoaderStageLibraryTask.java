@@ -30,6 +30,7 @@ import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineLifecycleStageChooserValues;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
+import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
@@ -68,6 +69,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -210,6 +212,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     serviceList = ImmutableList.copyOf(serviceList);
     serviceMap = ImmutableMap.copyOf(serviceMap);
 
+    // Various validations
+    validateAllServicesAvailable();
+
     // localization cache for definitions
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
       @Override
@@ -246,6 +251,24 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     poolConfig.setBlockWhenExhausted(false);
     poolConfig.setMaxWaitMillis(0);
     privateClassLoaderPool = new GenericKeyedObjectPool<>(new ClassLoaderFactory(stageClassLoaders), poolConfig);
+  }
+
+  // Go over all stages and validate that we can satisfy all the service dependencies. It's a runtime error
+  // and fatal error if we can't.
+  private void validateAllServicesAvailable() {
+    List<String> missingServices = new LinkedList<>();
+
+    for(StageDefinition stage : stageList) {
+      for(ServiceDependencyDefinition service : stage.getServices()) {
+        if(!serviceMap.containsKey(service.getService())) {
+          missingServices.add(Utils.format("Stage {} is missing service {}", stage.getName(), service.getService().getName()));
+        }
+      }
+    }
+
+    if(!missingServices.isEmpty()) {
+      throw new RuntimeException("Missing services: " + StringUtils.join(missingServices, ", "));
+    }
   }
 
   @Override
