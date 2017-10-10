@@ -96,9 +96,33 @@ public final class CommonSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
+      label = "Allow Late Tables",
+      displayPosition = 170,
+      group = "JDBC",
+      defaultValue = "false"
+  )
+  public boolean allowLateTable = false;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "${10 * SECONDS}",
+      label = "New Table Discovery Interval",
+      displayPosition = 171,
+      elDefs = {TimeEL.class},
+      evaluation = ConfigDef.Evaluation.IMPLICIT,
+      group = "JDBC",
+      dependsOn = "allowLateTable",
+      triggeredByValue = "true"
+  )
+  public long newTableQueryInterval;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Enable Schema Changes Event",
-      displayPosition = 170,
+      displayPosition = 172,
       group = "JDBC"
   )
   public boolean enableSchemaChanges;

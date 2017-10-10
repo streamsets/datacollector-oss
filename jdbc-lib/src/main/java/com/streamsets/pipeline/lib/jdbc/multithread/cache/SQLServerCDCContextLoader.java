@@ -22,28 +22,28 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
-import org.apache.commons.lang3.tuple.Pair;
 
-import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, TableReadContext> {
   private final ConnectionManager connectionManager;
   private final Map<String, String> offsets;
   private final int fetchSize;
+  private final boolean allowLateTable;
   private final boolean enableSchemaChanges;
 
   public SQLServerCDCContextLoader(
       ConnectionManager connectionManager,
       Map<String, String> offsets,
       int fetchSize,
+      boolean allowLateTable,
       boolean enableSchemaChanges
   ) {
     this.connectionManager = connectionManager;
     this.offsets = offsets;
     this.fetchSize = fetchSize;
+    this.allowLateTable = allowLateTable;
     this.enableSchemaChanges = enableSchemaChanges;
   }
 
@@ -57,18 +57,16 @@ public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, 
         offset,
         tableContext.getQualifiedName(),
         tableContext.getOffsetColumnToStartOffset(),
+        allowLateTable,
         enableSchemaChanges
     );
 
-    Pair<String, List<Pair<Integer, String>>> queryAndParamValToSet = Pair.of(query, new ArrayList<>());
-
-    Connection connection = connectionManager.getConnection();
 
     TableReadContext tableReadContext =
         new TableReadContext(
-            connection,
-            queryAndParamValToSet.getLeft(),
-            queryAndParamValToSet.getRight(),
+            connectionManager.getConnection(),
+            query,
+            new ArrayList<>(),
             fetchSize
         );
 

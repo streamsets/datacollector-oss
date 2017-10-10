@@ -45,6 +45,10 @@ public final class MSQueryUtil {
   public static final String CDC_SOURCE_TABLE_NAME = "table_name";
   public static final String CDC_CAPTURE_INSTANCE_NAME = "capture_instance_name";
 
+  private static final String IF_EXISTENCE_CDC_TABLE_QUERY = "IF EXISTS (SELECT OBJECT_ID FROM cdc.change_tables WHERE capture_instance='%s')";
+  private static final String BEGIN_QUERY = "BEGIN";
+  private static final String END_QUERY = "END";
+
   private static final String CHANGE_TRACKING_TABLE_QUERY = "SET NOCOUNT ON;\n" +
       "SELECT min_valid_version \n" +
       "FROM sys.change_tracking_tables t\n" +
@@ -168,9 +172,20 @@ public final class MSQueryUtil {
       Map<String, String> offsetMap,
       String tableName,
       Map<String, String> startOffset,
+      boolean allowLateTable,
       boolean enableSchemaChanges
   ) {
+    String captureInstanceName = tableName.substring("cdc.".length(), tableName.length() - "_CT".length());
     StringBuilder query = new StringBuilder();
+
+    // check the existing of CDC table
+    if (allowLateTable) {
+      query.append(String.format(IF_EXISTENCE_CDC_TABLE_QUERY, captureInstanceName));
+      query.append("\n");
+      query.append(BEGIN_QUERY);
+      query.append("\n");
+    }
+
     query.append(String.format(SELECT_CLAUSE, tableName));
 
     if (offsetMap == null || offsetMap.size() < 1) {
@@ -191,6 +206,10 @@ public final class MSQueryUtil {
 
     query.append(String.format(ORDER_BY_CLAUSE, COMMA_SPACE_JOINER.join(ImmutableList.of(CDC_START_LSN, CDC_SEQVAL))));
 
+    if (allowLateTable) {
+      query.append(END_QUERY);
+    }
+
     // if schema change detection is enabled, get first row of the source table
     if (enableSchemaChanges) {
       query.append("\n");
@@ -207,7 +226,7 @@ public final class MSQueryUtil {
       query.append(" FROM cdc.change_tables");
       query.append(String.format(
           " WHERE capture_instance = '%s';",
-          tableName.substring("cdc.".length(), tableName.length() - "_CT".length())
+          captureInstanceName
       ));
 
       query.append("\n");

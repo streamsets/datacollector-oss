@@ -42,6 +42,8 @@ public final class TableConfigBean {
   public static final String ENABLE_NON_INCREMENTAL_FIELD = "enableNonIncremental";
   public static final boolean ENABLE_NON_INCREMENTAL_DEFAULT_VALUE = false;
 
+  public static final String ALLOW_LATE_TABLE = "commonSourceConfigBean.allowLateTable";
+
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,

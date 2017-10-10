@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -43,6 +44,10 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
+@HideConfigs({
+    "commonSourceConfigBean.allowLateTable",
+    "commonSourceConfigBean.enableSchemaChanges"
+})
 public class JdbcDSource extends DSource {
 
   @ConfigDef(

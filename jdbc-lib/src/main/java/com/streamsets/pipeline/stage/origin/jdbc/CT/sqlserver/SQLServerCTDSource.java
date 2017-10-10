@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DPushSource;
@@ -25,16 +26,21 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "SQL Server Change Tracking Client",
     description = "Origin that an read change events from an SQL Server Database",
     icon = "sql-server.png",
     resetOffset = true,
     producesEvents = true,
+    upgrader = SQLServerCTSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/SQLServerChange.html#task_vsh_22s_r1b"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
+@HideConfigs({
+    "commonSourceConfigBean.allowLateTable",
+    "commonSourceConfigBean.enableSchemaChanges"
+})
 public class SQLServerCTDSource extends DPushSource {
 
   @ConfigDefBean

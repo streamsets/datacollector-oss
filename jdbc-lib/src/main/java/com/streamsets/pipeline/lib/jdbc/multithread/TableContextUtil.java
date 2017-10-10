@@ -625,7 +625,7 @@ public final class TableContextUtil {
         StringUtils.isEmpty(tableConfigBean.tableExclusionPattern)?
             null : Pattern.compile(tableConfigBean.tableExclusionPattern);
 
-    final String tablePattern = tableConfigBean.capture_instance + "_CT";
+    final String tablePattern = tableConfigBean.capture_instance;
     final String cdcSchema = "cdc";
     try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, cdcSchema, tablePattern, false)) {
       while (rs.next()) {

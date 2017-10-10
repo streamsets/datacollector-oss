@@ -44,6 +44,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.cache.SQLServerCDCContextLoader;
 import com.streamsets.pipeline.lib.util.OffsetUtil;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver.SQLServerCTSource;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
@@ -53,6 +54,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,6 +68,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 public class SQLServerCDCSource extends BasePushSource {
@@ -90,10 +94,15 @@ public class SQLServerCDCSource extends BasePushSource {
   private ConnectionManager connectionManager;
   private Map<String, String> offsets;
   private ExecutorService executorService;
+  private ScheduledExecutorService executorServiceForTableSpooler;
   private MultithreadedTableProvider tableOrderProvider;
   private HikariDataSource dataSource;
 
-  public SQLServerCDCSource(HikariPoolConfigBean hikariConfigBean, CommonSourceConfigBean commonSourceConfigBean, CDCTableJdbcConfigBean tableJdbcConfigBean) {
+  public SQLServerCDCSource(
+      HikariPoolConfigBean hikariConfigBean,
+      CommonSourceConfigBean commonSourceConfigBean,
+      CDCTableJdbcConfigBean tableJdbcConfigBean
+  ) {
     this.hikariConfigBean = hikariConfigBean;
     this.commonSourceConfigBean = commonSourceConfigBean;
     this.cdcTableJdbcConfigBean = tableJdbcConfigBean;
@@ -142,60 +151,12 @@ public class SQLServerCDCSource extends BasePushSource {
     if (issues.isEmpty()) {
       try {
         connectionManager = new ConnectionManager(dataSource);
-        for (CDCTableConfigBean tableConfigBean : cdcTableJdbcConfigBean.tableConfigs) {
-          //No duplicates even though a table matches multiple configurations, we will add it only once.
-          allTableContexts.putAll(
-              TableContextUtil.listCDCTablesForConfig(
-                  connectionManager.getConnection(),
-                  tableConfigBean,
-                  commonSourceConfigBean.enableSchemaChanges
-              )
-          );
-        }
 
-        LOG.info("Selected Tables: \n {}", NEW_LINE_JOINER.join(allTableContexts.keySet()));
+        getCDCTables(context, issues);
 
-        if (allTableContexts.isEmpty()) {
-          issues.add(
-              context.createConfigIssue(
-                  Groups.TABLE.name(),
-                  TableJdbcConfigBean.TABLE_CONFIG,
-                  JdbcErrors.JDBC_66
-              )
-          );
-        } else {
-          numberOfThreads = cdcTableJdbcConfigBean.numberOfThreads;
-          if (cdcTableJdbcConfigBean.numberOfThreads > allTableContexts.size()) {
-            numberOfThreads = Math.min(cdcTableJdbcConfigBean.numberOfThreads, allTableContexts.size());
-            LOG.info(
-                "Number of threads configured '{}'is more than number of tables '{}'. Will be Using '{}' number of threads.",
-                cdcTableJdbcConfigBean.numberOfThreads,
-                allTableContexts.size(),
-                numberOfThreads
-            );
-          }
+        //Accessed by all runner threads
+        offsets = new ConcurrentHashMap<>();
 
-          TableOrderProvider tableOrderProvider = new TableOrderProviderFactory(
-              connectionManager.getConnection(),
-              cdcTableJdbcConfigBean.tableOrderStrategy
-          ).create();
-
-          try {
-            tableOrderProvider.initialize(allTableContexts);
-            this.tableOrderProvider = new MultithreadedTableProvider(
-                allTableContexts,
-                tableOrderProvider.getOrderedTables(),
-                JdbcTableUtil.decideMaxTableSlotsForThreads(cdcTableJdbcConfigBean.batchTableStrategy, allTableContexts.size(), numberOfThreads),
-                numberOfThreads,
-                cdcTableJdbcConfigBean.batchTableStrategy
-            );
-          } catch (ExecutionException e) {
-            LOG.error("Error during Table Order Provider Init", e);
-            throw new StageException(JdbcErrors.JDBC_67, e);
-          }
-          //Accessed by all runner threads
-          offsets = new ConcurrentHashMap<>();
-        }
       } catch (SQLException e) {
         JdbcUtil.logError(e);
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
@@ -215,10 +176,72 @@ public class SQLServerCDCSource extends BasePushSource {
     }
   }
 
+  private void getCDCTables(Stage.Context context, List<ConfigIssue> issues) throws StageException, SQLException {
+    // clear the list
+    allTableContexts.clear();
+
+    for (CDCTableConfigBean tableConfigBean : cdcTableJdbcConfigBean.tableConfigs) {
+      //No duplicates even though a table matches multiple configurations, we will add it only once.
+      allTableContexts.putAll(TableContextUtil.listCDCTablesForConfig(connectionManager.getConnection(),
+          tableConfigBean,
+          commonSourceConfigBean.enableSchemaChanges
+      ));
+    }
+
+    LOG.info("Selected Tables: \n {}", NEW_LINE_JOINER.join(allTableContexts.keySet()));
+
+    if (allTableContexts.isEmpty() && !commonSourceConfigBean.allowLateTable) {
+      issues.add(context.createConfigIssue(Groups.TABLE.name(), TableJdbcConfigBean.TABLE_CONFIG, JdbcErrors.JDBC_66));
+    } else {
+      numberOfThreads = cdcTableJdbcConfigBean.numberOfThreads;
+      if (cdcTableJdbcConfigBean.numberOfThreads > allTableContexts.size()) {
+        numberOfThreads = Math.min(cdcTableJdbcConfigBean.numberOfThreads, allTableContexts.size());
+        LOG.info(
+            "Number of threads configured '{}'is more than number of tables '{}'. Will be Using '{}' number of threads.",
+            cdcTableJdbcConfigBean.numberOfThreads,
+            allTableContexts.size(),
+            numberOfThreads
+        );
+      }
+
+      TableOrderProvider tableOrderProvider = new TableOrderProviderFactory(connectionManager.getConnection(),
+          cdcTableJdbcConfigBean.tableOrderStrategy
+      ).create();
+
+      try {
+        tableOrderProvider.initialize(allTableContexts);
+
+        if (this.tableOrderProvider == null) {
+          this.tableOrderProvider = new MultithreadedTableProvider(allTableContexts,
+              tableOrderProvider.getOrderedTables(),
+              JdbcTableUtil.decideMaxTableSlotsForThreads(cdcTableJdbcConfigBean.batchTableStrategy,
+                  allTableContexts.size(),
+                  numberOfThreads
+              ),
+              numberOfThreads,
+              cdcTableJdbcConfigBean.batchTableStrategy
+          );
+        } else {
+          this.tableOrderProvider.setTableContextMap(allTableContexts, tableOrderProvider.getOrderedTables());
+        }
+      } catch (ExecutionException e) {
+        LOG.error("Error during Table Order Provider Init", e);
+        throw new StageException(JdbcErrors.JDBC_67, e);
+      }
+    }
+  }
+
   private void shutdownExecutorIfNeeded() {
     Optional.ofNullable(executorService).ifPresent(executor -> {
       if (!executor.isTerminated()) {
         LOG.info("Shutting down executor service");
+        executor.shutdown();
+      }
+    });
+
+    Optional.ofNullable(executorServiceForTableSpooler).ifPresent(executor -> {
+      if (!executor.isTerminated()) {
+        LOG.info("Shutting down table spooler executor service");
         executor.shutdown();
       }
     });
@@ -227,6 +250,7 @@ public class SQLServerCDCSource extends BasePushSource {
   @Override
   public void destroy() {
     executorService = null;
+    executorServiceForTableSpooler = null;
     //Invalidate all the thread cache so that all statements/result sets are properly closed.
     toBeInvalidatedThreadCaches.forEach(Cache::invalidateAll);
     //Closes all connections
@@ -244,6 +268,7 @@ public class SQLServerCDCSource extends BasePushSource {
     int batchSize = Math.min(maxBatchSize, commonSourceConfigBean.maxBatchSize);
 
     handleLastOffset(lastSourceOffset);
+
     try {
       executorService = new SafeScheduledExecutorService(numberOfThreads, JdbcBaseRunnable.TABLE_JDBC_THREAD_PREFIX);
 
@@ -254,6 +279,7 @@ public class SQLServerCDCSource extends BasePushSource {
             connectionManager,
             lastSourceOffset,
             cdcTableJdbcConfigBean.fetchSize,
+            commonSourceConfigBean.allowLateTable,
             commonSourceConfigBean.enableSchemaChanges
         );
 
@@ -273,14 +299,40 @@ public class SQLServerCDCSource extends BasePushSource {
         completionService.submit(runnable, null);
       });
 
+      if (commonSourceConfigBean.allowLateTable) {
+        TableSpooler tableSpooler = new TableSpooler();
+        executorServiceForTableSpooler = new SafeScheduledExecutorService(1, JdbcBaseRunnable.TABLE_JDBC_THREAD_PREFIX);
+        executorServiceForTableSpooler.scheduleWithFixedDelay(
+            tableSpooler,
+            0,
+            commonSourceConfigBean.newTableQueryInterval,
+            TimeUnit.SECONDS
+        );
+      }
+
       while (!getContext().isStopped()) {
         checkWorkerStatus(completionService);
         JdbcUtil.generateNoMoreDataEventIfNeeded(tableOrderProvider.shouldGenerateNoMoreDataEvent(), getContext());
       }
+    } catch (RuntimeException e) {
+      throw new StageException(JdbcErrors.JDBC_203, e.getCause(), e);
     } catch (Exception e) {
       LOG.error("Exception thrown during produce", e);
     } finally {
       shutdownExecutorIfNeeded();
+    }
+  }
+
+  class TableSpooler implements Runnable {
+    public void run() {
+      Thread.currentThread().setName("JDBC Multithread Fetch Tables");
+
+      try {
+        getCDCTables(getContext(), new ArrayList<>());
+      } catch (StageException | SQLException e) {
+        LOG.error("Exception thrown during fetching tables from metada", e);
+        throw new RuntimeException(e);
+      }
     }
   }
 

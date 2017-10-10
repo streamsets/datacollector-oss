@@ -21,6 +21,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
 import com.streamsets.testing.RandomTestUtils;
+import com.vividsolutions.jts.util.Assert;
 import jersey.repackaged.com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.BaseMatcher;
@@ -28,6 +29,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.mapdb.DBException;
 
 import java.sql.Types;
 import java.util.ArrayList;
@@ -395,6 +397,106 @@ public class TestMultithreadedTableProvider {
         expectedMaxOffsets
     );
 
+  }
+
+  @Test
+  public void addTableNotPartitioned() throws InterruptedException, StageException {
+    String schema = "db";
+    String table1Name = "table1";
+    String table2Name = "table2";
+    String offsetCol = null;
+    final String partitionSize = null;
+    int maxActivePartitions = 0;
+    int threadNumber = 0;
+    int numThreads = 1;
+
+    TableContext table1 = createTableContext(schema, table1Name, offsetCol, partitionSize, maxActivePartitions, true);
+
+    MultithreadedTableProvider provider = createTableProvider(numThreads, table1, BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE);
+
+    TableRuntimeContext tableRuntimeContext = provider.nextTable(threadNumber);
+    Assert.equals(table1Name, tableRuntimeContext.getSourceTableContext().getTableName());
+    provider.releaseOwnedTable(tableRuntimeContext, threadNumber);
+
+    tableRuntimeContext = provider.nextTable(threadNumber);
+    Assert.equals(table1Name, tableRuntimeContext.getSourceTableContext().getTableName());
+    provider.releaseOwnedTable(tableRuntimeContext, threadNumber);
+
+    TableContext table2 = createTableContext(schema, table2Name, offsetCol, partitionSize, maxActivePartitions, true);
+    Map<String, TableContext> tableContextMap = new HashMap<>();
+
+    tableContextMap.put(table1.getQualifiedName(), table1);
+    tableContextMap.put(table2.getQualifiedName(), table2);
+    Queue<String> sortedTableOrder = new LinkedList<>();
+    sortedTableOrder.add(table1.getQualifiedName());
+    sortedTableOrder.add(table2.getQualifiedName());
+
+    //Set added table lists
+    provider.setTableContextMap(tableContextMap, sortedTableOrder);
+
+    tableRuntimeContext = provider.nextTable(threadNumber);
+
+    Assert.equals(table1Name, tableRuntimeContext.getSourceTableContext().getTableName());
+    provider.releaseOwnedTable(tableRuntimeContext, threadNumber);
+
+    tableRuntimeContext = provider.nextTable(threadNumber);
+    Assert.equals(table2Name, tableRuntimeContext.getSourceTableContext().getTableName());
+    provider.releaseOwnedTable(tableRuntimeContext, threadNumber);
+  }
+
+  @Test
+  public void removeTableNotPartitioned() throws InterruptedException, StageException {
+    String schema = "db";
+    String table1Name = "table1";
+    String table2Name = "table2";
+    String offsetCol = null;
+    final String partitionSize = null;
+    int maxActivePartitions = 0;
+    int threadNumber = 0;
+    int numThreads = 1;
+
+    TableContext table1 = createTableContext(schema, table1Name, offsetCol, partitionSize, maxActivePartitions, true);
+    TableContext table2 = createTableContext(schema, table2Name, offsetCol, partitionSize, maxActivePartitions, true);
+    Map<String, TableContext> tableContextMap = new HashMap<>();
+
+    tableContextMap.put(table1.getQualifiedName(), table1);
+    tableContextMap.put(table2.getQualifiedName(), table2);
+    Queue<String> sortedTableOrder = new LinkedList<>();
+    sortedTableOrder.add(table1.getQualifiedName());
+    sortedTableOrder.add(table2.getQualifiedName());
+
+    Map threadNumToMaxTableSlots = new HashMap<>();
+
+    BatchTableStrategy batchTableStrategy = BatchTableStrategy.PROCESS_ALL_AVAILABLE_ROWS_FROM_TABLE;
+    MultithreadedTableProvider provider = new MultithreadedTableProvider(
+        tableContextMap,
+        sortedTableOrder,
+        threadNumToMaxTableSlots,
+        numThreads,
+        batchTableStrategy
+    );
+
+    TableRuntimeContext tableRuntimeContext = provider.nextTable(threadNumber);
+    Assert.equals(table1Name, tableRuntimeContext.getSourceTableContext().getTableName());
+    provider.releaseOwnedTable(tableRuntimeContext, threadNumber);
+
+    tableRuntimeContext = provider.nextTable(threadNumber);
+    Assert.equals(table2Name, tableRuntimeContext.getSourceTableContext().getTableName());
+    provider.releaseOwnedTable(tableRuntimeContext, threadNumber);
+
+    tableContextMap.remove(table2.getQualifiedName());
+    sortedTableOrder.remove(table2.getQualifiedName());
+    //Set removed table lists
+    provider.setTableContextMap(tableContextMap, sortedTableOrder);
+
+    tableRuntimeContext = provider.nextTable(threadNumber);
+
+    Assert.equals(table1Name, tableRuntimeContext.getSourceTableContext().getTableName());
+    provider.releaseOwnedTable(tableRuntimeContext, threadNumber);
+
+    tableRuntimeContext = provider.nextTable(threadNumber);
+    Assert.equals(table1Name, tableRuntimeContext.getSourceTableContext().getTableName());
+    provider.releaseOwnedTable(tableRuntimeContext, threadNumber);
   }
 
   private static void validatePartition(

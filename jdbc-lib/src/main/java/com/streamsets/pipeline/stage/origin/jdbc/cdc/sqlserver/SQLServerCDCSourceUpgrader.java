@@ -28,6 +28,7 @@ import java.util.Map;
 
 public class SQLServerCDCSourceUpgrader implements StageUpgrader {
   private static final String TABLECONFIG = "cdcTableJdbcConfigBean.tableConfigs";
+  private static final String ALLOW_LATE_TABLE = "commonSourceConfigBean.allowLateTable";
   private static final String SCHEMA_CONFIG = "schema";
   private static final String TABLEPATTERN_CONFIG = "tablePattern";
   private static final String TABLE_EXCLUSION_CONFIG = "tableExclusionPattern";
@@ -51,6 +52,9 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
   private static void upgradeV1ToV2(List<Config> configs) {
     Config removeConfig = null;
     Config addConfig = null;
+
+    configs.add(new Config(ALLOW_LATE_TABLE, false));
+
     for (Config config : configs) {
       if (TABLECONFIG.equals(config.getName())) {
         List<Map<String, String>> tableConfig = (List<Map<String, String>>) config.getValue();
@@ -82,6 +86,7 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
         }
         removeConfig = config;
         addConfig = new Config(TABLECONFIG, newconfig);
+
         break;
       }
     }

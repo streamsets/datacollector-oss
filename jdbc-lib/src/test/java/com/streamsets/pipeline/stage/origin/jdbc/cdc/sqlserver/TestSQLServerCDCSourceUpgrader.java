@@ -53,9 +53,12 @@ public class TestSQLServerCDCSourceUpgrader {
     SQLServerCDCSourceUpgrader sqlServerCDCSourceUpgrader = new SQLServerCDCSourceUpgrader();
     sqlServerCDCSourceUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals(2, configs.size());
 
-    ArrayList<HashMap<String, String>> tableConfigs = (ArrayList<HashMap<String, String>>)configs.get(0).getValue();
+    // "Allow Late Table" config returns false
+    Assert.assertEquals(false, configs.get(0).getValue());
+
+    ArrayList<HashMap<String, String>> tableConfigs = (ArrayList<HashMap<String, String>>)configs.get(1).getValue();
     Assert.assertEquals(1, tableConfigs.size());
 
     HashMap<String, String> tableConfig = tableConfigs.get(0);
@@ -91,9 +94,12 @@ public class TestSQLServerCDCSourceUpgrader {
     SQLServerCDCSourceUpgrader sqlServerCDCSourceUpgrader = new SQLServerCDCSourceUpgrader();
     sqlServerCDCSourceUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals(2, configs.size());
 
-    ArrayList<HashMap<String, String>> tableConfigs = (ArrayList<HashMap<String, String>>)configs.get(0).getValue();
+    // "Allow Late Table" config returns false
+    Assert.assertEquals(false, configs.get(0).getValue());
+
+    ArrayList<HashMap<String, String>> tableConfigs = (ArrayList<HashMap<String, String>>)configs.get(1).getValue();
     Assert.assertEquals(1, tableConfigs.size());
 
     HashMap<String, String> tableConfig = tableConfigs.get(0);

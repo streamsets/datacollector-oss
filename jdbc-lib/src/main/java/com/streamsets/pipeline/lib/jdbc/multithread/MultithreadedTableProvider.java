@@ -60,14 +60,14 @@ public final class MultithreadedTableProvider {
    */
   private static final int SHARED_QUEUE_SIZE_FUDGE_FACTOR = 2;
 
-  private final Map<String, TableContext> tableContextMap;
+  private Map<String, TableContext> tableContextMap;
   private final BlockingQueue<TableRuntimeContext> sharedAvailableTablesQueue;
   private final Set<TableContext> tablesWithNoMoreData;
-  private final Map<Integer, Integer> threadNumToMaxTableSlots;
+  private Map<Integer, Integer> threadNumToMaxTableSlots;
   private final int numThreads;
   private final BatchTableStrategy batchTableStrategy;
 
-  private final Queue<String> sortedTableOrder;
+  private Queue<String> sortedTableOrder;
 
   private final ThreadLocal<Deque<TableRuntimeContext>> ownedTablesQueue = ThreadLocal.withInitial(LinkedList::new);
   private final ConcurrentMap<TableContext, Integer> maxPartitionWithDataPerTable = Maps.newConcurrentMap();
@@ -113,6 +113,25 @@ public final class MultithreadedTableProvider {
 
     this.tablesWithNoMoreData = Sets.newConcurrentHashSet();
     this.threadNumToMaxTableSlots = threadNumToMaxTableSlots;
+  }
+
+  public void setTableContextMap(Map<String, TableContext> tableContextMap,
+      Queue<String> sortedTableOrder) {
+    if (!tableContextMap.equals(this.tableContextMap)) {
+      this.tableContextMap = new ConcurrentHashMap<>(tableContextMap);
+
+      final Map<String, Integer> tableNameToOrder = new HashMap<>();
+      int order = 1;
+      for (String tableName : sortedTableOrder) {
+        tableNameToOrder.put(tableName, order++);
+      }
+
+      this.sortedTableOrder = new ArrayDeque<>(sortedTableOrder);
+
+      // always construct initial values for partition queue based on table contexts
+      // if stored offsets come into play, those will be handled by a subsequent invocation
+      generateInitialPartitionsInSharedQueue(false, null, null);
+    }
   }
 
   public Set<String> initializeFromV1Offsets(Map<String, String> offsets) throws StageException {
@@ -341,7 +360,11 @@ public final class MultithreadedTableProvider {
   void acquireTableAsNeeded(int threadNumber) throws InterruptedException {
     if (!getOwnedTablesQueue().isEmpty() && batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
       final TableRuntimeContext lastOwnedPartition = getOwnedTablesQueue().pollLast();
-      sharedAvailableTablesQueue.offer(lastOwnedPartition);
+
+
+      if (getTableContextMap().containsValue(lastOwnedPartition.getSourceTableContext())) {
+        sharedAvailableTablesQueue.offer(lastOwnedPartition);
+      }
 
       TableContext lastOwnedTable = lastOwnedPartition.getSourceTableContext();
       // need to cycle off all partitions from the same table to the end of the queue
@@ -552,7 +575,6 @@ public final class MultithreadedTableProvider {
    * Deque the current element from head of the queue and put it back at the tail to queue.
    */
   public TableRuntimeContext nextTable(int threadNumber) throws InterruptedException {
-
     synchronized (partitionStateLock) {
       acquireTableAsNeeded(threadNumber);
 

@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DPushSource;
@@ -26,7 +27,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "JDBC Multitable Consumer",
     description = "Reads data from a JDBC source using table names.",
     icon = "rdbms_multithreaded.png",
@@ -37,8 +38,13 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     upgrader = TableJdbcSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/MultiTableJDBCConsumer.html#task_kst_m4w_4y"
 )
+
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
+@HideConfigs({
+    "commonSourceConfigBean.allowLateTable",
+    "commonSourceConfigBean.enableSchemaChanges"
+})
 public final class TableJdbcDSource extends DPushSource {
 
   @ConfigDefBean

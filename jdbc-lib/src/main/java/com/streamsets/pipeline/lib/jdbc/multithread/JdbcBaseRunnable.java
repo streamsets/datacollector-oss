@@ -69,7 +69,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
   protected final PushSource.Context context;
   protected final Map<String, String> offsets;
   private final LoadingCache<TableRuntimeContext, TableReadContext> tableReadContextCache;
-  private final MultithreadedTableProvider tableProvider;
+  private MultithreadedTableProvider tableProvider;
   protected final int threadNumber;
   private final int batchSize;
   protected final TableJdbcConfigBean tableJdbcConfigBean;
@@ -243,6 +243,12 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
         //invalidate if the connection is closed
         tableReadContextCache.invalidateAll();
         connectionManager.closeConnection();
+
+        //if the currently acquired tableContext is no longer a valid candidate, try re-fetch the table from table provider
+        if (commonSourceConfigBean.allowLateTable && !tableProvider.getActiveRuntimeContexts().containsKey(tableRuntimeContext.getSourceTableContext())) {
+          tableRuntimeContext = null;
+        }
+
         LOG.error("Error happened", e);
         Throwable th = (e instanceof ExecutionException)? e.getCause() : e;
         if (th instanceof SQLException) {
