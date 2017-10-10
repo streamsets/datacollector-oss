@@ -493,7 +493,7 @@ public class BigtableTarget extends BaseTarget {
       Bigtable - at least one field has to be inserted so there is a record of
       this Row Key.
        */
-      Map<String, Byte[]> values = new HashMap<>();
+      Map<String, byte[]> values = new HashMap<>();
 
       int nullFields = 0;
       int cantConvert = 0;
@@ -505,7 +505,7 @@ public class BigtableTarget extends BaseTarget {
         } else {
           // field exists - check if it's convertible.
           try {
-            values.put(f.source, ArrayUtils.toObject(convertValue(f, tempField, rec)));
+            values.put(f.source, convertValue(f, tempField, rec));
           } catch (OnRecordErrorException ex) {
             cantConvert++;
           }
@@ -537,12 +537,13 @@ public class BigtableTarget extends BaseTarget {
         theList.add(put.addColumn(destinationNames.get(f.column).columnFamily,
             destinationNames.get(f.column).qualifier,
             timeStamp,
-            ArrayUtils.toPrimitive(values.get(f.source))
+            values.get(f.source)
         ));
       }
 
       counter++;
       if (counter >= conf.numToBuffer) {
+        LOG.debug("Calling put for list of '{}' Records", counter);
         commitRecords(theList);
         theList.clear();
         counter = 0;

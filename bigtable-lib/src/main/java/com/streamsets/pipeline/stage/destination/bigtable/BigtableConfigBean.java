@@ -187,7 +187,6 @@ public class BigtableConfigBean {
      defaultValue = "1000",
      label = "Number of Records to Buffer",
      description = "Number of records to buffer per commit to Bigtable.  1 <= number <= 1000",
-     max = 1000,
      min = 1,
      displayPosition = 100,
      group = "BIGTABLE"
