@@ -52,6 +52,18 @@ public class ServiceConfigurationJson {
     this.serviceConfiguration = serviceConfiguration;
   }
 
+  public String getService() {
+    return serviceConfiguration.getService().getName();
+  }
+
+  public int getServiceVersion() {
+    return serviceConfiguration.getServiceVersion();
+  }
+
+  public List<ConfigConfigurationJson> getConfiguration() {
+    return BeanHelper.wrapConfigConfiguration(serviceConfiguration.getConfiguration());
+  }
+
   @JsonIgnore
   public ServiceConfiguration getServiceConfiguration() {
     return serviceConfiguration;

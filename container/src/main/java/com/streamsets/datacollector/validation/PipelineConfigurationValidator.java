@@ -48,6 +48,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +61,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("Duplicates")
 public class PipelineConfigurationValidator {
@@ -645,6 +647,23 @@ public class PipelineConfigurationValidator {
         preview = false;
       }
 
+      // Validate service definitions
+      Set<String> expectedServices = stageDef.getServices().stream()
+        .map(service -> service.getService().getName())
+        .collect(Collectors.toSet());
+      Set<String> configuredServices = stageConf.getServices().stream()
+        .map(service -> service.getService().getName())
+        .collect(Collectors.toSet());
+      if(!expectedServices.equals(configuredServices)) {
+        issues.add(issueCreator.create(
+            stageConf.getInstanceName(),
+            ValidationError.VALIDATION_0200,
+            StringUtils.join(expectedServices, ","),
+            StringUtils.join(configuredServices, ",")
+        ));
+      }
+
+      // Validate user exposed configuration
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         Config config = stageConf.getConfig(confDef.getName());
         if (confDef.isRequired() && (config == null || isNullOrEmpty(confDef, config))) {

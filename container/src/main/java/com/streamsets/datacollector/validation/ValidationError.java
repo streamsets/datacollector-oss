@@ -113,6 +113,9 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0104("Stage has open event streams"),
   VALIDATION_0105("Invalid pipeline lifecycle specification: {}"),
   VALIDATION_0106("Pipeline lifecycle events are not supported in mode: {}"),
+
+  // Service related validations
+  VALIDATION_0200("Invalid services declaration, expected definition for '{}', but got '{}'"),
   ;
 
   private final String msg;

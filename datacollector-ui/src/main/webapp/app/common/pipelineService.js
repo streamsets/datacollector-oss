@@ -57,6 +57,7 @@ angular.module('dataCollectorApp.common')
             self.pipelineConfigDefinition = definitions.pipeline[0];
             self.pipelineRulesConfigDefinition = definitions.pipelineRules[0];
             self.stageDefinitions = definitions.stages;
+            self.serviceDefinitions = definitions.services;
             self.elCatalog = definitions.elCatalog;
 
             //General Rules
@@ -177,6 +178,29 @@ angular.module('dataCollectorApp.common')
       return self.stageDefinitions;
     };
 
+    /**
+     * Returns Service Definitions
+     *
+     * @returns {*|serviceDefinitions}
+     */
+    this.getServiceDefinitions = function() {
+      return self.serviceDefinitions;
+    };
+
+    /**
+     * Returns Service Definition for given service
+     *
+     * @returns {*|serviceDefinition}
+     */
+    this.getServiceDefinition = function(serviceName) {
+      var serviceDef = null;
+      angular.forEach(self.getServiceDefinitions(), function(serviceDefinition) {
+        if (serviceDefinition.provides == serviceName) {
+          serviceDef = serviceDefinition;
+        }
+      });
+      return serviceDef;
+    };
     /**
      * Returns General Rules EL Metadata
      *
@@ -660,6 +684,26 @@ angular.module('dataCollectorApp.common')
 
         stageInstance.configuration = configuration;
       }
+
+      // Initialize structure for all dependent services
+      angular.forEach(stage.services, function(serviceDependency) {
+        // Find service definition for this particular service
+        var serviceDef = self.getServiceDefinition(serviceDependency.service);
+
+        // Crate service instance
+        var serviceInstance = {};
+        serviceInstance.service = serviceDef.provides;
+        serviceInstance.serviceVersion = serviceDef.version;
+        serviceInstance.configuration = [];
+        angular.forEach(serviceDef.configDefinitions, function(configDefinition) {
+          // We're passing null for stageInstance as that should be used only for calculating output lane
+          // name, which is operation that does not make sense for service.
+          serviceInstance.configuration.push(self.setDefaultValueForConfig(configDefinition, null));
+        });
+
+        // And finally push it to the stage definition
+        stageInstance.services.push(serviceInstance);
+      });
 
       return stageInstance;
     };
