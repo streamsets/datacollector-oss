@@ -18,6 +18,10 @@ package com.streamsets.pipeline.stage.origin.kafka;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.lineage.EndPointType;
+import com.streamsets.pipeline.api.lineage.LineageEvent;
+import com.streamsets.pipeline.api.lineage.LineageEventType;
+import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +39,7 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     if (issues.isEmpty()) {
-      if(getContext().isPreview()) {
+      if (getContext().isPreview()) {
         //set fixed batch duration time of 1 second for preview.
         conf.maxWaitTime = 1000;
       }
@@ -46,6 +50,12 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
         issues.add(getContext().createConfigIssue(null, null, ex.getErrorCode(), ex.getParams()));
       }
     }
+    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
+    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, conf.topic);
+    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.consumerGroup);
+    getContext().publishLineageEvent(event);
+
     return issues;
   }
 
