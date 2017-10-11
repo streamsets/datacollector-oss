@@ -31,6 +31,8 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.lib.util.JsonUtil;
+import org.mule.tools.soql.SOQLParserHelper;
+import org.mule.tools.soql.exception.SOQLParsingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,12 +55,10 @@ import java.util.regex.Pattern;
 public class ForceUtils {
   private static final Logger LOG = LoggerFactory.getLogger(ForceUtils.class);
 
-  private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
   private static final String WILDCARD_SELECT_QUERY = "^SELECT\\s*\\*\\s*FROM\\s*.*";
   public static final Pattern WILDCARD_SELECT_PATTERN = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
   public static final int METADATA_DEPTH = 5;
   private static final int MAX_METADATA_TYPES = 100;
-  private static Pattern sObjectFromQueryPattern = Pattern.compile(SOBJECT_TYPE_FROM_QUERY, Pattern.DOTALL);
   private static SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
   private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
   private static TimeZone TZ = TimeZone.getTimeZone("GMT");
@@ -363,12 +363,13 @@ public class ForceUtils {
     return metadataMap;
   }
 
-  public static String getSobjectTypeFromQuery(String query) {
-    Matcher m = sObjectFromQueryPattern.matcher(query.toUpperCase());
-    if (m.matches()) {
-      return m.group(1).toLowerCase();
+  public static String getSobjectTypeFromQuery(String query) throws StageException {
+    try {
+      return SOQLParserHelper.createSOQLData(query).getFromClause().getMainObjectSpec().getObjectName();
+    } catch (SOQLParsingException e) {
+      LOG.error("Error parsing SOQL query {}", query, e);
+      throw new StageException(Errors.FORCE_27, query, e);
     }
-    return null;
   }
 
   public static String expandWildcard(

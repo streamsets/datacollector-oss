@@ -186,9 +186,10 @@ public class ForceSource extends BaseSource {
         LOG.info("Successfully authenticated as {}", conf.username);
 
         if (conf.queryExistingData) {
-          sobjectType = ForceUtils.getSobjectTypeFromQuery(conf.soqlQuery);
-          LOG.info("Found sobject type {}", sobjectType);
-          if (sobjectType == null) {
+          try {
+            sobjectType = ForceUtils.getSobjectTypeFromQuery(conf.soqlQuery);
+            LOG.info("Found sobject type {}", sobjectType);
+          } catch (StageException e) {
             issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
                 ForceConfigBean.CONF_PREFIX + "soqlQuery",
                 Errors.FORCE_00,
@@ -222,9 +223,10 @@ public class ForceSource extends BaseSource {
           );
         } else if (null == sobjectType) {
           String soqlQuery = (String)qr.getRecords()[0].getField("Query");
-          sobjectType = ForceUtils.getSobjectTypeFromQuery(soqlQuery);
-          LOG.info("Found sobject type {}", sobjectType);
-          if (sobjectType == null) {
+          try {
+            sobjectType = ForceUtils.getSobjectTypeFromQuery(soqlQuery);
+            LOG.info("Found sobject type {}", sobjectType);
+          } catch (StageException e) {
             issues.add(getContext().createConfigIssue(Groups.SUBSCRIBE.name(),
                 ForceConfigBean.CONF_PREFIX + "pushTopic",
                 Errors.FORCE_00,

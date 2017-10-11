@@ -43,6 +43,21 @@
     <jetty.version>9.3.19.v20170502</jetty.version>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>mulesoft-releases</id>
+      <name>MuleSoft Releases Repository</name>
+      <url>http://repository.mulesoft.org/releases/</url>
+      <layout>default</layout>
+    </repository>
+    <repository>
+      <id>mulesoft-snapshots</id>
+      <name>MuleSoft Snapshots Repository</name>
+      <url>http://repository.mulesoft.org/snapshots/</url>
+      <layout>default</layout>
+    </repository>
+  </repositories>
+
   <dependencies>
     <!-- Common StreamSets Dependencies -->
     <dependency>
@@ -111,6 +126,11 @@
       <groupId>com.force.api</groupId>
       <artifactId>force-partner-api</artifactId>
       <version>${sfwsc.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mule.tools</groupId>
+      <artifactId>salesforce-soql-parser</artifactId>
+      <version>2.0</version>
     </dependency>
 
     <!-- Test Dependencies -->
