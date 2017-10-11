@@ -137,17 +137,18 @@ public abstract class BaseHiveIT {
     hiveConf.set(HiveConf.ConfVars.METASTORECONNECTURLKEY.varname, "jdbc:derby:;databaseName=target/metastore_db;create=true");
     hiveConf.set(HiveConf.ConfVars.METASTOREURIS.varname, Utils.format("thrift://{}:{}", HOSTNAME, METASTORE_PORT));
     hiveConf.set(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_BIND_HOST.varname, "localhost");
+    hiveConf.set("org.jpox.autoCreateSchema", "true");
+    hiveConf.set("datanucleus.schema.autoCreateTables", "true");
+    hiveConf.set("hive.metastore.schema.verification", "false");
     hiveConf.setInt(HiveConf.ConfVars.HIVE_SERVER2_THRIFT_PORT.varname, HIVE_SERVER_PORT);
 
     // Hive metastore
-    Callable<Void> metastoreService = new Callable<Void>() {
-      public Void call() throws Exception {
-        try {
-          HiveMetaStore.startMetaStore(METASTORE_PORT, ShimLoader.getHadoopThriftAuthBridge(), hiveConf);
-          while(true);
-        } catch (Throwable e) {
-          throw new Exception("Error starting metastore", e);
-        }
+    Callable<Void> metastoreService = () -> {
+      try {
+        HiveMetaStore.startMetaStore(METASTORE_PORT, ShimLoader.getHadoopThriftAuthBridge(), hiveConf);
+        while(true);
+      } catch (Throwable e) {
+        throw new Exception("Error starting metastore", e);
       }
     };
     hiveMetastoreExecutor.submit(metastoreService);
