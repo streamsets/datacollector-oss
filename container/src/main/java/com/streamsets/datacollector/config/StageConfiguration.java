@@ -35,6 +35,7 @@ public class StageConfiguration implements Serializable {
   private final List<Config> configuration;
   private final Map<String, Config> configurationMap;
   private final Map<String, Object> uiInfo;
+  private List<ServiceConfiguration> services;
 
   //wiring with other components
   private final List<String> inputLanes;
@@ -47,14 +48,24 @@ public class StageConfiguration implements Serializable {
   // Will be set to true if this stage is in the event path
   private boolean inEventPath;
 
-  public StageConfiguration(String instanceName, String library, String stageName, int stageVersion,
-      List<Config> configuration, Map<String, Object> uiInfo, List<String> inputLanes,
-      List<String> outputLanes, List<String> eventLanes) {
+  public StageConfiguration(
+      String instanceName,
+      String library,
+      String stageName,
+      int stageVersion,
+      List<Config> configuration,
+      Map<String, Object> uiInfo,
+      List<ServiceConfiguration> services,
+      List<String> inputLanes,
+      List<String> outputLanes,
+      List<String> eventLanes
+  ) {
     this.instanceName = instanceName;
     this.library = library;
     this.stageName = stageName;
     this.stageVersion = stageVersion;
     this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<String, Object>();
+    this.services = services;
     this.inputLanes = inputLanes;
     this.outputLanes = outputLanes;
     this.eventLanes = eventLanes;
@@ -98,6 +109,14 @@ public class StageConfiguration implements Serializable {
 
   public Map<String, Object> getUiInfo() {
     return uiInfo;
+  }
+
+  public void setServices(List<ServiceConfiguration> services) {
+    this.services = services;
+  }
+
+  public List<ServiceConfiguration> getServices() {
+    return services;
   }
 
   public List<String> getInputLanes() {

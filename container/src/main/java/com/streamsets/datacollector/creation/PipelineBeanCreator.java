@@ -438,10 +438,11 @@ public abstract class PipelineBeanCreator {
         "pipeline",
         pipelineConf.getVersion(),
         pipelineConf.getConfiguration(),
-        Collections.EMPTY_MAP,
-        Collections.EMPTY_LIST,
-        Collections.EMPTY_LIST,
-        Collections.EMPTY_LIST
+        Collections.emptyMap(),
+        Collections.emptyList(),
+        Collections.emptyList(),
+        Collections.emptyList(),
+        Collections.emptyList()
     );
   }
 
@@ -453,11 +454,12 @@ public abstract class PipelineBeanCreator {
         "none",
         "pipeline",
         ruleDefinitions.getVersion(),
-        ruleDefinitions.getConfiguration() != null ? ruleDefinitions.getConfiguration() : Collections.EMPTY_LIST,
-        Collections.EMPTY_MAP,
-        Collections.EMPTY_LIST,
-        Collections.EMPTY_LIST,
-        Collections.EMPTY_LIST
+        ruleDefinitions.getConfiguration() != null ? ruleDefinitions.getConfiguration() : Collections.emptyList(),
+        Collections.emptyMap(),
+        Collections.emptyList(),
+        Collections.emptyList(),
+        Collections.emptyList(),
+        Collections.emptyList()
     );
   }
 

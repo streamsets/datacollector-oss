@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.runner.preview;
 
+import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.pipeline.api.Config;
 
@@ -30,6 +31,7 @@ public class StageConfigurationBuilder {
   private int stageVersion = 1;
   private List<Config> configuration = Collections.emptyList();
   private Map<String, Object> uiInfo = null;
+  private List<ServiceConfiguration> services = Collections.emptyList();
   private List<String> inputLanes = Collections.emptyList();
   private List<String> outputLanes = Collections.emptyList();
   private List<String> eventLanes = Collections.emptyList();
@@ -54,6 +56,15 @@ public class StageConfigurationBuilder {
     return this;
   }
 
+  public StageConfigurationBuilder withServices(ServiceConfiguration ...services) {
+    this.services = Arrays.asList(services);
+    return this;
+  }
+
+  public StageConfigurationBuilder withServices(List<ServiceConfiguration> services) {
+    this.services = services;
+    return this;
+  }
   public StageConfigurationBuilder withInputLanes(String ...lanes) {
     this.inputLanes = Arrays.asList(lanes);
     return this;
@@ -92,6 +103,7 @@ public class StageConfigurationBuilder {
       stageVersion,
       configuration,
       uiInfo,
+      services,
       inputLanes,
       outputLanes,
       eventLanes

@@ -30,6 +30,7 @@ import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
@@ -1286,6 +1287,22 @@ public class BeanHelper {
   public static List<ServiceDependencyDefinitionJson> wrapServiceDependencyDefinitions(List<ServiceDependencyDefinition> services) {
     return services.stream()
       .map(ServiceDependencyDefinitionJson::new)
+      .collect(Collectors.toList());
+  }
+
+  public static List<ServiceConfigurationJson> wrapServiceConfiguration(List<ServiceConfiguration> services) {
+    return services.stream()
+      .map(ServiceConfigurationJson::new)
+      .collect(Collectors.toList());
+  }
+
+  public static List<ServiceConfiguration> unwrapServiceConfiguration(List<ServiceConfigurationJson> services) {
+    if(services == null) {
+      return null;
+    }
+
+    return services.stream()
+      .map(ServiceConfigurationJson::getServiceConfiguration)
       .collect(Collectors.toList());
   }
 }

@@ -88,6 +88,9 @@ public class PipelineConfigurationUpgrader {
         // fall through
       case 3:
         upgradeSchema3to4(pipelineConf, issues);
+        // fall through
+      case 4:
+        upgradeSchema4to5(pipelineConf, issues);
         break;
       default:
         issues.add(IssueCreator.getPipeline().create(ValidationError.VALIDATION_0000, pipelineConf.getSchemaVersion()));
@@ -124,6 +127,34 @@ public class PipelineConfigurationUpgrader {
     // * stopEventStages
     pipelineConf.setStartEventStages(Collections.emptyList());
     pipelineConf.setStopEventStages(Collections.emptyList());
+  }
+
+  private void upgradeSchema4to5(PipelineConfiguration pipelineConf, List<Issue> issues) {
+    // Each stage have now a new field called "services" that we will by default fill with empty array
+
+    // Normal stages
+    for(StageConfiguration stage: pipelineConf.getStages()) {
+      convertNullServiceToEmptyList(stage);
+    }
+
+    // Start event stages
+    for(StageConfiguration stage : pipelineConf.getStartEventStages()) {
+      convertNullServiceToEmptyList(stage);
+    }
+
+    // Stop event stages
+    for(StageConfiguration stage : pipelineConf.getStopEventStages()) {
+      convertNullServiceToEmptyList(stage);
+    }
+    // Extra stages
+    convertNullServiceToEmptyList(pipelineConf.getErrorStage());
+    convertNullServiceToEmptyList(pipelineConf.getStatsAggregatorStage());
+  }
+
+   private void convertNullServiceToEmptyList(StageConfiguration stage) {
+    if(stage != null && stage.getServices() == null) {
+      stage.setServices(Collections.emptyList());
+    }
   }
 
   private void convertEventLaneNullToEmptyList(StageConfiguration stage) {

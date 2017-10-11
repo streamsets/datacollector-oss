@@ -42,11 +42,18 @@ public class PreviewPipelineBuilder {
 
   @SuppressWarnings("unchecked")
   private StageConfiguration createPlugStage(List<String> lanes) {
-    StageConfiguration stageConf = new StageConfiguration(PreviewStageLibraryTask.NAME + UUID.randomUUID().toString(),
-                                                          PreviewStageLibraryTask.LIBRARY, PreviewStageLibraryTask.NAME,
-                                                          PreviewStageLibraryTask.VERSION, Collections.EMPTY_LIST,
-                                                          Collections.EMPTY_MAP, lanes, Collections.EMPTY_LIST,
-                                                          Collections.EMPTY_LIST);
+    StageConfiguration stageConf = new StageConfiguration(
+      PreviewStageLibraryTask.NAME + UUID.randomUUID().toString(),
+      PreviewStageLibraryTask.LIBRARY,
+      PreviewStageLibraryTask.NAME,
+      PreviewStageLibraryTask.VERSION,
+      Collections.emptyList(),
+      Collections.emptyMap(),
+      Collections.emptyList(),
+      lanes,
+      Collections.emptyList(),
+      Collections.emptyList()
+    );
     stageConf.setSystemGenerated();
     return stageConf;
   }

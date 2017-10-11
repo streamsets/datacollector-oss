@@ -788,12 +788,18 @@ public class TestPipelineBeanCreator {
     Mockito.when(libraryDef.getClassLoader()).thenReturn(cl);
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
 
-    StageConfiguration stageConf =
-        new StageConfiguration("i", "l", "n", 1, Collections.<Config>emptyList(),
-                               Collections.<String, Object>emptyMap(),
-                               Collections.<String>emptyList(),
-                               Collections.<String>emptyList(),
-                               Collections.<String>emptyList());
+    StageConfiguration stageConf = new StageConfiguration(
+      "i",
+      "l",
+      "n",
+      1,
+      Collections.<Config>emptyList(),
+      Collections.emptyMap(),
+      Collections.emptyList(),
+      Collections.emptyList(),
+      Collections.emptyList(),
+      Collections.emptyList()
+    );
 
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", 1);
     List<Issue> issues = new ArrayList<>();
