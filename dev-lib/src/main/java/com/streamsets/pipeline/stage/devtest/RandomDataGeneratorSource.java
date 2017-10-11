@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.lineage.EndPointType;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
+import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +42,8 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -71,6 +74,7 @@ public class RandomDataGeneratorSource extends BasePushSource {
 
   private final int EVENT_VERSION = 1;
 
+  private final List<String> tzValues = new TimeZoneChooserValues().getValues();
 
   private final Random random = new Random();
 
@@ -292,6 +296,8 @@ public class RandomDataGeneratorSource extends BasePushSource {
         return Field.create(Field.Type.BYTE_ARRAY, "StreamSets Inc, San Francisco".getBytes(StandardCharsets.UTF_8));
       case LONG_SEQUENCE:
         return Field.create(Field.Type.LONG, counter++);
+      case ZONED_DATETIME:
+        return Field.create(Field.Type.ZONED_DATETIME, getRandomZonedDateTime());
     }
     return null;
   }
@@ -329,6 +335,19 @@ public class RandomDataGeneratorSource extends BasePushSource {
       randBetween(0, gc.getActualMaximum(gc.SECOND))
     );
     return gc.getTime();
+  }
+
+  public ZonedDateTime getRandomZonedDateTime() {
+    String zoneId = tzValues.get(randBetween(0, tzValues.size()));
+    return ZonedDateTime.of(
+        randBetween(1990, 2020),
+        randBetween(1, 12),
+        randBetween(1, 28),
+        randBetween(0, 23),
+        randBetween(0, 60),
+        0,
+        0,
+        ZoneId.of(zoneId));
   }
 
   public static int randBetween(int start, int end) {
@@ -381,6 +400,7 @@ public class RandomDataGeneratorSource extends BasePushSource {
     DOUBLE,
     DATE,
     DATETIME,
+    ZONED_DATETIME,
     TIME,
     BOOLEAN,
     DECIMAL,

@@ -24,6 +24,7 @@ import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,9 +61,14 @@ public class TestRandomDataGenerator {
     decimalData.scale = 2;
     decimalData.precision = 5;
 
+    RandomDataGeneratorSource.DataGeneratorConfig zonedDateTimeData =
+        new RandomDataGeneratorSource.DataGeneratorConfig();
+    zonedDateTimeData.field = "zonedDateTime";
+    zonedDateTimeData.type = RandomDataGeneratorSource.Type.ZONED_DATETIME;
 
     final PushSourceRunner runner = new PushSourceRunner.Builder(RandomDataGeneratorSource.class)
-      .addConfiguration("dataGenConfigs", Arrays.asList(stringData, dateData, doubleData, longData, intData, decimalData))
+      .addConfiguration("dataGenConfigs",
+          Arrays.asList(stringData, dateData, doubleData, longData, intData, decimalData, zonedDateTimeData))
       .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addConfiguration("delay", 0)
       .addConfiguration("batchSize", 1000)
@@ -96,6 +102,9 @@ public class TestRandomDataGenerator {
       Assert.assertEquals(Field.Type.DECIMAL, decimalField.getType());
       Assert.assertEquals("5", decimalField.getAttribute(HeaderAttributeConstants.ATTR_PRECISION));
       Assert.assertEquals("2", decimalField.getAttribute(HeaderAttributeConstants.ATTR_SCALE));
+
+      Assert.assertEquals(Field.Type.ZONED_DATETIME, record.get("/zonedDateTime").getType());
+      Assert.assertTrue(record.get("/zonedDateTime").getValue() instanceof ZonedDateTime);
     } finally {
       runner.runDestroy();
     }
