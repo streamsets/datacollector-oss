@@ -63,7 +63,7 @@ public class ElUtil {
         }
         if (configDefinition.getType() == ConfigDef.Type.CREDENTIAL) {
           value = elEvaluator.evaluate(new ELVariables(constants), (String) value, Object.class);
-          if (value instanceof String) {
+          if (value == null || value instanceof String) {
             value = new ClearCredentialValue((String)value);
           } else if (!(value instanceof CredentialValue)) {
             throw new ELEvalException(
