@@ -624,9 +624,7 @@ public final class TableContextUtil {
             null : Pattern.compile(tableConfigBean.tableExclusionPattern);
 
 
-
-    // CDC table name convention
-    final String tablePattern = tableConfigBean.schema + "_" + tableConfigBean.tablePattern + "_CT";
+    final String tablePattern = tableConfigBean.capture_instance + "_CT";
     final String cdcSchema = "cdc";
     try (ResultSet rs = JdbcUtil.getTableMetadata(connection, null, cdcSchema, tablePattern, false)) {
       while (rs.next()) {

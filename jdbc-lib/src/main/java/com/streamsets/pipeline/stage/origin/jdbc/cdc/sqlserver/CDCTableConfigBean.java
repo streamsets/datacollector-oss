@@ -19,25 +19,16 @@ import com.streamsets.pipeline.api.ConfigDef;
 
 public class CDCTableConfigBean {
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Schema",
-      description = "Schema Name",
-      displayPosition = 20,
-      group = "TABLE"
-  )
-  public String schema;
-
-  @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Table Name Pattern",
-      description = "Pattern of the table names to read. Use a SQL like syntax.",
-      displayPosition = 30,
-      defaultValue = "%",
+      label = "Capture Instance Name",
+      description = "If capture instance is not specified when enabling CDC tables, " +
+          "the default value for Capture Instance Name is <schema>_<table>",
+      displayPosition =  10,
+      defaultValue = "dbo_%",
       group = "TABLE"
   )
-  public String tablePattern;
+  public String capture_instance;
 
   @ConfigDef(
       required = false,

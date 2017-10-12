@@ -25,11 +25,12 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "SQL Server CDC Client",
     description = "Origin that an read change events from an MS SQL Server Database",
     icon = "sql-server-multithreaded.png",
     resetOffset = true,
+    upgrader = SQLServerCDCSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/SQLServerCDC.html#task_nsg_fxc_v1b"
 )
 @GenerateResourceBundle
