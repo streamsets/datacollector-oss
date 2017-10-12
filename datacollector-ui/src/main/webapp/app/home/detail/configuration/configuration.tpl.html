@@ -14,7 +14,7 @@
     </tab>
 
     <tab ng-repeat="groupNameToLabelMap in configGroupTabs"
-         disable="!isGroupVisible(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupNameToLabelMap.name)"
+         disable="!isStageGroupVisible(detailPaneConfig, detailPaneConfigDefn, detailPaneServices, groupNameToLabelMap.name)"
          active="groupNameToLabelMap.active"
          select="onTabSelect(groupNameToLabelMap)">
       <tab-heading>
@@ -35,6 +35,20 @@
 
             <ng-include ng-if="selectedType !== pipelineConstant.LINK"
                     src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
+          </div>
+          <div
+              ng-repeat="service in detailPaneServices"
+              ng-if="detailPaneServices">
+            {{groupNameTolabelMap}}
+            <div class="form-group "
+                 ng-class="{'has-error': getConfigurationIssues(service.config, configDefinition).length > 0}"
+                 ng-repeat="configDefinition in service.definition.configDefinitions | filter: {group: groupNameToLabelMap.name} | orderBy: 'displayPosition'"
+                 ng-if="(verifyDependsOnMap(service.config, configDefinition)) && configDefinition.group === groupNameToLabelMap.name"
+                 ng-init="configIndex = getConfigIndex(service.config, configDefinition); detailPaneConfig = service.config">
+
+              <ng-include ng-if="selectedType !== pipelineConstant.LINK"
+                      src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
+            </div>
           </div>
         </form>
       </div>

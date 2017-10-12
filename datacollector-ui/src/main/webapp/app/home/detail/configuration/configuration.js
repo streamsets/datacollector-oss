@@ -514,7 +514,7 @@ angular
 
 
       /**
-       * Returns filtered & sorted Group Configurations.
+       * Returns true if at least one config is visible in given group.
        *
        * @param stageInstance
        * @param configDefinitions
@@ -534,6 +534,29 @@ angular
         return visible;
       },
 
+      /**
+       * Returns true if at least one config is visible in given group. This will calculate
+       * visibility in the main stage configuration and all declared services.
+       *
+       * @param stageInstance
+       * @param stageDefinition
+       * @param groupName
+       * @returns {*}
+       */
+      isStageGroupVisible: function(stageInstance, stageDefinition, services, groupName) {
+        // First see if this tab is visible in normal stage configurations
+        if(this.isGroupVisible(stageInstance, stageDefinition.configDefinitions, groupName)) {
+          return true;
+        }
+
+        var visible = false;
+        angular.forEach(services, function(service) {
+          if($scope.isGroupVisible(service.config, service.definition.configDefinitions, groupName)) {
+            visible = true;
+          }
+        });
+        return visible;
+      },
 
       /**
        * Returns true if there is any configuration issue for given Stage Instance name and configuration group.
@@ -682,6 +705,16 @@ angular
         $scope.showGroups = (groupDefn.groupNameToLabelMapList.length > 0);
 
         $scope.configGroupTabs = angular.copy(groupDefn.groupNameToLabelMapList);
+        // This code creates groups both for stages and general pipeline configuration. Since only
+        // stages have services, we need to add their groups only selectively.
+        if ('services' in $scope.detailPaneConfigDefn) {
+          angular.forEach($scope.detailPaneConfigDefn.services, function(serviceDependency) {
+            let serviceDef = pipelineService.getServiceDefinition(serviceDependency.service);
+            angular.forEach(serviceDef.configGroupDefinition.groupNameToLabelMapList, function(item) {
+              $scope.configGroupTabs.push(item);
+            });
+          });
+        }
 
         // handle stats group for Pipeline
         if ($scope.selectedType === pipelineConstant.PIPELINE &&

@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.generator;
+package com.streamsets.service.generator;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
 public enum Groups implements Label {
-  GENERATOR("Generator"),
+  DATA_FORMAT("Data Format"),
   ;
 
   private final String label;
@@ -33,5 +31,4 @@ public enum Groups implements Label {
   public String getLabel() {
     return label;
   }
-
 }

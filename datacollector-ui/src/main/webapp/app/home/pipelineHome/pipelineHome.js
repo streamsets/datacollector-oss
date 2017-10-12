@@ -1427,6 +1427,15 @@ angular
           }
         });
 
+        // Crate list of services where each item have both the definition and actual configuration values
+        $scope.detailPaneServices = [];
+        _.each($scope.detailPaneConfig.services, function(serviceConfig) {
+          let service = {};
+          service.definition = pipelineService.getServiceDefinition(serviceConfig.service);
+          service.config = serviceConfig;
+          $scope.detailPaneServices.push(service);
+        });
+
         $scope.stageLibraryList = _.sortBy(stageLibraryList, 'libraryLabel');
 
         if (!options.detailTabName) {
