@@ -118,7 +118,7 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   }
 
   @Override
-  public ServiceDefinition getServiceDefinition(Class serviceInterface) {
+  public ServiceDefinition getServiceDefinition(Class serviceInterface, boolean forExecution) {
     return null;
   }
 

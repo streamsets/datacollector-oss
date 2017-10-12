@@ -686,7 +686,7 @@ public class MockStages {
     }
 
     @Override
-    public ServiceDefinition getServiceDefinition(Class serviceInterface) {
+    public ServiceDefinition getServiceDefinition(Class serviceInterface, boolean forExecution) {
       return null;
     }
 

@@ -36,7 +36,7 @@ import java.util.Set;
  * Captures the configuration options for a {@link com.streamsets.pipeline.api.Stage}.
  *
  */
-public class StageDefinition {
+public class StageDefinition implements PrivateClassLoaderDefinition {
   private final StageLibraryDefinition libraryDefinition;
   private final boolean privateClassLoader;
   private final ClassLoader classLoader;
@@ -281,10 +281,12 @@ public class StageDefinition {
     return libraryDefinition.getLabel();
   }
 
+  @Override
   public ClassLoader getStageClassLoader() {
     return classLoader;
   }
 
+  @Override
   public boolean isPrivateClassLoader() {
     return privateClassLoader;
   }
@@ -297,6 +299,7 @@ public class StageDefinition {
     return klass;
   }
 
+  @Override
   public String getName() {
     return name;
   }

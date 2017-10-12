@@ -29,6 +29,7 @@ import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineLifecycleStageChooserValues;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
+import com.streamsets.datacollector.config.PrivateClassLoaderDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
@@ -540,8 +541,14 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   }
 
   @Override
-  public ServiceDefinition getServiceDefinition(Class serviceInterface) {
-    return serviceMap.get(serviceInterface);
+  public ServiceDefinition getServiceDefinition(Class serviceInterface, boolean forExecution) {
+    ServiceDefinition serviceDefinition = serviceMap.get(serviceInterface);
+
+    if(forExecution && serviceDefinition.isPrivateClassLoader()) {
+      serviceDefinition = new ServiceDefinition(serviceDefinition, getStageClassLoader(serviceDefinition));
+    }
+
+    return serviceDefinition;
   }
 
   @Override
@@ -564,18 +571,18 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     return stageNameAliases;
   }
 
-  ClassLoader getStageClassLoader(StageDefinition stageDefinition) {
+  ClassLoader getStageClassLoader(PrivateClassLoaderDefinition stageDefinition) {
     ClassLoader cl = stageDefinition.getStageClassLoader();
     if (stageDefinition.isPrivateClassLoader()) {
       String key = getClassLoaderKey(cl);
       synchronized (privateClassLoaderPool) {
         try {
           cl = privateClassLoaderPool.borrowObject(key);
-          LOG.debug("Got a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}'",
+          LOG.debug("Got a private ClassLoader for '{}', for '{}', active private ClassLoaders='{}'",
               key, stageDefinition.getName(), privateClassLoaderPool.getNumActive());
         } catch (Exception ex) {
           String msg = Utils.format(
-              "Could not get a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}': {}",
+              "Could not get a private ClassLoader for '{}', for '{}', active private ClassLoaders='{}': {}",
               key, stageDefinition.getName(), privateClassLoaderPool.getNumActive(), ex.toString());
           LOG.warn(msg, ex);
           throw new RuntimeException(msg, ex);

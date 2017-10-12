@@ -53,7 +53,7 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   public List<ServiceDefinition> getServiceDefinitions();
 
-  public ServiceDefinition getServiceDefinition(Class serviceInterface);
+  public ServiceDefinition getServiceDefinition(Class serviceInterface, boolean forExecution);
 
   public StageDefinition getStage(String library, String name, boolean forExecution);
 

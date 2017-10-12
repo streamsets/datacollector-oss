@@ -36,7 +36,7 @@ public class ServiceDefinitionJson {
   }
 
   public boolean isPrivateClassLoader() {
-    return serviceDefinition.isPrivateClassloader();
+    return serviceDefinition.isPrivateClassLoader();
   }
 
   public String getClassName() {

@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Encapsulates information provided in ServiceDef and information that is required for framework.
  */
-public class ServiceDefinition {
+public class ServiceDefinition implements PrivateClassLoaderDefinition {
   private final StageLibraryDefinition libraryDefinition;
   private final Class<? extends Service> klass;
   private final ClassLoader classLoader;
@@ -62,6 +62,23 @@ public class ServiceDefinition {
     this.upgrader = upgrader;
   }
 
+  public ServiceDefinition(
+    ServiceDefinition def,
+    ClassLoader classLoader
+  ) {
+    this.libraryDefinition = def.libraryDefinition;
+    this.klass = def.klass;
+    this.provides = def.provides;
+    this.classLoader = classLoader;
+    this.version = def.version;
+    this.label = def.label;
+    this.description = def.description;
+    this.groupDefinition = def.groupDefinition;
+    this.configDefinitions = def.configDefinitions;
+    this.privateClassloader = def.privateClassloader;
+    this.upgrader = def.upgrader;
+  }
+
   public StageLibraryDefinition getLibraryDefinition() {
     return libraryDefinition;
   }
@@ -86,8 +103,19 @@ public class ServiceDefinition {
     return version;
   }
 
-  public ClassLoader getClassLoader() {
+  @Override
+  public String getName() {
+    return klass.getName();
+  }
+
+  @Override
+  public ClassLoader getStageClassLoader() {
     return classLoader;
+  }
+
+  @Override
+  public boolean isPrivateClassLoader() {
+    return privateClassloader;
   }
 
   public List<ConfigDefinition> getConfigDefinitions() {
@@ -103,11 +131,8 @@ public class ServiceDefinition {
     return description;
   }
 
-  public boolean isPrivateClassloader() {
-    return privateClassloader;
-  }
-
   public StageUpgrader getUpgrader() {
     return upgrader;
   }
+
 }

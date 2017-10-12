@@ -98,7 +98,7 @@ public class TestServiceDefinitionExtractor {
 
     // General information
     Assert.assertNotNull(def);
-    Assert.assertEquals(getClass().getClassLoader(), def.getClassLoader());
+    Assert.assertEquals(getClass().getClassLoader(), def.getStageClassLoader());
     Assert.assertEquals(PrintMoneyServiceImpl.class, def.getKlass());
     Assert.assertEquals(PrintMoneyService.class, def.getProvides());
     Assert.assertEquals("Rich 2.0", def.getLabel());
