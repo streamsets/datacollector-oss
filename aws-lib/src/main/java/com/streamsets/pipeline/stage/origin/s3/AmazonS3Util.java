@@ -31,7 +31,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
-
+import com.streamsets.pipeline.lib.util.AntPathMatcher;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
