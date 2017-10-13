@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2017 StreamSets Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xsq_1wt_mbb">
+ <title>Partition Strategy</title>
+ <shortdesc>The partition strategy determines how to write statistics to MapR Streams partitions.
+        You can use a partition strategy to balance the work load or to write data
+        semantically.</shortdesc>
+ <conbody>
+        <p>The pipeline can use one of the following partition strategies:</p>
+        <p>
+            <draft-comment author="alisontaylor">This topic basically copied to MapR Streams
+                Producer. Make sure changes here go there. </draft-comment>
+        </p>
+        <p>
+            <dl>
+                <dlentry>
+                    <dt>Round-Robin</dt>
+                    <dd>Writes each record to a different partition using a cyclical order. Use for
+                        load balancing.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Random</dt>
+                    <dd>Writes each record to a different partition using a random order. Use for
+                        load balancing.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Expression</dt>
+                    <dd>Writes each record to a partition based on the results of the partition
+                        expression. Use to perform semantic partitioning. </dd>
+                    <dd>When you configure the partition expression, define the expression to
+                        evaluate to the partition where you want each record written. The expression
+                        must return a numeric value. </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Default</dt>
+                    <dd>Writes each record using the default partition strategy that MapR Streams
+                        provides.</dd>
+                </dlentry>
+            </dl>
+        </p>
+ </conbody>
+</concept>

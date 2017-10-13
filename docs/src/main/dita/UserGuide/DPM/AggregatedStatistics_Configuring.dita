@@ -58,6 +58,10 @@
                             Streams. Use when the job runs on multiple <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             />s.</li>
+                        <li>Write to MapR Streams - Write the pipeline statistics to MapR Streams.
+                            Use when the job runs on multiple <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            />s.</li>
                     </ul>
                 </info>
             </step>
@@ -301,6 +305,61 @@
                                             configuration property, enter the exact property name
                                             and the value. The pipeline does not validate the
                                             property names or values.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To write statistics to MapR Streams, on the <uicontrol>Stats Aggregator - Write
+                        to MapR Streams</uicontrol> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_z2j_315_mbb">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>MapR Streams Properties</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Runtime Topic Resolution </entry>
+                                    <entry>Do not use at this time. </entry>
+                                </row>
+                                <row>
+                                    <entry>Topic</entry>
+                                    <entry>Topic to use. To avoid mixing statistics from different
+                                        jobs, use a unique topic name for each job.<p>You cannot
+                                            define an expression that evaluates to the topic name.
+                                        </p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPPartStrategy">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Partition Expression </entry>
+                                    <entry>Expression to use when using the expression partition
+                                            strategy.<p>Define the expression to evaluate to the
+                                            partition where you want statistics written. Partition
+                                            numbers start with 0.</p><p>Optionally, click
+                                                <uicontrol>Ctrl + Space Bar</uicontrol> for help
+                                            with creating the expression.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>MapR Streams Configuration</entry>
+                                    <entry>Additional configuration properties to use. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
+                                            <uicontrol>Add</uicontrol> icon and define the MapR
+                                        Streams property name and value.<p>Use the property names
+                                            and values as expected by MapR Streams. You can use MapR
+                                            Streams properties and the set of Kafka properties
+                                            supported by MapR Streams. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

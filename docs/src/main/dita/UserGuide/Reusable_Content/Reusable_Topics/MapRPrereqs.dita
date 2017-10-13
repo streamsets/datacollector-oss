@@ -70,7 +70,7 @@
         </table>
         <ol id="ol_llv_tfv_xz">
             <li id="SetUpCommand">Use the following command to set up
-                MapR:<codeblock>$SDC_DIST/bin/streamsets setup-mapr</codeblock></li>
+                MapR:<codeblock>$SDC_HOME/bin/streamsets setup-mapr</codeblock></li>
             <li id="Restart">Restart <ph conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
                 verify that the MapR origins and destinations appear in the stage library.</li>
         </ol>

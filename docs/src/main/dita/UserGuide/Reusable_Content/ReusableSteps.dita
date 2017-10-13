@@ -4885,12 +4885,14 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_dgb_pns_2v"/></xref>
                                     </entry>
-                                    <entry>Additional configuration properties to use. To add
-                                        properties, click <uicontrol>Add</uicontrol> and define the
-                                        property name and value. <p>Use the property names and
-                                            values as expected by MapR.</p><p>You can use MapR
-                                            Streams properties and set of Kafka properties supported
-                                            by MapR Streams. </p></entry>
+                                    <entry>Additional configuration properties to use. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
+                                            <uicontrol>Add</uicontrol> icon and define the MapR
+                                        Streams property name and value.<p>Use the property names
+                                            and values as expected by MapR.</p><p>You can use MapR
+                                            Streams properties and the set of Kafka properties
+                                            supported by MapR Streams. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

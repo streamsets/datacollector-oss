@@ -2763,6 +2763,12 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                   additional steps to enable <ph conref="#concept_vhs_5tz_xp/pName-long"/> to
                   process MapR data. For more information, see <xref
                         href="../Installation/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</p>
+            <draft-comment author="alisontaylor">MapRPrereq-Stats - Used in Write Statistics to MapR
+                  Streams.</draft-comment>
+            <p id="MapRPrereq-Stats">Before you can write statistics to MapR Streams, you must perform additional steps to
+                  enable <ph conref="#concept_vhs_5tz_xp/pName-long"/> to process MapR data. For
+                  more information, see <xref
+                        href="../Installation/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</p>
             <draft-comment author="alisontaylor">MapR-PrereqHiveStream - Use in Hive Streaming
                   destination for MapR library to make sure they configure SDC.</draft-comment>
             <p id="MapRPrereqHiveStream">Before you use the Hive Streaming destination with the MapR
@@ -3248,9 +3254,9 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             <draft-comment author="alisontaylor">Note used 2 times in Aggregated Statistics for
                   Pipelines in DPM chapter</draft-comment>
             <note type="important" id="AggStatsNote">For a production environment, use a Kafka
-                  cluster or Amazon Kinesis Streams to aggregate statistics. Using SDC RPC to
-                  aggregate statistics is not highly available and might cause the loss of some
-                  data. It should be used for development purposes only.</note>
+                  cluster, Amazon Kinesis Streams, or MapR Streams to aggregate statistics. Using
+                  SDC RPC to aggregate statistics is not highly available and might cause the loss
+                  of some data. It should be used for development purposes only.</note>
             <p>
                   <draft-comment author="Loretta">This ph-PermissionsDisabled is used in Permissions
                         overview and Config the Data Collector.</draft-comment>
