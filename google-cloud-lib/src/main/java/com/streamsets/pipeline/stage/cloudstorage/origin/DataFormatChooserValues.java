@@ -24,7 +24,8 @@ public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
         super(
             DataFormat.DELIMITED,
             DataFormat.JSON,
-            DataFormat.SDC_JSON
+            DataFormat.SDC_JSON,
+            DataFormat.WHOLE_FILE
         );
     }
 }

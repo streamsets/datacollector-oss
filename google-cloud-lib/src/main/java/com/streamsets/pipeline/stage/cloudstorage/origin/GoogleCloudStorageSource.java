@@ -27,28 +27,47 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.hashing.HashingUtil;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.util.AntPathMatcher;
 import com.streamsets.pipeline.stage.cloudstorage.lib.Errors;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.Channels;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class GoogleCloudStorageSource extends BaseSource {
-
   private static final Logger LOG = LoggerFactory.getLogger(GoogleCloudStorageSource.class);
+  private static final String OFFSET_DELIMITER = "::";
+  private static final String START_FILE_OFFSET = "0";
+  private static final String END_FILE_OFFSET = "-1";
+  private static final String OFFSET_FORMAT = "%d"+ OFFSET_DELIMITER + "%s" + OFFSET_DELIMITER + "%s";
+  private static final String BUCKET = "bucket";
+  private static final String FILE = "file";
+  private static final String SIZE = "size";
+
   private Storage storage;
   private GCSOriginConfig gcsOriginConfig;
   private DataParser parser;
   private AntPathMatcher antPathMatcher;
   private MinMaxPriorityQueue<Blob> minMaxPriorityQueue;
   private CredentialsProvider credentialsProvider;
+  private ELEval rateLimitElEval;
+  private ELVars rateLimitElVars;
 
-  public GoogleCloudStorageSource(GCSOriginConfig gcsOriginConfig) {
+  GoogleCloudStorageSource(GCSOriginConfig gcsOriginConfig) {
     this.gcsOriginConfig = gcsOriginConfig;
   }
 
@@ -59,64 +78,57 @@ public class GoogleCloudStorageSource extends BaseSource {
     minMaxPriorityQueue = MinMaxPriorityQueue.orderedBy((Blob o1, Blob o2) -> {
       int result = o1.getUpdateTime().compareTo(o2.getUpdateTime());
       if(result != 0) {
-        //same modified time. Use name to sort
         return result;
       }
+      //same modified time. Use name to sort
       return o1.getName().compareTo(o2.getName());
     }).maximumSize(gcsOriginConfig.maxResultQueueSize).create();
     antPathMatcher = new AntPathMatcher();
-    gcsOriginConfig.prefixPattern = gcsOriginConfig.commonPrefix + gcsOriginConfig.prefixPattern;
 
-    gcsOriginConfig.credentials.getCredentialsProvider(getContext(), issues).ifPresent(p -> credentialsProvider = p);
+    gcsOriginConfig.credentials.getCredentialsProvider(getContext(), issues)
+        .ifPresent(p -> credentialsProvider = p);
 
     try {
-      storage = StorageOptions.newBuilder().setCredentials(credentialsProvider.getCredentials()).build().getService();
+      storage = StorageOptions.newBuilder()
+          .setCredentials(credentialsProvider.getCredentials())
+          .build()
+          .getService();
     } catch (IOException e) {
-      getContext().reportError(Errors.GCS_01, e);
+      LOG.error("Error when initializing storage. Reason : {}", e);
+      issues.add(getContext().createConfigIssue(
+          Groups.CREDENTIALS.name(),
+          "gcsOriginConfig.credentials.credentialsProvider",
+          Errors.GCS_01,
+          e
+      ));
     }
+
+    rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());
+    rateLimitElVars = getContext().createELVars();
 
     return issues;
   }
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    maxBatchSize = gcsOriginConfig.basicConfig.maxBatchSize;
+    maxBatchSize = Math.min(maxBatchSize, gcsOriginConfig.basicConfig.maxBatchSize);
 
     long minTimestamp = 0;
     String blobId = "";
-    String fileOffset = "0";
-    Page<Blob> blobs;
+    String fileOffset = START_FILE_OFFSET;
 
-    if (Strings.isNullOrEmpty(lastSourceOffset)) {
-      // Get Min TimeStamp
-      blobs = storage.list(gcsOriginConfig.bucketTemplate,
-          Storage.BlobListOption.prefix(gcsOriginConfig.commonPrefix));
-
-      for (Blob blob : blobs.iterateAll()) {
-        if (blob.getSize() > 0 && antPathMatcher.match(gcsOriginConfig.prefixPattern, blob.getName())) {
-          minMaxPriorityQueue.add(blob);
-        }
-      }
-
-    } else {
+    if (!Strings.isNullOrEmpty(lastSourceOffset)) {
       minTimestamp = getMinTimestampFromOffset(lastSourceOffset);
       fileOffset = getFileOffsetFromOffset(lastSourceOffset);
       blobId = getBlobIdFromOffset(lastSourceOffset);
     }
 
-    if (minMaxPriorityQueue.size() == 0) {
-      blobs = storage.list(gcsOriginConfig.bucketTemplate,
-          Storage.BlobListOption.prefix(gcsOriginConfig.commonPrefix));
-
-      for (Blob blob : blobs.iterateAll()) {
-        if (blob.getSize() > 0 && blob.getUpdateTime() >= minTimestamp && antPathMatcher.match(gcsOriginConfig.prefixPattern, blob.getName())) {
-          minMaxPriorityQueue.add(blob);
-        }
-      }
+    if (minMaxPriorityQueue.isEmpty()) {
+      poolForFiles(minTimestamp);
     }
 
-    if (minMaxPriorityQueue.size() == 0) {
-      // Nore more data avaliable
+    if (minMaxPriorityQueue.isEmpty()) {
+      //No more data available -> TODO: SDC-7581
       return lastSourceOffset;
     }
 
@@ -128,11 +140,43 @@ public class GoogleCloudStorageSource extends BaseSource {
         return lastSourceOffset;
       }
 
-      fileOffset = "0";
-      parser = gcsOriginConfig.dataParserFormatConfig.getParserFactory().getParser(blob.getGeneratedId(),
-          Channels.newInputStream(blob.reader()), fileOffset);
-
+      fileOffset = START_FILE_OFFSET;
       blobId = blob.getGeneratedId();
+
+      if (gcsOriginConfig.dataFormat == DataFormat.WHOLE_FILE) {
+        GCSFileRef.Builder gcsFileRefBuilder = new GCSFileRef.Builder()
+            .bufferSize(gcsOriginConfig.dataParserFormatConfig.wholeFileMaxObjectLen)
+            .createMetrics(true)
+            .totalSizeInBytes(blob.getSize())
+            .rateLimit(
+                FileRefUtil.evaluateAndGetRateLimit(
+                    rateLimitElEval,
+                    rateLimitElVars, gcsOriginConfig.dataParserFormatConfig.rateLimit
+                )
+            )
+            .blob(blob);
+
+        if (gcsOriginConfig.dataParserFormatConfig.verifyChecksum) {
+          gcsFileRefBuilder = gcsFileRefBuilder.verifyChecksum(true)
+              .checksum(Hex.encodeHexString(Base64.getDecoder().decode(blob.getMd5())))
+              .checksumAlgorithm(HashingUtil.HashType.MD5);
+        }
+
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put(BUCKET, blob.getBucket());
+        metadata.put(FILE, blob.getName());
+        metadata.put(SIZE, blob.getSize());
+        Optional.ofNullable(blob.getMetadata()).ifPresent(metadata::putAll);
+
+        parser = gcsOriginConfig.dataParserFormatConfig.getParserFactory()
+            .getParser(blobId, metadata, gcsFileRefBuilder.build());
+      } else {
+        parser = gcsOriginConfig.dataParserFormatConfig.getParserFactory().getParser(
+            blobId,
+            Channels.newInputStream(blob.reader()),
+            fileOffset
+        );
+      }
       minTimestamp = blob.getUpdateTime();
     }
 
@@ -144,30 +188,48 @@ public class GoogleCloudStorageSource extends BaseSource {
           batchMaker.addRecord(record);
           fileOffset = parser.getOffset();
         } else {
-          fileOffset = "-1";
-          parser.close();
+          fileOffset = END_FILE_OFFSET;
+          IOUtils.closeQuietly(parser);
           parser = null;
           break;
         }
         recordCount++;
       }
     } catch (IOException e) {
+      LOG.error("Error when parsing records. Reason : {}", e);
       getContext().reportError(Errors.GCS_00, e);
     }
 
-    return String.format("%d::%s::%s", minTimestamp, fileOffset, blobId);
+    return String.format(OFFSET_FORMAT, minTimestamp, fileOffset, blobId);
+  }
+
+  private void poolForFiles(long minTimeStamp) {
+    Page<Blob> blobs = storage.list(
+        gcsOriginConfig.bucketTemplate,
+        Storage.BlobListOption.prefix(gcsOriginConfig.commonPrefix)
+    );
+    blobs.iterateAll().forEach(blob ->  {
+      if (isBlobEligible(blob, minTimeStamp)) {
+        minMaxPriorityQueue.add(blob);
+      }
+    });
+  }
+
+  private boolean isBlobEligible(Blob blob, long minTimeStamp) {
+    return blob.getSize() > 0 && blob.getUpdateTime() > minTimeStamp
+        && antPathMatcher.match(gcsOriginConfig.prefixPattern, blob.getName());
   }
 
   private long getMinTimestampFromOffset(String offset) {
-    return Long.valueOf(offset.split("::", 3)[0]);
+    return Long.valueOf(offset.split(OFFSET_DELIMITER, 3)[0]);
   }
 
   private String getFileOffsetFromOffset(String offset) {
-    return offset.split("::", 3)[1];
+    return offset.split(OFFSET_DELIMITER, 3)[1];
   }
 
   private String getBlobIdFromOffset(String offset) {
-    return offset.split("::", 3)[2];
+    return offset.split(OFFSET_DELIMITER, 3)[2];
   }
 
   @Override

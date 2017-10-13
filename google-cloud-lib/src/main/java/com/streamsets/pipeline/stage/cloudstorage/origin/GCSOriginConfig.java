@@ -82,8 +82,6 @@ public class GCSOriginConfig {
     @ValueChooserModel(DataFormatChooserValues.class)
     public DataFormat dataFormat;
 
-
-
     @ConfigDefBean(groups = {"GCS"})
     public BasicConfig basicConfig;
 
@@ -98,8 +96,8 @@ public class GCSOriginConfig {
         dataParserFormatConfig.init(
             context,
             dataFormat,
-            "GCS",
-            "gcsOriginConfig.dataFormat",
+            Groups.GCS.name(),
+            "gcsOriginConfig.dataParserFormatConfig",
             issues
         );
         return issues;
