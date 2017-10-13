@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,6 +68,7 @@ public class TestElUtil {
     CredentialEL.setCredentialStores(ImmutableMap.of("cs", cs));
   }
 
+  @After
   public void cleanup() {
     CredentialEL.setCredentialStores(null);
   }
@@ -80,7 +82,7 @@ public class TestElUtil {
     Mockito.when(cd.getElDefs()).thenReturn(ImmutableList.of(CredentialEL.class));
     Mockito.when(cd.getConfigField()).thenReturn(CV_FIELD);
     Mockito.when(cd.getType()).thenReturn(ConfigDef.Type.CREDENTIAL);
-    return ElUtil.evaluate(el, sd, cd, Collections.emptyMap());
+    return ElUtil.evaluate("Test", el, cd, Collections.emptyMap());
   }
 
   @Test

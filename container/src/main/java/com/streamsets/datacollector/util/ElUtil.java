@@ -39,14 +39,16 @@ public class ElUtil {
 
   private ElUtil() {}
 
-  public static Object evaluate(Object value, StageDefinition stageDefinition,
+  public static Object evaluate(
+      String errorDescription,
+      Object value,
       ConfigDefinition configDefinition,
-      Map<String, Object> constants) throws ELEvalException {
+      Map<String, Object> constants
+  ) throws ELEvalException {
     if(configDefinition.getEvaluation() == ConfigDef.Evaluation.IMPLICIT) {
       if(isElString(value)) {
         //its an EL expression, try to evaluate it.
-        ELEvaluator elEvaluator = createElEval(configDefinition.getName(), constants, getElDefs(stageDefinition,
-          configDefinition));
+        ELEvaluator elEvaluator = createElEval(configDefinition.getName(), constants, getElDefs(configDefinition));
         Type genericType = configDefinition.getConfigField().getGenericType();
         Class<?> klass;
         if(genericType instanceof ParameterizedType) {
@@ -68,7 +70,7 @@ public class ElUtil {
           } else if (!(value instanceof CredentialValue)) {
             throw new ELEvalException(
                 ContainerError.CONTAINER_01500,
-                stageDefinition.getName(),
+                errorDescription,
                 configDefinition.getName(),
                 value.getClass()
             );
@@ -88,7 +90,7 @@ public class ElUtil {
     return false;
   }
 
-  public static Class<?>[] getElDefs(StageDefinition stageDef, ConfigDefinition configDefinition) {
+  public static Class<?>[] getElDefs(ConfigDefinition configDefinition) {
     List<Class> elDefs = configDefinition.getElDefs();
     if(elDefs != null && elDefs.size() > 0) {
       return elDefs.toArray(new Class[elDefs.size()]);
