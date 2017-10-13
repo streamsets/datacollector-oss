@@ -20,10 +20,12 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.epoll.EpollChannelOption;
 import io.netty.channel.epoll.EpollDatagramChannel;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.DatagramPacket;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 
 import java.net.InetSocketAddress;
@@ -31,7 +33,7 @@ import java.util.List;
 
 public class UDPConsumingServer extends BaseNettyServer {
 
-  private final UDPConsumingServerHandler handler;
+  private final SimpleChannelInboundHandler<DatagramPacket> handler;
 
   public UDPConsumingServer(
       boolean enableEpoll,
@@ -39,12 +41,26 @@ public class UDPConsumingServer extends BaseNettyServer {
       List<InetSocketAddress> addresses,
       UDPConsumer udpConsumer
   ) {
+    this(
+        enableEpoll,
+        numThreads,
+        addresses,
+        new UDPConsumingServerHandler(udpConsumer)
+    );
+  }
+
+  public UDPConsumingServer(
+      boolean enableEpoll,
+      int numThreads,
+      List<InetSocketAddress> addresses,
+      SimpleChannelInboundHandler<DatagramPacket> handler
+  ) {
     super(
         enableEpoll,
         numThreads,
         addresses
     );
-    handler = new UDPConsumingServerHandler(udpConsumer);
+    this.handler = handler;
   }
 
   @Override

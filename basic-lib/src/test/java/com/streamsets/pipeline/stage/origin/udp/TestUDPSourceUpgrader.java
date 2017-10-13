@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,14 +30,33 @@ public class TestUDPSourceUpgrader {
     List<Config> configs = new LinkedList<>();
     UDPSourceUpgrader upgrader = new UDPSourceUpgrader();
     upgrader.upgrade("lib", "stage", "stageInst", 2, 3, configs);
-    UpgraderTestUtils.assertExists(configs, "rawDataMode", UDPDSource.DEFAULT_RAW_DATA_MODE);
-    UpgraderTestUtils.assertExists(configs, "rawDataCharset", UDPDSource.DEFAULT_RAW_DATA_CHARSET);
-    UpgraderTestUtils.assertExists(configs, "rawDataOutputField", UDPDSource.DEFAULT_RAW_DATA_OUTPUT_FIELD);
+    UpgraderTestUtils.assertExists(configs, "rawDataMode", UDPSourceConfigBean.DEFAULT_RAW_DATA_MODE);
+    UpgraderTestUtils.assertExists(configs, "rawDataCharset", UDPSourceConfigBean.DEFAULT_RAW_DATA_CHARSET);
+    UpgraderTestUtils.assertExists(configs, "rawDataOutputField", UDPSourceConfigBean.DEFAULT_RAW_DATA_OUTPUT_FIELD);
     UpgraderTestUtils.assertExists(
         configs,
         "rawDataMultipleValuesBehavior",
-        UDPDSource.DEFAULT_RAW_DATA_MULTI_VALUES_BEHAVIOR
+        UDPSourceConfigBean.DEFAULT_RAW_DATA_MULTI_VALUES_BEHAVIOR
     );
-    UpgraderTestUtils.assertExists(configs, "rawDataSeparatorBytes", UDPDSource.DEFAULT_RAW_DATA_SEPARATOR_BYTES);
+    UpgraderTestUtils.assertExists(
+        configs,
+        "rawDataSeparatorBytes",
+        UDPSourceConfigBean.DEFAULT_RAW_DATA_SEPARATOR_BYTES
+    );
+  }
+
+  @Test
+  public void testV3ToV4() throws Exception {
+    List<Config> configs = new LinkedList<>();
+
+    final List<String> ports = Arrays.asList("8934");
+    final int batchSize = 42;
+
+    configs.add(new Config("ports", ports));
+    configs.add(new Config("batchSize", batchSize));
+    UDPSourceUpgrader upgrader = new UDPSourceUpgrader();
+    upgrader.upgrade("lib", "stage", "stageInst", 3, 4, configs);
+    UpgraderTestUtils.assertExists(configs, UDPDSource.CONFIG_PREFIX + "ports", ports);
+    UpgraderTestUtils.assertExists(configs, UDPDSource.CONFIG_PREFIX + "batchSize", batchSize);
   }
 }

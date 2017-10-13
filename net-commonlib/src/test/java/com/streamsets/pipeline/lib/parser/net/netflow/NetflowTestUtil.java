@@ -32,10 +32,18 @@ import java.util.TimeZone;
 
 public abstract class NetflowTestUtil {
   public static void assertRecordsForTenPackets(List<Record> records) {
-    assertRecordsForTenPackets(records, null);
+    assertRecordsForTenPackets(records, null, 0, 10);
+  }
+
+  public static void assertRecordsForTenPackets(List<Record> records, int startIndex, int numRecords) {
+    assertRecordsForTenPackets(records, null, startIndex, numRecords);
   }
 
   public static void assertRecordsForTenPackets(List<Record> records, String fieldPath) {
+    assertRecordsForTenPackets(records, fieldPath, 0, 10);
+  }
+
+  public static void assertRecordsForTenPackets(List<Record> records, String fieldPath, int startIndex, int numRecords) {
     //  seq:1 [227.213.154.241]:9231 <> [247.193.164.155]:53 proto:17 octets>:0 packets>:0 octets<:89 packets<:1 start:2013-08-14T22:56:40.140733193388244 finish:2013-08-14T22:56:40.140733193388244 tcp>:00 tcp<:00 flowlabel>:00000000 flowlabel<:00000000  (0x7fe073801a70)
 //  seq:2 [227.213.154.241]:64042 <> [247.193.164.155]:53 proto:17 octets>:0 packets>:0 octets<:89 packets<:1 start:2013-08-14T22:56:40.140733193388244 finish:2013-08-14T22:56:40.140733193388244 tcp>:00 tcp<:00 flowlabel>:00000000 flowlabel<:00000000  (0x7fe0738019e0)
 //  seq:3 [227.213.154.241]:18784 <> [247.193.164.155]:53 proto:17 octets>:0 packets>:0 octets<:89 packets<:1 start:2013-08-14T22:56:40.140733193388244 finish:2013-08-14T22:56:40.140733193388244 tcp>:00 tcp<:00 flowlabel>:00000000 flowlabel<:00000000  (0x7fe073801950)
@@ -46,177 +54,206 @@ public abstract class NetflowTestUtil {
 //  seq:8 [227.213.154.241]:57572 <> [249.229.186.21]:53 proto:17 octets>:0 packets>:0 octets<:89 packets<:1 start:2013-08-14T22:56:40.140733193388246 finish:2013-08-14T22:56:40.140733193388246 tcp>:00 tcp<:00 flowlabel>:00000000 flowlabel<:00000000  (0x7fe073801680)
 //  seq:9 [45.103.41.119]:53 <> [227.213.154.241]:54356 proto:17 octets>:696 packets>:1 octets<:0 packets<:0 start:2013-08-14T22:56:40.140733193388248 finish:2013-08-14T22:56:40.140733193388248 tcp>:00 tcp<:00 flowlabel>:00000000 flowlabel<:00000000  (0x7fe0738015f0)
 //  seq:10 [121.75.53.47]:53 <> [227.213.154.241]:5557 proto:17 octets>:504 packets>:1 octets<:0 packets<:0 start:2013-08-14T22:56:40.140733193388249 finish:2013-08-14T22:56:40.140733193388249 tcp>:00 tcp<:00 flowlabel>:00000000 flowlabel<:00000000  (0x7fe073801560)
-    Assert.assertEquals(10, records.size());
-    assertNetflowRecord(
-        records.get(0),
-        fieldPath,
-        5,
-        "2a9ac4fc-7c25-1000-8080-808080808080",
-        53,
-        9231,
-        "247.193.164.155",
-        "227.213.154.241",
-        17,
-        "2015-05-23T04:32:55.0059",
-        "2015-05-23T04:32:55.0059",
-        504,
-        1,
-        0,
-        89
-    );
-    assertNetflowRecord(
-        records.get(1),
-        fieldPath,
-        5,
-        "2a9ac4fc-7c25-1000-8080-808080808080",
-        53,
-        64042,
-        "247.193.164.155",
-        "227.213.154.241",
-        17,
-        "2015-05-23T04:32:55.0059",
-        "2015-05-23T04:32:55.0059",
-        504,
-        1,
-        0,
-        89
-    );
-    assertNetflowRecord(
-        records.get(2),
-        fieldPath,
-        5,
-        "2a9ac4fc-7c25-1000-8080-808080808080",
-        53,
-        18784,
-        "247.193.164.155",
-        "227.213.154.241",
-        17,
-        "2015-05-23T04:32:55.0059",
-        "2015-05-23T04:32:55.0059",
-        504,
-        1,
-        0,
-        89
-    );
-    assertNetflowRecord(
-        records.get(3),
-        fieldPath,
-        5,
-        "2a9ac4fc-7c25-1000-8080-808080808080",
-        53,
-        43998,
-        "249.229.186.21",
-        "227.213.154.241",
-        17,
-        "2015-05-23T04:32:55.0061",
-        "2015-05-23T04:32:55.0061",
-        504,
-        1,
-        0,
-        89
-    );
-    assertNetflowRecord(
-        records.get(4),
-        fieldPath,
-        5,
-        "2a9ac4fc-7c25-1000-8080-808080808080",
-        53,
-        8790,
-        "127.227.189.185",
-        "227.213.154.241",
-        17,
-        "2015-05-23T04:32:55.0061",
-        "2015-05-23T04:32:55.0061",
-        504,
-        1,
-        0,
-        89
-    );
-    assertNetflowRecord(
-        records.get(5),
-        fieldPath,
-        5,
-        "2a9ac4fc-7c25-1000-8080-808080808080",
-        53,
-        38811,
-        "127.227.189.185",
-        "227.213.154.241",
-        17,
-        "2015-05-23T04:32:55.0061",
-        "2015-05-23T04:32:55.0061",
-        504,
-        1,
-        0,
-        89
-    );
-    assertNetflowRecord(
-        records.get(6),
-        fieldPath,
-        5,
-        "2a9ac4fc-7c25-1000-8080-808080808080",
-        53,
-        48001,
-        "127.227.189.185",
-        "227.213.154.241",
-        17,
-        "2015-05-23T04:32:55.0061",
-        "2015-05-23T04:32:55.0061",
-        504,
-        1,
-        0,
-        89
-    );
-    assertNetflowRecord(
-        records.get(7),
-        fieldPath,
-        5,
-        "2a9ac4fc-7c25-1000-8080-808080808080",
-        53,
-        57572,
-        "249.229.186.21",
-        "227.213.154.241",
-        17,
-        "2015-05-23T04:32:55.0061",
-        "2015-05-23T04:32:55.0061",
-        504,
-        1,
-        0,
-        89
-    );
-    assertNetflowRecord(
-        records.get(8),
-        fieldPath,
-        5,
-        "2a9ac4fc-7c25-1000-8080-808080808080",
-        53,
-        54356,
-        "45.103.41.119",
-        "227.213.154.241",
-        17,
-        "2015-05-23T04:32:55.0063",
-        "2015-05-23T04:32:55.0063",
-        504,
-        1,
-        0,
-        696
-    );
-    assertNetflowRecord(
-        records.get(9),
-        fieldPath,
-        5,
-        "2a9ac4fc-7c25-1000-8080-808080808080",
-        53,
-        5557,
-        "121.75.53.47",
-        "227.213.154.241",
-        17,
-        "2015-05-23T04:32:55.0064",
-        "2015-05-23T04:32:55.0064",
-        504,
-        1,
-        0,
-        504
-    );
+    Assert.assertEquals(numRecords, records.size());
+
+    for (int i = 0; i < records.size(); i++) {
+      final int recordIndex = startIndex + i;
+      final Record record = records.get(i);
+      switch (recordIndex % 10) {
+        case 0:
+          assertNetflowRecord(
+              record,
+              fieldPath,
+              5,
+              "2a9ac4fc-7c25-1000-8080-808080808080",
+              53,
+              9231,
+              "247.193.164.155",
+              "227.213.154.241",
+              17,
+              "2015-05-23T04:32:55.0059",
+              "2015-05-23T04:32:55.0059",
+              504,
+              1,
+              0,
+              89
+          );
+          break;
+        case 1:
+          assertNetflowRecord(
+              record,
+              fieldPath,
+              5,
+              "2a9ac4fc-7c25-1000-8080-808080808080",
+              53,
+              64042,
+              "247.193.164.155",
+              "227.213.154.241",
+              17,
+              "2015-05-23T04:32:55.0059",
+              "2015-05-23T04:32:55.0059",
+              504,
+              1,
+              0,
+              89
+          );
+          break;
+        case 2:
+          assertNetflowRecord(
+              record,
+              fieldPath,
+              5,
+              "2a9ac4fc-7c25-1000-8080-808080808080",
+              53,
+              18784,
+              "247.193.164.155",
+              "227.213.154.241",
+              17,
+              "2015-05-23T04:32:55.0059",
+              "2015-05-23T04:32:55.0059",
+              504,
+              1,
+              0,
+              89
+          );
+          break;
+        case 3:
+          assertNetflowRecord(
+              record,
+              fieldPath,
+              5,
+              "2a9ac4fc-7c25-1000-8080-808080808080",
+              53,
+              43998,
+              "249.229.186.21",
+              "227.213.154.241",
+              17,
+              "2015-05-23T04:32:55.0061",
+              "2015-05-23T04:32:55.0061",
+              504,
+              1,
+              0,
+              89
+          );
+          break;
+        case 4:
+          assertNetflowRecord(
+              record,
+              fieldPath,
+              5,
+              "2a9ac4fc-7c25-1000-8080-808080808080",
+              53,
+              8790,
+              "127.227.189.185",
+              "227.213.154.241",
+              17,
+              "2015-05-23T04:32:55.0061",
+              "2015-05-23T04:32:55.0061",
+              504,
+              1,
+              0,
+              89
+          );
+          break;
+        case 5:
+          assertNetflowRecord(
+              record,
+              fieldPath,
+              5,
+              "2a9ac4fc-7c25-1000-8080-808080808080",
+              53,
+              38811,
+              "127.227.189.185",
+              "227.213.154.241",
+              17,
+              "2015-05-23T04:32:55.0061",
+              "2015-05-23T04:32:55.0061",
+              504,
+              1,
+              0,
+              89
+          );
+          break;
+        case 6:
+          assertNetflowRecord(
+              record,
+              fieldPath,
+              5,
+              "2a9ac4fc-7c25-1000-8080-808080808080",
+              53,
+              48001,
+              "127.227.189.185",
+              "227.213.154.241",
+              17,
+              "2015-05-23T04:32:55.0061",
+              "2015-05-23T04:32:55.0061",
+              504,
+              1,
+              0,
+              89
+          );
+          break;
+        case 7:
+          assertNetflowRecord(
+              record,
+              fieldPath,
+              5,
+              "2a9ac4fc-7c25-1000-8080-808080808080",
+              53,
+              57572,
+              "249.229.186.21",
+              "227.213.154.241",
+              17,
+              "2015-05-23T04:32:55.0061",
+              "2015-05-23T04:32:55.0061",
+              504,
+              1,
+              0,
+              89
+          );
+          break;
+        case 8:
+          assertNetflowRecord(
+              record,
+              fieldPath,
+              5,
+              "2a9ac4fc-7c25-1000-8080-808080808080",
+              53,
+              54356,
+              "45.103.41.119",
+              "227.213.154.241",
+              17,
+              "2015-05-23T04:32:55.0063",
+              "2015-05-23T04:32:55.0063",
+              504,
+              1,
+              0,
+              696
+          );
+          break;
+        case 9:
+          assertNetflowRecord(
+              record,
+              fieldPath,
+              5,
+              "2a9ac4fc-7c25-1000-8080-808080808080",
+              53,
+              5557,
+              "121.75.53.47",
+              "227.213.154.241",
+              17,
+              "2015-05-23T04:32:55.0064",
+              "2015-05-23T04:32:55.0064",
+              504,
+              1,
+              0,
+              504
+          );
+          break;
+        default:
+          throw new IllegalStateException("any number mod 10 should have 10 possibilities");
+      }
+    }
   }
 
   private static void assertNetflowRecord(

@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.origin.udp;
 
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -26,7 +25,6 @@ import com.streamsets.pipeline.lib.parser.net.netflow.NetflowDataParserFactory;
 import com.streamsets.pipeline.lib.parser.net.netflow.OutputValuesMode;
 import com.streamsets.pipeline.lib.parser.net.raw.RawDataMode;
 import com.streamsets.pipeline.lib.parser.udp.AbstractParser;
-import com.streamsets.pipeline.lib.parser.udp.ParserConfig;
 import com.streamsets.pipeline.lib.parser.udp.collectd.CollectdParser;
 import com.streamsets.pipeline.lib.parser.udp.netflow.NetflowParser;
 import com.streamsets.pipeline.lib.parser.udp.separated.SeparatedDataParser;
@@ -34,7 +32,6 @@ import com.streamsets.pipeline.lib.parser.udp.syslog.SyslogParser;
 import com.streamsets.pipeline.lib.udp.UDPConsumingServer;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.config.DatagramMode;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import io.netty.channel.epoll.Epoll;
 import org.slf4j.Logger;
@@ -50,7 +47,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -73,40 +69,16 @@ public class UDPSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(UDPSource.class);
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private static final boolean IS_DEBUG_ENABLED = LOG.isDebugEnabled();
-  private final boolean enableEpoll;
-  private final int numThreads;
-  private final Set<String> ports;
-  private final int maxBatchSize;
   private final Queue<Record> overrunQueue;
-  private final long maxWaitTime;
-  private final List<InetSocketAddress> addresses;
-  private final ParserConfig parserConfig;
-  private final DatagramMode dataFormat;
+  private final UDPSourceConfigBean conf;
   private long recordCount;
   private UDPConsumingServer udpServer;
-  private AbstractParser parser;
   private ErrorRecordHandler errorRecordHandler;
   private BlockingQueue<ParseResult> incomingQueue;
-  private boolean privilegedPortUsage = false;
 
-  public UDPSource(
-      List<String> ports,
-      boolean enableEpoll,
-      int numThreads,
-      ParserConfig parserConfig,
-      DatagramMode dataFormat,
-      int maxBatchSize,
-      long maxWaitTime
-  ) {
-    this.enableEpoll = enableEpoll;
-    this.numThreads = numThreads;
-    this.ports = ImmutableSet.copyOf(ports);
-    this.parserConfig = parserConfig;
-    this.dataFormat = dataFormat;
-    this.maxBatchSize = maxBatchSize;
-    this.maxWaitTime = maxWaitTime;
+  public UDPSource(UDPSourceConfigBean conf) {
+    this.conf = conf;
     this.overrunQueue = new LinkedList<>();
-    this.addresses = new ArrayList<>();
   }
 
   @Override
@@ -115,90 +87,15 @@ public class UDPSource extends BaseSource {
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     this.recordCount = 0;
-    this.incomingQueue = new ArrayBlockingQueue<>(this.maxBatchSize * 10);
-    if (enableEpoll && !Epoll.isAvailable()) {
-      issues.add(getContext().createConfigIssue(Groups.UDP.name(), "enableEpoll", Errors.UDP_08));
-    }
-    if (ports.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.UDP.name(), "ports",
-        Errors.UDP_02));
-    } else {
-      for (String candidatePort : ports) {
-        try {
-          int port = Integer.parseInt(candidatePort.trim());
-          if (port > 0 && port < 65536) {
-            if (port < 1024) {
-              privilegedPortUsage = true; // only for error handling purposes
-            }
-            addresses.add(new InetSocketAddress(port));
-          } else {
-            issues.add(getContext().createConfigIssue(Groups.UDP.name(), "ports",
-              Errors.UDP_03, port));
-          }
-        } catch (NumberFormatException ex) {
-          issues.add(getContext().createConfigIssue(Groups.UDP.name(), "ports",
-            Errors.UDP_03, candidatePort));
-        }
-      }
-    }
+    this.incomingQueue = new ArrayBlockingQueue<>(conf.batchSize * 10);
 
-    Charset charset;
-    switch (dataFormat) {
-      case NETFLOW:
-        final int maxTemplateCacheSize = parserConfig.getInteger(NETFLOW_MAX_TEMPLATE_CACHE_SIZE);
-        final int templateCacheTimeoutMs = parserConfig.getInteger(NETFLOW_TEMPLATE_CACHE_TIMEOUT_MS);
-        NetflowDataParserFactory.validateConfigs(
-            getContext(),
-            issues,
-            Groups.NETFLOW_V9.name(),
-            "",
-            maxTemplateCacheSize,
-            templateCacheTimeoutMs
-        );
-        parser = new NetflowParser(
-            getContext(),
-            (OutputValuesMode) parserConfig.get(NETFLOW_OUTPUT_VALUES_MODE),
-            maxTemplateCacheSize, templateCacheTimeoutMs
-        );
-        break;
-      case SYSLOG:
-        charset = validateCharset(Groups.SYSLOG.name(), issues);
-        parser = new SyslogParser(getContext(), charset);
-        break;
-      case COLLECTD:
-        charset = validateCharset(Groups.COLLECTD.name(), issues);
-        checkCollectdParserConfigs(issues);
-        if (issues.isEmpty()) {
-          parser = new CollectdParser(
-              getContext(),
-              parserConfig.getBoolean(CONVERT_TIME),
-              parserConfig.getString(TYPES_DB_PATH),
-              parserConfig.getBoolean(EXCLUDE_INTERVAL),
-              parserConfig.getString(AUTH_FILE_PATH),
-              charset
-          );
-        }
-        break;
-      case RAW_DATA:
-        charset = validateCharset(Groups.RAW_DATA.name(), issues);
-        parser = new SeparatedDataParser(
-            getContext(),
-            (RawDataMode) parserConfig.get(RAW_DATA_MODE),
-            charset,
-            parserConfig.getString(RAW_DATA_OUTPUT_FIELD_PATH),
-            (MultipleValuesBehavior) parserConfig.get(RAW_DATA_MULTIPLE_VALUES_BEHAVIOR),
-            (byte[]) parserConfig.get(RAW_DATA_SEPARATOR_BYTES)
-        );
-        break;
-      default:
-        issues.add(getContext().createConfigIssue(Groups.UDP.name(), "dataFormat",
-          Errors.UDP_01, dataFormat));
-        break;
-    }
-    if (issues.isEmpty()) {
+    final boolean valid = conf.init(getContext(), issues);
+
+    if (valid && issues.isEmpty()) {
+      final List<InetSocketAddress> addresses = conf.getAddresses();
       if (!addresses.isEmpty()) {
-        QueuingUDPConsumer udpConsumer = new QueuingUDPConsumer(parser, incomingQueue);
-        udpServer = new UDPConsumingServer(enableEpoll, numThreads, addresses, udpConsumer);
+        QueuingUDPConsumer udpConsumer = new QueuingUDPConsumer(conf.getParser(), incomingQueue);
+        udpServer = new UDPConsumingServer(conf.enableEpoll, conf.numThreads, addresses, udpConsumer);
         try {
           udpServer.listen();
           udpServer.start();
@@ -206,48 +103,16 @@ public class UDPSource extends BaseSource {
           udpServer.destroy();
           udpServer = null;
 
-          if (ex instanceof SocketException && privilegedPortUsage) {
-            issues.add(getContext().createConfigIssue(Groups.UDP.name(), "ports", Errors.UDP_07, ports, ex));
+          if (ex instanceof SocketException && conf.isPrivilegedPortUsage()) {
+            issues.add(getContext().createConfigIssue(Groups.UDP.name(), "ports", Errors.UDP_07, conf.ports, ex));
           } else {
             LOG.debug("Caught exception while starting up UDP server: {}", ex);
-            issues.add(getContext().createConfigIssue(null, null, Errors.UDP_00, addresses.toString(), ex.toString(), ex));
+            issues.add(getContext().createConfigIssue(Groups.UDP.name(), null, Errors.UDP_00, addresses.toString(), ex.toString(), ex));
           }
         }
       }
     }
     return issues;
-  }
-
-  private Charset validateCharset(String groupName, List<ConfigIssue> issues) {
-    Charset charset;
-    try {
-      charset = Charset.forName(parserConfig.getString(CHARSET));
-    } catch (UnsupportedCharsetException ex) {
-      charset = StandardCharsets.UTF_8;
-      issues.add(getContext().createConfigIssue(groupName, "charset", Errors.UDP_04, charset));
-    }
-    return charset;
-  }
-
-  private void checkCollectdParserConfigs(List<ConfigIssue> issues) {
-    String typesDbLocation = parserConfig.getString(TYPES_DB_PATH);
-    if (!typesDbLocation.isEmpty()) {
-      File typesDbFile = new File(typesDbLocation);
-      if (!typesDbFile.canRead() || !typesDbFile.isFile()) {
-        issues.add(
-            getContext().createConfigIssue(Groups.COLLECTD.name(), "typesDbPath", Errors.UDP_05, typesDbLocation)
-        );
-      }
-    }
-    String authFileLocation = parserConfig.getString(AUTH_FILE_PATH);
-    if (!authFileLocation.isEmpty()) {
-      File authFile = new File(authFileLocation);
-      if (!authFile.canRead() || !authFile.isFile()) {
-        issues.add(
-            getContext().createConfigIssue(Groups.COLLECTD.name(), "authFilePath", Errors.UDP_06, authFileLocation)
-        );
-      }
-    }
   }
 
 
@@ -264,9 +129,9 @@ public class UDPSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     Utils.checkNotNull(udpServer, "UDP server is null");
     Utils.checkNotNull(incomingQueue, "Incoming queue is null");
-    maxBatchSize = Math.min(this.maxBatchSize, maxBatchSize);
+    maxBatchSize = Math.min(conf.batchSize, maxBatchSize);
     final long startingRecordCount = recordCount;
-    long remainingTime = maxWaitTime;
+    long remainingTime = conf.maxWaitTime;
     for (int i = 0; i < maxBatchSize; i++) {
       if (overrunQueue.isEmpty()) {
         try {

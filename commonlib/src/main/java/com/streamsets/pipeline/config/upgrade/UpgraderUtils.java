@@ -20,9 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class UpgraderUtils {
 
@@ -46,6 +49,19 @@ public abstract class UpgraderUtils {
     for (int i=0; i<names.length; ) {
       nameMap.put(names[i], names[i+1]);
       i+=2;
+    }
+    return moveAllTo(configs, nameMap);
+  }
+
+  public static int prependToAll(List<Config> configs, String prefix, String... exceptProperties) {
+    final Set<String> except = new HashSet<>(Arrays.asList(exceptProperties));
+    Map<String, String> nameMap = new HashMap<>();
+    for (Config config : configs) {
+      final String name = config.getName();
+      if (except.contains(name)) {
+        continue;
+      }
+      nameMap.put(name, prefix + name);
     }
     return moveAllTo(configs, nameMap);
   }
