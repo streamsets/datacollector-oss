@@ -20,7 +20,8 @@ import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
     GCS_00("An error occurred while processing the record: '{}'"),
-    GCS_01("Error validating permissions: '{}'");
+    GCS_01("Error validating permissions: '{}'"),
+    GCS_02("Error writing record '{}'. Reason : {}");
 
     private final String msg;
 
