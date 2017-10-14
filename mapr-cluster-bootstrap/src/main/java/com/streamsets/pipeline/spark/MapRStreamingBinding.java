@@ -131,7 +131,6 @@ public class MapRStreamingBinding extends AbstractStreamingBinding {
     @SuppressWarnings("unchecked")
     public JavaStreamingContext create() {
       sparkConf.set("spark.streaming.kafka.maxRatePerPartition", String.valueOf(maxRatePerPartition));
-      sparkConf.set("spark.cleaner.ttl", "60s"); // force all old RDD metadata out
       JavaStreamingContext result = new JavaStreamingContext(sparkConf, new Duration(duration));
       Map<String, String> props = new HashMap<>();
       if (!autoOffsetValue.isEmpty()) {
