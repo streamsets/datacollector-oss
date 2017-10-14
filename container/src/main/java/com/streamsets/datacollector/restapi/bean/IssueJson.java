@@ -35,6 +35,10 @@ public class IssueJson {
     return issue.getInstanceName();
   }
 
+  public String getServiceName() {
+    return issue.getServiceName();
+  }
+
   public String getLevel() {
     return issue.getLevel();
   }

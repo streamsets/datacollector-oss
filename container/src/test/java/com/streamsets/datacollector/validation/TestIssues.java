@@ -36,6 +36,9 @@ public class TestIssues {
     Issues stages = new Issues(getStagesIssues());
     assertTrue(stages.hasIssues());
 
+    Issues services = new Issues((getServiceIssues()));
+    assertTrue(services.hasIssues());
+
     Issues issues = new Issues(getIssues());
     assertTrue(issues.hasIssues());
   }
@@ -51,10 +54,10 @@ public class TestIssues {
     assertTrue(stageIssues.containsKey("2"));
 
     // First stage
-    assertEquals(2, stageIssues.get("1").size());
+    assertEquals(4, stageIssues.get("1").size());
 
     // Second stage
-    assertEquals(1, stageIssues.get("2").size());
+    assertEquals(3, stageIssues.get("2").size());
   }
 
   @Test
@@ -65,33 +68,46 @@ public class TestIssues {
     Issues stages = new Issues(getStagesIssues());
     assertEquals(3, stages.getIssueCount());
 
+    Issues services = new Issues(getServiceIssues());
+    assertEquals(4, services.getIssueCount());
+
     Issues issues = new Issues(getIssues());
-    assertEquals(6, issues.getIssueCount());
+    assertEquals(10, issues.getIssueCount());
   }
 
 
   private List<Issue> getPipelineIssues() {
     return ImmutableList.of(
-      new Issue(null, "a", "b", CustomErrors.ERR_001),
-      new Issue(null, "a", "b", CustomErrors.ERR_002),
-      new Issue(null, "a", "b", CustomErrors.ERR_001)
+      new Issue(null, null, "a", "b", CustomErrors.ERR_001),
+      new Issue(null, null, "a", "b", CustomErrors.ERR_002),
+      new Issue(null, null, "a", "b", CustomErrors.ERR_001)
     );
   }
 
   private List<Issue> getStagesIssues() {
     return ImmutableList.of(
-      new Issue("1", "a", "b", CustomErrors.ERR_001),
-      new Issue("2", "a", "b", CustomErrors.ERR_002),
-      new Issue("1", "a", "b", CustomErrors.ERR_001),
-      new Issue("2", "a", "b", CustomErrors.ERR_002),
-      new Issue("1", "a", "b", CustomErrors.ERR_003)
+      new Issue("1", null, "a", "b", CustomErrors.ERR_001),
+      new Issue("2", null, "a", "b", CustomErrors.ERR_002),
+      new Issue("1", null, "a", "b", CustomErrors.ERR_001),
+      new Issue("2", null, "a", "b", CustomErrors.ERR_002),
+      new Issue("1", null, "a", "b", CustomErrors.ERR_003)
     );
   }
 
+  private List<Issue> getServiceIssues() {
+    return ImmutableList.of(
+      new Issue("1", "s1", "a", "b", CustomErrors.ERR_001),
+      new Issue("2", "s2", "a", "b", CustomErrors.ERR_002),
+      new Issue("1", "s1", "a", "b", CustomErrors.ERR_001),
+      new Issue("2", "s1", "a", "b", CustomErrors.ERR_002),
+      new Issue("1", "s1", "a", "b", CustomErrors.ERR_003)
+    );
+  }
   private List<Issue> getIssues() {
     ImmutableList.Builder builder = ImmutableList.builder();
     builder.addAll(getPipelineIssues());
     builder.addAll(getStagesIssues());
+    builder.addAll(getServiceIssues());
     return builder.build();
   }
 
@@ -108,7 +124,7 @@ public class TestIssues {
 
     @Override
     public String getMessage() {
-      return null;
+      return getCode();
     }
   }
 }

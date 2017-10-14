@@ -26,6 +26,8 @@ public interface ValidationIssue {
 
   String getInstanceName();
 
+  String getServiceName();
+
   String getLevel();
 
   String getConfigGroup();

@@ -313,7 +313,7 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
 
     public ConfigIssueImpl(String instanceName, String configGroup, String configName, ErrorCode errorCode,
         Object... args) {
-      super(instanceName, configGroup, configName, errorCode, args);
+      super(instanceName, null, configGroup, configName, errorCode, args);
     }
 
   }

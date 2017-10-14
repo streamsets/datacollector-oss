@@ -32,19 +32,18 @@ public abstract class IssueCreator {
     return new IssueCreator() {
       @Override
       public Issue create(ErrorCode error, Object... args) {
-        return new Issue(null, null, null, error, args);
+        return new Issue(null, null, null, null, error, args);
       }
 
       @Override
       public Issue create(String configGroup, String configName, ErrorCode error, Object... args) {
-        return new Issue(null, configGroup, configName, error, args);
+        return new Issue(null, null, configGroup, configName, error, args);
       }
 
       @Override
       public Issue create(String configGroup, ErrorCode error, Object... args) {
-        return new Issue(null, configGroup, null, error, args);
+        return new Issue(null, null, configGroup, null, error, args);
       }
-
     };
   }
 
@@ -52,21 +51,38 @@ public abstract class IssueCreator {
     return new IssueCreator() {
       @Override
       public Issue create(ErrorCode error, Object... args) {
-        return new Issue(instanceName, null, null, error, args);
+        return new Issue(instanceName, null, null, null, error, args);
       }
 
       @Override
       public Issue create(String configGroup, String configName, ErrorCode error, Object... args) {
-        return new Issue(instanceName, configGroup, configName, error, args);
+        return new Issue(instanceName, null, configGroup, configName, error, args);
       }
 
       @Override
       public Issue create(String configGroup, ErrorCode error, Object... args) {
-        return new Issue(instanceName, configGroup, null, error, args);
+        return new Issue(instanceName, null, configGroup, null, error, args);
       }
-
     };
   }
 
+  public static IssueCreator getService(final String instanceName, final String serviceName) {
+    return new IssueCreator() {
+      @Override
+      public Issue create(ErrorCode error, Object... args) {
+        return new Issue(instanceName, serviceName, null, null, error, args);
+      }
+
+      @Override
+      public Issue create(String configGroup, String configName, ErrorCode error, Object... args) {
+        return new Issue(instanceName, serviceName, configGroup, configName, error, args);
+      }
+
+      @Override
+      public Issue create(String configGroup, ErrorCode error, Object... args) {
+        return new Issue(instanceName, serviceName, configGroup, null, error, args);
+      }
+    };
+  }
 
 }
