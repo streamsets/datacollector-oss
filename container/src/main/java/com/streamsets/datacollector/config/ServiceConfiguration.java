@@ -18,13 +18,19 @@ package com.streamsets.datacollector.config;
 import com.streamsets.pipeline.api.Config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public class ServiceConfiguration {
+public class ServiceConfiguration implements UserConfigurable {
 
   private final Class service;
   private int serviceVersion;
   private final List<Config> configuration;
+
+  // Calculated, not serialized
+  private final Map<String, Config> configMap;
 
   public ServiceConfiguration(
       Class service,
@@ -34,6 +40,8 @@ public class ServiceConfiguration {
     this.service = service;
     this.serviceVersion = serviceVersion;
     this.configuration = configuration;
+
+    this.configMap = configuration.stream().collect(Collectors.toMap(Config::getName, c -> c));
   }
 
   public Class getService() {
@@ -44,6 +52,12 @@ public class ServiceConfiguration {
     return serviceVersion;
   }
 
+  @Override
+  public Config getConfig(String name) {
+    return configMap.get(name);
+  }
+
+  @Override
   public List<Config> getConfiguration() {
     return new ArrayList<>(configuration);
   }

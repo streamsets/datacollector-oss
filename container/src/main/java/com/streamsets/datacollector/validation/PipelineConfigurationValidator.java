@@ -24,9 +24,13 @@ import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
+import com.streamsets.datacollector.config.ServiceConfiguration;
+import com.streamsets.datacollector.config.ServiceDefinition;
+import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.config.UserConfigurable;
 import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
@@ -54,6 +58,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -647,6 +652,16 @@ public class PipelineConfigurationValidator {
         preview = false;
       }
 
+      // Validate stage owns configuration
+      preview &= validateComponentConfigs(
+        stageConf,
+        stageDef.getConfigDefinitions(),
+        stageDef.getConfigDefinitionsMap(),
+        stageDef.getHideConfigs(),
+        stageDef.hasPreconditions(),
+        issueCreator
+      );
+
       // Validate service definitions
       Set<String> expectedServices = stageDef.getServices().stream()
         .map(service -> service.getService().getName())
@@ -661,31 +676,55 @@ public class PipelineConfigurationValidator {
             StringUtils.join(expectedServices, ","),
             StringUtils.join(configuredServices, ",")
         ));
-      }
-
-      // Validate user exposed configuration
-      for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
-        Config config = stageConf.getConfig(confDef.getName());
-        if (confDef.isRequired() && (config == null || isNullOrEmpty(confDef, config))) {
-          preview &= validateRequiredField(confDef, stageConf, issueCreator);
-        }
-
-        if(confDef.getType() == ConfigDef.Type.NUMBER && !isNullOrEmpty(confDef, config)) {
-          preview &= validatedNumberConfig(config, confDef, stageConf, issueCreator);
-        }
-
-      }
-
-      for (Config conf : stageConf.getConfiguration()) {
-        ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
-        Set<String> hideConfigs = stageDef.getHideConfigs();
-        preview &= validateConfigDefinition(confDef, hideConfigs, conf, stageConf, stageDef, null, issueCreator, true/*inject*/);
-        if (confDef != null && stageDef.hasPreconditions() &&
-            confDef.getName().equals(StageConfigBean.STAGE_PRECONDITIONS_CONFIG)) {
-          preview &= validatePreconditions(stageConf.getInstanceName(), confDef, conf, issues, issueCreator);
+        preview = false;
+      } else {
+        // Validate all services
+        for (ServiceConfiguration serviceConf: stageConf.getServices()) {
+          ServiceDefinition serviceDef = stageLibrary.getServiceDefinition(serviceConf.getService(), false);
+          preview &= validateComponentConfigs(
+            serviceConf,
+            serviceDef.getConfigDefinitions(),
+            serviceDef.getConfigDefinitionsMap(),
+            Collections.emptySet(),
+            false,
+            issueCreator.forService(serviceConf.getService().getName())
+          );
         }
       }
     }
+    return preview;
+  }
+
+  public boolean validateComponentConfigs(
+    UserConfigurable component,
+    List<ConfigDefinition> configs,
+    Map<String, ConfigDefinition> definitionMap,
+    Set<String> hideConfigs,
+    boolean validatePrecondition,
+    IssueCreator issueCreator
+  ) {
+    boolean preview = true;
+
+    // Validate user exposed configuration
+    for (ConfigDefinition confDef : configs) {
+      Config config = component.getConfig(confDef.getName());
+      if (confDef.isRequired() && (config == null || isNullOrEmpty(confDef, config))) {
+        preview &= validateRequiredField(confDef, component, issueCreator);
+      }
+
+      if(confDef.getType() == ConfigDef.Type.NUMBER && !isNullOrEmpty(confDef, config)) {
+        preview &= validatedNumberConfig(config, confDef, component, issueCreator);
+      }
+    }
+
+    for (Config conf : component.getConfiguration()) {
+      ConfigDefinition confDef = definitionMap.get(conf.getName());
+      preview &= validateConfigDefinition(confDef, hideConfigs, conf, component, definitionMap, null, issueCreator);
+      if (confDef != null && validatePrecondition && confDef.getName().equals(StageConfigBean.STAGE_PRECONDITIONS_CONFIG)) {
+        preview &= validatePreconditions(confDef, conf, issues, issueCreator);
+      }
+    }
+
     return preview;
   }
 
@@ -728,27 +767,27 @@ public class PipelineConfigurationValidator {
 
   private boolean validateRequiredField(
       ConfigDefinition confDef,
-      StageConfiguration stageConf,
+      UserConfigurable component,
       IssueCreator issueCreator
   ) {
     boolean preview = true;
 
     // If the config doesn't depend on anything or the config should be triggered, config is invalid
-    if (confDef.getDependsOnMap().isEmpty() || configTriggered(stageConf, confDef)) {
+    if (confDef.getDependsOnMap().isEmpty() || configTriggered(component, confDef)) {
       issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0007));
       preview = false;
     }
     return preview;
   }
 
-  private boolean configTriggered(StageConfiguration stageConf, ConfigDefinition confDef) {
+  private boolean configTriggered(UserConfigurable component, ConfigDefinition confDef) {
     boolean triggered = true;
 
     for (Map.Entry<String, List<Object>> dependency : confDef.getDependsOnMap().entrySet()) {
       //At times the dependsOn config may be hidden [for ex. ToErrorKafkaTarget hides the dataFormat property].
-      // In such a scenario stageConf.getConfig(dependsOn) can be null. We need to guard against this.
-      triggered &= (stageConf.getConfig(dependency.getKey()) != null &&
-          triggeredByContains(dependency.getValue(), stageConf.getConfig(dependency.getKey()).getValue()));
+      // In such a scenario component.getConfig(dependsOn) can be null. We need to guard against this.
+      triggered &= (component.getConfig(dependency.getKey()) != null &&
+          triggeredByContains(dependency.getValue(), component.getConfig(dependency.getKey()).getValue()));
     }
     return triggered;
   }
@@ -756,11 +795,11 @@ public class PipelineConfigurationValidator {
   private boolean validatedNumberConfig(
       Config conf,
       ConfigDefinition confDef,
-      StageConfiguration stageConf,
-      IssueCreator issueCreator) {
-
+      UserConfigurable component,
+      IssueCreator issueCreator
+  ) {
     boolean preview = true;
-    if (!configTriggered(stageConf, confDef)) {
+    if (!configTriggered(component, confDef)) {
       return true;
     }
     if (conf.getValue() instanceof String && ((String)conf.getValue()).startsWith("${")
@@ -804,7 +843,6 @@ public class PipelineConfigurationValidator {
 
   @SuppressWarnings("unchecked")
   boolean validatePreconditions(
-      String instanceName,
       ConfigDefinition confDef,
       Config conf,
       Issues issues,
@@ -853,11 +891,10 @@ public class PipelineConfigurationValidator {
       ConfigDefinition confDef,
       Set<String> hideConfigs,
       Config conf,
-      StageConfiguration stageConf,
-      StageDefinition stageDef,
+      UserConfigurable stageConf,
+      Map<String, ConfigDefinition> definitionMap,
       Map<String, Object> parentConf,
-      IssueCreator issueCreator,
-      boolean inject
+      IssueCreator issueCreator
   ) {
     //parentConf is applicable when validating complex fields.
     boolean preview = true;
@@ -865,9 +902,8 @@ public class PipelineConfigurationValidator {
       // stage configuration defines an invalid configuration
       issues.add(
           issueCreator.create(
-              stageConf.getInstanceName(),
-              conf.getName(),
-              ValidationError.VALIDATION_0008
+              ValidationError.VALIDATION_0008,
+              conf.getName()
           )
       );
       return false;
@@ -893,7 +929,7 @@ public class PipelineConfigurationValidator {
         }
       }
       if (validateConfig && conf.getValue() != null && confDef.getModel() != null) {
-        preview = validateModel(stageConf, stageDef, confDef, conf, issueCreator);
+        preview = validateModel(stageConf, definitionMap, hideConfigs, confDef, conf, issueCreator);
       }
     }
     return preview;
@@ -929,8 +965,9 @@ public class PipelineConfigurationValidator {
 
   @SuppressWarnings("unchecked")
   private boolean validateModel(
-      StageConfiguration stageConf,
-      StageDefinition stageDef,
+      UserConfigurable stageConf,
+      Map<String, ConfigDefinition> definitionMap,
+      Set<String> hideConfigs,
       ConfigDefinition confDef,
       Config conf,
       IssueCreator issueCreator
@@ -994,14 +1031,15 @@ public class PipelineConfigurationValidator {
             //list of hash maps
             List<Map<String, Object>> maps = (List<Map<String, Object>>) conf.getValue();
             for (Map<String, Object> map : maps) {
-              preview &= validateComplexConfig(configDefinitionsMap, map, stageConf, stageDef, issueCreator);
+              preview &= validateComplexConfig(configDefinitionsMap, map, stageConf, definitionMap, hideConfigs, issueCreator);
             }
           } else if (conf.getValue() instanceof Map) {
             preview &= validateComplexConfig(
                 configDefinitionsMap,
                 (Map<String, Object>) conf.getValue(),
                 stageConf,
-                stageDef,
+                definitionMap,
+                hideConfigs,
                 issueCreator
             );
           }
@@ -1149,8 +1187,9 @@ public class PipelineConfigurationValidator {
   private boolean validateComplexConfig(
       Map<String, ConfigDefinition> configDefinitionsMap,
       Map<String, Object> confvalue,
-      StageConfiguration stageConf,
-      StageDefinition stageDef,
+      UserConfigurable stageConf,
+      Map<String, ConfigDefinition> definitionMap,
+      Set<String> hideConfigs,
       IssueCreator issueCreator
   ) {
     boolean preview = true;
@@ -1158,17 +1197,15 @@ public class PipelineConfigurationValidator {
       String configName = entry.getKey();
       Object value = entry.getValue();
       ConfigDefinition configDefinition = configDefinitionsMap.get(configName);
-      Set<String> hideConfigs = stageDef.getHideConfigs();
       Config config = new Config(configName, value);
       preview &= validateConfigDefinition(
           configDefinition,
           hideConfigs,
           config,
           stageConf,
-          stageDef,
+          definitionMap,
           confvalue,
-          issueCreator,
-          false /*do not inject*/
+          issueCreator
       );
     }
     return preview;

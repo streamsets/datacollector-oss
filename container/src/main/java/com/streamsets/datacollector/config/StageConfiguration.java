@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class StageConfiguration implements Serializable {
+public class StageConfiguration implements Serializable, UserConfigurable {
 
   //basic info
   private final String instanceName;
@@ -103,6 +103,7 @@ public class StageConfiguration implements Serializable {
     return stageVersion;
   }
 
+  @Override
   public List<Config> getConfiguration() {
     return new ArrayList<>(configuration);
   }
@@ -146,6 +147,7 @@ public class StageConfiguration implements Serializable {
     return outputAndEventLanes;
   }
 
+  @Override
   public Config getConfig(String name) {
     return configurationMap.get(name);
   }

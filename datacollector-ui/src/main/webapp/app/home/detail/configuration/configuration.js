@@ -24,7 +24,7 @@ angular
     $scope, $rootScope, $q, $modal, _, $timeout, api, previewService, pipelineConstant, pipelineService
   ) {
 
-    var getIssues = function(config, issues, instanceName, configDefinition) {
+    var getIssues = function(config, issues, instanceName, serviceName, configDefinition) {
       if (instanceName && issues.stageIssues && issues.stageIssues[instanceName]) {
         issues = issues.stageIssues[instanceName];
       } else if (config.errorStage && issues.stageIssues && instanceName &&
@@ -48,7 +48,7 @@ angular
       }
 
       return _.filter((issues || []), function(issue) {
-        return (issue.configName === configDefinition.name);
+        return (issue.configName === configDefinition.name && issue.serviceName == serviceName);
       });
     };
 
@@ -170,12 +170,23 @@ angular
         var commonErrors = $rootScope.common.errors;
         var issues;
 
+        // The configObject can be one of two things - either StageDefinition or ServiceDefinition.
+        var instanceName;
+        var serviceName;
+        if ("service" in configObject) {
+          instanceName = $scope.detailPaneConfig.instanceName;
+          serviceName = configObject.service;
+        } else {
+          instanceName = configObject.instanceName;
+          serviceName = null;
+        }
+
         if (config && config.issues) {
-          issues = getIssues(config, config.issues, configObject.instanceName, configDefinition);
+          issues = getIssues(config, config.issues, instanceName, serviceName, configDefinition);
         }
 
         if (issues.length === 0 && commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
-          issues = getIssues(config, commonErrors[0], configObject.instanceName, configDefinition);
+          issues = getIssues(config, commonErrors[0], instanceName, serviceName, configDefinition);
         }
 
         return issues;
@@ -641,13 +652,27 @@ angular
     };
 
     /**
+     * Return true if given instance looks like a Stage instance.
+     */
+    var isStageInstance = function(instance) {
+      return !("service" in instance);
+    }
+
+    /**
+     * Return true if given instance is stage instance a source.
+     */
+    var isSourceIstance = function(instance) {
+      return isStageInstance(instance) && instance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE;
+    }
+
+    /**
      * Update Stage Preview Data when stage selection changed.
      *
      * @param stageInstance
      */
     var updateFieldDataForStage = function(stageInstance) {
       //In case of processors and targets run the preview to get input fields & if current state of config is previewable.
-      if (stageInstance.uiInfo.stageType !== pipelineConstant.SOURCE_STAGE_TYPE && !$scope.fieldPathsFetchInProgress) {
+      if (isStageInstance(stageInstance) && !isSourceIstance(stageInstance) && !$scope.fieldPathsFetchInProgress) {
         $scope.fieldPathsFetchInProgress = true;
 
         $scope.fieldPaths = [];

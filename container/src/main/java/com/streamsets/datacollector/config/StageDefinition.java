@@ -373,6 +373,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     return hideConfigSet;
   }
 
+  // This method returns not only main configs, but also all complex ones!
   public Map<String, ConfigDefinition> getConfigDefinitionsMap() {
     return configDefinitionsMap;
   }

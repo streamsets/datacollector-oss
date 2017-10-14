@@ -32,7 +32,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0005("Stage name already defined"),
   VALIDATION_0006("Stage definition does not exist, library '{}', name '{}', version '{}'"),
   VALIDATION_0007("Configuration value is required"),
-  VALIDATION_0008("Invalid configuration"),
+  VALIDATION_0008("Invalid configuration: '{}'"),
   VALIDATION_0009("Configuration should be a '{}'"),
   VALIDATION_0010("Output streams '{}' are already defined by stage '{}'"),
   VALIDATION_0011("Stage has open output streams"),

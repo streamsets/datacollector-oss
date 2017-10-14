@@ -39,7 +39,6 @@
           <div
               ng-repeat="service in detailPaneServices"
               ng-if="detailPaneServices">
-            {{groupNameTolabelMap}}
             <div class="form-group "
                  ng-class="{'has-error': getConfigurationIssues(service.config, configDefinition).length > 0}"
                  ng-repeat="configDefinition in service.definition.configDefinitions | filter: {group: groupNameToLabelMap.name} | orderBy: 'displayPosition'"

@@ -25,6 +25,8 @@ public abstract class IssueCreator {
 
   public abstract Issue create(String configGroup, String configName, ErrorCode error, Object... args);
 
+  public abstract IssueCreator forService(String serviceName);
+
   private IssueCreator() {
   }
 
@@ -38,6 +40,11 @@ public abstract class IssueCreator {
       @Override
       public Issue create(String configGroup, String configName, ErrorCode error, Object... args) {
         return new Issue(null, null, configGroup, configName, error, args);
+      }
+
+      @Override
+      public IssueCreator forService(String serviceName) {
+        throw new IllegalStateException("Pipeline can't have declared service.");
       }
 
       @Override
@@ -60,6 +67,11 @@ public abstract class IssueCreator {
       }
 
       @Override
+      public IssueCreator forService(String serviceName) {
+        return getService(instanceName, serviceName);
+      }
+
+      @Override
       public Issue create(String configGroup, ErrorCode error, Object... args) {
         return new Issue(instanceName, null, configGroup, null, error, args);
       }
@@ -76,6 +88,11 @@ public abstract class IssueCreator {
       @Override
       public Issue create(String configGroup, String configName, ErrorCode error, Object... args) {
         return new Issue(instanceName, serviceName, configGroup, configName, error, args);
+      }
+
+      @Override
+      public IssueCreator forService(String serviceName) {
+        throw new IllegalStateException("Service can't have declared service.");
       }
 
       @Override

@@ -18,7 +18,9 @@ package com.streamsets.datacollector.config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.service.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Encapsulates information provided in ServiceDef and information that is required for framework.
@@ -35,6 +37,9 @@ public class ServiceDefinition implements PrivateClassLoaderDefinition {
   private final List<ConfigDefinition> configDefinitions;
   private final boolean privateClassloader;
   private final StageUpgrader upgrader;
+
+  // Calculated, not serialized
+  private final Map<String, ConfigDefinition> configDefinitionsMap;
 
   public ServiceDefinition(
     StageLibraryDefinition libraryDefinition,
@@ -60,6 +65,19 @@ public class ServiceDefinition implements PrivateClassLoaderDefinition {
     this.configDefinitions = configDefinitions;
     this.privateClassloader = privateClassloader;
     this.upgrader = upgrader;
+
+    // Calculated attributes
+    this.configDefinitionsMap = new HashMap<>();
+    configDefinitions.forEach(conf -> {
+     configDefinitionsMap.put(conf.getName(), conf);
+      ModelDefinition modelDefinition = conf.getModel();
+      if(modelDefinition != null && modelDefinition.getConfigDefinitions() != null) {
+        //Multi level complex is not allowed. So we stop at this level
+        //Assumption is that the config property names are unique in the class hierarchy
+        //and across complex types
+        modelDefinition.getConfigDefinitions().forEach(c -> configDefinitionsMap.put(c.getName(), c));
+      }
+    });
   }
 
   public ServiceDefinition(
@@ -75,6 +93,7 @@ public class ServiceDefinition implements PrivateClassLoaderDefinition {
     this.description = def.description;
     this.groupDefinition = def.groupDefinition;
     this.configDefinitions = def.configDefinitions;
+    this.configDefinitionsMap = def.configDefinitionsMap;
     this.privateClassloader = def.privateClassloader;
     this.upgrader = def.upgrader;
   }
@@ -120,6 +139,11 @@ public class ServiceDefinition implements PrivateClassLoaderDefinition {
 
   public List<ConfigDefinition> getConfigDefinitions() {
     return configDefinitions;
+  }
+
+  // This method returns not only main configs, but also all complex ones!
+  public Map<String, ConfigDefinition> getConfigDefinitionsMap() {
+    return configDefinitionsMap;
   }
 
   public String getLabel() {
