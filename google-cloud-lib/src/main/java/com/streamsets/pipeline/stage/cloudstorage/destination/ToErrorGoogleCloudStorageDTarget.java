@@ -27,7 +27,7 @@ import com.streamsets.pipeline.config.DataFormat;
         version = 1,
         label = "Google Cloud Storage Error Destination",
         description = "Writes error records to Google Cloud Storage",
-        onlineHelpRefUrl = ""
+        onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r"
 )
 @ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {

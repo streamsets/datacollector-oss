@@ -25,7 +25,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
         description = "Writes to google cloud storage.",
         icon = "cloud-storage-logo.png",
         recordsByRef = true,
-        onlineHelpRefUrl = ""
+        onlineHelpRefUrl = "index.html#Destinations/GCS.html#task_vn4_nrl_nbb"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
