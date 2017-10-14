@@ -22,9 +22,9 @@ import com.streamsets.pipeline.config.DataFormat;
 public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
     public DataFormatChooserValues() {
         super(
-                DataFormat.DELIMITED,
-                DataFormat.JSON,
-                DataFormat.SDC_JSON
+            DataFormat.DELIMITED,
+            DataFormat.JSON,
+            DataFormat.SDC_JSON
         );
     }
 }

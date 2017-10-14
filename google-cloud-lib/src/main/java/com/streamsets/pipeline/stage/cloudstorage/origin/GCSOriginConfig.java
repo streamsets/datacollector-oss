@@ -32,34 +32,34 @@ import java.util.List;
 
 public class GCSOriginConfig {
     @ConfigDef(
-            required = true,
-            type = ConfigDef.Type.STRING,
-            label = "Bucket",
-            description = "Expression that will identify bucket for each record.",
-            displayPosition = 20,
-            evaluation = ConfigDef.Evaluation.EXPLICIT,
-            elDefs = { RecordEL.class, TimeEL.class, TimeNowEL.class },
-            group = "GCS"
+        required = true,
+        type = ConfigDef.Type.STRING,
+        label = "Bucket",
+        description = "Expression that will identify bucket for each record.",
+        displayPosition = 20,
+        evaluation = ConfigDef.Evaluation.EXPLICIT,
+        elDefs = { RecordEL.class, TimeEL.class, TimeNowEL.class },
+        group = "GCS"
     )
     public String bucketTemplate;
 
     @ConfigDef(
-            required = true,
-            type = ConfigDef.Type.STRING,
-            label = "Common Prefix",
-            description = "The common Prefix",
-            displayPosition = 100,
-            group = "GCS"
+        required = true,
+        type = ConfigDef.Type.STRING,
+        label = "Common Prefix",
+        description = "The common Prefix",
+        displayPosition = 100,
+        group = "GCS"
     )
     public String commonPrefix;
 
     @ConfigDef(
-            required = true,
-            type = ConfigDef.Type.STRING,
-            label = "Prefix Pattern",
-            description = "An Ant-style path pattern that defines the remaining portion of prefix excluding the common prefix",
-            displayPosition = 100,
-            group = "GCS"
+        required = true,
+        type = ConfigDef.Type.STRING,
+        label = "Prefix Pattern",
+        description = "An Ant-style path pattern that defines the remaining portion of prefix excluding the common prefix",
+        displayPosition = 100,
+        group = "GCS"
     )
     public String prefixPattern;
 
@@ -73,11 +73,11 @@ public class GCSOriginConfig {
     public int maxResultQueueSize;
 
     @ConfigDef(
-            required = true,
-            type = ConfigDef.Type.MODEL,
-            label = "Data Format",
-            displayPosition = 1,
-            group = "DATA_FORMAT"
+        required = true,
+        type = ConfigDef.Type.MODEL,
+        label = "Data Format",
+        displayPosition = 1,
+        group = "DATA_FORMAT"
     )
     @ValueChooserModel(DataFormatChooserValues.class)
     public DataFormat dataFormat;
@@ -94,15 +94,14 @@ public class GCSOriginConfig {
     public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();
 
 
-    public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
         dataParserFormatConfig.init(
-                context,
-                dataFormat,
-                "GCS",
-                "GCSOriginConfigdataParserFormatConfig",
-                issues
+            context,
+            dataFormat,
+            "GCS",
+            "gcsOriginConfig.dataFormat",
+            issues
         );
-
         return issues;
     }
 }

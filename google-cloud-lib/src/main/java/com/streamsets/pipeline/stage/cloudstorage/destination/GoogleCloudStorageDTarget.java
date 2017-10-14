@@ -16,16 +16,20 @@
 
 package com.streamsets.pipeline.stage.cloudstorage.destination;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
-        version = 1,
-        label = "Google Cloud Storage Destination",
-        description = "Writes to google cloud storage.",
-        icon = "cloud-storage-logo.png",
-        recordsByRef = true,
-        onlineHelpRefUrl = "index.html#Destinations/GCS.html#task_vn4_nrl_nbb"
+    version = 1,
+    label = "Google Cloud Storage Destination",
+    description = "Writes to google cloud storage.",
+    icon = "cloud-storage-logo.png",
+    recordsByRef = true,
+    onlineHelpRefUrl = "index.html#Destinations/GCS.html#task_vn4_nrl_nbb"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

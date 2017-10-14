@@ -40,138 +40,138 @@ import java.util.List;
 
 public class GoogleCloudStorageSource extends BaseSource {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GoogleCloudStorageSource.class);
-    private Storage storage;
-    private GCSOriginConfig gcsOriginConfig;
-    private DataParser parser;
-    private AntPathMatcher antPathMatcher;
-    private MinMaxPriorityQueue<Blob> minMaxPriorityQueue;
-    private CredentialsProvider credentialsProvider;
+  private static final Logger LOG = LoggerFactory.getLogger(GoogleCloudStorageSource.class);
+  private Storage storage;
+  private GCSOriginConfig gcsOriginConfig;
+  private DataParser parser;
+  private AntPathMatcher antPathMatcher;
+  private MinMaxPriorityQueue<Blob> minMaxPriorityQueue;
+  private CredentialsProvider credentialsProvider;
 
-    public GoogleCloudStorageSource(GCSOriginConfig gcsOriginConfig) {
-        this.gcsOriginConfig = gcsOriginConfig;
+  public GoogleCloudStorageSource(GCSOriginConfig gcsOriginConfig) {
+    this.gcsOriginConfig = gcsOriginConfig;
+  }
+
+  @Override
+  protected List<ConfigIssue> init() {
+    // Validate configuration values and open any required resources.
+    List<ConfigIssue> issues = gcsOriginConfig.init(getContext(), super.init());
+    minMaxPriorityQueue = MinMaxPriorityQueue.orderedBy((Blob o1, Blob o2) -> {
+      int result = o1.getUpdateTime().compareTo(o2.getUpdateTime());
+      if(result != 0) {
+        //same modified time. Use name to sort
+        return result;
+      }
+      return o1.getName().compareTo(o2.getName());
+    }).maximumSize(gcsOriginConfig.maxResultQueueSize).create();
+    antPathMatcher = new AntPathMatcher();
+    gcsOriginConfig.prefixPattern = gcsOriginConfig.commonPrefix + gcsOriginConfig.prefixPattern;
+
+    gcsOriginConfig.credentials.getCredentialsProvider(getContext(), issues).ifPresent(p -> credentialsProvider = p);
+
+    try {
+      storage = StorageOptions.newBuilder().setCredentials(credentialsProvider.getCredentials()).build().getService();
+    } catch (IOException e) {
+      getContext().reportError(Errors.GCS_01, e);
     }
 
-    @Override
-    protected List<ConfigIssue> init() {
-        // Validate configuration values and open any required resources.
-        List<ConfigIssue> issues = gcsOriginConfig.init(getContext(), super.init());
-        minMaxPriorityQueue = MinMaxPriorityQueue.orderedBy((Blob o1, Blob o2) -> {
-            int result = o1.getUpdateTime().compareTo(o2.getUpdateTime());
-            if(result != 0) {
-                //same modified time. Use name to sort
-                return result;
-            }
-            return o1.getName().compareTo(o2.getName());
-        }).maximumSize(gcsOriginConfig.maxResultQueueSize).create();
-        antPathMatcher = new AntPathMatcher();
-        gcsOriginConfig.prefixPattern = gcsOriginConfig.commonPrefix + gcsOriginConfig.prefixPattern;
+    return issues;
+  }
 
-        gcsOriginConfig.credentials.getCredentialsProvider(getContext(), issues).ifPresent(p -> credentialsProvider = p);
+  @Override
+  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    maxBatchSize = gcsOriginConfig.basicConfig.maxBatchSize;
 
-        try {
-            storage = StorageOptions.newBuilder().setCredentials(credentialsProvider.getCredentials()).build().getService();
-        } catch (IOException e) {
-            getContext().reportError(Errors.GCS_01, e);
+    long minTimestamp = 0;
+    String blobId = "";
+    String fileOffset = "0";
+    Page<Blob> blobs;
+
+    if (Strings.isNullOrEmpty(lastSourceOffset)) {
+      // Get Min TimeStamp
+      blobs = storage.list(gcsOriginConfig.bucketTemplate,
+          Storage.BlobListOption.prefix(gcsOriginConfig.commonPrefix));
+
+      for (Blob blob : blobs.iterateAll()) {
+        if (blob.getSize() > 0 && antPathMatcher.match(gcsOriginConfig.prefixPattern, blob.getName())) {
+          minMaxPriorityQueue.add(blob);
         }
+      }
 
-        return issues;
+    } else {
+      minTimestamp = getMinTimestampFromOffset(lastSourceOffset);
+      fileOffset = getFileOffsetFromOffset(lastSourceOffset);
+      blobId = getBlobIdFromOffset(lastSourceOffset);
     }
 
-    @Override
-    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-        maxBatchSize = gcsOriginConfig.basicConfig.maxBatchSize;
+    if (minMaxPriorityQueue.size() == 0) {
+      blobs = storage.list(gcsOriginConfig.bucketTemplate,
+          Storage.BlobListOption.prefix(gcsOriginConfig.commonPrefix));
 
-        long minTimestamp = 0;
-        String blobId = "";
-        String fileOffset = "0";
-        Page<Blob> blobs;
+      for (Blob blob : blobs.iterateAll()) {
+        if (blob.getSize() > 0 && blob.getUpdateTime() >= minTimestamp && antPathMatcher.match(gcsOriginConfig.prefixPattern, blob.getName())) {
+          minMaxPriorityQueue.add(blob);
+        }
+      }
+    }
 
-        if (Strings.isNullOrEmpty(lastSourceOffset)) {
-            // Get Min TimeStamp
-            blobs = storage.list(gcsOriginConfig.bucketTemplate,
-                    Storage.BlobListOption.prefix(gcsOriginConfig.commonPrefix));
+    if (minMaxPriorityQueue.size() == 0) {
+      // Nore more data avaliable
+      return lastSourceOffset;
+    }
 
-            for (Blob blob : blobs.iterateAll()) {
-                if (blob.getSize() > 0 && antPathMatcher.match(gcsOriginConfig.prefixPattern, blob.getName())) {
-                    minMaxPriorityQueue.add(blob);
-                }
-            }
+    // Process Blob
+    if (parser == null) {
+      Blob blob = minMaxPriorityQueue.pollFirst();
 
+      if (blobId.equals(blob.getGeneratedId()) && fileOffset.equals("-1")) {
+        return lastSourceOffset;
+      }
+
+      fileOffset = "0";
+      parser = gcsOriginConfig.dataParserFormatConfig.getParserFactory().getParser(blob.getGeneratedId(),
+          Channels.newInputStream(blob.reader()), fileOffset);
+
+      blobId = blob.getGeneratedId();
+      minTimestamp = blob.getUpdateTime();
+    }
+
+    try {
+      int recordCount = 0;
+      while (recordCount < maxBatchSize) {
+        Record record = parser.parse();
+        if (record != null) {
+          batchMaker.addRecord(record);
+          fileOffset = parser.getOffset();
         } else {
-            minTimestamp = getMinTimestampFromOffset(lastSourceOffset);
-            fileOffset = getFileOffsetFromOffset(lastSourceOffset);
-            blobId = getBlobIdFromOffset(lastSourceOffset);
+          fileOffset = "-1";
+          parser.close();
+          parser = null;
+          break;
         }
-
-        if (minMaxPriorityQueue.size() == 0) {
-            blobs = storage.list(gcsOriginConfig.bucketTemplate,
-                    Storage.BlobListOption.prefix(gcsOriginConfig.commonPrefix));
-
-            for (Blob blob : blobs.iterateAll()) {
-                if (blob.getSize() > 0 && blob.getUpdateTime() >= minTimestamp && antPathMatcher.match(gcsOriginConfig.prefixPattern, blob.getName())) {
-                    minMaxPriorityQueue.add(blob);
-                }
-            }
-        }
-
-        if (minMaxPriorityQueue.size() == 0) {
-            // Nore more data avaliable
-            return lastSourceOffset;
-        }
-
-        // Process Blob
-        if (parser == null) {
-            Blob blob = minMaxPriorityQueue.pollFirst();
-
-            if (blobId.equals(blob.getGeneratedId()) && fileOffset.equals("-1")) {
-                return lastSourceOffset;
-            }
-
-            fileOffset = "0";
-            parser = gcsOriginConfig.dataParserFormatConfig.getParserFactory().getParser(blob.getGeneratedId(),
-                    Channels.newInputStream(blob.reader()), fileOffset);
-
-            blobId = blob.getGeneratedId();
-            minTimestamp = blob.getUpdateTime();
-        }
-
-        try {
-            int recordCount = 0;
-            while (recordCount < maxBatchSize) {
-                Record record = parser.parse();
-                if (record != null) {
-                    batchMaker.addRecord(record);
-                    fileOffset = parser.getOffset();
-                } else {
-                    fileOffset = "-1";
-                    parser.close();
-                    parser = null;
-                    break;
-                }
-                recordCount++;
-            }
-        } catch (IOException e) {
-            getContext().reportError(Errors.GCS_00, e);
-        }
-
-        return String.format("%d::%s::%s", minTimestamp, fileOffset, blobId);
+        recordCount++;
+      }
+    } catch (IOException e) {
+      getContext().reportError(Errors.GCS_00, e);
     }
 
-    private long getMinTimestampFromOffset(String offset) {
-        return Long.valueOf(offset.split("::", 3)[0]);
-    }
+    return String.format("%d::%s::%s", minTimestamp, fileOffset, blobId);
+  }
 
-    private String getFileOffsetFromOffset(String offset) {
-        return offset.split("::", 3)[1];
-    }
+  private long getMinTimestampFromOffset(String offset) {
+    return Long.valueOf(offset.split("::", 3)[0]);
+  }
 
-    private String getBlobIdFromOffset(String offset) {
-        return offset.split("::", 3)[2];
-    }
+  private String getFileOffsetFromOffset(String offset) {
+    return offset.split("::", 3)[1];
+  }
 
-    @Override
-    public void destroy() {
-        IOUtils.closeQuietly(parser);
-    }
+  private String getBlobIdFromOffset(String offset) {
+    return offset.split("::", 3)[2];
+  }
+
+  @Override
+  public void destroy() {
+    IOUtils.closeQuietly(parser);
+  }
 }
