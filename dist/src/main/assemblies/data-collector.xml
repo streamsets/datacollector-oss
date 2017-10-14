@@ -142,6 +142,11 @@
       </excludes>
     </fileSet>
 
+    <fileSet>
+      <directory>${basedir}/target/edge-binaries</directory>
+      <outputDirectory>/edge-binaries</outputDirectory>
+    </fileSet>
+
     <!-- local docs -->
     <fileSet>
       <directory>${docs.dist-dir}</directory>

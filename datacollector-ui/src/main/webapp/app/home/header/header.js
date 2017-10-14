@@ -447,6 +447,23 @@ angular
                 });
               });
             });
+      },
+
+      downloadEdgeExecutable: function () {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Download Edge Executable', 1);
+        if ($scope.executionMode === 'EDGE') {
+          var modalInstance = $modal.open({
+            templateUrl: 'app/home/header/downloadExecutable/downloadExecutable.tpl.html',
+            controller: 'DownloadEdgeExecutableController',
+            size: '',
+            backdrop: 'static',
+            resolve: {
+              pipelineConfig: function () {
+                return $scope.pipelineConfig;
+              }
+            }
+          });
+        }
       }
     });
 

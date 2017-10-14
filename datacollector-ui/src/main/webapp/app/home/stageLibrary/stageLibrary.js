@@ -44,13 +44,14 @@ angular
        *
        */
       onStageFilterGroupChange: function() {
-        var stageNameList = [],
-          regex = new RegExp($scope.searchInput, 'i');
+        var stageNameList = [];
+        var regex = new RegExp($scope.searchInput, 'i');
         $scope.filteredStageLibraries = [];
         angular.forEach($scope.stageLibraries, function(stageLibrary) {
           if (libraryFilter(stageLibrary) && !_.contains(stageNameList, stageLibrary.name) &&
             regex.test(stageLibrary.label) && !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage &&
-            stageLibrary.library !== 'streamsets-datacollector-stats-lib') {
+            stageLibrary.library !== 'streamsets-datacollector-stats-lib' &&
+            stageLibrary.executionModes.indexOf($scope.executionMode) !== -1) {
             stageNameList.push(stageLibrary.name);
             $scope.filteredStageLibraries.push(stageLibrary);
           }
@@ -101,23 +102,23 @@ angular
     };
 
     var updateStageGroups = function() {
-      var stageGroups = [],
-        libraryList = _.chain($scope.stageLibraries)
-          .filter(function(stageLibrary) {
-            return stageLibrary.library !== 'streamsets-datacollector-stats-lib';
-          })
-          .sortBy('libraryLabel')
-          .pluck("library")
-          .unique()
-          .value(),
-        libraryLabelList = _.chain($scope.stageLibraries)
-          .filter(function(stageLibrary) {
-            return stageLibrary.library !== 'streamsets-datacollector-stats-lib';
-          })
-          .sortBy('libraryLabel')
-          .pluck("libraryLabel")
-          .unique()
-          .value();
+      var stageGroups = [];
+      var libraryList = _.chain($scope.stageLibraries)
+        .filter(function (stageLibrary) {
+          return stageLibrary.library !== 'streamsets-datacollector-stats-lib';
+        })
+        .sortBy('libraryLabel')
+        .pluck("library")
+        .unique()
+        .value();
+      var libraryLabelList = _.chain($scope.stageLibraries)
+        .filter(function (stageLibrary) {
+          return stageLibrary.library !== 'streamsets-datacollector-stats-lib';
+        })
+        .sortBy('libraryLabel')
+        .pluck("libraryLabel")
+        .unique()
+        .value();
 
       stageGroups = stageGroups.concat(typeGroups);
 

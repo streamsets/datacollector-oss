@@ -37,7 +37,7 @@
         </bg-pane>
 
         <bg-pane min-size="0">
-          <ng-include src="'app/home/stageLibrary/stageLibrary.tpl.html'"></ng-include>
+          <ng-include ng-if="executionMode" src="'app/home/stageLibrary/stageLibrary.tpl.html'"></ng-include>
         </bg-pane>
 
       </bg-splitter>

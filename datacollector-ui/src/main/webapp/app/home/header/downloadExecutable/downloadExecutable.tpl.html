@@ -1,0 +1,93 @@
+<div class="download-executable-modal-form">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" ng-if="!forceStop" translate="home.header.downloadExecutable">Download Edge Executable</h3>
+  </div>
+  <div class="modal-body">
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div ng-if="!downloaded">
+      <div class="form-group">
+        <label class="control-label" translate="global.form.os">OS</label>
+        <select class="form-control"
+                name="density"
+                ng-model="selectedEdgeOs">
+          <option value="{{pipelineConstant.DARWIN_OS}}"
+                  ng-selected="selectedEdgeOs === pipelineConstant.DARWIN_OS">{{pipelineConstant.DARWIN_OS}}</option>
+          <option value="{{pipelineConstant.LINUX_OS}}"
+                  ng-selected="selectedEdgeOs === pipelineConstant.LINUX_OS">{{pipelineConstant.LINUX_OS}}</option>
+          <option value="{{pipelineConstant.WINDOWS_OS}}"
+                  ng-selected="selectedEdgeOs === pipelineConstant.WINDOWS_OS">{{pipelineConstant.WINDOWS_OS}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="control-label" translate="global.form.architecture">Architecture</label>
+        <select class="form-control"
+                name="density"
+                ng-model="selectedEdgeArch">
+          <option value="{{pipelineConstant.AMD64_ARCH}}"
+                  ng-selected="selectedEdgeArch === pipelineConstant.AMD64_ARCH">{{pipelineConstant.AMD64_ARCH}}</option>
+          <option value="{{pipelineConstant.ARM_ARCH}}"
+                  ng-selected="selectedEdgeArch === pipelineConstant.ARM_ARCH">{{pipelineConstant.ARM_ARCH}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div ng-if="downloaded">
+      <p>Quick Tips</p>
+      <div class="stepper">
+        <div class="step cursor-pointer">
+          <div>
+            <div class="title">1. Extract Downloaded Tar File</div>
+            <div class="body"></div>
+          </div>
+        </div>
+        <div class="step cursor-pointer">
+          <div>
+            <div class="title">2. Starting SDC Edge Pipeline</div>
+            <div class="body">
+              <pre>
+cd streamsets-datacollector-edge
+bin/edge --start={{pipelineConfig.pipelineId}}
+              </pre>
+            </div>
+          </div>
+        </div>
+        <div class="step cursor-pointer">
+          <div>
+            <div class="title">3. REST APIs</div>
+            <div class="body">
+              <pre>
+curl -X GET http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/status
+curl -X POST http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/start
+curl -X POST http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/stop
+curl -X POST http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/resetOffset
+curl -X GET http://localhost:18633/rest/v1/pipeline/{{pipelineConfig.pipelineId}}/metrics
+              </pre>
+            </div>
+          </div>
+        </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            ng-if="!downloaded"
+            class="btn btn-default"
+            ng-click="cancel()"
+            translate="global.form.cancel">Cancel</button>
+    <button type="button"
+            ng-if="!downloaded"
+            class="btn btn-primary"
+            ng-click="download()"
+            translate="global.form.download">Download</button>
+    <button type="button"
+            ng-if="downloaded"
+            class="btn btn-primary"
+            ng-click="done()"
+            translate="global.form.done">Done</button>
+  </div>
+</div>

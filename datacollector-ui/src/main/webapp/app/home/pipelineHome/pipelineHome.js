@@ -807,27 +807,6 @@ angular
         $scope.pipelineConfigDefinition = pipelineService.getPipelineConfigDefinition();
         $scope.stageLibraries = pipelineService.getStageDefinitions();
 
-        $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return stageLibrary.type === pipelineConstant.SOURCE_STAGE_TYPE &&
-            stageLibrary.library !== 'streamsets-datacollector-stats-lib';
-        });
-
-        $scope.processors = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return stageLibrary.type === pipelineConstant.PROCESSOR_STAGE_TYPE &&
-            stageLibrary.library !== 'streamsets-datacollector-stats-lib';
-        });
-
-        $scope.executors = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return (stageLibrary.type === pipelineConstant.EXECUTOR_STAGE_TYPE &&
-          stageLibrary.library !== 'streamsets-datacollector-stats-lib');
-        });
-
-        $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE &&
-          !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage  &&
-          stageLibrary.library !== 'streamsets-datacollector-stats-lib');
-        });
-
         //Pipelines
 
         $scope.existingPipelineLabels = pipelineService.existingPipelineLabels || [];
@@ -1145,6 +1124,35 @@ angular
       $scope.pipelineConfig = pipelineConfig || {};
       $scope.activeConfigInfo = $rootScope.$storage.activeConfigInfo = pipelineConfig.info;
       $scope.pipelineRules = pipelineRules;
+      var executionModeConfig = _.find($scope.pipelineConfig.configuration, function (c) {
+        return c.name === 'executionMode';
+      });
+      $scope.executionMode = executionModeConfig.value;
+
+      $scope.sources = _.filter($scope.stageLibraries, function (stageLibrary) {
+        return stageLibrary.type === pipelineConstant.SOURCE_STAGE_TYPE &&
+          stageLibrary.library !== 'streamsets-datacollector-stats-lib' &&
+          stageLibrary.executionModes.indexOf($scope.executionMode) !== -1;
+      });
+
+      $scope.processors = _.filter($scope.stageLibraries, function (stageLibrary) {
+        return stageLibrary.type === pipelineConstant.PROCESSOR_STAGE_TYPE &&
+          stageLibrary.library !== 'streamsets-datacollector-stats-lib' &&
+          stageLibrary.executionModes.indexOf($scope.executionMode) !== -1;
+      });
+
+      $scope.executors = _.filter($scope.stageLibraries, function (stageLibrary) {
+        return (stageLibrary.type === pipelineConstant.EXECUTOR_STAGE_TYPE &&
+          stageLibrary.library !== 'streamsets-datacollector-stats-lib') &&
+          stageLibrary.executionModes.indexOf($scope.executionMode) !== -1;
+      });
+
+      $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {
+        return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE &&
+          !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage  &&
+          stageLibrary.library !== 'streamsets-datacollector-stats-lib') &&
+          stageLibrary.executionModes.indexOf($scope.executionMode) !== -1;
+      });
 
       //Initialize the pipeline config
       if (!$scope.pipelineConfig.uiInfo || _.isEmpty($scope.pipelineConfig.uiInfo)) {
@@ -1814,8 +1822,8 @@ angular
 
           if (badRecordsStage) {
             var configuration;
-            if (errorStageInst && errorStageInst.stageName == badRecordsStage.name  &&
-              errorStageInst.stageVersion == badRecordsStage.version) {
+            if (errorStageInst && errorStageInst.stageName === badRecordsStage.name  &&
+              errorStageInst.stageVersion === badRecordsStage.version) {
               configuration = errorStageInst.configuration;
             }
             newValue.errorStage = pipelineService.getNewStageInstance({
@@ -1848,9 +1856,8 @@ angular
           });
 
           if (statsAggregatorStage) {
-            var saConfig;
-            if (statsAggregatorStageInst && statsAggregatorStageInst.stageName == statsAggregatorStage.name  &&
-              statsAggregatorStageInst.stageVersion == statsAggregatorStage.version) {
+            if (statsAggregatorStageInst && statsAggregatorStageInst.stageName === statsAggregatorStage.name  &&
+              statsAggregatorStageInst.stageVersion === statsAggregatorStage.version) {
               saConfig = statsAggregatorStageInst.configuration;
             }
             newValue.statsAggregatorStage = pipelineService.getNewStageInstance({
@@ -1882,9 +1889,8 @@ angular
           });
 
           if (startEventStage) {
-            var saConfig;
-            if (startEventStageInst && startEventStageInst.stageName == startEventStage.name  &&
-              startEventStageInst.stageVersion == startEventStage.version) {
+            if (startEventStageInst && startEventStageInst.stageName === startEventStage.name  &&
+              startEventStageInst.stageVersion === startEventStage.version) {
               saConfig = startEventStageInst.configuration;
             }
             eventStage = pipelineService.getNewStageInstance({
@@ -1919,8 +1925,8 @@ angular
 
           if (stopEventStage) {
             var saConfig;
-            if (stopEventStageInst && stopEventStageInst.stageName == stopEventStage.name  &&
-              stopEventStageInst.stageVersion == stopEventStage.version) {
+            if (stopEventStageInst && stopEventStageInst.stageName === stopEventStage.name  &&
+              stopEventStageInst.stageVersion === stopEventStage.version) {
               saConfig = stopEventStageInst.configuration;
             }
             eventStage = pipelineService.getNewStageInstance({
@@ -1986,7 +1992,9 @@ angular
     });
 
     $scope.$on('onOriginStageDelete', function () {
-      api.pipelineAgent.resetOffset($scope.activeConfigInfo.pipelineId);
+      if ($scope.executionMode !== 'EDGE') {
+        api.pipelineAgent.resetOffset($scope.activeConfigInfo.pipelineId);
+      }
     });
 
     $scope.$on('onPipelineConfigSelect', function(event, configInfo) {

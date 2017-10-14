@@ -51,5 +51,11 @@ angular.module('dataCollectorApp.common')
     CONNECT_ACTION: 'connect',
     STAGE_LIBRARY_CATEGORY: 'library',
     INSTALL_ACTION: 'install',
-    UNINSTALL_ACTION: 'uninstall'
+    UNINSTALL_ACTION: 'uninstall',
+
+    DARWIN_OS: 'darwin',
+    LINUX_OS: 'linux',
+    WINDOWS_OS: 'windows',
+    AMD64_ARCH: 'amd64',
+    ARM_ARCH: 'arm'
   });

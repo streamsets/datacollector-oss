@@ -169,6 +169,9 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_01404("Unknown LineageEventType passed to missingSpecificAttributes() '{}'"),
 
   CONTAINER_01500("Stage '{}' configuration '{}', EL must resolve to String or to a CredentialValue resolved to '{}'"),
+
+
+  CONTAINER_01600("Download executable not supported for pipeline execution mode: '{}'"),
   ;
 
   private final String msg;

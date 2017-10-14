@@ -93,6 +93,12 @@
             </a>
           </li>
 
+          <li role="presentation" ng-if="activeConfigInfo.valid && executionMode === 'EDGE'">
+            <a href="#" dropdown-toggle ng-click="downloadEdgeExecutable()">
+              <i class="fa fa-file-archive-o"></i> {{'home.header.downloadExecutable' | translate}}
+            </a>
+          </li>
+
         </ul>
       </div>
 

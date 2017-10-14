@@ -39,6 +39,7 @@
     <docs.dist-dir>${basedir}/src/main/emptydir</docs.dist-dir>
     <sdc.log4j.level>DEBUG</sdc.log4j.level>
     <snappy.version>1.0.5</snappy.version>
+    <datacollector-edge.version>3.0.0.0-SNAPSHOT</datacollector-edge.version>
   </properties>
 
   <dependencies>
@@ -108,6 +109,50 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependency</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>linux-arm</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>target/edge-binaries</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>linux-amd64</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>target/edge-binaries</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.streamsets</groupId>
+                  <artifactId>streamsets-datacollector-edge</artifactId>
+                  <classifier>darwin-amd64</classifier>
+                  <version>${datacollector-edge.version}</version>
+                  <type>tgz</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>target/edge-binaries</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
