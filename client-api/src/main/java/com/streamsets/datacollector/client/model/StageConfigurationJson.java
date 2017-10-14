@@ -34,6 +34,7 @@ public class StageConfigurationJson   {
   private String stageName = null;
   private String stageVersion = null;
   private List<ConfigConfigurationJson> configuration = new ArrayList<ConfigConfigurationJson>();
+  private List<ServiceConfigurationJson> services = new ArrayList<>();
   private Map<String, Object> uiInfo = new HashMap<String, Object>();
   private List<String> inputLanes = new ArrayList<String>();
   private List<String> outputLanes = new ArrayList<String>();
@@ -103,6 +104,18 @@ public class StageConfigurationJson   {
   /**
    **/
   @ApiModelProperty(value = "")
+  @JsonProperty("services")
+  public List<ServiceConfigurationJson> getServices() {
+    return services;
+  }
+  public void setServices(List<ServiceConfigurationJson> services) {
+    this.services = services;
+  }
+
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
   @JsonProperty("uiInfo")
   public Map<String, Object> getUiInfo() {
     return uiInfo;
@@ -159,6 +172,7 @@ public class StageConfigurationJson   {
     sb.append("    stageName: ").append(StringUtil.toIndentedString(stageName)).append("\n");
     sb.append("    stageVersion: ").append(StringUtil.toIndentedString(stageVersion)).append("\n");
     sb.append("    configuration: ").append(StringUtil.toIndentedString(configuration)).append("\n");
+    sb.append("    services: ").append(StringUtil.toIndentedString(services)).append("\n");
     sb.append("    uiInfo: ").append(StringUtil.toIndentedString(uiInfo)).append("\n");
     sb.append("    inputLanes: ").append(StringUtil.toIndentedString(inputLanes)).append("\n");
     sb.append("    outputLanes: ").append(StringUtil.toIndentedString(outputLanes)).append("\n");
