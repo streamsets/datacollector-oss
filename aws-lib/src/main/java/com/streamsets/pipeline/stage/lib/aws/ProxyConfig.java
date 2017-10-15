@@ -30,7 +30,7 @@ public class ProxyConfig {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "10",
       description = "Set connection timeout (in seconds)",
-      displayPosition = 4998,
+      displayPosition = 4995,
       group = "ADVANCED"
   )
   public Integer connectionTimeout = 10;
@@ -41,10 +41,22 @@ public class ProxyConfig {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "50",
       description = "Set socket timeout (in seconds) for read and write operations. ",
-      displayPosition = 4999,
+      displayPosition = 4997,
       group = "ADVANCED"
   )
   public Integer socketTimeout = 50;
+
+  @ConfigDef(
+      required = true,
+      label = "Retry Count",
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "3",
+      description = "Sets the maximum number of retry attempts for failed " +
+          "retry-able requests (ex: 5xx error).",
+      displayPosition = 4999,
+      group = "ADVANCED"
+  )
+  public Integer retryCount = 3;
 
 
   @ConfigDef(
