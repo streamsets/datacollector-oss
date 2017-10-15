@@ -22,6 +22,8 @@ import com.streamsets.datacollector.record.FieldDeserializer;
 import com.streamsets.datacollector.restapi.bean.FieldJson;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 
+import java.time.ZonedDateTime;
+
 public class ObjectMapperFactory {
 
   private static final ObjectMapper OBJECT_MAPPER = create(true);
@@ -35,6 +37,7 @@ public class ObjectMapperFactory {
     module.addDeserializer(FieldJson.class, new FieldDeserializer());
     module.addDeserializer(ErrorMessage.class, new ErrorMessageDeserializer());
     module.addSerializer(ClearCredentialValue.class, new ClearCredentialValueSerializer());
+    module.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
     objectMapper.registerModule(module);
     return objectMapper;
   }
