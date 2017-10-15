@@ -29,8 +29,12 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -41,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.channels.Channels;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
@@ -58,6 +63,7 @@ public class GoogleCloudStorageTarget extends BaseTarget {
 
   private ELVars elVars;
   private ELEval partitionEval;
+  private ELEval fileNameEval;
   private Calendar calendar;
   private CredentialsProvider credentialsProvider;
 
@@ -84,7 +90,9 @@ public class GoogleCloudStorageTarget extends BaseTarget {
       getContext().reportError(Errors.GCS_01, e);
     }
 
-
+    if (gcsTargetConfig.dataFormat == DataFormat.WHOLE_FILE) {
+      fileNameEval = getContext().createELEval("fileNameEL");
+    }
     return issues;
   }
 
@@ -98,41 +106,78 @@ public class GoogleCloudStorageTarget extends BaseTarget {
   public void write(Batch batch) throws StageException {
     TimeEL.setCalendarInContext(elVars, calendar);
     TimeNowEL.setTimeNowInContext(elVars, calendar.getTime());
-
     String pathExpression = gcsTargetConfig.commonPrefix + gcsTargetConfig.partitionTemplate;
+    if (gcsTargetConfig.dataFormat == DataFormat.WHOLE_FILE) {
+      handleWholeFileFormat(batch, elVars);
+    } else {
+      Multimap<String, Record> pathToRecordMap =
+          ELUtils.partitionBatchByExpression(partitionEval, elVars, pathExpression, batch);
 
-    Multimap<String, Record> pathToRecordMap =
-        ELUtils.partitionBatchByExpression(partitionEval, elVars, pathExpression, batch);
-
-    pathToRecordMap.keySet().forEach(path -> {
-      Collection<Record> records = pathToRecordMap.get(path);
-      String fileName = path + gcsTargetConfig.fileNamePrefix + '_' + UUID.randomUUID();
-      BlobId blobId = BlobId.of(gcsTargetConfig.bucketTemplate, fileName);
-      BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(getContentType()).build();
-
-      ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-
-      try (DataGenerator dg = gcsTargetConfig.dataGeneratorFormatConfig.getDataGeneratorFactory().getGenerator(bOut)) {
-        records.forEach(record -> {
-          try {
-            dg.write(record);
-          } catch (DataGeneratorException | IOException e) {
-            LOG.error("Error writing record {}. Reason {}", record.getHeader().getSourceId(), e);
-            getContext().toError(record, Errors.GCS_02, record.getHeader().getSourceId(), e);
-          }
-        });
-      } catch (IOException e) {
-        LOG.error("Error happened when creating Output stream. Reason {}", e);
-      }
-
-      try{
-        if (bOut.size() > 0) {
-          Blob blob = storage.create(blobInfo, bOut.toByteArray());
+      pathToRecordMap.keySet().forEach(path -> {
+        Collection<Record> records = pathToRecordMap.get(path);
+        String fileName = path + gcsTargetConfig.fileNamePrefix + '_' + UUID.randomUUID();
+        BlobId blobId = BlobId.of(gcsTargetConfig.bucketTemplate, fileName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(getContentType()).build();
+        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+        try (DataGenerator dg = gcsTargetConfig.dataGeneratorFormatConfig
+            .getDataGeneratorFactory().getGenerator(bOut)) {
+          records.forEach(record -> {
+            try {
+              dg.write(record);
+            } catch (DataGeneratorException | IOException e) {
+              LOG.error("Error writing record {}. Reason {}", record.getHeader().getSourceId(), e);
+              getContext().toError(record, Errors.GCS_02, record.getHeader().getSourceId(), e);
+            }
+          });
+        } catch (IOException e) {
+          LOG.error("Error happened when creating Output stream. Reason {}", e);
+          records.forEach(record -> getContext().toError(record, e));
         }
-        //TODO: events SDC-7559
-      } catch (StorageException e) {
-        LOG.error("Error happened when writing to Output stream. Reason {}", e);
-        records.forEach(record -> getContext().toError(record, e));
+
+        try{
+          if (bOut.size() > 0) {
+            Blob blob = storage.create(blobInfo, bOut.toByteArray());
+          }
+          //TODO: events SDC-7559
+        } catch (StorageException e) {
+          LOG.error("Error happened when writing to Output stream. Reason {}", e);
+          records.forEach(record -> getContext().toError(record, e));
+        }
+      });
+    }
+  }
+
+  private void handleWholeFileFormat(Batch batch, ELVars elVars) {
+    batch.getRecords().forEachRemaining(record -> {
+      RecordEL.setRecordInContext(elVars, record);
+      try {
+        String path = partitionEval.eval(elVars, gcsTargetConfig.partitionTemplate, String.class);
+        String fileName = fileNameEval.eval(elVars, gcsTargetConfig.dataGeneratorFormatConfig.fileNameEL, String.class);
+        String filePath = gcsTargetConfig.commonPrefix + "/" + path + "/" + fileName;
+        BlobId blobId = BlobId.of(gcsTargetConfig.bucketTemplate, filePath);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+        Blob blob = storage.get(blobId);
+
+        if (blob != null &&
+            gcsTargetConfig.dataGeneratorFormatConfig.wholeFileExistsAction
+                == WholeFileExistsAction.TO_ERROR) {
+          //File already exists and error action is to Error
+          getContext().toError(record, Errors.GCS_03, filePath);
+          return;
+        } //else overwrite
+        try (DataGenerator dg =
+                 gcsTargetConfig.dataGeneratorFormatConfig.getDataGeneratorFactory().getGenerator(
+                     Channels.newOutputStream(storage.writer(blobInfo))
+                 )
+        ) {
+          dg.write(record);
+        } catch (IOException | DataGeneratorException e) {
+          LOG.error("Error happened when Writing to Output stream. Reason {}", e);
+          getContext().toError(record, Errors.GCS_02, e);
+        }
+      } catch (ELEvalException e) {
+        LOG.error("Error happened when evaluating Expressions. Reason {}", e);
+        getContext().toError(record, Errors.GCS_04, e);
       }
     });
   }

@@ -19,25 +19,28 @@ package com.streamsets.pipeline.stage.cloudstorage.lib;
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-    GCS_00("An error occurred while processing the record: '{}'"),
-    GCS_01("Error validating permissions: '{}'"),
-    GCS_02("Error writing record '{}'. Reason : {}");
+  GCS_00("An error occurred while processing the record: '{}'"),
+  GCS_01("Error validating permissions: '{}'"),
+  GCS_02("Error writing record '{}'. Reason : {}"),
+  GCS_03("File Path '{}' already exists"),
+  GCS_04("Error evaluating EL. Reason {}"),
+  ;
 
-    private final String msg;
+  private final String msg;
 
-    Errors(String msg) {
-        this.msg = msg;
-    }
+  Errors(String msg) {
+    this.msg = msg;
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public String getCode() {
-        return name();
-    }
+  /** {@inheritDoc} */
+  @Override
+  public String getCode() {
+    return name();
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public String getMessage() {
-        return msg;
-    }
+  /** {@inheritDoc} */
+  @Override
+  public String getMessage() {
+    return msg;
+  }
 }
