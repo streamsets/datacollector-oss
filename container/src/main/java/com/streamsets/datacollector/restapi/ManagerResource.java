@@ -584,9 +584,11 @@ public class ManagerResource {
     RestAPIUtils.injectPipelineInMDC("*");
     List<SnapshotInfo> snapshotInfoList = new ArrayList<>();
     for(PipelineState pipelineState: manager.getPipelines()) {
-      Runner runner = manager.getRunner(pipelineState.getPipelineId(), pipelineState.getRev());
-      if(runner != null) {
-        snapshotInfoList.addAll(runner.getSnapshotsInfo());
+      if (!pipelineState.getExecutionMode().equals(ExecutionMode.EDGE)) {
+        Runner runner = manager.getRunner(pipelineState.getPipelineId(), pipelineState.getRev());
+        if(runner != null) {
+          snapshotInfoList.addAll(runner.getSnapshotsInfo());
+        }
       }
     }
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapSnapshotInfoNewAPI(
