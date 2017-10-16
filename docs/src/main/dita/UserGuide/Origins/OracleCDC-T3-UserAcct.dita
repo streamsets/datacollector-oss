@@ -54,7 +54,26 @@ GRANT select on &lt;db>.&lt;table> TO &lt;user name>;</codeblock><p>Repeat
                             <li>Log into the database as a user with DBA privileges.</li>
                             <li>Create the user
                                     account:<codeblock>CREATE USER &lt;user name> IDENTIFIED BY &lt;password>;
-GRANT create session, alter session, select any dictionary, logmining, execute_catalog_role TO &lt;username>;
+GRANT create session, alter session, select any dictionary, logmining, execute_catalog_role TO &lt;user name>;
+GRANT select on &lt;db>.&lt;table> TO &lt;user name>;</codeblock><p>Repeat
+                                    the final command for each table that you want to use.</p></li>
+                        </ol></dd>
+                    <dd>
+                        <p>When you configure the origin, use this user account for the JDBC
+                            credentials. </p>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Oracle 11g databases</dt>
+                    <dd>For Oracle 11g databases, create a user account with the necessary
+                        privileges: <ol id="ol_jkg_3zy_mbb">
+                            <li>Log into the database as a user with DBA privileges.</li>
+                            <li>Create the user
+                                    account:<codeblock>CREATE USER &lt;user name> IDENTIFIED BY &lt;password>;
+GRANT create session, alter session, execute_catalog_role, select any dictionary, select any transaction, select any table to &lt;user name>;
+GRANT select on v$logmnr_parameters to &lt;user name>;
+GRANT select on v$logmnr_logs to &lt;user name>;
+GRANT select on v$archived_log to &lt;user name>;
 GRANT select on &lt;db>.&lt;table> TO &lt;user name>;</codeblock><p>Repeat
                                     the final command for each table that you want to use.</p></li>
                         </ol></dd>

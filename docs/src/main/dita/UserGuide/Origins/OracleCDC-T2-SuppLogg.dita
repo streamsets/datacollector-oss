@@ -45,7 +45,7 @@
                         logging. If this is what you want, you can skip to <xref
                             href="OracleCDC-T3-UserAcct.dita#concept_jnz_bd2_3y">Task
                     3</xref>.</p></li>
-                <li>Enable identification key or full supplemental logging. <p>For multitenant
+                <li>Enable identification key or full supplemental logging. <p>For 12c multitenant
                         databases, best practice is to enable logging for the container for the
                         tables, rather than the entire database. You can use the following command
                         first to apply the changes to just the

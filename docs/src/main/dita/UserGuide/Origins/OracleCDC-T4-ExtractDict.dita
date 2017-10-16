@@ -27,7 +27,7 @@
             dictionary are still available. </p>
         <p>Oracle recommends that you extract the dictionary only at off-peak hours since the
             extraction can consume database resources.</p>
-        <p>To extract the dictionary for Oracle 12c databases, run the following
+        <p>To extract the dictionary for Oracle 11g or 12c databases, run the following
             command:<codeblock>EXECUTE DBMS_LOGMNR_D.BUILD(OPTIONS=> DBMS_LOGMNR_D.STORE_IN_REDO_LOGS);</codeblock></p>
         <p>To extract the dictionary for Oracle 12c multitenant databases, run the following
             commands:<codeblock>ALTER SESSION SET CONTAINER=cdb$root;
