@@ -51,10 +51,12 @@
             </dlentry>
             <dlentry>
                 <dt>Cloudera Manager installation</dt>
-                <dd>Define the garbage collector in the Java Options property for the StreamSets
-                    service in Cloudera Manager.</dd>
-                <dd>For example, to use the G1 garbage collector, add the option to the property as
-                    follows:<codeblock> -XX:+UseG1GC</codeblock></dd>
+                <dd>Define the garbage collector in the <uicontrol>Data Collector Advanced
+                        Configuration Snippet (Safety Valve) for sdc-env.sh</uicontrol> field for
+                    the StreamSets service in Cloudera Manager.</dd>
+                <dd>For example, to use the G1 garbage collector, add the following to the
+                        <codeph>sdc-env.sh</codeph> safety
+                    valve:<codeblock> export SDC_JAVA8_OPTS="-XX:+UseG1GC"</codeblock></dd>
             </dlentry>
         </dl>
         <section id="section_gqv_q21_vy">
@@ -81,9 +83,10 @@
                 </dlentry>
                 <dlentry>
                     <dt>Cloudera Manager installation</dt>
-                    <dd>Set the SDC_GC_LOGGING environment variable to false in the
-                            <codeph>sdc-env.sh</codeph> safety valve for the StreamSets service in
-                        Cloudera Manager.</dd>
+                    <dd>Set the SDC_GC_LOGGING environment variable to false in the <uicontrol>Data
+                            Collector Advanced Configuration Snippet (Safety Valve) for
+                            sdc-env.sh</uicontrol> field for the StreamSets service in Cloudera
+                        Manager.</dd>
                     <dd>For example, add the following to the <codeph>sdc-env.sh</codeph> safety
                         valve:<codeblock>export SDC_GC_LOGGING=false</codeblock></dd>
                 </dlentry>

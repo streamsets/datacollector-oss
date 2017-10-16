@@ -58,10 +58,12 @@
       </dlentry>
       <dlentry>
         <dt>Cloudera Manager installation</dt>
-        <dd>Define the heap size in the Java Options property for the StreamSets service in Cloudera
+        <dd>Define the heap size in the <uicontrol>Data Collector Advanced Configuration Snippet
+            (Safety Valve) for sdc-env.sh</uicontrol> field for the StreamSets service in Cloudera
           Manager.</dd>
-        <dd>For example, to double the heap size, add the Xmx and Xms settings to the property as
-          follows:<codeblock>-Xmx2048m -Xms2048m</codeblock></dd>
+        <dd>For example, to double the heap size, add the following to the
+            <codeph>sdc-env.sh</codeph> safety
+          valve:<codeblock>export SDC_JAVA_OPTS="-Xmx2048m -Xms2048m"</codeblock></dd>
       </dlentry>
     </dl>
     <p>With a heap size of 2048 MB, you can configure a pipeline to use up to 65% - that's 1331 MB

@@ -38,8 +38,8 @@
     <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> loads
       the value of the version-specific environment variable and adds it to the SDC_JAVA_OPTS
       environment variable.</p>
-    <p>For a Cloudera Manager installation, define Java configuration options in the Java Options
-      property for the StreamSets service in Cloudera Manager.</p>
+    <p>For a Cloudera Manager installation, define Java configuration options by configuring the
+      StreamSets service through Cloudera Manager.</p>
     <note>To modify Java configuration options for the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> command
       line interface, use the SDC_CLI_JAVA_OPTS environment variable. For more information, see
