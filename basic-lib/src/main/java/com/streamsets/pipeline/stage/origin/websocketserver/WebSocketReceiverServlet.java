@@ -146,7 +146,7 @@ public class WebSocketReceiverServlet extends WebSocketServlet implements WebSoc
     if (reqAppId == null) {
       LOG.warn("Request from '{}' missing appId, rejected", requester);
       res.sendError(HttpServletResponse.SC_FORBIDDEN, "Missing 'appId'");
-    } if (reqAppId != null && !getReceiver().getAppId().equals(reqAppId)) {
+    } if (reqAppId != null && !ourAppId.equals(reqAppId)) {
       LOG.warn("Request from '{}' invalid appId '{}', rejected", requester, reqAppId);
       res.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid 'appId'");
     } else {
