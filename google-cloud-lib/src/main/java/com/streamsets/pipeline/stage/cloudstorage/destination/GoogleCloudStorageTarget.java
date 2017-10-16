@@ -23,8 +23,10 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -39,7 +41,10 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
+import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.stage.cloudstorage.lib.Errors;
+import com.streamsets.pipeline.stage.cloudstorage.lib.GCSEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,11 +56,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GoogleCloudStorageTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(GoogleCloudStorageTarget.class);
   private static final String PARTITION_TEMPLATE = "partitionTemplate";
-
 
   private final GCSTargetConfig gcsTargetConfig;
 
@@ -119,11 +124,13 @@ public class GoogleCloudStorageTarget extends BaseTarget {
         BlobId blobId = BlobId.of(gcsTargetConfig.bucketTemplate, fileName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(getContentType()).build();
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+        final AtomicInteger recordsWithoutErrors = new AtomicInteger(0);
         try (DataGenerator dg = gcsTargetConfig.dataGeneratorFormatConfig
             .getDataGeneratorFactory().getGenerator(bOut)) {
           records.forEach(record -> {
             try {
               dg.write(record);
+              recordsWithoutErrors.incrementAndGet();
             } catch (DataGeneratorException | IOException e) {
               LOG.error("Error writing record {}. Reason {}", record.getHeader().getSourceId(), e);
               getContext().toError(record, Errors.GCS_02, record.getHeader().getSourceId(), e);
@@ -137,8 +144,12 @@ public class GoogleCloudStorageTarget extends BaseTarget {
         try{
           if (bOut.size() > 0) {
             Blob blob = storage.create(blobInfo, bOut.toByteArray());
+            GCSEvents.GCS_OBJECT_WRITTEN.create(getContext())
+                .with(GCSEvents.BUCKET, blob.getBucket())
+                .with(GCSEvents.OBJECT_KEY, blob.getName())
+                .with(GCSEvents.RECORD_COUNT, recordsWithoutErrors.longValue())
+                .createAndSend();
           }
-          //TODO: events SDC-7559
         } catch (StorageException e) {
           LOG.error("Error happened when writing to Output stream. Reason {}", e);
           records.forEach(record -> getContext().toError(record, e));
@@ -165,15 +176,38 @@ public class GoogleCloudStorageTarget extends BaseTarget {
           getContext().toError(record, Errors.GCS_03, filePath);
           return;
         } //else overwrite
+
+        EventRecord eventRecord = GCSEvents.FILE_TRANSFER_COMPLETE_EVENT.create(getContext())
+            .with(FileRefUtil.WHOLE_FILE_SOURCE_FILE_INFO, record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap())
+            .withStringMap(
+                FileRefUtil.WHOLE_FILE_TARGET_FILE_INFO,
+                ImmutableMap.of(
+                    GCSEvents.BUCKET, blobId.getBucket(),
+                    GCSEvents.OBJECT_KEY, blobId.getName()
+                )
+            )
+            .create();
+        FileRefStreamCloseEventHandler fileRefStreamCloseEventHandler =
+            new FileRefStreamCloseEventHandler(eventRecord);
+
+        boolean errorHappened = false;
+
         try (DataGenerator dg =
                  gcsTargetConfig.dataGeneratorFormatConfig.getDataGeneratorFactory().getGenerator(
-                     Channels.newOutputStream(storage.writer(blobInfo))
+                     Channels.newOutputStream(storage.writer(blobInfo)),
+                     //Close handler for populating checksum info in the event.
+                     fileRefStreamCloseEventHandler
                  )
         ) {
           dg.write(record);
         } catch (IOException | DataGeneratorException e) {
           LOG.error("Error happened when Writing to Output stream. Reason {}", e);
           getContext().toError(record, Errors.GCS_02, e);
+          errorHappened = true;
+        }
+        if (!errorHappened){
+          //Put the event if the record is not sent to error.
+          getContext().toEvent(eventRecord);
         }
       } catch (ELEvalException e) {
         LOG.error("Error happened when evaluating Expressions. Reason {}", e);

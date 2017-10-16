@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     label = "Google Cloud Storage Destination",
     description = "Writes to google cloud storage.",
     icon = "cloud-storage-logo.png",
-    recordsByRef = true,
+    producesEvents = true,
     onlineHelpRefUrl = "index.html#Destinations/GCS.html#task_vn4_nrl_nbb"
 )
 @ConfigGroups(value = Groups.class)
