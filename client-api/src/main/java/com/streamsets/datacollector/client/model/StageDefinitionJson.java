@@ -61,6 +61,7 @@ public class StageDefinitionJson   {
   private Integer outputStreams = null;
   private String outputStreamLabelProviderClass = null;
   private List<String> outputStreamLabels = new ArrayList<String>();
+  private List<ServiceDependencyDefinitionJson> services = null;
 
   public enum ExecutionModesEnum {
     STANDALONE("STANDALONE"),
@@ -258,6 +259,18 @@ public class StageDefinitionJson   {
   }
   public void setOutputStreamLabels(List<String> outputStreamLabels) {
     this.outputStreamLabels = outputStreamLabels;
+  }
+
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("service")
+  public List<ServiceDependencyDefinitionJson> getServices() {
+    return services;
+  }
+  public void setServices(List<ServiceDependencyDefinitionJson> services) {
+    this.services = services;
   }
 
 
