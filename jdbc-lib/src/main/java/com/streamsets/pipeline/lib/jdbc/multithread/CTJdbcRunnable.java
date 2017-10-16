@@ -130,4 +130,9 @@ public final class CTJdbcRunnable extends JdbcBaseRunnable {
 
     offsets.put(tableRuntimeContext.getOffsetKey(), offsetFormat);
   }
+
+  @Override
+  public void generateSchemaChanges(BatchContext batchContext) throws SQLException {
+    // no-op
+  }
 }

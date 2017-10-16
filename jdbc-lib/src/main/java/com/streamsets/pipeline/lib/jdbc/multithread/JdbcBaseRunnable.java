@@ -78,8 +78,9 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
   protected final ErrorRecordHandler errorRecordHandler;
   private final Map<String, Object> gaugeMap;
 
-  private TableRuntimeContext tableRuntimeContext;
+  protected TableRuntimeContext tableRuntimeContext;
   private long lastQueryIntervalTime;
+  protected TableReadContext tableReadContext;
 
   private int numSQLErrors = 0;
   private SQLException firstSqlException = null;
@@ -204,7 +205,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
           }
         }
         updateGauge(JdbcBaseRunnable.Status.QUERYING_TABLE);
-        TableReadContext tableReadContext = getOrLoadTableReadContext();
+        tableReadContext = getOrLoadTableReadContext();
         ResultSet rs = tableReadContext.getResultSet();
         boolean resultSetEndReached = false;
         try {
@@ -217,6 +218,9 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
             createAndAddRecord(rs, tableRuntimeContext, batchContext);
             recordCount++;
           }
+
+          generateSchemaChanges(batchContext);
+
           tableRuntimeContext.setResultSetProduced(true);
 
           //Reset numSqlErrors if we are able to read result set and add records to the batch context.

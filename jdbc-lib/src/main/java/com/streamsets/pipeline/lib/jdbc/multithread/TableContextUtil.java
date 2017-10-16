@@ -47,6 +47,7 @@ import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -616,13 +617,13 @@ public final class TableContextUtil {
 
   public static Map<String, TableContext> listCDCTablesForConfig(
       Connection connection,
-      CDCTableConfigBean tableConfigBean
+      CDCTableConfigBean tableConfigBean,
+      boolean enableSchemaChanges
   ) throws SQLException, StageException {
     Map<String, TableContext> tableContextMap = new LinkedHashMap<>();
     Pattern p =
         StringUtils.isEmpty(tableConfigBean.tableExclusionPattern)?
             null : Pattern.compile(tableConfigBean.tableExclusionPattern);
-
 
     final String tablePattern = tableConfigBean.capture_instance + "_CT";
     final String cdcSchema = "cdc";
@@ -630,14 +631,26 @@ public final class TableContextUtil {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
+
         if (p == null || !p.matcher(tableName).matches()) {
-          // validate table is change tracking enabled
+          // get the all column infos
+          Map<String, Integer> columnNameToType = null;
+          if (enableSchemaChanges) {
+            columnNameToType = getColumnNameType(connection, schemaName, tableName);
+            // remove CDC specific columns
+            columnNameToType.remove(MSQueryUtil.CDC_START_LSN);
+            columnNameToType.remove(MSQueryUtil.CDC_END_LSN);
+            columnNameToType.remove(MSQueryUtil.CDC_SEQVAL);
+            columnNameToType.remove(MSQueryUtil.CDC_OPERATION);
+            columnNameToType.remove(MSQueryUtil.CDC_UPDATE_MASK);
+            columnNameToType.remove(MSQueryUtil.CDC_COMMAND_ID);
+          }
+
           try {
               tableContextMap.put(
                   getQualifiedTableName(schemaName, tableName),
-                  createCDCTableContext(schemaName, tableName, tableConfigBean.initialOffset)
+                  createCDCTableContext(schemaName, tableName, tableConfigBean.initialOffset, columnNameToType)
               );
-
           } catch (SQLException | StageException e) {
             LOG.error(JdbcErrors.JDBC_200.getMessage(), schemaName + "." + tableName, e);
           }
@@ -718,7 +731,8 @@ public final class TableContextUtil {
   private static TableContext createCDCTableContext(
       String schemaName,
       String tableName,
-      String initalOffset
+      String initalOffset,
+      Map<String, Integer> columnToType
   ) throws SQLException, StageException {
     LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
     Map<String, String> offsetColumnToStartOffset = new HashMap<>();
@@ -736,7 +750,7 @@ public final class TableContextUtil {
     final int maxNumActivePartitions = 0;
     final String extraOffsetColumnConditions = "";
 
-    return new TableContext(
+    TableContext tableContext = new TableContext(
         schemaName,
         tableName,
         offsetColumnToType,
@@ -748,6 +762,12 @@ public final class TableContextUtil {
         maxNumActivePartitions,
         extraOffsetColumnConditions
     );
+
+    if (columnToType != null) {
+      tableContext.setColumnToType(columnToType);
+    }
+
+    return tableContext;
   }
 
 }

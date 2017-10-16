@@ -147,7 +147,8 @@ public class SQLServerCDCSource extends BasePushSource {
           allTableContexts.putAll(
               TableContextUtil.listCDCTablesForConfig(
                   connectionManager.getConnection(),
-                  tableConfigBean
+                  tableConfigBean,
+                  commonSourceConfigBean.enableSchemaChanges
               )
           );
         }
@@ -252,7 +253,8 @@ public class SQLServerCDCSource extends BasePushSource {
         CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache = new SQLServerCDCContextLoader(
             connectionManager,
             lastSourceOffset,
-            cdcTableJdbcConfigBean.fetchSize
+            cdcTableJdbcConfigBean.fetchSize,
+            commonSourceConfigBean.enableSchemaChanges
         );
 
         TableJdbcConfigBean tableJdbcConfigBean = convertToTableJdbcConfigBean(cdcTableJdbcConfigBean);

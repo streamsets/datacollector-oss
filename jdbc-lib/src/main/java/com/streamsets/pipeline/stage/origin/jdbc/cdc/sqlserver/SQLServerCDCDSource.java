@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     description = "Origin that an read change events from an MS SQL Server Database",
     icon = "sql-server-multithreaded.png",
     resetOffset = true,
+    producesEvents = true,
     upgrader = SQLServerCDCSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/SQLServerCDC.html#task_nsg_fxc_v1b"
 )

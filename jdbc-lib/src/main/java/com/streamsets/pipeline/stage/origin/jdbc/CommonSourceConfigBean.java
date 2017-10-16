@@ -93,6 +93,16 @@ public final class CommonSourceConfigBean {
   )
   public int numSQLErrorRetries;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Enable Schema Changes Event",
+      displayPosition = 170,
+      group = "JDBC"
+  )
+  public boolean enableSchemaChanges;
+
   private static final String MAX_BATCH_SIZE = "maxBatchSize";
   private static final String MAX_CLOB_SIZE = "maxClobSize";
   private static final String MAX_BLOB_SIZE = "maxBlobSize";

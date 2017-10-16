@@ -31,4 +31,9 @@ public interface JdbcRunnable {
       TableRuntimeContext tableRuntimeContext,
       BatchContext batchContext
   ) throws SQLException, StageException;
+
+  /**
+   * If "schema change" configuration is enabled, then check and generate schema change event
+   */
+  void generateSchemaChanges(BatchContext batchContext) throws SQLException;
 }

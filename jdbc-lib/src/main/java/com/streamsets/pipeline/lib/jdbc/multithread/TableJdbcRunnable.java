@@ -98,4 +98,9 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
       offsets.put(tableRuntimeContext.getOffsetKey(), offsetValue);
     }
   }
+
+  @Override
+  public void generateSchemaChanges(BatchContext batchContext) throws SQLException {
+    // no-op
+  }
 }

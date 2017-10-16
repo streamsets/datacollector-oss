@@ -33,15 +33,18 @@ public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, 
   private final ConnectionManager connectionManager;
   private final Map<String, String> offsets;
   private final int fetchSize;
+  private final boolean enableSchemaChanges;
 
   public SQLServerCDCContextLoader(
       ConnectionManager connectionManager,
       Map<String, String> offsets,
-      int fetchSize
+      int fetchSize,
+      boolean enableSchemaChanges
   ) {
     this.connectionManager = connectionManager;
     this.offsets = offsets;
     this.fetchSize = fetchSize;
+    this.enableSchemaChanges = enableSchemaChanges;
   }
 
   @Override
@@ -50,7 +53,12 @@ public class SQLServerCDCContextLoader extends CacheLoader<TableRuntimeContext, 
 
     final Map<String, String> offset = OffsetQueryUtil.getColumnsToOffsetMapFromOffsetFormat(offsets.get(tableRuntimeContext.getOffsetKey()));
 
-    String query = MSQueryUtil.buildCDCQuery(offset, fetchSize, tableContext.getQualifiedName(), tableContext.getOffsetColumnToStartOffset());
+    String query = MSQueryUtil.buildCDCQuery(
+        offset,
+        tableContext.getQualifiedName(),
+        tableContext.getOffsetColumnToStartOffset(),
+        enableSchemaChanges
+    );
 
     Pair<String, List<Pair<Integer, String>>> queryAndParamValToSet = Pair.of(query, new ArrayList<>());
 

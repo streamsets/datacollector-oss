@@ -40,6 +40,10 @@ public final class MSQueryUtil {
   public static final String CDC_SEQVAL = "__$seqval";
   public static final String CDC_OPERATION = "__$operation";
   public static final String CDC_UPDATE_MASK = "__$update_mask";
+  public static final String CDC_COMMAND_ID = "__$command_id";
+  public static final String CDC_SOURCE_SCHEMA_NAME = "schema_name";
+  public static final String CDC_SOURCE_TABLE_NAME = "table_name";
+  public static final String CDC_CAPTURE_INSTANCE_NAME = "capture_instance_name";
 
   private static final String CHANGE_TRACKING_TABLE_QUERY = "SET NOCOUNT ON;\n" +
       "SELECT min_valid_version \n" +
@@ -160,7 +164,12 @@ public final class MSQueryUtil {
     }
   }
 
-  public static String buildCDCQuery(Map<String, String> offsetMap, int maxBatchSize, String tableName, Map<String, String> startOffset) {
+  public static String buildCDCQuery(
+      Map<String, String> offsetMap,
+      String tableName,
+      Map<String, String> startOffset,
+      boolean enableSchemaChanges
+  ) {
     StringBuilder query = new StringBuilder();
     query.append(String.format(SELECT_CLAUSE, tableName));
 
@@ -181,6 +190,41 @@ public final class MSQueryUtil {
     }
 
     query.append(String.format(ORDER_BY_CLAUSE, COMMA_SPACE_JOINER.join(ImmutableList.of(CDC_START_LSN, CDC_SEQVAL))));
+
+    // if schema change detection is enabled, get first row of the source table
+    if (enableSchemaChanges) {
+      query.append("\n");
+      query.append("DECLARE @schema_name VARCHAR(MAX);");
+      query.append("\n");
+      query.append("DECLARE @table_name VARCHAR(MAX);");
+      query.append("\n");
+      query.append("DECLARE @capture_instance_name VARCHAR(MAX);");
+      query.append("\n");
+
+      // get the source table info
+      query.append(
+          "SELECT @schema_name=OBJECT_SCHEMA_NAME(source_object_id), @table_name=OBJECT_NAME(source_object_id), @capture_instance_name=capture_instance");
+      query.append(" FROM cdc.change_tables");
+      query.append(String.format(
+          " WHERE capture_instance = '%s';",
+          tableName.substring("cdc.".length(), tableName.length() - "_CT".length())
+      ));
+
+      query.append("\n");
+      // get the first row of source table in additional to source table info (schema & table name) and capture instance name
+      query.append(
+          "EXEC(" +
+            "'SELECT TOP 1 * " +
+            " FROM (" +
+                "SELECT ''' + @schema_name + ''' AS " + CDC_SOURCE_SCHEMA_NAME + ", " +
+                "''' + @table_name + ''' AS " + CDC_SOURCE_TABLE_NAME + ", " +
+                "''' + @capture_instance_name + ''' AS " + CDC_CAPTURE_INSTANCE_NAME +
+            ") TMP" +
+            " LEFT OUTER JOIN ' + @schema_name + '.' + @table_name " +
+            "+ ' ON TMP." + CDC_SOURCE_SCHEMA_NAME + "<> NULL'" +
+          ");"
+      );
+    }
 
     return query.toString();
   }

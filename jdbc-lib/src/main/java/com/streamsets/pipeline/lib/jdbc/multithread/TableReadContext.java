@@ -138,4 +138,12 @@ public final class TableReadContext {
     JdbcUtil.closeQuietly(rs);
     JdbcUtil.closeQuietly(ps);
   }
+
+  public ResultSet getMoreResultSet() throws SQLException {
+    ResultSet resultSet = null;
+    if (ps.getMoreResults()) {
+      resultSet = ps.getResultSet();
+    }
+    return resultSet;
+  }
 }

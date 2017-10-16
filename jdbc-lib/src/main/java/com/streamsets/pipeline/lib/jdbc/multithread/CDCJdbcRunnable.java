@@ -17,6 +17,8 @@ package com.streamsets.pipeline.lib.jdbc.multithread;
 
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.MapDifference;
+import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
@@ -28,7 +30,9 @@ import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
+import com.streamsets.pipeline.stage.origin.jdbc.JdbcEvents;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,5 +124,61 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
     batchContext.getBatchMaker().addRecord(record);
 
     offsets.put(tableRuntimeContext.getOffsetKey(), offsetFormat);
+  }
+
+  @Override
+  public void generateSchemaChanges(BatchContext batchContext) throws SQLException {
+    Map<String, Integer> source = new HashMap<>();
+    ResultSet rs = tableReadContext.getMoreResultSet();
+    String schemaName = "";
+    String tableName = "";
+    String captureInstanceName = "";
+
+    if (rs != null && rs.next()) {
+      ResultSetMetaData data = rs.getMetaData();
+
+      for (int i = 1; i <= data.getColumnCount(); i++) {
+        String label = data.getColumnLabel(i);
+        if (label.equals(MSQueryUtil.CDC_SOURCE_SCHEMA_NAME)) {
+          schemaName = rs.getString(label);
+        } else if (label.equals(MSQueryUtil.CDC_SOURCE_TABLE_NAME)) {
+          tableName = rs.getString(label);
+        } else if (label.equals(MSQueryUtil.CDC_CAPTURE_INSTANCE_NAME)) {
+          captureInstanceName = rs.getString(label);
+        } else {
+          int type = data.getColumnType(i);
+          source.put(label, type);
+        }
+      }
+
+      boolean schemaChanges = getDiff(captureInstanceName, source, tableRuntimeContext.getSourceTableContext().getColumnToType());
+
+      if (schemaChanges) {
+        JdbcEvents.SCHEMA_CHANGE.create(context, batchContext)
+            .with("source-table-schema-name", schemaName)
+            .with("source-table-name", tableName)
+            .with("capture-instance-name", captureInstanceName)
+            .createAndSend();
+        context.processBatch(batchContext);
+      }
+    }
+  }
+
+  private boolean getDiff(String captureInstanceName, Map<String, Integer> sourceTableColumnInfo, Map<String, Integer> cdcTableColumnInfo) {
+    MapDifference<String, Integer> diff = Maps.difference(sourceTableColumnInfo, cdcTableColumnInfo);
+
+    if (!diff.areEqual()) {
+      if (LOG.isTraceEnabled()) {
+        LOG.trace(
+            "Detected drift for table {} - new columns: {}, drop columns: {}",
+            captureInstanceName,
+            StringUtils.join(diff.entriesOnlyOnLeft().keySet(), ","),
+            StringUtils.join(diff.entriesOnlyOnRight().keySet(), ",")
+        );
+      }
+      return true;
+    }
+
+    return false;
   }
 }

@@ -35,7 +35,6 @@ public class TableContext {
 
   private final String schema;
   private final String tableName;
-  private Map<String, String> offsetColumnToStartOffset = new HashMap<>();
   private final LinkedHashMap<String, Integer> offsetColumnToType = new LinkedHashMap<>();
   private final Map<String, String> offsetColumnToPartitionOffsetAdjustments = new HashMap<>();
   private final Map<String, String> offsetColumnToMinValues = new HashMap<>();
@@ -44,6 +43,9 @@ public class TableContext {
   private final int maxNumActivePartitions;
   private final String extraOffsetColumnConditions;
   private final boolean partitionable;
+  private Map<String, String> offsetColumnToStartOffset = new HashMap<>();
+  // optionally store all column labels and types
+  private Map<String, Integer> columnToType = new LinkedHashMap<>();
 
   public TableContext(
       String schema,
@@ -231,5 +233,13 @@ public class TableContext {
 
   public void setOffsetColumnToStartOffset(Map<String, String> offsetColumnToStartOffset) {
     this.offsetColumnToStartOffset = offsetColumnToStartOffset;
+  }
+
+  public void setColumnToType(Map<String, Integer> columnToType) {
+    this.columnToType = columnToType;
+  }
+
+  public Map<String, Integer> getColumnToType() {
+    return this.columnToType;
   }
 }
