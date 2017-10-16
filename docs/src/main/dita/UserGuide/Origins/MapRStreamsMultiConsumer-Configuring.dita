@@ -13,64 +13,62 @@
   limitations under the License.
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
-<task id="task_ost_3n4_x1b">
-    <title>Configuring a Kafka Multitopic Consumer</title>
+<task id="task_pkc_lww_lbb">
+    <title>Configuring a MapR Streams Multitopic Consumer</title>
     <taskbody>
-        <context><indexterm>Kafka Multitopic Consumer
-                origin<indexterm>configuring</indexterm></indexterm>Configure a Kafka Multitopic
-            Consumer to use multiple threads to read data from multiple topics in a Kafka cluster. </context>
-        <steps>
+        <context id="context_bjz_ttj_mbb"><indexterm>MapR Streams Multitopic Consumer
+                    origin<indexterm>configuring</indexterm></indexterm>Configure a MapR Streams
+            Multitopic Consumer to read messages from MapR Streams. </context>
+        <steps id="steps_i5h_xtl_2v">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-EHandling">
                 <cmd/>
             </step>
             <step>
-                <cmd>On the <uicontrol>Kafka</uicontrol> tab, configure the following
+                <cmd>On the <uicontrol>MapR Streams</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_v4j_qhw_yq">
+                    <table frame="all" rowsep="1" colsep="1" id="table_ptq_myl_2v">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Kafka Property</entry>
+                                    <entry>MapR Streams Multitopic Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-KafkaBrokerURI">
-                                    <entry/>
-                                </row>
                                 <row>
                                     <entry>Consumer Group</entry>
-                                    <entry>Kafka consumer group that the <ph
+                                    <entry>Consumer group that the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> belongs to.</entry>
                                 </row>
                                 <row>
                                     <entry>Topic List</entry>
-                                    <entry>The Kafka topics to read. Click
-                                            <uicontrol>Add</uicontrol> to add additional topics. <p>
-                                            <note type="tip">You can use <xref
-                                                  href="PreviewingRawSourceData.dita#task_jp5_ql1_tq"
-                                                  >Raw Preview</xref> to generate a list of topics
-                                                associated with a broker. The list displays in a
-                                                format that you can use to list the topics in <xref
-                                                  href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
-                                                  >bulk edit mode</xref>. </note>
-                                        </p></entry>
+                                    <entry>The topics to read. Use the following
+                                            format:<codeblock>&lt;path to stream>:&lt;topic></codeblock><p>Click
+                                                <uicontrol>Add</uicontrol> to add additional topics.
+                                            </p><note type="tip">You can use <xref
+                                                href="PreviewingRawSourceData.dita#task_jp5_ql1_tq"
+                                                >Raw Preview</xref> to generate a list of topics
+                                            associated with a broker. The list displays in a format
+                                            that you can use to list the topics in <xref
+                                                href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                                >bulk edit mode</xref>. </note></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ProduceSingleRec">
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Number of Threads  </entry> <entry>The number of threads the origin generates and uses for multithreaded processing. The origin
-                                        uses threads as defined by the Kafka partition assignment
-                                        strategy. For more information, see <xref
-                                            href="KafkaMultiConsumer-MultithreadProcessing.dita#concept_ifs_wtm_3z"
+                                    <entry>Number of Threads </entry>
+                                    <entry>The number of threads the origin generates and uses for
+                                        multithreaded processing. MapR Streams distributes
+                                        partitions equally among all the consumers in a group. For
+                                        more information, see <xref
+                                            href="MapRStreamsMultiConsumer-MultithreadProcessing.dita#concept_ifs_wtm_3z"
                                         />.</entry>
                                 </row>
                                 <row
@@ -82,20 +80,19 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Kafka Configuration <xref
-                                            href="../Origins/KafkaMultiConsumer-AdditionalKProp.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"/></xref>
+                                    <entry>MapR Streams Configuration <xref
+                                            href="MapRStreamsCons-AddProps.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_uht_pm4_2v"/></xref>
                                     </entry>
-                                    <entry>
-                                        <p
-                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/p-KafkaConfig1"/>
-                                        <p
-                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/p-KafkaConfig2"/>
-                                        <p id="p-KafkaConfig3">For information about enabling secure
-                                            connections to Kafka, see <xref
-                                                href="../Origins/KafkaMultiConsumer-EnablingSecurity.dita"
-                                            />.</p></entry>
-                                                                           
+                                    <entry>Additional configuration properties to use. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
+                                            <uicontrol>Add</uicontrol> icon to add properties.<p>Use
+                                            the property names and values as expected by MapR
+                                            Streams.</p><p>You can use MapR Streams properties and
+                                            the set of Kafka properties supported by MapR Streams.
+                                        </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -118,14 +115,14 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format <xref href="KafkaMultiConsumer-DataFormats.dita">
+                                    <entry>Data Format <xref href="MapRStreamsCons-DataFormats.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_bmy_h5q_ds"
                                         /></xref></entry>
                                     <entry>Type of data to be read. Use one of the following
-                                            options:<ul
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-Kafka"
-                                            id="ul_l1j_hnf_qw">
+                                        options: <ul
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-ALL"
+                                            id="ul_w5w_syl_2v">
                                             <li/>
                                         </ul></entry>
                                 </row>
@@ -201,9 +198,6 @@
                         </tgroup>
                     </table>
                 </info>
-            </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-Datagram">
-                <cmd/>
             </step>
             <step>
                 <cmd>For delimited data, on the <wintitle>Data Format</wintitle> tab, configure the
@@ -455,18 +449,6 @@
                             <tbody>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-XMLDelimElement">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-XMLFieldXpath">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-XMLNamespaces">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-row-XMLOutputAtts">
                                     <entry/>
                                 </row>
                                 <row

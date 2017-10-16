@@ -18,11 +18,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hdc_fvn_sx">
- <title>Processing All Unread Data</title>
+ <title>Processing Available Data</title>
  <conbody>
-  <p><indexterm>Kafka Consumer origin<indexterm>processing all unread
-            data</indexterm></indexterm>You can configure the Kafka Consumer origin to read all
-            unread data in a topic. By default, the Kafka Consumer origin reads only incoming data. </p>
+  <p><indexterm>Kafka Consumer origin<indexterm>processing available data</indexterm></indexterm>You
+            can configure the Kafka Consumer origin to read all unread data in a topic. By default,
+            the Kafka Consumer origin reads only incoming data. </p>
         <p>To read all unread data in the topic, add the auto.offset.reset Kafka configuration
             property to the origin:<ol id="ol_n4r_rvn_sx">
                 <li>On the <wintitle>Kafka</wintitle> tab, click the <uicontrol>Add</uicontrol> icon

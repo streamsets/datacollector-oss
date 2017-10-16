@@ -30,9 +30,9 @@
         <p>
             <note type="important">In Kafka, make sure that the partition assignment strategy is set
                 to the strategy you want to use. For example, in Kafka 0.10.1, you can set
-                partition.assignment.property to range or roundrobin. For more information about the
-                strategies, see <xref href="https://kafka.apache.org/documentation/" format="html"
-                    scope="external">the Kafka documentation</xref>.</note>
+                partition.assignment.strategy property to range or roundrobin. For more information
+                about the strategies, see <xref href="https://kafka.apache.org/documentation/"
+                    format="html" scope="external">the Kafka documentation</xref>.</note>
         </p>
         <p>When performing multithreaded processing, the Kafka Multitopic Consumer origin checks the
             list of topics to process and creates the specified number of threads. Each thread

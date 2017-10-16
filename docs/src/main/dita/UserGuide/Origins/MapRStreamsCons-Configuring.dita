@@ -19,12 +19,13 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_bfz_gch_2v">
     <title>Configuring a MapR Streams Consumer</title>
-    <shortdesc>Configure a MapR Streams Consumer to read messages from MapR Streams. </shortdesc>
     <taskbody>
-        <context/>
+        <context><indexterm>MapR Streams Consumer
+                origin<indexterm>configuring</indexterm></indexterm>Configure a MapR Streams
+            Consumer to read messages from MapR Streams. </context>
         <steps id="steps_i5h_xtl_2v">
             <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-EHandling">
                 <cmd/>
             </step>
             <step>
@@ -71,12 +72,14 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_uht_pm4_2v"/></xref>
                                     </entry>
-                                    <entry>Additional configuration properties to use. To add
-                                        properties, click <uicontrol>Add</uicontrol> and define the
-                                        property name and value. <p>Use the property names and
-                                            values as expected by MapR Streams.</p><p>You can use
-                                            MapR Streams properties and set of Kafka properties
-                                            supported by MapR Streams. </p></entry>
+                                    <entry>Additional configuration properties to use. Using <xref
+                                            href="../Pipeline_Configuration/SimpleBulkEdit.dita#concept_alb_b3y_cbb"
+                                            >simple or bulk edit mode</xref>, click the
+                                            <uicontrol>Add</uicontrol> icon to add properties.<p>Use
+                                            the property names and values as expected by MapR
+                                            Streams.</p><p>You can use MapR Streams properties and
+                                            set of Kafka properties supported by MapR Streams.
+                                        </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

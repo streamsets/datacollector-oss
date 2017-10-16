@@ -19,14 +19,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lzy_xlg_2v">
  <title>Additional Properties</title>
- <shortdesc>You can add custom configuration properties to MapR Streams Consumer.</shortdesc>
+ <shortdesc>You can add custom configuration properties to MapR Streams Consumer. You can use any
+        MapR or Kafka property supported by MapR Streams. For more information, see the MapR Streams
+        documentation. </shortdesc>
  <conbody>
   <p><indexterm>additional properties<indexterm>MapR Streams
                 Consumer</indexterm></indexterm><indexterm>MapR Streams Consumer
                     origin<indexterm>additional properties</indexterm></indexterm>You can add any
             valid configuration property. When you add a property, enter the exact property name and
             the value. MapR Streams Consumer does not validate the property names or values.</p>
-        <p>You can use any MapR or Kafka property supported by MapR Streams. For more information,
-            see the MapR Streams documentation. </p>
  </conbody>
 </concept>

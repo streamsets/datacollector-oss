@@ -51,8 +51,9 @@
                 continues from where it left off by default. When you want the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to process all available data instead of continuing from where it stopped, reset
-                the origin.</p><p>To change the starting point for a Kafka Consumer, update the
-                offset in the Kafka ZooKeeper. For details, see the Kafka documentation. The
+                the origin.</p><p>You can configure the Kafka and MapR Streams origins to process
+                all available data by specifying  an additional Kafka configuration property. For
+                more information, see "Processing All Unread Data" in the stage documentation. The
                 remaining origin stages process transient data where resetting the origin has no
                 effect.</p><p>You can reset the origin for multiple pipelines at the same time from
                 the <uicontrol>Home</uicontrol> page. Or, you can reset the origin for a single

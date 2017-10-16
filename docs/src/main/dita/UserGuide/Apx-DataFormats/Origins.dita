@@ -396,6 +396,29 @@
               <entry/>
             </row>
             <row>
+              <entry>MapR Streams Multitopic Consumer</entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_mbn_szj_mbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_gcn_szj_mbb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_fdn_szj_mbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_wdn_szj_mbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_o2n_szj_mbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_gfn_szj_mbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_vfn_szj_mbb"
+                /></entry>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_mgn_szj_mbb"
+                /></entry>
+              <entry/>
+              <entry><image href="../Graphics/CheckIcon.png" scale="30" id="image_lhn_szj_mbb"
+                /></entry>
+            </row>
+            <row>
               <entry>MongoDB</entry>
               <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
             </row>

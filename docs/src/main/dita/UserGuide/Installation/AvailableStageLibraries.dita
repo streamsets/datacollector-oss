@@ -54,9 +54,10 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_9-lib</entry>
-                            <entry>For Kafka version 0.9.<p>Includes:<ul id="ul_hpb_htg_qw">
+                            <entry>For Kafka version 0.9.x.<p>Includes:<ul id="ul_hpb_htg_qw">
                                         <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
+                                        <li>Kafka Multitopic Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>Kafka Producer destination</li>
@@ -100,7 +101,7 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-apache-solr_6_1_0-lib</entry>
-                            <entry>For Apache Solr version 6.1<p>Includes the Solr
+                            <entry>For Apache Solr version 6.1.<p>Includes the Solr
                                 destination.</p></entry>
                         </row>
                         <row>
@@ -463,10 +464,11 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-cdh_kafka_2_0-lib </entry>
-                            <entry>For the Cloudera distribution of Apache Kafka 2.0 (0.9.0).
+                            <entry>For the Cloudera distribution of Apache Kafka 2.0.x (0.9.0).
                                     <p>Includes: <ul id="ul_kjf_ntg_qw">
                                         <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
+                                        <li>Kafka Multitopic Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>Kafka Producer destination</li>
@@ -474,10 +476,11 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-cdh_kafka_2_1-lib </entry>
-                            <entry>For the Cloudera distribution of Apache Kafka 2.1 (0.9.0).
+                            <entry>For the Cloudera distribution of Apache Kafka 2.1.x (0.9.0).
                                     <p>Includes: <ul id="ul_scl_wym_pz">
                                         <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin</li>
+                                        <li>Kafka Multitopic Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>Kafka Producer destination</li>
@@ -589,7 +592,7 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-hdp_2_5-lib </entry>
-                            <entry>For the Hortonworks version 2.5 distribution of Apache Hadoop.
+                            <entry>For the Hortonworks version 2.5.x distribution of Apache Hadoop.
                                         <p>Includes:<ul id="ul_jcc_kjv_cy">
                                         <li>
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
@@ -597,6 +600,7 @@
                                         <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin for standalone and cluster mode
                                             pipelines</li>
+                                        <li>Kafka Multitopic Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>HBase Lookup processor</li>
@@ -614,7 +618,7 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-hdp_2_6-lib </entry>
-                            <entry>For the Hortonworks version 2.6 distribution of Apache Hadoop.
+                            <entry>For the Hortonworks version 2.6.x distribution of Apache Hadoop.
                                         <p>Includes:<ul id="ul_pz4_nhd_wz">
                                         <li>
                                             <p>Hadoop FS origin for cluster mode pipelines</p>
@@ -622,6 +626,7 @@
                                         <li>HTTP to Kafka origin</li>
                                         <li>Kafka Consumer origin for standalone and cluster mode
                                             pipelines</li>
+                                        <li>Kafka Multitopic Consumer origin</li>
                                         <li>SDC RPC to Kafka origin</li>
                                         <li>UDP to Kafka origin</li>
                                         <li>HBase Lookup processor</li>
@@ -709,6 +714,7 @@
                                         <li>MapR FS origin for cluster mode pipelines</li>
                                         <li>MapR Streams Consumer origin for standalone and cluster
                                             mode pipelines</li>
+                                        <li>MapR Streams Multitopic Consumer</li>
                                         <li>HBase Lookup processor</li>
                                         <li>Hive Metadata processor</li>
                                         <li>Spark Evaluator processor</li>

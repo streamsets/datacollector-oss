@@ -73,6 +73,9 @@
           FS.</li>
         <li><xref href="MapRStreamsCons.dita#concept_cvy_xsf_2v">MapR Streams Consumer</xref> -
           Reads messages from MapR Streams.</li>
+        <li><xref href="MapRStreamsMultiConsumer.dita#concept_hvd_hww_lbb">MapR Streams Multitopic
+            Consumer</xref> - Reads messages from multiple MapR Streams topics. Creates multiple
+          threads to enable parallel processing in a multithreaded pipeline.</li>
         <li><xref href="MongoDB.dita#concept_bk4_2rs_ns">MongoDB</xref> - Reads documents from
           MongoDB.</li>
         <li><xref href="MongoDBOplog.dita#concept_mjn_yqw_4y">MongoDB Oplog</xref> - Reads entries

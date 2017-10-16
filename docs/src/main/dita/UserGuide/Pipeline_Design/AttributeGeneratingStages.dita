@@ -144,6 +144,22 @@
                                         id="image_vyh_ty3_fbb"/></xref></entry>
                         </row>
                         <row>
+                            <entry>MapR Streams Consumer origin</entry>
+                            <entry>Includes information about the origins of the record in record
+                                header attributes. <xref
+                                    href="../Origins/MapRStreamsCons-RecordHeaderAtts.dita">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                /></xref></entry>
+                        </row>
+                        <row>
+                            <entry>MapR Streams Multitopic Consumer origin</entry>
+                            <entry>Includes information about the origins of the record in record
+                                header attributes. <xref
+                                    href="../Origins/MapRStreamsMultiConsumer-RecordHeaderAtts.dita">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                /></xref></entry>
+                        </row>
+                        <row>
                             <entry>MongoDB Oplog origin</entry>
                             <entry>Includes CRUD information in CDC header attributes. <xref
                                     href="../Origins/MongoDBOplog-CDCHeader.dita">

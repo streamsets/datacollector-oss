@@ -18,12 +18,12 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ynx_vzg_2v">
- <title>Processing Available Data</title>
+ <title>Processing All Unread Data</title>
  <shortdesc>When you start a pipeline for the first time, the MapR Streams Consumer becomes a new
         consumer group for the topic. It reads only incoming data, processing data from all
         partitions, and ignores any existing data in the topic by default. </shortdesc>
  <conbody>
-        <p><indexterm>MapR Streams Consumer origin<indexterm>processing all
+        <p><indexterm>MapR Streams Consumer origin<indexterm>processing all unread
                 data</indexterm></indexterm>To read all unread data in the topic, add the
                 <uicontrol>auto.offset.reset</uicontrol> Kafka configuration property and set it to
                 <uicontrol>earliest</uicontrol>. For more information about this property, see the
