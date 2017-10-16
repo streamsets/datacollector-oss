@@ -17,12 +17,13 @@ package com.streamsets.datacollector.creation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.credential.CredentialEL;
+import com.streamsets.datacollector.definition.ServiceDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
@@ -48,6 +49,9 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.service.Service;
+import com.streamsets.pipeline.api.service.ServiceDef;
+import com.streamsets.pipeline.api.service.ServiceDependency;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,7 +61,6 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,7 +147,43 @@ public class TestPipelineBeanCreator {
     }
   }
 
-  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
+  @ServiceDef(
+    provides = Runnable.class,
+    version = 1,
+    label = "The best service ever"
+  )
+  public static class CoolService implements Service, Runnable {
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.NUMBER,
+        defaultValue = "1",
+        required = false
+    )
+    public int beanInt;
+
+    @Override
+    public List<ConfigIssue> init(Context context) {
+      return null;
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+
+    @Override
+    public void run() {
+
+    }
+  }
+
+  @StageDef(
+    version = 1,
+    label = "L",
+    onlineHelpRefUrl = "",
+    services = @ServiceDependency(service = Runnable.class)
+  )
   public static class MySource extends BaseSource {
 
     @ConfigDef(
@@ -313,14 +352,25 @@ public class TestPipelineBeanCreator {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
+    ServiceDefinition serviceDef = ServiceDefinitionExtractor.get().extract(libraryDef, CoolService.class);
 
-    StageConfiguration stageConf = new StageConfigurationBuilder("i", "n").build();
+    StageConfiguration stageConf = new StageConfigurationBuilder("i", "n")
+      .withServices(new ServiceConfigurationBuilder()
+        .withService(CoolService.class)
+        .build())
+      .build();
 
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", 1);
     List<Issue> issues = new ArrayList<>();
 
-    StageBean bean = PipelineBeanCreator.get().createStage(stageDef, Mockito.mock(ClassLoaderReleaser.class), stageConf,
-                                                           constants, issues);
+    StageBean bean = PipelineBeanCreator.get().createStage(
+      stageDef,
+      Mockito.mock(ClassLoaderReleaser.class),
+      stageConf,
+      s -> serviceDef,
+      constants,
+      issues
+    );
 
     Assert.assertNotNull(bean);
     MySource stage = (MySource) bean.getStage();
@@ -336,6 +386,12 @@ public class TestPipelineBeanCreator {
     Assert.assertEquals("secret", stage.password1.get());
     Assert.assertEquals("a", stage.password2.get());
     Assert.assertEquals("b", stage.password3.get());
+
+    // Services
+    Assert.assertEquals(1, bean.getServices().size());
+    CoolService service = (CoolService) bean.getServices().get(0).getService();
+    Assert.assertNotNull(service);
+    Assert.assertEquals(1, service.beanInt);
   }
 
   @Test
@@ -343,6 +399,7 @@ public class TestPipelineBeanCreator {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
+    ServiceDefinition serviceDef = ServiceDefinitionExtractor.get().extract(libraryDef, CoolService.class);
 
     StageConfiguration stageConf = new StageConfigurationBuilder("i", "n")
       .withConfig(
@@ -357,13 +414,23 @@ public class TestPipelineBeanCreator {
             "beanSubBean.subBeanList", ImmutableList.of("a", "b"),
             "beanSubBean.subBeanString", "X")))
       )
+      .withServices(new ServiceConfigurationBuilder()
+        .withService(CoolService.class)
+        .withConfig(new Config("beanInt", 2287))
+        .build())
       .build();
 
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", 1);
     List<Issue> issues = new ArrayList<>();
 
-    StageBean bean = PipelineBeanCreator.get().createStage(stageDef, Mockito.mock(ClassLoaderReleaser.class), stageConf,
-                                                           constants, issues);
+    StageBean bean = PipelineBeanCreator.get().createStage(
+      stageDef,
+      Mockito.mock(ClassLoaderReleaser.class),
+      stageConf,
+      s -> serviceDef,
+      constants,
+      issues
+    );
 
     Assert.assertNotNull(bean);
     MySource stage = (MySource) bean.getStage();
@@ -380,6 +447,12 @@ public class TestPipelineBeanCreator {
     Assert.assertEquals(E.A, stage.complexField.get(0).beanSubBean.subBeanEnum);
     Assert.assertEquals(ImmutableList.of("a", "b"), stage.complexField.get(0).beanSubBean.subBeanList);
     Assert.assertEquals("X", stage.complexField.get(0).beanSubBean.subBeanString);
+
+    // Services
+    Assert.assertEquals(1, bean.getServices().size());
+    CoolService service = (CoolService) bean.getServices().get(0).getService();
+    Assert.assertNotNull(service);
+    Assert.assertEquals(2287, service.beanInt);
   }
 
   @Test
@@ -594,7 +667,7 @@ public class TestPipelineBeanCreator {
     List<Issue> issues = new ArrayList<>();
 
     ClassLoaderReleaser releaser = Mockito.mock(ClassLoaderReleaser.class);
-    StageBean bean = PipelineBeanCreator.get().createStage(stageDef, releaser, stageConf, constants, issues);
+    StageBean bean = PipelineBeanCreator.get().createStage(stageDef, releaser, stageConf, s -> null, constants, issues);
 
     Mockito.verify(releaser, Mockito.never()).releaseStageClassLoader(Mockito.<ClassLoader>any());
     bean.releaseClassLoader();

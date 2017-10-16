@@ -18,6 +18,8 @@ package com.streamsets.datacollector.creation;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ModelType;
+import com.streamsets.datacollector.config.ServiceConfiguration;
+import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.credential.ClearCredentialValue;
@@ -44,6 +46,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * General config injector that will work with various object types.
@@ -194,6 +197,67 @@ public abstract class ConfigInjector {
     }
   }
 
+  public static class ServiceInjectorContext implements Context {
+
+    private final String stageName;
+    private final ServiceDefinition definition;
+    private final ServiceConfiguration configuration;
+    private final Map<String, Object> pipelineConstants;
+    private final IssueCreator issueCreator;
+    private final List<Issue> issues;
+
+    public ServiceInjectorContext(
+        String stageName,
+        ServiceDefinition definition,
+        ServiceConfiguration configuration,
+        Map<String, Object> pipelineConstants,
+        List<Issue> issues
+    ) {
+      this.stageName = stageName;
+      this.definition = definition;
+      this.configuration = configuration;
+      this.pipelineConstants = pipelineConstants;
+      this.issueCreator = IssueCreator.getService(stageName, definition.getKlass().getName());
+      this.issues = issues;
+    }
+
+    @Override
+    public ConfigDefinition getConfigDefinition(String configName) {
+      return definition.getConfigDefinitionsMap().get(configName);
+    }
+
+    @Override
+    public Object getConfigValue(String configName) {
+      Config config = configuration.getConfig(configName);
+
+      if(config == null) {
+        return null;
+      }
+
+      return config.getValue();
+    }
+
+    @Override
+    public void createIssue(ErrorCode error, Object... args) {
+      issues.add(issueCreator.create(error, args));
+    }
+
+    @Override
+    public void createIssue(String configGroup, String configName, ErrorCode error, Object... args) {
+      issues.add(issueCreator.create(configGroup, configName, error, args));
+    }
+
+    @Override
+    public String errorDescription() {
+      return Utils.format("Stage '{}' Service '{}'", stageName, definition.getKlass().getName());
+    }
+
+    @Override
+    public Map<String, Object> getPipelineConstants() {
+      return pipelineConstants;
+    }
+  }
+
   /**
    * Inject config values to given Stage.
    *
@@ -205,6 +269,10 @@ public abstract class ConfigInjector {
    */
   public void injectStage(Object stage, StageDefinition stageDef, StageConfiguration stageConf, Map<String, Object> constants, List<Issue> issues) {
     injectConfigsToObject(stage, new StageInjectorContext(stageDef, stageConf, constants, issues));
+  }
+
+  public void injectService(Object service, String stageName, ServiceDefinition def, ServiceConfiguration conf, Map<String, Object> constants, List<Issue> issues) {
+    injectConfigsToObject(service, new ServiceInjectorContext(stageName, def, conf, constants, issues));
   }
 
   public void injectConfigsToObject(Object object, Context context) {
@@ -353,7 +421,7 @@ public abstract class ConfigInjector {
 
   Object toNumber(Class numberType, Object value, String groupName, String configName, Context context) {
     if (!ConfigValueExtractor.NUMBER_TYPES.contains(value.getClass())) {
-      context.createIssue(groupName, configName, CreationError.CREATION_014, value);
+      context.createIssue(groupName, configName, CreationError.CREATION_014, value, value.getClass());
       value = null;
     } else {
       try {

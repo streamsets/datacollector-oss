@@ -21,6 +21,9 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.PipelineWebhookConfig;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.ServiceConfiguration;
+import com.streamsets.datacollector.config.ServiceDefinition;
+import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
@@ -32,13 +35,19 @@ import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.service.Service;
+import com.streamsets.pipeline.api.service.ServiceDependency;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class PipelineBeanCreator {
   public static final String PIPELINE_LIB_DEFINITION = "Pipeline";
@@ -306,11 +315,18 @@ public abstract class PipelineBeanCreator {
   ) {
     List<StageBean> stageBeans = new ArrayList<>(pipelineStageBeans.size());
 
+
     for(StageBean original: pipelineStageBeans.getStages()) {
+
+      // Create StageDefinition map for this stage
+      Map<Class, ServiceDefinition> services = original.getServices().stream()
+        .collect(Collectors.toMap(c -> c.getDefinition().getKlass(), ServiceBean::getDefinition));
+
       StageBean stageBean = createStage(
           original.getDefinition(),
           ClassLoaderReleaser.NOOP_RELEASER,
           original.getConfiguration(),
+          services::get,
           constants,
           errors
       );
@@ -394,7 +410,14 @@ public abstract class PipelineBeanCreator {
         }
       }
 
-      bean = createStage(stageDef, library, stageConf, constants, errors);
+      bean = createStage(
+        stageDef,
+        library,
+        stageConf,
+        serviceClass -> library.getServiceDefinition(serviceClass, true),
+        constants,
+        errors
+      );
     } else {
       errors.add(issueCreator.create(CreationError.CREATION_006, stageConf.getLibrary(), stageConf.getStageName(),
                                      stageConf.getStageVersion()));
@@ -459,7 +482,7 @@ public abstract class PipelineBeanCreator {
           );
         } catch (NoSuchFieldException ex) {
           IssueCreator issueCreator = IssueCreator.getStage(stageConf.getStageName());
-          errors.add(issueCreator.create(CreationError.CREATION_000, parametersConfigDef.getLabel(), ex.toString()));
+          errors.add(issueCreator.create(CreationError.CREATION_000, "pipeline", parametersConfigDef.getLabel(), ex.toString()));
           pipelineConfigBean.constants = Collections.EMPTY_MAP;
         }
       }
@@ -489,9 +512,14 @@ public abstract class PipelineBeanCreator {
     return pipelineConfigBean;
   }
 
-  // if not null it is OK. if null there was at least one error, check errors for the details
-  StageBean createStage(StageDefinition stageDef, ClassLoaderReleaser classLoaderReleaser, StageConfiguration stageConf,
-      Map<String, Object> pipelineConstants, List<Issue> errors) {
+  StageBean createStage(
+      StageDefinition stageDef,
+      ClassLoaderReleaser classLoaderReleaser,
+      StageConfiguration stageConf,
+      Function<Class, ServiceDefinition> serviceDefinitionResolver,
+      Map<String, Object> pipelineConstants,
+      List<Issue> errors
+  ) {
     Stage stage;
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     try {
@@ -505,7 +533,27 @@ public abstract class PipelineBeanCreator {
     }
     StageConfigBean stageConfigBean = new StageConfigBean();
     ConfigInjector.get().injectStage(stageConfigBean, stageDef, stageConf, pipelineConstants, errors);
-    return (errors.isEmpty()) ? new StageBean(stageDef, stageConf, stageConfigBean, stage, classLoaderReleaser) : null;
+
+    // Create services
+    List<ServiceBean> services = new ArrayList<>();
+    for(ServiceConfiguration serviceConf : stageConf.getServices()) {
+      ServiceDefinition serviceDef = serviceDefinitionResolver.apply(serviceConf.getService());
+
+      ServiceBean serviceBean = createService(
+        stageConf.getInstanceName(),
+        serviceDef,
+        classLoaderReleaser,
+        serviceConf,
+        pipelineConstants,
+        errors
+      );
+
+      if(serviceBean != null) {
+        services.add(serviceBean);
+      }
+    }
+
+    return (errors.isEmpty()) ? new StageBean(stageDef, stageConf, stageConfigBean, stage, classLoaderReleaser, services) : null;
   }
 
   private Stage createStageInstance(StageDefinition stageDef, String stageName, List<Issue> errors) {
@@ -514,9 +562,42 @@ public abstract class PipelineBeanCreator {
       stage = stageDef.getStageClass().newInstance();
     } catch (InstantiationException | IllegalAccessException ex) {
       IssueCreator issueCreator = IssueCreator.getStage(stageName);
-      errors.add(issueCreator.create(CreationError.CREATION_000, stageDef.getLabel(), ex.toString()));
+      errors.add(issueCreator.create(CreationError.CREATION_000, "stage", stageDef.getLabel(), ex.toString()));
     }
     return stage;
+  }
+
+  ServiceBean createService(
+      String stageName,
+      ServiceDefinition serviceDef,
+      ClassLoaderReleaser classLoaderReleaser,
+      ServiceConfiguration serviceConf,
+      Map<String, Object> pipelineConstants,
+      List<Issue> errors
+  ) {
+    Service service;
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    try {
+      Thread.currentThread().setContextClassLoader(serviceDef.getStageClassLoader());
+      service = createServiceInstance(stageName, serviceDef, errors);
+      if (service != null) {
+        ConfigInjector.get().injectService(service, stageName, serviceDef, serviceConf, pipelineConstants, errors);
+      }
+    } finally {
+      Thread.currentThread().setContextClassLoader(classLoader);
+    }
+    return (errors.isEmpty()) ? new ServiceBean(serviceDef, serviceConf, service, classLoaderReleaser) : null;
+  }
+
+  private Service createServiceInstance(String stageName, ServiceDefinition serviceDef, List<Issue> errors) {
+    Service service = null;
+    try {
+      service = serviceDef.getKlass().newInstance();
+    } catch (InstantiationException | IllegalAccessException ex) {
+      IssueCreator issueCreator = IssueCreator.getService(stageName, serviceDef.getKlass().getName());
+      errors.add(issueCreator.create(CreationError.CREATION_000, "service", serviceDef.getKlass().getName(), ex.toString()));
+    }
+    return service;
   }
 
 }

@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum CreationError implements ErrorCode {
 
-  CREATION_000("Failed to instantiate stage '{}' [ERROR]: {}"),
+  CREATION_000("Failed to instantiate {} '{}' [ERROR]: {}"),
   CREATION_001("Failed to instantiate config bean '{}' [ERROR]: {}"),
   CREATION_002("Configuration definition missing '{}', there is a library/stage mismatch [ERROR]"),
   CREATION_003("Failed to access config bean [ERROR]: {}"),

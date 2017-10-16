@@ -21,20 +21,31 @@ import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.Stage;
 
+import java.util.Collections;
+import java.util.List;
+
 public class StageBean {
   private final StageDefinition definition;
   private final StageConfiguration conf;
   private final StageConfigBean systemConfigs;
   private final Stage stage;
   private final ClassLoaderReleaser classLoaderReleaser;
+  private final List<ServiceBean> services;
 
-  public StageBean(StageDefinition definition, StageConfiguration conf, StageConfigBean systemConfigs, Stage stage,
-      ClassLoaderReleaser classLoaderReleaser) {
+  public StageBean(
+    StageDefinition definition,
+    StageConfiguration conf,
+    StageConfigBean systemConfigs,
+    Stage stage,
+    ClassLoaderReleaser classLoaderReleaser,
+    List<ServiceBean> services
+  ) {
     this.definition = definition;
     this.conf = conf;
     this.systemConfigs = systemConfigs;
     this.stage = stage;
     this.classLoaderReleaser = classLoaderReleaser;
+    this.services = Collections.unmodifiableList(services);
   }
 
   public StageDefinition getDefinition() {
@@ -53,8 +64,13 @@ public class StageBean {
     return stage;
   }
 
+  public List<ServiceBean> getServices() {
+    return services;
+  }
+
   public void releaseClassLoader() {
     classLoaderReleaser.releaseStageClassLoader(stage.getClass().getClassLoader());
+    services.forEach(ServiceBean::releaseClassLoader);
   }
 
   public boolean isSource() {
