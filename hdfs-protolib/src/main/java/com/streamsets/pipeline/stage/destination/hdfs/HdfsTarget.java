@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Date;
 import java.util.Iterator;
@@ -67,6 +68,14 @@ public class HdfsTarget extends BaseTarget {
   }
 
   private static StageException throwStageException(Exception e) {
+    // Hadoop libraries will wrap any non InterruptedException, RuntimeException, Error or IOException to
+    // UndeclaredThrowableException so we manually unwrap it here and properly propagate it to user.
+    if(e instanceof UndeclaredThrowableException) {
+      e = (Exception)e.getCause();
+    }
+
+    LOG.error("Exception while talking to HDFS: {}", e.toString(), e);
+
     if (e instanceof RuntimeException) {
       Throwable cause = e.getCause();
       if (cause != null) {
@@ -124,7 +133,6 @@ public class HdfsTarget extends BaseTarget {
         }
       });
     } catch (Exception ex) {
-      LOG.error("Can't write record", ex);
       throw throwStageException(ex);
     }
   }
