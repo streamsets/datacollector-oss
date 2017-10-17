@@ -22,6 +22,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.ServiceDefinition;
+import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBean;
@@ -52,6 +54,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.util.SystemProcess;
 import org.apache.commons.codec.binary.Base64;
@@ -618,17 +621,8 @@ public class ClusterProviderImpl implements ClusterProvider {
         }
       }
 
-      String type = StageLibraryUtils.getLibraryType(stageDef.getStageClassLoader());
-      String name = StageLibraryUtils.getLibraryName(stageDef.getStageClassLoader());
-      if (ClusterModeConstants.STREAMSETS_LIBS.equals(type)) {
-        streamsetsLibsCl.put(
-            name, findJars(name, (URLClassLoader) stageDef.getStageClassLoader(), stageDef.getClassName())
-        );
-      } else if (ClusterModeConstants.USER_LIBS.equals(type)) {
-        userLibsCL.put(name, findJars(name, (URLClassLoader) stageDef.getStageClassLoader(), stageDef.getClassName()));
-      } else {
-        throw new IllegalStateException(Utils.format("Error unknown stage library type: '{}'", type));
-      }
+      // Add stage own stage library to the jars that needs to be shipped
+      extractClassLoaderInfo(streamsetsLibsCl, userLibsCL, stageDef.getStageClassLoader(), stageDef.getClassName());
 
       // TODO: Get extras dir from the env var.
       // Then traverse each jar's parent (getParent method) and add only the ones who has the extras dir as parent.
@@ -644,6 +638,21 @@ public class ClusterProviderImpl implements ClusterProvider {
           stream(extraJarsForStageLib).map(File::toString).forEach(jarsToShip::add);
         }
         addJarsToJarsList((URLClassLoader) stageDef.getStageClassLoader(), jarsToShip, "streamsets-datacollector-spark-api-[0-9]+.*");
+      }
+    }
+
+    // We're shipping several stage libraries to the backend and those libraries can have stages that depends on various
+    // different services. Our bootstrap procedure will however terminate SDC start up if we have stage that doesn't have
+    // all required services available. Hence we go through all the stages that are being sent and ship all their
+    // services to the cluster as well.
+    for(StageDefinition stageDef: stageLibrary.getStages()) {
+      String stageLibName = stageDef.getLibrary();
+      if(streamsetsLibsCl.containsKey(stageLibName) || userLibsCL.containsKey(stageLibName)) {
+        for(ServiceDependencyDefinition serviceDep : stageDef.getServices()) {
+          ServiceDefinition serviceDef = stageLibrary.getServiceDefinition(serviceDep.getService(), false);
+          LOG.debug("Adding service {} for stage {}", serviceDef.getClassName(), stageDef.getName());
+          extractClassLoaderInfo(streamsetsLibsCl, userLibsCL, serviceDef.getStageClassLoader(), serviceDef.getClassName());
+        }
       }
     }
 
@@ -921,6 +930,23 @@ public class ClusterProviderImpl implements ClusterProvider {
       }
     } finally {
       process.cleanup();
+    }
+  }
+
+  private void extractClassLoaderInfo(
+      Map<String, List<URL>> streamsetsLibsCl,
+      Map<String, List<URL>> userLibsCL,
+      ClassLoader cl,
+      String mainClass
+  ) throws IOException {
+    String type = StageLibraryUtils.getLibraryType(cl);
+    String name = StageLibraryUtils.getLibraryName(cl);
+    if (ClusterModeConstants.STREAMSETS_LIBS.equals(type)) {
+      streamsetsLibsCl.put(name, findJars(name, (URLClassLoader) cl, mainClass));
+    } else if (ClusterModeConstants.USER_LIBS.equals(type)) {
+      userLibsCL.put(name, findJars(name, (URLClassLoader) cl, mainClass));
+    } else {
+      throw new IllegalStateException(Utils.format("Error unknown stage library type: '{}'", type));
     }
   }
 
