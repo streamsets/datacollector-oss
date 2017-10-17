@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -38,6 +39,7 @@ import java.util.List;
 @PrepareForTest({
     AsyncKuduClient.class,
 })
+@PowerMockIgnore({ "javax.net.ssl.*" })
 public class TestKuduUtils {
 
   private static final String KUDU_MASTER = "localhost:7051";
