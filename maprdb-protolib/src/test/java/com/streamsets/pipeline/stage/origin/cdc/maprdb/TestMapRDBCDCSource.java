@@ -319,8 +319,10 @@ public class TestMapRDBCDCSource {
       if(type != ChangeDataRecordType.RECORD_DELETE) {
         List<KeyValue<FieldPath, ChangeNode>> nodeList = new ArrayList<>();
         for (int j = 0; j < nodeCount; j++) {
+          Mockito.when(val.getString()).thenReturn("teststring");
           ChangeNode node = Mockito.mock(ChangeNode.class);
           Mockito.when(node.getMap()).thenReturn(Collections.singletonMap("datakey" + i, valueRing.next()));
+          Mockito.when(node.getValue()).thenReturn(val);
           Mockito.when(node.getOpTimestamp()).thenReturn(now);
           Mockito.when(node.getServerTimestamp()).thenReturn(now);
 

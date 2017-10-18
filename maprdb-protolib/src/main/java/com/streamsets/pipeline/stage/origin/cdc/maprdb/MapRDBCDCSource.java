@@ -28,6 +28,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.ojai.FieldPath;
 import org.ojai.KeyValue;
+import org.ojai.Value;
 import org.ojai.store.cdc.ChangeDataRecord;
 import org.ojai.store.cdc.ChangeNode;
 import org.slf4j.Logger;
@@ -76,8 +77,10 @@ public class MapRDBCDCSource extends BasePushSource {
     private final List<String> topicList;
     private final CountDownLatch startProcessingGate;
 
-    public MapRDBCDCCallable(long threadID, List<String> topicList, KafkaConsumer<byte[], ChangeDataRecord> consumer, CountDownLatch startProcessingGate) {
-      Thread.currentThread().setName("maprKafkaConsumerThread-"+threadID);
+    public MapRDBCDCCallable(
+        long threadID, List<String> topicList, KafkaConsumer<byte[], ChangeDataRecord> consumer, CountDownLatch startProcessingGate
+    ) {
+      Thread.currentThread().setName("maprKafkaConsumerThread-" + threadID);
       LOG.trace("MapRDBCDC thread {} begin", Thread.currentThread().getName());
       this.consumer = consumer;
       this.threadID = threadID;
@@ -93,14 +96,14 @@ public class MapRDBCDCSource extends BasePushSource {
       //wait until all threads are spun up before processing
       startProcessingGate.await();
 
-      try{
+      try {
         consumer.subscribe(topicList);
 
-        while(!getContext().isStopped()) {
+        while (!getContext().isStopped()) {
           BatchContext batchContext = getContext().startBatch();
           ConsumerRecords<byte[], ChangeDataRecord> messages = consumer.poll(conf.batchWaitTime);
 
-          for(ConsumerRecord<byte[], ChangeDataRecord> message : messages) {
+          for (ConsumerRecord<byte[], ChangeDataRecord> message : messages) {
             Map<String, Object> attributes = new HashMap<>();
             attributes.put(HeaderAttributeConstants.TOPIC, message.topic());
             attributes.put(HeaderAttributeConstants.PARTITION, String.valueOf(message.partition()));
@@ -125,30 +128,42 @@ public class MapRDBCDCSource extends BasePushSource {
       return messagesProcessed;
     }
 
-    private void iterateNode(ChangeDataRecord changeRecord, BatchMaker batchMaker, Map<String, Object> attributes) throws StageException {
-      switch(changeRecord.getType()) {
+    private void iterateNode(
+        ChangeDataRecord changeRecord, BatchMaker batchMaker, Map<String, Object> attributes
+    ) throws StageException {
+      switch (changeRecord.getType()) {
         case RECORD_INSERT:
         case RECORD_UPDATE:
-          for(KeyValue<FieldPath, ChangeNode> entry : changeRecord) {
+          for (KeyValue<FieldPath, ChangeNode> entry : changeRecord) {
             String fieldPath = entry.getKey().asPathString();
             ChangeNode node = entry.getValue();
 
-            Record record = getContext().createRecord(getMessageId(
-                (String)attributes.get(HeaderAttributeConstants.TOPIC),
-                (String)attributes.get(HeaderAttributeConstants.PARTITION),
-                (String)attributes.get(HeaderAttributeConstants.OFFSET)));
+            Record record = getContext().createRecord(getMessageId((String) attributes.get(HeaderAttributeConstants.TOPIC),
+                (String) attributes.get(HeaderAttributeConstants.PARTITION),
+                (String) attributes.get(HeaderAttributeConstants.OFFSET)
+            ));
             Record.Header recordHeader = record.getHeader();
             recordHeader.setAllAttributes(attributes);
             recordHeader.setAttribute(MAPR_OP_TIMESTAMP, String.valueOf(node.getOpTimestamp()));
             recordHeader.setAttribute(MAPR_SERVER_TIMESTAMP, String.valueOf(node.getServerTimestamp()));
-            record.set(
-                Field.create(node.getMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,e -> generateField(e.getValue())))));
+            if(node.getType() == Value.Type.MAP) {
+              record.set(
+                  Field.create(node.getMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,e -> generateField(e.getValue())))));
+            } else {
+              Map<String, Field> fields = new HashMap<>();
+              fields.put(fieldPath, generateField(node.getValue()));
+              record.set(Field.create(fields));
+            }
 
             record.set("/_id", Field.create(changeRecord.getId().getString()));
-            if(fieldPath == null || fieldPath.equals("")) {
-              recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(MaprDBCDCOperationType.INSERT.code));
+            if (fieldPath == null || fieldPath.equals("")) {
+              recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE,
+                  String.valueOf(MaprDBCDCOperationType.INSERT.code)
+              );
             } else {
-              recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(MaprDBCDCOperationType.UPDATE.code));
+              recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE,
+                  String.valueOf(MaprDBCDCOperationType.UPDATE.code)
+              );
               recordHeader.setAttribute(MAPR_FIELD_PATH, fieldPath);
             }
 
@@ -156,18 +171,20 @@ public class MapRDBCDCSource extends BasePushSource {
           }
           break;
         case RECORD_DELETE:
-          Record record = getContext().createRecord(getMessageId(
-              (String)attributes.get(HeaderAttributeConstants.TOPIC),
-              (String)attributes.get(HeaderAttributeConstants.PARTITION),
-              (String)attributes.get(HeaderAttributeConstants.OFFSET)));
+          Record record = getContext().createRecord(getMessageId((String) attributes.get(HeaderAttributeConstants.TOPIC),
+              (String) attributes.get(HeaderAttributeConstants.PARTITION),
+              (String) attributes.get(HeaderAttributeConstants.OFFSET)
+          ));
           Record.Header recordHeader = record.getHeader();
+          recordHeader.setAllAttributes(attributes);
 
           HashMap<String, Field> root = new HashMap<>();
           record.set(Field.create(root));
           record.set("/_id", Field.create(changeRecord.getId().getString()));
 
-          recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE, String.valueOf(MaprDBCDCOperationType.DELETE.code));
-          recordHeader.setAllAttributes(attributes);
+          recordHeader.setAttribute(OperationType.SDC_OPERATION_TYPE,
+              String.valueOf(MaprDBCDCOperationType.DELETE.code)
+          );
 
           batchMaker.addRecord(record);
           break;
@@ -209,7 +226,7 @@ public class MapRDBCDCSource extends BasePushSource {
     CountDownLatch startProcessingGate = new CountDownLatch(numThreads);
 
     // Run all the threads
-    for(int i = 0; i < numThreads; i++) {
+    for (int i = 0; i < numThreads; i++) {
       try {
         futures.add(executor.submit(new MapRDBCDCCallable(i,
             conf.topicList,
@@ -224,7 +241,7 @@ public class MapRDBCDCSource extends BasePushSource {
 
     // Wait for proper execution completion
     long totalMessagesProcessed = 0;
-    for(Future<Long> future : futures) {
+    for (Future<Long> future : futures) {
       try {
         totalMessagesProcessed += future.get();
       } catch (InterruptedException e) {
@@ -262,13 +279,13 @@ public class MapRDBCDCSource extends BasePushSource {
   }
 
   public void await() throws InterruptedException {
-    if(executor != null) {
+    if (executor != null) {
       executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 
   public boolean isRunning() {
-    if(executor == null) {
+    if (executor == null) {
       return false;
     }
 
@@ -284,6 +301,35 @@ public class MapRDBCDCSource extends BasePushSource {
   private void shutdown() {
     if (!shutdownCalled.getAndSet(true)) {
       executor.shutdownNow();
+    }
+  }
+
+  private Field generateField(Value value) {
+    switch (value.getType()) {
+      case INT:
+        return Field.create(value.getInt());
+      case LONG:
+        return Field.create(value.getLong());
+      case SHORT:
+        return Field.create(value.getShort());
+      case BOOLEAN:
+        return Field.create(value.getBoolean());
+      case DECIMAL:
+        return Field.create(value.getDecimal());
+      case BYTE:
+        return Field.create(value.getByte());
+      case DATE:
+        return Field.createDate(value.getDate().toDate());
+      case FLOAT:
+        return Field.create(value.getFloat());
+      case DOUBLE:
+        return Field.create(value.getDouble());
+      case STRING:
+        return Field.create(value.getString());
+      case MAP:
+        return Field.create(value.getMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, this::generateField)));
+      default:
+        throw new IllegalArgumentException("Unsupported type " + value.getType().toString());
     }
   }
 
@@ -309,7 +355,7 @@ public class MapRDBCDCSource extends BasePushSource {
     } else if(value instanceof String) {
       return Field.create((String) value);
     } else {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Unsupported type " + value.getClass().toString());
     }
   }
 }
