@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
+import com.google.common.base.Preconditions;
+import com.streamsets.pipeline.ZonedDateTimeFormatChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -25,7 +27,9 @@ import com.streamsets.pipeline.config.DecimalScaleRoundingStrategyChooserValues;
 import com.streamsets.pipeline.config.LocaleChooserValues;
 import com.streamsets.pipeline.config.DateFormatChooserValues;
 import com.streamsets.pipeline.config.PrimitiveFieldTypeChooserValues;
+import com.streamsets.pipeline.config.ZonedDateTimeFormat;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
@@ -65,7 +69,7 @@ public class BaseConverterConfig {
                     "separator",
       displayPosition = 30,
       dependsOn = "targetType",
-      triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"}
+      triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT", "ZONED_DATETIME"}
   )
   @ValueChooserModel(LocaleChooserValues.class)
   public String dataLocale;
@@ -131,6 +135,30 @@ public class BaseConverterConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+      defaultValue="ISO_ZONED_DATE_TIME",
+      label = "Zoned DateTime Format",
+      description="Select or enter any valid date or datetime format",
+      displayPosition = 60,
+      dependsOn = "targetType",
+      triggeredByValue = {"ZONED_DATETIME", "STRING"}
+  )
+  @ValueChooserModel(ZonedDateTimeFormatChooserValues.class)
+  public ZonedDateTimeFormat zonedDateTimeFormat;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Other Zoned DateTime Format",
+      displayPosition = 70,
+      dependsOn = "zonedDateTimeFormat",
+      triggeredByValue = "OTHER"
+  )
+  public String otherZonedDateTimeFormat;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "UTF-8",
       label = "CharSet",
       displayPosition = 80,
@@ -140,11 +168,26 @@ public class BaseConverterConfig {
   @ValueChooserModel(CharsetChooserValues.class)
   public String encoding = "UTF-8";
 
+  private DateTimeFormatter dateTimeFormatter;
   /**
    * Return configured date mask.
    */
   public String getDateMask() {
     return dateFormat != DateFormat.OTHER ? dateFormat.getFormat() : otherDateFormat;
+  }
+
+  public DateTimeFormatter getFormatter() {
+    if (!targetType.isOneOf(Field.Type.STRING, Field.Type.ZONED_DATETIME)) {
+      return null;
+    }
+    return zonedDateTimeFormat.getFormatter().orElseGet(() -> {
+      Preconditions.checkNotNull(otherZonedDateTimeFormat,
+          "Zoned Datetime format cannot be null");
+      if (dateTimeFormatter == null) {
+        dateTimeFormatter = DateTimeFormatter.ofPattern(otherZonedDateTimeFormat, getLocale());
+      }
+      return dateTimeFormatter;
+    });
   }
 
 }

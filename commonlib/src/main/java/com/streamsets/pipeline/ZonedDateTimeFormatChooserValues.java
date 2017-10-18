@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline;
 
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.ZonedDateTimeFormat;
 
-public class PrimitiveFieldTypeChooserValues extends BaseEnumChooserValues<Field.Type> {
+public class ZonedDateTimeFormatChooserValues extends BaseEnumChooserValues<ZonedDateTimeFormat> {
 
-  public PrimitiveFieldTypeChooserValues() {
-    super(Field.Type.BOOLEAN, Field.Type.CHAR, Field.Type.BYTE, Field.Type.SHORT, Field.Type.INTEGER, Field.Type.LONG,
-          Field.Type.FLOAT, Field.Type.DOUBLE, Field.Type.DECIMAL, Field.Type.DATE, Field.Type.TIME, Field.Type.DATETIME,
-          Field.Type.ZONED_DATETIME, Field.Type.STRING, Field.Type.BYTE_ARRAY);
+  public ZonedDateTimeFormatChooserValues() {
+    super(ZonedDateTimeFormat.class);
   }
-
 }

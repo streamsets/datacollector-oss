@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -27,6 +28,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.config.DateFormat;
 import com.streamsets.pipeline.config.DecimalScaleRoundingStrategy;
+import com.streamsets.pipeline.config.ZonedDateTimeFormat;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -40,6 +42,8 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -47,6 +51,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
@@ -1107,6 +1112,195 @@ public class TestFieldTypeConverterProcessorFields {
       runner.runDestroy();
     }
   }
+
+  @Test
+  public void testZonedDatetimeToString() throws Exception {
+    FieldTypeConverterConfig config1 =
+        new FieldTypeConverterConfig();
+    config1.fields = ImmutableList.of("/zdt-1");
+    config1.targetType = Field.Type.STRING;
+    config1.dataLocale = "en";
+    config1.zonedDateTimeFormat = ZonedDateTimeFormat.ISO_ZONED_DATE_TIME;
+
+    FieldTypeConverterConfig config2 =
+        new FieldTypeConverterConfig();
+    config2.fields = ImmutableList.of("/zdt-2");
+    config2.targetType = Field.Type.STRING;
+    config2.dataLocale = "en";
+    config2.zonedDateTimeFormat = ZonedDateTimeFormat.ISO_OFFSET_DATE_TIME;
+
+
+    FieldTypeConverterConfig config3 =
+        new FieldTypeConverterConfig();
+    config3.fields = ImmutableList.of("/zdt-3");
+    config3.targetType = Field.Type.STRING;
+    config3.dataLocale = "en";
+    config3.zonedDateTimeFormat = ZonedDateTimeFormat.OTHER;
+    config3.otherZonedDateTimeFormat = "YYYY-MM-ddX";
+
+    FieldTypeConverterConfig config4 =
+        new FieldTypeConverterConfig();
+    config4.fields = ImmutableList.of("/zdt-4");
+    config4.targetType = Field.Type.STRING;
+    config4.dataLocale = "en";
+    config4.zonedDateTimeFormat = ZonedDateTimeFormat.OTHER;
+    config4.otherZonedDateTimeFormat = "YYYY-MM-dd'T'HH:mm:ssX[VV]";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+                                 .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+                                 .addConfiguration("fieldTypeConverterConfigs",
+                                     ImmutableList.of(config1, config2, config3, config4))
+                                 .addOutputLane("a").build();
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    ZonedDateTime current = ZonedDateTime.now();
+    map.put("zdt-1", Field.createZonedDateTime(current));
+    map.put("zdt-2", Field.createZonedDateTime(current));
+    map.put("zdt-3", Field.createZonedDateTime(current));
+    map.put("zdt-4", Field.createZonedDateTime(current));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    try {
+      Record output = runner.runProcess(ImmutableList.of(record)).getRecords().get("a").get(0);
+      Assert.assertEquals(current.format(DateTimeFormatter.ISO_ZONED_DATE_TIME),
+          output.get("/zdt-1").getValueAsString());
+      Assert.assertEquals(current.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+          output.get("/zdt-2").getValueAsString());
+      Assert.assertEquals(current.format(DateTimeFormatter.ofPattern("YYYY-MM-ddX")),
+          output.get("/zdt-3").getValueAsString());
+      Assert.assertEquals(current.format(DateTimeFormatter.ofPattern("YYYY-MM-dd'T'HH:mm:ssX[VV]")),
+          output.get("/zdt-4").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStringToZonedDatetime() throws Exception {
+    ZonedDateTime current = ZonedDateTime.now();
+    FieldTypeConverterConfig config1 =
+        new FieldTypeConverterConfig();
+    config1.fields = ImmutableList.of("/zdt-1");
+    config1.targetType = Field.Type.ZONED_DATETIME;
+    config1.dataLocale = "en";
+    config1.zonedDateTimeFormat = ZonedDateTimeFormat.ISO_ZONED_DATE_TIME;
+
+    FieldTypeConverterConfig config2 =
+        new FieldTypeConverterConfig();
+    config2.fields = ImmutableList.of("/zdt-2");
+    config2.targetType = Field.Type.ZONED_DATETIME;
+    config2.dataLocale = "en";
+    config2.zonedDateTimeFormat = ZonedDateTimeFormat.ISO_OFFSET_DATE_TIME;
+
+    FieldTypeConverterConfig config3 =
+        new FieldTypeConverterConfig();
+    config3.fields = ImmutableList.of("/zdt-3");
+    config3.targetType = Field.Type.ZONED_DATETIME;
+    config3.dataLocale = "en";
+    config3.zonedDateTimeFormat = ZonedDateTimeFormat.OTHER;
+    config3.otherZonedDateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX'['VV']'";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+                                 .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+                                 .addConfiguration("fieldTypeConverterConfigs",
+                                     ImmutableList.of(config1, config2, config3))
+                                 .addOutputLane("a").build();
+    runner.runInit();
+
+    Map<String, Field> map = new LinkedHashMap<>();
+    map.put("zdt-1", Field.create(ZonedDateTimeFormat.ISO_ZONED_DATE_TIME.getFormatter().get().format(current)));
+    map.put("zdt-2", Field.create(ZonedDateTimeFormat.ISO_OFFSET_DATE_TIME.getFormatter().get().format(current)));
+    map.put("zdt-3", Field.create(
+        current.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX'['VV']'", Locale.ENGLISH))));
+    Record record = RecordCreator.create("s", "s:1");
+    record.set(Field.create(map));
+
+    try {
+      Record output = runner.runProcess(ImmutableList.of(record)).getRecords().get("a").get(0);
+      Assert.assertEquals(current, output.get("/zdt-1").getValueAsZonedDateTime());
+      Assert.assertEquals(current.toOffsetDateTime().toZonedDateTime(), output.get("/zdt-2").getValueAsZonedDateTime());
+      Assert.assertEquals(current, output.get("/zdt-3").getValueAsZonedDateTime());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testInvalidMask() {
+
+    List<FieldTypeConverterConfig> valids = new ArrayList<>();
+    List<FieldTypeConverterConfig> invalids = new ArrayList<>();
+
+    FieldTypeConverterConfig config1 =
+        new FieldTypeConverterConfig();
+    config1.fields = ImmutableList.of("/zdt-1");
+    config1.targetType = Field.Type.ZONED_DATETIME;
+    config1.dataLocale = "en";
+    config1.zonedDateTimeFormat = ZonedDateTimeFormat.OTHER;
+    config1.otherZonedDateTimeFormat = "yyyy-MM-ddX"; // Invalid
+
+    invalids.add(config1);
+
+    FieldTypeConverterConfig config2 =
+        new FieldTypeConverterConfig();
+    config2.fields = ImmutableList.of("/zdt-2");
+    config2.targetType = Field.Type.ZONED_DATETIME;
+    config2.dataLocale = "en";
+    config2.zonedDateTimeFormat = ZonedDateTimeFormat.OTHER;
+    config2.otherZonedDateTimeFormat = "yyyy-MM'T'HHX"; // Invalid
+
+    invalids.add(config2);
+
+    FieldTypeConverterConfig config3 =
+        new FieldTypeConverterConfig();
+    config3.fields = ImmutableList.of("/zdt-3");
+    config3.targetType = Field.Type.ZONED_DATETIME;
+    config3.dataLocale = "en";
+    config3.zonedDateTimeFormat = ZonedDateTimeFormat.OTHER;
+    config3.otherZonedDateTimeFormat = "yyyy-MM-dd'T'HHX"; // Valid
+
+    valids.add(config3);
+
+    FieldTypeConverterConfig config4 =
+        new FieldTypeConverterConfig();
+    config4.fields = ImmutableList.of("/zdt-3");
+    config4.targetType = Field.Type.ZONED_DATETIME;
+    config4.dataLocale = "en";
+    config4.zonedDateTimeFormat = ZonedDateTimeFormat.OTHER;
+    config4.otherZonedDateTimeFormat =  "yyyy-MM-dd'T'HH:mm:ss.SSSX"; // Valid
+
+    valids.add(config4);
+
+    invalids.forEach(config -> {
+      try {
+        ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+                                     .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+                                     .addConfiguration("fieldTypeConverterConfigs",
+                                         ImmutableList.of(config))
+                                     .addOutputLane("a").build();
+        runner.runInit();
+        Assert.fail("Expected StageException for Field: "  + config.fields.get(0));
+      } catch (StageException ignored) {
+      }
+    });
+
+    valids.forEach(config -> {
+      try {
+        ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+                                     .addConfiguration("convertBy", ConvertBy.BY_FIELD)
+                                     .addConfiguration("fieldTypeConverterConfigs",
+                                         ImmutableList.of(config))
+                                     .addOutputLane("a").build();
+        runner.runInit();
+      } catch (StageException ex) {
+        Assert.fail("Unexpected StageException for field, " + config.fields.get(0) + ": " +
+                        Throwables.getStackTraceAsString(ex));
+      }
+    });
+  }
+
 
   @Test
   public void testInvalidConversionFieldsNumber() throws StageException {

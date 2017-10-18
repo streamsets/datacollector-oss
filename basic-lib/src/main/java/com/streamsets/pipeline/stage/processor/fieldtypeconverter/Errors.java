@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum Errors implements ErrorCode {
   CONVERTER_00("Failed to convert field '{}' of type '{}' with value '{}' to type '{}'"),
   CONVERTER_01("Invalid Encoding '{}'"),
+  CONVERTER_03("ZonedDateTime requires year, month, day of month, hour fields and either the Zone Offset or ZoneId")
   ;
 
   private final String msg;

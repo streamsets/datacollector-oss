@@ -25,14 +25,16 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @StageDef(
-    version=1,
-    label="Field Type Converter",
+    version = 2,
+    label = "Field Type Converter",
     description = "Converts the data type of a field(s)",
-    icon="converter.png",
-    onlineHelpRefUrl = "index.html#Processors/FieldTypeConverter.html#task_g23_2tq_wq"
+    icon = "converter.png",
+    onlineHelpRefUrl = "index.html#Processors/FieldTypeConverter.html#task_g23_2tq_wq",
+    upgrader = FieldTypeConverterProcessorUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
@@ -62,7 +64,7 @@ public class FieldTypeConverterDProcessor extends DProcessor {
       triggeredByValue = "BY_FIELD"
   )
   @ListBeanModel
-  public List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
+  public List<FieldTypeConverterConfig> fieldTypeConverterConfigs = new ArrayList<>();
 
   @ConfigDef(
       required = false,
@@ -76,7 +78,7 @@ public class FieldTypeConverterDProcessor extends DProcessor {
       triggeredByValue = "BY_TYPE"
   )
   @ListBeanModel
-  public List<WholeTypeConverterConfig> wholeTypeConverterConfigs;
+  public List<WholeTypeConverterConfig> wholeTypeConverterConfigs = new ArrayList<>();
 
 
   @Override

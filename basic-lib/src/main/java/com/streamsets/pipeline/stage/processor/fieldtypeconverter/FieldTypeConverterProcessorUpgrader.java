@@ -15,16 +15,16 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.ZonedDateTimeFormat;
+
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class FieldTypeConverterProcessorUpgrader implements StageUpgrader {
-  List<Config> configsToAdd = new ArrayList<>();
 
   @Override
   public List<Config> upgrade (
@@ -45,8 +45,16 @@ public class FieldTypeConverterProcessorUpgrader implements StageUpgrader {
     return configs;
   }
 
+  @SuppressWarnings("unchecked")
   private void upgradeV1ToV2(List<Config> configs) {
-    configsToAdd.add(new Config("treatInputFieldAsDate", false));
-    configs.add(new Config("fieldTypeConverterConfigs", configsToAdd));
+    configs.stream().filter(config -> config.getName().equals("fieldTypeConverterConfigs") ||
+                                          config.getName().equals("wholeTypeConverterConfigs"))
+        .forEach(config -> {
+          List<LinkedHashMap<String, Object>> configList = (List<LinkedHashMap<String, Object>>) config.getValue();
+          configList.forEach(configMap -> {
+            configMap.put("zonedDateTimeFormat", ZonedDateTimeFormat.ISO_ZONED_DATE_TIME);
+            configMap.put("otherZonedDateTimeFormat", "");
+          });
+        });
   }
 }

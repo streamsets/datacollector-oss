@@ -32,10 +32,16 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+
+import static com.streamsets.pipeline.stage.processor.fieldtypeconverter.Errors.CONVERTER_03;
 
 public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldTypeConverterProcessor.class);
@@ -53,6 +59,28 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     this.fieldTypeConverterConfigs = fieldTypeConverterConfigs;
     this.wholeTypeConverterConfigs = wholeTypeConverterConfigs;
   }
+
+  @Override
+  public List<ConfigIssue> init() {
+    List<ConfigIssue> issues = super.init();
+    fieldTypeConverterConfigs.forEach(config -> validate(config).ifPresent(issues::add));
+    wholeTypeConverterConfigs.forEach(config -> validate(config).ifPresent(issues::add));
+    return issues;
+  }
+
+  private Optional<ConfigIssue> validate(BaseConverterConfig config) {
+    if (config.targetType == Field.Type.ZONED_DATETIME) {
+      ZonedDateTime now = ZonedDateTime.now();
+      try {
+        ZonedDateTime.parse(now.format(config.getFormatter()), config.getFormatter());
+      } catch (DateTimeParseException ex) {
+        return Optional.of(
+            getContext().createConfigIssue("TYPE_CONVERSION", "fieldTypeConverterConfigs", CONVERTER_03));
+      }
+    }
+    return Optional.empty();
+  }
+
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
@@ -125,7 +153,14 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
           if (converterConfig.targetType.isOneOf(Field.Type.DATE, Field.Type.DATETIME, Field.Type.TIME)) {
             dateMask = converterConfig.getDateMask();
           }
-          return convertStringToTargetType(field, converterConfig.targetType, converterConfig.getLocale(), dateMask, converterConfig.scale, converterConfig.decimalScaleRoundingStrategy);
+          return convertStringToTargetType(field,
+              converterConfig.targetType,
+              converterConfig.getLocale(),
+              dateMask,
+              converterConfig.scale,
+              converterConfig.decimalScaleRoundingStrategy,
+              converterConfig.getFormatter()
+          );
         } catch (ParseException | IllegalArgumentException e) {
           throw new OnRecordErrorException(Errors.CONVERTER_00,
               matchingField,
@@ -160,6 +195,10 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
         java.text.DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
         return Field.create(converterConfig.targetType, dateFormat.format(field.getValueAsDatetime()));
       }
+    }
+
+    if (field.getType() == Field.Type.ZONED_DATETIME) {
+      return Field.create(converterConfig.getFormatter().format(field.getValueAsZonedDateTime()));
     }
 
     if(field.getType() == Field.Type.BYTE_ARRAY && converterConfig.targetType == Field.Type.STRING) {
@@ -217,9 +256,9 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       Locale dataLocale,
       String dateMask,
       int scale,
-      DecimalScaleRoundingStrategy decimalScaleRoundingStrategy
-  )
-    throws ParseException {
+      DecimalScaleRoundingStrategy decimalScaleRoundingStrategy,
+      DateTimeFormatter dateTimeFormatter
+  ) throws ParseException {
     String stringValue = field.getValueAsString();
     switch(targetType) {
       case BOOLEAN:
@@ -239,6 +278,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       case TIME:
         java.text.DateFormat timeFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
         return Field.createTime(timeFormat.parse(stringValue));
+      case ZONED_DATETIME:
+        return Field.createZonedDateTime(ZonedDateTime.parse(stringValue, dateTimeFormatter));
       case DECIMAL:
         Number decimal = NumberFormat.getInstance(dataLocale).parse(stringValue);
         BigDecimal bigDecimal = adjustScaleIfNeededForDecimalConversion(new BigDecimal(decimal.toString()), scale, decimalScaleRoundingStrategy);
