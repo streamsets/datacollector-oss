@@ -208,6 +208,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
     String sobjectType = ForceUtils.getSobjectTypeFromQuery(preparedQuery);
 
     if (metadataMap.get(sobjectType.toLowerCase()) == null) {
+      LOG.debug("Getting metadata for sobjectType {} - query is {}", sobjectType, preparedQuery);
       try {
         ForceUtils.getAllReferences(partnerConnection, metadataMap, new String[]{sobjectType}, ForceUtils.METADATA_DEPTH);
       } catch (ConnectionException e) {

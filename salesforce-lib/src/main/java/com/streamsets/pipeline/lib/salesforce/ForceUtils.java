@@ -31,8 +31,13 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.lib.util.JsonUtil;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.BailErrorStrategy;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import soql.SOQLLexer;
+import soql.SOQLParser;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -53,12 +58,10 @@ import java.util.regex.Pattern;
 public class ForceUtils {
   private static final Logger LOG = LoggerFactory.getLogger(ForceUtils.class);
 
-  private static final String SOBJECT_TYPE_FROM_QUERY = "^SELECT.*FROM\\s*(\\S*)\\b.*";
   private static final String WILDCARD_SELECT_QUERY = "^SELECT\\s*\\*\\s*FROM\\s*.*";
   public static final Pattern WILDCARD_SELECT_PATTERN = Pattern.compile(WILDCARD_SELECT_QUERY, Pattern.DOTALL);
   public static final int METADATA_DEPTH = 5;
   private static final int MAX_METADATA_TYPES = 100;
-  private static Pattern sObjectFromQueryPattern = Pattern.compile(SOBJECT_TYPE_FROM_QUERY, Pattern.DOTALL);
   private static SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss");
   private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
   private static TimeZone TZ = TimeZone.getTimeZone("GMT");
@@ -363,12 +366,19 @@ public class ForceUtils {
     return metadataMap;
   }
 
-  public static String getSobjectTypeFromQuery(String query) {
-    Matcher m = sObjectFromQueryPattern.matcher(query.toUpperCase());
-    if (m.matches()) {
-      return m.group(1).toLowerCase();
+  public static String getSobjectTypeFromQuery(String query) throws StageException {
+    try {
+      SOQLLexer lexer = new SOQLLexer(new ANTLRInputStream(query));
+      CommonTokenStream tokens = new CommonTokenStream(lexer);
+      SOQLParser parser = new SOQLParser(tokens);
+      parser.setErrorHandler(new BailErrorStrategy());
+      SOQLParser.StatementContext statementContext = parser.statement();
+
+      return statementContext.objectList().objectType(0).IDENTIFIER().get(0).toString().toLowerCase();
+    } catch (Exception e) {
+      LOG.error(Errors.FORCE_27.getMessage(), query, e);
+      throw new StageException(Errors.FORCE_27, query, e);
     }
-    return null;
   }
 
   public static String expandWildcard(
