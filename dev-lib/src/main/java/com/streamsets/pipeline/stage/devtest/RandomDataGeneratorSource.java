@@ -32,7 +32,6 @@ import com.streamsets.pipeline.api.lineage.EndPointType;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
-import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.lang3.StringUtils;
@@ -74,7 +73,7 @@ public class RandomDataGeneratorSource extends BasePushSource {
 
   private final int EVENT_VERSION = 1;
 
-  private final List<String> tzValues = new TimeZoneChooserValues().getValues();
+  private final List<String> tzValues = new ArrayList<>(ZoneId.getAvailableZoneIds());
 
   private final Random random = new Random();
 
