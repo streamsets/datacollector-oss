@@ -73,6 +73,7 @@ import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.sampling.RecordSampler;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -655,6 +656,11 @@ public class StageContext implements Source.Context, PushSource.Context, Target.
   @Override
   public Map<String, Object> getStageRunnerSharedMap() {
     return sharedRunnerMap;
+  }
+
+  @Override
+  public <T> T getService(Class<? extends T> serviceInterface) {
+    throw new NotImplementedException("getService()");
   }
 
   @Override
