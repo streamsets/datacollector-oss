@@ -19,7 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.api.service.Service;
+import com.streamsets.pipeline.api.base.BaseService;
 import com.streamsets.pipeline.api.service.ServiceDef;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
@@ -37,7 +37,7 @@ import java.util.List;
   label = "DataFormat Generator"
 )
 @ConfigGroups(Groups.class)
-public class DataGeneratorServiceImpl implements Service, DataFormatGeneratorService {
+public class DataGeneratorServiceImpl extends BaseService implements DataFormatGeneratorService {
 
   @ConfigDef(
     required = true,
@@ -54,7 +54,7 @@ public class DataGeneratorServiceImpl implements Service, DataFormatGeneratorSer
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   @Override
-  public List<ConfigIssue> init(Context context) {
+  public List<ConfigIssue> init() {
     /* TODO: We need to first abstract some of the common interfaces up
     return dataGeneratorFormatConfig.init(
       context,
@@ -66,10 +66,6 @@ public class DataGeneratorServiceImpl implements Service, DataFormatGeneratorSer
     */
 
     return Collections.emptyList();
-  }
-
-  @Override
-  public void destroy() {
   }
 
   @Override
