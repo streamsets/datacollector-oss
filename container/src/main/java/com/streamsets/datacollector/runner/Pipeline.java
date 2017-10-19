@@ -24,6 +24,7 @@ import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.PipelineStageBeans;
+import com.streamsets.datacollector.creation.ServiceBean;
 import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
@@ -944,6 +945,19 @@ public class Pipeline {
     long startTime,
     LineagePublisherTask lineagePublisherTask
   ) {
+    // Create runtime structures for all services of this stage
+    Map<Class, ServiceRuntime> services = new HashMap<>();
+    for(ServiceBean serviceBean: stageBean.getServices()) {
+      ServiceRuntime runtime = new ServiceRuntime(pipelineBean, serviceBean);
+
+      runtime.setContext(new ServiceContext(
+        stageBean.getConfiguration().getInstanceName(),
+        serviceBean.getDefinition().getClassName()
+      ));
+
+      services.put(serviceBean.getDefinition().getKlass(), runtime);
+    }
+
     // Create StageRuntime itself
     StageRuntime stageRuntime = new StageRuntime(pipelineBean, stageBean);
 
@@ -973,7 +987,8 @@ public class Pipeline {
         configuration,
         runnerSharedMap,
         startTime,
-        new LineagePublisherDelegator.TaskDelegator(lineagePublisherTask)
+        new LineagePublisherDelegator.TaskDelegator(lineagePublisherTask),
+        services
       )
     );
 
