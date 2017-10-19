@@ -31,7 +31,11 @@
             configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. <p>For information about
                 configuring these properties, see the email alert table in <xref
                     href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"
-            />.</p></prereq>
+                    product="SDC"/><ph product="DPM"><xref
+                        href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCConfig.html%23task_lxk_kjw_1r"
+                        format="html" scope="external">Configuring Data Collector</xref> in the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> documentation</ph>.</p></prereq>
         <context/>
         <steps id="steps_rl5_tsw_1r">
             <step>

@@ -36,8 +36,8 @@
             </ul></p>
         <p>When you enable alerts, you can be informed of the alert in the following ways:<ul
                 id="ul_hlr_dnk_rz">
-                <li>Pipeline monitoring - All alerts display when you view the pipeline in Monitor
-                    mode. </li>
+                <li product="SDC">Pipeline monitoring - All alerts display when you view the
+                    pipeline in Monitor mode. </li>
                 <li>Webhooks - All alerts trigger all configured webhooks.</li>
                 <li>Email - You can configure rules to send email alerts.</li>
             </ul></p>

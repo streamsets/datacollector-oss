@@ -19,15 +19,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_c53_pzp_yy">
  <title>Write Statistics to SDC RPC</title>
- <shortdesc>When you write statistics to SDC RPC, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        effectively adds an SDC RPC destination to the pipeline that you are configuring. <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
-        automatically generates and runs a system pipeline for the job. The system pipeline is a
-        pipeline with a Dev SDC RPC with Buffering origin that reads the statistics passed from the
-        SDC RPC destination, and then aggregates and sends the statistics to <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </shortdesc>
  <conbody>
+        <p>When you write statistics to SDC RPC, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            effectively adds an SDC RPC destination to the pipeline that you are configuring. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>
+            automatically generates and runs a system pipeline for the job. The system pipeline is a
+            pipeline with a Dev SDC RPC with Buffering origin that reads the statistics passed from
+            the SDC RPC destination, and then aggregates and sends the statistics to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>. </p>
         <p>Write statistics to SDC RPC when the job runs on multiple <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />s.</p>

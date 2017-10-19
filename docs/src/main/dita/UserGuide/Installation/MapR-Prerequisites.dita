@@ -36,10 +36,5 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             run as the user account that is granted access to the cluster in the MapR user or
             service ticket. </p>
-        <p>
-            <note>The MapR FS destination supports MapR versions 5.0.0, 5.1.0 and 5.2.0. All other
-                stages that use the MapR library currently only support MapR versions 5.1.0 and
-                5.2.0.</note>
-        </p>
     </conbody>
 </concept>

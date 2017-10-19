@@ -42,8 +42,8 @@
                 <cmd/>
             </step>
         </steps>
+        <postreq id="postreq_hmp_2bk_4bb"><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCenvConfigs"
+            /></postreq>
     </taskbody>
-    <related-links>
-        <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>
-    </related-links>
 </task>

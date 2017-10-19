@@ -19,19 +19,19 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_szj_3mw_xz">
  <title>Support Bundles</title>
- <shortdesc>You can use <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        generate a support bundle. A support bundle is a ZIP file that includes <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> logs,
-        environment and configuration information, pipeline JSON files, resource files, and pipeline
-        snapshots. You upload the generated file to the StreamSets support team so that we can use
-        the information to troubleshoot your support tickets. Or, you can download the generated
-        file and then send the file to another StreamSets community member.</shortdesc>
  <conbody>
   <p><indexterm>support
                     bundles<indexterm>generating</indexterm></indexterm><indexterm>generators<indexterm>support
-                    bundles</indexterm></indexterm><ph
+                    bundles</indexterm></indexterm>You can use <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            generate a support bundle. A support bundle is a ZIP file that includes <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            logs, environment and configuration information, pipeline JSON files, resource files,
+            and pipeline snapshots. You upload the generated file to the StreamSets support team so
+            that we can use the information to troubleshoot your support tickets. Or, you can
+            download the generated file and then send the file to another StreamSets community
+            member.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             uses several generators to create a support bundle. Each generator bundles different
             types of information. You can choose to use all or some of the generators. </p>
         <p>Each generator automatically redacts all passwords entered in pipelines, configuration

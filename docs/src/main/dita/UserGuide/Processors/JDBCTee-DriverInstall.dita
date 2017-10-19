@@ -23,7 +23,7 @@
         <p><indexterm>JDBC Tee processor<indexterm>driver installation</indexterm></indexterm>Before
             you use the JDBC Tee, install the JDBC driver for the database. You cannot access the
             database until you install the required driver. </p>
-        <p>For more information about installing drivers, see <xref
-                href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"
+            /></p>
  </conbody>
 </concept>

@@ -65,8 +65,8 @@
                     processed by stages that you configure in the canvas. They are passed to an
                     event consumer that you configure in the pipeline properties.<p>The event
                         consumer does not display in the pipeline’s canvas. As a result, pipeline
-                        events are also not visualized in data preview or pipeline monitoring.
-                    </p></li>
+                        events are also not visualized in data preview<ph product="SDC"> or pipeline
+                            monitoring</ph>. </p></li>
                 <li><b>Single-use events</b> - You can configure only one event consumer for each
                     event type within the pipeline properties: one for the Start event and one for
                     the Stop event. <p>When necessary, you can pass pipeline events to another

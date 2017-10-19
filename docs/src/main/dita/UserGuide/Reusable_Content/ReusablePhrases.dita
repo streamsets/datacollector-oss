@@ -22,10 +22,6 @@
       <shortdesc>Use the following reusable phrases for conrefs in the book. <draft-comment
                   author="Loretta">Company name - not really using this</draft-comment></shortdesc>
       <conbody>
-            <p>
-                  <note>Do NOT use conrefs in headings - it causes problems in the webhelp
-                        navigation panel.</note>
-            </p>
             <p>Company name: <ph id="company">StreamSets</ph></p>
             <draft-comment author="Loretta">product name: trying to consistently use
                   this</draft-comment>
@@ -42,6 +38,123 @@
                   in the install and upgrade steps:</draft-comment>
             <p><ph id="version">2.8.0.0</ph></p>
             <p><ph id="version_DirName">2800</ph></p>
+            <draft-comment author="Loretta">
+                  <p>For SDC/DPM xrefs to Configuring SDC.</p>
+            </draft-comment>
+            <p><ph id="SDCDPM_ConfigSDC">
+                        <ph product="SDC">For more information, see <xref
+                                    href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"
+                              /></ph><ph product="DPM">For more information, see <xref
+                                    href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCConfig.html"
+                                    format="html" scope="external">Configuring Data Collector</xref>
+                              in the <ph conref="#concept_vhs_5tz_xp/pName-long"/>
+                              documentation</ph>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">For SDC/DPM xrefs to SDC Environment
+                        Config.</draft-comment>
+            </p>
+            <p><ph id="SDCDPM_SDCenvConfigs">For more information about environment variables, see
+                              <xref
+                              href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
+                              product="SDC"/><ph product="DPM"><xref
+                                    href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCEnvironmentConfig.html"
+                                    format="html" scope="external">Data Collector Environment
+                                    Configuration</xref> in the <ph
+                                    conref="#concept_vhs_5tz_xp/pName-long"/>
+                        documentation</ph>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">SDC/DPM Data Collector Logs</draft-comment>
+            </p>
+            <p><ph id="SDCDPM_SDCLogs">For details, see <xref
+                              href="../Administration/ViewingLogData.dita#task_gbm_s3k_br"
+                              product="SDC"/><ph product="DPM">Viewing Data Collector Logs in the
+                                    <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> documentation</ph>.</ph></p>
+            <draft-comment author="Loretta">SDC/DPM Data Collector Log Level</draft-comment>
+            <p><ph id="SDCDPM_LogLevel">For details, see <xref
+                              href="../Administration/ModifyingLogLevel.dita#task_lkv_g2f_wy"
+                              product="SDC"/><ph product="DPM">Modifying the Log Level in the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> documentation</ph>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">SDC/DPM external libraries</draft-comment>
+            </p>
+            <p><ph id="SDCDPM_ExtLibs">For information about installing additional drivers, see
+                              <xref href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"
+                              product="SDC"/><ph product="DPM"><xref
+                                    href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/ExternalLibs.html%23concept_pdv_qlw_ft"
+                                    format="html" scope="external">Install External Libraries</xref>
+                              in the <ph conref="#concept_vhs_5tz_xp/pName-long"/>
+                              documentation</ph>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">SDC/DPM Hadoop Impersonation Mode</draft-comment>
+            </p>
+            <p><ph id="SDCDPM_HDFSImperMode">For more information, see <xref
+                              href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
+                              product="SDC"/><ph product="DPM"><xref
+                                    href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCConfig.html%23concept_pmr_sy5_nz"
+                                    format="html" scope="external">Hadoop Impersonation Mode</xref>
+                              in the <ph conref="#concept_vhs_5tz_xp/pName-long"/>
+                              documentation</ph>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">SDC/DPM HTTPS for Cluster
+                        Pipelines</draft-comment>
+            </p>
+            <p><ph id="SDCDPM_httpsClusterPipes">For more information, see <xref
+                              href="../Configuration/HTTP_protocolsCluster.dita#concept_rdt_h54_cw"
+                              product="SDC"/><ph product="DPM"><xref
+                                    href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCConfig.html%23concept_rdt_h54_cw"
+                                    format="html" scope="external">Configuring HTTPS for Cluster
+                                    Pipelines</xref> in the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> documentation</ph>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">SDC/DPM Java Heap Size</draft-comment>
+            </p>
+            <p><ph id="SDCDPM-JavaHeapSize">For information about configuring the <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> heap size, see <xref
+                              href="../Configuration/JavaHeapSize.dita#concept_mdc_shg_qr"
+                              product="SDC"/><ph product="DPM"><xref
+                                    href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCEnvironmentConfig.html%23concept_mdc_shg_qr"
+                                    format="html" scope="external">Java Heap Size</xref> in the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> documentation</ph>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">SDC/DPM Kerberos Authentication</draft-comment>
+            </p>
+            <p><ph id="SDCDPM-Kerberos">For more information about enabling Kerberos authentication
+                        for <ph
+                              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />, see <xref href="../Configuration/Kerberos.dita#concept_hnm_n4l_xs"
+                              product="SDC"/><ph product="DPM"><xref
+                                    href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCConfig.html%23concept_hnm_n4l_xs"
+                                    format="html" scope="external">Kerberos Authentication</xref> in
+                              the Data Collector documentation</ph>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">SDC/DPM MapR Prereqs</draft-comment>
+            </p>
+            <p><ph id="SDCDPM_MapRPrereq">For more information, see <xref
+                              href="../Installation/MapR-Prerequisites.dita#concept_jgs_qpg_2v"
+                              product="SDC"/><ph product="DPM"><xref
+                                    href="https://streamsets.com/documentation/datacollector/latest/help/#Installation/MapR-Prerequisites.html%23concept_jgs_qpg_2v"
+                                    format="html" scope="external">MapR Prerequisites</xref> in the
+                                    <ph conref="#concept_vhs_5tz_xp/pName-long"/>
+                        documentation</ph>.</ph></p>
+            <p>
+                  <draft-comment author="Loretta">SDC/DPM Pipeline Monitoring
+                        Overview</draft-comment>
+            </p>
+            <p><ph id="SDCDPM-PipelineMonitoring">For more information about monitoring pipelines,
+                        see <xref
+                              href="../Pipeline_Monitoring/PipelineMonitoring.dita#concept_hsp_tnt_lq"
+                              product="SDC"/><ph product="DPM"><xref
+                                    href="https://streamsets.com/documentation/datacollector/latest/help/#Pipeline_Monitoring/PipelineMonitoring_title.html%23concept_hsp_tnt_lq"
+                                    format="html" scope="external">Pipeline Monitoring
+                                    Overview</xref> in the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> documentation</ph>.</ph></p>
             <p>
                   <draft-comment author="Loretta">Data Collector max buffer size for records,
                         overridden by the parser.limit SDC property. used in Configuring SDC and
@@ -1377,14 +1490,10 @@ web-0011.log</codeblock></dd>
                         the pipeline.</ph></p>
             <p>
                   <draft-comment author="Loretta">JDBC Consumer, Producer, and Query executor use
-                        the following <uicontrol>ph-JDBCdriver</uicontrol> and
-                              <uicontrol>p-JDBCdriver-link</uicontrol> in Installing the
-                        Driver</draft-comment>
+                        the following <uicontrol>ph-JDBCdriver</uicontrol> and SDCDPM_ExtLib </draft-comment>
             </p>
             <p><ph id="ph-JDBCdriver">install the JDBC driver for the database. You cannot access
                         the database until you install the required driver. </ph></p>
-            <p id="p-JDBCdriver-link">For more information about installing drivers, see <xref
-                        href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p>
             <p>
                   <draft-comment author="Loretta">JDBC Multitable Consumer uses all three DLentries,
                         and SQL Server Change Tracking uses the first two DLentries in the
@@ -2051,7 +2160,7 @@ input_stream.read()</codeblock></p>
                         reused content - used in Avro &amp; Parquet implementation. </draft-comment>
             </p>
             <p><ph id="HD-BasicImp-ph">the origin of your choice, the Hive Metadata processor
-                        connnected to the Hive Metastore destination to perform metadata updates,
+                        connected to the Hive Metastore destination to perform metadata updates,
                         and to either the Hadoop FS or MapR FS destination to process data</ph></p>
             <p>As with Avro data, the <ph id="HD-DataStream-ph">Hive Metadata processor passes
                         records through the first output stream - the data stream. Connect the data
@@ -2164,7 +2273,11 @@ input_stream.read()</codeblock></p>
                   /> user. When this property is not set, you can specify a user in the origin. For
                   more information about Hadoop impersonation and the Data Collector property, see
                         <xref
-                        href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"/>. </p>
+                        href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
+                        product="SDC"/><ph product="DPM"><xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCConfig.html%23concept_pmr_sy5_nz"
+                              format="html" scope="external">Hadoop Impersonation Mode</xref> in the
+                        Data Collector documentation</ph>. </p>
             <p>Note that the origin <ph id="HUser-ConnectUser">uses a different user account to
                         connect to HDFS. <ph id="HUser-ConnectGeneric">By default, <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -2765,21 +2878,21 @@ ${YY()}_${MM()}_${DD()}</codeblock>
             </p>
             <p id="MapRPrereq">Before you use any MapR stage in a pipeline, you must perform
                   additional steps to enable <ph conref="#concept_vhs_5tz_xp/pName-long"/> to
-                  process MapR data. For more information, see <xref
-                        href="../Installation/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</p>
+                  process MapR data. <ph conref="#concept_vhs_5tz_xp/SDCDPM_MapRPrereq"/></p>
+
             <draft-comment author="alisontaylor">MapRPrereq-Stats - Used in Write Statistics to MapR
                   Streams.</draft-comment>
-            <p id="MapRPrereq-Stats">Before you can write statistics to MapR Streams, you must perform additional steps to
-                  enable <ph conref="#concept_vhs_5tz_xp/pName-long"/> to process MapR data. For
-                  more information, see <xref
-                        href="../Installation/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.</p>
+            <p id="MapRPrereq-Stats">Before you can write statistics to MapR Streams, you must
+                  perform additional steps to enable <ph conref="#concept_vhs_5tz_xp/pName-long"/>
+                  to process MapR data. <ph conref="#concept_vhs_5tz_xp/SDCDPM_MapRPrereq"/></p>
+
             <draft-comment author="alisontaylor">MapR-PrereqHiveStream - Use in Hive Streaming
                   destination for MapR library to make sure they configure SDC.</draft-comment>
             <p id="MapRPrereqHiveStream">Before you use the Hive Streaming destination with the MapR
                   library in a pipeline, you must perform additional steps to enable <ph
-                        conref="#concept_vhs_5tz_xp/pName-long"/> to process MapR data. For more
-                  information, see <xref
-                        href="../Installation/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>. </p>
+                        conref="#concept_vhs_5tz_xp/pName-long"/> to process MapR data. <ph
+                        conref="#concept_vhs_5tz_xp/SDCDPM_MapRPrereq"/>
+            </p>
             <draft-comment author="alisontaylor">Two versions of Lookup Cache below. Be sure to make
                   the same updates to both.</draft-comment>
             <draft-comment author="alisontaylor">Lookup Cache - used for Redis Lookup and HBase
@@ -2915,46 +3028,87 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         <uicontrol>Tip_AccessKeys</uicontrol> used in AWS Credentials topic for AWS
                   stages. <uicontrol>Tip_Passwords</uicontrol> used in keystore/truststore password
                   properties for all stages.</draft-comment>
-            <note type="tip" id="Tip_Usernames_JDBC">To secure sensitive information such as usernames and passwords, you
-                  can use <xref href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b"
-                        >credential stores</xref> or <xref
+            <note type="tip" id="SDCDPM_Tip_Usernames_JDBC">To secure sensitive information such as
+                  usernames and passwords, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>. </note>
-            <note type="tip" id="Tip_Usernames">To secure sensitive information such as usernames
-                  and passwords, you can use <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref> or <xref
+                        >runtime resources</xref> or <ph product="SDC"><xref
+                              href="../Configuration/CredentialStores.dita#concept_bt1_bpj_r1b"
+                              >credential stores.</xref></ph><ph product="DPM">credential stores.
+                        For more information about credential stores, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/CredentialStores.html"
+                              format="html" scope="external">Credential Stores</xref> in the Data
+                        Collector documentation.</ph></note>
+            <note type="tip" id="SDCDPM_Tip_Usernames">To secure sensitive information such as
+                  usernames and passwords, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>. </note>
-            <note type="tip" id="Tip_AccessKeys">To secure sensitive information such as access key
-                  pairs, you can use <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref> or <xref
+                        >runtime resources</xref> or <ph product="SDC"><xref
+                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
+                              >Hashicorp Vault secrets.</xref></ph>
+                  <ph product="DPM">Hashicorp Vault secrets. For more information about Hashicorp
+                        Vault secrets, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
+                              format="html" scope="external">Accessing Vault Secrets with Vault
+                              Functions</xref> in the Data Collector documentation.</ph></note>
+            <note type="tip" id="SDCDPM_Tip_AccessKeys">To secure sensitive information such as
+                  access key pairs, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>. </note>
-            <note type="tip" id="Tip_Passwords">To secure sensitive information such as passwords,
-                  you can use <xref href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
-                        >Hashicorp Vault secrets</xref> or <xref
+                        >runtime resources</xref> or <ph><xref
+                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
+                              product="SDC">Hashicorp Vault secrets.</xref></ph><ph product="DPM"
+                        >Hashicorp Vault secrets. For more information about Hashicorp Vault
+                        secrets, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
+                              format="html" scope="external">Accessing Vault Secrets with Vault
+                              Functions</xref> in the Data Collector documentation.</ph>
+            </note>
+            <note type="tip" id="SDCDPM_Tip_Passwords">To secure sensitive information such as
+                  passwords, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>. </note>
-            <note type="tip" id="Tip_ConsumerKey">To secure sensitive information such as the
+                        >runtime resources</xref> or <ph><xref
+                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
+                              product="SDC">Hashicorp Vault secrets.</xref></ph><ph product="DPM"
+                        >Hashicorp Vault secrets. For more information about Hashicorp Vault
+                        secrets, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
+                              format="html" scope="external">Accessing Vault Secrets with Vault
+                              Functions</xref> in the Data Collector documentation.</ph>
+            </note>
+            <note type="tip" id="SDCDPM_Tip_ConsumerKey">To secure sensitive information such as the
                   consumer key and secret, you can use <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref> or <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>. </note>
-            <note type="tip" id="Tip_ClientID">To secure sensitive information such as the client ID
-                  and secret, you can use <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref> or <xref
+                        >runtime resources</xref> or <ph><xref
+                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
+                              product="SDC">Hashicorp Vault secrets.</xref></ph><ph product="DPM"
+                        >Hashicorp Vault secrets. For more information about Hashicorp Vault
+                        secrets, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
+                              format="html" scope="external">Accessing Vault Secrets with Vault
+                              Functions</xref> in the Data Collector documentation.</ph>
+            </note>
+            <note type="tip" id="SDCDPM_Tip_ClientID">To secure sensitive information such as the
+                  client ID and secret, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>. </note>
-            <note type="tip" id="Tip_JWTKey">To secure sensitive information such as the JWT signing
-                  key, you can use <xref
-                        href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw">Hashicorp
-                        Vault secrets</xref> or <xref
+                        >runtime resources</xref> or <ph><xref
+                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
+                              product="SDC">Hashicorp Vault secrets.</xref></ph><ph product="DPM"
+                        >Hashicorp Vault secrets. For more information about Hashicorp Vault
+                        secrets, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
+                              format="html" scope="external">Accessing Vault Secrets with Vault
+                              Functions</xref> in the Data Collector documentation.</ph>
+            </note>
+            <note type="tip" id="SDCDPM_Tip_JWTKey">To secure sensitive information such as the JWT
+                  signing key, you can use <xref
                         href="../Pipeline_Configuration/RuntimeResources.dita#concept_bs4_5nm_2s"
-                        >runtime resources</xref>. </note>
+                        >runtime resources</xref> or <ph><xref
+                              href="../Configuration/Vault-Overview.dita#concept_bmq_gl1_mw"
+                              product="SDC">Hashicorp Vault secrets.</xref></ph><ph product="DPM"
+                        >Hashicorp Vault secrets. For more information about Hashicorp Vault
+                        secrets, see <xref
+                              href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/Vault-Overview.html"
+                              format="html" scope="external">Accessing Vault Secrets with Vault
+                              Functions</xref> in the Data Collector documentation.</ph>
+            </note>
             <p>
                   <draft-comment author="Loretta">Cluster mode: MapR Streaming mode and Kafka (Yarn)
                         requirements:</draft-comment>
@@ -3043,7 +3197,11 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         documentation. For more information about the stage libraries that include
                         the Spark Evaluator, see <xref
                               href="../Installation/AvailableStageLibraries.dita#concept_evs_xkm_s5"
-                        />.</ph></p>
+                              product="SDC"/><ph product="DPM"><xref
+                                    href="https://streamsets.com/documentation/datacollector/latest/help/#Installation/AddtionalStageLibs.html%23concept_evs_xkm_s5"
+                                    format="html" scope="external">Available Stage Libraries</xref>
+                              in the <ph conref="#concept_vhs_5tz_xp/pName-long"/>
+                              documentation</ph>.</ph></p>
             <p>
                   <draft-comment author="Loretta">Used by Spark Evaluator > Installing the
                         Application and Config > Install External Libraries.</draft-comment>

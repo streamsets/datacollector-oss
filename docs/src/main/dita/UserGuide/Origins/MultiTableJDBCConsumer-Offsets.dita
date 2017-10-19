@@ -79,8 +79,9 @@
                                 columns with a Datetime data type, enter the initial value as a Long
                                 value. You can use the time functions to transform a Datetime value
                                 to a Long value. For example, the following expression converts a
-                                date entered as a String to a Date object, and then to a Long
-                                value:<codeblock>${time:dateTimeToMilliseconds(time:extractDateFromString('2017-05-01 20:15:30.915','yyyy-MM-dd HH:mm:ss.SSS'))} </codeblock></note>
+                                date entered as a String to a Date object, and then to a Long value:<p>
+                                    <codeblock>${time:dateTimeToMilliseconds(time:extractDateFromString('2017-05-01 20:15:30.915','yyyy-MM-dd HH:mm:ss.SSS'))} </codeblock>
+                                </p></note>
                         </p></dd>
                 </dlentry>
                 <dlentry>

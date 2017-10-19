@@ -45,7 +45,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Alerts/DataAlerts-Configuring.dita"/>
-   <topicref href="../Alerts/DataAlerts-ViewingMetricsSummary.dita"/>
+   <topicref href="../Alerts/DataAlerts-ViewingMetricsSummary.dita" product="SDC"/>
   </topicref>
   <topicref href="../Alerts/DataDriftAlerts.dita">
    <topicmeta>

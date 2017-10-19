@@ -19,17 +19,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ky2_g4f_qv">
  <title>Gauge</title>
- <shortdesc>The gauge metric type provides alerts based on the number of input, output, or error
-        records for the last processed batch. It also provides alerts on the age of the current
-        batch, the amount of time a stage takes to process a batch, or the time that <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> last
-        received a record from the origin.</shortdesc>
  <conbody>
         <p><indexterm>metric rules and
                     alerts<indexterm>gauge</indexterm></indexterm><indexterm>gauge<indexterm>metric
                     rules and alerts</indexterm></indexterm>The gauge metric type provides alerts
-            about some of the Runtime Statistics displayed in Monitor mode:</p>
-        <image href="../Graphics/MetricGauge.png" scale="50" id="image_r5z_hpf_qv"/>
+            based on the number of input, output, or error records for the last processed batch. It
+            also provides alerts on the age of the current batch, the amount of time a stage takes
+            to process a batch, or the time that <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            last received a record from the origin.</p>
+        <p product="SDC">The gauge metric type provides alerts about some of the Runtime Statistics
+            displayed in Monitor mode:</p>
+        <image href="../Graphics/MetricGauge.png" scale="50" id="image_r5z_hpf_qv" product="SDC"/>
         <p>The gauge metric type includes a single metric ID, Runtime Statistics Gauge. You can
             configure the alert to trigger on the following metric elements:<ul id="ul_d1h_kqf_qv">
                 <li>Last Batch Input, Output, or Error Records Counts</li>

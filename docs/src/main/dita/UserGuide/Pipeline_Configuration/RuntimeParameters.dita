@@ -43,7 +43,7 @@
                 <li>Use an expression in the pipeline to call a runtime parameter.</li>
                 <li>Start the pipeline with parameter values.</li>
             </ol></p>
-        <p>When you monitor a pipeline started with parameters, you can view the parameter values
-            that the pipeline is currently using.</p>
+        <p product="SDC">When you monitor a pipeline started with parameters, you can view the
+            parameter values that the pipeline is currently using.</p>
  </conbody>
 </concept>

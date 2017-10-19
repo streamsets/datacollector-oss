@@ -21,7 +21,7 @@
             records, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             ignores any configured NetFlow 9 configuration properties. </p>
-        <p>The generated Netflow 5 records include processed data as fields in the record, with no
+        <p>The generated NetFlow 5 records include processed data as fields in the record, with no
             additional metadata, as
             follows:<codeblock> {
       "tcp_flags" : 27,

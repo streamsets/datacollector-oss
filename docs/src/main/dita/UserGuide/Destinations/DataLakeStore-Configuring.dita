@@ -55,9 +55,8 @@
                                             /> web application created in Active Directory.
                                             </p><p>For help locating this information in Azure, see
                                                 <xref
-                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/Step-AppID"
-                                                >Step 2. Retrieve Details from
-                                        Azure</xref>.</p></entry>
+                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Auth Token Endpoint</entry>
@@ -65,18 +64,16 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> web application.<p>For help locating this information in
                                             Azure, see <xref
-                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/Step-AuthTokenEndpoint"
-                                                >Step 2. Retrieve Details from
-                                        Azure</xref>.</p></entry>
+                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Account FQDN</entry>
                                     <entry>The host name of the Data Lake Store. For example:
                                             <codeblock>&lt;service name>.azuredatalakestore.net</codeblock><p>For
                                             help locating this information in Azure, see <xref
-                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/Step-AccountFDQN"
-                                                >Step 2. Retrieve Details from
-                                        Azure</xref>.</p></entry>
+                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Application Key</entry>
@@ -84,9 +81,8 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> web application created in Active Directory. <p>For help
                                             locating this information in Azure, see <xref
-                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y/Step-AppKey"
-                                                >Step 2. Retrieve Details from
-                                        Azure</xref>.</p></entry>
+                                                href="DataLakeStore-Pre-Step2.dita#concept_xv4_b2h_1y"
+                                            />.</p></entry>
                                 </row>
                            
                             </tbody>

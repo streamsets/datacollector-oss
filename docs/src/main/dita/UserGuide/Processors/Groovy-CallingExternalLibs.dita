@@ -24,8 +24,9 @@
         from the Groovy script that you develop for the processor. </shortdesc>
  <conbody>
         <p><indexterm>Groovy Evaluator processor<indexterm>external Java
-                code</indexterm></indexterm>To install an external Java library for the Groovy
-            Evaluator, see <xref href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>. </p>
+                code</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"
+            /></p>
         <p>To call the external Java code from the Groovy Evaluator, simply add an import statement
             like so to your script:<codeblock>import &lt;package>.&lt;class name></codeblock></p>
         <p>For example, let's say that you installed the Bouncy Castle JAR file to compute SHA-3

@@ -19,12 +19,17 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="task_otr_swr_nx">
     <title>Granting Permissions on Groovy Scripts</title>
-    <shortdesc>If <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
-        using the Java Security Manager and the Groovy code needs to access network resources, you
-        must update the Data Collector security policy to include Groovy scripts. The Java Security
-        Manager is enabled by default.</shortdesc>
     <taskbody>
+        <context id="context_nbk_l24_nbb"><indexterm>Groovy Evaluator processor<indexterm>granting
+                    permissions</indexterm></indexterm>If <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
+            using the Java Security Manager and the Groovy code needs to access network resources,
+            you must update the Data Collector security policy to include Groovy scripts. The Java
+            Security Manager is enabled by default. For more information, see <xref
+                href="../Configuration/JavaSecurityManager.dita#concept_tm4_pbg_ht" product="SDC"
+                /><ph product="DPM">Java Security Manager in the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> documentation</ph>.</context>
         <steps>
             <step>
                 <cmd>In the <ph
@@ -60,7 +65,4 @@ grant codebase "file:///groovy/script" {
             </step>
         </steps>
     </taskbody>
-    <related-links>
-        <link href="../Configuration/JavaSecurityManager.dita#concept_tm4_pbg_ht" type="topic"/>
-    </related-links>
 </task>

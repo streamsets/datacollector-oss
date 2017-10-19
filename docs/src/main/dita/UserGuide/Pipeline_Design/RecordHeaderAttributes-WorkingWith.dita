@@ -33,9 +33,8 @@
         <p>
             <note type="important">Record header attributes do not have field paths. When using an
                 attribute in an expression, use just the attribute name, surrounded by quotation
-                marks since attributes are strings, as follows:<p>
-                    <codeblock> ${record:attribute('&lt;attribute name>')}</codeblock>
-                </p></note>
+                marks since attributes are strings, as
+                follows:<codeblock> ${record:attribute('&lt;attribute name>')}</codeblock></note>
         </p>
         <p>For example, the following Expression Evaluator adds the file and offset record header
             attributes created by the Directory origin to the record: </p>

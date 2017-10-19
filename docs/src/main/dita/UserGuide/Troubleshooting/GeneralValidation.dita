@@ -49,13 +49,9 @@ name &lt;stage name>, version &lt;version></codeblock>
                         />. </dd>
                     <dd>If you need to use a stage that is not installed on the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />, install the related stage library. For an RPM installation, see <xref
-                            href="../Installation/CoreInstall_RPMAdditionalLibs.dita#concept_amc_cf3_dx"/>.
-                        For a tarball installation, see <xref
-                            href="../Installation/CoreInstall-Tarball-LibsPackageMgr.dita#concept_h5k_jbl_nx"
-                        /> or <xref
-                            href="../Installation/CoreInstall-Tarball-LibsCommand.dita#concept_bnl_n3n_s5"
-                        />.</dd>
+                        />, install the related stage library. <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"
+                        /></dd>
                 </dlentry>
             </dl></p>
  </conbody>

@@ -28,9 +28,12 @@
                 <uicontrol>monitor.memory</uicontrol> property in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, the counter metric type
-            also provides alerts about the Stage Heap Memory Usage and the Heap Memory Usage
-            statistics displayed in Monitor mode for the pipeline or for a stage:</p>
-     <p><image href="../Graphics/MetricCounter.png" scale="50" id="image_zqq_np3_fw"/></p>
+            also provides alerts about <ph product="SDC">the Stage Heap Memory Usage and the Heap
+                Memory Usage statistics displayed in Monitor mode for the pipeline or for a
+                stage:</ph><ph product="DPM">stage heap memory usage and heap memory usage
+                statistics for a pipeline or a stage.</ph></p>
+     <p><image href="../Graphics/MetricCounter.png" scale="50" id="image_zqq_np3_fw" product="SDC"
+            /></p>
         <p><note type="important">Memory monitoring is disabled by default. Enable memory monitoring
                 only when you are testing real-world load usage in the test or production
                 environment. When finished testing, disable memory monitoring. </note>The counter

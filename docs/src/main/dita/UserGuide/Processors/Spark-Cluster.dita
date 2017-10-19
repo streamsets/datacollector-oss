@@ -69,9 +69,10 @@
                     evaluate <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> expressions in <codeph>init</codeph> method arguments.</li>
-                <li>When you monitor the running pipeline, the record throughput for intervals less
-                    than 15 minutes might show an inaccurate count. To accurately monitor the
-                    throughput rate, evaluate the throughput for 15 minutes or more.</li>
+                <li product="SDC">When you monitor the running pipeline, the record throughput for
+                    intervals less than 15 minutes might show an inaccurate count. To accurately
+                    monitor the throughput rate, evaluate the throughput for 15 minutes or
+                    more.</li>
             </ul></p>
     </conbody>
     <related-links>

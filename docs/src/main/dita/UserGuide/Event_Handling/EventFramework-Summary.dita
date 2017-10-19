@@ -55,9 +55,9 @@
                     events for pipeline development and testing. For more information about the
                     development stages, see <xref
                         href="../Pipeline_Design/DevStages.dita#concept_czx_ktn_ht"/>.</li>
-                <li>In data preview and in Monitor mode, stage-generated event records display
-                    separately in the event-generating stage. Afterwards, they are treated like any
-                    standard record. </li>
+                <li>In data preview<ph product="SDC"> and in Monitor mode</ph>, stage-generated
+                    event records display separately in the event-generating stage. Afterwards, they
+                    are treated like any standard record. </li>
                 <li>You can configure data preview to generate and execute pipeline events.</li>
             </ol> For examples of how you might use the event framework, see the case studies
             earlier in this chapter. </p>

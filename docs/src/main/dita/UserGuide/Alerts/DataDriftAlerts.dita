@@ -64,8 +64,8 @@
                     </tbody>
                 </tgroup>
             </table></p>
-        <p>You can view the metrics and sample records for data drift rules in the same way that you
-            view data rule metrics and records. For more information, see <xref
+        <p product="SDC">You can view the metrics and sample records for data drift rules in the
+            same way that you view data rule metrics and records. For more information, see <xref
                 href="DataAlerts-ViewingMetricsSummary.dita"/>.</p>
         <p>For details about the data drift functions, see <xref
                 href="../Expression_Language/DataDriftFunctions.dita#concept_hpn_xfk_p5"/>.</p>

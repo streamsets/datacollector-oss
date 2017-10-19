@@ -201,15 +201,17 @@
                                     <entry>Action to take when the pipeline memory reaches the
                                         configured Max Pipeline Memory:<ul id="ul_vsf_3k4_1s">
                                             <li>Log - Logs a message in the pipeline history.</li>
-                                            <li>Log and Alert - Logs a message and triggers an alert
-                                                that displays in Monitor mode and sends an alert
-                                                email to any provided email addresses.</li>
+                                            <li>Log and Alert - Logs a message <ph product="SDC">and
+                                                  triggers an alert that displays in Monitor mode
+                                                </ph>and sends an alert email to any provided email
+                                                addresses.</li>
                                         </ul><ul id="ul_mtf_3k4_1s">
-                                            <li>Log, Alert and Stop Pipeline - Logs a message,
-                                                triggers an alert that displays in Monitor mode and
-                                                sends an alert email to any provided email
-                                                addresses. Stops the pipeline. This option is not
-                                                supported for cluster mode pipelines at this time. </li>
+                                            <li>Log, Alert and Stop Pipeline - Logs a message<ph
+                                                  product="SDC">, triggers an alert that displays in
+                                                  Monitor mode</ph> and sends an alert email to any
+                                                provided email addresses. Stops the pipeline. This
+                                                option is not supported for cluster mode pipelines
+                                                at this time. </li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -536,10 +538,10 @@
                                             />s write to the same directory. </p><p>The <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> ID is stored in the following file:
-                                                <filepath>$SDC_DATA/sdc.id</filepath> file. For more
-                                            information about environment variables, see <xref
-                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
-                                            />. </p></entry>
+                                                <filepath>$SDC_DATA/sdc.id</filepath> file.
+                                                </p><p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCenvConfigs"
+                                            /></p></entry>
                                 </row>
                                 <row>
                                     <entry>File Wait Time (secs)</entry>
@@ -871,7 +873,9 @@
                         href="../Processors/Processors_overview.dita#concept_hpr_twm_jq"/>.<p>For
                         configuration details about destinations, see <xref
                             href="../Destinations/Destinations_overview.dita#concept_hpr_twm_jq"
-                        />.</p></info>
+                        />.</p><p>For configuration details about executors, see <xref
+                            href="../Executors/Executors-overview.dita#concept_stt_2lk_fx"
+                    />.</p></info>
             </step>
             <step>
                 <cmd>Add additional stages as necessary.</cmd>
@@ -886,15 +890,16 @@
                     pipeline run and create threshold alerts. For more information, see <xref
                         href="../Alerts/RulesAlerts_title.dita#concept_pgk_brx_rr"/>.</cmd>
             </step>
-            <step>
+            <step product="SDC">
                 <cmd>When the pipeline is complete, use the <uicontrol>Start</uicontrol> icon to run
                     the pipeline. </cmd>
             </step>
         </steps>
-        <result>When <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            starts the pipeline, Monitor mode displays real-time statistics for the pipeline. For
-            more information about monitoring, see <xref
-                href="../Pipeline_Monitoring/PipelineMonitoring.dita#concept_hsp_tnt_lq"/>.</result>
+        <result><ph product="SDC">When <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> starts the pipeline, Monitor mode displays real-time statistics for the pipeline.
+                For more information about monitoring, see <xref
+                    href="../Pipeline_Monitoring/PipelineMonitoring.dita#concept_hsp_tnt_lq"
+            />.</ph></result>
     </taskbody>
 </task>

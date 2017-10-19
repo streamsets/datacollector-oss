@@ -57,7 +57,7 @@
         </topicref>
         <topicref href="../Event_Handling/DataPreview_Monitor.dita">
             <topicref href="../Event_Handling/DataPreview.dita"/>
-            <topicref href="../Event_Handling/MonitorMode.dita"/>
+            <topicref href="../Event_Handling/MonitorMode.dita" product="SDC"/>
         </topicref>
         <topicref href="../Event_Handling/DataPreview-PipelineEvents.dita"/>
         <topicref href="../Event_Handling/CaseStudy-Parquet.dita" >

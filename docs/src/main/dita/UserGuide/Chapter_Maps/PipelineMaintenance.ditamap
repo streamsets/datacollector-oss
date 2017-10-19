@@ -24,18 +24,18 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Maintenance/PipelineStates-Examples.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Maintenance/StartingPipelines.dita">
+  <topicref href="../Pipeline_Maintenance/StartingPipelines.dita" product="SDC">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Pipeline_Maintenance/StartingPipelinesParameters.dita"/>
    <topicref href="../Pipeline_Maintenance/ResettingTheOrigin.dita"/>
   </topicref>
- <topicref href="../Pipeline_Maintenance/StoppingPipelines.dita">
-  <topicmeta>
-  <shortdesc/>
- </topicmeta>
- </topicref>
+ <topicref href="../Pipeline_Maintenance/StoppingPipelines.dita" product="SDC">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Pipeline_Maintenance/ImportPipelines.dita">
    <topicref href="../Pipeline_Maintenance/ImportingPipelines.dita">
     <topicmeta>
@@ -58,6 +58,11 @@
   <shortdesc/>
  </topicmeta>
  </topicref>
+  <topicref href="../DPM/ExportPipelinesForDPM.dita" product="DPM">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Pipeline_Maintenance/DuplicatingAPipeline.dita">
    <topicmeta>
     <shortdesc/>

@@ -24,8 +24,9 @@
         from the Jython script that you develop for the processor. </shortdesc>
  <conbody>
         <p><indexterm>Jython Evaluator processor<indexterm>external Java
-                code</indexterm></indexterm>To install an external Java library for the Jython
-            Evaluator, see <xref href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>. </p>
+                code</indexterm></indexterm><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"
+            /></p>
         <p>To call the external Java code from the Jython Evaluator, simply add an import statement
             like so to your
             script:<codeblock>from &lt;package> import &lt;class name></codeblock></p>

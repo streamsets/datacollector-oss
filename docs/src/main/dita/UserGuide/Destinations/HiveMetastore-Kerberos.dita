@@ -31,8 +31,7 @@
             authentication, configure all Kerberos properties in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file and include the Kerberos principal in the HiveServer2 JDBC URL.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM-Kerberos"
+            /></p>
  </conbody>
-    <related-links>
-        <link href="../Configuration/Kerberos.dita#concept_hnm_n4l_xs"/>
-    </related-links>
 </concept>

@@ -60,22 +60,28 @@
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>.</dd>
           <dd>For more information, see <xref
-              href="../Configuration/RunningMultiplePipelines.dita#task_nkc_ydl_bw"/>.</dd>
+              href="../Configuration/RunningMultiplePipelines.dita#task_nkc_ydl_bw" product="SDC"
+              /><ph product="DPM"><xref
+                href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCConfig.html%23task_nkc_ydl_bw"
+                format="html" scope="external">Running Multiple Concurrent Pipelines</xref> in the
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+              /> documentation</ph>.</dd>
         </dlentry>
-    <dlentry>
-     <dt>How can I tell what's slowing down my pipeline?</dt>
-     <dd>Review the information available in the <ph
+    <dlentry product="SDC">
+          <dt>How can I tell what's slowing down my pipeline?</dt>
+          <dd>Review the information available in the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI
             in Monitor mode. Charts provide information about the record count, record throughput,
             and batch throughput for the pipeline. To determine where processing slows, you can
             click each stage to view the count and throughput details for the stage.</dd>
-     <dd>If the origin is the issue, you might tune the batch size or batch wait time properties or
-      adjust related properties in the origin system. If the destinations cause the problem, try
-      adjusting  any performance-related properties in the destination or related properties in the
-      destination system.</dd>
-     <dd>If a processor causes the problem, you might take a snapshot of the pipeline to review how
-      data passes through the pipeline and consider options for streamlining processing. </dd>
-    </dlentry>
+          <dd>If the origin is the issue, you might tune the batch size or batch wait time
+            properties or adjust related properties in the origin system. If the destinations cause
+            the problem, try adjusting any performance-related properties in the destination or
+            related properties in the destination system.</dd>
+          <dd>If a processor causes the problem, you might take a snapshot of the pipeline to review
+            how data passes through the pipeline and consider options for streamlining processing.
+          </dd>
+        </dlentry>
     <dlentry>
      <dt>How can I improve the general pipeline performance? </dt>
      <dd>You might improve performance by adjusting the batch size used by the pipeline. The batch
@@ -85,7 +91,8 @@
       arrival. For example, if your records are extremely big, you might reduce the batch size to
       increase the processing speed. Or if the records are small and arrive quickly, you might
       increase the batch size.</dd>
-     <dd>Experiment with the batch size and review the results in Monitor mode. </dd>
+     <dd>Experiment with the batch size and review the results<ph product="SDC"> in Monitor
+              mode</ph>. </dd>
      <dd>To change the batch size, configure the <b>production.maxBatchSize</b> property in the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
        configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </dd>

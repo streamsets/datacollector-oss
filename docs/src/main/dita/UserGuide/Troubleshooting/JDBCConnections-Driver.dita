@@ -25,7 +25,12 @@
             displays:<codeblock>JDBC_00 - Cannot connect to specified database: com.streamsets.pipeline.api.StageException:
 JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitable driver</codeblock></p>
         <p>Verify that you have followed the instructions to install additional drivers, as
-            explained in <xref href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>. </p>
+            explained in <xref href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"
+                product="SDC"/><ph product="DPM"><xref
+                    href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/ExternalLibs.html%23concept_pdv_qlw_ft"
+                    format="html" scope="external">Install External Libraries</xref> in the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> documentation</ph>.</p>
         <p>You can also use these additional tips to help resolve the issue:</p>
         <dl>
             <dlentry>
@@ -61,8 +66,7 @@ JDBC_06 - Failed to initialize connection pool: java.sql.SQLException: No suitab
                     <codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock></dd>
                 <dd>
                     <p
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"
-                    />
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EnvFileLocation"/>
                 </dd>
             </dlentry>
             <dlentry>

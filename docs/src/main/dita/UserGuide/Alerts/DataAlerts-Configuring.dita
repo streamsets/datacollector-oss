@@ -23,13 +23,13 @@
         <context><indexterm>data rules and
             alerts<indexterm>configuring</indexterm></indexterm>Create a data rule to view metrics,
             sample data, and alerts based on the rule. You can configure data rules and alerts when
-            you configure or monitor a pipeline. You can edit or delete data rules when they are not
-            enabled. </context>
+            you configure <ph product="SDC">or monitor </ph>a pipeline. You can edit or delete data
+            rules when they are not enabled. </context>
         <steps id="steps_mvl_w2k_br">
             <step>
-                <cmd>In the Properties panel or Monitor panel, click the <uicontrol>Data
-                        Rules</uicontrol> tab, and then click the <uicontrol>Add</uicontrol>
-                    icon.</cmd>
+                <cmd>In the Properties panel<ph product="SDC"> or Monitor panel</ph>, click the
+                        <uicontrol>Data Rules</uicontrol> tab, and then click the
+                        <uicontrol>Add</uicontrol> icon.</cmd>
             </step>
             <step>
                 <cmd>In the <wintitle>Data Rule</wintitle> dialog box, configure the following
@@ -77,9 +77,9 @@
                                 </row>
                                 <row>
                                     <entry>Enable Meter</entry>
-                                    <entry>Enables gathering information for the data rule. The
-                                        information gathered displays when you select the link in
-                                        Monitor mode. </entry>
+                                    <entry>Enables gathering information for the data rule. <ph
+                                            product="SDC">The information gathered displays when you
+                                            select the link in Monitor mode. </ph></entry>
                                 </row>
                                 <row>
                                     <entry>Enable Alert</entry>

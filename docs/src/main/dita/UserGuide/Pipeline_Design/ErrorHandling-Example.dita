@@ -29,14 +29,14 @@
    based on how you configure the pipeline error handling: <ul id="ul_a3h_mjy_5r">
     <li>When the pipeline discards error records, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          discards the record without noting the action or the cause. <p>When you monitor the
-            pipeline, you can view the most recent set of error records and information about the
-            errors on the Error Records tab for the stage. But this information becomes unavailable
-            after you stop the pipeline. </p></li>
+          discards the record without noting the action or the cause. <p product="SDC">When you
+            monitor the pipeline, you can view the most recent set of error records and information
+            about the errors on the Error Records tab for the stage. But this information becomes
+            unavailable after you stop the pipeline. </p></li>
     <li>When the pipeline writes error records to a destination, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> writes
           the error record and additional error information to the destination. It also includes the
-          error records in monitor counts and metrics. </li>
+          error records in <ph product="SDC">monitor </ph>counts and metrics. </li>
    </ul></p>
  </conbody>
 </concept>

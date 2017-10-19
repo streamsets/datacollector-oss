@@ -167,9 +167,8 @@
           </ul></dd>
         <dd>
           <note type="tip">To strip any leading or trailing white space characters from the file,
-            add the <codeph>str:trim</codeph> function as follows:<p>
-              <codeblock>${str:trim(runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)}</codeblock>
-            </p></note>
+            add the <codeph>str:trim</codeph> function as
+            follows:<codeblock>${str:trim(runtime:loadResource(&lt;file name>, &lt;restricted: true | false>)}</codeblock></note>
         </dd>
         <dd>For example, the following expression returns the contents of the restricted
           JDBCpassword.txt file, stripping any leading or trailing white space

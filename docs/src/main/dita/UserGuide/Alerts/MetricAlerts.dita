@@ -22,31 +22,33 @@
  <shortdesc>Metric rules and alerts provide notifications about real-time statistics for
     pipelines.</shortdesc>
  <conbody>
-  <p><indexterm>metric rules and
-          alerts<indexterm>overview</indexterm></indexterm><indexterm>monitoring<indexterm>metric
-          rules and alerts</indexterm></indexterm>When <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs a
-      pipeline, the UI displays the pipeline in Monitor mode and displays real-time statistics about
-      the pipeline. You can define and enable metric rules so that you are sent an alert when a
-      statistic reaches a certain threshold. </p>
-    <p>For example, the Record Count and Record Throughput statistics in Monitor mode display the
-      number of input, output, and error records that the pipeline has processed:</p>
-    <p><image href="../Graphics/MetricStatistics.png" id="image_h55_gc1_qv" scale="50"/></p>
-    <p>You can view the number of error records in these statistics. However, you might want to be
-      notified when the number of error records reaches a certain threshold. You can enable the
-      default rule for the Pipeline Error Records Counter metric to send an alert when the pipeline
-      encounters more than 100 error records. When you enable the metric rule and the alert
-      triggers, the alert displays in the <ph
+  <p><indexterm>metric rules and alerts<indexterm>overview</indexterm></indexterm><indexterm
+        product="SDC">monitoring<indexterm>metric rules and alerts</indexterm></indexterm><ph
+        product="SDC">When <ph
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs a
+        pipeline, the UI displays the pipeline in Monitor mode and displays real-time statistics
+        about the pipeline. </ph>You can define and enable metric rules so that you are sent an
+      alert when a statistic reaches a certain threshold. </p>
+    <p product="SDC">For example, the Record Count and Record Throughput statistics in Monitor mode
+      display the number of input, output, and error records that the pipeline has processed:</p>
+    <p product="SDC"><image href="../Graphics/MetricStatistics.png" id="image_h55_gc1_qv" scale="50"
+      /></p>
+    <p product="SDC">You can view the number of error records in these statistics. However, you
+      might want to be notified when the number of error records reaches a certain threshold. You
+      can enable the default rule for the Pipeline Error Records Counter metric to send an alert
+      when the pipeline encounters more than 100 error records. When you enable the metric rule and
+      the alert triggers, the alert displays in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI as
       follows: </p>
-    <p><image href="../Graphics/MetricAlert.png" scale="40" id="image_ukv_rf1_qv"/></p>
+    <p product="SDC"><image href="../Graphics/MetricAlert.png" scale="40" id="image_ukv_rf1_qv"
+      /></p>
     <p>When you enable a metric rule, it automatically enables an alert for the rule. You can also
       configure a metric rule to send email alerts to all email addresses associated with the
       pipeline. </p>
-    <p>You configure metric rules when you configure or monitor the pipeline. <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides a
-      set of default metric rules that you can edit and enable for any pipeline. Metric rules take
-      effect after you enable them.</p>
+    <p>You configure metric rules when you configure <ph product="SDC">or monitor </ph>the pipeline.
+        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      provides a set of default metric rules that you can edit and enable for any pipeline. Metric
+      rules take effect after you enable them.</p>
     <p>You can also create custom metric rules. When you create a custom metric rule, you select the
       metric type. The metric type determines which statistic triggers the alert. You configure the
       condition that triggers the alert, and enter the text to display in the alert.</p>

@@ -29,7 +29,7 @@
                     UI</indexterm></indexterm>Pipelines display on the Home page when you or your
             user group has read permission on the pipeline or when you created the pipeline. </p>
         <p>View pipelines on the Home page to perform <xref
-                href="../Pipeline_Maintenance/PipelineMaintenance_overview.dita#concept_zf1_3tr_5q"
+                href="../Pipeline_Maintenance/PipelineMaintenance_title.dita"
                 >pipeline maintenance</xref>, such as copying or sharing a pipeline. You can access
             the Home page when you click the Home icon (<image
                 href="../Graphics/icon_OverHome.png" id="image_lw2_h23_ts" scale="80"/>) in the

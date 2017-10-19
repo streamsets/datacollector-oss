@@ -27,8 +27,7 @@
             location:</p>
             <p><xref
                     href="https://repo1.maven.org/maven2/io/netty/netty-tcnative-boringssl-static/1.1.33.Fork19/netty-tcnative-boringssl-static-1.1.33.Fork19.jar"
-                    format="jar" scope="external"/></p><p>Install the library as described in <xref
-                    href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p></context>
+                    format="jar" scope="external"/></p><p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"/></p></context>
        
     </taskbody>
 </task>

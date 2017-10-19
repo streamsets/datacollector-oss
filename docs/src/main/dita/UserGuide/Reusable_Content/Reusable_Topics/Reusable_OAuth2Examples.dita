@@ -38,8 +38,7 @@
                     and consumer secret for the <uicontrol>Username</uicontrol> and
                     <uicontrol>Password</uicontrol> properties.</cmd>
                 <info>
-                    <note
-                        conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_ConsumerKey"/>
+                    <note conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_ConsumerKey"/>
                 </info>
             </step>
             <step id="Twitter_OAuth2">
@@ -85,7 +84,7 @@
                     <p>The client secret is the application secret that you created in the app
                         registration portal for your app. </p>
                     <note
-                        conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_ClientID"
+                        conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_ClientID"
                     />
                 </info>
             </step>
@@ -129,7 +128,7 @@
                         string version of the key. Copy the string into the <uicontrol>JWT Signing
                             Key</uicontrol> property, and then replace all "\n" literals with new
                         lines.</p><note
-                    conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_JWTKey"
+                    conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_JWTKey"
                 />
                 </info>
             </step>

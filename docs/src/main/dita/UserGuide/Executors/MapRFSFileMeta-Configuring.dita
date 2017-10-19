@@ -119,10 +119,9 @@
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> user. </p>
                                         <p>Not configurable when Data Collector is configured to use
-                                            the currently logged in Data Collector user. For more
-                                            information, see <xref
-                                                href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
-                                            />. </p>
+                                            the currently logged in Data Collector user. <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_HDFSImperMode"
+                                            /></p>
                                     </entry>
                                 </row>
                                 <row>

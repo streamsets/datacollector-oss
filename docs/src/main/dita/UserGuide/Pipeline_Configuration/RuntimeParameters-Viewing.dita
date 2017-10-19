@@ -27,7 +27,9 @@
                     parameters<indexterm>viewing</indexterm></indexterm><indexterm>runtime
                         parameters<indexterm>monitoring</indexterm></indexterm>Before you can view
                 the current runtime parameter values, verify that the monitoring settings include
-                the Runtime Parameters chart.</p>
+                the Runtime Parameters chart.<draft-comment author="Loretta">What do we do with this
+                    step for DPM? Do we add DPM steps or have a totally different topic for DPM
+                    steps? – setting topic to SDC only for now</draft-comment></p>
         </context>
         <steps>
             <step>

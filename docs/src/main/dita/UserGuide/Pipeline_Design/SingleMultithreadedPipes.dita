@@ -21,10 +21,9 @@
     <title>Single and Multithreaded Pipelines</title>
     <conbody>
         <p><indexterm>pipelines<indexterm>single and multithreaded</indexterm></indexterm>The
-            information above describes a standard <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            single-threaded pipeline - the origin creates a batch and passes it through the
-            pipeline, creating a new batch only after processing the previous batch.</p>
+            information above describes a standard single-threaded pipeline - the origin creates a
+            batch and passes it through the pipeline, creating a new batch only after processing the
+            previous batch.</p>
         <p>Some origins can generate multiple threads to enable parallel processing in
                 <term>multithreaded pipelines</term>. In a multithreaded pipeline, you configure the
             origin to create the number of threads or amount of concurrency that you want to use.

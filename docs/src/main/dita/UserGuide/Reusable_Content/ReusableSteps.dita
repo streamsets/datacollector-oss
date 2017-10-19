@@ -250,7 +250,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_u44_lsn_xs">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1116,10 +1116,9 @@
                                             <codeph>$SDC_RESOURCES</codeph>.<p>For information about
                                             generating the descriptor file, see <xref
                                                 href="../Data_Formats/Protobuf-Prerequisites.dita"
-                                            />. For more information about environment variables,
-                                            see <xref
-                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
-                                            />.</p></entry>
+                                            />. <ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCenvConfigs"
+                                            /></p></entry>
                                 </row>
                                 <row id="Mess-MessType">
                                     <entry>Message Type</entry>
@@ -1176,11 +1175,10 @@
                                         be in the <ph
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
-                                            <p>For more information about environment variables, see
-                                                <xref
-                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
-                                            />. For information about generating the descriptor
-                                            file, see <xref
+                                                <p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCenvConfigs"
+                                            /> For information about generating the descriptor file,
+                                            see <xref
                                                 href="../Data_Formats/Protobuf-Prerequisites.dita"
                                             />.</p></entry>
                                 </row>
@@ -1606,7 +1604,7 @@
                                     <entry>Password</entry>
                                     <entry>Password for basic, digest, or universal authentication.
                                             <note
-                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"
                                         /></entry>
                                 </row>
                                 <row>
@@ -1663,7 +1661,7 @@
                                 <row>
                                     <entry>Password</entry>
                                     <entry>Proxy password.<note
-                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"
                                         /></entry>
                                 </row>
                             </tbody>
@@ -1685,7 +1683,7 @@
                 <info>
                     <draft-comment author="Loretta">delete when fully replaced with
                         TLS.</draft-comment>
-                    <note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"/>
+                    <note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Passwords"/>
                     <table frame="all" rowsep="1" colsep="1" id="SSLTLS_table">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
@@ -1759,10 +1757,9 @@
                                         the file or a path relative to the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> resources directory: <filepath>$SDC_RESOURCES</filepath>.
-                                            <p>For more information about environment variables, see
-                                                <xref
-                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
-                                            />.</p><p>By default, no keystore is used. </p></entry>
+                                                <p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCenvConfigs"
+                                            /></p><p>By default, no keystore is used. </p></entry>
                                 </row>
                                 <row id="TLS-KeystoreType-row">
                                     <entry>Keystore Type</entry>
@@ -1777,8 +1774,7 @@
                                     <entry>Password to the keystore file. A password is optional,
                                         but recommended.<p>
                                             <note
-                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
-                                            />
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Passwords"/>
                                         </p></entry>
                                 </row>
                                 <row id="TLS-KeystoreKeyAlgo-row">
@@ -1795,11 +1791,9 @@
                                         to the file or a path relative to the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> resources directory: <filepath>$SDC_RESOURCES</filepath>.
-                                            <p>For more information about environment variables, see
-                                                <xref
-                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
-                                            />.</p><p>By default, no truststore is used.
-                                        </p></entry>
+                                                <p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCenvConfigs"
+                                            /></p><p>By default, no truststore is used. </p></entry>
                                 </row>
                                 <row id="TLS-TruststoreType-row">
                                     <entry>Truststore Type</entry>
@@ -1813,8 +1807,7 @@
                                     <entry>Password to the truststore file. A password is optional,
                                         but recommended.<p>
                                             <note
-                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
-                                            />
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Passwords"/>
                                         </p></entry>
                                 </row>
                                 <row id="TLS-TruststoreKeyAlgo-row">
@@ -2007,7 +2000,7 @@
                                 <row id="row-JDBCpassword">
                                     <entry>Password</entry>
                                     <entry>Password for the JDBC account.<note
-                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames_JDBC"
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames_JDBC"
                                         /></entry>
                                 </row>
                             </tbody>
@@ -2169,7 +2162,7 @@
                                 <row>
                                     <entry>Password</entry>
                                     <entry>JMS password.<note
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"
                                         /></entry>
                                 </row>
                             </tbody>
@@ -2297,7 +2290,7 @@
                 <cmd>On the <wintitle>Credentials</wintitle> tab, enter the RabbitMQ credentials to
                     use if you enabled credentials.</cmd>
                 <info>
-                    <note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/>
+                    <note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"/>
                 </info>
             </step>
             <step id="Rabbit-QueueStep">
@@ -2512,7 +2505,7 @@
                                 <row id="O-RPC-KeystorePass">
                                     <entry>Keystore Password</entry>
                                     <entry>Password for the keystore file.<note
-                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Passwords"
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Passwords"
                                         /></entry>
                                 </row>
                                 <row>
@@ -3851,11 +3844,10 @@
                                         be in the <ph
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
-                                            <p>For more information about environment variables, see
-                                                <xref
-                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
-                                            />. For information about generating the descriptor
-                                            file, see <xref
+                                                <p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCenvConfigs"
+                                            /> For information about generating the descriptor file,
+                                            see <xref
                                                 href="../Data_Formats/Protobuf-Prerequisites.dita"
                                             />.</p></entry>
                                 </row>
@@ -3900,11 +3892,10 @@
                                         be in the <ph
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> resources directory, <codeph>$SDC_RESOURCES</codeph>.
-                                            <p>For more information about environment variables, see
-                                                <xref
-                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
-                                            />. For information about generating the descriptor
-                                            file, see <xref
+                                                <p><ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCenvConfigs"
+                                            /> For information about generating the descriptor file,
+                                            see <xref
                                                 href="../Data_Formats/Protobuf-Prerequisites.dita"
                                             />.</p></entry>
                                 </row>
@@ -3919,39 +3910,6 @@
                                 <row>
                                     <entry>Write Delimiter</entry>
                                     <entry>Writes a delimiter after each message. </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
-                    <draft-comment author="Loretta">SDC Record - not used yet.</draft-comment>
-                </cmd>
-            </step>
-            <step>
-                <cmd>For SDC Record data, on the <wintitle>Data Format</wintitle> tab, configure the
-                    following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_fgj_mty_wx">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry/>
-                                    <entry/>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry/>
-                                    <entry/>
-                                </row>
-                                <row>
-                                    <entry/>
-                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -4206,10 +4164,9 @@
                                             /> ID>. </p><p>The <ph
                                                 conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> ID is stored in the following file:
-                                                <filepath>$SDC_DATA/sdc.id</filepath>. For more
-                                            information about environment variables, see <xref
-                                                href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"
-                                            />.</p></entry>
+                                                <filepath>$SDC_DATA/sdc.id</filepath>. <ph
+                                                conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCenvConfigs"
+                                            /></p></entry>
                                 </row>
                                 <row id="row-FileSuffix">
                                     <entry>File Suffix</entry>
@@ -4596,7 +4553,7 @@
                                     <entry>Elasticsearch username and password. <p>Enter the
                                             username and password using the following
                                             syntax:<codeblock>&lt;username>:&lt;password></codeblock></p><note
-                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"
                                         /></entry>
                                 </row>
                                 <row>
@@ -4803,7 +4760,7 @@
                                                 values as expected by Kafka. Do not use the
                                                 broker.list property.</p><p>For information about
                                                 enabling secure connections to Kafka, see <xref
-                                                  href="Reusable_Topics/Kafka-EnablingSecurity.dita"
+                                                  href="../Destinations/KProducer-EnablingSecurity.dita#concept_znr_b3c_rw"
                                                 />.</p></entry>
                                     </row>
                                     <row>
@@ -5229,8 +5186,8 @@ $sudo -u hdfs hadoop fs -chown sdc /user/sdc</codeblock></info>
                 <info>Once enabled, <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> automatically uses the Kerberos principal and keytab to connect to any YARN
-                    cluster that uses Kerberos. For more information, see <xref
-                        href="../Configuration/Kerberos.dita#concept_hnm_n4l_xs"/>.</info>
+                    cluster that uses Kerberos. <ph
+                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM-Kerberos"/></info>
             </step>
             <step>
                 <cmd>

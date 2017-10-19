@@ -23,14 +23,15 @@
         between stages. You can create data rules based on any link in the pipeline. You can also
         enable metrics and create alerts for data rules.</shortdesc>
  <conbody>
-  <p><indexterm>data rules and
-     alerts<indexterm>overview</indexterm></indexterm><indexterm>monitoring<indexterm>data rules and
-     alerts</indexterm></indexterm>When you click a link between two stages while monitoring a
-   pipeline, the Monitor panel displays summary statistics, data rules, and information about the
-   stream of data that the link represents. The summary statistics that display are based on the
-   data rules that you create. </p>
-  <p>You can configure data rules when you configure or monitor the pipeline. To create a data rule,
-            you need familiarity with the data being processed. You might preview data or take a
-            snapshot of data to help determine how to configure data rules. </p>
+  <p><indexterm>data rules and alerts<indexterm>overview</indexterm></indexterm><indexterm
+                product="SDC">monitoring<indexterm>data rules and alerts</indexterm></indexterm><ph
+                product="SDC">When you click a link between two stages while monitoring a pipeline,
+                the Monitor panel displays summary statistics, data rules, and information about the
+                stream of data that the link represents. The summary statistics that display are
+                based on the data rules that you create. </ph></p>
+  <p>You can configure data rules when you configure<ph product="SDC"> or monitor</ph> the pipeline.
+            To create a data rule, you need familiarity with the data being processed. You might
+            preview data <ph product="SDC">or take a snapshot of data </ph>to help determine how to
+            configure data rules. </p>
  </conbody>
 </concept>

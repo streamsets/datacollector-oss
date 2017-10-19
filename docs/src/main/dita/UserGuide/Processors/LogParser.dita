@@ -19,15 +19,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ulm_qdq_fs">
  <title>Log Parser</title>
- <shortdesc>The Log Parser processor parses log data in a field based on the specified log format.
-    Use the Log Parser to process log data within the pipeline. To read log data directly from an
-    origin system, you can use an origin that processes the log data format, such as File Tail or
-    Kafka Consumer.</shortdesc>
  <conbody>
   <p><indexterm>Log Parser
-          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Log
-          Parser</indexterm></indexterm>When you configure Log Parser, you define the field that
-      contains the log line and the field to contain the parsed fields. </p>
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Log
+                    Parser</indexterm></indexterm>The Log Parser processor parses log data in a
+            field based on the specified log format. Use the Log Parser to process log data within
+            the pipeline. To read log data directly from an origin system, you can use an origin
+            that processes the log data format, such as File Tail or Kafka Consumer.</p>
+        <p>When you configure Log Parser, you define the field that contains the log line and the
+            field to contain the parsed fields. </p>
     <p>If the record contains fields in addition to the field to be parsed, those fields are passed
       through by default. Parsed fields are written to the specified location, overwriting any
       existing data. </p>

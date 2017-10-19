@@ -48,8 +48,9 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             must be configured to send email. To enable sending email, configure the email alert <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            properties. For more information, see <xref
-                href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"/>.</p>
+            properties. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ConfigSDC"
+            /></p>
         <p>For more information about pipeline states, see <xref
                 href="../Pipeline_Maintenance/PipelineStates-Understanding.dita#concept_s4p_ns5_nz"
             />.</p>

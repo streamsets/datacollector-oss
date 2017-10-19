@@ -46,7 +46,7 @@
                                         configured batch wait time has elapsed.</li>
                                 </ul>
                                 <p>For more information, see <xref
-                                        href="../Origins/AmazonS3-EventGeneration.dita#concept_ttg_vgn_qx"
+                                        href="../Origins/AmazonS3-EventGeneration.dita"
                                         >"Event Generation" for the Amazon S3 origin</xref>. </p>
                             </entry>
                         </row>

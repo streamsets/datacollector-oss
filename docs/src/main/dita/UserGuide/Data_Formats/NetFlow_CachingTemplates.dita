@@ -47,10 +47,16 @@
             <note><ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> keeps the cached templates in memory. If you need to cache large numbers of
-                templates, you might want to increase the <xref
-                    href="../Configuration/JavaHeapSize.dita#concept_mdc_shg_qr"><ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> heap size accordingly</xref>. </note>
+                templates, you might want to increase the <ph><xref
+                        href="../Configuration/JavaHeapSize.dita#concept_mdc_shg_qr" product="SDC"
+                            ><ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> heap size accordingly.</xref></ph><ph product="DPM">Data Collector heap
+                    size accordingly. For more information, see <xref
+                        href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCEnvironmentConfig.html%23concept_mdc_shg_qr"
+                        format="html" scope="external">Java Heap Size</xref> in the Data Collector
+                    documentation.</ph>
+            </note>
         </p>
  </conbody>
 </concept>

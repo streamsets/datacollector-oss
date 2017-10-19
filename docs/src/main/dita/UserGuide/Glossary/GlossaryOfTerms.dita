@@ -138,7 +138,8 @@
       </dlentry>
       <dlentry>
         <dt>metric alerts</dt>
-        <dd>Monitoring or email alerts based on stage or pipeline metrics. </dd>
+        <dd><ph product="SDC">Monitoring or email</ph><ph product="SDC">Email</ph> alerts based on
+          stage or pipeline metrics. </dd>
       </dlentry>
       <dlentry>
         <dt>multithreaded pipelines</dt>
@@ -214,7 +215,7 @@
           pipeline and represents all pipeline processing after the origin. Used in multithreaded
           pipelines.</dd>
       </dlentry>
-      <dlentry>
+      <dlentry product="SDC">
         <dt>snapshot</dt>
         <dd>A set of data captured as a pipeline runs. You can step through the snapshot like data
           preview. You can also use it as a source for data preview.</dd>

@@ -23,13 +23,13 @@
         <context><indexterm>data drift rules and
                 alerts<indexterm>configuring</indexterm></indexterm>Create a data drift rule to view
             metrics, sample data, and alerts based on the rule. You can configure data drift rules
-            and alerts when you configure or monitor a pipeline. You can edit or delete data drift
-            rules when they are not enabled. </context>
+            and alerts when you configure<ph product="SDC"> or monitor</ph> a pipeline. You can edit
+            or delete data drift rules when they are not enabled. </context>
         <steps id="steps_mvl_w2k_br">
             <step>
-                <cmd>In the Properties panel or Monitor panel, click the <uicontrol>Data Drift
-                        Rules</uicontrol> tab, and then click the <uicontrol>Add</uicontrol>
-                    icon.</cmd>
+                <cmd>In the Properties panel<ph product="SDC"> or Monitor panel</ph>, click the
+                        <uicontrol>Data Drift Rules</uicontrol> tab, and then click the
+                        <uicontrol>Add</uicontrol> icon.</cmd>
             </step>
             <step>
                 <cmd>In the <wintitle>Data Drift Rule</wintitle> dialog box, configure the following
@@ -80,8 +80,8 @@
                                 <row>
                                     <entry>Enable Meter</entry>
                                     <entry>Enables gathering information for the data drift rule.
-                                        The information gathered displays when you select the link
-                                        in Monitor mode. </entry>
+                                            <ph product="SDC">The information gathered displays when
+                                            you select the link in Monitor mode. </ph></entry>
                                 </row>
                                 <row>
                                     <entry>Enable Alert</entry>

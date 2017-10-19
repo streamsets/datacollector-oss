@@ -20,16 +20,18 @@
 <task id="task_hcf_11k_br">
     <title>Configuring a Metric Rule and Alert</title>
     <shortdesc>Create a custom metric rule to receive alerts when a real-time statistic reaches a
-        certain threshold. You can create metric rules and alerts when you configure or monitor a
-        pipeline. You can edit or delete metric rules when they are not enabled. </shortdesc>
+        certain threshold. You can create metric rules and alerts when you configure <ph
+            product="SDC">or monitor </ph>a pipeline. You can edit or delete metric rules when they
+        are not enabled. </shortdesc>
     <taskbody>
         <context><indexterm>metric rules and
             alerts<indexterm>configuring</indexterm></indexterm>Configure metric rules based on the
             metric type, the metric, an element associated with the metric, and a condition. </context>
         <steps id="steps_jzm_f1k_br">
             <step>
-                <cmd>In the Properties panel or Monitor panel, click the <uicontrol>Metric
-                        Rules</uicontrol> tab, and click the <uicontrol>Add</uicontrol> icon.</cmd>
+                <cmd>In the Properties panel<ph product="SDC"> or Monitor panel</ph>, click the
+                        <uicontrol>Metric Rules</uicontrol> tab, and click the
+                        <uicontrol>Add</uicontrol> icon.</cmd>
             </step>
             <step>
                 <cmd>In the <wintitle>Metric Rule</wintitle> dialog box, configure the following

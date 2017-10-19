@@ -49,11 +49,8 @@
                             </ul>
                         </p>
                     </dd>
-                    <dd>30 represents the number of bytes in the statement ID, which is also stored. </dd>
-                    <dd>For information about setting the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> heap size, see <xref
-                            href="../Configuration/JavaHeapSize.dita#concept_mdc_shg_qr"/>.</dd>
+                    <dd>30 represents the number of bytes in the statement ID, which is also stored.
+                    </dd>
                 </dlentry>
                 <dlentry>
                     <dt>To disk</dt>
@@ -94,11 +91,10 @@
                                 given time.</li>
                         </ul>
                     </dd>
-                    <dd>For information about setting the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> heap size, see <xref
-                            href="../Configuration/JavaHeapSize.dita#concept_mdc_shg_qr"/>.</dd>
                 </dlentry>
             </dl></p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM-JavaHeapSize"
+            /></p>
  </conbody>
 </concept>

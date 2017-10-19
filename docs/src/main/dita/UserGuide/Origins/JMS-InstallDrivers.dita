@@ -22,14 +22,12 @@
     <shortdesc>Before you use the JMS Consumer, install the JMS drivers for the implementation that
         you are using. </shortdesc>
     <taskbody>
-        <context>
-            <p><indexterm>JMS Consumer origin<indexterm>installing
-                drivers</indexterm></indexterm>For example, to use the Oracle version of JMS, you
-                need to install the Oracle JMS drivers: <codeph>wljmsclient.jar</codeph> and
+        <context><p><indexterm>JMS Consumer origin<indexterm>installing
+                    drivers</indexterm></indexterm>For example, to use the Oracle version of JMS,
+                you need to install the Oracle JMS drivers: <codeph>wljmsclient.jar</codeph> and
                     <codeph>wlclient.jar</codeph>. Or to use the ActiveMQ version, install all the
-                ActiveMQ jars: activemq-all-*.jar.</p>
-            <p>For details on installing additional drivers, see <xref
-                    href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p>
-        </context>
+                ActiveMQ jars: activemq-all-*.jar.</p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"
+            /></context>
     </taskbody>
 </task>

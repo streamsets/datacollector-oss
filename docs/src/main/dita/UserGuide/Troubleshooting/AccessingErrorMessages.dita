@@ -37,18 +37,19 @@
         canvas.</li>
       </ul></dd>
     </dlentry>
-    <dlentry>
-     <dt>Runtime error information</dt>
-     <dd>You can view error information when you monitor a running pipeline. In the canvas, the
-      pipeline displays error record counts for each stage generating error records. </dd>
-     <dd>On the Errors tab, you can view error record statistics and the latest set of error records
-      with error messages. If the error was produced by an exception, you can click <uicontrol>View
-       Stack Trace</uicontrol> to view the full stack trace.</dd>
-     <dd>
-      <note>This information becomes unavailable when you stop the pipeline. To preserve information
-       about error records, use the Error Records pipeline property to save error records.</note>
-     </dd>
-    </dlentry>
+    <dlentry product="SDC">
+          <dt>Runtime error information</dt>
+          <dd>You can view error information when you monitor a running pipeline. In the canvas, the
+            pipeline displays error record counts for each stage generating error records. </dd>
+          <dd>On the Errors tab, you can view error record statistics and the latest set of error
+            records with error messages. If the error was produced by an exception, you can click
+              <uicontrol>View Stack Trace</uicontrol> to view the full stack trace.</dd>
+          <dd>
+            <note>This information becomes unavailable when you stop the pipeline. To preserve
+              information about error records, use the Error Records pipeline property to save error
+              records.</note>
+          </dd>
+        </dlentry>
     <dlentry>
      <dt>Error record information</dt>
      <dd>You can use the Error Records pipeline properties to write error records and related
@@ -67,13 +68,13 @@
       functionality in the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> log. You
       can view or download the logs from the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI. For
-      details, see <xref href="../Administration/ViewingLogData.dita#task_gbm_s3k_br"/>.</dd>
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> UI. <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCLogs"/></dd>
      <dd>By default, <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> logs
       messages at the INFO severity level. You can modify the log level to display messages at
-      another severity level. For details, see <xref
-       href="../Administration/ModifyingLogLevel.dita#task_lkv_g2f_wy"/>.</dd>
+      another severity level. <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_LogLevel"/></dd>
     </dlentry>
    </dl>
   </p>

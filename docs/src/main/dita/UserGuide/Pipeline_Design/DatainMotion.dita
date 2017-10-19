@@ -19,8 +19,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_y1r_zky_bt">
  <title>Data in Motion</title>
- <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-    passes data through the pipeline in <term>batches</term>. This is how it works:</shortdesc>
+ <shortdesc>Data passes through the pipeline in <term>batches</term>. This is how it
+        works:</shortdesc>
  <conbody>
   <p><indexterm>pipeline<indexterm>batch and processing
     overview</indexterm></indexterm><indexterm>batch</indexterm>The origin creates a batch as it

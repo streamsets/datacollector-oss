@@ -116,7 +116,7 @@
                                                 placement="inline" id="image_t3x_4qg_xs"
                                         /></xref></entry>
                                     <entry>The Hadoop user to use to read from MapR FS. When using
-                                        this property, make sure MapR  is configured
+                                        this property, make sure MapR is configured
                                             appropriately.<p>When not configured, the pipeline uses
                                             the currently logged in <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -124,9 +124,9 @@
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> is configured to use the currently logged in <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> user. For more information, see <xref
-                                                href="../Configuration/HadoopImpersonationMode.dita#concept_pmr_sy5_nz"
-                                            />.</p></entry>
+                                            /> user. <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_HDFSImperMode"
+                                            /></p></entry>
                                 </row>
                                 <row>
                                     <entry>Hadoop FS Configuration  <xref

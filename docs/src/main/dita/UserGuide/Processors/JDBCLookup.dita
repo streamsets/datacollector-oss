@@ -39,8 +39,8 @@
             performance.</p>
         <p>To use a JDBC version older than 4.0, you can specify the driver class name and define a
             health check query.</p>
-        <p>When you monitor a pipeline that includes the JDBC Lookup processor, you can view stage
-            statistics about the number of queries the processor makes and the average time of the
-            queries.</p>
+        <p product="SDC">When you monitor a pipeline that includes the JDBC Lookup processor, you
+            can view stage statistics about the number of queries the processor makes and the
+            average time of the queries.</p>
  </conbody>
 </concept>

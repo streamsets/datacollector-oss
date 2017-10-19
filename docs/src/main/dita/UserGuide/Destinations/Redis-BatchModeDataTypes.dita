@@ -19,15 +19,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ozv_24h_jw">
  <title>Data Types for Batch Mode</title>
- <shortdesc>When you configure the destination for batch mode, you select the incoming fields to use
-        as the Redis key and value. You also select the data type of the Redis value. If needed, the
-        Redis destination converts the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> data
-        type of the incoming value field to the selected Redis data type. </shortdesc>
  <conbody>
   <p><indexterm>Redis destination<indexterm>data types</indexterm></indexterm><indexterm>data
-                    types<indexterm>Redis destination</indexterm></indexterm>When appropriate, use a
-            Field Type Converter processor earlier in the pipeline to convert data types.</p>
+                    types<indexterm>Redis destination</indexterm></indexterm>When you configure the
+            destination for batch mode, you select the incoming fields to use as the Redis key and
+            value. You also select the data type of the Redis value. If needed, the Redis
+            destination converts the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            data type of the incoming value field to the selected Redis data type. </p>
+        <p>When appropriate, use a Field Type Converter processor earlier in the pipeline to convert
+            data types.</p>
         <p>The following table lists the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             data types that can be converted to Redis data types:</p>

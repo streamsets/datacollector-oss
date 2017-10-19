@@ -32,7 +32,7 @@
      <shortdesc/>
     </topicmeta>
    </topicref>
-   <topicref href="../Cluster_Mode/MonitoringaCluster.dita">
+   <topicref href="../Cluster_Mode/MonitoringaCluster.dita" product="SDC">
     <topicmeta>
      <shortdesc/>
     </topicmeta>

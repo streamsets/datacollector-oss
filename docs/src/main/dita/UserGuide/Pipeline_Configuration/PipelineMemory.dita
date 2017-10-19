@@ -28,8 +28,8 @@
    the maximum amount of memory <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses when it
    runs the pipeline. </p>
-  <p>The monitor.memory property should only be enabled during development and testing. For more
-   information, see <xref href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"/>. </p>
+  <p>The monitor.memory property should only be enabled during development and testing. <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ConfigSDC"/></p>
   <p>When you configure the <uicontrol>Max Pipeline Memory</uicontrol> pipeline property, best
    practice is to configure the pipeline to use up to 65% of the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Java heap
@@ -42,8 +42,7 @@
    <note type="tip">To avoid errors, you might create an alert to indicate when the memory usage
     approaches the configured limit.</note>
   </p>
+  <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM-JavaHeapSize"
+   /></p>
  </conbody>
- <related-links>
-  <link href="../Configuration/JavaHeapSize.dita#concept_mdc_shg_qr"/>
- </related-links>
 </concept>

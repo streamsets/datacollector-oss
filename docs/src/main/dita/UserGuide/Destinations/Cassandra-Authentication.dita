@@ -30,8 +30,8 @@
             </ul><p>Before selecting one of the DSE authentication providers, install the DSE Java driver version
             1.2.4 or later. For a compatibility matrix, see the <xref
                 href="http://docs.datastax.com/en/developer/java-driver/3.3/manual/native_protocol/"
-                format="html" scope="external">Cassandra documentation</xref>. For information about
-            installing drivers, see <xref
-                href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p>
+                format="html" scope="external">Cassandra documentation</xref>. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"
+            /></p>
  </conbody>
 </concept>

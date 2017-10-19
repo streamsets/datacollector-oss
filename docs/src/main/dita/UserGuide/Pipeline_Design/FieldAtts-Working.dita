@@ -28,9 +28,8 @@
         <p>
             <note type="important">Field attributes do not have field paths. When using an attribute
                 in an expression, use just the attribute name surrounded by quotation marks after
-                specifying the path to the associated field, as follows:<p>
-                    <codeblock> ${record:fieldAttribute(&lt;path to the field>,'&lt;attribute name>')}</codeblock>
-                </p></note>
+                specifying the path to the associated field, as
+                follows:<codeblock> ${record:fieldAttribute(&lt;path to the field>,'&lt;attribute name>')}</codeblock></note>
         </p>
         <p>For example, say you are processing Avro data as part of the <xref
                 href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w">Drift

@@ -25,20 +25,16 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SparkLibraries"
         />, install those libraries in the same location as well. </shortdesc>
     <taskbody>
-        <context>
-            <note type="tip">To include all dependent libraries used in your custom Spark
+        <context><note type="tip">To include all dependent libraries used in your custom Spark
                 application, you can use the Apache Maven Dependency Plugin. For more information
                 about the Dependency Plugin, see <xref
                     href="http://maven.apache.org/plugins/maven-dependency-plugin/" format="html"
-                    scope="external"/>.</note>
-            <p>To install an external library for the Spark Evaluator, see <xref
-                    href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"/>.</p>
-            <p>
+                    scope="external"/>.</note><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"/><p>
                 <note>The Spark Evaluator processor is included in several CDH and MapR stage
                     libraries. When you install external libraries for the processor, you must make
                     them accessible to the stage library that you are using.</note>
-            </p>
-        </context>
+            </p></context>
     </taskbody>
     
 </task>

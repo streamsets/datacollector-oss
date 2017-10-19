@@ -69,5 +69,10 @@
                     /> - any pipeline can call them.</dd>
             </dlentry>
         </dl>
+        <note>When configuring runtime values for pipelines run by <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DPM-short"/>,
+            all <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> that run the pipeline must have the values locally defined in the expected
+            locations.</note>
  </conbody>
 </concept>

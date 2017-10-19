@@ -102,8 +102,7 @@
         </dlentry>
    </dl>
   </p>
+    <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ConfigSDC"
+      /></p>
  </conbody>
-  <related-links>
-    <link href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
-  </related-links>
 </concept>

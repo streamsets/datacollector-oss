@@ -28,8 +28,8 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, <codeph>sdc.properties</codeph>. You can optionally generate a
             truststore file for the gateway and worker nodes.</p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_httpsClusterPipes"
+            /></p>
  </conbody>
-    <related-links>
-        <link href="../Configuration/HTTP_protocolsCluster.dita#concept_rdt_h54_cw"/>
-    </related-links>
 </concept>

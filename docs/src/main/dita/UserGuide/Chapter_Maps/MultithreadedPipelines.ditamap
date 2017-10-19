@@ -27,7 +27,7 @@
             <topicref href="../Multithreaded_Pipelines/Origins.dita"/>
             <topicref href="../Multithreaded_Pipelines/ProcessorCaching.dita"/>
         </topicref>
-        <topicref href="../Multithreaded_Pipelines/Monitoring.dita"/>
+        <topicref href="../Multithreaded_Pipelines/Monitoring.dita" product="SDC"/>
         <topicref href="../Multithreaded_Pipelines/Tuning.dita"/>
         <topicref href="../Multithreaded_Pipelines/ResourceUsage.dita">
         <topicmeta><shortdesc></shortdesc></topicmeta></topicref>

@@ -25,8 +25,8 @@
             can add the configurations in simple or bulk edit mode. By default, each property uses
             simple edit mode. </p>
   <p>For example, in the Expression Evaluator, you can click the Add icon in simple edit mode to add
-            multiple expressions to the processor. Data Collector displays text boxes for you to
-            enter configuration values, as follows:</p>
+            multiple expressions to the processor. The stage displays text boxes for you to enter
+            configuration values, as follows:</p>
         <p><image href="../Graphics/SimpleEditMode.png" scale="70" id="image_shd_mjy_cbb"/></p>
         <p>Or, you can switch to bulk edit mode to enter a list of configurations in JSON format,
             for example:</p>

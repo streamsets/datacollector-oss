@@ -23,8 +23,8 @@
   <p><indexterm>Oracle CDC Client<indexterm>prereq - driver installation</indexterm></indexterm>The
             Oracle CDC Client origin connects to Oracle through JDBC. You cannot access the database
             until you install the required driver. </p>
-        <p>Install the Oracle JDBC driver for the Oracle database version that you use. For more
-            information, see <xref href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft"
-            />.</p>
+        <p>Install the Oracle JDBC driver for the Oracle database version that you use. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"
+            /></p>
  </conbody>
 </concept>

@@ -56,7 +56,7 @@
                                     <entry>Password</entry>
                                     <entry>Password to access the InfluxDB database.<p>If InfluxDB
                                             authentication is disabled, enter any value.</p><note
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"
                                         /></entry>
                                 </row>
                                 <row>

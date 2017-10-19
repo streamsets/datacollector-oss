@@ -62,7 +62,9 @@
             the origin, you set the number of threads to 4. You also leave the pipeline Max Runners
             property with the default of 0, which creates a matching number of pipeline runners for
             the threads - in this case, 4. After you start the pipeline and let it run for a while,
-            you check back and find the following histogram: </p>
+            you check back and find the following histogram<ph product="DPM"> in the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> UI</ph>: </p>
         <p><image href="../Graphics/Multithreaded-Stats.png" id="image_av3_3rk_mz" scale="70"/></p>
         <p>The histogram shows that the mean is 1.4, which means at any time, it's likely that there
             are 1.4 available runners.</p>

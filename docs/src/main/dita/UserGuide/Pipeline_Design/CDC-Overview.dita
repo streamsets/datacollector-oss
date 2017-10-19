@@ -20,10 +20,8 @@
 <concept id="concept_apw_l2c_ty">
  <title>Processing Changed Data</title>
  <conbody>
-        <p><indexterm>CDC processing<indexterm>overview</indexterm></indexterm>Certain <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            stages enable you to easily process change capture data (CDC) or transactional data in a
-            pipeline. </p>
+        <p><indexterm>CDC processing<indexterm>overview</indexterm></indexterm>Certain stages enable
+            you to easily process change capture data (CDC) or transactional data in a pipeline. </p>
         <p>CDC-enabled origins can read change capture data. Some exclusively read change capture
             data, others can be configured to read it. When reading changed data, they determine the
             CRUD operation associated with the data and include CRUD operations - such as insert,

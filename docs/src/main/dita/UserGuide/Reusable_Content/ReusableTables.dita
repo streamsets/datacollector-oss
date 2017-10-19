@@ -834,7 +834,7 @@
       <entry>Client secret that the HTTP service uses to authenticate the HTTP client.<p>Enter for
         the client credentials grant that uses a client ID and secret for authentication. Or, for
         the resource owner password credentials grant that requires a client ID and secret.</p><note
-        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_ClientID"/></entry>
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_ClientID"/></entry>
      </row>
      <row>
       <entry>User Name</entry>
@@ -844,7 +844,7 @@
      <row>
       <entry>Password</entry>
       <entry>Resource owner password.<p>Enter for the resource owner password credentials
-        grant.</p><note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
+        grant.</p><note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"/></entry>
      </row>
      <row>
       <entry>JWT Signing Algorithm</entry>
@@ -854,7 +854,7 @@
      <row>
       <entry>JWT Signing Key</entry>
       <entry>Base64 encoded key used to sign the JSON Web Token, if you selected a signing
-        algorithm.<note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_JWTKey"/><p>Enter for
+        algorithm.<note conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_JWTKey"/><p>Enter for
         the JSON Web Tokens grant.</p></entry>
      </row>
      <row>
@@ -1462,7 +1462,7 @@
      <row id="row-ProxyPassword">
       <entry>Proxy Password</entry>
       <entry>Password for proxy credentials.<note
-        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"/></entry>
      </row>
      <row>
       <entry>Thread Pool Size for Parallel Uploads</entry>
@@ -1827,7 +1827,7 @@
      <row id="SalesforcePassword">
       <entry>Password</entry>
       <entry>Salesforce password. <note
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"/></entry>
      </row>
      <row id="SalesforceEndpoint">
       <entry>Auth Endpoint</entry>
@@ -1892,7 +1892,7 @@
      <row id="row_SalesforceProxyPassword">
       <entry>Proxy Password</entry>
       <entry>Password for proxy credentials.<note
-        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"/></entry>
      </row>
     </tbody>
    </tgroup>
@@ -1957,7 +1957,8 @@
      <tbody>
       <row>
        <entry>Read</entry>
-       <entry>View and monitor the pipeline, and see alerts. View existing snapshot data.</entry>
+       <entry>View <ph product="SDC">and monitor </ph>the pipeline, and see alerts. <ph
+         product="SDC">View existing snapshot data.</ph></entry>
       </row>
       <row>
        <entry>Write</entry>
@@ -1965,7 +1966,8 @@
       </row>
       <row>
        <entry>Execute</entry>
-       <entry>Start and stop the pipeline. Preview data and take a snapshot.</entry>
+       <entry>Start and stop the pipeline. Preview data<ph product="SDC"> and take a
+        snapshot</ph>.</entry>
       </row>
      </tbody>
     </tgroup>
@@ -2311,7 +2313,7 @@
      <row id="row-MongoPassword">
       <entry>Password</entry>
       <entry>MongoDB or LDAP password.<note
-        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/Tip_Usernames"/></entry>
+        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_Tip_Usernames"/></entry>
      </row>
     </tbody>
    </tgroup>
@@ -2569,19 +2571,19 @@ com_streamsets_pipeline_stage_plugin_navigator_NavigatorLineagePublisher</codebl
      <row id="row_KuduTableName">
       <entry>Table Name</entry>
       <entry>Table to write to. Enter one of the following: <p>
-       <ul id="ul_KuduTableName">
-        <li>Name of an existing Kudu table. If the table doesn't exist, the pipeline fails to
-         start.</li>
-        <li>Expression that evaluates to the name of an existing Kudu table. For example, if the
-         table name is stored in the "tableName" record attribute, enter the following
-         expression:<codeblock>${record:attribute('tableName')}</codeblock>If the table doesn't
-         exist, the records are treated as error records.</li>
-       </ul>
-      </p><p id="p_KuduTableNote">
-       <note>Impala creates Kudu tables with the following naming convention:
+        <ul id="ul_KuduTableName">
+         <li>Name of an existing Kudu table. If the table doesn't exist, the pipeline fails to
+          start.</li>
+         <li>Expression that evaluates to the name of an existing Kudu table. For example, if the
+          table name is stored in the "tableName" record attribute, enter the following
+          expression:<codeblock>${record:attribute('tableName')}</codeblock>If the table doesn't
+          exist, the records are treated as error records.</li>
+        </ul>
+       </p><p id="p_KuduTableNote">
+        <note>Impala creates Kudu tables with the following naming convention:
           <codeblock>impala:&lt;database name>.&lt;table name></codeblock><p>When using a table
           created by Impala, be sure to use the entire table name. </p></note>
-      </p></entry>
+       </p></entry>
      </row>
     </tbody>
    </tgroup>

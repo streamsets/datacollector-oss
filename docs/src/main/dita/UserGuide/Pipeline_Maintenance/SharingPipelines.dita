@@ -44,6 +44,11 @@
         <p>When someone shares a pipeline with you, it displays in the Pipeline library under the
                 <uicontrol>Shared With Me</uicontrol> label in the pipeline library.</p>
         <p>For more information about roles and permissions, see <xref
-                href="../Configuration/RolesandPermissions.dita#concept_k1r_prc_yy"/>.</p>
+                href="../Configuration/RolesandPermissions.dita#concept_k1r_prc_yy" product="SDC"
+                /><ph product="DPM"><xref
+                    href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/RolesandPermissions.html%23concept_k1r_prc_yy"
+                    format="html" scope="external">Roles and Permissions</xref> in the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> documentation</ph>.</p>
     </conbody>
 </concept>

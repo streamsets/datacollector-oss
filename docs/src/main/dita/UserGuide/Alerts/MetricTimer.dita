@@ -25,9 +25,10 @@
         <p><indexterm>metric rules and
                     alerts<indexterm>timer</indexterm></indexterm><indexterm>timer<indexterm>metric
                     rules and alerts</indexterm></indexterm>The timer metric type provides alerts
-            about the Batch Throughput and Batch Processing Timer statistics displayed in Monitor
-            mode for the pipeline or for a stage:</p>
-        <image href="../Graphics/MetricTimer.png" scale="50" id="image_fsb_llg_qv"/>
+            about the Batch Throughput and Batch Processing Timer statistics <ph product="SDC"
+                >displayed in Monitor mode for the pipeline or for a stage:</ph><ph product="DPM"
+                >for the pipeline or a stage.</ph></p>
+        <image href="../Graphics/MetricTimer.png" scale="50" id="image_fsb_llg_qv" product="SDC"/>
         <p>The timer metric type includes the following metric IDs:<ul id="ul_uxn_4lg_qv">
                 <li>Pipeline Batch Processing Timer - Amount of time for the pipeline to process a
                     batch.</li>

@@ -25,9 +25,10 @@
         <p><indexterm>metric rules and
                     alerts<indexterm>histogram</indexterm></indexterm><indexterm>histogram<indexterm>metric
                     rules and alerts</indexterm></indexterm>The histogram metric type provides
-            alerts about the Records Per Batch Histogram statistics displayed in Monitor mode for
-            the pipeline or for a stage:</p>
-        <image href="../Graphics/MetricHistogram.png" scale="50" id="image_emj_ddg_qv"/>
+            alerts about the Records Per Batch Histogram statistics<ph product="SDC"> displayed in
+                Monitor mode for the pipeline or for a stage</ph>
+            <ph product="SDC">:</ph><ph product="DPM">for a pipeline or a stage.</ph></p>
+        <image href="../Graphics/MetricHistogram.png" scale="50" id="image_emj_ddg_qv" product="SDC"/>
         <p>The histogram metric type includes metric IDs for the input records, output records,
             error records, or stage errors for the pipeline or for a stage in the pipeline. You can
             configure the alert to trigger on the metric elements displayed in the monitoring

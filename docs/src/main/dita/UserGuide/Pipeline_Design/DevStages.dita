@@ -28,11 +28,10 @@
           origin<indexterm>description</indexterm></indexterm><indexterm>Dev Raw Data Source
           origin<indexterm>description</indexterm></indexterm><indexterm>Dev Random Error
           processor<indexterm>description</indexterm></indexterm><indexterm>Dev Record Creator
-          processor<indexterm>description</indexterm></indexterm>The <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
-      several development stages that you can use to help develop or test pipelines. <note>Do not
-        use development stages in production pipelines. </note></p>
-    <p>You can use the following development stages when developing or testing pipelines:<dl>
+          processor<indexterm>description</indexterm></indexterm>You can use several development
+      stages to help develop and test pipelines. <note>Do not use development stages in production
+        pipelines. </note></p>
+    <p>You can use the following stages when developing or testing pipelines:<dl>
         <dlentry>
           <dt>Dev Data Generator origin</dt>
           <dd>Generates records with the configured number of fields with the selected data types.
@@ -95,7 +94,7 @@
         <dlentry>
           <dt>To Event destination</dt>
           <dd>Generates events for testing event handling functionality. To generate events, select
-            the <uicontrol>Produce Events</uicontrol>  property. </dd>
+            the <uicontrol>Produce Events</uicontrol> property. </dd>
           <dd>The destination generates an event record for each incoming record. It uses the
             incoming record as the body of an event record and adds event record header attributes.
             Note that any record header attributes in the incoming record might be lost or

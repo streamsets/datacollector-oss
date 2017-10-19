@@ -20,10 +20,15 @@
 <map>
  <title>Pipeline Design</title>
  <topicref href="../Pipeline_Design/PipelineDesign_title.dita">
-  <topicref href="../Pipeline_Design/What_isa_Pipeline.dita">
-   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Pipeline_Design/DatainMotion.dita" chunk="to-content">
-   <topicmeta><shortdesc></shortdesc></topicmeta>
+  <topicref href="../Pipeline_Design/What_isa_Pipeline.dita" product="SDC">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Design/DatainMotion.dita" chunk="to-content" product="SDC">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Design/SingleMultithreadedPipes.dita"/>
    <topicref href="../Pipeline_Design/DeliveryGuarantee.dita"/>
   </topicref>

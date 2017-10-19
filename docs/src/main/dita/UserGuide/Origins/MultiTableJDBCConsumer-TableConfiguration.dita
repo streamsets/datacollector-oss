@@ -19,15 +19,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rx3_3hx_4y">
  <title>Table Configuration</title>
- <shortdesc>When you configure JDBC Multitable Consumer, you define a table configuration for each
-        group of tables that you want to read. A table configuration defines a group of tables from
-        the same schema, that have the same table name pattern, and that have proper primary keys or
-        have the same user-defined offset columns.</shortdesc>
  <conbody>
         <p><indexterm>JDBC Multitable Consumer origin<indexterm>table
                 configuration</indexterm></indexterm><indexterm>table configuration<indexterm>JDBC
-                    Multitable Consumer origin</indexterm></indexterm>You can define one or more
-            table configurations. </p>
+                    Multitable Consumer origin</indexterm></indexterm>When you configure JDBC
+            Multitable Consumer, you define a table configuration for each group of tables that you
+            want to read. A table configuration defines a group of tables from the same schema, that
+            have the same table name pattern, and that have proper primary keys or have the same
+            user-defined offset columns.</p>
+        <p>You can define one or more table configurations. </p>
         <p>For example, you can define one table configuration to replicate a database that has a
             proper primary key for each table. You simply define the schema name and use the default
             table name pattern <codeph>%</codeph> which matches all tables in the schema.</p>

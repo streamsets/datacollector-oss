@@ -54,8 +54,9 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> resources directory</dt>
                 <dd>Save the generated descriptor file in the <codeph>$SDC_RESOURCES</codeph>
-                    directory. For more information about environment variables, see <xref
-                        href="../Configuration/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</dd>
+                    directory. <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_SDCenvConfigs"
+                    />.</dd>
             </dlentry>
         </dl>
         <p>For a list of origins and destinations that process protobuf data, see <xref

@@ -27,6 +27,7 @@
         <p>The MySQL JDBC driver must be located in a MySQL Binary Log subdirectory of the external
             directory for additional drivers. For example:
                 <codeph>/opt/sdc-extras/streamsets-datacollector-mysql-binlog-lib/lib/</codeph>.</p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-JDBCdriver-link"/>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"
+            /></p>
     </conbody>
 </concept>

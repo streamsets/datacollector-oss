@@ -19,8 +19,6 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_bft_qzs_gz">
  <title>Install Manually</title>
- <conbody>
-        <p>To manually install external libraries, use the required procedure for your installation
-            type.</p>
-    </conbody>
+    <shortdesc>To manually install external libraries, use the required procedure for your
+        installation type.</shortdesc>
 </concept>

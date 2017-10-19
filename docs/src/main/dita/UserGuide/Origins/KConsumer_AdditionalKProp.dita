@@ -26,15 +26,13 @@
           properties</indexterm></indexterm>When you add the Kafka configuration property, enter the
       exact property name and the value. The Kafka Consumer does not validate the property names or
       values.</p>
-  <p>
+ 
    <note>The Kafka Consumer origin uses the following Kafka configuration properties. The origin
-                ignores user-defined values for these properties:<p>
-                    <ul id="ul_ajb_c3g_vq">
-                        <li>auto.commit.enable</li>
-                        <li>group.id</li>
-                        <li>zookeeper.connect</li>
-                    </ul>
-                </p></note>
-  </p>
+            ignores user-defined values for these properties:<ul id="ul_ajb_c3g_vq">
+                <li>auto.commit.enable</li>
+                <li>group.id</li>
+                <li>zookeeper.connect</li>
+            </ul></note>
+  
  </conbody>
 </concept>

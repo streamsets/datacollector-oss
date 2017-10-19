@@ -65,9 +65,7 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />.</li>
             </ol></p>
-        <p>For more information about editing the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration file, see <xref
-                href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"/>.</p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ConfigSDC"
+            /></p>
  </conbody>
 </concept>

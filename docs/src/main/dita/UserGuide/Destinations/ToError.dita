@@ -28,9 +28,10 @@
    stream to the To Error destination to pass the records to the pipeline for error handling. </p>
   <p>The pipeline performs error handling based on the Error Records properties configured for the
    pipeline. </p>
-  <p>As with other destinations, you can monitor the number of records passed to the To Error
-   destination and you can create metric and data alerts. You can also examine the data sent to the
-   destination as part of data preview or a monitor snapshot. </p>
+  <p>As with other destinations, you can <ph product="SDC">monitor the number of records passed to
+                the To Error destination and you can create metric and data alerts. You can also
+            </ph>examine the data sent to the destination as part of data preview<ph product="SDC">
+                or a monitor snapshot</ph>. </p>
   <p>The To Error destination has no configuration options. To use the destination in a pipeline,
    simply add the stage and connect the pipeline to the stage.</p>
  </conbody>

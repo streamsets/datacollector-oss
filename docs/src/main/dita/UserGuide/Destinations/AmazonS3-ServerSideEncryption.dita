@@ -19,16 +19,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_adm_kn1_mw">
  <title>Server-Side Encryption</title>
- <shortdesc>You can configure the destination to use Amazon Web Services server-side encryption
-        (SSE) to protect data written to Amazon S3. When configured for server-side encryption, the
-        destination passes required server-side encryption configuration values to Amazon S3. Amazon
-        S3 uses the values to encrypt the data as it is written to Amazon S3.</shortdesc>
  <conbody>
   <p><indexterm>Amazon S3 destination<indexterm>server-side
                 encryption</indexterm></indexterm><indexterm>server-side encryption<indexterm>Amazon
-                    S3 destination</indexterm></indexterm>When you enable server-side encryption for
-            the destination, you select one of the following ways that Amazon S3 manages the
-            encryption keys:<dl>
+                    S3 destination</indexterm></indexterm>You can configure the destination to use
+            Amazon Web Services server-side encryption (SSE) to protect data written to Amazon S3.
+            When configured for server-side encryption, the destination passes required server-side
+            encryption configuration values to Amazon S3. Amazon S3 uses the values to encrypt the
+            data as it is written to Amazon S3.</p>
+        <p>When you enable server-side encryption for the destination, you select one of the
+            following ways that Amazon S3 manages the encryption keys:<dl>
                 <dlentry>
                     <dt>Amazon S3-Managed Encryption Keys (SSE-S3)</dt>
                     <dd>When you use server-side encryption with Amazon S3-managed keys, Amazon S3

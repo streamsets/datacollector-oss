@@ -30,22 +30,23 @@
           <dd>The stage silently discards the record. <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> does
             not log information about the error or note the specific record that encountered an
-            error. The discarded record is not included in Monitor mode error record counts or
-            metrics. </dd>
+            error. The discarded record is not included in <ph product="SDC">Monitor mode </ph>error
+            record counts or metrics. </dd>
         </dlentry>
         <dlentry>
           <dt>Send to Error </dt>
           <dd>The stage sends the record to the pipeline for error handling. The pipeline processes
             the record based on the pipeline error handling configuration.</dd>
-          <dd>When you monitor the pipeline, you can view the most recent error records and the
-            issues they encountered on the Error Records tab for the stage. This information becomes
-            unavailable after you stop the pipeline. </dd>
+          <dd product="SDC">When you monitor the pipeline, you can view the most recent error
+            records and the issues they encountered on the Error Records tab for the stage. This
+            information becomes unavailable after you stop the pipeline. </dd>
         </dlentry>
         <dlentry>
           <dt>Stop Pipeline</dt>
           <dd><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             stops the pipeline and logs information about the error. The error that stopped the
-            pipeline displays as an alert in Monitor mode and as an error in the pipeline history. </dd>
+            pipeline displays <ph product="SDC">as an alert in Monitor mode and </ph>as an error in
+            the pipeline history. </dd>
           <dd>Stop pipeline is not supported for cluster mode pipelines at this time.</dd>
         </dlentry>
       </dl></p>

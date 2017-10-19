@@ -38,8 +38,8 @@
                 <li>Processors that cache information generally have a separate cache for each
                     instance of the pipeline. The exception is the Record Deduplicator, which can
                     identify duplicate records across all pipeline runners. </li>
-                <li>The pipeline and stage statistics that display during monitoring are aggregated
-                    across all threads. </li>
+                <li product="SDC">The pipeline and stage statistics that display during monitoring
+                    are aggregated across all threads. </li>
                 <li>To optimize performance and resource usage, check the Available Pipeline Runners
                     histogram to see if pipeline runners are being used effectively.</li>
                 <li>We recommend monitoring the resource usage of the pipeline and the <ph

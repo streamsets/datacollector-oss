@@ -19,33 +19,43 @@
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map collection-type="sequence">
  <title>Pipeline Configuration</title>
- <topicref href="../Pipeline_Configuration/PipelineConfiguration_title.dita" chunk="to-content">
-  <topicref href="../Pipeline_Configuration/DataCollectorUI-Config.dita">
-   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Pipeline_Configuration/Retry.dita">
+ <topicref href="../Pipeline_Configuration/PipelineConfiguration_title.dita">
+  <topicref href="../Pipeline_Configuration/DataCollectorUI-Config.dita" product="SDC" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Configuration/PipelineMemory.dita">
+  <topicref href="../Pipeline_Configuration/Retry.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Configuration/PipelineMemory.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta></topicref>
-  <topicref href="../Pipeline_Configuration/PipelineRateLimit.dita">
+  <topicref href="../Pipeline_Configuration/PipelineRateLimit.dita" chunk="to-content">
   <topicmeta>
    <shortdesc/>
   </topicmeta>
  </topicref>
-  <topicref href="../Pipeline_Configuration/SimpleBulkEdit.dita"/>
-  <topicref href="../Pipeline_Configuration/RuntimeValues.dita">
+  <topicref href="../Pipeline_Configuration/SimpleBulkEdit.dita" chunk="to-content"> 
+  <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+ </topicref>
+  <topicref href="../Pipeline_Configuration/RuntimeValues.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Configuration/RuntimeParameters.dita">
     <topicmeta>
      <shortdesc/>
     </topicmeta>
     <topicref href="../Pipeline_Configuration/RuntimeParameters-Defining.dita"/>
     <topicref href="../Pipeline_Configuration/RuntimeParameters-Calling.dita"/>
-    <topicref href="../Pipeline_Configuration/RuntimeParameters-Starting.dita"/>
-    <topicref href="../Pipeline_Configuration/RuntimeParameters-Viewing.dita"/>
+    <topicref href="../Pipeline_Configuration/RuntimeParameters-Starting.dita" product="SDC"/>
+    <topicref href="../Pipeline_Configuration/RuntimeParameters-Viewing.dita" product="SDC"/>
    </topicref>
    <topicref href="../Pipeline_Configuration/RuntimeProperties.dita">
     <topicref href="../Pipeline_Configuration/RuntimeProperties-Defining.dita"/>
@@ -55,10 +65,13 @@
     <topicref href="../Pipeline_Configuration/RuntimeResources-Defining.dita"/>
     <topicref href="../Pipeline_Configuration/RuntimeResources-Calling.dita"/>
    </topicref>  </topicref>
-  <topicref href="../Pipeline_Configuration/EventGeneration.dita">
+  <topicref href="../Pipeline_Configuration/EventGeneration.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Configuration/EventRecords.dita"/>
   </topicref>
-   <topicref href="../Pipeline_Configuration/Webhooks.dita">
+   <topicref href="../Pipeline_Configuration/Webhooks.dita" chunk="to-content">
     <topicmeta>
      <shortdesc/>
     </topicmeta>
@@ -66,22 +79,43 @@
     <topicref href="../Pipeline_Configuration/Webhooks-Payload_Parameters.dita"/>
    <topicref href="../Pipeline_Configuration/Webhooks-Examples.dita"/>
    </topicref>
-  <topicref href="../Pipeline_Configuration/Notifications.dita">
+  <topicref href="../Pipeline_Configuration/Notifications.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Configuration/SSL-TLS.dita">
+  <topicref href="../DPM/AggregatedStatistics.dita" product="DPM" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../DPM/AggStatistics_DirectlyToDPM.dita"/>
+   <topicref href="../DPM/AggStatistics_SDCRPC.dita">
+    <topicref href="../DPM/AggStatistics_SDCRPCBestPractices.dita"/>
+   </topicref>
+   <topicref href="../DPM/AggStatistics_Kafka.dita">
+    <topicref href="../DPM/AggStatistics_KafkaPartitionStrategy.dita"/>
+    <topicref href="../DPM/AggStatistics_KafkaBestPractices.dita"/>
+   </topicref>
+   <topicref href="../DPM/AggStatistics_Kinesis.dita">
+    <topicref href="../DPM/AggStatistics_KinesisAWSCredentials.dita"/>
+    <topicref href="../DPM/AggStatistics_KinesisBestPractices.dita"/>
+   </topicref>
+   <topicref href="../DPM/AggregatedStatistics_Configuring.dita"/>
+  </topicref>
+  <topicref href="../Pipeline_Configuration/SSL-TLS.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
    <topicref href="../Pipeline_Configuration/SSL-TLS-KeystoreTruststore.dita"/>
    <topicref href="../Pipeline_Configuration/SSL-TLS-TransferProtocols.dita"/>
    <topicref href="../Pipeline_Configuration/SSL-TLS-CipherSuites.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Configuration/Validation.dita">
+  <topicref href="../Pipeline_Configuration/Validation.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
   </topicref>
-  <topicref href="../Pipeline_Configuration/Expressions.dita">
+  <topicref href="../Pipeline_Configuration/Expressions.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

@@ -24,9 +24,11 @@
             <p><indexterm>pipelines<indexterm>starting with
                         parameters</indexterm></indexterm><indexterm>parameters<indexterm>starting
                         pipelines with</indexterm></indexterm>When you start the pipeline, specify
-                the values to use for the parameters. <note>If you want to use the default parameter
-                    values, you can simply click the <uicontrol>Start</uicontrol> icon to start the
-                    pipeline.</note></p>
+                the values to use for the parameters. <draft-comment author="Loretta">What do we do
+                    with this step for DPM? Do we add DPM steps or have a totally different topic
+                    for DPM steps? – setting topic to SDC only for now</draft-comment><note>If you
+                    want to use the default parameter values, you can simply click the
+                        <uicontrol>Start</uicontrol> icon to start the pipeline.</note></p>
         </context>
         <steps>
             <step

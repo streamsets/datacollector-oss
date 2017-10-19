@@ -137,7 +137,7 @@
         href="../Getting_Started/DataCollectorUI_Home-Pipelines.dita#concept_wc5_ysp_1w"/>.</p>
     <p>For information about configuring pipelines, see <xref
         href="../Pipeline_Configuration/DataCollectorUI-Config.dita#concept_izr_f2p_rq"/>.</p>
-    <p>For information about pipeline monitoring options, see <xref
+    <p product="SDC">For information about pipeline monitoring options, see <xref
         href="../Pipeline_Monitoring/DataCollectorUI-Monitor.dita#concept_t1c_mf4_tq"/>.</p>
  </conbody>
 </concept>

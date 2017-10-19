@@ -21,10 +21,10 @@
  <title>Installing the JDBC Driver</title>
  <conbody>
         <p><indexterm>JDBC Multitable Consumer origin<indexterm>driver
-                installation</indexterm></indexterm>Before you use the JDBC Multitable Consumer,
-                <ph
+                installation</indexterm></indexterm>Before you use the JDBC Multitable Consumer, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-JDBCdriver"
             /></p>
-        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/p-JDBCdriver-link"/>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"
+            /></p>
  </conbody>
 </concept>

@@ -19,20 +19,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_knb_cjq_dx">
  <title>Design the Complete Data Architecture</title>
- <shortdesc>As a data architect - the person responsible for defining how data is stored, consumed,
-        and managed by different systems - you design the complete flow of data through multiple
-        systems. You might architect the high-level design in a design document or diagram. Then,
-        you work with your team to develop <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        pipelines that meet those dataflow needs.</shortdesc>
  <conbody>
-  <p><draft-comment author="alisontaylor">text copied from same topic in DPM User Guide. Make the
-                same updates in both places. </draft-comment>For example, you need to create a
-            360-degree view of your customers by collecting all customer data captured in your
-            organization’s social feeds, enterprise data warehouse, and website logs. You need to
-            send all of the data to the Hadoop Distributed File System (HDFS) for further analysis
-            using tools such as Hive and Impala. You determine that the website logs must be written
-            to Kafka as an intermediary system before being streamed to HDFS. </p>
+        <p>As a data architect - the person responsible for defining how data is stored, consumed,
+            and managed by different systems - you design the complete flow of data through multiple
+            systems. You might architect the high-level design in a design document or diagram.
+            Then, you work with your team to develop <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            pipelines that meet those dataflow needs.<draft-comment author="alisontaylor">text
+                copied from same topic in DPM User Guide. Make the same updates in both places.
+            </draft-comment></p>
+        <p>For example, you need to create a 360-degree view of your customers by collecting all
+            customer data captured in your organization’s social feeds, enterprise data warehouse,
+            and website logs. You need to send all of the data to the Hadoop Distributed File System
+            (HDFS) for further analysis using tools such as Hive and Impala. You determine that the
+            website logs must be written to Kafka as an intermediary system before being streamed to
+            HDFS. </p>
         <p>To address this need, you create the following high-level design of the complete data
             flow:</p>
         <p><image href="../Graphics/DPM_DesignArchitecture.png" scale="70" id="image_w1d_k5r_dx"

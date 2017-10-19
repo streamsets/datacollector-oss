@@ -26,9 +26,11 @@
                     alerts<indexterm>meter</indexterm></indexterm><indexterm>meter<indexterm>metric
                     rules and alerts</indexterm></indexterm>The meter metric type can provide alerts
             about the number of batches processed by the pipeline. The meter metric type can also
-            provide alerts about the Record Count and Record Throughput statistics displayed in
-            Monitor mode for the pipeline or for a stage:</p>
-     <p><image href="../Graphics/MetricStatistics.png" id="image_h55_gc1_qv" scale="50"/></p>
+            provide alerts about the Record Count and Record Throughput statistics <ph product="SDC"
+                >displayed in Monitor mode for the pipeline or for a stage:</ph><ph product="DPM"
+                >for the pipeline or a stage.</ph></p>
+     <p><image href="../Graphics/MetricStatistics.png" id="image_h55_gc1_qv" scale="50"
+                product="SDC"/></p>
         <p>The meter metric type includes metric IDs for the pipeline batch count and for the input
             records, output records, error records, or stage errors for the pipeline or for a stage
             in the pipeline. You can configure the alert to trigger on the following metric elements

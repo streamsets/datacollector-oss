@@ -39,9 +39,14 @@
             change the origin's behavior, you might need to increase the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             > </ph> parser buffer size by configuring the parser.limit property in the <xref
-                href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r"><ph
+                href="../Configuration/ConfiguringDataCollector.dita#task_lxk_kjw_1r" product="SDC"
+                    ><ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file</xref>. </p>
+                /> configuration file.</xref><ph product="DPM">Data Collector configuration file.
+                For more information, see <xref
+                    href="https://streamsets.com/documentation/datacollector/latest/help/#Configuration/DCConfig.html%23task_lxk_kjw_1r"
+                    format="html" scope="external">Configuring Data Collector</xref> in the Data
+                Collector documentation.</ph></p>
         <p>Note that most of the maximum record size properties are specified in characters, while
             the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             /> limit is defined in bytes. </p>

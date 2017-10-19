@@ -26,13 +26,14 @@
  <conbody>
   <p><indexterm>JDBC Lookup processor<indexterm>monitoring</indexterm></indexterm><indexterm>JDBC
                 Lookup processor<indexterm>statistics</indexterm></indexterm>When you select the
-            JDBC Lookup processor in the canvas while <xref
-                href="../Pipeline_Monitoring/PipelineMonitoring.dita#concept_hsp_tnt_lq">monitoring
-                a running pipeline</xref>, the Summary tab displays the following stage
-            statistics:</p>
+            JDBC Lookup processor in the canvas while monitoring a running pipeline, the Summary tab
+            displays the following stage statistics:</p>
         <p><image href="../Graphics/JDBCLookupStatistics.png" scale="70" id="image_qwq_btd_wz"/></p>
         <p>The Select Queries Meter displays the number of queries that the processor makes per
             second. The Select Queries Timer displays the average amount of time that the queries
             take to complete. </p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM-PipelineMonitoring"
+            /></p>
  </conbody>
 </concept>

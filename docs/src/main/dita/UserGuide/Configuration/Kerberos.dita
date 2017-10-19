@@ -23,24 +23,28 @@
     clusters. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector configuration file<indexterm>enabling Kerberos
-          authentication</indexterm></indexterm><indexterm>Kerberos
-          authentication<indexterm>enabling for the Data Collector</indexterm></indexterm>By
-      default, <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      uses the user account who started it to connect to external systems. When you enable Kerberos,
-      it can use the Kerberos principal to connect to external systems.</p>
+                    authentication</indexterm></indexterm><indexterm>Kerberos
+                    authentication<indexterm>enabling for the Data
+            Collector</indexterm></indexterm>By default, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            uses the user account who started it to connect to external systems. When you enable
+            Kerberos, it can use the Kerberos principal to connect to external systems.</p>
     <p>You can configure Kerberos authentication for the following stages:<ul id="ul_u5p_x1f_55">
         <li>Hadoop FS origin</li>
                 <li>HTTP to Kafka origin, <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
                     /></li>
         <li>Kafka Consumer origin, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/></li>
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
+                    /></li>
                 <li>Kafka Multitopic Consumer origin</li>
         <li>MapR FS origin</li>
         <li>SDC RPC to Kafka, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/></li>
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
+                    /></li>
         <li>UDP to Kafka, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/></li>
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
+                    /></li>
         <li>HBase Lookup processor</li>
         <li>Hive Metadata processor</li>
                 <li>Cassandra destination, when the DataStax Enterprise Java driver is
@@ -49,7 +53,8 @@
         <li>HBase destination</li>
         <li>Hive Metastore destination</li>
         <li>Kafka Producer, <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/></li>
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
+                    /></li>
         <li>MapR DB destination</li>
         <li>MapR FS destination</li>
         <li>Solr destination</li>
@@ -59,7 +64,6 @@
                 <li>Spark executor</li>
       </ul></p>
   <p>To enable <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            to use Kerberos authentication, use the required procedure for your installation
-            type.</p>
+            to use Kerberos authentication, use the required procedure for your installation type. </p>
  </conbody>
 </concept>

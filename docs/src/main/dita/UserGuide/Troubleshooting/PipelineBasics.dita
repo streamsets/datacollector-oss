@@ -64,7 +64,7 @@
               <uicontrol> Settings</uicontrol>
             </menucascade>.</dd>
         </dlentry>
-        <dlentry>
+        <dlentry product="SDC">
           <dt>The data reaching the destination is not what I expect - what do I do?</dt>
           <dd>If the pipeline is still running, take a couple snapshots of the data being processed,
             then stop the pipeline and enter data preview and use the snapshot as the source data.

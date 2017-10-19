@@ -34,7 +34,7 @@
             from outside the United
             States:<codeblock> ${record:value('/COUNTRY') == 'US'}</codeblock></p>
         <p>Error records include information about failed preconditions in the errorMessage record
-            header attribute. You can also view error messages when viewing recent error records in
-            Monitor mode, while the pipeline is running. </p>
+            header attribute. <ph product="SDC">You can also view error messages when viewing recent
+                error records in Monitor mode, while the pipeline is running. </ph></p>
  </conbody>
 </concept>

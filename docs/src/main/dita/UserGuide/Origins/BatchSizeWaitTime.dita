@@ -19,10 +19,6 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ypd_vgr_5q">
  <title>Batch Size and Wait Time</title>
- <shortdesc>For origin stages, the batch size determines the maximum number of records sent through
-        the pipeline at one time. The batch wait time determines the time that the origin waits for
-        data before sending a batch. At the end of the wait time, it sends the batch regardless of
-        how many records the batch contains. </shortdesc>
  <conbody>
   <p><indexterm>batch size and wait
                 time<indexterm>origins</indexterm></indexterm><indexterm>Directory
@@ -30,14 +26,17 @@
                 Tail origin<indexterm>batch size and wait
                 time</indexterm></indexterm><indexterm>Kafka Consumer origin<indexterm>batch size
                     and wait time</indexterm></indexterm><indexterm>origins<indexterm>batch size and
-                    wait time</indexterm></indexterm>For example, a File Tail origin is configured
-            for a batch size of 20 records and a batch wait time of 240 seconds. When data arrives
-            quickly, File Tail fills a batch with 20 records and sends it through the pipeline
-            immediately, creating a new batch and sending it again as soon as it is full. As
-            incoming data slows, a remaining batch contains a few records, gaining an extra record
-            periodically. 240 seconds after creating the batch, File Tail sends the partially-full
-            batch through the pipeline. It immediately creates a new batch and starts a new
-            countdown.</p>
+                    wait time</indexterm></indexterm>For origin stages, the batch size determines
+            the maximum number of records sent through the pipeline at one time. The batch wait time
+            determines the time that the origin waits for data before sending a batch. At the end of
+            the wait time, it sends the batch regardless of how many records the batch contains. </p>
+        <p>For example, a File Tail origin is configured for a batch size of 20 records and a batch
+            wait time of 240 seconds. When data arrives quickly, File Tail fills a batch with 20
+            records and sends it through the pipeline immediately, creating a new batch and sending
+            it again as soon as it is full. As incoming data slows, a remaining batch contains a few
+            records, gaining an extra record periodically. 240 seconds after creating the batch,
+            File Tail sends the partially-full batch through the pipeline. It immediately creates a
+            new batch and starts a new countdown.</p>
   <p>Configure the batch wait time based on your processing needs. You might reduce the batch wait
    time to ensure all data is processed within a specified time frame or to make regular contact
    with pipeline destinations. Use the default or increase the wait time if you prefer not to
