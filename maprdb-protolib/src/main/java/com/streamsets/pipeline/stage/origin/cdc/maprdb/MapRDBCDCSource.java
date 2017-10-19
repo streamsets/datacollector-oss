@@ -31,12 +31,16 @@ import org.ojai.KeyValue;
 import org.ojai.Value;
 import org.ojai.store.cdc.ChangeDataRecord;
 import org.ojai.store.cdc.ChangeNode;
+import org.ojai.types.ODate;
+import org.ojai.types.OInterval;
+import org.ojai.types.OTime;
+import org.ojai.types.OTimestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -328,14 +332,31 @@ public class MapRDBCDCSource extends BasePushSource {
         return Field.create(value.getString());
       case MAP:
         return Field.create(value.getMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, this::generateField)));
+      case TIME:
+        return Field.createTime(value.getTime().toDate());
+      case ARRAY:
+        return Field.create(value.getList().stream().map(this::generateField).collect(Collectors.toList()));
+      case BINARY:
+        return Field.create(value.getBinary().array());
+      case TIMESTAMP:
+        return Field.createDatetime(value.getTimestamp().toDate());
+      case INTERVAL:
+        return Field.create(value.getInterval().getTimeInMillis());
       default:
         throw new IllegalArgumentException("Unsupported type " + value.getType().toString());
     }
   }
 
+  @SuppressWarnings("unchecked")
   private Field generateField(Object value) {
     if(value instanceof Integer) {
       return Field.create((Integer) value);
+    } else if(value instanceof List) {
+      return Field.create(((List<Object>) value).stream().map(this::generateField).collect(Collectors.toList()));
+    } else if(value instanceof byte[]) {
+      return Field.create((byte[]) value);
+    } else if(value instanceof ByteBuffer) {
+      return Field.create(((ByteBuffer) value).array());
     } else if(value instanceof Long) {
       return Field.create((Long) value);
     } else if(value instanceof Short) {
@@ -346,14 +367,22 @@ public class MapRDBCDCSource extends BasePushSource {
       return Field.create((BigDecimal) value);
     } else if(value instanceof Byte) {
       return Field.create((Byte) value);
-    } else if(value instanceof Date) {
-      return Field.createDate((Date) value);
     } else if(value instanceof Float) {
       return Field.create((Float) value);
     } else if(value instanceof Double) {
       return Field.create((Double) value);
     } else if(value instanceof String) {
       return Field.create((String) value);
+    } else if(value instanceof OTime) {
+      return Field.createTime(((OTime) value).toDate());
+    } else if(value instanceof ODate) {
+      return Field.createDate(((ODate) value).toDate());
+    } else if(value instanceof OTimestamp) {
+      return Field.createDatetime(((OTimestamp)value).toDate());
+    } else if(value instanceof OInterval) {
+      return Field.create(((OInterval)value).getTimeInMillis());
+    } else if(value instanceof Map) {
+      return Field.create(((Map<String, Object>) value).entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, this::generateField)));
     } else {
       throw new IllegalArgumentException("Unsupported type " + value.getClass().toString());
     }
