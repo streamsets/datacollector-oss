@@ -26,6 +26,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -46,9 +47,11 @@ public class ClusterHelper {
   private final File clusterManagerFile;
   private URLClassLoader apiCL;
   private URLClassLoader containerCL;
+  private Configuration configuration;
 
-  public ClusterHelper(RuntimeInfo runtimeInfo, SecurityConfiguration securityConfiguration, File tempDir) {
-    this(new SystemProcessFactory(), new ClusterProviderImpl(runtimeInfo, securityConfiguration), tempDir, new File(
+  public ClusterHelper(RuntimeInfo runtimeInfo, SecurityConfiguration securityConfiguration,
+                       File tempDir, Configuration conf) {
+    this(new SystemProcessFactory(), new ClusterProviderImpl(runtimeInfo, securityConfiguration, conf), tempDir, new File(
       runtimeInfo.getLibexecDir(), "_cluster-manager"), null, null, securityConfiguration);
   }
 

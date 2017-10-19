@@ -20,6 +20,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import com.streamsets.datacollector.config.LineagePublisherDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ServiceDefinition;
@@ -33,6 +34,7 @@ import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.lineage.LineagePublisherConstants;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -54,7 +56,6 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.util.SystemProcess;
 import org.apache.commons.codec.binary.Base64;
@@ -135,6 +136,7 @@ public class ClusterProviderImpl implements ClusterProvider {
   private final RuntimeInfo runtimeInfo;
   private final YARNStatusParser yarnStatusParser;
   private final MesosStatusParser mesosStatusParser;
+  private final Configuration configuration;
   /**
    * Only null in the case of tests
    */
@@ -146,14 +148,17 @@ public class ClusterProviderImpl implements ClusterProvider {
 
   @VisibleForTesting
   ClusterProviderImpl() {
-    this(null, null);
+    this(null, null, null);
   }
 
-  public ClusterProviderImpl(RuntimeInfo runtimeInfo, @Nullable SecurityConfiguration securityConfiguration) {
+  public ClusterProviderImpl(RuntimeInfo runtimeInfo,
+                             @Nullable SecurityConfiguration securityConfiguration,
+                             Configuration conf) {
     this.runtimeInfo = runtimeInfo;
     this.securityConfiguration = securityConfiguration;
     this.yarnStatusParser = new YARNStatusParser();
     this.mesosStatusParser = new MesosStatusParser();
+    this.configuration = conf;
   }
 
   @Override
@@ -656,6 +661,17 @@ public class ClusterProviderImpl implements ClusterProvider {
       }
     }
 
+    if(configuration != null && configuration.hasName(LineagePublisherConstants.CONFIG_LINEAGE_PUBLISHERS)) {
+      String confDefName = LineagePublisherConstants.configDef(configuration.get(LineagePublisherConstants.CONFIG_LINEAGE_PUBLISHERS, null));
+      String lineagePublisherDef = configuration.get(confDefName, null);
+      if (lineagePublisherDef != null) {
+        String[] configDef = lineagePublisherDef.split("::");
+        LineagePublisherDefinition def = stageLibrary.getLineagePublisherDefinition(configDef[0], configDef[1]);
+        LOG.debug("Adding Lineage Publisher {}:{}", def.getClassLoader(), def.getKlass().getName());
+        extractClassLoaderInfo(streamsetsLibsCl, userLibsCL, def.getClassLoader(), def.getKlass().getName());
+      }
+    }
+
     if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING ||
         executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
       LOG.info("Execution Mode is CLUSTER_STREAMING. Adding container jar and API jar to spark-submit");
@@ -943,7 +959,8 @@ public class ClusterProviderImpl implements ClusterProvider {
     String name = StageLibraryUtils.getLibraryName(cl);
     if (ClusterModeConstants.STREAMSETS_LIBS.equals(type)) {
       streamsetsLibsCl.put(name, findJars(name, (URLClassLoader) cl, mainClass));
-    } else if (ClusterModeConstants.USER_LIBS.equals(type)) {
+      // sdc-user-libs for Navigator and Atlas, and the customer's custom stages, too.
+    } else if (ClusterModeConstants.USER_LIBS.equals(type) || ClusterModeConstants.SDC_USER_LIBS.equals(type)) {
       userLibsCL.put(name, findJars(name, (URLClassLoader) cl, mainClass));
     } else {
       throw new IllegalStateException(Utils.format("Error unknown stage library type: '{}'", type));

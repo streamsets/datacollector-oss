@@ -178,7 +178,7 @@ public class ClusterRunner extends AbstractRunner {
     this.rev = rev;
     this.tempDir = Files.createTempDir();
     if (clusterHelper == null) {
-      this.clusterHelper = new ClusterHelper(runtimeInfo, null, tempDir);
+      this.clusterHelper = new ClusterHelper(runtimeInfo, null, tempDir, configuration);
     } else {
       this.clusterHelper = clusterHelper;
     }
@@ -201,7 +201,7 @@ public class ClusterRunner extends AbstractRunner {
       throw new IllegalStateException(Utils.format("Could not create temp directory: {}", tempDir));
     }
     this.clusterHelper = new ClusterHelper(runtimeInfo, new SecurityConfiguration(runtimeInfo,
-      configuration), tempDir);
+      configuration), tempDir, configuration);
     if (configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
       MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT) > 0) {
       metricsEventRunnable = this.objectGraph.get(MetricsEventRunnable.class);

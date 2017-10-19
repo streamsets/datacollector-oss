@@ -20,6 +20,7 @@ public class ClusterModeConstants {
   public static final String CONTAINER_LIB = "container-lib";
   public static final String STREAMSETS_LIBS = "streamsets-libs";
   public static final String USER_LIBS = "user-libs";
+  public static final String SDC_USER_LIBS = "sdc-user-libs";
 
   public static final String NUM_EXECUTORS_KEY = "num-executors";
   public static final String CLUSTER_PIPELINE_NAME = "cluster.pipeline.name";
