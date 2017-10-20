@@ -157,6 +157,19 @@ public class TestRuntimeInfo {
   }
 
   @Test
+  public void testTrailingSlashRemovedFromHttpURL() throws Exception {
+    RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(null, null, null);
+    runtimeInfo.setBaseHttpUrl("http://localhost:18630");
+    Assert.assertEquals("http://localhost:18630", runtimeInfo.getBaseHttpUrl());
+    // add a leading forward slash
+    runtimeInfo.setBaseHttpUrl("http://localhost:18630/");
+    Assert.assertEquals("http://localhost:18630", runtimeInfo.getBaseHttpUrl());
+    // add two leading forward slash
+    runtimeInfo.setBaseHttpUrl("http://localhost:18630//");
+    Assert.assertEquals("http://localhost:18630", runtimeInfo.getBaseHttpUrl());
+  }
+
+  @Test
   public void testRuntimeInfoSdcId() {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR, "w");
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "x");

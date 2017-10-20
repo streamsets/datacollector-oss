@@ -23,6 +23,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +120,7 @@ public abstract class RuntimeInfo {
   }
 
   public String getBaseHttpUrl() {
-    return httpUrl;
+    return StringUtils.stripEnd(httpUrl, "/");
   }
 
   public String getStaticWebDir() {
