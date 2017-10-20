@@ -119,6 +119,8 @@ public class JdbcSource extends BaseSource {
   private SQLException firstQueryException = null;
   private long noMoreDataRecordCount = 0;
   private String tableNames;
+  private boolean shouldFire = true;
+  private boolean firstTime = true;
 
   public JdbcSource(
       boolean isIncrementalMode,
@@ -269,6 +271,8 @@ public class JdbcSource extends BaseSource {
     }
     event.setProperties(props);
     getContext().publishLineageEvent(event);
+    shouldFire = true;
+    firstTime = true;
 
     return issues;
   }
@@ -336,7 +340,6 @@ public class JdbcSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(this.commonSourceConfigBean.maxBatchSize, maxBatchSize);
     String nextSourceOffset = lastSourceOffset == null ? initialOffset : lastSourceOffset;
-    boolean queryStartedInThisBatch = false;
 
     long now = System.currentTimeMillis();
     long delay = Math.max(0, (lastQueryCompletedTime + queryIntervalMillis) - now);
@@ -383,8 +386,8 @@ public class JdbcSource extends BaseSource {
           queryRowCount = 0;
           numQueryErrors = 0;
           firstQueryException = null;
-          queryStartedInThisBatch = true;
         }
+
         // Read Data and track last offset
         int rowCount = 0;
         String lastTransactionId = "";
@@ -420,6 +423,7 @@ public class JdbcSource extends BaseSource {
           ++rowCount;
           ++queryRowCount;
           ++noMoreDataRecordCount;
+          shouldFire = true;
         }
         LOG.debug("Processed rows: " + rowCount);
 
@@ -438,10 +442,9 @@ public class JdbcSource extends BaseSource {
           // In case of non-incremental mode, we need to generate no-more-data event as soon as we hit end of the
           // result set. Incremental mode will try to run the query again and generate the event if and only if
           // the next query results in zero rows.
-          if(!isIncrementalMode) {
+          if (!isIncrementalMode) {
             generateNoMoreDataEvent();
           }
-
         }
 
         /*
@@ -449,9 +452,12 @@ public class JdbcSource extends BaseSource {
          * 1) We run a query in this batch and returned empty.
          * 2) We consumed at least some data since last time (to not generate the event all the time)
          */
-        if(isIncrementalMode && queryStartedInThisBatch && rowCount == 0 && noMoreDataRecordCount > 0) {
+
+        if (isIncrementalMode && rowCount == 0 && !haveNext && shouldFire && !firstTime) {
           generateNoMoreDataEvent();
+          shouldFire = false;
         }
+        firstTime = false;
 
       } catch (SQLException e) {
         if (++numQueryErrors == 1) {
