@@ -21,6 +21,7 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.runner.production.ReportErrorDelegate;
+import com.streamsets.datacollector.util.LambdaUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchContext;
@@ -37,7 +38,9 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +52,7 @@ public class StageRuntime implements PushSourceContextDelegate {
   private final StageConfiguration conf;
   private final StageBean stageBean;
   private final Stage.Info info;
+  private final Collection<ServiceRuntime> services;
   private StageContext context;
   private volatile long runnerThread;
 
@@ -69,12 +73,17 @@ public class StageRuntime implements PushSourceContextDelegate {
    */
   private ClassLoader mainClassLoader;
 
-  public StageRuntime(PipelineBean pipelineBean, final StageBean stageBean) {
+  public StageRuntime(
+    PipelineBean pipelineBean,
+    final StageBean stageBean,
+    Collection<ServiceRuntime> services
+  ) {
     this.pipelineBean = pipelineBean;
     this.def = stageBean.getDefinition();
     this.stageBean = stageBean;
     this.conf = stageBean.getConfiguration();
     String label = Optional.ofNullable(conf.getUiInfo().get("label")).orElse("").toString();
+    this.services = services;
     info = new Stage.Info() {
       @Override
       public String getName() {
@@ -150,20 +159,26 @@ public class StageRuntime implements PushSourceContextDelegate {
   @SuppressWarnings("unchecked")
   public List<Issue> init() {
     Preconditions.checkState(context != null, "context has not been set");
-    ClassLoader cl = Thread.currentThread().getContextClassLoader();
     if(context.isPreview()) {
       runnerThread = Thread.currentThread().getId();
     }
-    try {
-      Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
-      List<Issue> issues = getStage().init(info, context);
-      if (issues == null) {
-        issues = Collections.emptyList();
-      }
-      return issues;
-    } finally {
-      Thread.currentThread().setContextClassLoader(cl);
+
+    List<Issue> issues = new LinkedList<>();
+
+    // Firstly init() all services, so that Stage's init() can already use the Services if needed
+    for(ServiceRuntime serviceRuntime : services) {
+      issues.addAll(serviceRuntime.init());
     }
+
+    // We initialize stage itself only if all it's services were initialized properly
+    if(issues.isEmpty()) {
+      issues.addAll(LambdaUtil.withClassLoader(
+        getDefinition().getStageClassLoader(),
+        () -> getStage().init(info, context)
+      ));
+    }
+
+    return issues;
   }
 
   String execute(Callable<String> callable, ErrorSink errorSink, EventSink eventSink) throws StageException {
@@ -251,18 +266,31 @@ public class StageRuntime implements PushSourceContextDelegate {
 
   public void destroy(ErrorSink errorSink, EventSink eventSink) {
     mainClassLoader = Thread.currentThread().getContextClassLoader();
+
     try {
       setErrorAndEventSink(errorSink, eventSink);
-      Thread.currentThread().setContextClassLoader(getDefinition().getStageClassLoader());
-      getStage().destroy();
+
+      // Firstly destroy stage itself
+      LambdaUtil.withClassLoader(
+        getDefinition().getStageClassLoader(),
+        () -> {
+          getStage().destroy();
+          return null;
+        }
+      );
+
+      // Then all associated services
+      for (ServiceRuntime serviceRuntime : services) {
+        serviceRuntime.destroy();
+      }
     } finally {
       // Do not eventSink and errorSink to null when in preview mode AND current thread
       // is different from the one executing stages because stages might send error to errorSink.
       if (!context.isPreview() || runnerThread == (Thread.currentThread().getId())) {
         setErrorAndEventSink(null, null);
       }
-      Thread.currentThread().setContextClassLoader(mainClassLoader);
-      //we release the stage classloader back to the library  ro reuse (as some stages my have private classloaders)
+
+      // We release the stage classloader back to the library  ro reuse (as some stages my have private classloaders)
       stageBean.releaseClassLoader();
     }
   }

@@ -959,7 +959,7 @@ public class Pipeline {
     }
 
     // Create StageRuntime itself
-    StageRuntime stageRuntime = new StageRuntime(pipelineBean, stageBean);
+    StageRuntime stageRuntime = new StageRuntime(pipelineBean, stageBean, services.values());
 
     // Add it to Info array
     if (addToStageInfos) {

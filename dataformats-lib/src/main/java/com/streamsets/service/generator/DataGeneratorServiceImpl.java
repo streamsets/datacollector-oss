@@ -25,6 +25,8 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
 import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -38,6 +40,8 @@ import java.util.List;
 )
 @ConfigGroups(Groups.class)
 public class DataGeneratorServiceImpl extends BaseService implements DataFormatGeneratorService {
+
+  private static final Logger LOG = LoggerFactory.getLogger(DataGeneratorServiceImpl.class);
 
   @ConfigDef(
     required = true,
@@ -55,6 +59,7 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
 
   @Override
   public List<ConfigIssue> init() {
+    LOG.debug("Initializing dataformat service.");
     /* TODO: We need to first abstract some of the common interfaces up
     return dataGeneratorFormatConfig.init(
       context,
@@ -66,6 +71,11 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
     */
 
     return Collections.emptyList();
+  }
+
+  @Override
+  public void destroy() {
+    LOG.debug("Destroying DataFormat service.");
   }
 
   @Override

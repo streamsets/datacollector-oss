@@ -17,7 +17,11 @@ package com.streamsets.datacollector.runner;
 
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.ServiceBean;
+import com.streamsets.datacollector.util.LambdaUtil;
+import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.service.Service;
+
+import java.util.List;
 
 public class ServiceRuntime {
   private final PipelineBean pipelineBean;
@@ -34,5 +38,19 @@ public class ServiceRuntime {
 
   public void setContext(Service.Context context) {
     this.context = context;
+  }
+
+  public List<Issue> init() {
+    return LambdaUtil.withClassLoader(
+        serviceBean.getDefinition().getStageClassLoader(),
+        () -> (List)serviceBean.getService().init(context)
+    );
+  }
+
+  public void destroy() {
+    LambdaUtil.withClassLoader(
+      serviceBean.getDefinition().getStageClassLoader(),
+      () -> { serviceBean.getService().destroy(); return null; }
+    );
   }
 }
