@@ -48,7 +48,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
- * This target writes records to Salesforce Wave Analytics
+ * This target writes records to Salesforce objects
  */
 public class ForceTarget extends BaseTarget {
 

@@ -26,9 +26,9 @@ import com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean;
 
 @StageDef(
     version = 1,
-    label = "Wave Analytics Destination",
-    description = "Writes data to Salesforce Wave Analytics",
-    icon = "waveanalytics.png",
+    label = "Einstein Analytics",
+    description = "Writes data to Salesforce Einstein Analytics",
+    icon = "analytics.png",
     recordsByRef = true,
     onlineHelpRefUrl = "index.html#Destinations/WaveAnalytics.html#task_mdt_dv3_rx"
 )

@@ -59,7 +59,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This target writes records to Salesforce Wave Analytics
+ * This target writes records to Salesforce Einstein Analytics
  */
 public class WaveAnalyticsTarget extends BaseTarget {
 
