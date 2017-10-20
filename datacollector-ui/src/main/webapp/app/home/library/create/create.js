@@ -30,7 +30,7 @@ angular
       newConfig : {
         name: '',
         description: '',
-        stages: []
+        executionMode: 'STANDALONE'
       },
 
       save : function () {
@@ -38,7 +38,27 @@ angular
           api.pipelineAgent.createNewPipelineConfig($scope.newConfig.name, $scope.newConfig.description).
             then(
               function(res) {
-                $modalInstance.close(res.data);
+                if ($scope.newConfig.executionMode === 'STANDALONE') {
+                  $modalInstance.close(res.data);
+                } else {
+                  var newPipelineObject = res.data;
+
+                  // Update execution mode
+                  var executionModeConfig = _.find(newPipelineObject.configuration, function(c) {
+                    return c.name === 'executionMode';
+                  });
+
+                  executionModeConfig.value = $scope.newConfig.executionMode;
+                  api.pipelineAgent.savePipelineConfig(newPipelineObject.pipelineId, newPipelineObject)
+                    .then(
+                      function(res) {
+                        $modalInstance.close(res.data);
+                      },
+                      function(res) {
+                        $scope.common.errors = [res.data];
+                      }
+                    );
+                }
               },
               function(res) {
                 $scope.common.errors = [res.data];

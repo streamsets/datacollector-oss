@@ -641,7 +641,8 @@
       "system:sharedWithMePipelines": "Shared with Me",
       "targetPlaceholder": "Select Destination...",
       "transferPermissions": "Transfer Permissions",
-      "updatePermissionsSuccessMessage": "Successfully updated all permissions"
+      "updatePermissionsSuccessMessage": "Successfully updated all permissions",
+      "whereToRun": "Where would you like it to run?"
     },
     "noPipelines": "No Pipeline Found",
     "import": {

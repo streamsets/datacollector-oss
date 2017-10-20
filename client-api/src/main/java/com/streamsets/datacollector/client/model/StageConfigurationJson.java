@@ -33,12 +33,12 @@ public class StageConfigurationJson   {
   private String library = null;
   private String stageName = null;
   private String stageVersion = null;
-  private List<ConfigConfigurationJson> configuration = new ArrayList<ConfigConfigurationJson>();
+  private List<ConfigConfigurationJson> configuration = new ArrayList<>();
   private List<ServiceConfigurationJson> services = new ArrayList<>();
-  private Map<String, Object> uiInfo = new HashMap<String, Object>();
-  private List<String> inputLanes = new ArrayList<String>();
-  private List<String> outputLanes = new ArrayList<String>();
-  private List<String> eventLanes = new ArrayList<String>();
+  private Map<String, Object> uiInfo = new HashMap<>();
+  private List<String> inputLanes = new ArrayList<>();
+  private List<String> outputLanes = new ArrayList<>();
+  private List<String> eventLanes = new ArrayList<>();
 
 
   /**

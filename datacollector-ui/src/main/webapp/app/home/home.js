@@ -770,6 +770,18 @@ angular
       },
 
       /**
+       * Returns true if pipeline is Edge pipeline
+       * @param pipelineInfo
+       */
+      isEdgePipeline: function(pipelineInfo) {
+        var pipelineStatus = $rootScope.common.pipelineStatusMap[pipelineInfo.pipelineId];
+        return (
+          pipelineStatus && pipelineStatus.pipelineId === pipelineInfo.pipelineId &&
+         pipelineStatus.executionMode === 'EDGE'
+        );
+      },
+
+      /**
        * Callback function when Show Name column menu item clicked
        */
       onToggleShowNameColumn: function() {

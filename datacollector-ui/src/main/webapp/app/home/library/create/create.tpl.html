@@ -31,6 +31,19 @@
                 ng-model="newConfig.description"></textarea>
     </div>
 
+    <div class="form-group">
+      <label class="control-label" translate="home.library.whereToRun">Where would you like it to run?</label>
+      <select class="form-control"
+              name="density"
+              ng-model="newConfig.executionMode">
+        <option value="STANDALONE"
+                ng-selected="newConfig.executionMode === 'STANDALONE'">Data Collector</option>
+        <option value="EDGE"
+                ng-selected="newConfig.executionMode === 'EDGE'">Data Collector Edge</option>
+      </select>
+    </div>
+
+
   </div>
   <div class="modal-footer">
     <button type="reset" class="btn btn-default" ng-click="cancel()"

@@ -567,13 +567,7 @@ angular.module('dataCollectorApp.common')
        * @returns Updated Pipeline Configuration
        */
       savePipelineConfig: function(name, config) {
-        var url;
-
-        if (!name) {
-          name = 'xyz';
-        }
-
-        url = apiBase + '/pipeline/' + name;
+        var url = apiBase + '/pipeline/' + name;
         return $http({
           method: 'POST',
           url: url,
