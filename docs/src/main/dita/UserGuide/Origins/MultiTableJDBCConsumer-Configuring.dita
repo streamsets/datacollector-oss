@@ -215,8 +215,10 @@
                             <tbody>
                                 <row>
                                     <entry>Schema Name</entry>
-                                    <entry>Name of the schema to use for this table
-                                        configuration.</entry>
+                                    <entry>Name of the schema to use for this table configuration.
+                                        Required for Oracle tables. <p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Oracletablenames"
+                                            /></p></entry>
                                 </row>
                                 <row>
                                     <entry>Table Name Pattern <xref
@@ -226,7 +228,9 @@
                                         </xref></entry>
                                     <entry>Pattern of the table names to read for this table
                                         configuration. Use the SQL LIKE syntax to define the
-                                        pattern. <p>Default is the percentage wildcard (%) which
+                                        pattern. <note><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Oracletablenames"
+                                            /></note><p>Default is the percentage wildcard (%) which
                                             matches all tables in the schema.</p></entry>
                                 </row>
                                 <row>
@@ -256,7 +260,7 @@
                                             select this option and specify a valid offset column.
                                             For more information about partition processing
                                             requirements, see <xref
-                                                href="MultiTableJDBCConsumer-PartitionOffsetTypes.dita#concept_c54_hj1_q1b"
+                                                href="MultiTableJDBCConsumer-PartitionRequirements.dita#concept_c54_hj1_q1b"
                                             />.</p></entry>
                                 </row>
                                 <row>
@@ -281,21 +285,45 @@
                                             the same order that the columns are defined.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Enable Non-Incremental Load</entry>
+                                    <entry>Enables <xref
+                                            href="MultitableJDBCConsumer-NonIncremental.dita#concept_xwr_bhm_nbb"
+                                            >non-incremental processing</xref> of tables that do not
+                                        include a primary key or offset column. Do not use when
+                                        requiring multithreaded partition processing. </entry>
+                                </row>
+                                <row>
                                     <entry>Multithreaded Partition Processing Mode</entry>
                                     <entry>Determines how the origin performs multithreaded
                                         processing. Select one of the following options:<ul
                                             id="ul_btn_wfj_t1b">
-                                            <li>Off - The origin performs multithreaded table
-                                                processing.</li>
-                                            <li>On (Best Effort) - The origin performs multithreaded
-                                                partition processing for all tables that meet the
-                                                requirements and performs multithreaded table
-                                                partitioning for all other tables.</li>
+                                            <li>Off - The origin performs <xref
+                                                  href="MultiTableJDBCConsumer-MultithreadTable.dita#concept_tz5_fw5_gz"
+                                                  >multithreaded table processing</xref>.<p>Can be
+                                                  used to perform <xref
+                                                  href="https://docs.google.com/document/d/1Eea8KPKhHz8OdCl0sp0zmRJeeYgT9w7iVOJe-TbeEjw/edit#heading=h.kdebto8fxfkr"
+                                                  format="html" scope="external">non-incremental
+                                                  processing</xref> of tables without key or offset
+                                                  columns.</p></li>
+                                            <li>On (Best Effort) - The origin performs <xref
+                                                  href="MultiTableJDBCConsumer-MultithreadPartition.dita#concept_gvy_yws_p1b"
+                                                  >multithreaded partition processing</xref> for all
+                                                tables that meet the <xref
+                                                  href="MultiTableJDBCConsumer-PartitionRequirements.dita#concept_c54_hj1_q1b"
+                                                  >partition processing requirements</xref> and
+                                                performs multithreaded table partitioning tables
+                                                with multiple key or offset columns.<p>Can be used
+                                                  to perform <xref
+                                                  href="https://docs.google.com/document/d/1Eea8KPKhHz8OdCl0sp0zmRJeeYgT9w7iVOJe-TbeEjw/edit#heading=h.kdebto8fxfkr"
+                                                  format="html" scope="external">non-incremental
+                                                  processing</xref> of tables without key or offset
+                                                  columns.</p></li>
                                             <li>On (Required) - The origin performs multithreaded
-                                                partition processing for all tables. </li>
-                                        </ul> For more information, see <xref
-                                            href="MultiTableJDBCConsumer-Multithread.dita#concept_nbk_xgt_p1b"
-                                        />.</entry>
+                                                partition processing for all tables. <p>Generates an
+                                                  error if the table configuration includes tables
+                                                  that do not meet the partition processing
+                                                  requirements.</p></li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Partition Size</entry>

@@ -52,16 +52,22 @@
                                 </row>
                                 <row>
                                     <entry>Schema Name</entry>
-                                    <entry>Optional database or schema name to use. <p>Use when the
-                                            database requires a fully-qualified table
-                                        name.</p></entry>
+                                    <entry>Optional database or schema name to use. <p>Use when the database requires a fully-qualified table
+                                            name. <note type="tip"><ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Oracletablenames"/>
+                                                <p>To use a lower- or mixed-case schema name, enter
+                                                  the name and enable the Enclosed Object Names
+                                                  property. </p></note></p></entry>
                                 </row>
                                 <row>
                                     <entry>Table Name</entry>
                                     <entry>Database table name to use. Use the table name format
                                         required by the database. <p>
-                                            <note type="tip">By default, Oracle requires table names
-                                                in all caps, e.g. TABLE_NAME.</note>
+                                            <note type="tip"><ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Oracletablenames"
+                                                  /><p>To use a lower- or mixed-case table name,
+                                                  enter the name and enable the Enclosed Object
+                                                  Names property. </p></note>
                                         </p></entry>
                                 </row>
                                 <row
@@ -72,10 +78,13 @@
                                     <entry>Enclose Object Names</entry>
                                     <entry>Encloses the database or schema name, table name, and
                                         column names in quotation marks when writing to the
-                                            database.<p>Use when the database/schema or table was
-                                            created with quotation marks to allow for lower case,
-                                            mixed-case, or special characters in the names.
-                                        </p></entry>
+                                        database. <p>Enables using case-sensitive names or names
+                                            with special characters. When not enabled, the JDBC
+                                            driver that the destination uses determines how the
+                                            names are submitted. </p><p>Oracle JDBC drivers submit
+                                            names as all caps by default. Also, <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Oracletablenames"
+                                            /></p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/LogFormat_row">

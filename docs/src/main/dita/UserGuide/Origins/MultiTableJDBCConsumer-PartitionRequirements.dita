@@ -28,6 +28,11 @@
                     <dd>The table must have a single primary key or user-defined offset column.
                         Performing multithreaded partition processing on a table with composite keys
                         generates an error and stops the pipeline.</dd>
+                    <dd>If a table does not have a primary key column, you can use the Override
+                        Offset Columns property to specify a valid offset column to use. Having an
+                        ascending index on the offset column is strongly encouraged since the
+                        underlying query uses an ORDER BY and inequality operators on this
+                        column.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>Numeric data type</dt>
@@ -44,12 +49,5 @@
                 </dlentry>
             </dl>
         </p>
-        <p><note type="tip">If the table that you want to process does not meet these requirements,
-                you can use the Override Offset Columns property to specify a valid offset column to
-                use. Having an index on the offset column is strongly encouraged since the
-                underlying query uses an ORDER BY and inequality operators on this column.</note>You
-            can also use the default processing mode to allow the origin to perform partition
-            processing for tables that meet the requirements and to perform table processing for the
-            remaining tables. </p>
  </conbody>
 </concept>

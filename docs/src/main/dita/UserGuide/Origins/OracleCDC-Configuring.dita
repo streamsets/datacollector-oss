@@ -88,18 +88,23 @@
                             <tbody>
                                 <row>
                                     <entry>Schema Name</entry>
-                                    <entry>Name of the schema to use.</entry>
+                                    <entry>Name of the schema to use. The origin submits the schema
+                                        name in all caps by default. To use a lower- or mixed-case
+                                        name, enable the Case-Sensitive Names.</entry>
                                 </row>
                                 <row>
                                     <entry>Tables</entry>
-                                    <entry>Tables to use.</entry>
+                                    <entry>Tables to use.<p>The origin submits tables names in all
+                                            caps by default. To use lower- or mixed-case names,
+                                            enable the Case-Sensitive Names.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Case-Sensitive Names</entry>
-                                    <entry>Enables case-sensitive schema, table, and column names.
-                                        Use when the schema, tables, or columns were created with
-                                        quotation marks surrounding the names.<p>By default, the
-                                            origin uses all caps for the names. </p></entry>
+                                    <entry>Enables using case-sensitive schema, table, and column
+                                        names. When not enabled, the origin submits names in all
+                                                caps.<p><ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Oracletablenames"
+                                            /></p></entry>
                                 </row>
                                 <row>
                                     <entry>Initial Change <xref href="OracleCDC-InitialChange.dita">

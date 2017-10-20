@@ -20,31 +20,41 @@
                 types</indexterm></indexterm>The JDBC Multitable Consumer origin performs parallel
             processing and enables the creation of a multithreaded pipeline. The origin can use
             multiple threads to process entire tables or partitions within tables. </p>
-        <p>By default, the origin performs partition processing for the tables that fulfill the
-            partition processing requirements, and performs table processing for all other tables.
-            When using the default behavior, the origin notes the tables that allow partition
-            processing in the <ph
+        <p>By default, the origin performs multithreaded partition processing for the tables that
+            fulfill the partition processing requirements, and performs multithreaded table
+            processing for all other tables. When using the default behavior, the origin notes the
+            tables that allow partition processing in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             log. When needed, you can configure the origin to require partition processing for all
-            tables or to perform only table processing.</p>
-        <p>The origin provides the following processing modes:<ul id="ul_trr_gxt_p1b">
-                <li>Multithreaded table processing - The origin can use up to one thread per table.
-                    Can process tables with multiple offset columns.</li>
-                <li>Multithreaded partition processing - The origin can use up to one thread per
-                    table partition. Use to process larger volumes of data than multithreaded table
-                        processing.<p>Multithreaded partition processing requires a single primary
-                        key or user-defined offset column of a supported data type, and additional
-                        details for partition creation. Tables with composite keys or a key or
-                        user-defined offset column of an unsupported data type cannot be
+            tables or to perform only table processing. You can also allow the single-threaded <xref
+                href="MultitableJDBCConsumer-NonIncremental.dita#concept_xwr_bhm_nbb"
+                >non-incremental processing</xref> of tables when needed.</p>
+        <p>The origin provides the following multithreaded processing modes:<ul id="ul_trr_gxt_p1b">
+                <li><xref href="MultiTableJDBCConsumer-MultithreadTable.dita#concept_tz5_fw5_gz"
+                        >Multithreaded table processing</xref> - The origin can use up to one thread
+                    per table. Can process tables with multiple offset columns.</li>
+                <li><xref
+                        href="MultiTableJDBCConsumer-MultithreadPartition.dita#concept_gvy_yws_p1b"
+                        >Multithreaded partition processing</xref> - The origin can use up to one
+                    thread per table partition. Use to process larger volumes of data than
+                    multithreaded table processing.<p>Multithreaded partition processing requires a
+                        single primary key or user-defined offset column of a supported data type,
+                        and additional details for partition creation. Tables with composite keys or
+                        a key or user-defined offset column of an unsupported data type cannot be
                         partitioned.</p></li>
             </ul></p>
         <p>When you configure the origin, you specify the tables to process and the multithreaded
             partition processing mode to use for each set of tables: <ul id="ul_qk1_g2j_t1b">
-                <li>Off - Use to perform multithreaded table processing. </li>
-                <li>On (Best Effort) - Use to perform partition processing where possible, and table
-                    processing for all other tables.</li>
+                <li>Off - Use to perform multithreaded table processing. <p>Can be used to perform
+                        non-incremental loads of tables without key or offset columns, when
+                        enabled.</p></li>
+                <li>On (Best Effort) - Use to perform partition processing where possible and allow
+                    multithreaded table processing for tables with multiple key or offset columns.
+                        <p>Can be used to perform non-incremental loads of tables without key or
+                        offset columns, when enabled. </p></li>
                 <li>On (Required) - Use to perform partition processing for all specified tables.
-                </li>
+                        <p>Does not allow performing other types of processing for tables that do
+                        not meet the partition processing requirements.</p></li>
             </ul></p>
  </conbody>
 </concept>

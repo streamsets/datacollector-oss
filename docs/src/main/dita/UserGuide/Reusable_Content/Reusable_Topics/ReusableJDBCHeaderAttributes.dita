@@ -45,7 +45,9 @@
                             <entry> &lt;JDBC prefix>.tables</entry>
                             <entry id="entry_JDBCtables">Provides a comma-separated list of source
                                 tables for the fields in the record.<note>Not all JDBC drivers
-                                    provide this information.</note></entry>
+                                    provide this information.</note><p><ph
+                                        conref="../ReusablePhrases.dita#concept_vhs_5tz_xp/Oracletablenames"
+                                    /></p></entry>
                         </row>
                     <row>
                             <entry>&lt;JDBC prefix>.&lt;column name>.jdbcType</entry>

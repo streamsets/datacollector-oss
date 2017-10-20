@@ -21,12 +21,12 @@
             origin performs multithreaded partition processing for all tables that meet the
             partition processing requirements, and performs table processing for all other tables. </p>
         <p>To perform multithreaded processing of partitions within a table, you enable partition
-            processing, specify the partition size, and the maximum number of partitions to use.
-            Limiting the number of partitions also limits the number of threads that can be
-            dedicated to processing data in the table. </p>
-        <p>When you configure a table for unlimited partitions, the origin creates up to twice as
-            many partitions as the pipeline thread count. For example, if you have 5 threads, the
-            table can have up to 10 partitions. </p>
+            processing in the table configuration, then specify the partition size and the maximum
+            number of partitions to use. Limiting the number of partitions also limits the number of
+            threads that can be dedicated to processing data in the table. </p>
+        <p>When you configure a set of tables for unlimited partitions, the origin creates up to
+            twice as many partitions as the pipeline thread count. For example, if you have 5
+            threads, the table can have up to 10 partitions. </p>
         <p>Similar to multithreaded table processing, each thread reads data from a single
             partition, and each partition can have a maximum of one thread read from it at a time. </p>
         <p>When processing partitions, the processing order depends on many factors. For a full

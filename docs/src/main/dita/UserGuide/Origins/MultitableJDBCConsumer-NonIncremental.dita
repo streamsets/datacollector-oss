@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xwr_bhm_nbb">
+ <title>Non-Incremental Processing</title>
+ <conbody>
+  <p><indexterm>JDBC Multitable Consumer origin<indexterm>non-incremental
+                processing</indexterm></indexterm><indexterm>non-incremental
+                    processing<indexterm>JDBC Multitable Consumer</indexterm></indexterm>You can
+            configure the JDBC Multitable Consumer origin to perform non-incremental processing for
+            tables with no primary keys or user-defined offset columns. By default, the origin
+            performs incremental processing and does not process tables without a key or offset
+            column. </p>
+        <p>You can enable non-incremental processing for the set of tables defined in a table
+            configuration.</p>
+        <p>
+            <note>When enabling non-incremental processing for a table without a key or offset
+                column, you cannot require <xref
+                    href="MultiTableJDBCConsumer-MultithreadPartition.dita#concept_gvy_yws_p1b"
+                    >multithreaded partition processing</xref> for the table configuration. That is,
+                you cannot run the pipeline with the Multithreaded Partition Processing Mode
+                property set to On (Required).</note>
+        </p>
+        <p>Use On (Best Effort) or Off to perform non-incremental processing of the table. With
+            either option selected, table is processed using a single thread, like <xref
+                href="MultiTableJDBCConsumer-MultithreadTable.dita#concept_tz5_fw5_gz">multithreaded
+                table processing</xref>. </p>
+        <p>When you enable non-incremental processing, the origin processes any table without a key
+            or offset column as follows:<ul id="ul_tzt_2nm_nbb">
+                <li>The origin uses a single thread to process all available data in the table. </li>
+                <li>After the origin processes all available data, it notes that the table has been
+                    processed as an offset. So, if you stop and restart the pipeline after the
+                    origin completes all processing, the origin does not reprocess the table. <p>If
+                        you want to reprocess data in the table, you can reset the origin before
+                        restarting the pipeline. This resets the origin for all tables that the
+                        origin processes.</p></li>
+                <li>If the pipeline stops while the origin is still processing available data, when
+                    the pipeline restarts, the origin reprocesses the entire table. This occurs
+                    because the table has no key or offset column to allow for tracking progress.
+                </li>
+            </ul></p>
+        <p>For example, say you configure the origin to use five threads and process a set of tables
+            that includes a table with no key or offset column. To process data in this table, you
+            enable the Enable Non-Incremental Load table configuration property. You also set
+            Multithreaded Partition Processing Mode to On (Best Effort) o allow the origin to use
+            multithreaded partition processing when possible and allow both non-incremental
+            processing and multithreaded table processing when needed.</p>
+        <p>When you start the pipeline, the origin allocates one thread to the table that requires
+            non-incremental processing. It processes the table data using multithreaded table
+            processing until all data is processed. When the thread completes processing all
+            available data, the origin notes this as part of the offset and the thread becomes
+            available to process data from other tables. In the meantime, the four other threads
+            process data from the rest of the tables using multithreaded partition processing when
+            possible. </p>
+ </conbody>
+</concept>

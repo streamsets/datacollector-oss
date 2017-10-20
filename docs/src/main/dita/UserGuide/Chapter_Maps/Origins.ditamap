@@ -195,9 +195,11 @@
    <topicref href="../Origins/MultiTableJDBCConsumer-Multithread.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-MultithreadTable.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-MultithreadPartition.dita">
-    <topicref href="../Origins/MultiTableJDBCConsumer-PartitionOffsetTypes.dita"/>
+    <topicref href="../Origins/MultiTableJDBCConsumer-PartitionRequirements.dita"/>
     <topicref href="../Origins/MultiTableJDBCConsumer-MultiOffsetHandling.dita"/>
+    <topicref href="../Origins/MultiTableJDBCConsumer-BestEffort.dita"/>
    </topicref>
+   <topicref href="../Origins/MultitableJDBCConsumer-NonIncremental.dita"/>
    <topicref href="../Origins/MultiTableJDBCConsumer-BatchStrategy.dita">
     <topicref href="../Origins/MultiTableJDBCConsumer-BStrategy-AllRows.dita"/>
     <topicref href="../Origins/MultiTableJDBCConsumer-BStrategy-SwitchTables.dita"/>

@@ -1066,7 +1066,13 @@
                   predicate:<codeblock>/&lt;element>[@&lt;attribute name>='&lt;attribute value>']</codeblock></p>
             <p><ph id="XML-ph-AttAsterisk">You can use the asterisk wildcard as the attribute value.
                         Surround the value in single quotation marks.</ph></p>
-            <p/>
+            <p>
+                  <draft-comment author="Loretta">Oracle Table Names, used in JDBC origins &amp;
+                        Oracle CDC Client.</draft-comment>
+            </p>
+            <p><ph id="Oracletablenames">Oracle uses all caps for schema, table, and column names by
+                        default. Names can be lower- or mixed-case only if the schema, table, or
+                        column was created with quotation marks around the name.</ph></p>
             <p>
                   <draft-comment author="Loretta">Amazon <uicontrol>S3origin-CopyMove1</uicontrol>
                         and 2 used in Amazon S3 origin Configuring.</draft-comment>

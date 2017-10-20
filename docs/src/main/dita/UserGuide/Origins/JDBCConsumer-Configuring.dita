@@ -103,8 +103,11 @@
                                                 href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_yxz_srq_ds"/>
                                         </xref></entry>
-                                    <entry>SQL query to use when reading data from the
-                                        database.</entry>
+                                    <entry>SQL query to use when reading data from the database. <p>
+                                            <note><ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Oracletablenames"
+                                                /></note>
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Initial Offset </entry>

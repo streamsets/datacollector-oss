@@ -26,6 +26,10 @@
                     origins<indexterm>JDBC Multitable Consumer</indexterm></indexterm>The JDBC
             Multitable Consumer origin reads database data from multiple tables through a JDBC
             connection. The origin returns data as a map with column names and field values. </p>
+        <p>By default, the origin processes tables incrementally, using primary key columns or
+            user-defined offset columns to track its progress. You can configure the origin to
+            perform non-incremental processing to enable it to also process tables that do not have
+            a key or offset column.</p>
         <p>The origin uses multiple threads to enable parallel processing of tables and partitions.
             Use the JDBC Multitable Consumer origin to read multiple tables in the same database.
             For example, you might use the origin to perform database replication. </p>
@@ -40,10 +44,11 @@
             database. You also configure the number of threads to use.</p>
         <p>When you define the table configuration for the groups of tables that you want to
             process, you can optionally override the default key column and specify the initial
-            offset to use. You can configure the origin to perform multithreaded partition
+            offset to use. You can enable non-incremental processing for tables without key or
+            offset columns. You can configure the origin to perform multithreaded partition
             processing, multithreaded table processing, or use the default - a mix of both. When
             configuring partitions, you can configure the offset size, number of active partitions,
-            and offset conditions.</p>
+            and offset conditions. </p>
         <p>You define the strategy that the origin uses to create each batch of data and the number
             of batches to create from each result set. You can configure advanced properties, such
             as the initial order to read from tables, connection related properties, and transaction
