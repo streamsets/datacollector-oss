@@ -66,10 +66,9 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -88,7 +87,6 @@ import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_16;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_37;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_40;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_41;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_42;
@@ -139,10 +137,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String SCN = PREFIX + "scn";
   private static final String USER = PREFIX + "user";
   private static final String DDL_TEXT = PREFIX + "ddl";
-  private static final String DATE = "DATE";
-  private static final String TIME = "TIME";
-  private static final String TIMESTAMP = "TIMESTAMP";
-  private static final String TIMESTAMP_HEADER = PREFIX + TIMESTAMP.toLowerCase();
+  private static final String TIMESTAMP_HEADER = PREFIX + "timestamp";
   private static final String TABLE = PREFIX + "table";
   private static final String ROWID_KEY = PREFIX + "rowId";
   private static final String QUERY_KEY = PREFIX + "query";
@@ -156,7 +151,6 @@ public class OracleCDCSource extends BaseSource {
   // What are all these constants?
   // String templates used in debug logging statements. To avoid unnecessarily creating new strings,
   // we just reuse these constants to avoid adding an if(LOG.isDebugEnabled()) call.
-  private static final String START_DATE_REFRESH_NOT_REQUIRED = "Start date refresh not required";
   private static final String START_DATE_REFRESHED_TO = "Start date refreshed to: '{}'";
   private static final String TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE =
       "Trying to start LogMiner with start date: {} and end date: {}";
@@ -174,7 +168,6 @@ public class OracleCDCSource extends BaseSource {
   private static final String DISCARDING_RECORD_AS_CONFIGURED = ". Discarding record as configured";
   private static final String UNSUPPORTED_DISCARD = JDBC_85.getMessage() + DISCARDING_RECORD_AS_CONFIGURED;
   private static final String UNSUPPORTED_SEND_TO_PIPELINE = JDBC_85.getMessage() + ". Sending to pipeline as configured";
-  private static final String QUEUEING = "Queueing {}";
   private static final String GENERATED_RECORD = "Generated Record: '{}'";
   public static final String FOUND_RECORDS_IN_TRANSACTION = "Found {} records in transaction";
   public static final String RETURNING_OFFSET = "Returning offset: {}";
@@ -183,6 +176,12 @@ public class OracleCDCSource extends BaseSource {
   public static final String REDO_SELECT_QUERY_FOR_START = "Redo select query for start = {}";
   public static final String REDO_SELECT_QUERY_FOR_RESUME = "Redo select query for resume = {}";
   public static final String CURRENT_LATEST_SCN_IS = "Current latest SCN is: {}";
+
+  // https://docs.oracle.com/cd/E16338_01/appdev.112/e13995/constant-values.html#oracle_jdbc_OracleTypes_TIMESTAMPTZ
+  private static final int TIMESTAMP_TZ_TYPE = -101;
+  // https://docs.oracle.com/cd/E16338_01/appdev.112/e13995/constant-values.html#oracle_jdbc_OracleTypes_TIMESTAMPLTZ
+  private static final int TIMESTAMP_LTZ_TYPE = -102;
+  private DateTimeColumnHandler dateTimeColumnHandler;
 
   private boolean sentInitialSchemaEvent = false;
   private Optional<ResultSet> currentResultSet = Optional.empty(); //NOSONAR
@@ -233,16 +232,13 @@ public class OracleCDCSource extends BaseSource {
   private static final String GET_COMMIT_TS = "SELECT COMMIT_TIMESTAMP FROM V$LOGMNR_CONTENTS";
   private static final String OFFSET_DELIM = "::";
   private static final int RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED = 1306;
-  private static final String NLS_DATE_FORMAT = "ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MM-YYYY HH24:MI:SS'";
+  private static final String NLS_DATE_FORMAT = "ALTER SESSION SET NLS_DATE_FORMAT = " + DateTimeColumnHandler.DT_SESSION_FORMAT;
   private static final String NLS_NUMERIC_FORMAT = "ALTER SESSION SET NLS_NUMERIC_CHARACTERS = \'.,\'";
   private static final String NLS_TIMESTAMP_FORMAT =
-      "ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'";
-  private final Pattern toDatePattern = Pattern.compile("TO_DATE\\('(.*)',.*");
-  // If a date is set into a timestamp column (or a date field is widened to a timestamp,
-  // a timestamp ending with "." is returned (like 2016-04-15 00:00:00.), so we should also ignore the trailing ".".
-  private final Pattern toTimestampPattern = Pattern.compile("TO_TIMESTAMP\\('(.*[^\\.]).*'");
+      "ALTER SESSION SET NLS_TIMESTAMP_FORMAT = " + DateTimeColumnHandler.TIMESTAMP_SESSION_FORMAT;
+  private static final String NLS_TIMESTAMP_TZ_FORMAT =
+      "ALTER SESSION SET NLS_TIMESTAMP_TZ_FORMAT = " + DateTimeColumnHandler.ZONED_DATETIME_SESSION_FORMAT;
   private final Pattern ddlPattern = Pattern.compile("(CREATE|ALTER|DROP|TRUNCATE).*", Pattern.CASE_INSENSITIVE);
-  private final DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
   private final OracleCDCConfigBean configBean;
   private final HikariPoolConfigBean hikariConfigBean;
@@ -279,6 +275,7 @@ public class OracleCDCSource extends BaseSource {
   private PreparedStatement numericFormat;
   private PreparedStatement switchContainer;
   private PreparedStatement getCommitTimestamp;
+  private PreparedStatement tsTzStatement;
 
   private final ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
   private final SQLListener sqlListener = new SQLListener();
@@ -375,7 +372,7 @@ public class OracleCDCSource extends BaseSource {
             if (lastSCN != null) {
               // The lastSCN is actually SCN for the last statement, not necessarily a commit, so use that one
               // if it exists. On restart use the one from the offset.
-              String endTime = getEndTimeForStartTime(lastSCNTimestamp).format(dtFormatter);
+              String endTime = getEndTimeForStartTime(lastSCNTimestamp).format(DateTimeColumnHandler.DT_FORMATTER);
               if (LOG.isInfoEnabled()) {
                 LOG.info(Utils.format(
                     "Starting Logminer from SCN: {} and end date: {}", lastSCN.toPlainString(), endTime));
@@ -416,7 +413,7 @@ public class OracleCDCSource extends BaseSource {
               resumeCommitSCN = BigDecimal.ZERO;
               resumeSeq = 0;
               if (configBean.startValue == StartValues.DATE) {
-                startDate = LocalDateTime.parse(configBean.startDate, dtFormatter);
+                startDate = LocalDateTime.parse(configBean.startDate, DateTimeColumnHandler.DT_FORMATTER);
               } else {
                 startDate = nowAtDBTz();
               }
@@ -440,10 +437,11 @@ public class OracleCDCSource extends BaseSource {
             startLogMnrForRedoDict();
           }
           if (lastSCN == null || !configBean.bufferLocally || getContext().isPreview()) {
-            startLogMinerUsingGivenDates(startDate.format(dtFormatter), endTime.format(dtFormatter));
+            startLogMinerUsingGivenDates(startDate.format(DateTimeColumnHandler.DT_FORMATTER), endTime.format(
+                DateTimeColumnHandler.DT_FORMATTER));
           } else {
             startLogMnrForResume.setBigDecimal(1, lastSCN);
-            startLogMnrForResume.setString(2, endTime.format(dtFormatter));
+            startLogMnrForResume.setString(2, endTime.format(DateTimeColumnHandler.DT_FORMATTER));
             startLogMnrForResume.execute();
           }
           LOG.debug(START_TIME_END_TIME, startDate, endTime);
@@ -1051,6 +1049,7 @@ public class OracleCDCSource extends BaseSource {
           Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.database", JDBC_00, configBean.baseConfigBean.database));
     }
     zoneId = ZoneId.of(configBean.dbTimeZone);
+    dateTimeColumnHandler = new DateTimeColumnHandler(zoneId);
     String commitScnField;
     BigDecimal scn = null;
     try {
@@ -1064,15 +1063,15 @@ public class OracleCDCSource extends BaseSource {
           break;
         case LATEST:
           // If LATEST is used, use now() as the startDate and proceed as if a startDate was specified
-          configBean.startDate = nowAtDBTz().format(dtFormatter);
+          configBean.startDate = nowAtDBTz().format(DateTimeColumnHandler.DT_FORMATTER);
           // fall-through
         case DATE:
           try {
-            LocalDateTime startDate = getDate(configBean.startDate);
+            LocalDateTime startDate = dateTimeColumnHandler.getDate(configBean.startDate);
             if (startDate.isAfter(nowAtDBTz())) {
               issues.add(getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startDate", JDBC_48));
             }
-          } catch (ParseException ex) {
+          } catch (DateTimeParseException ex) {
             LOG.error("Invalid date", ex);
             issues.add(getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startDate", JDBC_49));
           }
@@ -1206,7 +1205,7 @@ public class OracleCDCSource extends BaseSource {
         resumeCommitSCN = new BigDecimal(configBean.startSCN);
         break;
       case LATEST:
-        configBean.startDate = nowAtDBTz().format(dtFormatter);
+        configBean.startDate = nowAtDBTz().format(DateTimeColumnHandler.DT_FORMATTER);
         // fall through
       case DATE:
         startString = startString + " AND TIMESTAMP >= TO_DATE('" + configBean.startDate + "', 'DD-MM-YYYY HH24:MI:SS')";
@@ -1312,6 +1311,7 @@ public class OracleCDCSource extends BaseSource {
     getLatestSCN = connection.prepareStatement(CURRENT_SCN);
     dateStatement = connection.prepareStatement(NLS_DATE_FORMAT);
     tsStatement = connection.prepareStatement(NLS_TIMESTAMP_FORMAT);
+    tsTzStatement = connection.prepareStatement(NLS_TIMESTAMP_TZ_FORMAT);
     numericFormat = connection.prepareStatement(NLS_NUMERIC_FORMAT);
     switchContainer = connection.prepareStatement(SWITCH_TO_CDB_ROOT);
   }
@@ -1561,7 +1561,14 @@ public class OracleCDCSource extends BaseSource {
         // For whatever reason, Oracle returns all the date/time/timestamp fields as the same type, so additional
         // logic is required to accurately parse the type
         String actualType = dateTimeColumns.get(table).get(column);
-        field = getDateTimeStampField(column, columnValue, columnType, actualType);
+        field = dateTimeColumnHandler.getDateTimeStampField(column, columnValue, columnType, actualType);
+        break;
+      case Types.TIMESTAMP_WITH_TIMEZONE:
+      case TIMESTAMP_TZ_TYPE:
+        field = dateTimeColumnHandler.getTimestampWithTimezoneField(columnValue);
+        break;
+      case TIMESTAMP_LTZ_TYPE:
+        field = dateTimeColumnHandler.getTimestampWithLocalTimezone(columnValue);
         break;
       case Types.ROWID:
       case Types.CLOB:
@@ -1574,59 +1581,15 @@ public class OracleCDCSource extends BaseSource {
       case Types.NULL:
       case Types.OTHER:
       case Types.REF:
-        //case Types.REF_CURSOR: // JDK8 only
+      case Types.REF_CURSOR:
       case Types.SQLXML:
       case Types.STRUCT:
-        //case Types.TIME_WITH_TIMEZONE: // JDK8 only
-        //case Types.TIMESTAMP_WITH_TIMEZONE: // JDK8 only
+      case Types.TIME_WITH_TIMEZONE:
       default:
         throw new UnsupportedFieldTypeException(column, columnValue, columnType);
     }
 
     return field;
-  }
-
-  /**
-   * This method returns an {@linkplain Field} that represents a DATE, TIME or TIMESTAMP. It is possible for user to upgrade
-   * a field from DATE to TIMESTAMP, and if we read the table schema on startup after this upgrade, we would assume the field
-   * should be returned as DATETIME field. But it is possible that the first change we read was made before the upgrade from
-   * DATE to TIMESTAMP. So we check whether the returned SQL has TO_TIMESTAMP - if it does we return it as DATETIME, else we
-   * return it as DATE.
-   */
-  private Field getDateTimeStampField(String column, String columnValue, int columnType, String actualType) throws StageException, ParseException {
-    Field.Type type;
-    if (DATE.equalsIgnoreCase(actualType)) {
-      type = Field.Type.DATE;
-    } else if (TIME.equalsIgnoreCase(actualType)) {
-      type = Field.Type.TIME;
-    } else if (TIMESTAMP.equalsIgnoreCase(actualType)) {
-      type = Field.Type.DATETIME;
-    } else {
-      throw new StageException(JDBC_37, columnType, column);
-    }
-    if (columnValue == null) {
-      return Field.create(type, null);
-    } else {
-      Optional<String> ts = matchDateTimeString(toTimestampPattern.matcher(columnValue));
-      if (ts.isPresent()) {
-        return Field.create(type, Timestamp.valueOf(ts.get()));
-      }
-      // We did not find TO_TIMESTAMP, so try TO_DATE
-      Optional<String> dt = matchDateTimeString(toDatePattern.matcher(columnValue));
-      return Field.create(Field.Type.DATE, dt.isPresent() ?
-          Date.from(getDate(dt.get()).atZone(zoneId).toInstant()) : null);
-    }
-  }
-
-  private static Optional<String> matchDateTimeString(Matcher m) {
-    if (!m.find()) {
-      return Optional.empty();
-    }
-    return Optional.of(m.group(1));
-  }
-
-  private LocalDateTime getDate(String s) throws ParseException {
-    return LocalDateTime.parse(s, dtFormatter);
   }
 
   private void alterSession() throws SQLException {
@@ -1636,6 +1599,7 @@ public class OracleCDCSource extends BaseSource {
     dateStatement.execute();
     tsStatement.execute();
     numericFormat.execute();
+    tsTzStatement.execute();
   }
 
   private void discardOldUncommitted() {
