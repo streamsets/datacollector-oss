@@ -580,12 +580,12 @@ public class HiveMetadataProcessor extends RecordProcessor {
   }
 
   private void validateNames(String dbName, String tableName) throws HiveStageCheckedException {
-    if (!HiveMetastoreUtil.validateName(dbName)){
+    if (!HiveMetastoreUtil.validateObjectName(dbName)){
       throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, HIVE_DB_NAME, dbName);
     }
     if (tableName.isEmpty()) {
       throw new HiveStageCheckedException(Errors.HIVE_METADATA_02, tableEL);
-    } else if (!HiveMetastoreUtil.validateName(tableName)){
+    } else if (!HiveMetastoreUtil.validateObjectName(tableName)){
       throw new HiveStageCheckedException(Errors.HIVE_METADATA_03, HIVE_TABLE_NAME, tableName);
     }
   }

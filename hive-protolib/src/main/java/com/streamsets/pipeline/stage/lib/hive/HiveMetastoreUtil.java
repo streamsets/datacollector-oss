@@ -701,10 +701,6 @@ public final class HiveMetastoreUtil {
     return columns;
   }
 
-  public static boolean validateName(String valName){
-    return MetaStoreUtils.validateName(valName);
-  }
-
   /**
    * Checks if partition value contains unsupported character.
    * @param value String to check
@@ -716,6 +712,9 @@ public final class HiveMetastoreUtil {
 
   /**
    * Validate that given object name (column, table, database, ...) is valid.
+   *
+   * This method is the least common denominator of what both Avro and Hive allows. Since we match Avro schema field
+   * names directly to hive names, we can work only with only those names that work everywhere.
    */
   public static boolean validateObjectName(String objName) {
     return OBJECT_NAME_PATTERN.matcher(objName).matches();
