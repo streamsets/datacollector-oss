@@ -71,6 +71,7 @@ import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -267,7 +268,8 @@ public class OpcUaClientSource implements PushSource {
             rootNodeId = new NodeId(conf.rootNamespaceIndex, new ByteString(conf.rootIdentifier.getBytes()));
             break;
         }
-        browseNode(rootNodeId, nodeIds, issues);
+        conf.nodeIdConfigs = new ArrayList<>();
+        browseNode(rootNodeId, nodeIds, issues, new HashMap<>());
         if (nodeIds.isEmpty()) {
           issues.add(
               context.createConfigIssue(
@@ -342,7 +344,8 @@ public class OpcUaClientSource implements PushSource {
       } else if (stopwatch.elapsed(TimeUnit.SECONDS) > conf.refreshNodeIdsInterval) {
         try {
           List<NodeId> newNodeIds = new ArrayList<>();
-          browseNode(rootNodeId, newNodeIds, new ArrayList<>());
+          conf.nodeIdConfigs = new ArrayList<>();
+          browseNode(rootNodeId, newNodeIds, new ArrayList<>(), new HashMap<>());
           if (!newNodeIds.isEmpty()) {
             nodeIds = newNodeIds;
           }
@@ -468,15 +471,9 @@ public class OpcUaClientSource implements PushSource {
       if (conf.readMode.equals(OpcUaReadMode.SUBSCRIBE)) {
         fieldName = subscribeFieldName;
       } else {
-        if (conf.nodeIdFetchMode.equals(NodeIdFetchMode.BROWSE)) {
-          NodeId nodeId = nodeIds.get(idx[0]++);
-          fieldName = EscapeUtil.singleQuoteEscape(nodeId.getIdentifier().toString());
-        } else {
-          NodeIdConfig nodeIdConfig = conf.nodeIdConfigs.get(idx[0]++);
-          fieldName = nodeIdConfig.field;
-        }
+        NodeIdConfig nodeIdConfig = conf.nodeIdConfigs.get(idx[0]++);
+        fieldName = nodeIdConfig.field;
       }
-
 
       if (!fieldName.startsWith("/")) {
         fieldName = "/" + fieldName;
@@ -790,7 +787,18 @@ public class OpcUaClientSource implements PushSource {
     }
   }
 
-  private void browseNode(NodeId browseRoot, List<NodeId> nodeIdList, List<ConfigIssue> issues) {
+  private void browseNode(
+      NodeId browseRoot,
+      List<NodeId> nodeIdList,
+      List<ConfigIssue> issues,
+      Map<String, Boolean> visitedMap
+  ) {
+    if (visitedMap.containsKey(browseRoot.getIdentifier().toString())) {
+      return;
+    }
+
+    visitedMap.put(browseRoot.getIdentifier().toString(), true);
+
     BrowseDescription browse = new BrowseDescription(
         browseRoot,
         BrowseDirection.Forward,
@@ -804,16 +812,48 @@ public class OpcUaClientSource implements PushSource {
       List<ReferenceDescription> references = toList(browseResult.getReferences());
 
       for (ReferenceDescription rd : references) {
-        if (rd.getNodeClass().equals(NodeClass.Variable)) {
-          nodeIdList.add(new NodeId(
-              rd.getNodeId().getNamespaceIndex().intValue(),
-              rd.getNodeId().getIdentifier().toString()
-          ));
+        if (visitedMap.containsKey(rd.getNodeId().getIdentifier().toString())) {
+          continue;
         }
 
-        rd.getNodeId().local().ifPresent(nodeId -> {
-          browseNode(nodeId, nodeIdList, issues);
-        });
+        if (rd.getNodeClass().equals(NodeClass.Variable)) {
+          NodeId nodeId = null;
+          NodeIdConfig nodeIdConfig = new NodeIdConfig();
+          switch (rd.getNodeId().getType()) {
+            case Numeric:
+              nodeId = new NodeId(
+                  rd.getNodeId().getNamespaceIndex().intValue(),
+                  Integer.parseInt(rd.getNodeId().getIdentifier().toString())
+              );
+              nodeIdConfig.field = rd.getBrowseName().getName() + "_" + rd.getNodeId().getIdentifier().toString();
+              break;
+            case String:
+              nodeId = new NodeId(
+                  rd.getNodeId().getNamespaceIndex().intValue(),
+                  rd.getNodeId().getIdentifier().toString()
+              );
+              nodeIdConfig.field = rd.getNodeId().getIdentifier().toString();
+              break;
+            case Guid:
+              nodeId = new NodeId(
+                  rd.getNodeId().getNamespaceIndex().intValue(),
+                  UUID.fromString(rd.getNodeId().getIdentifier().toString())
+              );
+              nodeIdConfig.field = rd.getBrowseName().getName() + "_" + rd.getNodeId().getIdentifier().toString();
+              break;
+            case Opaque:
+              nodeId = new NodeId(
+                  rd.getNodeId().getNamespaceIndex().intValue(),
+                  new ByteString(rd.getNodeId().getIdentifier().toString().getBytes())
+              );
+              nodeIdConfig.field = rd.getBrowseName().getName() + "_" + rd.getNodeId().getIdentifier().toString();
+              break;
+          }
+          nodeIdList.add(nodeId);
+          conf.nodeIdConfigs.add(nodeIdConfig);
+        }
+
+        rd.getNodeId().local().ifPresent(nodeId -> browseNode(nodeId, nodeIdList, issues, visitedMap));
       }
     } catch (InterruptedException | ExecutionException ex) {
       LOG.error("Browsing nodeId={} failed: {}", browseRoot, ex.getMessage(), ex);
@@ -829,10 +869,10 @@ public class OpcUaClientSource implements PushSource {
     }
   }
 
-
   private void browseNodes() {
     LinkedHashMap<String, Field> rootFieldMap = new LinkedHashMap<>();
-    browseNode(Identifiers.RootFolder, rootFieldMap);
+    Map<String, Boolean> visitedMap = new HashMap<>();
+    browseNode(Identifiers.RootFolder, rootFieldMap, visitedMap);
     BatchContext batchContext = context.startBatch();
     String requestId = System.currentTimeMillis() + "." + counter.getAndIncrement();
     Record record = context.createRecord(requestId);
@@ -841,7 +881,17 @@ public class OpcUaClientSource implements PushSource {
     context.processBatch(batchContext);
   }
 
-  private void browseNode(NodeId browseRoot, LinkedHashMap<String, Field> rootFieldMap) {
+  private void browseNode(
+      NodeId browseRoot,
+      LinkedHashMap<String, Field> rootFieldMap,
+      Map<String, Boolean> visitedMap
+  ) {
+    if (visitedMap.containsKey(browseRoot.getIdentifier().toString())) {
+      return;
+    }
+
+    visitedMap.put(browseRoot.getIdentifier().toString(), true);
+
     BrowseDescription browse = new BrowseDescription(
         browseRoot,
         BrowseDirection.Forward,
@@ -856,6 +906,9 @@ public class OpcUaClientSource implements PushSource {
       List<ReferenceDescription> references = toList(browseResult.getReferences());
 
       for (ReferenceDescription rd : references) {
+        if (visitedMap.containsKey(rd.getNodeId().getIdentifier().toString())) {
+          continue;
+        }
         LinkedHashMap<String, Field> fieldMap = new LinkedHashMap<>();
         fieldMap.put("name", Field.create(rd.getBrowseName().getName()));
         fieldMap.put("nameSpaceIndex", Field.create(rd.getNodeId().getNamespaceIndex().intValue()));
@@ -866,8 +919,10 @@ public class OpcUaClientSource implements PushSource {
         rd.getNodeId().local().ifPresent(nodeId -> {
           if (!nodeId.equals(browseRoot)) {
             LinkedHashMap<String, Field> childrenMap = new LinkedHashMap<>();
-            browseNode(nodeId, childrenMap);
-            fieldMap.put("children",  Field.create(childrenMap));
+            browseNode(nodeId, childrenMap, visitedMap);
+            if (!childrenMap.isEmpty()) {
+              fieldMap.put("children",  Field.create(childrenMap));
+            }
           }
         });
 
