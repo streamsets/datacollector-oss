@@ -131,11 +131,12 @@ public class TestKafkaSource {
 
   private static File tempDir;
   private static File protoDescFile;
-  private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
+  private static SdcKafkaTestUtil sdcKafkaTestUtil;
 
 
   @BeforeClass
   public static void setUp() throws IOException, InterruptedException {
+    sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
     sdcKafkaTestUtil.startZookeeper();
     sdcKafkaTestUtil.startKafkaBrokers(3);
 

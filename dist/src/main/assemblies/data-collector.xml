@@ -432,6 +432,10 @@
       <directory>${basedir}/../${apache-kafka_0_10-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/../${apache-kafka_0_11-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
 
     <!-- Cassandra libs -->
     <fileSet>

@@ -18,19 +18,25 @@ package com.streamsets.pipeline.kafka.common;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.testing.SingleForkNoReuseTest;
 import org.junit.experimental.categories.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ServiceLoader;
 
 @Category(SingleForkNoReuseTest.class)
 public abstract class TestUtilFactoriesBean {
 
+  private static final Logger LOG = LoggerFactory.getLogger(TestUtilFactoriesBean.class);
+
   public abstract SdcKafkaTestUtilFactory createSdcKafkaTestUtilFactory();
 
-  private static ServiceLoader<TestUtilFactoriesBean> factoriesBeanLoader = ServiceLoader.load(TestUtilFactoriesBean.class);
+  private static ServiceLoader<TestUtilFactoriesBean> factoriesBeanLoader;
 
   private static TestUtilFactoriesBean testUtilFactoriesBean;
 
   static {
+    LOG.info("Loading TestUtilFactoriesBean");
+    factoriesBeanLoader = ServiceLoader.load(TestUtilFactoriesBean.class);
     int serviceCount = 0;
     for (TestUtilFactoriesBean bean : factoriesBeanLoader) {
       testUtilFactoriesBean = bean;
@@ -39,6 +45,8 @@ public abstract class TestUtilFactoriesBean {
     if (serviceCount != 1) {
       throw new RuntimeException(Utils.format("Unexpected number of FactoriesBean: {} instead of 1", serviceCount));
     }
+
+    LOG.info("Loaded TestUtilFactoriesBean: {}", testUtilFactoriesBean.getClass().getName());
   }
 
   public static SdcKafkaTestUtilFactory getSdcKafkaTestUtilFactory() {

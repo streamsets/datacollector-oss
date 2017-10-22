@@ -157,6 +157,7 @@
     <module>sdc-kafka_0_9</module>
     <module>sdc-kafka_0_9_mapr_5_1</module>
     <module>sdc-kafka_0_10</module>
+    <module>sdc-kafka_0_11</module>
     <module>kafka-common</module>
     <module>kafka_source-protolib</module>
     <module>kafka_multisource-protolib</module>
@@ -420,10 +421,11 @@
              IMPORTANT: define a property matching the module directory name
              for every stage library here with the directory name as value
         -->
-        <apache-kafka_0_10-lib>apache-kafka_0_10-lib</apache-kafka_0_10-lib>
         <apache-kafka_0_8_1-lib>apache-kafka_0_8_1-lib</apache-kafka_0_8_1-lib>
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
+        <apache-kafka_0_10-lib>apache-kafka_0_10-lib</apache-kafka_0_10-lib>
+        <apache-kafka_0_11-lib>apache-kafka_0_11-lib</apache-kafka_0_11-lib>
         <apache-kudu_1_0-lib>apache-kudu_1_0-lib</apache-kudu_1_0-lib>
         <apache-kudu_1_1-lib>apache-kudu_1_1-lib</apache-kudu_1_1-lib>
         <apache-kudu_1_2-lib>apache-kudu_1_2-lib</apache-kudu_1_2-lib>
@@ -484,10 +486,11 @@
 
              IMPORTANT: the modules for all stage libraries
         -->
-        <module>apache-kafka_0_10-lib</module>
         <module>apache-kafka_0_8_1-lib</module>
         <module>apache-kafka_0_8_2-lib</module>
         <module>apache-kafka_0_9-lib</module>
+        <module>apache-kafka_0_10-lib</module>
+        <module>apache-kafka_0_11-lib</module>
         <module>apache-kudu_1_0-lib</module>
         <module>apache-kudu_1_1-lib</module>
         <module>apache-kudu_1_2-lib</module>
@@ -560,7 +563,7 @@
              IMPORTANT: define a property matching the module directory name
              for all the sample dev stage libraries here with the directory name as value
         -->
-        <apache-kafka_0_10-lib>apache-kafka_0_10-lib</apache-kafka_0_10-lib>
+        <apache-kafka_0_11-lib>apache-kafka_0_11-lib</apache-kafka_0_11-lib>
         <apache-kudu_1_4-lib>apache-kudu_1_4-lib</apache-kudu_1_4-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
         <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
@@ -588,7 +591,7 @@
 
              IMPORTANT: the modules for the sample dev stage libraries
         -->
-        <module>apache-kafka_0_10-lib</module>
+        <module>apache-kafka_0_11-lib</module>
         <module>apache-kudu_1_4-lib</module>
         <module>apache-solr_6_1_0-lib</module>
         <module>cassandra_3-lib</module>
