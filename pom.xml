@@ -458,6 +458,7 @@
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
         <cdh_kafka_2_1-lib>cdh_kafka_2_1-lib</cdh_kafka_2_1-lib>
+        <cdh_kafka_3_0-lib>cdh_kafka_3_0-lib</cdh_kafka_3_0-lib>
         <cdh_spark_2_1_r1-lib>cdh_spark_2_1_r1-lib</cdh_spark_2_1_r1-lib>
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
@@ -523,6 +524,7 @@
         <module>cdh_kafka_1_3-lib</module>
         <module>cdh_kafka_2_0-lib</module>
         <module>cdh_kafka_2_1-lib</module>
+        <module>cdh_kafka_3_0-lib</module>
         <module>cdh_spark_2_1_r1-lib</module>
         <module>elasticsearch_5-lib</module>
         <module>groovy_2_4-lib</module>
@@ -569,7 +571,7 @@
         <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
         <cdh_5_12-cluster-cdh_kafka_2_1-lib>cdh_5_12-cluster-cdh_kafka_2_1-lib</cdh_5_12-cluster-cdh_kafka_2_1-lib>
         <cdh_5_13-lib>cdh_5_13-lib</cdh_5_13-lib>
-        <cdh_kafka_2_1-lib>cdh_kafka_2_1-lib</cdh_kafka_2_1-lib>
+        <cdh_kafka_3_0-lib>cdh_kafka_3_0-lib</cdh_kafka_3_0-lib>
         <cdh_spark_2_1_r1-lib>cdh_spark_2_1_r1-lib</cdh_spark_2_1_r1-lib>
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
@@ -597,7 +599,7 @@
         <module>cassandra_3-lib</module>
         <module>cdh_5_12-cluster-cdh_kafka_2_1-lib</module>
         <module>cdh_5_13-lib</module>
-        <module>cdh_kafka_2_1-lib</module>
+        <module>cdh_kafka_3_0-lib</module>
         <module>cdh_spark_2_1_r1-lib</module>
         <module>elasticsearch_5-lib</module>
         <module>groovy_2_4-lib</module>
