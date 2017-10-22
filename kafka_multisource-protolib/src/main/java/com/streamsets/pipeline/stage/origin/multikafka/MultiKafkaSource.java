@@ -246,7 +246,9 @@ public class MultiKafkaSource extends BasePushSource {
             startProcessingGate
         )));
       } catch (Exception e) {
-        LOG.error("{}", e);
+        LOG.error("Error while initializing Kafka consumer: {}", e.toString(), e);
+        Throwables.propagateIfPossible(e.getCause(), StageException.class);
+        Throwables.propagate(e);
       }
       startProcessingGate.countDown();
     }
