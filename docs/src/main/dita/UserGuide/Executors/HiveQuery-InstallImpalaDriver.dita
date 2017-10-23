@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_rfq_xk4_nbb">
+ <title>Installing the Impala Driver</title>
+ <conbody>
+  <p><indexterm>Hive Query executor<indexterm>installing the Impala JDBC
+                driver</indexterm></indexterm><indexterm>Impala JDBC driver<indexterm>installing for
+                    the Hive Query executor</indexterm></indexterm>You can use the Apache Hive JDBC
+            driver included with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            perform Impala queries. However, some distributions recommend using a native Impala JDBC
+            driver. </p>
+        <p>To use the included Apache Hive JDBC driver included with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
+            you do not need to perform any additional steps. </p>
+        <p>To use an Impala JDBC driver, perform the following steps:<ol id="ol_ilv_fm4_nbb">
+                <li>Download the native Impala JDBC driver for the Hive distribution that you use. </li>
+                <li>Install the driver as an external library for the stage library used by the Hive
+                    Query executor. <p>For example, say the executor is configured to use the CDH
+                        5.12.0 stage library. If you use the Package Manager to install the driver,
+                        then in the Install External Libraries dialog box, you select the CDH 5.12.0
+                        stage library, then browse to select the Impala driver libraries to install.
+                    </p></li>
+            </ol></p>
+        <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/SDCDPM_ExtLibs"
+            /></p>
+        <p>If you have trouble determining the URL format to use when configuring the executor,
+            check out our <xref
+                href="https://ask.streamsets.com/question/7/how-do-you-configure-a-hive-impala-jdbc-driver-for-data-collector/?answer=8#post-id-8"
+                format="html" scope="external">Ask StreamSets post</xref>.</p>
+ </conbody>
+</concept>

@@ -51,6 +51,9 @@
           />.</li>
         <li>You can install external Java libraries to call external Java code from the scripting
           processors: Groovy, Java, and Jython Evaluator.</li>
+        <li>You can install the Impala JDBC driver under the stage library selected for the
+          executor. For more information, see <xref
+            href="../Executors/HiveQuery-InstallImpalaDriver.dita#concept_rfq_xk4_nbb"/>.</li>
       </ul></p>
   </conbody>
 </concept>

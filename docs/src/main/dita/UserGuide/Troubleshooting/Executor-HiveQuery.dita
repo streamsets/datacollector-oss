@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_njt_1p4_nbb">
+ <title>Hive Query</title>
+ <conbody>
+  <p>
+            <dl>
+                <dlentry>
+                    <dt>When I enter the name of the Impala JDBC driver in the stage, I receive an
+                        error saying that the driver is not present in the class path:</dt>
+                    <dd>
+                        <codeblock>HIVE_15 - Hive JDBC Driver &lt;driver name> not present in the class path.</codeblock>
+                    </dd>
+                </dlentry>
+            </dl>
+        </p>
+        <p>To use an Impala JDBC driver with the Hive Query executor, the driver must be installed
+            as an external library. And it must be installed for the stage library that the Hive
+            Query executor uses. </p>
+        <p>If you already installed the driver, verify that you have it installed for the correct
+            stage library. For more information, see <xref
+                href="../Executors/HiveQuery-InstallImpalaDriver.dita#concept_rfq_xk4_nbb"/>.</p>
+ </conbody>
+</concept>

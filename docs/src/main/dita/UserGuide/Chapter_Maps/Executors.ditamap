@@ -58,6 +58,7 @@
         <topicref href="../Executors/HiveQuery.dita" chunk="to-content">
             <topicmeta><shortdesc></shortdesc></topicmeta>
             <topicref href="../Executors/HiveQuery-EventStages.dita"/>
+            <topicref href="../Executors/HiveQuery-InstallImpalaDriver.dita"/>
             <topicref href="../Executors/HiveQuery-Queries.dita"/>
             <topicref href="../Executors/HiveQuery-ImpalaHDS.dita"/>
             <topicref href="../Executors/HiveQuery-EventGeneration.dita">

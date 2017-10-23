@@ -49,9 +49,16 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveJDBCURL">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveJDBCdriver">
-                                    <entry/>
+                                <row>
+                                    <entry>JDBC Driver Name</entry>
+                                    <entry>
+                                        <p>The fully-qualified JDBC driver name. </p>
+                                        <p>Before using an Impala JDBC driver, install the driver as
+                                            an external library for the stage library used by the
+                                            Hive Query executor. For more information, see <xref
+                                                href="HiveQuery-InstallImpalaDriver.dita#concept_rfq_xk4_nbb"
+                                            />.</p>
+                                    </entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/P-D_HiveConfigDir">
