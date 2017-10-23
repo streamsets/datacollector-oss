@@ -944,7 +944,10 @@
       <row id="P-D_HiveJDBCURL">
        <entry>JDBC URL</entry>
        <entry>JDBC URL for Hive. You can use the default, or replace the expression for the database
-        name with a specific database name when appropriate.</entry>
+        name with a specific database name when appropriate.<p>For more information about specifying
+         the URL, see our <xref
+          href="https://ask.streamsets.com/question/7/how-do-you-configure-a-hive-impala-jdbc-driver-for-data-collector/?answer=8#post-id-8"
+          format="html" scope="external">Ask StreamSets post</xref>.</p></entry>
       </row>
       <row id="P-D_HiveJDBCdriver">
        <entry>JDBC Driver Name</entry>

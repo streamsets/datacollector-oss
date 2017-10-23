@@ -34,6 +34,9 @@
                 href="../Hive_Drift_Solution/HiveDrift-Overview.dita#concept_phk_bdf_2w">Drift
                 Synchronization Solution for Hive</xref> or to configure table properties for
             newly-created tables.</p>
+        <p>When using the Hive Query executor with Impala, you can use the default driver included
+            with <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />, or you can install an Impala JDBC driver. </p>
         <p>
             <note
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/note-HiveQuery"/>

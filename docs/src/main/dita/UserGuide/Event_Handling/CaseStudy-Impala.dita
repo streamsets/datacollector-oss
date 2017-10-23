@@ -76,21 +76,16 @@
                             id="image_pcc_3zm_5x" scale="55"/></p></li>
                 <li>Add the Hive Query executor and connect the Hive Metastore destination and the
                     Expression Evaluator to the executor. Then configure the Hive Query executor.<p>
-                        <note>To use the Hive Query executor with Impala, you need to use the Impala
-                            JDBC driver. By default, <ph
+                        <note>If you want to use an Impala JDBC driver, make sure to install the
+                            driver as an  external library for the Hive Query executor. For more
+                            information, see <xref
+                                href="../Executors/HiveQuery-InstallImpalaDriver.dita#concept_rfq_xk4_nbb"
+                            />. When using the Apache Hive JDBC driver included with <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> uses an open source Hive JDBC driver. So if you haven't already,
-                                <xref
-                                href="https://www.cloudera.com/downloads/connectors/impala/jdbc/2-5-37.html"
-                                format="html" scope="external">download the driver from Cloudera
-                            </xref>, then <xref
-                                href="../Configuration/ExternalLibs.dita#concept_pdv_qlw_ft">install
-                                the driver</xref>. Note that the download page also includes a link
-                            to documentation for the driver. </note>
-                    </p><p>Once the Impala JDBC driver is installed, in the Hive Query executor,
-                        configure the Hive configuration details on the <wintitle>Hive</wintitle>
-                        tab. If you have any trouble configuring the URL, see the Impala driver
-                        information in our <xref
+                            />, no additional steps are required. </note>
+                    </p><p>In the Hive Query executor, configure the Hive configuration details on
+                        the <wintitle>Hive</wintitle> tab. If you have any trouble configuring the
+                        URL, see the Impala driver information in our <xref
                             href="https://ask.streamsets.com/question/7/how-do-you-configure-a-hive-impala-jdbc-driver-for-data-collector/"
                             format="html" scope="external">Ask StreamSets post</xref>. </p><p>Then,
                         on the <wintitle>Query</wintitle> tab, enter the following
