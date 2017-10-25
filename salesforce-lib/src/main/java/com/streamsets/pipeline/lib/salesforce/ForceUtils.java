@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.salesforce;
 
+import com.google.common.collect.ListMultimap;
 import com.sforce.async.AsyncApiException;
 import com.sforce.async.BulkConnection;
 import com.sforce.soap.partner.DescribeSObjectResult;
@@ -27,6 +28,7 @@ import com.sforce.ws.bind.XmlObject;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
@@ -389,22 +391,29 @@ public class ForceUtils {
     Matcher m = ForceUtils.WILDCARD_SELECT_PATTERN.matcher(query.toUpperCase());
     if (m.matches()) {
       // Query is SELECT * FROM... - substitute in list of field names
-      StringBuilder fieldsString = new StringBuilder();
-      for (com.sforce.soap.partner.Field field : metadataMap.get(sobjectType.toLowerCase()).values()) {
-        String typeName = field.getType().name();
-        if ("address".equals(typeName) || "location".equals(typeName)) {
-          // Skip compound fields of address or geolocation type since they are returned
-          // with null values by the SOAP API and not supported at all by the Bulk API
-          continue;
-        }
-        if (fieldsString.length() > 0){
-          fieldsString.append(',');
-        }
-        fieldsString.append(field.getName());
-      }
-      query = query.replaceFirst("\\*", fieldsString.toString());
+      query = query.replaceFirst("\\*", expandWildcard(sobjectType, metadataMap));
     }
     return query;
+  }
+
+  public static String expandWildcard(
+      String sobjectType,
+      Map<String, Map<String, com.sforce.soap.partner.Field>> metadataMap
+  ) {
+    StringBuilder fieldsString = new StringBuilder();
+    for (com.sforce.soap.partner.Field field : metadataMap.get(sobjectType.toLowerCase()).values()) {
+      String typeName = field.getType().name();
+      if ("address".equals(typeName) || "location".equals(typeName)) {
+        // Skip compound fields of address or geolocation type since they are returned
+        // with null values by the SOAP API and not supported at all by the Bulk API
+        continue;
+      }
+      if (fieldsString.length() > 0){
+        fieldsString.append(',');
+      }
+      fieldsString.append(field.getName());
+    }
+    return fieldsString.toString();
   }
 
   public static int getOperationFromRecord(Record record,
@@ -443,4 +452,5 @@ public class ForceUtils {
     }
     return opCode;
   }
+
 }

@@ -46,8 +46,6 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
   }
 
   private Map<String, Field> lookupValuesForRecord(String preparedQuery) throws StageException {
-    Map<String, Field> fieldMap = new HashMap<>();
-
     try {
       QueryResult queryResult = processor.conf.queryAll
           ? processor.partnerConnection.queryAll(preparedQuery)
@@ -60,7 +58,7 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
       if (records.length > 0) {
         // TODO - handle multiple records (SDC-4739)
 
-        fieldMap = ForceUtils.addFields(
+        return ForceUtils.addFields(
             records[0],
             processor.metadataMap,
             processor.conf.createSalesforceNsHeaders,
@@ -68,23 +66,11 @@ class ForceLookupLoader extends CacheLoader<String, Map<String, Field>> {
             processor.columnsToTypes);
       } else {
         // Salesforce returns no row. Use default values.
-        for (String key : processor.columnsToFields.keySet()) {
-          String val = processor.columnsToDefaults.get(key);
-          try {
-            if (processor.columnsToTypes.get(key) != DataType.USE_SALESFORCE_TYPE) {
-              Field field = Field.create(Field.Type.valueOf(processor.columnsToTypes.get(key).getLabel()), val);
-              fieldMap.put(key, field);
-            }
-          } catch (IllegalArgumentException e) {
-            throw new OnRecordErrorException(Errors.FORCE_20, key, val, e);
-          }
-        }
+        return processor.getDefaultFields();
       }
     } catch (ConnectionException e) {
       LOG.error(Errors.FORCE_17.getMessage(), preparedQuery, e);
       throw new OnRecordErrorException(Errors.FORCE_17, preparedQuery, e.getMessage());
     }
-
-    return fieldMap;
   }
 }

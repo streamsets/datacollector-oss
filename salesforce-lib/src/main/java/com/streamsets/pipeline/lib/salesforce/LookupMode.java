@@ -13,27 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.lookup;
+package com.streamsets.pipeline.lib.salesforce;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  FORCE("Salesforce"),
-  LOOKUP("Lookup"),
-  ADVANCED("Advanced"),
-  ;
+public enum LookupMode implements Label {
+  QUERY("SOQL Query"),
+  RETRIEVE("Retrieve");
 
   private final String label;
 
-  private Groups(String label) {
+  LookupMode(String label) {
     this.label = label;
   }
 
-  /** {@inheritDoc} */
   @Override
   public String getLabel() {
-    return this.label;
+    return label;
   }
 }

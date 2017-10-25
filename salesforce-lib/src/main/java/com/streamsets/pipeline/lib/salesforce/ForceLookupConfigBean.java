@@ -17,7 +17,9 @@ package com.streamsets.pipeline.lib.salesforce;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
@@ -25,6 +27,18 @@ import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import java.util.List;
 
 public class ForceLookupConfigBean extends ForceConfigBean {
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "QUERY",
+      label = "Lookup Mode",
+      description = "Lookup records by a SOQL Query or by the Salesforce record ID.",
+      displayPosition = 50,
+      group = "LOOKUP"
+  )
+  @ValueChooserModel(LookupModeChooserValues.class)
+  public LookupMode lookupMode;
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.TEXT,
@@ -35,8 +49,10 @@ public class ForceLookupConfigBean extends ForceConfigBean {
           "SELECT <field>, ... FROM <object name> WHERE <field> <operator> <expression>",
       elDefs = {StringEL.class, RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 50,
-      group = "FORCE"
+      dependsOn = "lookupMode",
+      triggeredByValue = "QUERY",
+      displayPosition = 60,
+      group = "LOOKUP"
   )
   public String soqlQuery;
 
@@ -46,10 +62,55 @@ public class ForceLookupConfigBean extends ForceConfigBean {
       label = "Include Deleted Records",
       description = "When enabled, the processor will additionally retrieve deleted records from the Recycle Bin",
       defaultValue = "false",
-      displayPosition = 55,
-      group = "FORCE"
+      dependsOn = "lookupMode",
+      triggeredByValue = "QUERY",
+      displayPosition = 70,
+      group = "LOOKUP"
   )
   public boolean queryAll = false;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Id Field",
+      description = "The field in the record containing the Salesforce record ID for lookup",
+      defaultValue = "",
+      dependsOn = "lookupMode",
+      triggeredByValue = "RETRIEVE",
+      displayPosition = 80,
+      group = "LOOKUP"
+  )
+  @FieldSelectorModel(singleValued = true)
+  public String idField = "";
+
+  // This is a comma-separated string, since (1) a common use case is to
+  // copy the field names from an existing SOQL query and (2) the Salesforce
+  // retrieve() call takes a comma-separated list of field names
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Salesforce Fields",
+      description = "Comma-separated list of Salesforce fields to retrieve for each record",
+      defaultValue = "",
+      dependsOn = "lookupMode",
+      triggeredByValue = "RETRIEVE",
+      displayPosition = 90,
+      group = "LOOKUP"
+  )
+  public String retrieveFields = "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Object Type",
+      description = "The Salesforce object type to retrieve",
+      defaultValue = "",
+      dependsOn = "lookupMode",
+      triggeredByValue = "RETRIEVE",
+      displayPosition = 95,
+      group = "LOOKUP"
+  )
+  public String sObjectType = "";
 
   @ConfigDef(
       required = true,
@@ -57,22 +118,22 @@ public class ForceLookupConfigBean extends ForceConfigBean {
       label = "Field Mappings",
       defaultValue = "",
       description = "Mappings from Salesforce field names to SDC field names",
-      displayPosition = 60,
-      group = "FORCE"
+      displayPosition = 100,
+      group = "LOOKUP"
   )
   @ListBeanModel
   public List<ForceSDCFieldMapping> fieldMappings;
 
-  @ConfigDefBean(groups = "FORCE")
+  @ConfigDefBean(groups = "LOOKUP")
   public CacheConfig cacheConfig = new CacheConfig();
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Create Salesforce Attributes",
-      description = "Generate field attributes that provide additional details about source data, such as the original data type.",
+      description = "Generate field attributes that provide additional details about source data, such as the original data type",
       defaultValue = "true",
-      displayPosition = 70,
+      displayPosition = 110,
       group = "ADVANCED"
   )
   public boolean createSalesforceNsHeaders = true;
@@ -83,7 +144,7 @@ public class ForceLookupConfigBean extends ForceConfigBean {
       label = "Salesforce Attribute Prefix",
       description = "Prefix for the field attributes, used as follows: <prefix>.<type of information>. For example: salesforce.precision and salesforce.scale",
       defaultValue = "salesforce.",
-      displayPosition = 80,
+      displayPosition = 120,
       group = "ADVANCED",
       dependsOn = "createSalesforceNsHeaders",
       triggeredByValue = "true"

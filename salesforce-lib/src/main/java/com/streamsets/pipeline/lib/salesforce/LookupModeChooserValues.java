@@ -13,27 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.lookup;
+package com.streamsets.pipeline.lib.salesforce;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  FORCE("Salesforce"),
-  LOOKUP("Lookup"),
-  ADVANCED("Advanced"),
-  ;
-
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public String getLabel() {
-    return this.label;
+public class LookupModeChooserValues extends BaseEnumChooserValues<LookupMode> {
+  public LookupModeChooserValues() {
+    super(LookupMode.class);
   }
 }
