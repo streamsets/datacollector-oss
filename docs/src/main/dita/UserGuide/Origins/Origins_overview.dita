@@ -34,7 +34,8 @@
           endpoint and processes the contents of all authorized CoAP requests. Creates multiple
           threads to enable parallel processing in a multithreaded pipeline.</li>
         <li><xref href="Directory.dita#concept_qcq_54n_jq">Directory</xref> - Reads fully-written
-          files from a directory. </li>
+          files from a directory. Creates multiple threads to enable parallel processing in a
+          multithreaded pipeline.</li>
         <li><xref href="Elasticsearch.dita#concept_f1q_vpm_2z">Elasticsearch</xref> - Reads data
           from an Elasticsearch cluster. Creates multiple threads to enable parallel processing in a
           multithreaded pipeline.</li>

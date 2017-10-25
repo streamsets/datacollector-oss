@@ -19,17 +19,20 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_qcq_54n_jq">
  <title>Directory</title>
- <shortdesc>The Directory origin reads data from files in a directory. The file names must all share
-        a file name pattern and be fully written. To read data from an active file that is still
-        being written to, use the File Tail origin.</shortdesc>
  <conbody>
   <p><indexterm>Directory
-                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Directory</indexterm></indexterm>When
-            you configure the Directory origin, you define the directory to use, read order, file
-            name pattern, file name pattern mode, and the first file to process. You can use glob
-            patterns or regular expressions to define the file name pattern that you want to use.
-            When using the last-modified timestamp read order, you can configure the origin to read
-            from subdirectories. </p>
+                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Directory</indexterm></indexterm>The
+            Directory origin reads data from files in a directory. The origin can use multiple
+            threads to enable the parallel processing of files. </p>
+        <p>The files to be processed must all share a file name pattern and be fully written. To
+            read data from an active file that is still being written to, use the File Tail origin. </p>
+        <p>When you configure the Directory origin, you define the directory to use, read order,
+            file name pattern, file name pattern mode, and the first file to process. You can use
+            glob patterns or regular expressions to define the file name pattern that you want to
+            use. </p>
+        <p>When using the last-modified timestamp read order, you can configure the origin to read
+            from subdirectories. To use multiple threads for processing, specify the number of
+            threads to use. </p>
         <p>You can also enable reading compressed files or files in a late arriving directory. After
             processing a file, Directory can keep, archive, or delete the file. </p>
         <p>When the pipeline stops, Directory notes where it stops reading. When the pipeline starts

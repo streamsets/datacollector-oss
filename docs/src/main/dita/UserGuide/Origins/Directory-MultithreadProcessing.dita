@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pcl_nwn_qbb">
+ <title>Multithreaded Processing</title>
+    <conbody>
+        <p><indexterm>Directory origin<indexterm>multithreaded
+                processing</indexterm></indexterm><indexterm>Number of
+                    Threads<indexterm>Elasticsearch origin</indexterm></indexterm>The Directory
+            origin uses multiple concurrent threads based on the Number of Threads property. Each
+            thread reads data from a single file, and each file can have a maximum of one thread
+            read from it at a time. The file read order is based on the configuration for the <xref
+                href="Directory-ReadOrder.dita#concept_b4d_fym_xv">Read Order property</xref>.</p>
+        <p>As the pipeline runs, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def1_JDBCModified"
+            /></p>
+        <p>
+            <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-def2"
+            /></p>
+        <p><ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-MultiThread-batchorder"
+            /></p>
+        <p>For example, say you configure the origin to read files from a directory using 5 threads
+            and a read order based on the last-modified timestamp. When you start the pipeline, <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-createsthreads"
+            />
+        </p>
+        <p>The Directory origin assigns a thread to each of the five oldest files in the directory.
+            Each thread processes its assigned file, passing batches of data to the origin. <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-Passesbatch"
+            />
+        </p>
+        <p>After each thread completes processing a file, it continues to the next file based on the
+            last-modified timestamp, until all files are processed. </p>
+        <p>For more information about multithreaded pipelines, see <xref
+                href="../Multithreaded_Pipelines/MultithreadedPipelines_Overview.dita#concept_zpp_2xc_py"
+            />.</p>
+    </conbody>
+</concept>

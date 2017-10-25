@@ -1410,6 +1410,9 @@ web-0011.log</codeblock></dd>
                         <li><xref href="../Origins/CoAPServer.dita#concept_wfy_ghn_sz">CoAP
                                     Server</xref> - Listens on a CoAP endpoint and processes the
                               contents of all authorized CoAP requests.</li>
+                        <li><xref href="../Origins/Directory.dita#concept_qcq_54n_jq"
+                                    >Directory</xref> - Reads fully written files from a
+                              directory.</li>
                         <li><xref href="../Origins/Elasticsearch.dita#concept_f1q_vpm_2z"
                                     >Elasticsearch</xref> - Reads data from an Elasticsearch
                               cluster.</li>
@@ -1470,7 +1473,7 @@ web-0011.log</codeblock></dd>
                         Multithreaded Processing</draft-comment>
             </p>
             <p><ph id="HTTPServer-process-ph"><ph id="ph-createsthreads">the origin creates five
-                              threads, and by default <ph
+                              threads, and <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                               /> creates a matching number of pipeline runners.</ph>
                         <ph id="ph-Passesbatch">Upon receiving data, the origin passes a batch to

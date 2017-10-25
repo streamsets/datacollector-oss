@@ -91,6 +91,18 @@
                                         path.</entry>
                                 </row>
                                 <row>
+                                    <entry>Number of Threads <xref
+                                            href="Directory-MultithreadProcessing.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_trk_mj4_qbb"
+                                        /></xref></entry>
+                                    <entry>
+                                        <p>Number of threads the origin generates and uses for
+                                            multithreaded processing. </p>
+                                        <p>Default is 1.</p>
+                                    </entry>
+                                </row>
+                                <row>
                                     <entry>File Name Pattern Mode</entry>
                                     <entry>Indicates whether the file name pattern uses glob
                                         patterns or regular expressions.</entry>

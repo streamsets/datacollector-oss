@@ -30,9 +30,9 @@
             user-defined offset columns to track its progress. You can configure the origin to
             perform non-incremental processing to enable it to also process tables that do not have
             a key or offset column.</p>
-        <p>The origin uses multiple threads to enable parallel processing of tables and partitions.
-            Use the JDBC Multitable Consumer origin to read multiple tables in the same database.
-            For example, you might use the origin to perform database replication. </p>
+        <p>The origin can use multiple threads to enable parallel processing of tables and
+            partitions. Use the JDBC Multitable Consumer origin to read multiple tables in the same
+            database. For example, you might use the origin to perform database replication. </p>
         <p>When you configure the JDBC Multitable Consumer origin, you define groups of database
             tables to read. The origin generates SQL queries based on the table configurations that
             you define. </p>
