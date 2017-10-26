@@ -67,5 +67,5 @@ public final class Constants {
    * Redaction regular expression for pipeline configuration keys
    */
   public static final String PIPELINE_REDACT_REGEXP = "bundle.pipeline.redact_regexp";
-  public static final String DEFAULT_PIPELINE_REDACT_REGEXP = ".*[Pp]assword.*";
+  public static final String DEFAULT_PIPELINE_REDACT_REGEXP = "(.*[Pp]assword.*|.*AccessKey.*)";
 }
