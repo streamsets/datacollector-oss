@@ -70,21 +70,14 @@ public class TestTarFileCreator {
     TarFileCreator.createTarGz(etcDir, tarFile);
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testCreateEtcTarGzDirIsEmpty() throws Exception {
     File etcDir = new File(tempDir, "etc");
     Assert.assertTrue(etcDir.mkdir());
     File tarFile = new File(tempDir, "etc.tar.gz");
     TarFileCreator.createTarGz(etcDir, tarFile);
-  }
-
-  @Test(expected = IllegalStateException.class)
-  public void testCreateEtcTarGzFileDirIsNotReadable() throws Exception {
-    File etcDir = new File(tempDir, "etc");
-    Assert.assertTrue(etcDir.mkdir());
-    etcDir.setReadable(false);
-    File tarFile = new File(tempDir, "etc.tar.gz");
-    TarFileCreator.createTarGz(etcDir, tarFile);
+    TarInputStream tis = new TarInputStream(new GZIPInputStream(new FileInputStream(tarFile)));
+    Assert.assertNotNull(tis);
   }
 
   @Test
@@ -96,7 +89,6 @@ public class TestTarFileCreator {
     File tarFile = new File(tempDir, "etc.tar.gz");
     TarFileCreator.createTarGz(etcDir, tarFile);
     TarInputStream tis = new TarInputStream(new GZIPInputStream(new FileInputStream(tarFile)));
-    readJar(tis);
     readJar(tis);
   }
 

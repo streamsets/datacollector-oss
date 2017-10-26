@@ -67,8 +67,9 @@ public class TarFileCreator {
     TarOutputStream out = new TarOutputStream(new BufferedOutputStream(new GZIPOutputStream(dest), 65536));
     File[] files = dir.listFiles();
     Utils.checkState(files != null, Utils.formatL("Directory {} could not be read", dir));
-    Utils.checkState(files.length > 0, Utils.formatL("Directory {} is empty", dir));
-    tarFolder(null, dir.getAbsolutePath(), out);
+    if(files.length > 0) {
+      tarFolder(null, dir.getAbsolutePath(), out);
+    }
     out.close();
   }
 
