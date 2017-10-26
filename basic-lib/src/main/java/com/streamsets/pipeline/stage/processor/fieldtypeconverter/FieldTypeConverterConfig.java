@@ -17,6 +17,8 @@ package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.lib.el.FieldEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
 
 import java.util.List;
 
@@ -31,7 +33,9 @@ public class FieldTypeConverterConfig extends BaseConverterConfig {
       defaultValue="",
       label = "Fields to Convert",
       description = "You can convert multiple fields to the same type",
-      displayPosition = 10
+      displayPosition = 10,
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = {RecordEL.class, FieldEL.class}
   )
   @FieldSelectorModel
   public List<String> fields;

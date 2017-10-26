@@ -18,6 +18,8 @@ package com.streamsets.pipeline.stage.processor.fieldhasher;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.el.FieldEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
 
 import java.util.List;
 
@@ -28,7 +30,9 @@ public class FieldHasherConfig {
       defaultValue = "",
       label = "Fields to Hash",
       description = "One or more fields to hash",
-      displayPosition = 10
+      displayPosition = 10,
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = {RecordEL.class, FieldEL.class}
   )
   @FieldSelectorModel
   public List<String> sourceFieldsToHash;

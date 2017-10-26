@@ -24,8 +24,11 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
+import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
 import java.util.Collection;
@@ -43,6 +46,9 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       Field.Type.LIST,
       Field.Type.LIST_MAP
   );
+
+  private ELEval fieldPathEval;
+  private ELVars fieldPathVars;
 
   public FieldHasherProcessor(
       HasherConfig hasherConfig,
@@ -143,6 +149,9 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       );
     }
 
+    fieldPathEval = getContext().createELEval("sourceFieldsToHash");
+    fieldPathVars = getContext().createELVars();
+
     return configIssues;
   }
 
@@ -242,8 +251,12 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       //Collect the matching fields to Hash.
       Set<String> matchingFieldsForTheConfig = new HashSet<String>();
       for (String fieldToHash : fieldHasherConfig.sourceFieldsToHash) {
-        List<String> matchingFieldsPath =
-            FieldRegexUtil.getMatchingFieldPaths(fieldToHash, record.getEscapedFieldPaths());
+        List<String> matchingFieldsPath = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+            fieldToHash,
+            fieldPathEval,
+            fieldPathVars,
+            record
+        );
         matchingFieldsForTheConfig.addAll(matchingFieldsPath);
       }
       Set<String> validFieldsToHashForThisConfig = validateAndExtractFieldsToHash(

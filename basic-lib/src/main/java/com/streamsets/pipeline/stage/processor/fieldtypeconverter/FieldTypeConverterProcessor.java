@@ -20,9 +20,11 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DecimalScaleRoundingStrategy;
-import com.streamsets.pipeline.lib.util.FieldRegexUtil;
+import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.LinkedList;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -39,7 +42,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.streamsets.pipeline.stage.processor.fieldtypeconverter.Errors.CONVERTER_03;
 
@@ -49,6 +51,8 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   private final ConvertBy convertBy;
   private final List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
   private final List<WholeTypeConverterConfig> wholeTypeConverterConfigs;
+  private ELEval fieldPathEval;
+  private ELVars fieldPathVars;
 
   public FieldTypeConverterProcessor(
       ConvertBy convertBy,
@@ -65,6 +69,10 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
     List<ConfigIssue> issues = super.init();
     fieldTypeConverterConfigs.forEach(config -> validate(config).ifPresent(issues::add));
     wholeTypeConverterConfigs.forEach(config -> validate(config).ifPresent(issues::add));
+
+    fieldPathEval = getContext().createELEval("fields");
+    fieldPathVars = getContext().createELVars();
+
     return issues;
   }
 
@@ -127,10 +135,20 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
   }
 
   private void processByField(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    Set<String> fieldPaths = record.getEscapedFieldPaths();
     for(FieldTypeConverterConfig fieldTypeConverterConfig : fieldTypeConverterConfigs) {
       for(String fieldToConvert : fieldTypeConverterConfig.fields) {
-        for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToConvert, fieldPaths)) {
+        final List<String> matchingFieldPaths = new LinkedList<>(FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+            fieldToConvert,
+            fieldPathEval,
+            fieldPathVars,
+            record
+        ));
+        if (matchingFieldPaths.isEmpty()) {
+          // FieldPathExpressionUtil.evaluateMatchingFieldPaths does NOT return the supplied param in its result
+          // regardless, like FieldRegexUtil#getMatchingFieldPaths did, so we add manually here
+          matchingFieldPaths.add(fieldToConvert);
+        }
+        for (String matchingField : matchingFieldPaths) {
           Field field = record.get(matchingField);
           if(field == null) {
             LOG.trace("Record does not have field {}. Ignoring conversion.", matchingField);

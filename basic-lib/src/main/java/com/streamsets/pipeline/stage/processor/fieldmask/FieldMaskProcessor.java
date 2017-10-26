@@ -21,7 +21,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import com.streamsets.pipeline.lib.util.FieldRegexUtil;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +56,9 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
 
   private Map<String, Set<Integer>> regexToGroupsToShowMap = new HashMap<>();
   private Map<String, Pattern> regExToPatternMap = new HashMap<>();
+
+  private ELEval fieldPathEval;
+  private ELVars fieldPathVars;
 
   public FieldMaskProcessor(List<FieldMaskConfig> fieldMaskConfigs) {
     this.allFieldMaskConfigs = fieldMaskConfigs;
@@ -104,6 +109,10 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
         }
       }
     }
+
+    fieldPathEval = getContext().createELEval("fields");
+    fieldPathVars = getContext().createELVars();
+
     return issues;
   }
 
@@ -116,7 +125,12 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
       // For each configured field expression
       for (String toMask : fieldMaskConfig.fields) {
         // Find all actual fields that matches given configured expression
-        for(String matchingFieldPath : FieldRegexUtil.getMatchingFieldPaths(toMask, fieldPaths)) {
+        for (String matchingFieldPath : FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+            toMask,
+            fieldPathEval,
+            fieldPathVars,
+            record
+        )) {
           if (record.has(matchingFieldPath)) {
             Field field = record.get(matchingFieldPath);
             if (field.getType() != Field.Type.STRING) {

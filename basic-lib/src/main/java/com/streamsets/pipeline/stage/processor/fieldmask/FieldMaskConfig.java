@@ -18,6 +18,8 @@ package com.streamsets.pipeline.stage.processor.fieldmask;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.el.FieldEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
 
 import java.util.List;
 
@@ -29,7 +31,9 @@ public class FieldMaskConfig {
       defaultValue="",
       label = "Fields to Mask",
       description="Mask string fields. You can enter multiple fields for the same mask type.",
-      displayPosition = 10
+      displayPosition = 10,
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = {RecordEL.class, FieldEL.class}
   )
   @FieldSelectorModel
   public List<String> fields;

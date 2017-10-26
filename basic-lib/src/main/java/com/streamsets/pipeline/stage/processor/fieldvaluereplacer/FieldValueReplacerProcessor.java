@@ -26,8 +26,9 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import com.streamsets.pipeline.lib.el.FieldEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.util.FieldRegexUtil;
+import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,8 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
   private final List<FieldValueConditionalReplacerConfig> fieldsToConditionallyReplace;
   private ELEval nullConditionELEval;
   private ELVars nullConditionELVars;
+  private ELEval fieldPathEval;
+  private ELVars fieldPathVars;
 
   public FieldValueReplacerProcessor(
       List<NullReplacerConditionalConfig> nullReplacerConditionalConfigs,
@@ -70,6 +73,10 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
       nullConditionELEval = getContext().createELEval("condition");
       nullConditionELVars = getContext().createELVars();
     }
+
+    fieldPathEval = getContext().createELEval("fields");
+    fieldPathVars = getContext().createELVars();
+
     return configIssues;
   }
 
@@ -77,6 +84,14 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     Set<String> fieldPaths = record.getEscapedFieldPaths();
     Set<String> fieldsThatDoNotExist = new HashSet<>();
+
+    ELEval fieldPathEval = getContext().createELEval(String.format(
+        "%s---%s---%s",
+        getContext().getPipelineId(),
+        getContext().getStageInfo().getInstanceName(),
+        "fieldPathEval"
+    ), RecordEL.class, FieldEL.class);
+    ELVars fieldPathVars = getContext().createELVars();
 
     RecordEL.setRecordInContext(nullConditionELVars, record);
 
@@ -90,21 +105,30 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
     if(fieldsToReplaceIfNull !=null && !fieldsToReplaceIfNull.isEmpty()) {
       for (FieldValueReplacerConfig fieldValueReplacerConfig : fieldsToReplaceIfNull) {
         for (String fieldToReplace : fieldValueReplacerConfig.fields) {
-          for(String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToReplace, fieldPaths)) {
-            if (record.has(matchingField)) {
-              Field field = record.get(matchingField);
-              if (field.getValue() == null) {
-                try {
-                  record.set(matchingField, Field.create(field, convertToType(
-                      fieldValueReplacerConfig.newValue, field.getType(), "Replace If Null"))
-                  );
-                } catch (IllegalArgumentException | ParseException e) {
-                  throw new OnRecordErrorException(Errors.VALUE_REPLACER_00, fieldValueReplacerConfig.newValue,
-                      field.getType(), e.toString(), e);
+          final List<String> matchingPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(fieldToReplace,
+              fieldPathEval,
+              fieldPathVars,
+              record
+          );
+          if (matchingPaths.isEmpty()) {
+            fieldsThatDoNotExist.add(fieldToReplace);
+          } else {
+            for(String matchingField : matchingPaths) {
+              if (record.has(matchingField)) {
+                Field field = record.get(matchingField);
+                if (field.getValue() == null) {
+                  try {
+                    record.set(matchingField, Field.create(field, convertToType(
+                        fieldValueReplacerConfig.newValue, field.getType(), "Replace If Null"))
+                    );
+                  } catch (IllegalArgumentException | ParseException e) {
+                    throw new OnRecordErrorException(Errors.VALUE_REPLACER_00, fieldValueReplacerConfig.newValue,
+                        field.getType(), e.toString(), e);
+                  }
                 }
+              } else {
+                fieldsThatDoNotExist.add(matchingField);
               }
-            } else {
-              fieldsThatDoNotExist.add(matchingField);
             }
           }
         }
@@ -116,7 +140,12 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
         String operator = fieldValueConditionalReplacerConfig.operator;
 
         for (String fieldToReplace : fieldValueConditionalReplacerConfig.fieldNames) {
-          for (String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldToReplace, fieldPaths)) {
+          for (String matchingField : FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+              fieldToReplace,
+              fieldPathEval,
+              fieldPathVars,
+              record
+          )) {
             if (record.has(matchingField)) {
 
               Field field = record.get(matchingField);
@@ -200,12 +229,27 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
       //Gather existing paths for each nullReplacerConditionalConfig
       //And if field does not exist gather them in fieldsThatDoNotExist
       for (String fieldNameToNull : fieldNamesToNull) {
-        for (String matchingField : FieldRegexUtil.getMatchingFieldPaths(fieldNameToNull, fieldPaths)) {
-          if (record.has(matchingField)) {
-            fieldPathsToNull.add(matchingField);
+        try {
+          final List<String> matchingPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+              fieldNameToNull, fieldPathEval, fieldPathVars,
+              record
+          );
+          if (matchingPaths.isEmpty()) {
+            // FieldPathExpressionUtil.evaluateMatchingFieldPaths does NOT return the supplied param in its result
+            // regardless, like FieldRegexUtil#getMatchingFieldPaths did, so we add manually here
+            fieldsThatDoNotExist.add(fieldNameToNull);
           } else {
-            fieldsThatDoNotExist.add(matchingField);
+            for (String matchingField : matchingPaths) {
+              if (record.has(matchingField)) {
+                fieldPathsToNull.add(matchingField);
+              } else {
+                fieldsThatDoNotExist.add(matchingField);
+              }
+            }
           }
+        } catch (ELEvalException e) {
+          LOG.error("Error evaluating condition: " + nullReplacerConditionalConfig.condition, e);
+          throw new OnRecordErrorException(record, Errors.VALUE_REPLACER_07, fieldNameToNull, e.toString(), e);
         }
       }
       //Now evaluate the condition in nullReplacerConditionalConfig

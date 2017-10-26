@@ -18,7 +18,10 @@ package com.streamsets.pipeline.stage.processor.fieldfilter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,11 +35,20 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
 
   private final FilterOperation filterOperation;
   private final List<String> fields;
+  private ELEval fieldPathEval;
+  private ELVars fieldPathVars;
 
 
   public FieldFilterProcessor(FilterOperation filterOperation, List<String> fields) {
     this.filterOperation = filterOperation;
     this.fields = fields;
+  }
+
+  @Override
+  protected List<ConfigIssue> init() {
+    fieldPathEval = getContext().createELEval("fields");
+    fieldPathVars = getContext().createELVars();
+    return super.init();
   }
 
   @Override
@@ -47,14 +59,20 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
       case REMOVE:
         list = new ArrayList<>();
         for(String field : fields) {
-          List<String> matchingFieldPaths = FieldRegexUtil.getMatchingFieldPaths(field, fieldPaths);
+          List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+              field, fieldPathEval, fieldPathVars,
+              record
+          );
           list.addAll(matchingFieldPaths);
         }
         break;
       case REMOVE_NULL:
         list = new ArrayList<>();
         for (String field : fields) {
-          List<String> matchingFieldPaths = FieldRegexUtil.getMatchingFieldPaths(field, fieldPaths);
+          List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+              field, fieldPathEval, fieldPathVars,
+              record
+          );
           for (String fieldPath : matchingFieldPaths) {
             if (fieldPaths.contains(fieldPath) && record.get(fieldPath).getValue() == null) {
               list.add(fieldPath);
@@ -93,7 +111,10 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
           //remove the field path itself from the fieldsToRemove set
           //Consider wild card characters
 
-          List<String> matchingFieldPaths = FieldRegexUtil.getMatchingFieldPaths(field, fieldPaths);
+          List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+              field, fieldPathEval, fieldPathVars,
+              record
+          );
           fieldsToRemove.removeAll(matchingFieldPaths);
           //Keep the children of the field
 

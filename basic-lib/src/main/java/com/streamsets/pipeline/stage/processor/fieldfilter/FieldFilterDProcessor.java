@@ -26,6 +26,8 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DProcessor;
+import com.streamsets.pipeline.lib.el.FieldEL;
+import com.streamsets.pipeline.lib.el.RecordEL;
 
 import java.util.List;
 
@@ -67,7 +69,9 @@ public class FieldFilterDProcessor extends DProcessor {
       label = "Fields",
       description = "",
       displayPosition = 20,
-      group = "FILTER"
+      group = "FILTER",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = {RecordEL.class, FieldEL.class}
   )
   @FieldSelectorModel
   public List<String> fields;
