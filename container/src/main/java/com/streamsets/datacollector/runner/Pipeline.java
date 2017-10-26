@@ -223,8 +223,11 @@ public class Pipeline {
   @SuppressWarnings("unchecked")
   public List<Issue> init(boolean productionExecution) {
     PipeContext pipeContext = new PipeContext();
-    this.runner.setPipelineConfiguration(pipelineConf);
-    this.runner.setPipeContext(pipeContext);
+    this.runner.setRuntimeConfiguration(
+      pipeContext,
+      pipelineConf,
+      pipelineBean.getConfig()
+    );
 
     List<Issue> issues = new ArrayList<>();
 

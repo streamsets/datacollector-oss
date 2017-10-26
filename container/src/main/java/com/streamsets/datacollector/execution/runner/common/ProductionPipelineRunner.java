@@ -32,6 +32,7 @@ import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -169,6 +170,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   private ThreadHealthReporter threadHealthReporter;
   private final List<List<StageOutput>> capturedBatches = new ArrayList<>();
   private PipeContext pipeContext = null;
+  private PipelineConfigBean pipelineConfigBean = null;
   private PipelineConfiguration pipelineConfiguration = null;
 
   @Inject
@@ -1026,7 +1028,10 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
    * @param pipeBatch Current batch
    */
   private void createFailureBatch(FullPipeBatch pipeBatch) {
-    // SDC-XXXX: This behavior should be configurable - not sure if on SDC or pipeline level though (future exercise)
+    if(!pipelineConfigBean.shouldCreateFailureSnapshot) {
+      return;
+    }
+
     try {
       String snapshotName = "Failure_" + UUID.randomUUID().toString();
       String snapshotLabel = "Failure at " + LocalDateTime.now().toString();
@@ -1046,14 +1051,13 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     return null != statsAggregatorRequests;
   }
 
-  @Override
-  public void setPipeContext(PipeContext pipeContext) {
+  public void setRuntimeConfiguration(
+    PipeContext pipeContext,
+    PipelineConfiguration pipelineConfiguration,
+    PipelineConfigBean pipelineConfigBean
+  ) {
     this.pipeContext = pipeContext;
-  }
-
-  @Override
-  public void setPipelineConfiguration(PipelineConfiguration pipelineConfiguration) {
     this.pipelineConfiguration = pipelineConfiguration;
+    this.pipelineConfigBean = pipelineConfigBean;
   }
-
 }

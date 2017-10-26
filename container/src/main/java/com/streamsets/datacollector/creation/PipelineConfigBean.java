@@ -312,6 +312,17 @@ public class PipelineConfigBean implements Stage {
   )
   public int maxRunners = 0;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "true",
+    label = "Create Failure Snapshot",
+    description = "When selected and the pipeline execution fails with unrecoverable exception, SDC will attempt to create" +
+      "partial snapshot with records that have not been processed yet.",
+    displayPosition = 200
+  )
+  public boolean shouldCreateFailureSnapshot;
+
   @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "[]",

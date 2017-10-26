@@ -24,6 +24,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.PipelineEL;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
@@ -404,13 +405,13 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   }
 
-  public void setPipeContext(PipeContext pipeContext) {
-
-  }
-
-  @Override
-  public void setPipelineConfiguration(PipelineConfiguration pipelineConfiguration) {
+  public void setRuntimeConfiguration(
+    PipeContext pipeContext,
+    PipelineConfiguration pipelineConfiguration,
+    PipelineConfigBean pipelineConfigBean
+  ) {
     this.pipelineConfiguration = pipelineConfiguration;
+    // Preview does not need the remaining runtime structures
   }
 
   @Override

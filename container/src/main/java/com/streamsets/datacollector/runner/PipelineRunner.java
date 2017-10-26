@@ -17,6 +17,7 @@ package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
@@ -98,8 +99,13 @@ public interface PipelineRunner extends PipelineFinisherDelegate {
     Throwable throwable
   );
 
-  public void setPipeContext(PipeContext pipeContext);
-
-  public void setPipelineConfiguration(PipelineConfiguration pipelineConfiguration);
+  /**
+   * Configure various runtime structures that the might need about the pipeline execution.
+   */
+  public void setRuntimeConfiguration(
+    PipeContext pipeContext,
+    PipelineConfiguration pipelineConfiguration,
+    PipelineConfigBean pipelineConfigBean
+  );
 
 }
