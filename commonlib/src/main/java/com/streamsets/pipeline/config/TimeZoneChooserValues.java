@@ -16,30 +16,41 @@
 package com.streamsets.pipeline.config;
 
 import com.streamsets.pipeline.api.ChooserValues;
+import org.jetbrains.annotations.NotNull;
 
+import java.time.ZoneId;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
 public class TimeZoneChooserValues implements ChooserValues {
-  private static final List<String> VALUES = new ArrayList<String>();
-  private static final List<String> LABELS = new ArrayList<String>();
+  private static final List<String> VALUES = new ArrayList<>();
+  private static final List<String> LABELS = new ArrayList<>();
 
   static {
-    Set<String> seen = new HashSet<>();
-    for (String tzId : TimeZone.getAvailableIDs()) {
+    ZoneId systemDefault = ZoneId.systemDefault();
+    VALUES.add(systemDefault.getId());
+    LABELS.add("Same as Data Collector: " + getLabelForTimeZoneId(systemDefault));
+
+    for (String tzId : ZoneId.getAvailableZoneIds()) {
       // skip id's that are like "Etc/GMT+01:00" because their display names are like "GMT-01:00", which is confusing
       if (!tzId.startsWith("Etc/GMT")) {
-        if (!seen.contains(tzId)) {
-          TimeZone tZone = TimeZone.getTimeZone(tzId);
+        ZoneId zoneId = ZoneId.of(tzId);
+        if (!zoneId.equals(systemDefault)) {
           VALUES.add(tzId);
-          LABELS.add(tZone.getDisplayName(false, TimeZone.SHORT) + " (" + tzId + ")");
-          seen.add(tzId);
+          LABELS.add(getLabelForTimeZoneId(zoneId));
         }
       }
     }
+  }
+
+  @NotNull
+  private static String getLabelForTimeZoneId(ZoneId zoneId) {
+    return zoneId.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + " (" + zoneId.getId() + ")";
   }
 
   @Override

@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.time.Clock;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -229,7 +230,7 @@ public class TCPObjectToRecordHandler extends ChannelInboundHandlerAdapter {
     if (lastRecord != null) {
       RecordEL.setRecordInContext(vars, lastRecord);
     }
-    final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(timeZoneId));
+    final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of(timeZoneId)));
     TimeEL.setCalendarInContext(vars, calendar);
     TimeNowEL.setTimeNowInContext(vars, Date.from(ZonedDateTime.now().toInstant()));
     final String elResult;

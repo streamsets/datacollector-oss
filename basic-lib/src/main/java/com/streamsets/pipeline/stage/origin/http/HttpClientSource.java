@@ -65,6 +65,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.EnumSet;
@@ -167,7 +168,7 @@ public class HttpClientSource extends BaseSource {
 
     bodyVars = getContext().createELVars();
     bodyEval = getContext().createELEval(REQUEST_BODY_CONFIG_NAME);
-    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(conf.timeZoneID));
+    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of(conf.timeZoneID)));
     TimeEL.setCalendarInContext(bodyVars, calendar);
 
     headerVars = getContext().createELVars();

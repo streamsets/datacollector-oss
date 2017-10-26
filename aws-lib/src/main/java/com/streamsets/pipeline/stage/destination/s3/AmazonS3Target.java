@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -91,7 +92,7 @@ public class AmazonS3Target extends BaseTarget {
     bucketEval = getContext().createELEval(BUCKET_TEMPLATE);
     partitionEval = getContext().createELEval(PARTITION_TEMPLATE);
     timeDriverEval = getContext().createELEval(TIME_DRIVER_TEMPLATE);
-    calendar = Calendar.getInstance(TimeZone.getTimeZone(s3TargetConfigBean.timeZoneID));
+    calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of(s3TargetConfigBean.timeZoneID)));
 
     transferManager = TransferManagerBuilder
         .standard()

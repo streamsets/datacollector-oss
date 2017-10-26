@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.channels.Channels;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
@@ -87,7 +88,7 @@ public class GoogleCloudStorageTarget extends BaseTarget {
     elVars = getContext().createELVars();
     partitionEval = getContext().createELEval(PARTITION_TEMPLATE);
 
-    calendar = Calendar.getInstance(TimeZone.getTimeZone(gcsTargetConfig.timeZoneID));
+    calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of(gcsTargetConfig.timeZoneID)));
 
     try {
       storage = StorageOptions.newBuilder().setCredentials(credentialsProvider.getCredentials()).build().getService();

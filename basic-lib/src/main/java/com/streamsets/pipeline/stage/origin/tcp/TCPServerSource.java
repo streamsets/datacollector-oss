@@ -48,6 +48,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -212,7 +213,7 @@ public class TCPServerSource extends BasePushSource {
     if (!Strings.isNullOrEmpty(config.recordProcessedAckMessage)) {
       final ELEval eval = getContext().createELEval("recordProcessedAckMessage");
 
-      final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(config.timeZoneID));
+      final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of(config.timeZoneID)));
       TimeEL.setCalendarInContext(getContext().createELVars(), calendar);
       final ELVars vars = getContext().createELVars();
       Record validationRecord = getContext().createRecord("recordProcessedAckMessageValidationRecord");
@@ -234,7 +235,7 @@ public class TCPServerSource extends BasePushSource {
     if (!Strings.isNullOrEmpty(config.batchCompletedAckMessage)) {
       final ELEval eval = getContext().createELEval("batchCompletedAckMessage");
 
-      final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(config.timeZoneID));
+      final Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of(config.timeZoneID)));
       TimeEL.setCalendarInContext(getContext().createELVars(), calendar);
       final ELVars vars = getContext().createELVars();
       vars.addVariable("batchSize", 0);

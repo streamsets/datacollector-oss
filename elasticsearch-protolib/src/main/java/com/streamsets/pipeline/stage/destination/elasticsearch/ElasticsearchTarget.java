@@ -57,6 +57,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -85,7 +86,7 @@ public class ElasticsearchTarget extends BaseTarget {
     if (this.conf.params == null) {
       this.conf.params = new HashMap<>();
     }
-    this.timeZone = TimeZone.getTimeZone(conf.timeZoneID);
+    this.timeZone = TimeZone.getTimeZone(ZoneId.of(conf.timeZoneID));
   }
 
   private void validateEL(ELEval elEval, String elStr, String config, ErrorCode parseError, ErrorCode evalError,

@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -395,7 +396,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
   private TableReadContext getOrLoadTableReadContext() throws ExecutionException, InterruptedException {
     initTableEvalContextForProduce(
         tableJdbcELEvalContext, tableRuntimeContext,
-        Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID))
+        Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of(tableJdbcConfigBean.timeZoneID)))
     );
     //Check and then if we want to wait for query being issued do that
     TableReadContext tableReadContext = tableReadContextCache.getIfPresent(tableRuntimeContext);
@@ -408,7 +409,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
       //Set time before query
       initTableEvalContextForProduce(
           tableJdbcELEvalContext, tableRuntimeContext,
-          Calendar.getInstance(TimeZone.getTimeZone(tableJdbcConfigBean.timeZoneID))
+          Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of(tableJdbcConfigBean.timeZoneID)))
       );
       tableReadContext = tableReadContextCache.get(tableRuntimeContext);
       //Record query time

@@ -30,6 +30,7 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.lib.hive.FieldPathEL;
 import com.streamsets.pipeline.stage.lib.hive.HiveConfigBean;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -212,7 +213,7 @@ public class HiveMetadataDProcessor extends DProcessor {
       hiveConfigBean,
       timeDriver,
       decimalDefaultsConfig,
-      TimeZone.getTimeZone(timeZoneID),
+      TimeZone.getTimeZone(ZoneId.of(timeZoneID)),
       dataFormat,
       commentExpression,
       metadataHeaderAttributeConfigs

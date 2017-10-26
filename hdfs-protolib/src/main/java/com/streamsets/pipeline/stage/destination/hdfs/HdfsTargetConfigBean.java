@@ -60,6 +60,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.security.PrivilegedExceptionAction;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -572,7 +573,7 @@ public class HdfsTargetConfigBean {
             fileNameSuffix,
             dirPathTemplateInHeader,
             dirPathTemplate,
-            TimeZone.getTimeZone(timeZoneID),
+            TimeZone.getTimeZone(ZoneId.of(timeZoneID)),
             lateRecordsLimitSecs,
             maxFileSize * MEGA_BYTE,
             maxRecordsPerFile,
@@ -631,7 +632,7 @@ public class HdfsTargetConfigBean {
                   fileNameSuffix,
                   false, // Late records doesn't support "template directory" to be in header
                   lateRecordsDirPathTemplate,
-                  TimeZone.getTimeZone(timeZoneID),
+                  TimeZone.getTimeZone(ZoneId.of(timeZoneID)),
                   lateRecordsLimitSecs,
                   maxFileSize * MEGA_BYTE,
                   maxRecordsPerFile,

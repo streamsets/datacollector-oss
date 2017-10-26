@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -95,7 +96,7 @@ public class DataLakeTarget extends BaseTarget {
     timeDriverEval = getContext().createELEval("timeDriver");
     timeDriverVars = getContext().createELVars();
 
-    calendar = Calendar.getInstance(TimeZone.getTimeZone(conf.timeZoneID));
+    calendar = Calendar.getInstance(TimeZone.getTimeZone(ZoneId.of(conf.timeZoneID)));
 
     if (conf.idleTimeout != null && !conf.idleTimeout.isEmpty()) {
       idleTimeSecs = initTimeConfigs(getContext(), "idleTimeout", conf.idleTimeout, Groups.OUTPUT,
