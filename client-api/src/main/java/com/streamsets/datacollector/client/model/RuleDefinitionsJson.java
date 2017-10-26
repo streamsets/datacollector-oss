@@ -27,13 +27,35 @@ import java.util.List;
 @ApiModel(description = "")
 public class RuleDefinitionsJson   {
 
-  private List<MetricsRuleDefinitionJson> metricsRuleDefinitions = new ArrayList<MetricsRuleDefinitionJson>();
-  private List<DataRuleDefinitionJson> dataRuleDefinitions = new ArrayList<DataRuleDefinitionJson>();
-  private List<String> emailIds = new ArrayList<String>();
+  private String schemaVersion = null;
+  private String version = null;
+  private List<MetricsRuleDefinitionJson> metricsRuleDefinitions = new ArrayList<>();
+  private List<DataRuleDefinitionJson> dataRuleDefinitions = new ArrayList<>();
+  private List<DriftRuleDefinitionJson> driftRuleDefinitions = new ArrayList<>();
+  private List<String> emailIds = new ArrayList<>();
   private String uuid = null;
-  private List<RuleIssueJson> ruleIssues = new ArrayList<RuleIssueJson>();
-  List<ConfigConfigurationJson> configuration = new ArrayList<>();
-  private List<IssueJson> configIssues = new ArrayList<IssueJson>();
+  private List<RuleIssueJson> ruleIssues = new ArrayList<>();
+  private List<ConfigConfigurationJson> configuration = new ArrayList<>();
+  private List<IssueJson> configIssues = new ArrayList<>();
+
+
+  @ApiModelProperty(value = "")
+  @JsonProperty("schemaVersion")
+  public String getSchemaVersion() {
+    return schemaVersion;
+  }
+  public void setSchemaVersion(String schemaVersion) {
+    this.schemaVersion = uuid;
+  }
+
+  @ApiModelProperty(value = "")
+  @JsonProperty("version")
+  public String getVersion() {
+    return version;
+  }
+  public void setVersion(String version) {
+    this.version = version;
+  }
 
   /**
    **/
@@ -56,6 +78,17 @@ public class RuleDefinitionsJson   {
   }
   public void setDataRuleDefinitions(List<DataRuleDefinitionJson> dataRuleDefinitions) {
     this.dataRuleDefinitions = dataRuleDefinitions;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("driftRuleDefinitions")
+  public List<DriftRuleDefinitionJson> getDriftRuleDefinitions() {
+    return driftRuleDefinitions;
+  }
+  public void setDriftRuleDefinitions(List<DriftRuleDefinitionJson> driftRuleDefinitions) {
+    this.driftRuleDefinitions = driftRuleDefinitions;
   }
 
 
@@ -120,9 +153,11 @@ public class RuleDefinitionsJson   {
   public String toString()  {
     StringBuilder sb = new StringBuilder();
     sb.append("class RuleDefinitionsJson {\n");
-
+    sb.append("    schemaVersion: ").append(StringUtil.toIndentedString(schemaVersion)).append("\n");
+    sb.append("    version: ").append(StringUtil.toIndentedString(version)).append("\n");
     sb.append("    metricsRuleDefinitions: ").append(StringUtil.toIndentedString(metricsRuleDefinitions)).append("\n");
     sb.append("    dataRuleDefinitions: ").append(StringUtil.toIndentedString(dataRuleDefinitions)).append("\n");
+    sb.append("    driftRuleDefinitions: ").append(StringUtil.toIndentedString(driftRuleDefinitions)).append("\n");
     sb.append("    emailIds: ").append(StringUtil.toIndentedString(emailIds)).append("\n");
     sb.append("    uuid: ").append(StringUtil.toIndentedString(uuid)).append("\n");
     sb.append("    ruleIssues: ").append(StringUtil.toIndentedString(ruleIssues)).append("\n");

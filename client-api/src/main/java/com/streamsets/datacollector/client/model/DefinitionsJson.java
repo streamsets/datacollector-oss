@@ -31,6 +31,7 @@ public class DefinitionsJson   {
   private List<PipelineDefinitionJson> pipeline = new ArrayList<>();
   private List<PipelineRulesDefinitionJson> pipelineRules = new ArrayList<>();
   private List<StageDefinitionJson> stages = new ArrayList<>();
+  private List<ServiceDefinitionJson> services = new ArrayList<>();
   private Map<String, Object> rulesElMetadata = new HashMap<>();
   private Map<String, Object> elCatalog = new HashMap<>();
   private List<Object> runtimeConfigs = new ArrayList<>();
@@ -70,6 +71,16 @@ public class DefinitionsJson   {
     this.stages = stages;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("services")
+  public List<ServiceDefinitionJson> getServices() {
+    return services;
+  }
+  public void setServices(List<ServiceDefinitionJson> services) {
+    this.services = services;
+  }
 
   /**
    **/
@@ -126,6 +137,7 @@ public class DefinitionsJson   {
     sb.append("    pipeline: ").append(StringUtil.toIndentedString(pipeline)).append("\n");
     sb.append("    pipelineRules: ").append(StringUtil.toIndentedString(pipelineRules)).append("\n");
     sb.append("    stages: ").append(StringUtil.toIndentedString(stages)).append("\n");
+    sb.append("    services: ").append(StringUtil.toIndentedString(services)).append("\n");
     sb.append("    rulesElMetadata: ").append(StringUtil.toIndentedString(rulesElMetadata)).append("\n");
     sb.append("    elCatalog: ").append(StringUtil.toIndentedString(elCatalog)).append("\n");
     sb.append("    runtimeConfigs: ").append(StringUtil.toIndentedString(runtimeConfigs)).append("\n");

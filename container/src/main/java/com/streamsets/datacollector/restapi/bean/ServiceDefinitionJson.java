@@ -16,14 +16,15 @@
 package com.streamsets.datacollector.restapi.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.streamsets.datacollector.config.ServiceDefinition;
 
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceDefinitionJson {
-  private final com.streamsets.datacollector.config.ServiceDefinition serviceDefinition;
+  private final ServiceDefinition serviceDefinition;
 
-  public ServiceDefinitionJson(com.streamsets.datacollector.config.ServiceDefinition serviceDefinition) {
+  ServiceDefinitionJson(ServiceDefinition serviceDefinition) {
     this.serviceDefinition = serviceDefinition;
   }
 

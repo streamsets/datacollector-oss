@@ -20,6 +20,7 @@ import com.streamsets.datacollector.client.StringUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,11 +71,12 @@ public class ConfigDefinitionJson   {
   private String description = null;
   private String dependsOn = null;
   private List<Object> triggeredByValues = new ArrayList<Object>();
-  private Long min = null;
+  private BigInteger min;
   private String group = null;
 
 public enum EvaluationEnum {
-  IMPLICIT("IMPLICIT"), EXPLICIT("EXPLICIT");
+  IMPLICIT("IMPLICIT"),
+  EXPLICIT("EXPLICIT");
 
   private String value;
 
@@ -89,7 +91,7 @@ public enum EvaluationEnum {
 }
 
   private EvaluationEnum evaluation = null;
-  private Long max = null;
+  private BigInteger max;
   private String fieldName = null;
 
 
@@ -289,10 +291,10 @@ public enum EvaluationEnum {
    **/
   @ApiModelProperty(value = "")
   @JsonProperty("min")
-  public Long getMin() {
+  public BigInteger getMin() {
     return min;
   }
-  public void setMin(Long min) {
+  public void setMin(BigInteger min) {
     this.min = min;
   }
 
@@ -325,10 +327,10 @@ public enum EvaluationEnum {
    **/
   @ApiModelProperty(value = "")
   @JsonProperty("max")
-  public Long getMax() {
+  public BigInteger getMax() {
     return max;
   }
-  public void setMax(Long max) {
+  public void setMax(BigInteger max) {
     this.max = max;
   }
 

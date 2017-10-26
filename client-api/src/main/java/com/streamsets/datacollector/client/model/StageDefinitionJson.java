@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.client.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.streamsets.datacollector.client.StringUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -27,8 +26,6 @@ import java.util.List;
 // This class was originally generated, however it's now maintained manually
 @ApiModel(description = "")
 public class StageDefinitionJson   {
-
-  private String name = null;
 
   public enum TypeEnum {
     SOURCE("SOURCE"),
@@ -47,21 +44,6 @@ public class StageDefinitionJson   {
       return value;
     }
   }
-
-  private TypeEnum type = null;
-  private String className = null;
-  private String label = null;
-  private String libraryLabel = null;
-  private ConfigGroupDefinitionJson configGroupDefinition = null;
-  private RawSourceDefinitionJson rawSourceDefinition = null;
-  private Boolean errorStage = null;
-  private Boolean statsAggregatorStage = null;
-  private Boolean pipelineLifecycleStage = null;
-  private Boolean variableOutputStreams = null;
-  private Integer outputStreams = null;
-  private String outputStreamLabelProviderClass = null;
-  private List<String> outputStreamLabels = new ArrayList<String>();
-  private List<ServiceDependencyDefinitionJson> services = null;
 
   public enum ExecutionModesEnum {
     STANDALONE("STANDALONE"),
@@ -84,6 +66,22 @@ public class StageDefinitionJson   {
     }
   }
 
+  private String name = null;
+  private TypeEnum type = null;
+  private String className = null;
+  private String label = null;
+  private String libraryLabel = null;
+  private ConfigGroupDefinitionJson configGroupDefinition = null;
+  private RawSourceDefinitionJson rawSourceDefinition = null;
+  private Boolean errorStage = null;
+  private Boolean statsAggregatorStage = null;
+  private Boolean pipelineLifecycleStage = null;
+  private Boolean offsetCommitTrigger = null;
+  private Boolean variableOutputStreams = null;
+  private Integer outputStreams = null;
+  private String outputStreamLabelProviderClass = null;
+  private List<String> outputStreamLabels = new ArrayList<String>();
+  private List<ServiceDependencyDefinitionJson> services = null;
   private List<ExecutionModesEnum> executionModes = new ArrayList<ExecutionModesEnum>();
   private String description = null;
   private Boolean privateClassLoader = null;
@@ -95,6 +93,7 @@ public class StageDefinitionJson   {
   private Boolean preconditions = null;
   private Boolean resetOffset = null;
   private Boolean producingEvents = null;
+  private String onlineHelpRefUrl = null;
 
 
   /**
@@ -214,6 +213,18 @@ public class StageDefinitionJson   {
     this.pipelineLifecycleStage = pipelineLifecycleStage;
   }
 
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("offsetCommitTrigger")
+  public Boolean getOffsetCommitTrigger() {
+    return offsetCommitTrigger;
+  }
+  public void setOffsetCommitTrigger(Boolean offsetCommitTrigger) {
+    this.offsetCommitTrigger = offsetCommitTrigger;
+  }
+
   /**
    **/
   @ApiModelProperty(value = "")
@@ -265,7 +276,7 @@ public class StageDefinitionJson   {
   /**
    **/
   @ApiModelProperty(value = "")
-  @JsonProperty("service")
+  @JsonProperty("services")
   public List<ServiceDependencyDefinitionJson> getServices() {
     return services;
   }
@@ -403,34 +414,14 @@ public class StageDefinitionJson   {
     this.producingEvents = producingEvents;
   }
 
-  @Override
-  public String toString()  {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class StageDefinitionJson {\n");
-
-    sb.append("    name: ").append(StringUtil.toIndentedString(name)).append("\n");
-    sb.append("    type: ").append(StringUtil.toIndentedString(type)).append("\n");
-    sb.append("    className: ").append(StringUtil.toIndentedString(className)).append("\n");
-    sb.append("    label: ").append(StringUtil.toIndentedString(label)).append("\n");
-    sb.append("    libraryLabel: ").append(StringUtil.toIndentedString(libraryLabel)).append("\n");
-    sb.append("    configGroupDefinition: ").append(StringUtil.toIndentedString(configGroupDefinition)).append("\n");
-    sb.append("    rawSourceDefinition: ").append(StringUtil.toIndentedString(rawSourceDefinition)).append("\n");
-    sb.append("    errorStage: ").append(StringUtil.toIndentedString(errorStage)).append("\n");
-    sb.append("    variableOutputStreams: ").append(StringUtil.toIndentedString(variableOutputStreams)).append("\n");
-    sb.append("    outputStreams: ").append(StringUtil.toIndentedString(outputStreams)).append("\n");
-    sb.append("    outputStreamLabelProviderClass: ").append(StringUtil.toIndentedString(outputStreamLabelProviderClass)).append("\n");
-    sb.append("    outputStreamLabels: ").append(StringUtil.toIndentedString(outputStreamLabels)).append("\n");
-    sb.append("    executionModes: ").append(StringUtil.toIndentedString(executionModes)).append("\n");
-    sb.append("    description: ").append(StringUtil.toIndentedString(description)).append("\n");
-    sb.append("    privateClassLoader: ").append(StringUtil.toIndentedString(privateClassLoader)).append("\n");
-    sb.append("    library: ").append(StringUtil.toIndentedString(library)).append("\n");
-    sb.append("    configDefinitions: ").append(StringUtil.toIndentedString(configDefinitions)).append("\n");
-    sb.append("    version: ").append(StringUtil.toIndentedString(version)).append("\n");
-    sb.append("    icon: ").append(StringUtil.toIndentedString(icon)).append("\n");
-    sb.append("    onRecordError: ").append(StringUtil.toIndentedString(onRecordError)).append("\n");
-    sb.append("    preconditions: ").append(StringUtil.toIndentedString(preconditions)).append("\n");
-    sb.append("    producingEvents: ").append(StringUtil.toIndentedString(producingEvents)).append("\n");
-    sb.append("}");
-    return sb.toString();
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("onlineHelpRefUrl")
+  public String getOnlineHelpRefUrl() {
+    return onlineHelpRefUrl;
+  }
+  public void setOnlineHelpRefUrl(String onlineHelpRefUrl) {
+    this.onlineHelpRefUrl = onlineHelpRefUrl;
   }
 }

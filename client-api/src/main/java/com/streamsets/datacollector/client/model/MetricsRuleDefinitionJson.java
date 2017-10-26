@@ -31,7 +31,11 @@ public class MetricsRuleDefinitionJson   {
   private String metricId = null;
 
 public enum MetricTypeEnum {
-  GAUGE("GAUGE"), COUNTER("COUNTER"), HISTOGRAM("HISTOGRAM"), METER("METER"), TIMER("TIMER");
+  GAUGE("GAUGE"),
+  COUNTER("COUNTER"),
+  HISTOGRAM("HISTOGRAM"),
+  METER("METER"),
+  TIMER("TIMER");
 
   private String value;
 
@@ -48,7 +52,46 @@ public enum MetricTypeEnum {
   private MetricTypeEnum metricType = null;
 
 public enum MetricElementEnum {
-  COUNTER_COUNT("COUNTER_COUNT"), HISTOGRAM_COUNT("HISTOGRAM_COUNT"), HISTOGRAM_MAX("HISTOGRAM_MAX"), HISTOGRAM_MIN("HISTOGRAM_MIN"), HISTOGRAM_MEAN("HISTOGRAM_MEAN"), HISTOGRAM_MEDIAN("HISTOGRAM_MEDIAN"), hISTOGRAMP75("HISTOGRAM_P75"), hISTOGRAMP95("HISTOGRAM_P95"), hISTOGRAMP98("HISTOGRAM_P98"), hISTOGRAMP99("HISTOGRAM_P99"), hISTOGRAMP999("HISTOGRAM_P999"), HISTOGRAM_STD_DEV("HISTOGRAM_STD_DEV"), METER_COUNT("METER_COUNT"), mETERM1RATE("METER_M1_RATE"), mETERM5RATE("METER_M5_RATE"), mETERM15RATE("METER_M15_RATE"), mETERM30RATE("METER_M30_RATE"), mETERH1RATE("METER_H1_RATE"), mETERH6RATE("METER_H6_RATE"), mETERH12RATE("METER_H12_RATE"), mETERH24RATE("METER_H24_RATE"), METER_MEAN_RATE("METER_MEAN_RATE"), TIMER_COUNT("TIMER_COUNT"), TIMER_MAX("TIMER_MAX"), TIMER_MIN("TIMER_MIN"), TIMER_MEAN("TIMER_MEAN"), tIMERP50("TIMER_P50"), tIMERP75("TIMER_P75"), tIMERP95("TIMER_P95"), tIMERP98("TIMER_P98"), tIMERP99("TIMER_P99"), tIMERP999("TIMER_P999"), TIMER_STD_DEV("TIMER_STD_DEV"), tIMERM1RATE("TIMER_M1_RATE"), tIMERM5RATE("TIMER_M5_RATE"), tIMERM15RATE("TIMER_M15_RATE"), TIMER_MEAN_RATE("TIMER_MEAN_RATE"), CURRENT_BATCH_AGE("CURRENT_BATCH_AGE"), TIME_IN_CURRENT_STAGE("TIME_IN_CURRENT_STAGE"), TIME_OF_LAST_RECEIVED_RECORD("TIME_OF_LAST_RECEIVED_RECORD");
+  COUNTER_COUNT("COUNTER_COUNT"),
+  HISTOGRAM_COUNT("HISTOGRAM_COUNT"),
+  HISTOGRAM_MAX("HISTOGRAM_MAX"),
+  HISTOGRAM_MIN("HISTOGRAM_MIN"),
+  HISTOGRAM_MEAN("HISTOGRAM_MEAN"),
+  HISTOGRAM_MEDIAN("HISTOGRAM_MEDIAN"),
+  hISTOGRAMP75("HISTOGRAM_P75"),
+  hISTOGRAMP95("HISTOGRAM_P95"),
+  hISTOGRAMP98("HISTOGRAM_P98"),
+  hISTOGRAMP99("HISTOGRAM_P99"),
+  hISTOGRAMP999("HISTOGRAM_P999"),
+  HISTOGRAM_STD_DEV("HISTOGRAM_STD_DEV"),
+  METER_COUNT("METER_COUNT"),
+  mETERM1RATE("METER_M1_RATE"),
+  mETERM5RATE("METER_M5_RATE"),
+  mETERM15RATE("METER_M15_RATE"),
+  mETERM30RATE("METER_M30_RATE"),
+  mETERH1RATE("METER_H1_RATE"),
+  mETERH6RATE("METER_H6_RATE"),
+  mETERH12RATE("METER_H12_RATE"),
+  mETERH24RATE("METER_H24_RATE"),
+  METER_MEAN_RATE("METER_MEAN_RATE"),
+  TIMER_COUNT("TIMER_COUNT"),
+  TIMER_MAX("TIMER_MAX"),
+  TIMER_MIN("TIMER_MIN"),
+  TIMER_MEAN("TIMER_MEAN"),
+  tIMERP50("TIMER_P50"),
+  tIMERP75("TIMER_P75"),
+  tIMERP95("TIMER_P95"),
+  tIMERP98("TIMER_P98"),
+  tIMERP99("TIMER_P99"),
+  tIMERP999("TIMER_P999"),
+  TIMER_STD_DEV("TIMER_STD_DEV"),
+  tIMERM1RATE("TIMER_M1_RATE"),
+  tIMERM5RATE("TIMER_M5_RATE"),
+  tIMERM15RATE("TIMER_M15_RATE"),
+  TIMER_MEAN_RATE("TIMER_MEAN_RATE"),
+  CURRENT_BATCH_AGE("CURRENT_BATCH_AGE"),
+  TIME_IN_CURRENT_STAGE("TIME_IN_CURRENT_STAGE"),
+  TIME_OF_LAST_RECEIVED_RECORD("TIME_OF_LAST_RECEIVED_RECORD");
 
   private String value;
 
@@ -67,6 +110,7 @@ public enum MetricElementEnum {
   private Boolean sendEmail = null;
   private Boolean enabled = null;
   private Boolean valid = null;
+  private long timestamp;
 
 
   /**
@@ -176,7 +220,16 @@ public enum MetricElementEnum {
     this.valid = valid;
   }
 
-
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("timestamp")
+  public long getTimestamp() {
+    return timestamp;
+  }
+  public void setTimestamp(long timestamp) {
+    this.timestamp = timestamp;
+  }
 
   @Override
   public String toString()  {
@@ -192,6 +245,7 @@ public enum MetricElementEnum {
     sb.append("    sendEmail: ").append(StringUtil.toIndentedString(sendEmail)).append("\n");
     sb.append("    enabled: ").append(StringUtil.toIndentedString(enabled)).append("\n");
     sb.append("    valid: ").append(StringUtil.toIndentedString(valid)).append("\n");
+    sb.append("    timestamp: ").append(StringUtil.toIndentedString(timestamp)).append("\n");
     sb.append("}");
     return sb.toString();
   }
