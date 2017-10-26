@@ -99,7 +99,9 @@ public class KuduTarget extends BaseTarget {
   private final int tableCacheSize = 500;
 
   private final LoadingCache<String, KuduTable> kuduTables;
+  private final LoadingCache<KuduTable, KuduRecordConverter> recordConverters;
   private final CacheCleaner cacheCleaner;
+  private final CacheCleaner recordBuilderCacheCleaner;
 
   private ErrorRecordHandler errorRecordHandler;
   private ELVars tableNameVars;
@@ -136,6 +138,14 @@ public class KuduTarget extends BaseTarget {
         });
 
     cacheCleaner = new CacheCleaner(kuduTables, "KuduTarget", 10 * 60 * 1000);
+
+    recordConverters = cacheBuilder.build(new CacheLoader<KuduTable, KuduRecordConverter>() {
+      @Override
+      public KuduRecordConverter load(KuduTable table) throws KuduException {
+        return createKuduRecordConverter(table);
+      }
+    });
+    recordBuilderCacheCleaner = new CacheCleaner(recordConverters, "KuduTarget KuduRecordConverter", 10 * 60 * 1000);
   }
 
   @Override
@@ -257,11 +267,11 @@ public class KuduTarget extends BaseTarget {
     return session;
   }
 
-  private Optional<KuduRecordConverter> createKuduRecordConverter(KuduTable table) {
+  private KuduRecordConverter createKuduRecordConverter(KuduTable table) {
     return createKuduRecordConverter(null, table);
   }
 
-  private Optional<KuduRecordConverter> createKuduRecordConverter(List<ConfigIssue> issues, KuduTable table) {
+  private KuduRecordConverter createKuduRecordConverter(List<ConfigIssue> issues, KuduTable table) {
     Map<String, Field.Type> columnsToFieldTypes = new HashMap<>();
     Map<String, String> fieldsToColumns = new HashMap<>();
     Schema schema = table.getSchema();
@@ -294,7 +304,7 @@ public class KuduTarget extends BaseTarget {
         fieldsToColumns.put(fieldMappingConfig.field, fieldMappingConfig.columnName);
       }
     }
-    return Optional.of(new KuduRecordConverter(columnsToFieldTypes, fieldsToColumns, schema));
+    return new KuduRecordConverter(columnsToFieldTypes, fieldsToColumns, schema);
   }
 
   @Override
@@ -303,6 +313,7 @@ public class KuduTarget extends BaseTarget {
       if (!batch.getRecords().hasNext()) {
         // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
         cacheCleaner.periodicCleanUp();
+        recordBuilderCacheCleaner.periodicCleanUp();
       }
 
       writeBatch(batch);
@@ -347,8 +358,10 @@ public class KuduTarget extends BaseTarget {
       Iterator<Record> it = partitions.get(tableName).iterator();
 
       KuduTable table;
+      KuduRecordConverter recordConverter;
       try {
         table = kuduTables.get(tableName);
+        recordConverter = recordConverters.get(table);
       } catch (ExecutionException ex) {
         // if table doesn't exist, send records to the error handler and continue
         while (it.hasNext()) {
@@ -356,12 +369,6 @@ public class KuduTarget extends BaseTarget {
         }
         continue;
       }
-
-      Optional<KuduRecordConverter> kuduRecordConverter = createKuduRecordConverter(table);
-      if (!kuduRecordConverter.isPresent()) {
-        throw new StageException(Errors.KUDU_11);
-      }
-      KuduRecordConverter recordConverter = kuduRecordConverter.get();
 
       while (it.hasNext()) {
         Record record = null;
