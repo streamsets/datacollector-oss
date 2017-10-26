@@ -18,18 +18,30 @@ package com.streamsets.datacollector.record;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.util.EscapeUtil;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PathElement {
 
-  enum Type {ROOT, MAP, LIST }
+  public enum Type {
+    ROOT,
+    MAP,
+    LIST,
+    FIELD_EXPRESSION
+  }
 
   private final Type type;
   private final String name;
   private final int idx;
 
+  public static final String WILDCARD_ANY_LENGTH = "*";
+  public static final String WILDCARD_SINGLE_CHAR = "?";
+
+  public static final int WILDCARD_INDEX_ANY_LENGTH = -1;
+  public static final int WILDCARD_INDEX_SINGLE_CHAR = -2;
   public static final PathElement ROOT = new PathElement(Type.ROOT, null, 0);
 
   private PathElement(Type type, String name, int idx) {
@@ -44,6 +56,10 @@ public class PathElement {
 
   public static PathElement createArrayElement(int idx) {
     return new PathElement(Type.LIST, null, idx);
+  }
+
+  public static PathElement createFieldExpressionElement(String expression) {
+    return new PathElement(Type.FIELD_EXPRESSION, expression, 0);
   }
 
   public Type getType() {
@@ -67,6 +83,8 @@ public class PathElement {
         return Utils.format("PathElement[type=MAP, name='{}']", getName());
       case LIST:
         return Utils.format("PathElement[type=LIST, idx='{}']", getIndex());
+      case FIELD_EXPRESSION:
+        return Utils.format("PathElement[type=FIELD_EXPRESSION, expression='{}']", getName());
       default:
         throw new IllegalStateException();
     }
@@ -76,11 +94,24 @@ public class PathElement {
   public static final String INVALID_FIELD_PATH_REASON = "Invalid fieldPath '{}' at char '{}' ({})";
   public static final String REASON_EMPTY_FIELD_NAME = "field name can't be empty";
   public static final String REASON_INVALID_START = "field path needs to start with '[' or '/'";
-  public static final String REASON_NOT_A_NUMBER = "only numbers and '*' allowed between '[' and ']'";
+  public static final String REASON_NOT_VALID_EXPR = "only numbers, the '*' character, or a field path EL expression " +
+      "is allowed between '[' and ']'";
   public static final String REASON_QUOTES = "quotes are not properly closed";
-  public static final String INVALID_FIELD_PATH_NUMBER = "Invalid fieldPath '{}' at char '{}' ('{}' needs to be a number or '*')";
+  public static final String INVALID_FIELD_PATH_NUMBER = "Invalid fieldPath '{}' at char '{}' ('{}' needs to be a" +
+      " number, the '*' character, or a field path EL expression)";
 
-  public static List<PathElement> parse(String fieldPath, boolean isSingleQuoteEscaped) {
+  public static List<PathElement> parse(
+      String fieldPath,
+      boolean isSingleQuoteEscaped
+  ) {
+    return parse(fieldPath, isSingleQuoteEscaped, false);
+  }
+
+  public static List<PathElement> parse(
+      String fieldPath,
+      boolean isSingleQuoteEscaped,
+      boolean includeFieldPathExpressionElements
+  ) {
     fieldPath =
         EscapeUtil.standardizePathForParse(
             Preconditions.checkNotNull(fieldPath, "fieldPath cannot be null"),
@@ -92,41 +123,41 @@ public class PathElement {
       char chars[] = fieldPath.toCharArray();
       boolean requiresStart = true;
       boolean requiresName = false;
-      boolean requiresIndex = false;
+      int squareBracketsDepth = 0;
       boolean singleQuote = false;
       boolean doubleQuote = false;
       StringBuilder collector = new StringBuilder();
       int pos = 0;
       for (; pos < chars.length; pos++) {
-        if (requiresStart) {
+        final char ch = chars[pos];
+        if (requiresStart && squareBracketsDepth == 0) {
           requiresStart = false;
           requiresName = false;
-          requiresIndex = false;
           singleQuote = false;
           doubleQuote = false;
-          switch (chars[pos]) {
+          switch (ch) {
             case '/':
               requiresName = true;
               break;
             case '[':
-              requiresIndex = true;
+              squareBracketsDepth++;
               break;
             default:
               throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, 0, REASON_INVALID_START));
           }
         } else {
           if (requiresName) {
-            switch (chars[pos]) {
+            switch (ch) {
               case '\'':
                 if(pos == 0 || chars[pos - 1] != '\\') {
                   if(!doubleQuote) {
                     singleQuote = !singleQuote;
                   } else {
-                    collector.append(chars[pos]);
+                    collector.append(ch);
                   }
                 } else {
                   collector.setLength(collector.length() - 1);
-                  collector.append(chars[pos]);
+                  collector.append(ch);
                 }
                 break;
               case '"':
@@ -134,28 +165,40 @@ public class PathElement {
                   if(!singleQuote) {
                     doubleQuote = !doubleQuote;
                   } else {
-                    collector.append(chars[pos]);
+                    collector.append(ch);
                   }
                 } else {
                   collector.setLength(collector.length() - 1);
-                  collector.append(chars[pos]);
+                  collector.append(ch);
                 }
                 break;
               case '/':
               case '[':
               case ']':
                 if(singleQuote || doubleQuote) {
-                  collector.append(chars[pos]);
+                  collector.append(ch);
                 } else {
+                  requiresName = false;
+                  if (ch == '[') {
+                    if (squareBracketsDepth++ > 0) {
+                      collector.append(ch);
+                    }
+                  } else if (ch == ']') {
+                    if (--squareBracketsDepth > 0) {
+                      collector.append(ch);
+                    }
+                  }
+
                   if (chars.length <= pos + 1) {
                     throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, pos, REASON_EMPTY_FIELD_NAME));
                   }
-                  if (chars[pos] == chars[pos + 1]) {
-                    collector.append(chars[pos]);
+                  if (ch == chars[pos + 1]) {
+                    collector.append(ch);
                     pos++;
                   } else {
                     elements.add(PathElement.createMapElement(collector.toString()));
                     requiresStart = true;
+                    squareBracketsDepth = 0;
                     collector.setLength(0);
                     //not very kosher, we need to replay the current char as start of path element
                     pos--;
@@ -163,10 +206,10 @@ public class PathElement {
                 }
                 break;
               default:
-                collector.append(chars[pos]);
+                collector.append(ch);
             }
-          } else if (requiresIndex) {
-            switch (chars[pos]) {
+          } else if (squareBracketsDepth > 0) {
+            switch (ch) {
               case '0':
               case '1':
               case '2':
@@ -178,28 +221,50 @@ public class PathElement {
               case '8':
               case '9':
               case '*': //wildcard character
-                collector.append(chars[pos]);
+                collector.append(ch);
                 break;
               case ']':
-                String indexString = collector.toString();
-                try {
-                  int index = 0;
-                  if(!"*".equals(indexString)) {
-                    index = Integer.parseInt(indexString);
-                  }
-                  if (index >= 0) {
-                    elements.add(PathElement.createArrayElement(index));
+                if (--squareBracketsDepth == 0) {
+                  String bracketedString = collector.toString();
+                  if (FieldPathExpressionUtil.isFieldPathExpression(bracketedString)) {
+                    if (includeFieldPathExpressionElements) {
+                      elements.add(createFieldExpressionElement(bracketedString));
+                    }
                     requiresStart = true;
+                    squareBracketsDepth = 0;
                     collector.setLength(0);
                   } else {
-                    throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
+                    final boolean singleCharWildcard = WILDCARD_SINGLE_CHAR.equals(bracketedString);
+                    final boolean wildcardAnyLength = WILDCARD_ANY_LENGTH.equals(bracketedString);
+                    final boolean wildcardIndex = singleCharWildcard || wildcardAnyLength;
+                    if (wildcardIndex || StringUtils.isNumeric(bracketedString)) {
+                      // wildcard or numeric index
+                      try {
+                        int index = singleCharWildcard ? WILDCARD_INDEX_SINGLE_CHAR : WILDCARD_INDEX_ANY_LENGTH;
+                        if(!wildcardIndex) {
+                          index = Integer.parseInt(bracketedString);
+                        }
+                        elements.add(createArrayElement(index));
+                        requiresStart = true;
+                        squareBracketsDepth = 0;
+                        collector.setLength(0);
+                      } catch (NumberFormatException ex) {
+                        throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_NUMBER, fieldPath, pos, bracketedString), ex);
+                      }
+                    } else {
+                      throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, pos, REASON_NOT_VALID_EXPR));
+                    }
                   }
-                } catch (NumberFormatException ex) {
-                  throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_NUMBER, fieldPath, pos, indexString), ex);
+                } else {
+                  collector.append(ch);
                 }
                 break;
+              case '[':
+                squareBracketsDepth++;
+                // fall through
               default:
-                throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, pos, REASON_NOT_A_NUMBER));
+                collector.append(ch);
+                break;
             }
           }
         }

@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class ListFieldBuilder extends BaseFieldBuilder<ListFieldBuilder> {
   private final String field;
@@ -99,7 +100,16 @@ public class ListFieldBuilder extends BaseFieldBuilder<ListFieldBuilder> {
 
   @Override
   public BaseFieldBuilder<? extends BaseFieldBuilder> end() {
-    parentBuilder.handleEndChildField(field, Field.create(Field.Type.LIST, fields));
+    return end(new String[0]);
+  }
+
+  @Override
+  public BaseFieldBuilder<? extends BaseFieldBuilder> end(String... attributes) {
+    final Field field = Field.create(Field.Type.LIST, fields);
+    for (Map.Entry<String, String> attr : buildAttributeMap(attributes).entrySet()) {
+      field.setAttribute(attr.getKey(), attr.getValue());
+    }
+    parentBuilder.handleEndChildField(this.field, field);
     return parentBuilder;
   }
 }

@@ -17,6 +17,14 @@ package com.streamsets.testing.fieldbuilder;
 
 import com.streamsets.pipeline.api.Field;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.AbstractMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public abstract class BaseFieldBuilder<BT extends BaseFieldBuilder> {
   protected abstract BT getInstance();
 
@@ -28,7 +36,22 @@ public abstract class BaseFieldBuilder<BT extends BaseFieldBuilder> {
     return new ListFieldBuilder(name, this);
   }
 
+  public static Map<String, String> buildAttributeMap(String... attributes) {
+    if (attributes == null || attributes.length == 0) {
+      return Collections.emptyMap();
+    }
+    List<String> list = Arrays.asList(attributes);
+    Map<String, String> attrMap = IntStream.range(1, list.size())
+        .filter(i -> (i + 1) % 2 == 0)
+        .mapToObj(i -> new AbstractMap.SimpleEntry<>(list.get(i - 1), list.get(i)))
+        .collect(Collectors.toMap(o -> o.getKey(), o -> o.getValue()));
+    return attrMap;
+  }
+
   protected abstract void handleEndChildField(String fieldName, Field fieldValue);
 
   public abstract BaseFieldBuilder<? extends BaseFieldBuilder> end();
+
+  public abstract BaseFieldBuilder<? extends BaseFieldBuilder> end(String... attributes);
+
 }

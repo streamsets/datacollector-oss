@@ -309,6 +309,7 @@ public class RecordImpl implements Record, Cloneable {
               }
             }
             break;
+          case FIELD_EXPRESSION:
           default:
             break;
         }
@@ -349,6 +350,7 @@ public class RecordImpl implements Record, Cloneable {
           case LIST:
             deleted = fields.get(fieldPos - 1).getValueAsList().remove(element.getIndex());
             break;
+          case FIELD_EXPRESSION:
           default:
             throw new IllegalStateException("Unexpected field type " + element.getType());
         }
@@ -561,6 +563,7 @@ public class RecordImpl implements Record, Cloneable {
             fieldToReplace = parentField.getValueAsList().set(elementIndex, newField);
           }
           break;
+        case FIELD_EXPRESSION:
         case ROOT:
           break;
       }

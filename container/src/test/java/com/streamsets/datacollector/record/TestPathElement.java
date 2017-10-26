@@ -21,6 +21,10 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+
 public class TestPathElement {
 
   @Test
@@ -85,7 +89,7 @@ public class TestPathElement {
     Assert.assertEquals(4, parse.size());
     Assert.assertEquals(PathElement.ROOT, parse.get(0));
     Assert.assertEquals(null, parse.get(1).getName());
-    Assert.assertEquals(0, parse.get(1).getIndex());
+    Assert.assertEquals(PathElement.WILDCARD_INDEX_ANY_LENGTH, parse.get(1).getIndex());
     Assert.assertEquals(PathElement.Type.LIST,  parse.get(1).getType());
     Assert.assertEquals("China", parse.get(2).getName());
     Assert.assertEquals(PathElement.Type.MAP,  parse.get(2).getType());
@@ -114,19 +118,14 @@ public class TestPathElement {
   }
 
   @Test
-  public void testInvalidNumber() {
-    try {
-      PathElement.parse("[0*8]", true);
-      Assert.fail("Should fail.");
-    } catch (IllegalArgumentException e) {
-      Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains("'0*8' needs to be a number"));
-    }
-
-    try {
-      PathElement.parse("[Nan]", true);
-      Assert.fail("Should fail.");
-    } catch (IllegalArgumentException e) {
-      Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains(PathElement.REASON_NOT_A_NUMBER));
+  public void testInvalidExpressions() {
+    for (String expr : new String[] {"[0*8]", "[Nan]", "[{invalid_EL_1}]", "[${invalid_EL_2)]"}) {
+      try {
+        PathElement.parse(expr, true);
+        Assert.fail("Should fail.");
+      } catch (IllegalArgumentException e) {
+        Assert.assertTrue(Utils.format("Message: {}", e.getMessage()), e.getMessage().contains(PathElement.REASON_NOT_VALID_EXPR));
+      }
     }
   }
 
@@ -140,4 +139,30 @@ public class TestPathElement {
     }
   }
 
+  @Test
+  public void testFieldExpression() {
+    final String elExpression = "${f:type() == 'STRING' and str:matches(f:value(), '[0-9]*')}";
+    final String expression = String.format("/sensor*[%s]", elExpression);
+
+    // first, parse using the overload that simulates previous behavior (omitting field expressions)
+    List<PathElement> pathElements = PathElement.parse(
+        expression,
+        false
+    );
+    assertThat(pathElements, hasSize(2));
+    assertThat(pathElements.get(0).getType(), equalTo(PathElement.Type.ROOT));
+    assertThat(pathElements.get(1).getType(), equalTo(PathElement.Type.MAP));
+
+    // parse again, but this time including field expressions (which should become the "name")
+    List<PathElement> pathElementsWithExpression = PathElement.parse(
+        expression,
+        false,
+        true
+    );
+    assertThat(pathElementsWithExpression, hasSize(3));
+    assertThat(pathElementsWithExpression.get(0).getType(), equalTo(PathElement.Type.ROOT));
+    assertThat(pathElementsWithExpression.get(1).getType(), equalTo(PathElement.Type.MAP));
+    assertThat(pathElementsWithExpression.get(2).getType(), equalTo(PathElement.Type.FIELD_EXPRESSION));
+    assertThat(pathElementsWithExpression.get(2).getName(), equalTo(elExpression));
+  }
 }

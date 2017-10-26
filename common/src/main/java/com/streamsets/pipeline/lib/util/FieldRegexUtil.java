@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.lib.util;
 
-
+import com.streamsets.datacollector.record.PathElement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,10 +43,14 @@ public class FieldRegexUtil {
   private static final Pattern MAP_WILDCARD_FIELD_PATTERN = Pattern.compile("(\\/\\(?)\\*(\\)?)");
   private static final String MAP_WILD_CARD_REPLACEMENT = "$1[^\\\\/\\\\[]+$2";
 
+  private static final String BRACKETED_WILDCARD_ANY_LENGTH = "[" + PathElement.WILDCARD_ANY_LENGTH + "]";
   private FieldRegexUtil() {}
 
   public static boolean hasWildCards(String fieldPath) {
-    if(fieldPath.contains("[*]") || fieldPath.contains("/*") || fieldPath.contains("*") || fieldPath.contains("?")) {
+    if(
+        fieldPath.contains(BRACKETED_WILDCARD_ANY_LENGTH) || fieldPath.contains("/" + PathElement.WILDCARD_ANY_LENGTH)
+        || fieldPath.contains(PathElement.WILDCARD_ANY_LENGTH) || fieldPath.contains(PathElement.WILDCARD_SINGLE_CHAR)
+    ) {
       return true;
     }
     return false;
@@ -61,13 +65,7 @@ public class FieldRegexUtil {
     //Reference to * in array index must be replaced by \d+
 
 
-    fieldPath = fieldPath
-        .replace("[*]", "[\\d+]")
-        .replace("[", "\\[")
-        .replace("]", "\\]")
-        .replaceAll("\\/\\*", "/([^\\\\/\\\\[]+)")
-        .replaceAll(Pattern.quote("*"), "\\\\w+")
-        .replaceAll(Pattern.quote("?"), "\\\\w");
+    fieldPath = transformFieldPathRegex(fieldPath);
 
     Pattern pattern = Pattern.compile(fieldPath);
     List<String> matchingFieldPaths = new ArrayList<>();
@@ -78,6 +76,16 @@ public class FieldRegexUtil {
       }
     }
     return matchingFieldPaths;
+  }
+
+  public static String transformFieldPathRegex(String fieldPath) {
+    return fieldPath
+        .replace(BRACKETED_WILDCARD_ANY_LENGTH, "[\\d+]")
+        .replace("[", "\\[")
+        .replace("]", "\\]")
+        .replaceAll("\\/\\*", "/([^\\\\/\\\\[]+)")
+        .replaceAll(Pattern.quote(PathElement.WILDCARD_ANY_LENGTH), "\\\\w+")
+        .replaceAll(Pattern.quote(PathElement.WILDCARD_SINGLE_CHAR), "\\\\w");
   }
 
   private static String patchUpSpecialCases(String fieldPath, Pattern pattern, String replaceMentString) {
@@ -107,4 +115,5 @@ public class FieldRegexUtil {
     );
     return returnPath;
   }
+
 }
