@@ -61,6 +61,7 @@ import com.streamsets.datacollector.runner.production.SourceOffsetUpgrader;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.DisconnectedSecurityUtils;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.http.AbstractSSOService;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
@@ -492,20 +493,10 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             remoteDataCollector.syncAcl(((SyncAclEvent) event).getAcl());
             break;
           case SSO_DISCONNECTED_MODE_CREDENTIALS:
-            DisconnectedSsoCredentialsEvent disconectedSsoCredentialsEvent = (DisconnectedSsoCredentialsEvent) event;
-            try (OutputStream os = disconnectedCredentialsDataStore.getOutputStream()) {
-              ObjectMapperFactory.get().writeValue(os, disconectedSsoCredentialsEvent);
-              disconnectedCredentialsDataStore.commit(os);
-            } catch (IOException ex) {
-              LOG.warn(
-                  "Disconnected credentials maybe out of sync, could not write to '{}': {}",
-                  disconnectedCredentialsDataStore.getFile(),
-                  ex.toString(),
-                  ex
-              );
-            } finally {
-              disconnectedCredentialsDataStore.release();
-            }
+            DisconnectedSecurityUtils.writeDisconnectedCredentials(
+                disconnectedCredentialsDataStore,
+                (DisconnectedSsoCredentialsEvent) event
+            );
             break;
           default:
             ackEventMessage = Utils.format("Unrecognized event: '{}'", eventType);

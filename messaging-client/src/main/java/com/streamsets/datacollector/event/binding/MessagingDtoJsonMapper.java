@@ -39,6 +39,7 @@ import com.streamsets.datacollector.event.json.PipelineStatusEventsJson;
 import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.datacollector.event.json.SyncAclEventJson;
+import com.streamsets.lib.security.http.DisconnectedSecurityInfo;
 import fr.xebia.extras.selma.Mapper;
 import fr.xebia.extras.selma.Maps;
 import fr.xebia.extras.selma.Selma;
@@ -95,6 +96,8 @@ public abstract class MessagingDtoJsonMapper {
   public abstract SDCInfoEventJson toSDCInfoEventJson(SDCInfoEvent sdcInfoEvent);
 
   public abstract SyncAclEventJson toSyncAclEventJson(SyncAclEvent syncAclEvent);
+
+  public abstract DisconnectedSsoCredentialsEvent toJson(DisconnectedSecurityInfo info);
 
   public abstract SyncAclEvent asSyncAclEventDto(SyncAclEventJson syncAclEvent);
 

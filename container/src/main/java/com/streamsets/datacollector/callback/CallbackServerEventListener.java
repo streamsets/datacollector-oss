@@ -15,9 +15,13 @@
  */
 package com.streamsets.datacollector.callback;
 
+import com.streamsets.datacollector.event.dto.DisconnectedSsoCredentialsEvent;
+import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.DisconnectedSecurityUtils;
+import com.streamsets.lib.security.http.DisconnectedSSOManager;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
@@ -29,6 +33,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.util.Map;
 
 class CallbackServerEventListener {
@@ -84,8 +89,15 @@ class CallbackServerEventListener {
       }
       Response response = request.post(Entity.json(BeanHelper.wrapCallbackInfo(callbackInfo)));
       if (response.getStatus() != 200) {
-        throw new RuntimeException("Failed : HTTP error code : "
-            + response.getStatus());
+        throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+      }
+      if (runtimeInfo.isDPMEnabled()) {
+        DisconnectedSsoCredentialsEvent disconnectedSsoCredentialsEvent = response.readEntity(
+            DisconnectedSsoCredentialsEvent.class);
+        DisconnectedSecurityUtils.writeDisconnectedCredentials(new DataStore(new File(
+            runtimeInfo.getDataDir(),
+            DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE
+        )), disconnectedSsoCredentialsEvent);
       }
     } catch (Throwable ex) { //TODO - check why jersey throws the following error org.glassfish.jersey.internal.ServiceConfigurationError ( java.util.zip.ZipException: error in opening zip file)
       LOG.warn("Error while calling callback to Callback Server , {}", ex.toString(), ex);

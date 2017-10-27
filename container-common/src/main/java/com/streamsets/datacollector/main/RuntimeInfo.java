@@ -51,7 +51,7 @@ public abstract class RuntimeInfo {
   public static final String STATIC_WEB_DIR = ".static-web.dir";
   public static final String TRANSIENT_ENVIRONMENT = "sdc.transient-env";
   public static final String UNDEF = "UNDEF";
-  public static final String CALLBACK_URL = "/public-rest/v1/cluster/callback";
+  public static final String CALLBACK_URL = "/public-rest/v1/cluster/callbackWithResponse";
 
 
   public static final String SECURITY_PREFIX = "java.security.";
