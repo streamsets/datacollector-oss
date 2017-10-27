@@ -128,6 +128,21 @@
               </descriptors>
             </configuration>
           </execution>
+          <execution>
+            <id>legacy-libs</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-${project.version}-legacy</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/legacy-libs.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>
