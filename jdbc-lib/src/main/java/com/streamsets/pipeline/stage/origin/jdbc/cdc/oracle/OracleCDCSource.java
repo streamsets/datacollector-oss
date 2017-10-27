@@ -229,7 +229,7 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private static final String GET_COMMIT_TS = "SELECT COMMIT_TIMESTAMP FROM V$LOGMNR_CONTENTS";
+  private static final String GET_TIMESTAMPS_FROM_LOGMNR_CONTENTS = "SELECT TIMESTAMP FROM V$LOGMNR_CONTENTS ORDER BY TIMESTAMP";
   private static final String OFFSET_DELIM = "::";
   private static final int RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED = 1306;
   private static final String NLS_DATE_FORMAT = "ALTER SESSION SET NLS_DATE_FORMAT = " + DateTimeColumnHandler.DT_SESSION_FORMAT;
@@ -274,7 +274,7 @@ public class OracleCDCSource extends BaseSource {
   private PreparedStatement tsStatement;
   private PreparedStatement numericFormat;
   private PreparedStatement switchContainer;
-  private PreparedStatement getCommitTimestamp;
+  private PreparedStatement getTimestampsFromLogMnrContents;
   private PreparedStatement tsTzStatement;
 
   private final ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
@@ -951,10 +951,11 @@ public class OracleCDCSource extends BaseSource {
     return startDate;
   }
 
-  private LocalDateTime getDateForSCN(BigDecimal commitSCN) throws SQLException {
+  private LocalDateTime getDateForSCN(BigDecimal scn) throws SQLException {
     refreshed = true; // start commit window before the given time
-    startLogMinerUsingGivenSCNs(commitSCN, commitSCN);
-    try (ResultSet rs = getCommitTimestamp.executeQuery()) {
+    startLogMinerUsingGivenSCNs(scn, getEndingSCN());
+    getTimestampsFromLogMnrContents.setMaxRows(1);
+    try (ResultSet rs = getTimestampsFromLogMnrContents.executeQuery()) {
       if (rs.next()) {
         LocalDateTime date = rs.getTimestamp(1).toLocalDateTime();
         if (currentResultSet.isPresent()) {
@@ -965,7 +966,7 @@ public class OracleCDCSource extends BaseSource {
       }
     }
     throw new IllegalStateException(Utils.format(
-        "SCN: '{}' is not valid and cannot be found in LogMiner logs", commitSCN.toPlainString()));
+        "SCN: '{}' is not valid and cannot be found in LogMiner logs", scn.toPlainString()));
   }
 
   private LocalDateTime getEndTimeForStartTime(LocalDateTime startTime) {
@@ -1326,7 +1327,7 @@ public class OracleCDCSource extends BaseSource {
     startLogMnrForResume = connection.prepareCall(
         Utils.format(logMinerProcedure, "STARTSCN => ?", "ENDTIME => ?"));
     endLogMnr = connection.prepareCall("BEGIN DBMS_LOGMNR.END_LOGMNR; END;");
-    getCommitTimestamp = connection.prepareStatement(GET_COMMIT_TS);
+    getTimestampsFromLogMnrContents = connection.prepareStatement(GET_TIMESTAMPS_FROM_LOGMNR_CONTENTS);
     LOG.debug(REDO_SELECT_QUERY_FOR_START, startString);
     LOG.debug(REDO_SELECT_QUERY_FOR_RESUME, resumeString);
   }
