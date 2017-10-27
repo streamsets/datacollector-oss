@@ -178,6 +178,7 @@
               "xmail.password",
               "xmail.from.address",
               "monitor.memory",
+              "max.stage.private.classloaders",
               "kerberos.client.enabled",
               "preview.maxBatchSize",
               "preview.maxBatches",
@@ -776,6 +777,13 @@
           "description": "Monitor memory of stages. Use only to test real-world load usage in test or production environments.",
           "type": "boolean",
           "default": "false"
+        },
+        {
+          "name": "max.stage.private.classloaders",
+          "label": "Maximum number of private classloaders",
+          "description": "Stage that have configuration singletons (i.e. Hadoop FS & Hbase) require private classloaders.",
+          "type": "long",
+          "default": "50"
         },
         {
           "name": "runner.thread.pool.size",
