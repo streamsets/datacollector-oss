@@ -242,8 +242,10 @@ public class GoogleCloudStorageSource extends BaseSource {
   }
 
   private boolean isBlobEligible(Blob blob, long minTimeStamp) {
+    String blobName = blob.getName();
+    String prefixToMatch =  blobName.substring(gcsOriginConfig.commonPrefix.length(), blobName.length());
     return blob.getSize() > 0 && blob.getUpdateTime() > minTimeStamp
-        && antPathMatcher.match(gcsOriginConfig.prefixPattern, blob.getName());
+        && antPathMatcher.match(gcsOriginConfig.prefixPattern, prefixToMatch);
   }
 
   private long getMinTimestampFromOffset(String offset) {
