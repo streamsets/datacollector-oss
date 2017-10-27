@@ -19,6 +19,17 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.jms.config.BaseJmsConfig;
 
 public class JmsSourceConfig extends BaseJmsConfig {
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "JMS Destination Name",
+      description = "Queue or topic name",
+      displayPosition = 50,
+      group = "JMS"
+  )
+  public String destinationName;
+
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.STRING,

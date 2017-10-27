@@ -121,7 +121,8 @@ public class JmsTarget extends BaseTarget {
           dataFormat,
           dataFormatConfig,
           credentialsConfig,
-          jmsTargetConfig
+          jmsTargetConfig,
+          getContext()
       );
       issues.addAll(jmsMessageProducer.init(getContext()));
     }

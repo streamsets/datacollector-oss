@@ -53,16 +53,6 @@ public class BaseJmsConfig {
   public String providerURL;
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "JMS Destination Name",
-      description = "Queue or topic name",
-      displayPosition = 50,
-      group = "JMS"
-  )
-  public String destinationName;
-
-  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
       defaultValue = "UNKNOWN",

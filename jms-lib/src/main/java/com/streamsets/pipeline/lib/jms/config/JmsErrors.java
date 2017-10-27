@@ -35,6 +35,7 @@ public enum JmsErrors implements ErrorCode {
   JMS_11("Unable to create consumer: {}"),
   JMS_12("Could not write record: {}"),
   JMS_13("Could not produce message: {}"),
+  JSM_14("Can't create producer: {}"),
   ;
   private final String msg;
 

@@ -15,9 +15,11 @@
  */
 package com.streamsets.pipeline.stage.destination.jms;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -174,7 +176,9 @@ public class TestJmsTarget {
         new JmsMessageProducerFactoryImpl(),
         new InitialContextFactory()
     );
-    return new TargetRunner.Builder(JmsTarget.class, destination).build();
+    return new TargetRunner.Builder(JmsDTarget.class, destination)
+      .setOnRecordError(OnRecordError.TO_ERROR)
+      .build();
   }
 
   private void runInit(String expectedError) {
@@ -202,12 +206,6 @@ public class TestJmsTarget {
   }
 
   @Test
-  public void testInvalidDestination() throws Exception {
-    jmsTargetConfig.destinationName = "invalid";
-    runInit("JMS_05");
-  }
-
-  @Test
   public void testInvalidCreds() throws Exception {
     credentialsConfig.username = () -> "invalid";
     runInit("JMS_04");
@@ -220,12 +218,58 @@ public class TestJmsTarget {
   }
 
   @Test
+  public void testNonExistingDestination() throws Exception {
+    dataFormat = DataFormat.TEXT;
+    dataFormatConfig.textFieldPath = "/text";
+    dataFormatConfig.textRecordSeparator = RECORD_SEPERATOR;
+    jmsTargetConfig.destinationName = "guess-what-i-dont-exists";
+
+    Record record = generateRecordPayload("text", Field.Type.STRING);
+    List<String> rows;
+    TargetRunner runner = createRunner();
+    runner.runInit();
+    try {
+      runner.runWrite(ImmutableList.of(record));
+      rows = getQueue();
+
+      Assert.assertEquals(1, runner.getErrorRecords().size());
+      Assert.assertEquals(0, rows.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testDestinationExpression() throws Exception {
+    dataFormat = DataFormat.TEXT;
+    dataFormatConfig.textFieldPath = "/text";
+    dataFormatConfig.textRecordSeparator = RECORD_SEPERATOR;
+    jmsTargetConfig.destinationName = "${record:attribute('destination')}";
+
+    Record record = generateRecordPayload("text", Field.Type.STRING);
+    record.getHeader().setAttribute("destination", JNDI_PREFIX + DESTINATION_NAME);
+    List<String> rows;
+    TargetRunner runner = createRunner();
+    runner.runInit();
+    try {
+      runner.runWrite(ImmutableList.of(record));
+
+      rows = getQueue();
+    } finally {
+      runner.runDestroy();
+    }
+
+    Assert.assertNotNull(rows);
+    Assert.assertEquals(ImmutableList.of(record.get("/text").getValueAsString() + RECORD_SEPERATOR), rows);
+  }
+
+  @Test
   public void testTextSuccess() throws Exception {
     dataFormat = DataFormat.TEXT;
     dataFormatConfig.textFieldPath = "/text";
     dataFormatConfig.textRecordSeparator = RECORD_SEPERATOR;
 
-    List<Record> recordsList = generateRecordPayload("text", Field.Type.STRING);
+    List<Record> recordsList = ImmutableList.of(generateRecordPayload("text", Field.Type.STRING));
     List<String> rows, expected;
     TargetRunner runner = createRunner();
     runner.runInit();
@@ -250,7 +294,7 @@ public class TestJmsTarget {
     dataFormat = DataFormat.BINARY;
     dataFormatConfig.binaryFieldPath = "/bin";
 
-    List<Record> recordsList = generateRecordPayload("bin", Field.Type.BYTE_ARRAY);
+    List<Record> recordsList = ImmutableList.of(generateRecordPayload("bin", Field.Type.BYTE_ARRAY));
     List<String> rows, expected;
     TargetRunner runner = createRunner();
     runner.runInit();
@@ -307,7 +351,7 @@ public class TestJmsTarget {
     dataFormatConfig.jsonMode = JsonMode.ARRAY_OBJECTS;
     ObjectMapper objectMapper = new ObjectMapper();
 
-    List<Record> recordsList = generateRecordPayload("text", Field.Type.STRING);
+    List<Record> recordsList = ImmutableList.of(generateRecordPayload("text", Field.Type.STRING));
     List<String> rows;
     TargetRunner runner = createRunner();
     runner.runInit();
@@ -335,7 +379,7 @@ public class TestJmsTarget {
     dataFormatConfig.csvReplaceNewLinesString = "";
     dataFormatConfig.charset = "UTF-8";
 
-    List<Record> recordsList = generateRecordPayload("text", Field.Type.STRING);
+    List<Record> recordsList = ImmutableList.of(generateRecordPayload("text", Field.Type.STRING));
     List<String> rows;
     TargetRunner runner = createRunner();
     runner.runInit();
@@ -432,7 +476,7 @@ public class TestJmsTarget {
     runner.runDestroy();
   }
 
-  private List<Record> generateRecordPayload(String fieldName, Field.Type type) {
+  private Record generateRecordPayload(String fieldName, Field.Type type) {
     Object val1 = (type == Field.Type.STRING ? "hello" : "hello".getBytes());
     Object val2 = (type == Field.Type.STRING ? "world" : "world".getBytes());
     Object val3 = (type == Field.Type.STRING ? "!?.:;" : "!?.:;".getBytes());
@@ -444,6 +488,6 @@ public class TestJmsTarget {
     Record record1 = RecordCreator.create("s", "s:1");
     record1.set(Field.createListMap(r1));
 
-    return Arrays.asList(record1);
+    return record1;
   }
 }

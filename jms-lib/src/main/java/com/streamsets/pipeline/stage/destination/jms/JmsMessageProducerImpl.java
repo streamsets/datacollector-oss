@@ -15,19 +15,28 @@
  */
 package com.streamsets.pipeline.stage.destination.jms;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.jms.config.JmsErrors;
 import com.streamsets.pipeline.lib.jms.config.JmsGroups;
 import com.streamsets.pipeline.stage.common.CredentialsConfig;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,28 +50,32 @@ import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.naming.NameNotFoundException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class JmsMessageProducerImpl implements JmsMessageProducer {
   private static final Logger LOG = LoggerFactory.getLogger(JmsMessageProducerImpl.class);
   private static final String CONN_FACTORY_CONFIG_NAME = "jmsTargetConfig.connectionFactory";
-  private static final String DEST_NAME_CONFIG_NAME = "jmsTargetConfig.destinationName";
   private final InitialContext initialContext;
   private final ConnectionFactory connectionFactory;
   private final DataFormat dataFormat;
   private final DataGeneratorFormatConfig dataFormatConfig;
   private final CredentialsConfig credentialsConfig;
   private final JmsTargetConfig jmsTargetConfig;
+  private final Stage.Context context;
+  private ELEval destinationEval;
+  private ErrorRecordHandler errorHandler;
   private Connection connection;
   private Session session;
   private Destination destination;
-  private MessageProducer messageProducer;
+  private LoadingCache<String, MessageProducer> messageProducers;
 
   public JmsMessageProducerImpl(
     InitialContext initialContext,
@@ -70,14 +83,16 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
     DataFormat dataFormat,
     DataGeneratorFormatConfig dataFormatConfig,
     CredentialsConfig credentialsConfig,
-    JmsTargetConfig jmsTargetConfig)
-  {
+    JmsTargetConfig jmsTargetConfig,
+    Stage.Context context
+  ) {
     this.initialContext = initialContext;
     this.connectionFactory = connectionFactory;
     this.dataFormat = dataFormat;
     this.dataFormatConfig = dataFormatConfig;
     this.credentialsConfig = credentialsConfig;
     this.jmsTargetConfig = jmsTargetConfig;
+    this.context = context;
   }
 
   @Override
@@ -125,35 +140,31 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
       }
     }
     if(issues.isEmpty()) {
-      try {
-        switch (jmsTargetConfig.destinationType) {
-          case UNKNOWN:
-            destination = (Destination) initialContext.lookup(jmsTargetConfig.destinationName);
-            break;
-          case QUEUE:
-            destination = session.createQueue(jmsTargetConfig.destinationName);
-            break;
-          case TOPIC:
-            destination = session.createTopic(jmsTargetConfig.destinationName);
-            break;
-          default:
-            throw new IllegalArgumentException(Utils.format("Unknown destination type: {}", jmsTargetConfig.destinationName));
-        }
-      } catch (JMSException | NamingException ex) {
-        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), DEST_NAME_CONFIG_NAME, JmsErrors.JMS_05,
-            jmsTargetConfig.destinationName, String.valueOf(ex)));
-        LOG.info(Utils.format(JmsErrors.JMS_05.getMessage(), jmsTargetConfig.destinationName,
-            String.valueOf(ex)), ex);
-      }
-    }
-    if(issues.isEmpty()) {
-      try {
-        messageProducer = session.createProducer(destination);
-      } catch (JMSException ex) {
-        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), CONN_FACTORY_CONFIG_NAME, JmsErrors.JMS_11,
-            ex.toString()));
-        LOG.info(Utils.format(JmsErrors.JMS_11.getMessage(), ex.toString()), ex);
-      }
+      messageProducers = CacheBuilder.newBuilder()
+        .expireAfterAccess(15, TimeUnit.MINUTES)
+        .build(new CacheLoader<String, MessageProducer>() {
+          @Override
+          public MessageProducer load(String key) throws Exception {
+            switch (jmsTargetConfig.destinationType) {
+              case UNKNOWN:
+                destination = (Destination) initialContext.lookup(key);
+                break;
+              case QUEUE:
+                destination = session.createQueue(key);
+                break;
+              case TOPIC:
+                destination = session.createTopic(key);
+                break;
+              default:
+                throw new IllegalArgumentException(Utils.format("Unknown destination type: {}", jmsTargetConfig.destinationName));
+            }
+
+            return session.createProducer(destination);
+          }
+        });
+
+      destinationEval = context.createELEval("destinationName");
+      errorHandler = new DefaultErrorRecordHandler(context);
     }
 
     return issues;
@@ -167,22 +178,25 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
     int count = 0;
     while (records.hasNext()) {
       baos.reset();
+      Record record = records.next();
+
       try (DataGenerator generator = generatorFactory.getGenerator(baos)) {
-        generator.write(records.next());
+        generator.write(record);
       } catch (IOException e) {
         LOG.error("Failed to write Records: {}", e);
         throw new StageException(JmsErrors.JMS_12, e.getMessage(), e);
       }
 
-      handleDelivery(baos.toByteArray());
+      handleDelivery(record, baos.toByteArray());
       count++;
     }
 
     return count;
   }
 
-  private void handleDelivery(byte[] payload) throws StageException {
+  private void handleDelivery(Record record, byte[] payload) throws StageException {
     Message message;
+    String destinationName = null;
     try {
       switch (this.dataFormat) {
         case DELIMITED:
@@ -205,13 +219,32 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
           throw new StageException(JmsErrors.JMS_10, this.dataFormat);
       }
 
-      messageProducer.send(message);
+      // Resolve
+      ELVars elVars = context.createELVars();
+      RecordEL.setRecordInContext(elVars, record);
+      destinationName = destinationEval.eval(elVars, jmsTargetConfig.destinationName, String.class);
+
+      // Finally sent the bits
+      messageProducers.get(destinationName).send(message);
     } catch (JMSException e) {
       LOG.error("Could not produce message: {}", e);
       throw new StageException(JmsErrors.JMS_13, e.getMessage(), e);
     } catch (UnsupportedEncodingException e) {
       LOG.error("Unsupported charset: {}", this.dataFormatConfig.charset);
       throw new StageException(DataFormatErrors.DATA_FORMAT_05, this.dataFormatConfig.charset, e);
+    } catch (ExecutionException e) {
+      // The ExecutionException is a wrapper that guava cache will use to wrap any exception. We have handling for
+      // some of the causes (like invalid destination name).
+      if(e.getCause() instanceof NameNotFoundException) {
+        errorHandler.onError(new OnRecordErrorException(
+          record, JmsErrors.JMS_05,
+          destinationName,
+          e.getCause().toString()
+        ));
+      } else {
+        LOG.error("Can't create producer: " + e.toString(), e);
+        throw new StageException(JmsErrors.JSM_14, e.toString(), e);
+      }
     }
   }
 

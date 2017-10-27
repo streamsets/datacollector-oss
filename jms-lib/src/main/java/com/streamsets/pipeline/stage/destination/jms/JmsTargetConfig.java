@@ -15,8 +15,21 @@
  */
 package com.streamsets.pipeline.stage.destination.jms;
 
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.jms.config.BaseJmsConfig;
 
 public class JmsTargetConfig extends BaseJmsConfig {
-  //empty for now
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "JMS Destination Name",
+      description = "Queue or topic name",
+      displayPosition = 50,
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = RecordEL.class,
+      group = "JMS"
+  )
+  public String destinationName;
 }
