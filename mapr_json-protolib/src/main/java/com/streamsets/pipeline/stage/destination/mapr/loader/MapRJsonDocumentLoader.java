@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang.StringUtils;
 import org.ojai.Document;
+import org.ojai.store.DocumentMutation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,9 +68,12 @@ public abstract class MapRJsonDocumentLoader {
   }
 
   protected abstract Document createDocumentInternal(String jsonString);
+  protected abstract DocumentMutation createDocumentMutationInternal();
   protected abstract void commitInternal(String tableName, Document document, boolean createTable) throws MapRJsonDocumentLoaderException;
   protected abstract void commitReplaceInternal(String tableName, Document document, boolean createTable) throws MapRJsonDocumentLoaderException;
-  protected abstract void flushInternal(String tableName);
+  protected abstract void commitMutationInternal(String tableName, String fieldPath, DocumentMutation documentMutation) throws MapRJsonDocumentLoaderException;
+  protected abstract void deleteRowInternal(String tableName, String id) throws MapRJsonDocumentLoaderException;
+  protected abstract void flushInternal(String tableName) throws MapRJsonDocumentLoaderException;
   protected abstract void closeInternal();
 
   public static Document createDocument(String jsonString) {
@@ -79,6 +83,16 @@ public abstract class MapRJsonDocumentLoader {
     } else {
       Preconditions.checkNotNull(delegate);
       return delegate.createDocumentInternal(jsonString);
+    }
+  }
+
+  public static DocumentMutation createDocumentMutation() {
+    if(isTest) {
+      Preconditions.checkNotNull(testDelegate);
+      return testDelegate.createDocumentMutationInternal();
+    } else {
+      Preconditions.checkNotNull(delegate);
+      return delegate.createDocumentMutationInternal();
     }
   }
 
@@ -102,7 +116,27 @@ public abstract class MapRJsonDocumentLoader {
     }
   }
 
-  public static void flush(String tableName) {
+  public static void commitMutation(String tableName, String fieldPath, DocumentMutation documentMutation) throws MapRJsonDocumentLoaderException {
+    if(isTest) {
+      Preconditions.checkNotNull(testDelegate);
+      testDelegate.commitMutationInternal(tableName, fieldPath, documentMutation);
+    } else {
+      Preconditions.checkNotNull(delegate);
+      delegate.commitMutationInternal(tableName, fieldPath, documentMutation);
+    }
+  }
+
+  public static void deleteRow(String tableName, String id) throws MapRJsonDocumentLoaderException {
+    if(isTest) {
+      Preconditions.checkNotNull(testDelegate);
+      testDelegate.deleteRowInternal(tableName, id);
+    } else {
+      Preconditions.checkNotNull(delegate);
+      delegate.deleteRowInternal(tableName, id);
+    }
+  }
+
+  public static void flush(String tableName) throws MapRJsonDocumentLoaderException {
     if(isTest) {
       Preconditions.checkNotNull(testDelegate);
       testDelegate.flushInternal(tableName);

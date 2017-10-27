@@ -22,6 +22,8 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 
 public class MapRJsonConfigBean {
 
+  public static final String MAPR_JSON_CONFIG_BEAN_PREFIX = "mapRJsonConfigBean";
+
   @ConfigDef(required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
@@ -83,5 +85,22 @@ public class MapRJsonConfigBean {
   )
   @ValueChooserModel(InsertOrReplaceChooserValues.class)
   public InsertOrReplace insertOrReplace = InsertOrReplace.INSERT;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "REPLACE",
+      label = "Set API",
+      description = "Select which MapR DB API to use when updating a record in "
+          + "MapR JSON Document Database.  "
+          + "When encountering a duplicate field with a different type Set will fail.  "
+          + "The record will be sent to the "
+          + "On Record Error destination.  SetOrReplace will replace the field when a different "
+          + "field type is encountered.",
+      displayPosition = 50,
+      group = "MAPR_JSON"
+  )
+  @ValueChooserModel(SetOrReplaceChooserValues.class)
+  public SetOrReplace setOrReplace = SetOrReplace.REPLACE;
 
 }

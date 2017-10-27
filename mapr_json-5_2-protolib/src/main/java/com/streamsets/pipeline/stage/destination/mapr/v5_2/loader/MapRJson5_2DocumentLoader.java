@@ -21,6 +21,7 @@ import com.mapr.db.exceptions.DBException;
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoader;
 import com.streamsets.pipeline.stage.destination.mapr.loader.MapRJsonDocumentLoaderException;
 import org.ojai.Document;
+import org.ojai.store.DocumentMutation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,11 @@ public class MapRJson5_2DocumentLoader extends MapRJsonDocumentLoader {
   }
 
   @Override
+  protected DocumentMutation createDocumentMutationInternal() {
+    return MapRDB.newMutation();
+  }
+
+  @Override
   protected void commitInternal(String tableName, Document document, boolean createTable) throws MapRJsonDocumentLoaderException {
     initTable(tableName, createTable);
     theTables.get(tableName).insert(document);
@@ -48,8 +54,27 @@ public class MapRJson5_2DocumentLoader extends MapRJsonDocumentLoader {
   }
 
   @Override
-  protected void flushInternal(String tableName) {
-    theTables.get(tableName).flush();
+  protected void commitMutationInternal(String tableName, String fieldPath, DocumentMutation documentMutation) throws MapRJsonDocumentLoaderException {
+    initTable(tableName, false);
+    theTables.get(tableName).update(fieldPath, documentMutation);
+  }
+
+  @Override
+  protected void deleteRowInternal(String tableName, String id) throws MapRJsonDocumentLoaderException {
+    initTable(tableName, false);
+    theTables.get(tableName).delete(id);
+  }
+
+  @Override
+  protected void flushInternal(String tableName) throws MapRJsonDocumentLoaderException {
+    try {
+      theTables.get(tableName).flush();
+    } catch (DBException ex) {
+      throw new MapRJsonDocumentLoaderException(
+          "Encountered error flushing table changes",
+          ex
+      );
+    }
   }
 
   @Override
