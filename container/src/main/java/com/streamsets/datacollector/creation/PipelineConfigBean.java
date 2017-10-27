@@ -232,7 +232,7 @@ public class PipelineConfigBean implements Stage {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Worker Memory (MB)",
-      defaultValue = "1024",
+      defaultValue = "2048",
       displayPosition = 150,
       group = "CLUSTER",
       dependsOn = "executionMode",
