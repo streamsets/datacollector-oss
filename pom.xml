@@ -253,6 +253,9 @@
             <exclude>.gitreview</exclude>
             <exclude>.git/**</exclude>
 
+            <!-- Jenkins -->
+            <exclude>**/buildInfo*.properties</exclude>
+
             <!-- Maven -->
             <exclude>**/target/**</exclude>
             <exclude>.m2/**</exclude> <!-- maven on jenkins -->
