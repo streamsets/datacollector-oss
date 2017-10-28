@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 class RecordSequence implements Serializable {
@@ -25,14 +26,17 @@ class RecordSequence implements Serializable {
   final String rsId;
   final Object ssn;
   final int opCode;
+  final LocalDateTime timestamp;
 
-  RecordSequence(Map<String, String> headers, String sql, int seq, int opCode, String rsId, Object ssn) {
+  RecordSequence(Map<String, String> headers, String sql, int seq, int opCode, String rsId, Object ssn,
+      LocalDateTime timestamp) {
     this.headers = headers;
     this.sqlString = sql;
     this.seq = seq;
     this.rsId = rsId;
     this.ssn = ssn;
     this.opCode = opCode;
+    this.timestamp = timestamp;
   }
 
   @Override
