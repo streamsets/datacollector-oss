@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.streamsets.pipeline.stage.cloudstorage.destination;
+package com.streamsets.pipeline.stage.pubsub.destination;
 
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -25,19 +24,19 @@ import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
     version = 1,
-    label = "Write to Google Cloud Storage",
-    description = "Writes error records to Google Cloud Storage",
+    label = "Write to Google Pub Sub",
+    description = "Writes error records to Google Pub Sub",
     onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r"
 )
 @ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {
-    "gcsTargetConfig.dataFormat",
+    "conf.dataFormat",
 })
 @GenerateResourceBundle
-public class ToErrorGoogleCloudStorageDTarget extends GoogleCloudStorageDTarget {
-    @Override
-    protected Target createTarget() {
-        gcsTargetConfig.dataFormat = DataFormat.SDC_JSON;
-        return new GoogleCloudStorageTarget(gcsTargetConfig);
-    }
+public class ToErrorPubSubDTarget extends PubSubDTarget {
+  @Override
+  protected Target createTarget() {
+    conf.dataFormat = DataFormat.SDC_JSON;
+    return new PubSubTarget(conf);
+  }
 }
