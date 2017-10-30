@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.time.Instant;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -79,6 +80,9 @@ public class TestMapRDBCDCSource {
       new ODate(123),
       new OInterval(123),
       new HashMap<String, Object>(),
+      new HashMap<String, Object>(Collections.singletonMap("asd", "hello")),
+      new HashMap<String, Object>(Collections.singletonMap("asd", Collections.singletonMap("jkl", "world"))),
+      Collections.singletonMap("asd", Arrays.asList("a", "b", "c")),
       new ArrayList<Object>()
   );
   private CircularIterator<Object> objectRing = new CircularIterator<>(objectList);

@@ -40,7 +40,9 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -381,8 +383,12 @@ public class MapRDBCDCSource extends BasePushSource {
       return Field.createDatetime(((OTimestamp)value).toDate());
     } else if(value instanceof OInterval) {
       return Field.create(((OInterval)value).getTimeInMillis());
+    } else if(value instanceof Map.Entry) {
+      return generateField(((Map.Entry) value).getValue());
     } else if(value instanceof Map) {
-      return Field.create(((Map<String, Object>) value).entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, this::generateField)));
+      return Field.create(((Map<String, Object>) value).entrySet()
+          .stream()
+          .collect(Collectors.toMap(Map.Entry::getKey, this::generateField)));
     } else {
       throw new IllegalArgumentException("Unsupported type " + value.getClass().toString());
     }
