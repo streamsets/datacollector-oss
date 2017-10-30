@@ -24,6 +24,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -42,6 +43,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class TestAvroSpoolDirSource {
+  private static final int threadNumber = 0;
+  private static final int batchSize = 10;
 
   private String createTestDir() {
     File f = new File("target", UUID.randomUUID().toString());
@@ -130,7 +133,8 @@ public class TestAvroSpoolDirSource {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      Assert.assertEquals("-1", source.produce(createAvroDataFile(), null, 10, batchMaker));
+      SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, null);
+      Assert.assertEquals("-1", runnable.generateBatch(createAvroDataFile(), null, 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -220,7 +224,8 @@ public class TestAvroSpoolDirSource {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      String offset = source.produce(createAvroDataFile(), null, 1, batchMaker);
+      SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, null);
+      String offset = runnable.generateBatch(createAvroDataFile(), null, 1, batchMaker);
       Assert.assertNotEquals("-1", offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
@@ -251,7 +256,7 @@ public class TestAvroSpoolDirSource {
       Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createAvroDataFile(), null, 1, batchMaker);
+      offset = runnable.generateBatch(createAvroDataFile(), null, 1, batchMaker);
       Assert.assertNotEquals("-1", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
@@ -283,7 +288,7 @@ public class TestAvroSpoolDirSource {
       Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createAvroDataFile(), null, 1, batchMaker);
+      offset = runnable.generateBatch(createAvroDataFile(), null, 1, batchMaker);
       Assert.assertNotEquals("-1", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
@@ -315,7 +320,7 @@ public class TestAvroSpoolDirSource {
       Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createAvroDataFile(), null, 1, batchMaker);
+      offset = runnable.generateBatch(createAvroDataFile(), null, 1, batchMaker);
       Assert.assertEquals("-1", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");

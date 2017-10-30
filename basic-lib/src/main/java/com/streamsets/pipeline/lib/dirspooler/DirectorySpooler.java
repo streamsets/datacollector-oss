@@ -480,7 +480,7 @@ public class DirectorySpooler {
     return !waitForPathAppearance;
   }
 
-  public File poolForFile(long wait, TimeUnit timeUnit) throws InterruptedException {
+  public synchronized File poolForFile(long wait, TimeUnit timeUnit) throws InterruptedException {
     Preconditions.checkArgument(wait >= 0, "wait must be zero or greater");
     Preconditions.checkNotNull(timeUnit, "timeUnit cannot be null");
 

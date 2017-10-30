@@ -25,11 +25,10 @@ import java.util.Map;
 
 public class Offset {
   public static final String VERSION_ONE = "1";
-  public static final String VERSION_TWO = "2";
   private static final String OFFSET_SEPARATOR = "::";
   public static final String MINUS_ONE = "-1";
   private static final String ZERO = "0";
-  private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
+  public static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
   private static final String POS = "POS";
   private final String file;
   private String fileOffset;
@@ -46,7 +45,7 @@ public class Offset {
   public Offset(String version, String file, String offset) throws StageException {
     this.file = file;
 
-    if (version.equals(VERSION_TWO)) {
+    if (version.equals(VERSION_ONE)) {
       try {
         if (offset.startsWith("{")) {
           Map<String, String> map = OffsetUtil.deserializeOffsetMap(offset);

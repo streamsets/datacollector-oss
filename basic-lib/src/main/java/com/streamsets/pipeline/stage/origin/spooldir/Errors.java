@@ -52,6 +52,7 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_32("File Pattern cannot be empty"),
   SPOOLDIR_33("Cannot Serialize Offset: {}"),
   SPOOLDIR_34("Cannot Deserialize Offset: {}"),
+  SPOOLDIR_35("Spool Directory Runner Failed. Reason {}"),
   ;
 
   private final String msg;

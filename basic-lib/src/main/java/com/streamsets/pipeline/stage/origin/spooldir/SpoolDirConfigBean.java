@@ -52,6 +52,18 @@ public class SpoolDirConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1",
+      label = "Number of Threads",
+      description = "Number of parallel threads that read data",
+      displayPosition = 11,
+      group = "FILES",
+      min = 1
+  )
+  public int numberOfThreads = 1;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "File Name Pattern Mode",
       description = "Select whether the File Name Pattern specified uses glob pattern syntax or regex syntax.",
