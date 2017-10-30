@@ -22,6 +22,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.DeleteOneModel;
 import com.mongodb.client.model.InsertOneModel;
 import com.mongodb.client.model.ReplaceOneModel;
+import com.mongodb.client.model.UpdateOneModel;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.WriteModel;
 import com.streamsets.pipeline.api.Batch;
@@ -40,7 +41,6 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,16 +52,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MongoDBTarget extends BaseTarget {
+import static com.google.common.base.Strings.isNullOrEmpty;
 
+public class MongoDBTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(MongoDBTarget.class);
 
-  // We will be using sdc.operation.type defined in OperationType.
-  // This will be deprecated.
-  public static final String OPERATION_KEY = "SDC.MONGODB.OPERATION";
-  public static final String INSERT = "INSERT";
-  public static final String UPSERT = "UPSERT";
-  public static final String DELETE = "DELETE";
   public static final int DEFAULT_CAPACITY = 1024;
 
   private final MongoTargetConfigBean mongoTargetConfigBean;
@@ -74,6 +69,7 @@ public class MongoDBTarget extends BaseTarget {
     this.mongoTargetConfigBean = mongoTargetConfigBean;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
@@ -125,36 +121,28 @@ public class MongoDBTarget extends BaseTarget {
         generator.close();
         Document document = Document.parse(new String(baos.toByteArray()));
 
-        //create a write model based on record header
-        if (StringUtils.isEmpty(record.getHeader().getAttribute(OPERATION_KEY)) &&
-            StringUtils.isEmpty(record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE))
-        ) {
-          LOG.error(
-              Errors.MONGODB_15.getMessage(),
-              record.getHeader().getSourceId()
-          );
-          throw new OnRecordErrorException(
-              Errors.MONGODB_15,
-              record.getHeader().getSourceId()
-          );
+        // create a write model based on record header
+        if (isNullOrEmpty(record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE))) {
+          LOG.error(Errors.MONGODB_15.getMessage(), record.getHeader().getSourceId());
+          throw new OnRecordErrorException(Errors.MONGODB_15, record.getHeader().getSourceId());
         }
 
         String operationCode = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
-        String operation = null;
+        String operation;
         if (operationCode != null) {
           operation = OperationType.getLabelFromStringCode(operationCode);
         } else {
-          operation = record.getHeader().getAttribute(OPERATION_KEY);
+          operation = record.getHeader().getAttribute(OperationType.SDC_OPERATION_TYPE);
         }
         if (operation == null) {
           throw new StageException(Errors.MONGODB_15, record.getHeader().getSourceId());
         }
         switch (operation.toUpperCase()) {
-          case INSERT:
+          case "INSERT":
             documentList.add(new InsertOneModel<>(document));
             recordList.add(record);
             break;
-          case UPSERT:
+          case "REPLACE":
             validateUniqueKey(operation, record);
             recordList.add(record);
             documentList.add(
@@ -164,25 +152,31 @@ public class MongoDBTarget extends BaseTarget {
                         record.get(mongoTargetConfigBean.uniqueKeyField).getValueAsString()
                     ),
                     document,
-                    new UpdateOptions().upsert(true)
+                    new UpdateOptions().upsert(mongoTargetConfigBean.isUpsert)
                 )
             );
             break;
-          case DELETE:
+          case "UPDATE":
+            validateUniqueKey(operation, record);
             recordList.add(record);
-            documentList.add(new DeleteOneModel<Document>(document));
+            documentList.add(
+                new UpdateOneModel<>(
+                    new Document(
+                        removeLeadingSlash(mongoTargetConfigBean.uniqueKeyField),
+                        record.get(mongoTargetConfigBean.uniqueKeyField).getValueAsString()
+                    ),
+                    new Document("$set", document),
+                    new UpdateOptions().upsert(mongoTargetConfigBean.isUpsert)
+                )
+            );
+            break;
+          case "DELETE":
+            recordList.add(record);
+            documentList.add(new DeleteOneModel<>(document));
             break;
           default:
-            LOG.error(
-                Errors.MONGODB_14.getMessage(),
-                operation,
-                record.getHeader().getSourceId()
-            );
-            throw new StageException(
-                Errors.MONGODB_14,
-                operation,
-                record.getHeader().getSourceId()
-            );
+            LOG.error(Errors.MONGODB_14.getMessage(), operation, record.getHeader().getSourceId());
+            throw new StageException(Errors.MONGODB_14, operation, record.getHeader().getSourceId());
         }
       } catch (IOException | StageException | NumberFormatException e) {
         errorRecordHandler.onError(

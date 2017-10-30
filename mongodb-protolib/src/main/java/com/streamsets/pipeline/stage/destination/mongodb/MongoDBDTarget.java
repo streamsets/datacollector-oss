@@ -25,7 +25,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "MongoDB",
     description = "Writes data to MongoDB",
     icon="mongodb.png",

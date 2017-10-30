@@ -29,7 +29,7 @@ public class MongoTargetConfigBean {
   @ConfigDef(
       type = ConfigDef.Type.MODEL,
       label = "Unique Key Field",
-      description = "Unique key field is required for upserts and optional for inserts and deletes",
+      description = "Unique key field is required for update and replace while optional for inserts and deletes",
       required = false,
       displayPosition = 1000,
       group = "MONGODB"
@@ -38,12 +38,23 @@ public class MongoTargetConfigBean {
   public String uniqueKeyField;
 
   @ConfigDef(
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Upsert",
+      defaultValue = "false",
+      description = "Sets the Upsert flag for Update and Replace operations",
+      required = true,
+      displayPosition = 1010,
+      group = "MONGODB"
+  )
+  public boolean isUpsert;
+
+  @ConfigDef(
       type = ConfigDef.Type.MODEL,
       label = "Write Concern",
       description = "Sets the write concern",
       defaultValue = "JOURNALED",
       required = true,
-      displayPosition = 1001,
+      displayPosition = 1020,
       group = "MONGODB"
   )
   @ValueChooserModel(WriteConcernChooserValues.class)
