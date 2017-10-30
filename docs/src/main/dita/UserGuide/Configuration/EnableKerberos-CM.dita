@@ -33,11 +33,23 @@
         </context>
         <steps id="steps_rry_chy_w5">
             <step>
-                <cmd>To enable Kerberos, in Cloudera Manager, go to the
-                        <wintitle>Configuration</wintitle> page. </cmd>
+                <cmd>In Cloudera Manager, select the <uicontrol>StreamSets</uicontrol> service and
+                    then click <wintitle>Configuration</wintitle>. </cmd>
             </step>
             <step>
                 <cmd>Select <uicontrol>Enable Kerberos Client</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>In the Cloudera Manager home page, click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol> Security</uicontrol>
+                    </menucascade>.</cmd>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Kerberos Credentials</uicontrol>.</cmd>
+            </step>
+            <step>
+                <cmd>Click <uicontrol>Generate Missing Credentials</uicontrol>.</cmd>
             </step>
             <step>
                 <cmd>Restart <ph
