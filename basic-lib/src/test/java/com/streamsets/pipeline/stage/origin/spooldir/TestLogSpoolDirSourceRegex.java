@@ -24,6 +24,7 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -36,7 +37,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestLogSpoolDirSourceRegex {
@@ -47,6 +50,10 @@ public class TestLogSpoolDirSourceRegex {
   private static final String INVALID_REGEX =
     "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+ \\S+ \\S+\" (\\d{3}) (\\d+)";
   private static final List<RegExConfig> REGEX_CONFIG = new ArrayList<>();
+
+  private static final int threadNumber = 0;
+  private static final int batchSize = 10;
+  private static final Map<String, Offset> lastSourceOffset = new HashMap<>();
 
   static {
     RegExConfig r1 = new RegExConfig();
@@ -135,7 +142,8 @@ public class TestLogSpoolDirSourceRegex {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      Assert.assertEquals("-1", source.produce(createLogFile(), "0", 10, batchMaker));
+      SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, lastSourceOffset);
+      Assert.assertEquals("-1", runnable.generateBatch(createLogFile(), "0", 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -208,7 +216,8 @@ public class TestLogSpoolDirSourceRegex {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      String offset = source.produce(createLogFile(), "0", 1, batchMaker);
+      SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, lastSourceOffset);
+      String offset = runnable.generateBatch(createLogFile(), "0", 1, batchMaker);
       //FIXME
       Assert.assertEquals("83", offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
@@ -242,7 +251,7 @@ public class TestLogSpoolDirSourceRegex {
       Assert.assertEquals("2326", record.get("/bytesSent").getValueAsString());
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createLogFile(), offset, 1, batchMaker);
+      offset = runnable.generateBatch(createLogFile(), offset, 1, batchMaker);
       Assert.assertEquals("165", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
@@ -276,7 +285,7 @@ public class TestLogSpoolDirSourceRegex {
 
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createLogFile(), offset, 1, batchMaker);
+      offset = runnable.generateBatch(createLogFile(), offset, 1, batchMaker);
       Assert.assertEquals("-1", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");

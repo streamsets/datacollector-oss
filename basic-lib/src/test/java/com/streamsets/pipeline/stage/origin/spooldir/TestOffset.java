@@ -108,7 +108,7 @@ public class TestOffset {
     Offset offset = new Offset(Offset.VERSION_ONE, offsetV1);
     String offsetString = offset.getOffsetString();
 
-    Offset offsetV2 = new Offset(Offset.VERSION_TWO, offset.getFile(), offsetString);
+    Offset offsetV2 = new Offset(Offset.VERSION_ONE, offset.getFile(), offsetString);
 
     Assert.assertEquals(fileName, offsetV2.getFile());
     Assert.assertEquals(initialOffset, offsetV2.getOffset());

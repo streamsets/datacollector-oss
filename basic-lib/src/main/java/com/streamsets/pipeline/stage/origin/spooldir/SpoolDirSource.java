@@ -16,94 +16,53 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.api.BatchContext;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.FileRef;
-import com.streamsets.pipeline.api.Record;
+import com.google.common.base.Throwables;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
-import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.ext.io.ObjectLengthException;
-import com.streamsets.pipeline.api.ext.io.OverrunException;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.lineage.EndPointType;
-import com.streamsets.pipeline.api.lineage.LineageEvent;
-import com.streamsets.pipeline.api.lineage.LineageEventType;
-import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
-import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
-import com.streamsets.pipeline.lib.io.fileref.LocalFileRef;
-import com.streamsets.pipeline.lib.parser.DataParser;
-import com.streamsets.pipeline.lib.parser.DataParserException;
-import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
-import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
-import org.apache.commons.io.IOUtils;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnableBuilder;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirUtil;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.channels.ClosedByInterruptException;
-import java.nio.file.Files;
 import java.nio.file.PathMatcher;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.stream.IntStream;
 
 public class SpoolDirSource extends BasePushSource {
   private final static Logger LOG = LoggerFactory.getLogger(SpoolDirSource.class);
-  private static final String MINUS_ONE = "-1";
-  private static final String ZERO = "0";
-  private static final int ONE = 1;
+
   public static final String OFFSET_VERSION =
       "$com.streamsets.pipeline.stage.origin.spooldir.SpoolDirSource.offset.version$";
   public static final String OFFSET_VERSION_ONE = "1";
-  static final String PERMISSIONS = "permissions";
-
-
-  private static final String BASE_DIR = "baseDir";
-
-  private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
   public static final String SPOOLDIR_CONFIG_BEAN_PREFIX = "conf.";
   public static final String SPOOLDIR_DATAFORMAT_CONFIG_PREFIX = SPOOLDIR_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
-  private boolean useLastModified;
 
+  private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
   private final SpoolDirConfigBean conf;
 
+  private boolean useLastModified;
   private DirectorySpooler spooler;
-  private File currentFile;
-  private ErrorRecordHandler errorRecordHandler;
-  private DataParserFactory parserFactory;
-  private DataParser parser;
-
-  private ELEval rateLimitElEval;
-  private ELVars rateLimitElVars;
-
-  private boolean shouldSendNoMoreDataEvent;
-  private long noMoreDataRecordCount;
-  private long noMoreDataErrorCount;
-  private long noMoreDataFileCount;
-
-  private long perFileRecordCount;
-  private long perFileErrorCount;
-
-  private long totalFiles;
-
-  private HashMap<String, Offset> allOffsets;
+  private int numberOfThreads;
+  private ExecutorService executorService;
+  private String lastSourceFileName;
 
   public SpoolDirSource(SpoolDirConfigBean conf) {
     this.conf = conf;
@@ -111,12 +70,15 @@ public class SpoolDirSource extends BasePushSource {
 
   @Override
   public int getNumberOfThreads() {
-    return ONE;
+    return numberOfThreads;
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+
+    numberOfThreads = conf.numberOfThreads;
+    lastSourceFileName = null;
 
     conf.dataFormatConfig.checkForInvalidAvroSchemaLookupMode(
         conf.dataFormat,
@@ -213,6 +175,8 @@ public class SpoolDirSource extends BasePushSource {
       }
     }
 
+    // Override the StringBuilder pool size maintained by Text and Log Data Parser Factories.
+    conf.dataFormatConfig.stringBuilderPoolSize = conf.numberOfThreads;
     conf.dataFormatConfig.init(
         getContext(),
         conf.dataFormat,
@@ -223,8 +187,6 @@ public class SpoolDirSource extends BasePushSource {
     );
 
     if (issues.isEmpty()) {
-      parserFactory = conf.dataFormatConfig.getParserFactory();
-
       if (getContext().isPreview()) {
         conf.poolingTimeoutSecs = 1;
       }
@@ -249,21 +211,7 @@ public class SpoolDirSource extends BasePushSource {
       builder.setUseLastModifiedTimestamp(useLastModified);
       spooler = builder.build();
       spooler.init(conf.initialFileToProcess);
-      rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());;
-      rateLimitElVars = getContext().createELVars();
     }
-
-    shouldSendNoMoreDataEvent = false;
-    noMoreDataRecordCount = 0;
-    noMoreDataErrorCount = 0;
-    noMoreDataFileCount = 0;
-
-    perFileErrorCount = 0;
-    perFileRecordCount = 0;
-
-    totalFiles = 0;
-
-    allOffsets = new HashMap<>();
 
     return issues;
   }
@@ -354,7 +302,9 @@ public class SpoolDirSource extends BasePushSource {
 
   @Override
   public void destroy() {
-    IOUtils.closeQuietly(parser);
+    shutdownExecutorIfNeeded();
+    executorService = null;
+
     if (spooler != null) {
       spooler.destroy();
     }
@@ -365,383 +315,156 @@ public class SpoolDirSource extends BasePushSource {
     return spooler;
   }
 
-  private boolean hasToFetchNextFileFromSpooler(String file, String offset) {
-    return
-        // we don't have a current file half way processed in the current agent execution
-        currentFile == null ||
-            // we don't have a file half way processed from a previous agent execution via offset tracking
-            file == null ||
-            (useLastModified && compareFiles(new File(spooler.getSpoolDir(), file), currentFile)) ||
-            // the current file is lexicographically lesser than the one reported via offset tracking
-            // this can happen if somebody drop
-            currentFile.getName().compareTo(file) < 0 ||
-            // the current file has been fully processed
-            MINUS_ONE.equals(offset);
-  }
-
-  private boolean isFileFromSpoolerEligible(File spoolerFile, String offsetFile, String offsetInFile) {
-    if (spoolerFile == null) {
-      // there is no new file from spooler, we return yes to break the loop
-      return true;
-    }
-    if (offsetFile == null) {
-      // file reported by offset tracking is NULL, means we are starting from zero
-      return true;
-    }
-    if (spoolerFile.getAbsolutePath().compareTo(offsetFile) == 0 && !MINUS_ONE.equals(offsetInFile)) {
-      // file reported by spooler is equal than current offset file
-      // and we didn't fully process (not -1) the current file
-      return true;
-    }
-    if (useLastModified) {
-      if (compareFiles(spoolerFile, new File(offsetFile))) {
-        return true;
-      }
-    } else {
-      if (spoolerFile.getAbsolutePath().compareTo(offsetFile) > 0) {
-        // file reported by spooler is newer than current offset file
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * True if f1 is "newer" than f2.
-   */
-  private boolean compareFiles(File f1, File f2) {
-    return f1.lastModified() > f2.lastModified() ||
-            (f1.lastModified() == f2.lastModified() && f1.getName().compareTo(f2.getName()) > 0);
-  }
-
   @VisibleForTesting
-  void setErrorRecordHandler(DefaultErrorRecordHandler errorRecordHandler) {
-    this.errorRecordHandler = errorRecordHandler;
-  }
+  Map<String, Offset> handleLastSourceOffset(Map<String, String> lastSourceOffset, PushSource.Context context) throws StageException {
+    Map<String, Offset> offsetMap = new HashMap<>();
 
-  private Offset handleLastSourceOffset(Map<String, String> lastSourceOffset) throws StageException {
-    Offset offset = null;
     if (lastSourceOffset != null && lastSourceOffset.size() > 0) {
       if (lastSourceOffset.containsKey(Source.POLL_SOURCE_OFFSET_KEY)) {
         // version one
-        offset = new Offset(Offset.VERSION_ONE, lastSourceOffset.get(Source.POLL_SOURCE_OFFSET_KEY));
+        Offset offset = new Offset(Offset.VERSION_ONE, lastSourceOffset.get(Source.POLL_SOURCE_OFFSET_KEY));
+
         //Remove Poll Source Offset key from the offset.
-        getContext().commitOffset(Source.POLL_SOURCE_OFFSET_KEY, null);
+        context.commitOffset(Source.POLL_SOURCE_OFFSET_KEY, null);
+
         // commit the offset version
-        getContext().commitOffset(OFFSET_VERSION, OFFSET_VERSION_ONE);
-        getContext().commitOffset(offset.getFile(), offset.getOffsetString());
+        context.commitOffset(OFFSET_VERSION, OFFSET_VERSION_ONE);
+        context.commitOffset(offset.getFile(), offset.getOffsetString());
+
+        offsetMap.put(offset.getFile(), offset);
+        lastSourceFileName = offset.getFile();
       } else {
         String version = lastSourceOffset.get(OFFSET_VERSION);
-        // remove the offset key from the list
-        lastSourceOffset.remove(OFFSET_VERSION);
         Set<String> key = lastSourceOffset.keySet();
         Iterator iterator = key.iterator();
 
-        // the source offset should have one key
-        if (iterator.hasNext()) {
+        while (iterator.hasNext()) {
           String keyString = (String) iterator.next();
-          offset = new Offset(version, keyString, lastSourceOffset.get(keyString));
+          if (keyString.equals(OFFSET_VERSION)) {
+            continue;
+          }
+          Offset offset = new Offset(version, keyString, lastSourceOffset.get(keyString));
+          offsetMap.put(offset.getFile(), offset);
+
+          if (lastSourceFileName != null) {
+            if ((useLastModified && SpoolDirUtil.compareFiles(new File(spooler.getSpoolDir(), lastSourceFileName), new File(spooler.getSpoolDir(), offset.getFile()))) ||
+                offset.getFile().compareTo(lastSourceFileName) < 0) {
+              lastSourceFileName = offset.getFile();
+            }
+          } else {
+            lastSourceFileName = offset.getFile();
+          }
         }
       }
-    } else {
-      offset = new Offset(Offset.VERSION_ONE, null);
     }
-    return offset;
+
+    if (offsetMap.isEmpty()) {
+      // commit the offset version
+      context.commitOffset(OFFSET_VERSION, OFFSET_VERSION_ONE);
+
+      Offset offset = new Offset(Offset.VERSION_ONE, null);
+      offsetMap.put(offset.getFile(), offset);
+      lastSourceFileName = offset.getFile();
+    }
+
+    return offsetMap;
+  }
+
+  @VisibleForTesting
+  String getLastSourceFileName() {
+    return lastSourceFileName;
   }
 
   @Override
   public void produce(Map<String, String> lastSourceOffset, int maxBatchSize) throws StageException {
     int batchSize = Math.min(conf.batchSize, maxBatchSize);
 
-    Offset newSourceOffset = handleLastSourceOffset(lastSourceOffset);
+    Map<String, Offset> newSourceOffset = handleLastSourceOffset(lastSourceOffset, getContext());
 
-    while (!getContext().isStopped()) {
-      BatchContext batchContext = getContext().startBatch();
-      BatchMaker batchMaker = batchContext.getBatchMaker();
-      errorRecordHandler = new DefaultErrorRecordHandler(getContext(), batchContext);
-
-      newSourceOffset = produceBatch(newSourceOffset, batchSize, batchContext, batchMaker);
-    }
-  }
-
-  private Offset produceBatch(Offset lastSourceOffset, int batchSize, BatchContext batchContext, BatchMaker batchMaker) throws StageException {
-    // if lastSourceOffset is NULL (beginning of source) it returns NULL
-    String file = lastSourceOffset.getFile();
-    String lastSourceFile = file;
-    String fullPath = (file != null) ? getSpooler().getSpoolDir() + "/" + file : null;
-    // if lastSourceOffset is NULL (beginning of source) it returns 0
-    String offset = lastSourceOffset.getOffset();
-
-    if (hasToFetchNextFileFromSpooler(fullPath, offset)) {
-      currentFile = null;
-      try {
-        File nextAvailFile = null;
-        do {
-          if (nextAvailFile != null) {
-            LOG.warn("Ignoring file '{}' in spool directory as is lesser than offset file '{}'",
-                nextAvailFile.toString(),
-                fullPath
-            );
-          }
-          nextAvailFile = getSpooler().poolForFile(conf.poolingTimeoutSecs, TimeUnit.SECONDS);
-        } while (!isFileFromSpoolerEligible(nextAvailFile, fullPath, offset));
-
-        if (nextAvailFile == null) {
-          // no file to process
-          LOG.debug("No new file available in spool directory after '{}' secs, producing empty batch",
-              conf.poolingTimeoutSecs);
-
-          // no-more-data event needs to be sent.
-          shouldSendNoMoreDataEvent = true;
-
-        } else {
-          // since we have data to process, don't trigger the no-more-data event.
-          shouldSendNoMoreDataEvent = false;
-
-          // file to process
-          currentFile = nextAvailFile;
-
-          // if the current offset file is null or the file returned by the spooler is greater than the current offset
-          // file we take the file returned by the spooler as the new file and set the offset to zero
-          // if not, it means the spooler returned us the current file, we just keep processing it from the last
-          // offset we processed (known via offset tracking)
-          boolean pickFileFromSpooler = false;
-          if (file == null) {
-            pickFileFromSpooler = true;
-          } else if (useLastModified) {
-            File fileObject = new File(spooler.getSpoolDir(), file);
-            if (compareFiles(nextAvailFile, fileObject)) {
-              pickFileFromSpooler = true;
-            }
-          } else if (nextAvailFile.getName().compareTo(file) > 0) {
-            pickFileFromSpooler = true;
-          }
-          if (pickFileFromSpooler) {
-            file = currentFile.toString().replaceFirst(spooler.getSpoolDir() + "/", "");
-            offset = ZERO;
-          }
-        }
-
-        if (currentFile != null) {
-          perFileRecordCount = 0;
-          perFileErrorCount = 0;
-          SpoolDirEvents.NEW_FILE.create(getContext(), batchContext)
-              .with("filepath", currentFile.getAbsolutePath())
-              .createAndSend();
-          noMoreDataFileCount++;
-          totalFiles++;
-        }
-
-      } catch (InterruptedException ex) {
-        // the spooler was interrupted while waiting for a file, we log and return, the pipeline agent will invoke us
-        // again to wait for a file again
-        LOG.warn("Pooling interrupted");
-      }
-    }
-
-    if (currentFile != null) {
-      // we have a file to process (from before or new from spooler)
-      try {
-        // we ask for a batch from the currentFile starting at offset
-        offset = produce(currentFile, offset, batchSize, batchMaker);
-
-        if (MINUS_ONE.equals(offset)) {
-          SpoolDirEvents.FINISHED_FILE.create(getContext(), batchContext)
-              .with("filepath", currentFile.getAbsolutePath())
-              .with("error-count", perFileErrorCount)
-              .with("record-count", perFileRecordCount)
-              .createAndSend();
-
-          LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
-          event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, currentFile.getAbsolutePath());
-          event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.LOCAL_FS.name());
-          event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.filePattern);
-          Map<String, String> props = new HashMap<>();
-          props.put("Record Count", Long.toString(perFileRecordCount));
-          event.setProperties(props);
-          getContext().publishLineageEvent(event);
-        }
-      } catch (BadSpoolFileException ex) {
-        LOG.error(Errors.SPOOLDIR_01.getMessage(), ex.getFile(), ex.getPos(), ex.toString(), ex);
-        getContext().reportError(Errors.SPOOLDIR_01, ex.getFile(), ex.getPos(), ex.toString(), ex);
-
-        try {
-          // then we ask the spooler to error handle the failed file
-          spooler.handleCurrentFileAsError();
-
-        } catch (IOException ex1) {
-          throw new StageException(Errors.SPOOLDIR_00, currentFile, ex1.toString(), ex1);
-        }
-        // we set the offset to -1 to indicate we are done with the file and we should fetch a new one from the spooler
-        offset = MINUS_ONE;
-      }
-    }
-
-    if (shouldSendNoMoreDataEvent) {
-      LOG.info("sending no-more-data event.  records {} errors {} files {} ",
-          noMoreDataRecordCount, noMoreDataErrorCount, noMoreDataFileCount
-      );
-      SpoolDirEvents.NO_MORE_DATA.create(getContext(), batchContext)
-          .with("record-count", noMoreDataRecordCount)
-          .with("error-count", noMoreDataErrorCount)
-          .with("file-count", noMoreDataFileCount)
-          .createAndSend();
-      shouldSendNoMoreDataEvent = false;
-      noMoreDataRecordCount = 0;
-      noMoreDataErrorCount = 0;
-      noMoreDataFileCount = 0;
-    }
-
-    Offset newOffset = new Offset(Offset.VERSION_TWO, file, offset);
-
-    // reset the offset
-    if (lastSourceFile != null) {
-      getContext().commitOffset(lastSourceFile, null);
-    }
-
-    // Process And Commit offsets
-    getContext().processBatch(batchContext, newOffset.getFile(), newOffset.getOffsetString());
-
-    return newOffset;
-  }
-
-  /**
-   * Processes a batch from the specified file and offset up to a maximum batch size. If the file is fully processed
-   * it must return -1, otherwise it must return the offset to continue from next invocation.
-   */
-  public String produce(File file, String offset, int maxBatchSize, BatchMaker batchMaker) throws StageException,
-      BadSpoolFileException {
-    String sourceFile = file.getName();
     try {
-      if (parser == null) {
-        switch (conf.dataFormat) {
-          case AVRO:
-            parser = parserFactory.getParser(file, offset);
-            break;
-          case WHOLE_FILE:
-            FileRef localFileRef = new LocalFileRef.Builder()
-                .filePath(file.getAbsolutePath())
-                .bufferSize(conf.dataFormatConfig.wholeFileMaxObjectLen)
-                .rateLimit(FileRefUtil.evaluateAndGetRateLimit(rateLimitElEval, rateLimitElVars, conf.dataFormatConfig.rateLimit))
-                .createMetrics(true)
-                .totalSizeInBytes(Files.size(file.toPath()))
-                .build();
-            parser = parserFactory.getParser(file.getName(), getFileMetadata(file), localFileRef);
-            break;
-          default:
-            parser = parserFactory.getParser(file.getName(), new FileInputStream(file), offset);
-        }
+      executorService = new SafeScheduledExecutorService(numberOfThreads, SpoolDirRunnable.SPOOL_DIR_THREAD_PREFIX);
+
+      ExecutorCompletionService<Future> completionService = new ExecutorCompletionService<>(executorService);
+
+      List<Future> allFutures = new LinkedList<>();
+      IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
+        SpoolDirRunnable runnable = getSpoolDirRunnable(threadNumber, batchSize, newSourceOffset);
+        allFutures.add(completionService.submit(runnable, null));
+      });
+
+      while (!getContext().isStopped()) {
+        checkWorkerStatus(completionService);
       }
 
-      for (int i = 0; i < maxBatchSize; i++) {
+      for (Future future : allFutures) {
         try {
-          Record record;
-
-          try {
-            record = parser.parse();
-          } catch(RecoverableDataParserException ex) {
-            // Propagate partially parsed record to error stream
-            record = ex.getUnparsedRecord();
-            setHeaders(record, file, offset);
-
-            errorRecordHandler.onError(new OnRecordErrorException(record, ex.getErrorCode(), ex.getParams()));
-            perFileErrorCount++;
-            noMoreDataErrorCount++;
-            // We'll simply continue reading once this
-            continue;
-          }
-
-          if (record != null) {
-            setHeaders(record, file, offset);
-            batchMaker.addRecord(record);
-            offset = parser.getOffset();
-
-            noMoreDataRecordCount++;
-            perFileRecordCount++;
-
-          } else {
-            parser.close();
-            parser = null;
-            offset = MINUS_ONE;
-            break;
-          }
-        } catch (ObjectLengthException ex) {
-          String exOffset = offset;
-          offset = MINUS_ONE;
-          errorRecordHandler.onError(Errors.SPOOLDIR_02, sourceFile, exOffset, ex);
-          perFileErrorCount++;
-          noMoreDataErrorCount++;
-        }
-      }
-    } catch (IOException|DataParserException ex) {
-      if (ex instanceof ClosedByInterruptException || ex.getCause() instanceof ClosedByInterruptException) {
-        //If the pipeline was stopped, we may get a ClosedByInterruptException while reading avro data.
-        //This is because the thread is interrupted when the pipeline is stopped.
-        //Instead of sending the file to error, publish batch and move one.
-      } else {
-        offset = MINUS_ONE;
-        String exOffset;
-        if (ex instanceof OverrunException) {
-          exOffset = String.valueOf(((OverrunException) ex).getStreamOffset());
-        } else {
-          try {
-            exOffset = (parser != null) ? parser.getOffset() : MINUS_ONE;
-          } catch (IOException ex1) {
-            LOG.warn("Could not get the file offset to report with error, reason: {}", ex1.toString(), ex);
-            exOffset = MINUS_ONE;
-          }
-        }
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            // we failed to produce a record, which leaves the input file in an unknown state. all we can do here is
-            // throw an exception.
-            throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
-          case STOP_PIPELINE:
-            getContext().reportError(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString(), ex);
-            throw new StageException(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
-          default:
-            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                getContext().getOnErrorRecord(), ex));
+          future.get();
+        } catch (ExecutionException e) {
+          LOG.error(
+              "ExecutionException when attempting to wait for all table JDBC runnables to complete, after context was" +
+                  " stopped: {}",
+              e.getMessage(),
+              e
+          );
+        } catch (InterruptedException e) {
+          LOG.error(
+              "InterruptedException when attempting to wait for all table JDBC runnables to complete, after context " +
+                  "was stopped: {}",
+              e.getMessage(),
+              e
+          );
+          Thread.currentThread().interrupt();
         }
       }
     } finally {
-      if (MINUS_ONE.equals(offset)) {
-        if (parser != null) {
-          try {
-            parser.close();
-            parser = null;
-          } catch (IOException ex) {
-            //NOP
-          }
+      shutdownExecutorIfNeeded();
+    }
+  }
+
+  private void shutdownExecutorIfNeeded() {
+    Optional.ofNullable(executorService).ifPresent(executor -> {
+      if (!executor.isTerminated()) {
+        LOG.info("Shutting down executor service");
+        executor.shutdown();
+      }
+    });
+  }
+
+  /**
+   * Checks whether any of the {@link SpoolDirRunnable} workers completed
+   * and whether there is any error that needs to be handled from them.
+   * @param completionService {@link ExecutorCompletionService} used to detect completion
+   * @throws StageException if {@link StageException} is thrown by the workers (if the error handling is stop pipeline)
+   */
+  private void checkWorkerStatus(ExecutorCompletionService<Future> completionService) throws StageException {
+    Future future = completionService.poll();
+    if (future != null) {
+      try {
+        future.get();
+      } catch (InterruptedException e) {
+        LOG.error("Thread interrupted", e);
+      } catch (ExecutionException e) {
+        Throwable cause = Throwables.getRootCause(e);
+        if (cause != null && cause instanceof StageException) {
+          throw (StageException) cause;
+        } else {
+          LOG.error("Internal Error. {}", e);
+          throw new StageException(Errors.SPOOLDIR_35, e.toString(), e);
         }
       }
     }
-    return offset;
   }
 
-  private void setHeaders(Record record, File file, String offset) {
-    record.getHeader().setAttribute(HeaderAttributeConstants.FILE, file.getPath());
-    record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME, file.getName());
-    record.getHeader().setAttribute(HeaderAttributeConstants.LAST_MODIFIED_TIME, String.valueOf(file.lastModified()));
-    record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, offset == null ? "0" : offset);
-    record.getHeader().setAttribute(BASE_DIR, conf.spoolDir);
+  @VisibleForTesting
+  SpoolDirRunnable getSpoolDirRunnable(int threadNumber, int batchSize, Map<String, Offset> lastSourceOffset) {
+    return new SpoolDirRunnableBuilder()
+        .context(getContext())
+        .threadNumber(threadNumber)
+        .batchSize(batchSize)
+        .offsets(lastSourceOffset)
+        .lastSourcFileName(getLastSourceFileName())
+        .spooler(getSpooler())
+        .conf(conf)
+        .build();
   }
-
-  @SuppressWarnings("unchecked")
-  public static Map<String, Object> getFileMetadata(File file) throws IOException {
-    boolean isPosix = file.toPath().getFileSystem().supportedFileAttributeViews().contains("posix");
-    Map<String, Object>  metadata = new HashMap<>(Files.readAttributes(file.toPath(), isPosix? "posix:*" : "*"));
-    metadata.put(HeaderAttributeConstants.FILE_NAME, file.getName());
-    metadata.put(HeaderAttributeConstants.FILE, file.getPath());
-    if (isPosix && metadata.containsKey(PERMISSIONS) && Set.class.isAssignableFrom(metadata.get(PERMISSIONS).getClass())) {
-      Set<PosixFilePermission> posixFilePermissions = (Set<PosixFilePermission>)(metadata.get(PERMISSIONS));
-      //converts permission to rwx- format and replace it in permissions field.
-      // (totally containing 9 characters 3 for user 3 for group and 3 for others)
-      metadata.put(PERMISSIONS, PosixFilePermissions.toString(posixFilePermissions));
-    }
-    return metadata;
-  }
-
 }

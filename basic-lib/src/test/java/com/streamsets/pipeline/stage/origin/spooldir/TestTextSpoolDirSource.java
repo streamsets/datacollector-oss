@@ -22,6 +22,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -36,10 +37,15 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestTextSpoolDirSource {
+  private static final int threadNumber = 0;
+  private static final int batchSize = 10;
+  private static final Map<String, Offset> lastSourceOffset = new HashMap<>();
 
   private String createTestDir() {
     File f = new File("target", UUID.randomUUID().toString());
@@ -94,7 +100,8 @@ public class TestTextSpoolDirSource {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      Assert.assertEquals("-1", source.produce(createLogFile(charset), "0", 10, batchMaker));
+      SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, null);
+      Assert.assertEquals("-1", runnable.generateBatch(createLogFile(charset), "0", 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
@@ -125,7 +132,8 @@ public class TestTextSpoolDirSource {
     runner.runInit();
     try {
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      String offset = source.produce(createLogFile("UTF-8"), "0", 1, batchMaker);
+      SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, null);
+      String offset = runnable.generateBatch(createLogFile("UTF-8"), "0", 1, batchMaker);
       Assert.assertEquals("11", offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
@@ -136,7 +144,7 @@ public class TestTextSpoolDirSource {
 
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createLogFile("UTF-8"), offset, 1, batchMaker);
+      offset = runnable.generateBatch(createLogFile("UTF-8"), offset, 1, batchMaker);
       Assert.assertEquals("22", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
@@ -146,7 +154,7 @@ public class TestTextSpoolDirSource {
       Assert.assertEquals(true, records.get(0).get().getValueAsMap().get("truncated").getValueAsBoolean());
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createLogFile("UTF-8"), offset, 1, batchMaker);
+      offset = runnable.generateBatch(createLogFile("UTF-8"), offset, 1, batchMaker);
       Assert.assertEquals("-1", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
@@ -175,7 +183,8 @@ public class TestTextSpoolDirSource {
       reader.close();
 
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      Assert.assertEquals("-1", source.produce(f, "0", 10, batchMaker));
+      SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, null);
+      Assert.assertEquals("-1", runnable.generateBatch(f, "0", 10, batchMaker));
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);

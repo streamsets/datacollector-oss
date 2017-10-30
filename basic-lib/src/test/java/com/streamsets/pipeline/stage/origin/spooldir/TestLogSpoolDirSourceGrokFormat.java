@@ -23,6 +23,7 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -33,7 +34,9 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestLogSpoolDirSourceGrokFormat {
@@ -55,6 +58,10 @@ public class TestLogSpoolDirSourceGrokFormat {
       "REDISLOG \\[%{POSINT:pid}\\] %{REDISTIMESTAMP:timestamp} %{GREEDYDATA:message}";
 
   private static final String GROK_PATTERN = "%{REDISLOG}";
+
+  private static final int threadNumber = 0;
+  private static final int batchSize = 10;
+  private static final Map<String, Offset> lastSourceOffset = new HashMap<>();
 
   private File createLogFile() throws Exception {
     File f = new File(createTestDir(), "test.log");
@@ -97,11 +104,17 @@ public class TestLogSpoolDirSourceGrokFormat {
   public void testProduceFullFile() throws Exception {
     SpoolDirSource source = createSource();
     PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+
     runner.runInit();
+
     try {
+      SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, lastSourceOffset);
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      Assert.assertEquals("-1", source.produce(createLogFile(), "0", 10, batchMaker));
+      String offset = runnable.generateBatch(createLogFile(), "0", 10, batchMaker);
+
+      Assert.assertEquals("-1", offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+
       List<Record> records = output.getRecords().get("lane");
       Assert.assertNotNull(records);
       Assert.assertEquals(2, records.size());
@@ -151,10 +164,13 @@ public class TestLogSpoolDirSourceGrokFormat {
   public void testProduceLessThanFile() throws Exception {
     SpoolDirSource source = createSource();
     PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+
     runner.runInit();
+
     try {
+      SpoolDirRunnable runnable = source.getSpoolDirRunnable(threadNumber, batchSize, lastSourceOffset);
       BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
-      String offset = source.produce(createLogFile(), "0", 1, batchMaker);
+      String offset = runnable.generateBatch(createLogFile(), "0", 1, batchMaker);
 
       Assert.assertEquals("147", offset);
       StageRunner.Output output = SourceRunner.getOutput(batchMaker);
@@ -179,7 +195,7 @@ public class TestLogSpoolDirSourceGrokFormat {
 
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createLogFile(), offset, 1, batchMaker);
+      offset = runnable.generateBatch(createLogFile(), offset, 1, batchMaker);
       Assert.assertEquals("293", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");
@@ -204,7 +220,7 @@ public class TestLogSpoolDirSourceGrokFormat {
 
 
       batchMaker = SourceRunner.createTestBatchMaker("lane");
-      offset = source.produce(createLogFile(), offset, 1, batchMaker);
+      offset = runnable.generateBatch(createLogFile(), offset, 1, batchMaker);
       Assert.assertEquals("-1", offset);
       output = SourceRunner.getOutput(batchMaker);
       records = output.getRecords().get("lane");

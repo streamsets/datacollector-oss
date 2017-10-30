@@ -25,6 +25,7 @@ import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirRunnable;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import org.apache.commons.io.IOUtils;
@@ -131,10 +132,10 @@ public class TestWholeFileSpoolDirSource {
       Assert.assertTrue(record.get(FileRefUtil.FILE_INFO_FIELD_PATH).getValueAsMap().keySet().containsAll(metadata.keySet()));
 
       //Check permissions
-      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + SpoolDirSource.PERMISSIONS));
+      Assert.assertTrue(record.has(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + SpoolDirRunnable.PERMISSIONS));
       Assert.assertEquals(
           "rwxr-----",
-          record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + SpoolDirSource.PERMISSIONS).getValueAsString()
+          record.get(FileRefUtil.FILE_INFO_FIELD_PATH + "/" + SpoolDirRunnable.PERMISSIONS).getValueAsString()
       );
 
       Assert.assertEquals(Field.Type.FILE_REF, record.get(FileRefUtil.FILE_REF_FIELD_PATH).getType());

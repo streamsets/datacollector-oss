@@ -17,9 +17,9 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
@@ -34,11 +34,14 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,43 +55,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 public class TestSpoolDirSource {
   /*
    * Don't use the constant defined in SpoolDirSource in order to regression test the source.
    */
   private static final String NULL_FILE_OFFSET = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c::0";
+  private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
   private static final String OFFSET_VERSION_ONE = "1";
 
   private String createTestDir() {
     File f = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(f.mkdirs());
     return f.getAbsolutePath();
-  }
-
-  public static class TSpoolDirSource extends SpoolDirSource {
-    File file;
-    long offset;
-    int maxBatchSize;
-    long offsetIncrement;
-    boolean produceCalled;
-    String spoolDir;
-
-    public TSpoolDirSource(SpoolDirConfigBean conf) {
-      super(conf);
-      this.spoolDir = conf.spoolDir;
-    }
-
-    @Override
-    public String produce(File file, String offset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-      long longOffset = Long.parseLong(offset);
-      produceCalled = true;
-      Assert.assertEquals(this.file, file);
-      Assert.assertEquals(this.offset, longOffset);
-      Assert.assertEquals(this.maxBatchSize, maxBatchSize);
-      Assert.assertNotNull(batchMaker);
-      return String.valueOf(longOffset + offsetIncrement);
-    }
   }
 
   private TSpoolDirSource createSource(String initialFile) {
@@ -116,12 +96,16 @@ public class TestSpoolDirSource {
     return new TSpoolDirSource(conf);
   }
 
+  @BeforeClass
+  public static void setup() {
+    DataCollectorServicesUtils.loadDefaultServices();
+  }
+
   @Test
   public void testInitDestroy() throws Exception {
     TSpoolDirSource source = createSource("file-0.log");
     PushSourceRunner runner = new PushSourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
-    List<Record> records = Collections.synchronizedList(new ArrayList<>(10));
-    AtomicInteger batchCount = new AtomicInteger(0);
+
     runner.runInit();
     try {
       Assert.assertTrue(source.getSpooler().isRunning());
@@ -267,8 +251,10 @@ public class TestSpoolDirSource {
 
       runner.waitOnProduce();
 
+      TSpoolDirRunnable runnable = source.getTSpoolDirRunnable();
+
       TestOffsetUtil.compare("file-0.log::0", runner.getOffsets());
-      Assert.assertTrue(source.produceCalled);
+      Assert.assertTrue(runnable.produceCalled);
     } finally {
       runner.runDestroy();
     }
@@ -312,8 +298,9 @@ public class TestSpoolDirSource {
 
       runner.waitOnProduce();
 
+      TSpoolDirRunnable runnable = source.getTSpoolDirRunnable();
       TestOffsetUtil.compare("file-0.log::0", runner.getOffsets());
-      Assert.assertTrue(source.produceCalled);
+      Assert.assertTrue(runnable.produceCalled);
     } finally {
       runner.runDestroy();
     }
@@ -336,8 +323,9 @@ public class TestSpoolDirSource {
 
       runner.waitOnProduce();
 
+      TSpoolDirRunnable runnable = source.getTSpoolDirRunnable();
       TestOffsetUtil.compare("file-0.log::1", runner.getOffsets());
-      Assert.assertTrue(source.produceCalled);
+      Assert.assertTrue(runnable.produceCalled);
     } finally {
       runner.runDestroy();
     }
@@ -359,18 +347,19 @@ public class TestSpoolDirSource {
       source.offsetIncrement = -1;
 
       runner.runProduce(new HashMap<>(), 1000, output -> {
+        TSpoolDirRunnable runnable = source.getTSpoolDirRunnable();
         batchCount.incrementAndGet();
 
         if (batchCount.get() == 1) {
           Assert.assertEquals("file-0.log", output.getOffsetEntity());
           Assert.assertEquals("{\"POS\":\"-1\"}", output.getNewOffset());
-          Assert.assertTrue(source.produceCalled);
-          source.produceCalled = false;
+          Assert.assertTrue(runnable.produceCalled);
+          runnable.produceCalled = false;
         } else if (batchCount.get() == 2) {
           Assert.assertEquals("file-0.log", output.getOffsetEntity());
           Assert.assertEquals("{\"POS\":\"-1\"}", output.getNewOffset());
           //Produce will not be called as this file-0.log will not be eligible for produce
-          Assert.assertFalse(source.produceCalled);
+          Assert.assertFalse(runnable.produceCalled);
         } else if (batchCount.get() > 2){
           runner.setStop();
         }
@@ -388,35 +377,38 @@ public class TestSpoolDirSource {
   public void testAdvanceToNextSpoolFile() throws Exception {
     TSpoolDirSource source = createSource(null);
     PushSourceRunner runner = new PushSourceRunner.Builder(TSpoolDirSource.class, source).addOutputLane("lane").build();
+
     File file1 = new File(source.spoolDir, "file-0.log").getAbsoluteFile();
     Files.createFile(file1.toPath());
     File file2 = new File(source.spoolDir, "file-1.log").getAbsoluteFile();
     Files.createFile(file2.toPath());
 
-    AtomicInteger batchCount = new AtomicInteger(0);
-    runner.runInit();
     source.file = file1;
     source.offset = 0;
     source.maxBatchSize = 10;
+
+    AtomicInteger batchCount = new AtomicInteger(0);
+    runner.runInit();
 
     try {
       runner.runProduce(ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, "file-0.log::0"), 10, output -> {
         batchCount.incrementAndGet();
 
+        TSpoolDirRunnable runnable = source.getTSpoolDirRunnable();
         if (batchCount.get() == 1) {
           Assert.assertEquals("file-0.log", output.getOffsetEntity());
           Assert.assertEquals("{\"POS\":\"0\"}", output.getNewOffset());
-          Assert.assertTrue(source.produceCalled);
+          Assert.assertTrue(runnable.produceCalled);
 
           Assert.assertEquals(1, runner.getEventRecords().size());
           Assert.assertEquals("new-file", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
 
-          source.produceCalled = false;
-          source.offsetIncrement = -1;
+          runnable.produceCalled = false;
+          runnable.offsetIncrement = -1;
         } else if (batchCount.get() == 2) {
           Assert.assertEquals("file-0.log", output.getOffsetEntity());
           Assert.assertEquals("{\"POS\":\"-1\"}", output.getNewOffset());
-          Assert.assertTrue(source.produceCalled);
+          Assert.assertTrue(runnable.produceCalled);
           Assert.assertEquals(2, runner.getEventRecords().size());
           Assert.assertEquals("new-file", runner.getEventRecords().get(0).getHeader().getAttribute(EventRecord.TYPE));
 
@@ -424,12 +416,12 @@ public class TestSpoolDirSource {
           Assert.assertEquals(0, runner.getEventRecords().get(1).get("/error-count").getValueAsInteger());
           Assert.assertEquals(0, runner.getEventRecords().get(1).get("/record-count").getValueAsInteger());
 
-          source.file = file2;
+          runnable.file = file2;
 
         } else if (batchCount.get() == 4) {
-          source.produceCalled = false;
-          source.offset = 0;
-          source.offsetIncrement = 0;
+          runnable.produceCalled = false;
+          runnable.offset = 0;
+          runnable.offsetIncrement = 0;
           runner.setStop();
         } else if (batchCount.get() > 4) {
           runner.setStop();
@@ -665,6 +657,271 @@ public class TestSpoolDirSource {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  private static PushSource.Context createTestContext() {
+    return Mockito.mock(PushSource.Context.class);
+  }
+
+  @Test
+  public void testHandleLastSourceOffsetWithEmptyOffset() throws Exception {
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = "/";
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+    conf.allowLateDirectory = false;
+    conf.numberOfThreads = 1;
+
+    SpoolDirSource source = new SpoolDirSource(conf);
+
+    Map<String, String> lastSourceOffset = null;
+    Map<String, Offset> offsetMap = source.handleLastSourceOffset(lastSourceOffset, createTestContext());
+    Assert.assertEquals(1, offsetMap.size());
+    Assert.assertTrue(offsetMap.containsKey(NULL_FILE));
+    Assert.assertEquals("0", offsetMap.get(NULL_FILE).getOffset());
+  }
+
+  @Test
+  public void testHandleLastSourceOffsetFromV0() throws Exception {
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = "/";
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+    conf.allowLateDirectory = false;
+    conf.numberOfThreads = 1;
+
+    SpoolDirSource source = new SpoolDirSource(conf);
+
+    Map<String, String> lastSourceOffset = ImmutableMap.of(Source.POLL_SOURCE_OFFSET_KEY, "file-1.log::0");
+    Map<String, Offset>  offsetMap = source.handleLastSourceOffset(lastSourceOffset, createTestContext());
+    Assert.assertEquals(1, offsetMap.size());
+    Assert.assertEquals("0", offsetMap.get("file-1.log").getOffset());
+  }
+
+  @Test
+  public void testHandleLastSourceOffsets() throws Exception {
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = "/";
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+    conf.allowLateDirectory = false;
+    conf.numberOfThreads = 1;
+
+    SpoolDirSource source = new SpoolDirSource(conf);
+
+    final int numOffset = 5;
+    Map<String, String> lastSourceOffsets = new HashMap<>(numOffset);
+    IntStream.range(0, numOffset).forEach(
+        threadNumber -> lastSourceOffsets.put("file-" + threadNumber + ".log", Integer.toString(threadNumber))
+    );
+
+    Map<String, String> lastSourceOffset = new HashMap<>();
+    lastSourceOffset.put(source.OFFSET_VERSION, OFFSET_VERSION_ONE);
+    for (String fileName : lastSourceOffsets.keySet()) {
+      Offset offset = new Offset(OFFSET_VERSION_ONE, fileName + "::" + lastSourceOffsets.get(fileName));
+      lastSourceOffset.put(fileName, offset.getOffsetString());
+    }
+
+    Map<String, Offset>  offsetMap = source.handleLastSourceOffset(lastSourceOffset, createTestContext());
+    Assert.assertEquals(numOffset, offsetMap.size());
+
+    for (String fileName : lastSourceOffsets.keySet()) {
+      Assert.assertEquals(lastSourceOffsets.get(fileName), offsetMap.get(fileName).getOffset());
+    }
+
+    // get the very last file from the last source offset
+    Assert.assertEquals("file-0.log", source.getLastSourceFileName());
+  }
+
+  @Test
+  public void testWithMultipleThreads() throws Exception {
+    // set up multiple test files
+    File f = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(f.mkdirs());
+
+    final int numFiles = 10;
+    for (int i = 0; i < numFiles; i++) {
+      FileOutputStream outputStream = new FileOutputStream(new File(f.getAbsolutePath(), "file-" + i + ".log"));
+      // each file has 5 lines
+      IOUtils.writeLines(ImmutableList.of("1", "2", "3", "4", "5"), "\n", outputStream);
+      outputStream.close();
+    }
+
+    readFilesMultipleThreads(f.getAbsolutePath(), 2);
+    readFilesMultipleThreads(f.getAbsolutePath(), 5);
+    readFilesMultipleThreads(f.getAbsolutePath(), 10);
+
+  }
+
+  private void readFilesMultipleThreads(String spoolDir, int numberOfThreads) throws Exception {
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = spoolDir;
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+    conf.allowLateDirectory = false;
+    conf.numberOfThreads = numberOfThreads;
+
+    SpoolDirSource source = new SpoolDirSource(conf);
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirSource.class, source).addOutputLane("lane").build();
+
+    AtomicInteger batchCount = new AtomicInteger(0);
+    final List<Record> records = Collections.synchronizedList(new ArrayList<>(10));
+    runner.runInit();
+
+    final int maxBatchSize = 10;
+
+    try {
+      runner.runProduce(new HashMap<>(), maxBatchSize, output -> {
+        batchCount.incrementAndGet();
+
+        synchronized (records) {
+          records.addAll(output.getRecords().get("lane"));
+        }
+
+        if (records.size() == 50 || batchCount.get() > 999) {
+          runner.setStop();
+        }
+      });
+
+      runner.waitOnProduce();
+      Assert.assertTrue(batchCount.get() > 1);
+      TestOffsetUtil.compare("file-9.log::-1", runner.getOffsets());
+      Assert.assertEquals(50, records.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testWithMultipleThreadsInitialOffsets() throws Exception {
+    // set up multiple test files
+    File f = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(f.mkdirs());
+
+    final int numFiles = 10;
+    for (int i = 0; i < numFiles; i++) {
+      FileOutputStream outputStream = new FileOutputStream(new File(f.getAbsolutePath(), "file-" + i + ".log"));
+      // each file has 5 lines
+      IOUtils.writeLines(ImmutableList.of("1", "2", "3", "4", "5"), "\n", outputStream);
+      outputStream.close();
+    }
+
+    // let the first 2 files, file-0.log and file-2.log, were processed and
+    // file-1.log was processed 1 line/record
+    Map<String, String> lastSourceOffsetMap = ImmutableMap.of(
+        SpoolDirSource.OFFSET_VERSION, OFFSET_VERSION_ONE,
+        "file-0.log", "{\"POS\":\"-1\"}",
+        "file-1.log", "{\"POS\":\"2\"}",
+        "file-2.log", "{\"POS\":\"-1\"}"
+    );
+
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = f.getAbsolutePath();
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+    conf.allowLateDirectory = false;
+    conf.numberOfThreads = 10;
+
+    SpoolDirSource source = new SpoolDirSource(conf);
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirSource.class, source).addOutputLane("lane").build();
+
+    AtomicInteger batchCount = new AtomicInteger(0);
+    final List<Record> records = Collections.synchronizedList(new ArrayList<>(10));
+    runner.runInit();
+
+    final int maxBatchSize = 10;
+
+    try {
+      runner.runProduce(lastSourceOffsetMap, maxBatchSize, output -> {
+        batchCount.incrementAndGet();
+
+        synchronized (records) {
+          records.addAll(output.getRecords().get("lane"));
+        }
+
+         if (records.size() == 39 || batchCount.get() > 99) {
+          runner.setStop();
+        }
+      });
+
+      runner.waitOnProduce();
+      Assert.assertTrue(batchCount.get() > 1);
+      TestOffsetUtil.compare("file-9.log::-1", runner.getOffsets());
+      Assert.assertEquals(39, records.size());
+    } finally {
+      runner.runDestroy();
+    }
+
   }
 
   @Test
