@@ -37,8 +37,8 @@ public class GCSTargetConfig {
       label = "Bucket",
       description = "Expression that will identify bucket for each record.",
       displayPosition = 20,
-      //TODO SDC-7572
       evaluation = ConfigDef.Evaluation.IMPLICIT,
+      //TODO SDC-7719
       group = "GCS"
   )
   public String bucketTemplate;

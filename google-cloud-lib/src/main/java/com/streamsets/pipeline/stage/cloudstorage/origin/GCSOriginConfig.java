@@ -37,8 +37,8 @@ public class GCSOriginConfig {
         label = "Bucket",
         description = "Expression that will identify bucket for each record.",
         displayPosition = 20,
-        evaluation = ConfigDef.Evaluation.EXPLICIT,
-        elDefs = { RecordEL.class, TimeEL.class, TimeNowEL.class },
+        evaluation = ConfigDef.Evaluation.IMPLICIT,
+        //TODO SDC-7719
         group = "GCS"
     )
     public String bucketTemplate;
