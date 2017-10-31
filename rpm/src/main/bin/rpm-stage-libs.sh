@@ -22,6 +22,7 @@ DIST=$1
 TARGET=$2
 VERSION=$3
 DISTS=(el6 el7)
+DISTRIBUTION="$DIST/dist/target/streamsets-datacollector-$VERSION/streamsets-datacollector-$VERSION/streamsets-libs/streamsets-datacollector"
 
 cd "${TARGET}" || exit
 
@@ -34,8 +35,7 @@ for dist in "${DISTS[@]}"; do
   do
     STAGE_LIB=${STAGE_DIR}/target/rpm
     STAGE_NAME=$(basename "${STAGE_DIR}")
-    RPM="rpm"
-    if [ -d "${STAGE_LIB}" ] && [ "${STAGE_NAME}" != "${RPM}" ];
+    if [ -d "${STAGE_LIB}" ] && [ -d "$DISTRIBUTION-$STAGE_NAME" ];
     then
       echo "Processing stage library: ${STAGE_NAME}"
       ln -sf "${STAGE_LIB}"/*/RPMS/noarch/streamsets-datacollector-*.noarch.rpm "${RPM_ALL_DIST}"
