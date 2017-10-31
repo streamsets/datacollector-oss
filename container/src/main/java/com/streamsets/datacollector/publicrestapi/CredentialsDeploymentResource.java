@@ -18,8 +18,10 @@ package com.streamsets.datacollector.publicrestapi;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.WebServerAgentCondition;
-import com.streamsets.lib.security.http.CredentialsBeanJson;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.CredentialDeploymentResponseJson;
+import com.streamsets.lib.security.http.CredentialDeploymentStatus;
+import com.streamsets.lib.security.http.CredentialsBeanJson;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.Charsets;
@@ -51,7 +53,6 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -72,7 +73,6 @@ public class CredentialsDeploymentResource {
   static final String DPM_DEPLOYMENT_ID = "dpm.remote.deployment.id";
   static final String DPM_REMOTE_CONTROL_JOB_LABELS = "dpm.remote.control.job.labels";
 
-
   private final RuntimeInfo runtimeInfo;
   private final AtomicInteger failedCount = new AtomicInteger(0);
 
@@ -88,10 +88,18 @@ public class CredentialsDeploymentResource {
   public Response deployCredentials(CredentialsBeanJson credentialsBeanJson) throws Exception {
     LOG.info("Credentials have been received. Validating..");
     boolean isValid = validateSignature(credentialsBeanJson);
+    CredentialDeploymentStatus credentialDeploymentStatus;
     if (isValid) {
-      deployDPMToken(credentialsBeanJson);
-      handleKerberos(credentialsBeanJson);
-      WebServerAgentCondition.setCredentialsReceived();
+      if (!WebServerAgentCondition.getReceivedCredentials()) {
+        deployDPMToken(credentialsBeanJson);
+        handleKerberos(credentialsBeanJson);
+        WebServerAgentCondition.setCredentialsReceived();
+        credentialDeploymentStatus = CredentialDeploymentStatus.CREDENTIAL_USED_AND_DEPLOYED;
+      } else {
+        LOG.info("Credentials already received, so not using the token");
+        credentialDeploymentStatus = CredentialDeploymentStatus.CREDENTIAL_NOT_USED_ALREADY_DEPLOYED;
+      }
+      return Response.ok(new CredentialDeploymentResponseJson(runtimeInfo.getId(), credentialDeploymentStatus)).build();
     } else {
       LOG.warn("Received credentials were invalid, {} of maximum {} attempts",
           failedCount.incrementAndGet(), MAX_FAILURES_ALLOWED);
@@ -102,7 +110,6 @@ public class CredentialsDeploymentResource {
       }
       return Response.status(Response.Status.BAD_REQUEST).entity("Cannot validate the received credentials").build();
     }
-    return Response.ok(runtimeInfo.getId()).build();
   }
 
   private boolean validateSignature(CredentialsBeanJson credentialsBeanJson)

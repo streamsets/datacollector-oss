@@ -15,8 +15,10 @@
  */
 package com.streamsets.datacollector.publicrestapi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.ConfigurationTestInjector;
 import com.streamsets.datacollector.restapi.RuntimeInfoTestInjector;
@@ -25,6 +27,8 @@ import com.streamsets.datacollector.restapi.StageLibraryResourceConfig;
 import com.streamsets.datacollector.restapi.StartupAuthorizationFeature;
 import com.streamsets.datacollector.restapi.WebServerAgentCondition;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.CredentialDeploymentResponseJson;
+import com.streamsets.lib.security.http.CredentialDeploymentStatus;
 import com.streamsets.lib.security.http.CredentialsBeanJson;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -43,6 +47,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
@@ -55,6 +60,8 @@ import java.util.Properties;
 import static com.streamsets.datacollector.publicrestapi.CredentialsDeploymentResource.DPM_AGENT_PUBLIC_KEY;
 
 public class TestCredentialsDeploymentResource extends JerseyTest{
+
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   @Before
   public void setUp() throws Exception {
@@ -130,6 +137,12 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
     try {
       response = target("/v1/deployment/deployCredentials").request().post(Entity.json(json));
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+      CredentialDeploymentResponseJson responseJson =
+          OBJECT_MAPPER.readValue((InputStream) response.getEntity(), CredentialDeploymentResponseJson.class);
+      Assert.assertEquals(
+          CredentialDeploymentStatus.CREDENTIAL_USED_AND_DEPLOYED,
+          responseJson.getCredentialDeploymentStatus()
+      );
 
       // Verify sdc.properties
       sdcProps = new Properties();
@@ -168,6 +181,15 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
         Assert.assertEquals(len, fr.read(tokenBytes));
         Assert.assertEquals(token, new String(tokenBytes, Charsets.UTF_8));
       }
+      //Test redeploying the credentials again
+      response = target("/v1/deployment/deployCredentials").request().post(Entity.json(json));
+      responseJson =
+          OBJECT_MAPPER.readValue((InputStream) response.getEntity(), CredentialDeploymentResponseJson.class);
+      Assert.assertEquals(
+          CredentialDeploymentStatus.CREDENTIAL_NOT_USED_ALREADY_DEPLOYED,
+          responseJson.getCredentialDeploymentStatus()
+      );
+
     } finally {
       if (response != null) {
         response.close();
