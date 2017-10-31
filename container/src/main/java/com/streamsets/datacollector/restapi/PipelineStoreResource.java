@@ -71,11 +71,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -102,9 +97,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriBuilder;
 import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -166,11 +158,7 @@ public class PipelineStoreResource {
   private static final String SYSTEM_ERROR_PIPELINES = "system:errorPipelines";
   private static final String SHARED_WITH_ME_PIPELINES = "system:sharedWithMePipelines";
 
-  private final static String EDGE_DIST_DIR = "/edge-binaries/";
-  private final static String PIPELINE_JSON_FILE = "pipeline.json";
-  private final static String PIPELINE_INFO_FILE = "info.json";
-  private final static String DATA_PIPELINES_FOLDER = "data/pipelines/";
-  private final static String TAR_FILE_PREFIX = "streamsets-datacollector-edge-";
+
 
   private static final List<String> SYSTEM_PIPELINE_LABELS = ImmutableList.of(
       SYSTEM_ALL_PIPELINES,
@@ -1141,7 +1129,7 @@ public class PipelineStoreResource {
   }
 
   @GET
-  @Path("/pipeline/{pipelineId}/executable")
+  @Path("/pipelines/executable")
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @RolesAllowed({
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
@@ -1151,79 +1139,33 @@ public class PipelineStoreResource {
       authorizations = @Authorization(value = "basic")
   )
   public Response getEdgeExecutable(
-      @PathParam("pipelineId") String pipelineId,
       @QueryParam("edgeOs") @DefaultValue("darwin") String edgeOs,
-      @QueryParam("edgeArch") @DefaultValue("amd64") String edgeArch
+      @QueryParam("edgeArch") @DefaultValue("amd64") String edgeArch,
+      @QueryParam("pipelineIds") String pipelineIds
   ) throws IOException, PipelineException {
-    PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
-    PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfiguration, new ArrayList<>(), null);
-    if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
-      throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
-    }
 
-    String endsWith = "-" + edgeOs + "-" + edgeArch + ".tgz";
-    File dir = new File(runtimeInfo.getRuntimeDir() + EDGE_DIST_DIR);
-    File[] files = dir.listFiles((dir1, name) -> name.startsWith(TAR_FILE_PREFIX) && name.endsWith(endsWith));
+    String[] pipelineIdArr = pipelineIds.split(",");
+    List<PipelineConfigurationJson> pipelineConfigurationList = new ArrayList<>();
 
-    if (files == null || files.length != 1) {
-      throw new RuntimeException("Executable file not found");
-    }
-
-    StreamingOutput streamingOutput = output -> {
-      TarArchiveOutputStream tarArchiveOutput = new TarArchiveOutputStream(new GzipCompressorOutputStream(output));
-      TarArchiveInputStream tarArchiveInput = new TarArchiveInputStream(
-          new GzipCompressorInputStream(new FileInputStream(files[0]))
-      );
-      TarArchiveEntry entry = tarArchiveInput.getNextTarEntry();
-
-      while (entry != null) {
-        if (!entry.getName().contains("pipelines/")) {
-          tarArchiveOutput.putArchiveEntry(entry);
-          IOUtils.copy(tarArchiveInput, tarArchiveOutput);
-          tarArchiveOutput.closeArchiveEntry();
-        }
-        entry = tarArchiveInput.getNextTarEntry();
+    for (String pipelineId: pipelineIdArr) {
+      PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
+      PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
+          .create(pipelineConfiguration, new ArrayList<>(), null);
+      if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
+        throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
       }
+      pipelineConfigurationList.add(BeanHelper.wrapPipelineConfiguration(pipelineConfiguration));
+    }
 
-      File pipelineFile = File.createTempFile(pipelineConfiguration.getPipelineId(), PIPELINE_JSON_FILE);
-      FileOutputStream pipelineOutputStream = new FileOutputStream(pipelineFile);
-      ObjectMapperFactory.get().writeValue(
-          pipelineOutputStream,
-          BeanHelper.wrapPipelineConfiguration(pipelineConfiguration)
-      );
-      pipelineOutputStream.flush();
-      pipelineOutputStream.close();
-      TarArchiveEntry pipelinEntry = new TarArchiveEntry(
-          pipelineFile,
-          DATA_PIPELINES_FOLDER + pipelineConfiguration.getPipelineId() + "/" + PIPELINE_JSON_FILE);
-      pipelinEntry.setSize(pipelineFile.length());
-      tarArchiveOutput.putArchiveEntry(pipelinEntry);
-      IOUtils.copy(new FileInputStream(pipelineFile), tarArchiveOutput);
-      tarArchiveOutput.closeArchiveEntry();
-
-      File infoFile = File.createTempFile(pipelineConfiguration.getPipelineId(), PIPELINE_INFO_FILE);
-      FileOutputStream outputStream = new FileOutputStream(infoFile);
-      ObjectMapperFactory.get().writeValue(outputStream, BeanHelper.wrapPipelineInfo(pipelineConfiguration.getInfo()));
-      outputStream.flush();
-      outputStream.close();
-      TarArchiveEntry infoEntry = new TarArchiveEntry(
-          pipelineFile,
-          DATA_PIPELINES_FOLDER + pipelineConfiguration.getPipelineId() + "/" + PIPELINE_INFO_FILE
-      );
-      infoEntry.setSize(pipelineFile.length());
-      tarArchiveOutput.putArchiveEntry(infoEntry);
-      IOUtils.copy(new FileInputStream(pipelineFile), tarArchiveOutput);
-      tarArchiveOutput.closeArchiveEntry();
-
-      tarArchiveOutput.finish();
-
-      tarArchiveInput.close();
-      tarArchiveOutput.close();
-    };
+    EdgeExecutableStreamingOutput streamingOutput = new EdgeExecutableStreamingOutput(
+        runtimeInfo,
+        edgeOs,
+        edgeArch,
+        pipelineConfigurationList
+    );
 
     return Response.ok(streamingOutput)
-        .header("Content-Disposition", "attachment; filename=\""+ files[0].getName() +"\"")
+        .header("Content-Disposition", "attachment; filename=\""+ streamingOutput.getFileName() +"\"")
         .build();
   }
 }

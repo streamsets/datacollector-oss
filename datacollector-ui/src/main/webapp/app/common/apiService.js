@@ -786,12 +786,13 @@ angular.module('dataCollectorApp.common')
       /**
        * Download Edge Executable.
        *
-       * @param pipelineId
        * @param edgeOs
        * @param edgeArch
+       * @param pipelineIds
        */
-      downloadEdgeExecutable: function(pipelineId, edgeOs, edgeArch) {
-        var url = apiBase + '/pipeline/' + pipelineId + '/executable?edgeOs=' + edgeOs + '&edgeArch=' + edgeArch;
+      downloadEdgeExecutable: function(edgeOs, edgeArch, pipelineIds) {
+        var url = apiBase + '/pipelines/executable?edgeOs=' + edgeOs + '&edgeArch=' + edgeArch +
+          '&pipelineIds=' + pipelineIds.join(',');
         window.open(url, '_blank', '');
       },
 

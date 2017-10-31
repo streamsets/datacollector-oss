@@ -1159,11 +1159,11 @@ angular.module('dataCollectorApp.common')
      * @param pipelineConfig
      */
     this.autoArrange = function(pipelineConfig) {
-      var xPos = 60,
-        yPos = 50,
-        stages = pipelineConfig.stages,
-        laneYPos = {},
-        laneXPos = {};
+      var xPos = 60;
+      var yPos = 50;
+      var stages = pipelineConfig.stages;
+      var laneYPos = {};
+      var laneXPos = {};
 
       angular.forEach(stages, function(stage) {
         var y = stage.inputLanes.length ? laneYPos[stage.inputLanes[0]]: yPos,

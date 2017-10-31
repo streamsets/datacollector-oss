@@ -29,9 +29,9 @@ angular
 
       download: function() {
         api.pipelineAgent.downloadEdgeExecutable(
-          pipelineConfig.pipelineId,
           $scope.selectedEdgeOs,
-          $scope.selectedEdgeArch
+          $scope.selectedEdgeArch,
+          [pipelineConfig.pipelineId]
         );
         $scope.downloaded = true;
       },
