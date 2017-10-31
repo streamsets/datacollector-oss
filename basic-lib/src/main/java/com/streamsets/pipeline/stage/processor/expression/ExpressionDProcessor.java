@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.expression;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Processor;
@@ -31,7 +32,14 @@ import java.util.List;
     description="Performs calculations on a field-by-field basis",
     icon="expression.png",
     upgrader = ExpressionProcessorUpgrader.class,
-    onlineHelpRefUrl = "index.html#Processors/Expression.html#task_x2h_tv4_yq"
+    onlineHelpRefUrl = "index.html#Processors/Expression.html#task_x2h_tv4_yq",
+    execution = {
+        ExecutionMode.STANDALONE,
+        ExecutionMode.CLUSTER_BATCH,
+        ExecutionMode.CLUSTER_YARN_STREAMING,
+        ExecutionMode.CLUSTER_MESOS_STREAMING,
+        ExecutionMode.EDGE
+    }
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
