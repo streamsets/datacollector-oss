@@ -131,7 +131,9 @@ public class ProductionPipeline {
             issues.get(0).getMessage());
           Map<String, Object> attributes = new HashMap<>();
           attributes.put("issues", new IssuesJson(new Issues(issues)));
-          stateChanged(PipelineStatus.STARTING_ERROR, issues.get(0).getMessage(), attributes);
+          // We need to store the error in runningErrorMsg, so that it gets propagated to START_ERROR terminal state
+          runningErrorMsg = issues.get(0).getMessage();
+          stateChanged(PipelineStatus.STARTING_ERROR, runningErrorMsg, attributes);
           errorWhileInitializing = true;
           getPipeline().errorNotification(e);
           throw e;
