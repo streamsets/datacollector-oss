@@ -280,7 +280,7 @@ public class HttpClientSource extends BaseSource {
   private void configureAuthAndBuildClient(ClientBuilder clientBuilder, List<ConfigIssue> issues) {
     if (conf.client.authType == AuthenticationType.OAUTH) {
       String consumerKey = conf.client.oauth.resolveConsumerKey(getContext(),"CREDENTIALS", "conf.clinet.oauth.", issues);
-      String consumerSecret = conf.client.oauth.resolveConsumerKey(getContext(), "CREDENTIALS", "conf.client.oauth.", issues);
+      String consumerSecret = conf.client.oauth.resolveConsumerSecret(getContext(), "CREDENTIALS", "conf.client.oauth.", issues);
       String token = conf.client.oauth.resolveToken(getContext(), "CREDENTIALS", "conf.client.oauth.", issues);
       String tokenSecret = conf.client.oauth.resolveTokenSecret(getContext(), "CREDENTIALS", "conf.client.oauth.", issues);
 
