@@ -712,6 +712,10 @@ public class JdbcUtil {
       config.setTransactionIsolation(hikariConfigBean.transactionIsolation.name());
     }
 
+    if(StringUtils.isNotEmpty(hikariConfigBean.initialQuery)) {
+      config.setConnectionInitSql(hikariConfigBean.initialQuery);
+    }
+
     config.setDataSourceProperties(hikariConfigBean.getDriverProperties());
 
     return config;

@@ -224,6 +224,18 @@ public class HikariPoolConfigBean {
   public boolean readOnly = true;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      mode = ConfigDef.Mode.SQL,
+      label = "Init Query",
+      description = "SQL query that will be executed on all new connections when they are created, before they are" +
+        " added to connection pool.",
+      displayPosition = 80,
+      group = "ADVANCED"
+  )
+  public String initialQuery = "";
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Transaction isolation",
