@@ -157,8 +157,6 @@ public class SpoolDirConfigBean {
           "pipeline to fail.",
       displayPosition = 60,
       group = "FILES",
-      dependsOn = "dataFormat",
-      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED", "LOG", "WHOLE_FILE"},
       min = 1,
       max = Integer.MAX_VALUE
   )
@@ -171,9 +169,7 @@ public class SpoolDirConfigBean {
       label = "First File to Process",
       description = "When configured, the Data Collector does not process earlier (naturally ascending order) file names",
       displayPosition = 50,
-      group = "FILES",
-      dependsOn = "dataFormat",
-      triggeredByValue = { "TEXT", "JSON", "XML", "DELIMITED", "LOG", "WHOLE_FILE"}
+      group = "FILES"
   )
   public String initialFileToProcess;
 
