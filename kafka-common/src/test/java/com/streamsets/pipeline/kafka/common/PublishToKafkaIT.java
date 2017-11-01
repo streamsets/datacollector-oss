@@ -46,7 +46,7 @@ public class PublishToKafkaIT {
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC, MULTIPLE_PARTITIONS, producer, startProducing, DataType.JSON,
-      Mode.ARRAY_OBJECTS, -1, null));
+      Mode.ARRAY_OBJECTS, -1, null, SdcKafkaTestUtilFactory.getInstance().create()));
 
     startProducing.countDown();
 

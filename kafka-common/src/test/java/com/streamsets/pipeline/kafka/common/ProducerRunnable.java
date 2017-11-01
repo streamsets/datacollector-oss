@@ -36,10 +36,19 @@ public class ProducerRunnable implements Runnable {
   private final Mode jsonMode;
   private int noOfRecords;
   private final CountDownLatch doneSignal;
+  private final SdcKafkaTestUtil testUtil;
 
-  public ProducerRunnable(String topic, int partitions,
-                          Producer<String, String> producer, CountDownLatch startLatch, DataType dataType,
-                          Mode jsonMode, int noOfRecords, CountDownLatch doneSignal) {
+  public ProducerRunnable(
+    String topic,
+    int partitions,
+    Producer<String, String> producer,
+    CountDownLatch startLatch,
+    DataType dataType,
+    Mode jsonMode,
+    int noOfRecords,
+    CountDownLatch doneSignal,
+    SdcKafkaTestUtil testUtil
+  ) {
     this.topic = topic;
     this.partitions = partitions;
     this.producer = producer;
@@ -49,23 +58,43 @@ public class ProducerRunnable implements Runnable {
     this.jsonMode = jsonMode;
     this.noOfRecords = noOfRecords;
     this.doneSignal = doneSignal;
+    this.testUtil = testUtil;
+
+    LOG.info(
+      "Received producer class {} from {}",
+      producer.getClass(),
+      producer.getClass().getProtectionDomain().getCodeSource().getLocation().toString()
+    );
+    LOG.info(
+      "Received test util {} from {}",
+      testUtil.getClass(),
+      testUtil.getClass().getProtectionDomain().getCodeSource().getLocation().toString()
+    );
   }
 
   @Override
   public void run() {
     try {
+      LOG.info("Waiting on signal to start");
       startLatch.await();
     } catch (InterruptedException e) {
-      LOG.debug("Ignoring exception", e);
+      LOG.error("Ignoring exception", e);
     }
 
-    int i = 0;
-    while(i < noOfRecords || noOfRecords == -1) {
-      producer.send(new KeyedMessage<>(topic, getPartitionKey(), KafkaTestUtil.generateTestData(dataType, jsonMode)));
-      i++;
-    }
-    if (doneSignal != null) {
-      doneSignal.countDown();
+    LOG.info("Moving to generate messages");
+
+    try {
+      int i = 0;
+      while (i < noOfRecords || noOfRecords == -1) {
+        producer.send(new KeyedMessage<>(topic, getPartitionKey(), testUtil.generateTestData(dataType, jsonMode)));
+        i++;
+      }
+      if (doneSignal != null) {
+        doneSignal.countDown();
+      }
+    } catch (Throwable e) {
+      LOG.error("Exception while generating messages: {}", e.toString(), e);
+      throw new RuntimeException("Can't generate messages", e);
     }
   }
 

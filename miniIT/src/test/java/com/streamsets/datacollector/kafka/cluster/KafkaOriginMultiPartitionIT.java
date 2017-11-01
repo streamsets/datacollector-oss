@@ -20,6 +20,7 @@ import com.streamsets.datacollector.base.PipelineOperationsClusterIT;
 import com.streamsets.pipeline.kafka.common.DataType;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import com.streamsets.pipeline.kafka.common.ProducerRunnable;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import kafka.javaapi.producer.Producer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -51,7 +52,7 @@ public class KafkaOriginMultiPartitionIT extends PipelineOperationsClusterIT {
     Producer<String, String> producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
     executorService = Executors.newSingleThreadExecutor();
     executorService.submit(new ProducerRunnable(TOPIC, 3, producer, startLatch, DataType.TEXT, null, -1,
-      null));
+      null, SdcKafkaTestUtilFactory.getInstance().create()));
     PipelineOperationsClusterIT.beforeClass(getPipelineJson(), "TestKafkaOriginMultiPartitionCluster");
     startLatch.countDown();
   }

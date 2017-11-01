@@ -43,7 +43,7 @@ public abstract class TestUtilFactoriesBean {
       serviceCount++;
     }
     if (serviceCount != 1) {
-      throw new RuntimeException(Utils.format("Unexpected number of FactoriesBean: {} instead of 1", serviceCount));
+      throw new RuntimeException(Utils.format("Unexpected number of TestUtilFactoriesBean: {} instead of 1", serviceCount));
     }
 
     LOG.info("Loaded TestUtilFactoriesBean: {}", testUtilFactoriesBean.getClass().getName());
