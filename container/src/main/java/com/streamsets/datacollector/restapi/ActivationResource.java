@@ -50,7 +50,6 @@ public class ActivationResource {
   }
 
   @GET
-  @Path("/")
   @ApiOperation(value = "Returns SDC activation information", response = Map.class, authorizations = @Authorization(value = "guest"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
@@ -59,7 +58,6 @@ public class ActivationResource {
   }
 
   @POST
-  @Path("/")
   @ApiOperation(value = "Uploads the SDC activation key", response = Map.class, authorizations = @Authorization(value = "admin"))
   @Consumes(MediaType.TEXT_PLAIN)
   @Produces(MediaType.APPLICATION_JSON)
