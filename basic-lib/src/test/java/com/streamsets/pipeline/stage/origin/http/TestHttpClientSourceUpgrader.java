@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.HttpProxyConfigBean;
@@ -267,6 +268,22 @@ public class TestHttpClientSourceUpgrader {
         "conf.client.",
         new HttpClientSourceUpgrader(),
         13
+    );
+  }
+
+  @Test
+  public void testV13ToV14() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
+    httpClientSourceUpgrader.upgrade("lib", "stage", "inst", 13, 14, configs);
+
+    UpgraderTestUtils.assertAllExist(
+        configs,
+        "conf.client.requestLoggingConfig.enableRequestLogging",
+        "conf.client.requestLoggingConfig.logLevel",
+        "conf.client.requestLoggingConfig.verbosity",
+        "conf.client.requestLoggingConfig.maxEntitySize"
     );
   }
 

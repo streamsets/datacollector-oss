@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.JerseyClientUtil;
+import com.streamsets.pipeline.lib.http.logging.HttpConfigUpgraderUtil;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgradeUtil;
 
 import java.util.ArrayList;
@@ -108,12 +109,19 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         }
         // fall through
       case 11:
+        upgradeV11ToV12(configs);
         if (toVersion == 12) {
           break;
         }
         // fall through
       case 12:
         upgradeV12ToV13(configs);
+        if (toVersion == 13) {
+          break;
+        }
+        // fall through
+      case 13:
+        upgradeV13ToV14(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -127,6 +135,10 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
 
   private void upgradeV12ToV13(List<Config> configs) {
     TlsConfigBeanUpgradeUtil.upgradeHttpSslConfigBeanToTlsConfigBean(configs, "conf.client.");
+  }
+
+  private void upgradeV13ToV14(List<Config> configs) {
+    HttpConfigUpgraderUtil.addDefaultRequestLoggingConfigs(configs, "conf.client");
   }
 
   private static void upgradeV8ToV9(List<Config> configs) {

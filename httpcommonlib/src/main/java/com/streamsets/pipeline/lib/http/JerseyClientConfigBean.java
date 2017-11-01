@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.http.logging.RequestLoggingConfigBean;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import org.apache.commons.lang.StringUtils;
@@ -140,6 +141,9 @@ public class JerseyClientConfigBean {
 
   @ConfigDefBean(groups = "TLS")
   public TlsConfigBean tlsConfig = new TlsConfigBean();
+
+  @ConfigDefBean(groups = "LOGGING")
+  public RequestLoggingConfigBean requestLoggingConfig = new RequestLoggingConfigBean();
 
   public void init(Stage.Context context, String groupName, String prefix, List<Stage.ConfigIssue> issues) {
     if (useProxy && !StringUtils.isEmpty(proxy.uri)) {

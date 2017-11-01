@@ -26,6 +26,7 @@ public enum Groups implements Label {
   PROXY("Proxy"),
   TLS("TLS"),
   DATA_FORMAT("Data Format"),
+  LOGGING("Logging"),
 
   ;
 

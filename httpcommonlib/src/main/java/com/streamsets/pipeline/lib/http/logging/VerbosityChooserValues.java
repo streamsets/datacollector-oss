@@ -13,32 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.http;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+package com.streamsets.pipeline.lib.http.logging;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  HTTP("HTTP"),
-  PAGINATION("Pagination"),
-  CREDENTIALS("Credentials"),
-  OAUTH2("OAuth 2"),
-  PROXY("Proxy"),
-  TLS("TLS"),
-  TIMEOUT("Timeout Handling"),
-  DATA_FORMAT("Data Format"),
-  LOGGING("Logging")
-  ;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import org.glassfish.jersey.logging.LoggingFeature;
 
-  private final String label;
+public class VerbosityChooserValues extends BaseEnumChooserValues<LoggingFeature.Verbosity> {
 
-  private Groups(String label) {
-    this.label = label;
-  }
+  public static final String DEFAULT_VERBOSITY_STR = "HEADERS_ONLY";
+  public static final LoggingFeature.Verbosity DEFAULT_VERBOSITY = LoggingFeature.Verbosity.valueOf(
+      DEFAULT_VERBOSITY_STR
+  );
 
-  @Override
-  public String getLabel() {
-    return this.label;
+  public VerbosityChooserValues() {
+    super(LoggingFeature.Verbosity.class);
   }
 }
