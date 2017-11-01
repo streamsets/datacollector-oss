@@ -220,7 +220,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       PipelineStatus.DISCONNECTED
     ))
     .put(PipelineStatus.DISCONNECTED, ImmutableSet.of(
-      PipelineStatus.CONNECTING
+      PipelineStatus.CONNECTING,
+      PipelineStatus.STARTING
     ))
     .put(PipelineStatus.CONNECTING, ImmutableSet.of(
       PipelineStatus.STARTING,
@@ -344,7 +345,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           if (attributes != null && attributes.containsKey(ProductionPipeline.RUNTIME_PARAMETERS_ATTR)) {
             runtimeParameters = (Map<String, Object>) attributes.get(ProductionPipeline.RUNTIME_PARAMETERS_ATTR);
           }
-          validateAndSetStateTransition(user, PipelineStatus.CONNECTING, msg, null);
           retryOrStart(user);
           break;
         default:

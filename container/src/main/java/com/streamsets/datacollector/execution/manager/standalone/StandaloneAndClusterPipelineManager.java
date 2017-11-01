@@ -89,6 +89,8 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   static final String RUNNER_EXPIRY_INTERVAL = "runner.expiry.interval";
   static final long DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY = 30*60*1000;
   static final String RUNNER_EXPIRY_INITIAL_DELAY = "runner.expiry.initial.delay";
+  static final boolean DEFAULT_RUNNER_RESTART_PIPELINES = true;
+  static final String RUNNER_RESTART_PIPELINES = "runner.boot.pipeline.restart";
   private final long runnerExpiryInterval;
   private final long runnerExpiryInitialDelay;
   private ScheduledFuture<?> runnerExpiryFuture;
@@ -219,6 +221,11 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       CacheBuilder.newBuilder().build())
     ;
 
+    // On SDC start up we will try by default start all pipelines that were running at the time SDC was shut down. This
+    // can however be disabled via sdc.properties config. Especially helpful when starting all pipeline at once could
+    // lead to troubles.
+    boolean restartPipelines = configuration.get(RUNNER_RESTART_PIPELINES, DEFAULT_RUNNER_RESTART_PIPELINES);
+
     List<PipelineInfo> pipelineInfoList;
     try {
       pipelineInfoList = pipelineStore.getPipelines();
@@ -239,7 +246,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
           ExecutionMode executionMode = pipelineState.getExecutionMode();
           Runner runner = getRunner(name, rev, executionMode);
           runner.prepareForDataCollectorStart(pipelineState.getUser());
-          if (runner.getState().getStatus() == PipelineStatus.DISCONNECTED) {
+          if (restartPipelines && runner.getState().getStatus() == PipelineStatus.DISCONNECTED) {
             runnerCache.put(getNameAndRevString(name, rev), new RunnerInfo(runner, executionMode));
             try {
               String user = pipelineState.getUser();
