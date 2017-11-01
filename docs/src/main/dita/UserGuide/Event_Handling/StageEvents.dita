@@ -140,6 +140,11 @@
                                 <ul id="ul_dfr_cxg_x1b">
                                     <li>Completes processing the data in the associated CDC
                                         tables.</li>
+                                    <li>
+                                        <p>When you enable checking for schema changes, the origin
+                                            generates an event each time it detects a schema
+                                            change.</p>
+                                    </li>
                                 </ul>
                                 <p>For more information, see <xref
                                         href="../Origins/SQLServerCDC-EventGeneration.dita">"Event

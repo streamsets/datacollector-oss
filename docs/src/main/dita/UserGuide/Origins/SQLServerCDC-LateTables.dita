@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_nxm_1lp_qbb">
+ <title>Allow Late Table Processing</title>
+ <conbody>
+  <p><indexterm>SQL Server CDC Client origin<indexterm>allow late table
+                processing</indexterm></indexterm><indexterm>late tables<indexterm>allowing
+                    processing by the SQL Server CDC Client origin</indexterm></indexterm>You can
+            configure the SQL Server CDC Client to process data in CDC tables that appear after the
+            pipeline starts. </p>
+        <p>When you allow late table processing, the SQL Server CDC Client origin uses a background
+            thread to check for late CDC tables. The origin checks at regular user-defined
+            intervals.</p>
+        <p>To enable late table processing, configure the following properties: <ul
+                id="ul_emp_jk4_sbb">
+                <li>On the JDBC tab, select the Allow Late Tables property. </li>
+                <li>To define the time to wait before checking for new tables, configure the New
+                    Table Discovery Interval property.</li>
+                <li>On the Advanced tab, set the Maximum Pool Size and Minimum Idle Connections
+                    properties to one thread more than the Number of Threads property.</li>
+            </ul></p>
+ </conbody>
+</concept>

@@ -41,6 +41,7 @@
    <topicref href="../Troubleshooting/Origins-JDBC.dita"/>
    <topicref href="../Troubleshooting/Origins-KafkaConsumer.dita"/>
    <topicref href="../Troubleshooting/Origins-OracleCDC.dita"/>
+   <topicref href="../Troubleshooting/Origins-SQLServerCDC.dita"/>
   </topicref>
   <topicref href="../Troubleshooting/Destinations.dita">
    <topicmeta>

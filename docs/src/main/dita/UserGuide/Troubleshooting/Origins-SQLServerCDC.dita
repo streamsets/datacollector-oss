@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_f5z_s3q_qbb">
+ <title>SQL Server CDC Client</title>
+ <conbody>
+        <dl>
+            <dlentry>
+                <dt>A pipeline with the SQL Server CDC Client origin cannot establish a connection.
+                    The pipeline fails with the following error:</dt>
+                <dd>
+                    <codeblock>java.sql.SQLTransientConnectionException: HikariPool-3 - 
+   Connection is not available, request timed out after 30004ms.
+at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:213)
+at com.zaxxer.hikari.pool.HikariPool.getConnection(HikariPool.java:163)
+at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.
+  java:85)
+at com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager.
+  getNewConnection(ConnectionManager.java:45)
+at com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager.
+  getConnection(ConnectionManager.java:57)
+at com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.
+  SQLServerCDCSource.getCDCTables(SQLServerCDCSource.java:181)</codeblock>
+                </dd>
+                <dd>
+                    <p>This can occur when the origin is configured to use a certain number of
+                        threads, but the thread pool is not set high enough. On the Advanced tab,
+                        check the settings for the Maximum Pool Size and Minimum Idle Connections
+                        properties. </p>
+                </dd>
+                <dd>When using <xref
+                        href="../Origins/SQLServerChange-Multithread.dita#concept_ofh_gns_r1b"
+                        >multithreaded processing</xref>, you want these properties to be set to
+                    greater than or equal to the value of the Number of Threads property on the JDBC
+                    tab.</dd>
+                <dd>
+                    <p>Also, <xref
+                            href="../Origins/SQLServerCDC-LateTables.dita#concept_nxm_1lp_qbb"
+                            >allowing late table processing</xref> requires the origin to use an
+                        additional background thread. When you enable processing late tables, you
+                        should set the Maximum Pool Size and Minimum Idle Connections properties to
+                        one thread more than the Number of Threads property.</p>
+                </dd>
+            </dlentry>
+            <dlentry>
+                <dt>After dropping and recreating a table, the origin won't seem to read the data in
+                    the table. What's the problem?</dt>
+                <dd>The SQL Server CDC Client origin stores the offset for every table that it
+                    processes to track its progress. If you drop a table and recreate it using the
+                    same name, the origin assumes it is the same table and uses the last-saved
+                    offset for the table. </dd>
+                <dd>If you need the origin to process data earlier than the last-saved offset, you
+                    might need to <xref
+                        href="../Pipeline_Maintenance/ResettingTheOrigin.dita#task_hdg_j1s_5q">reset
+                        the origin</xref>. </dd>
+                <dd>Note that after you reset the origin, the origin drops all stored offsets. And
+                    when you restart the pipeline, the origin processes all available data in the
+                    specified tables. You cannot reset the origin for a particular table.</dd>
+            </dlentry>
+        </dl>
+ </conbody>
+</concept>

@@ -470,10 +470,13 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Origins/SQLServerCDC-DriverInstall.dita"/>
+   <topicref href="../Origins/SQLServerCDC-SupportedOps.dita"/>
    <topicref href="../Origins/SQLServerCDC-Multithread.dita"/>
    <topicref href="../Origins/SQLServerCDC-BatchStrategy.dita"/>
    <topicref href="../Origins/SQLServerCDC-TableConfig.dita"/>
    <topicref href="../Origins/SQLServerCDC-TableOrder.dita"/>
+   <topicref href="../Origins/SQLServerCDC-LateTables.dita"/>
+   <topicref href="../Origins/SQLServerCDC-SchemaChanges.dita"/>
    <topicref href="../Origins/SQLServerCDC-GeneratedRecord.dita">
     <topicref href="../Origins/SQLServerCDC-RecordHeaderAtts.dita"/>
     <topicref href="../Origins/SQLServerCDC-CDCOpHeaderAtt.dita"/>

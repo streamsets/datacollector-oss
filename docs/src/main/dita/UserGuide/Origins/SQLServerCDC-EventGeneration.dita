@@ -22,10 +22,14 @@
             generate events that you can use in an event stream. When you enable event generation,
             the origin generates an event when it completes processing the data returned by the
             specified queries for all tables. </p>
+        <p>If you enable schema change event generation, the origin also generates an event each
+            time it finds a schema change.</p>
         <p>SQL Server CDC Client events can be used in any logical way. For example: <ul
                 id="ul_j5y_bkv_s1b">
                 <li
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/li-UseCase-PipelineFinisher"/>
+                <li
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-li-Event-FileStore"/>
             </ul></p>
         <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventGen-xref"
             /></p>

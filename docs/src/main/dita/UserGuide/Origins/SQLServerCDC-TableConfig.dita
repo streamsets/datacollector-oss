@@ -17,38 +17,62 @@
  <title>Table Configuration</title>
  <conbody>
   <p><draft-comment author="Loretta">Note: any changes here should probably also go into the SQL
-                Server Change Tracking version of this topic.</draft-comment><indexterm>SQL Server
-                CDC Client origin<indexterm>table configuration</indexterm></indexterm>When you
-            configure SQL Server CDC Client, you define multiple CDC tables using a single set of
-            table configuration properties and you can define multiple table configurations to
-            process multiple groups of CDC tables. When you define table configurations you can
-            define the following properties for each set of tables:<ul id="ul_nrw_s21_s1b">
-                <li>Schema - The schema where the tables reside.</li>
-            </ul><ul id="ul_gkr_r21_s1b">
-                <li>Table name pattern - <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SpecifyDataTables"
-                        /><p>When defining the table name pattern, use SQL-like syntax to define a
-                        set of tables to process. For example, the table name pattern st% matches
-                        tables whose names start with "st". The default pattern, %, matches all
-                        tables in the schema. </p><p>For more information about valid patterns for
-                        the SQL LIKE syntax, see <xref
+                Server Change Tracking version of this topic. – except the Capture Instance Name is
+                just CDC client.</draft-comment><indexterm>SQL Server CDC Client
+                    origin<indexterm>table configuration</indexterm></indexterm>When you configure
+            SQL Server CDC Client, you can define multiple CDC tables using a single set of table
+            configuration properties. You can also define multiple table configurations to process
+            multiple groups of CDC tables. </p>
+        <p>When you define table configurations you can define the following properties for each set
+            of tables:<dl>
+                <dlentry>
+                    <dt>Capture Instance Name</dt>
+                    <dd>Determines the CDC tables to process. The naming convention for Microsoft
+                        SQL Server CDC tables is &lt;capture instance name>_CT. When specifying this
+                        property, use the capture instance name, not the names of the CDC tables to
+                        be processed. For example, specify the <codeph>dbo.customer</codeph> source
+                        table, not the associated CDC table, <codeph>dbo_customer_CT</codeph>.</dd>
+                    <dd>When you configure the Capture Instance Name property, you can specify a
+                        pattern that describes a set of capture instance names to use. If capture
+                        instance names are not set up in the database, then you specify a pattern
+                        for the table names to process. </dd>
+                    <dd>You can use SQL-like syntax to define the set of CDC tables to process. For
+                        example, the pattern <codeph>east%</codeph> matches tables whose names start
+                        with "east". For more information about SQL LIKE syntax, see <xref
                             href="https://msdn.microsoft.com/en-us/library/ms179859.aspx"
-                            format="html" scope="external"/>. </p></li>
-                <li>Table exclusion pattern - When necessary, use a regex pattern to exclude certain
-                    tables that match the table name pattern from being read. <p>For example, say
-                        you want to process all CDC tables in the schema except for those that start
-                        with "dept". You can use the default % for the table name pattern, and enter
-                        dept* for the table exclusion pattern.</p><p>For more information about
-                        using regular expressions with <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />, see <xref href="../Apx-RegEx/RegEx-Overview.dita#concept_vd4_nsc_gs"/>.
-                    </p></li>
-                <li>Initial offset - The SQL Server CDC Client origin uses the __$start_lsn column
-                    as the offset column. To process existing data, define the offset value to use.
-                    The offset is used for all tables included in the table configuration. <p>When
-                        not set, the origin processes all available CDC data. </p><note
-                        type="important">When processing an offset, the origin starts with the first
-                        value greater than the specified offset. </note></li>
-            </ul></p>
+                            format="html" scope="external"/>. </dd>
+                    <dd>
+                        <p>When configuring the Capture Instance Name property, you can use one of
+                            the following formats:<ul
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CaptureInstance-Formats"
+                                id="ul_g52_x1q_qbb">
+                                <li/>
+                            </ul></p>
+                    </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Table exclusion pattern</dt>
+                    <dd>Optionally specify a regex pattern for the table names that you want to
+                        exclude from the query.<p>For example, say you want to process all CDC
+                            tables in the schema except for those that start with "dept". You can
+                            use the default % for the table name pattern, and enter dept* for the
+                            table exclusion pattern.</p><p>For more information about using regular
+                            expressions with <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            />, see <xref href="../Apx-RegEx/RegEx-Overview.dita#concept_vd4_nsc_gs"
+                            />. </p></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Initial offset</dt>
+                    <dd>To process existing data, specify an initial offset. When not set, the
+                        origin processes all available CDC data. </dd>
+                    <dd>The SQL Server CDC Client origin uses the <codeph>__$start_lsn</codeph>
+                        column as the offset column. To process existing data, define the offset
+                        value to use. The offset is used for all tables included in the table
+                        configuration. <note type="important">When you specify an initial offset,
+                            the origin starts with the first value greater than the specified
+                            offset. </note></dd>
+                </dlentry>
+            </dl></p>
  </conbody>
 </concept>

@@ -33,23 +33,24 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             changed data processing and a list of CRUD-enabled destinations, see <xref
                 href="../Pipeline_Design/CDC-Overview.dita#concept_apw_l2c_ty"/>. </p>
-        <p>Note that the origin supports the SQL Server insert and delete operations. Updates
-            captured after the update operation are treated as update, and updates captured before
-            the update operation are treated as an unsupported operation.</p>
         <p>You might use this origin to perform database replication. You can use a separate
             pipeline with the JDBC Query Consumer or JDBC Multitable Consumer origin to read
             existing data. Then start a pipeline with the SQL Server CDC Client origin to process
             subsequent changes.</p>
-        <p>When you configure the origin, you specify the SQL Server source table names - the origin
-            processes the related CDC tables. You can define groups of tables in the same database
-            and any initial offsets to use. When you omit initial offsets, the origin processes all
-            available data in the CDC tables.</p>
+        <p>When you configure the origin, you specify the SQL Server capture instance names - the
+            origin processes the related CDC tables. You can define groups of tables in the same
+            database and any initial offsets to use. When you omit initial offsets, the origin
+            processes all available data in the CDC tables.</p>
+        <p>You can enable late table processing to allow the origin to process tables that appear
+            after the pipeline starts. You can also configure the origin to check for schema changes
+            in processed tables and to generate an event after discovering a change.</p>
         <p>To determine how the origin connects to the database, you specify connection information,
             a query interval, number of retries, and any custom JDBC configuration properties that
             you need. </p>
         <p>To use a JDBC version older than 4.0, you can specify the driver class name and define a
             health check query.</p>
         <p
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventHandling-overview"/>
- </conbody>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/O-EventHandling-overview"
+        />
+    </conbody>
 </concept>

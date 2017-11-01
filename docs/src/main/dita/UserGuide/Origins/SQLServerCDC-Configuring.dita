@@ -85,9 +85,14 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCUseCredentials_row">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/JDBCQueryInterval">
-                                    <entry/>
+                                <row>
+                                    <entry>Query Interval</entry>
+                                    <entry>Amount of time to wait between queries. Enter an
+                                        expression based on a unit of time. You can use SECONDS,
+                                        MINUTES, or HOURS.<p>Also used as the interval between
+                                            checking for schema changes when Enable Schema Changes
+                                            Event is enabled. </p><p>Default is 10 seconds: ${10 *
+                                            SECONDS}. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Number of Threads <xref
@@ -146,6 +151,34 @@
                                     <entry/>
                                 </row>
                                 <row>
+                                    <entry>Enable Schema Changes Event <xref
+                                            href="SQLServerCDC-SchemaChanges.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_a3d_54v_qbb"/>
+                                        </xref></entry>
+                                    <entry>Enables regular checks for schema changes. <p>When
+                                            enabled, the origin checks for schema changes for all
+                                            processed tables at regular intervals based on the Query
+                                            Interval property. The origin generates a schema change
+                                            event each time it discovers a schema change.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Allow Late Tables</entry>
+                                    <entry>Allows the origin to process tables that appear after the
+                                        pipeline starts. <p>When enabled, the origin uses a
+                                            background thread to check for additional tables to
+                                            process. For information about adjusting related
+                                            configuration properties, see <xref
+                                                href="SQLServerCDC-LateTables.dita#concept_nxm_1lp_qbb"
+                                            />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>New Table Discovery Interval</entry>
+                                    <entry>Time to wait before checking for additional tables to
+                                        process.</entry>
+                                </row>
+                                <row>
                                     <entry
                                         conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/entry-FetchSize"/>
                                     <entry><ph
@@ -184,26 +217,22 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JDBC-SchemaName">
-                                    <entry/>
-                                </row>
                                 <row>
-                                    <entry>Table Name Pattern <xref
-                                            href="SQLServerCDC-TableConfig.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_pyb_2cc_x1b"/>
-                                        </xref></entry>
-                                    <entry>
-                                        <p
-                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/p-TableNamePatt-1"/>
-                                        <p><ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ph-SpecifyDataTables"
-                                            /></p>
-                                        <p
-                                            conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/p-TableNamePat-2"
-                                        />
-                                    </entry>
+                                    <entry>Capture Instance Name</entry>
+                                    <entry>Determines the set of CDC tables to process. Use SQL LIKE
+                                        syntax to define a table name pattern for the table names.
+                                        Use one of the following formats:<ul id="ul_yzh_2kv_qbb">
+                                            <li><ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/format-ChangeInstanceName"
+                                                /><codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/code-ChangeInstanceName"/></li>
+                                            <li><ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/format-TableNamePattern"
+                                                /><codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/code-tablenamepattern"/></li>
+                                            <li><ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/format-AllTables"
+                                                /><codeblock conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/code-AllTables"/></li>
+                                        </ul><p>Default is dbo_%, which processes all available CDC
+                                            tables in the  default dbo schema.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Table Exclusion Pattern</entry>

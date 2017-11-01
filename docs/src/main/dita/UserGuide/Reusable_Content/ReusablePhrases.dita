@@ -1550,13 +1550,40 @@ web-0011.log</codeblock></dd>
                                     pipeline to read the existing data before you start the pipeline
                                     with Oracle CDC Client</ph></ph></ph></p>
             <p>
-                  <draft-comment author="Loretta">The following ph is used by SQL Server CDC Client
-                        - Table Config and Configuring the origin</draft-comment>
+                  <draft-comment author="Loretta">The following phrases and bullets are used by SQL
+                        Server CDC Client - Table Config and Configuring the origin</draft-comment>
             </p>
-            <p><ph id="ph-SpecifyDataTables">When specifying the table names, use the names for the
-                        source tables that contain the data, not the names of the CDC tables. For
-                        example, specify the dbo.customer source table, not the associated CDC
-                        table, cdc.dbo_customer_CT. </ph></p>
+            <ul id="CaptureInstance-Formats">
+                  <li><ph id="format-ChangeInstanceName">To process the CDC tables that match the
+                              specified capture instance name pattern, use the following
+                              format:</ph><codeblock id="code-ChangeInstanceName">&lt;capture instance name pattern></codeblock><p>Use
+                              this format when CDC tables are created based on capture instance
+                              names. You can use the pattern to process a full set of CDC tables or
+                              to exclude some CDC tables from processing. </p><p>For example, say
+                              you have a <codeph>Sales.Accounts</codeph> table with a CDC table
+                              named <codeph>Sales_Accounts_CT</codeph>. After adding several columns
+                              to the table, you create a new CDC table called
+                                    <codeph>Sales_Accounts2_CT</codeph>. </p><p>To process both CDC
+                              tables, you can specify the following capture instance name pattern:
+                                    <codeph>Sales_Accounts%</codeph>. To process only the CDC data
+                              that occurred after the schema change, you can specify the following
+                              capture instance name: <codeph>Sales_Accounts2</codeph>.</p></li>
+                  <li><ph id="format-TableNamePattern">To process all available CDC tables for the
+                              specified data tables, use the following
+                              format:</ph><codeblock id="code-tablenamepattern">&lt;schema name>_&lt;data table name pattern></codeblock><p>Use
+                              this format when CDC tables are created based on data tables instead
+                              of capture instance names. </p><p>For example, to process all
+                              available CDC tables for data tables in a Sales schema, you might use
+                                    <codeph>Sales_%</codeph>. Or, to process the CDC tables
+                              associated with a set of data tables with the Transact prefix, you
+                              might use <codeph>Sales_Transact%</codeph>.</p></li>
+                  <li><ph id="format-AllTables">To process all CDC tables associated with the
+                              schema, use the following format:</ph><p>
+                              <codeblock id="code-AllTables">&lt;schema name>_%</codeblock>
+                        </p><p>For example, to process all tables in the sales schema, enter
+                                    <codeph>sales_%</codeph>.</p></li>
+            </ul>
+            <p/>
             <p>
                   <draft-comment author="Loretta">UDP Source and UDP to Kafka use the following ph
                         and ul:</draft-comment>

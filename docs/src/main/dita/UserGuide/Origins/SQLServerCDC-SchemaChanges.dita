@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_avq_s2q_qbb">
+ <title>Checking for Schema Changes</title>
+ <conbody>
+  <p><indexterm>SQL Server CDC Client origin<indexterm>checking for schema
+                changes</indexterm></indexterm>You can configure the SQL Server CDC Client origin to
+            check for schema changes in the tables being processed. When checking for schema
+            changes, the origin includes a schema check statement in the SQL query. </p>
+        <p>When the origin checks for schema changes, it performs the following tasks:<ol
+                id="ol_xhx_b3q_qbb">
+                <li>Compares current table schemas with the original table schemas at regular
+                    intervals, based on the Query Interval property.</li>
+                <li>If it determines that the schema of a table has changed, it generates a
+                    schema-change event that states the table or capture instance name with the
+                    changed schema.<p>The origin generates a schema-change event each time that it
+                        finds a schema change: one for each table with a schema change. </p><p>
+                        <note>Since the origin continues to check for schema changes at regular
+                            intervals until the pipeline stops, a single schema change can generate
+                            a large volume of events.</note>
+                    </p></li>
+                <li>It can write the exact column name or data type change to the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> log. To enable writing to the log, the log level must be set to Trace. For
+                    information about changing the log level, see <xref
+                        href="../Administration/ModifyingLogLevel.dita#task_lkv_g2f_wy"/>.</li>
+            </ol></p>
+        <p>To enable the SQL Server CDC Client origin to check for schema changes and generate
+            events when discovering them, enable both of the following properties:<ul
+                id="ul_wrj_pkv_qbb">
+                <li>On the General tab, select the Produce Events property.</li>
+                <li>On the JDBC tab, select the Enable Schema Changes Event property.</li>
+            </ul></p>
+ </conbody>
+</concept>
