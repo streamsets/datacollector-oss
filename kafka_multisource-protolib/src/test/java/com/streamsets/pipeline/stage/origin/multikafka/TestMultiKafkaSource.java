@@ -22,11 +22,13 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.origin.multikafka.loader.KafkaConsumerLoader;
 import com.streamsets.pipeline.stage.origin.multikafka.loader.MockKafkaConsumerLoader;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +49,12 @@ public class TestMultiKafkaSource {
   @Before
   public void setUp() throws IOException, InterruptedException {
     MockitoAnnotations.initMocks(this);
+    KafkaConsumerLoader.isTest = true;
+  }
+
+  @After
+  public void tearDown() {
+    KafkaConsumerLoader.isTest = false;
   }
 
   private MultiKafkaBeanConfig getConfig() {
