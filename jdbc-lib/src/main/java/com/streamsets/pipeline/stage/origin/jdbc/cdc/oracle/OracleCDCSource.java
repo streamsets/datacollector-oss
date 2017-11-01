@@ -661,6 +661,9 @@ public class OracleCDCSource extends BaseSource {
       try {
         fields.put(columnName, objectToField(table, columnName, column.getValue()));
       } catch (UnsupportedFieldTypeException ex) {
+        if (configBean.sendUnsupportedFields) {
+          fields.put(columnName, Field.create(column.getValue()));
+        }
         fieldTypeExceptions.add(ex);
       }
       if (decimalColumns.containsKey(table) && decimalColumns.get(table).containsKey(columnName)) {

@@ -39,10 +39,16 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
         if (toVersion == 3) {
           return configs;
         }
-
         // fall through
       case 3:
-        return upgradeV3ToV4(configs);
+        configs = upgradeV3ToV4(configs);
+        if (toVersion == 4) {
+          return configs;
+        }
+        // fall through
+      case 4:
+        return upgradeV4ToV5(configs);
+
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -66,6 +72,11 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
 
   private static List<Config> upgradeV3ToV4(List<Config> configs) {
     configs.add(new Config("oracleCDCConfigBean.jdbcFetchSize", 1));
+    return configs;
+  }
+
+  private static List<Config> upgradeV4ToV5(List<Config> configs) {
+    configs.add(new Config("oracleCDCConfigBean.sendUnsupportedFields", false));
     return configs;
   }
 }

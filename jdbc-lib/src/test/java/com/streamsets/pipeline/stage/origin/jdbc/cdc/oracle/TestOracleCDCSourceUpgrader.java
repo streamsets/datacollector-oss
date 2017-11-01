@@ -66,4 +66,13 @@ public class TestOracleCDCSourceUpgrader {
     Assert.assertEquals(configs.get(0).getValue(), 1);
   }
 
+  @Test
+  public void upgradeV4TOV5() throws Exception {
+    List<Config> configs = new ArrayList<>(1);
+
+    configs = new OracleCDCSourceUpgrader().upgrade("a", "b", "v", 4, 5, configs);
+    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals(configs.get(0).getName(), "oracleCDCConfigBean.sendUnsupportedFields");
+    Assert.assertEquals(configs.get(0).getValue(), false);
+  }
 }

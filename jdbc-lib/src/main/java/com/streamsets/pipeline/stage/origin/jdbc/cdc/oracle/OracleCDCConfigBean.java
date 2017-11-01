@@ -138,6 +138,17 @@ public class OracleCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
+      label = "Add unsupported fields to records",
+      description = "Add values of unsupported fields as unparsed strings to records",
+      displayPosition = 115,
+      group = "CDC",
+      defaultValue = "false"
+  )
+  public boolean sendUnsupportedFields;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
       label = "Include Nulls",
       description = "Includes null values passed from the database from full supplemental logging rather than " +
           "not returning those fields.",
