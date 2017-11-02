@@ -140,6 +140,13 @@
       <artifactId>aws-java-sdk-iam</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-cbor</artifactId>
+      <version>${jackson.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
       <groupId>io.confluent</groupId>
       <artifactId>kafka-schema-registry-client</artifactId>
     </dependency>
