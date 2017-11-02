@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.destination.kudu;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
@@ -38,6 +37,10 @@ import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
+import com.streamsets.pipeline.lib.operation.FieldPathConverter;
+import com.streamsets.pipeline.lib.operation.MongoDBOpLogFieldConverter;
+import com.streamsets.pipeline.lib.operation.MySQLBinLogFieldConverter;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
@@ -110,7 +113,6 @@ public class KuduTarget extends BaseTarget {
   private KuduSession kuduSession;
 
   private KuduOperationType defaultOperation;
-
   private Set<String> accessedTables;
 
   public KuduTarget(KuduConfigBean configBean) {
@@ -304,7 +306,13 @@ public class KuduTarget extends BaseTarget {
         fieldsToColumns.put(fieldMappingConfig.field, fieldMappingConfig.columnName);
       }
     }
-    return new KuduRecordConverter(columnsToFieldTypes, fieldsToColumns, schema);
+    FieldPathConverter converter = null;
+    if (configBean.changeLogFormat == ChangeLogFormat.MongoDBOpLog) {
+      converter = new MongoDBOpLogFieldConverter();
+    } else if (configBean.changeLogFormat == ChangeLogFormat.MySQLBinLog){
+      converter = new MySQLBinLogFieldConverter();
+    }
+    return new KuduRecordConverter(columnsToFieldTypes, fieldsToColumns, schema, converter);
   }
 
   @Override

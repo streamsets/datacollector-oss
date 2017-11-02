@@ -104,7 +104,7 @@ public class TestKuduRecordConverter {
       new ColumnSchema.ColumnSchemaBuilder("unixtime_micro", Type.UNIXTIME_MICROS).build()
       ));
     partialRow = new PartialRow(schema);
-    kuduRecordConverter = new KuduRecordConverter(columnsToFieldTypes, fieldsToColumns, schema);
+    kuduRecordConverter = new KuduRecordConverter(columnsToFieldTypes, fieldsToColumns, schema, null);
   }
 
   private String toString(ByteBuffer buffer) {

@@ -21,6 +21,8 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
+import com.streamsets.pipeline.lib.operation.ChangeLogFormatChooserValues;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationActionChooserValues;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
@@ -77,6 +79,18 @@ public class KuduConfigBean {
   )
   @ValueChooserModel(KuduOperationChooserValues.class)
   public KuduOperationType defaultOperation;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "Change Log Format",
+      defaultValue = "NONE",
+      description = "If input is a change data capture log, specify the format.",
+      displayPosition = 40,
+      group = "KUDU"
+  )
+  @ValueChooserModel(ChangeLogFormatChooserValues.class)
+  public ChangeLogFormat changeLogFormat = ChangeLogFormat.NONE;
 
   // advanced tab
   @ConfigDef(

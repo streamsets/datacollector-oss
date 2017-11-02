@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.operation.FieldPathConverter;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
@@ -32,20 +33,25 @@ public class KuduRecordConverter {
   private final Map<String, Field.Type> columnsToFieldTypes;
   private final Map<String, String> fieldsToColumns;
   private final Schema schema;
+  private final FieldPathConverter fieldConverter;
 
   public KuduRecordConverter(Map<String, Field.Type> columnsToFieldTypes, Map<String, String> fieldsToColumns,
-                             Schema schema) {
+                             Schema schema, FieldPathConverter converter) {
     this.columnsToFieldTypes = ImmutableMap.copyOf(columnsToFieldTypes);
     this.fieldsToColumns = ImmutableMap.copyOf(fieldsToColumns);
     this.schema = schema;
+    this.fieldConverter = converter;
   }
 
   public void convert(Record record, PartialRow row, int operation) throws OnRecordErrorException {
     for (Map.Entry<String, String> entry : fieldsToColumns.entrySet()) {
-      String fieldName = entry.getKey(); // field name in record
+      String fieldName =  entry.getKey();
+      if (fieldConverter != null) {
+        fieldName = fieldConverter.getFieldPath(fieldName, operation);
+      }
       String column = entry.getValue();  // column name in Kudu table
       // For delete, we only need to fill primary key column name & value in PartialRow
-      if (operation == KuduOperationType.DELETE.code){
+      if (operation == KuduOperationType.DELETE.code) {
         for(ColumnSchema col : schema.getPrimaryKeyColumns()) {
           if (col.getName().equals(column))
             recordToRow(record, row, fieldName, column, operation);
@@ -56,6 +62,15 @@ public class KuduRecordConverter {
         recordToRow(record, row, fieldName, column, operation);
       }
     }
+  }
+
+  // insert and update record have /Data field with map of key-value.
+  // delete record have /OldData
+  private String binLogRecordFieldtoSdc(String fieldPath, int operation) {
+    if (operation == KuduOperationType.DELETE.code) {
+      return "/OldData" + fieldPath;
+    }
+    return fieldPath;
   }
 
   private void recordToRow(Record record, PartialRow row, String fieldName, String column, int operation) throws OnRecordErrorException {
@@ -113,7 +128,7 @@ public class KuduRecordConverter {
     } else {
       // SDC-5816.  do not null out columns in UPDATE or UPSERT mode.
       // if the columns are not specified - they should not be changed.
-      if(operation == KuduOperationType.INSERT.code) {
+      if (operation == KuduOperationType.INSERT.code) {
         if (!columnSchema.isNullable()) {
           throw new OnRecordErrorException(record, Errors.KUDU_06, column, fieldName);
         }
@@ -121,5 +136,6 @@ public class KuduRecordConverter {
       }
     }
   }
+
 
 }
