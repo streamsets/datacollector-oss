@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
     version = 2,
     label = "SQL Server Change Tracking Client",
     description = "Origin that an read change events from an SQL Server Database",
-    icon = "sql-server.png",
+    icon = "sql-server-multithreaded.png",
     resetOffset = true,
     producesEvents = true,
     upgrader = SQLServerCTSourceUpgrader.class,
