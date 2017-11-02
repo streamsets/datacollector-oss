@@ -45,6 +45,7 @@ import com.streamsets.pipeline.lib.io.fileref.FileRefStreamCloseEventHandler;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.stage.cloudstorage.lib.Errors;
 import com.streamsets.pipeline.stage.cloudstorage.lib.GCSEvents;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,6 +123,9 @@ public class GoogleCloudStorageTarget extends BaseTarget {
       pathToRecordMap.keySet().forEach(path -> {
         Collection<Record> records = pathToRecordMap.get(path);
         String fileName = path + gcsTargetConfig.fileNamePrefix + '_' + UUID.randomUUID();
+        if (StringUtils.isNotEmpty(gcsTargetConfig.fileNameSuffix)) {
+          fileName = fileName + "." + gcsTargetConfig.fileNameSuffix;
+        }
         BlobId blobId = BlobId.of(gcsTargetConfig.bucketTemplate, fileName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(getContentType()).build();
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();

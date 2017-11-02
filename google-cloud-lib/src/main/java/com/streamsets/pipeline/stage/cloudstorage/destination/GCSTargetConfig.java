@@ -25,6 +25,7 @@ import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.stage.cloudstorage.lib.Errors;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.GoogleCloudCredentialsConfig;
 
@@ -103,6 +104,18 @@ public class GCSTargetConfig {
   public String fileNamePrefix;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      description = "Suffix for object names that will be uploaded on GCS. e.g.'txt'",
+      label = "Object Name Suffix",
+      displayPosition = 220,
+      group = "GCS",
+      dependsOn = "dataFormat",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF", "SDC_JSON", "XML"}
+  )
+  public String fileNameSuffix;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
@@ -126,6 +139,16 @@ public class GCSTargetConfig {
         "gcsTargetConfig.dataFormat",
         issues
     );
+    //File Suffix should not contain '/' or start with '.'
+    if (fileNameSuffix != null && (fileNameSuffix.startsWith(".") || fileNameSuffix.contains("/"))) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.GCS.getLabel(),
+              "gcsTargetConfig.fileNameSuffix",
+              Errors.GCS_05
+          )
+      );
+    }
     return issues;
   }
 }
