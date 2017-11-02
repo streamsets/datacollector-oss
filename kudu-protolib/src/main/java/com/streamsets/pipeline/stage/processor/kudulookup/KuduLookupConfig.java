@@ -122,8 +122,9 @@ public class KuduLookupConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
-      label = "Cache Kudu Table",
-      description = "Cache table objects. Enable only if table schema won't change often. This will improve performance.",
+      label = "Enable Table Caching",
+      description = "Select to enable caching of table information. This improves performance, " +
+          "but should only be used when the table schema does not change often",
       displayPosition = 10,
       group = "LOOKUP"
   )
@@ -133,8 +134,9 @@ public class KuduLookupConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "-1",
-      label = "Maximum Entries to Cache Table Objects",
-      description = "Maximum number of object to cache. If exceeded, oldest values are evicted to make room. Default value is -1 which is unlimited",
+      label = "Maximum Table Entries to Cache",
+      description = "Maximum number of table entries to cache. If exceeded, oldest values are evicted to make room. " +
+          "Default value is -1 which is unlimited",
       dependsOn = "enableTableCache",
       triggeredByValue = "true",
       displayPosition = 20,
