@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  FORCE("Wave"),
+  FORCE("Analytics"),
   ADVANCED("Advanced"),
   ;
 
