@@ -98,18 +98,6 @@ public class CDCTableJdbcConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "UTC",
-      label = "Data Time Zone",
-      description = "Time zone to use to resolve time based expressions",
-      displayPosition = 200,
-      group = "JDBC"
-  )
-  @ValueChooserModel(TimeZoneChooserValues.class)
-  public String timeZoneID;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
       label = "Initial Table Order Strategy",
       description = "Determines the strategy for initial table ordering",

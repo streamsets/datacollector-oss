@@ -34,6 +34,7 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
   private static final String TABLE_EXCLUSION_CONFIG = "tableExclusionPattern";
   private static final String TABLE_INITIALOFFSET_CONFIG = "initialOffset";
   private static final String TABLE_CAPTURE_INSTANCE_CONFIG = "capture_instance";
+  private static final String TABLE_TIMEZONE_ID = "cdcTableJdbcConfigBean.timeZoneID";
 
   @Override
   public List<Config> upgrade(
@@ -42,6 +43,12 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -94,6 +101,15 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
     if (removeConfig != null) {
       configs.add(addConfig);
       configs.remove(removeConfig);
+    }
+  }
+
+  private static void upgradeV2ToV3(List<Config> configs) {
+    for (Config config : configs) {
+      if (TABLE_TIMEZONE_ID.equals(config.getName())) {
+        configs.remove(config);
+        break;
+      }
     }
   }
 }
