@@ -1371,7 +1371,7 @@ public class OracleCDCSource extends BaseSource {
       case Types.BINARY:
       case Types.LONGVARBINARY:
       case Types.VARBINARY:
-        field = Field.create(Field.Type.BYTE_ARRAY, columnValue);
+        field = Field.create(Field.Type.BYTE_ARRAY, RawTypeHandler.parseRaw(column, columnValue, columnType));
         break;
       case Types.BIT:
       case Types.BOOLEAN:
@@ -1632,19 +1632,6 @@ public class OracleCDCSource extends BaseSource {
     public RecordOffset(Record record, Offset offset) {
       this.record = record;
       this.offset = offset;
-    }
-  }
-
-  private class UnsupportedFieldTypeException extends RuntimeException {
-
-    final String column;
-    final String columnVal;
-    final int fieldType;
-
-    UnsupportedFieldTypeException(String column, String columnVal, int fieldType) {
-      this.column = column;
-      this.columnVal = columnVal;
-      this.fieldType = fieldType;
     }
   }
 

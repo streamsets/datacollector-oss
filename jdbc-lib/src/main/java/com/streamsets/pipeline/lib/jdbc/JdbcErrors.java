@@ -118,8 +118,8 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_200("Tables are not change tracking enabled: {}"),
   JDBC_201("Invalid Change Tracking Current Version: {}"),
   JDBC_202("Error while getting min valid version: {}"),
-  JDBC_203("Error while fetch tables from metadata: {}")
-
+  JDBC_203("Error while fetch tables from metadata: {}"),
+  JDBC_204("Hex '{}' cannot be converted into a byte array"),
   ;
 
   private final String msg;
