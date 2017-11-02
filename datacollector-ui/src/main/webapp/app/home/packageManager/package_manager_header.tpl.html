@@ -20,7 +20,7 @@
     <div ng-if="selectedNavigationItem !== extrasNavigationItem">
       <div class="pull-right">
 
-        <a ng-disabled="hasSelectedLibrary(true)"
+        <a ng-disabled="hasSelectedLibrary(true) || isManagedByClouderaManager"
            ng-if="isAuthorized([userRoles.admin])"
            ng-click="hasSelectedLibrary(true) || onInstallSelectedLibrariesClick()"
            tooltip-placement="bottom"
@@ -30,7 +30,7 @@
           <i class="fa fa-plus-square fa-14x"></i>
         </a>
 
-        <a ng-disabled="common.isSlaveNode || hasSelectedLibrary(false)"
+        <a ng-disabled="common.isSlaveNode || hasSelectedLibrary(false) || isManagedByClouderaManager"
            ng-if="isAuthorized([userRoles.admin])"
            ng-click="hasSelectedLibrary(false) || onUninstallSelectedLibrariesClick()"
            tooltip-placement="bottom"

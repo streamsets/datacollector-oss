@@ -82,14 +82,14 @@
               </span>
           <ul class="dropdown-menu" role="menu">
 
-            <li role="presentation" ng-if="isAuthorized([userRoles.admin]) && !stageLibrary.installed">
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin]) && !stageLibrary.installed && !isManagedByClouderaManager">
               <a href="#" dropdown-toggle ng-click="onInstallLibraryClick(stageLibrary, $event)">
                 <i class="fa fa-plus-square"></i>
                 <span>{{'packageManager.header.install' | translate}}</span>
               </a>
             </li>
 
-            <li role="presentation" ng-if="isAuthorized([userRoles.admin]) && stageLibrary.installed">
+            <li role="presentation" ng-if="isAuthorized([userRoles.admin]) && stageLibrary.installed && !isManagedByClouderaManager">
               <a href="#" dropdown-toggle ng-click="onUninstallLibraryClick(stageLibrary, $event)">
                 <i class="fa fa-minus-square"></i>
                 <span>{{'packageManager.header.uninstall' | translate}}</span>

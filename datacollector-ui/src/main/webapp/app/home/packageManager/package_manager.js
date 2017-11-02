@@ -200,6 +200,10 @@ angular
        * Callback function when Install button clicked.
        */
       onInstallSelectedLibrariesClick: function() {
+        if($scope.isManagedByClouderaManager) {
+          return;
+        }
+
         $rootScope.common.trackEvent(
           pipelineConstant.BUTTON_CATEGORY,
           pipelineConstant.CLICK_ACTION,
@@ -216,6 +220,10 @@ angular
        * Callback function when Uninstall button clicked.
        */
       onUninstallSelectedLibrariesClick: function() {
+        if($scope.isManagedByClouderaManager) {
+          return;
+        }
+
         $rootScope.common.trackEvent(
           pipelineConstant.BUTTON_CATEGORY,
           pipelineConstant.CLICK_ACTION,
