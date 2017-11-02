@@ -125,12 +125,12 @@ public class OracleCDCSource extends BaseSource {
   private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
   private static final String USERNAME = HIKARI_CONFIG_PREFIX + "username";
   private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
-  private static final String CURRENT_SCN = "SELECT CURRENT_SCN FROM V$DATABASE";
+  private static final String CURRENT_SCN = "SELECT CURRENT_SCN FROM GV$DATABASE";
   // At the time of executing this statement, either the cachedSCN is 0
   // (which means we are executing for the first time), or it is no longer valid, so select
   // only the ones that are > than the cachedSCN.
   private static final String GET_OLDEST_SCN =
-      "SELECT FIRST_CHANGE#, STATUS from V$ARCHIVED_LOG WHERE STATUS = 'A' ORDER BY FIRST_CHANGE#";
+      "SELECT FIRST_CHANGE#, STATUS from GV$ARCHIVED_LOG WHERE STATUS = 'A' ORDER BY FIRST_CHANGE#";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
   private static final String ROWID = "ROWID";
   private static final String PREFIX = "oracle.cdc.";
@@ -222,7 +222,7 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private static final String GET_TIMESTAMPS_FROM_LOGMNR_CONTENTS = "SELECT TIMESTAMP FROM V$LOGMNR_CONTENTS ORDER BY TIMESTAMP";
+  private static final String GET_TIMESTAMPS_FROM_LOGMNR_CONTENTS = "SELECT TIMESTAMP FROM GV$LOGMNR_CONTENTS ORDER BY TIMESTAMP";
   private static final String OFFSET_DELIM = "::";
   private static final int RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED = 1306;
   private static final String NLS_DATE_FORMAT = "ALTER SESSION SET NLS_DATE_FORMAT = " + DateTimeColumnHandler.DT_SESSION_FORMAT;
@@ -1038,7 +1038,7 @@ public class OracleCDCSource extends BaseSource {
     final String base =
         "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, " + commitScnField +
             ", SEQUENCE#, CSF, XIDUSN, XIDSLT, XIDSQN, RS_ID, SSN" +
-            " FROM V$LOGMNR_CONTENTS" +
+            " FROM GV$LOGMNR_CONTENTS" +
             " WHERE ";
 
     final String tableCondition = Utils.format("SEG_OWNER='{}' AND TABLE_NAME IN ({})",
