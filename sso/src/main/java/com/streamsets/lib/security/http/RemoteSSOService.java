@@ -260,8 +260,7 @@ public class RemoteSSOService extends AbstractSSOService {
     } catch (IOException ex){
       LOG.warn("Could not do user token validation, going inactive: {}", ex.toString());
       serviceActive = false;
-      Map error = ImmutableMap.of("message", "Could not connect to security service: " + ex.toString());
-      throw new ForbiddenException(error);
+      throw new RuntimeException(Utils.format("Could not connect to security service: {}", ex), ex);
     }
     if (principal != null) {
       principal.setTokenStr(userAuthToken);
@@ -297,8 +296,7 @@ public class RemoteSSOService extends AbstractSSOService {
     } catch (IOException ex){
       LOG.warn("Could not do app token validation, going inactive: {}", ex.toString());
       serviceActive = false;
-      Map error = ImmutableMap.of("message", "Could not connect to seucirty service: " + ex.toString());
-      throw new ForbiddenException(error);
+      throw new RuntimeException(Utils.format("Could not connect to security service: {}", ex), ex);
     }
     if (principal != null) {
       principal.setTokenStr(authToken);
