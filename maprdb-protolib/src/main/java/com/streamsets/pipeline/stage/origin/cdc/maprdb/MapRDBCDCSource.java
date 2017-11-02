@@ -60,6 +60,7 @@ import java.util.stream.Collectors;
 public class MapRDBCDCSource extends BasePushSource {
   private static final Logger LOG = LoggerFactory.getLogger(MapRDBCDCSource.class);
   private static final String MAPR_FIELD_PATH = "mapr.field.path";
+  private static final String MAPR_TABLE_NAME = "mapr.table.name";
   private static final String MAPR_OP_TIMESTAMP = "mapr.op.timestamp";
   private static final String MAPR_SERVER_TIMESTAMP = "mapr.server.timestamp";
 
@@ -114,6 +115,7 @@ public class MapRDBCDCSource extends BasePushSource {
             attributes.put(HeaderAttributeConstants.TOPIC, message.topic());
             attributes.put(HeaderAttributeConstants.PARTITION, String.valueOf(message.partition()));
             attributes.put(HeaderAttributeConstants.OFFSET, String.valueOf(message.offset()));
+            attributes.put(MAPR_TABLE_NAME, conf.topicTableList.get(message.topic()));
 
             iterateNode(message.value(), batchContext.getBatchMaker(), attributes);
           }
@@ -228,6 +230,7 @@ public class MapRDBCDCSource extends BasePushSource {
     shutdownCalled.set(false);
     batchSize = Math.min(maxBatchSize, conf.maxBatchSize);
     int numThreads = getNumberOfThreads();
+    List<String> topicList = new ArrayList<>(conf.topicTableList.keySet());
     List<Future<Long>> futures = new ArrayList<>(numThreads);
     CountDownLatch startProcessingGate = new CountDownLatch(numThreads);
 
@@ -235,7 +238,7 @@ public class MapRDBCDCSource extends BasePushSource {
     for (int i = 0; i < numThreads; i++) {
       try {
         futures.add(executor.submit(new MapRDBCDCCallable(i,
-            conf.topicList,
+            topicList,
             consumerFactory.create(getKafkaProperties()),
             startProcessingGate
         )));

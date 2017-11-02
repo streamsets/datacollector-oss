@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,14 +37,14 @@ public class MapRDBCDCBeanConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.LIST,
-      defaultValue = "[\"/stream:table\"]",
+      type = ConfigDef.Type.MAP,
+      defaultValue = "{ \"key\": \"/stream:topic\", \"value\": \"table\" }",
       label = "Topic List",
-      description = "List of MapR Streams topics to consume. The Streams topics transport the CDC records and typically follow the pattern /<stream_name>:<table_name>.",
+      description = "List of MapR Streams topics to consume. The Streams CDC topics typically follow the pattern /<stream_name>:<topic_name>. Table name is required for each topic.",
       displayPosition = 30,
       group = "MAPR"
   )
-  public List<String> topicList = new ArrayList<>();
+  public Map<String, String> topicTableList = new HashMap<>();
 
   @ConfigDef(
       required = true,

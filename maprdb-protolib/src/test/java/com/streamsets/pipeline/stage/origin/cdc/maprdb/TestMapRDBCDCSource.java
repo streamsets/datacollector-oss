@@ -135,7 +135,7 @@ public class TestMapRDBCDCSource {
   @Test
   public void testProduceStringRecords() throws StageException, InterruptedException {
     MapRDBCDCBeanConfig conf = getConfig();
-    conf.topicList = Collections.singletonList("topic");
+    conf.topicTableList = Collections.singletonMap("topic", "table");
     conf.numberOfThreads = 1;
 
     ConsumerRecords<byte[], ChangeDataRecord> consumerRecords = generateConsumerRecords(5, 1, "topic", 0, ChangeDataRecordType.RECORD_INSERT);
@@ -170,7 +170,7 @@ public class TestMapRDBCDCSource {
   @Test
   public void testDeleteRecords() throws StageException, InterruptedException {
     MapRDBCDCBeanConfig conf = getConfig();
-    conf.topicList = Collections.singletonList("topic");
+    conf.topicTableList = Collections.singletonMap("topic", "table");
     conf.numberOfThreads = 1;
 
     ConsumerRecords<byte[], ChangeDataRecord> consumerRecords = generateConsumerRecords(5, 1, "topic", 0, ChangeDataRecordType.RECORD_DELETE);
@@ -205,7 +205,7 @@ public class TestMapRDBCDCSource {
   @Test
   public void testMultiplePartitions() throws StageException, InterruptedException {
     MapRDBCDCBeanConfig conf = getConfig();
-    conf.topicList = Collections.singletonList("topic");
+    conf.topicTableList = Collections.singletonMap("topic", "table");
     conf.numberOfThreads = 1;
 
     ConsumerRecords<byte[], ChangeDataRecord> consumerRecords1 = generateConsumerRecords(5, 1, "topic", 0, ChangeDataRecordType.RECORD_INSERT);
@@ -250,19 +250,21 @@ public class TestMapRDBCDCSource {
     long totalMessages = 0;
     Random rand = new Random();
 
-    List<String> topicNames = new ArrayList<>(numTopics);
+    Map<String, String> topicTableList = new HashMap<>(numTopics);
+//    List<String> topicNames = new ArrayList<>(numTopics);
     List<KafkaConsumer> consumerList = new ArrayList<>(numTopics);
 
     for(int i=0; i<numTopics; i++) {
-      String topic = "topic-" + i;
-      topicNames.add(topic);
+      topicTableList.put("topic-" + i, "table-" + i);
     }
 
     for(int i=0; i<conf.numberOfThreads; i++) {
       int numMessages = rand.nextInt(40)+1;
       totalMessages += numMessages;
-      ConsumerRecords<byte[], ChangeDataRecord> consumerRecords = generateConsumerRecords(numMessages, 1, topicNames.get(rand.nextInt(numTopics)), 0, ChangeDataRecordType.RECORD_UPDATE);
-      ConsumerRecords<byte[], ChangeDataRecord> emptyRecords = generateConsumerRecords(1, 0, topicNames.get(rand.nextInt(numTopics)), 0, ChangeDataRecordType.RECORD_UPDATE);
+      ConsumerRecords<byte[], ChangeDataRecord> consumerRecords =
+          generateConsumerRecords(numMessages, 1, "topic"+rand.nextInt(numTopics), 0, ChangeDataRecordType.RECORD_UPDATE);
+      ConsumerRecords<byte[], ChangeDataRecord> emptyRecords =
+          generateConsumerRecords(1, 0, "topic"+rand.nextInt(numTopics), 0, ChangeDataRecordType.RECORD_UPDATE);
 
       KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
       consumerList.add(mockConsumer);
@@ -270,7 +272,7 @@ public class TestMapRDBCDCSource {
       Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
 
-    conf.topicList = topicNames;
+    conf.topicTableList = topicTableList;
 
     MapRDBCDCSource source = createSource(conf, consumerList.iterator());
     PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCSource.class, source)
@@ -295,7 +297,7 @@ public class TestMapRDBCDCSource {
   @Test(expected = ExecutionException.class)
   public void testPollFail() throws StageException, InterruptedException, ExecutionException {
     MapRDBCDCBeanConfig conf = getConfig();
-    conf.topicList = Collections.singletonList("topic");
+    conf.topicTableList = Collections.singletonMap("topic", "table");
     conf.numberOfThreads = 1;
 
     KafkaConsumer mockConsumer = Mockito.mock(KafkaConsumer.class);
@@ -337,12 +339,12 @@ public class TestMapRDBCDCSource {
     conf.numberOfThreads = 10;
 
     int numTopics = conf.numberOfThreads;
-    List<String> topicNames = new ArrayList<>(numTopics);
+    Map<String, String> topicTableNames = new HashMap<>(numTopics);
     List<KafkaConsumer> consumerList = new ArrayList<>(numTopics);
 
     for(int i=0; i<numTopics; i++) {
       String topic =  "topic-" + i;
-      topicNames.add(topic);
+      topicTableNames.put(topic, "table" + i);
       ConsumerRecords<byte[], ChangeDataRecord> consumerRecords = generateConsumerRecords(5, 1, topic, 0, ChangeDataRecordType.RECORD_DELETE);
       ConsumerRecords<byte[], ChangeDataRecord> emptyRecords = generateConsumerRecords(0, 1, topic, 0, ChangeDataRecordType.RECORD_DELETE);
 
@@ -352,7 +354,7 @@ public class TestMapRDBCDCSource {
       Mockito.when(mockConsumer.poll(conf.batchWaitTime)).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
 
-    conf.topicList = topicNames;
+    conf.topicTableList = topicTableNames;
 
     MapRDBCDCSource source = createSource(conf, consumerList.iterator());
     PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MapRDBCDCSource.class, source)

@@ -20,10 +20,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  MAPR("MapR CDC"),
-//  CREDENTIALS("Credentials"),
-//  LEGACY("Legacy"),
-//  ADVANCED("Advanced")
+  MAPR("MapR DB CDC"),
   ;
 
   private final String label;
