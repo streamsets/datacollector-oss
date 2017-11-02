@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +61,6 @@ public class AggregatorDataProvider {
   class DataWindow {
     private final long endTimeMillis;
     private volatile Map<Aggregator, AggregatorData> data;
-    private volatile Map<GroupByAggregator, Map<String, Aggregator>> groupByElementAggregators;
 
     /**
      * Creates a DataWindow.
@@ -71,16 +69,6 @@ public class AggregatorDataProvider {
      */
     private DataWindow(long endTimeMillis) {
       this.endTimeMillis = endTimeMillis;
-      this.groupByElementAggregators = new ConcurrentHashMap<>();
-    }
-
-    /**
-     * Returns a Map with all the group-by element Aggregators of all GroupByAggregators.
-     *
-     * @return a Map with all the group-by element Aggregators of all GroupByAggregators.
-     */
-    Map<GroupByAggregator, Map<String, Aggregator>> getAllGroupByElementAggregators() {
-      return groupByElementAggregators;
     }
 
     /**
@@ -90,22 +78,6 @@ public class AggregatorDataProvider {
      */
     long getEndTimeMillis() {
       return endTimeMillis;
-    }
-
-    /**
-     * Returns all the group-by element Aggregators of a GroupByAggregator.
-     *
-     * @param parentGroupByAggregator the group-by Aggregator.
-     * @return all the group-by element Aggregators of the given GroupByAggregator.
-     */
-    Map<String, Aggregator> getGroupByElementAggregators(GroupByAggregator parentGroupByAggregator) {
-      Map<String, Aggregator> map = groupByElementAggregators.get(parentGroupByAggregator);
-      // only if it is the live datawindow (data == null) we clone group-by elements to have a fixed set of elements.
-      // For closed datawindows it cannot change, so no need to clone it.
-      if (data == null) {
-        map = (map == null) ? new HashMap<>() : new HashMap<>(map);
-      }
-      return map;
     }
 
     /**
@@ -167,24 +139,13 @@ public class AggregatorDataProvider {
   /**
    * Adds an Aggregator to the AggregatorDataProvider.
    * <p/>
-   * Top level Aggregators can be added only if the AggregatorDataProvider <b>has not</b> been started yet.
-   * <p/>
-   * Group-by element Aggregators can be added only  if the AggregatorDataProvider <b>has</b> been started yet.
+   * Aggregators can be added only if the AggregatorDataProvider <b>has not</b> been started yet.
    *
    * @param aggregator aggregator to add
    */
   public void addAggregator(Aggregator aggregator) {
-    if (aggregator.getGroupByParent() == null) {
       Utils.checkState(!started, "Already started");
       aggregators.add(aggregator);
-    } else {
-      Utils.checkState(started, "Not started");
-      Map<String, Aggregator> children = currentDataWindow.getAllGroupByElementAggregators()
-                                                          .computeIfAbsent(aggregator.getGroupByParent(),
-                                                              aggregator1 -> new ConcurrentHashMap<>()
-                                                          );
-      children.put(aggregator.getName(), aggregator);
-    }
   }
 
 
@@ -201,10 +162,15 @@ public class AggregatorDataProvider {
   /**
    * Stops the AggregatorDataProvider instance.
    */
-  public void stop() {
+  public Map<Aggregator, AggregatorData> stop() {
     Utils.checkState(started, "Not started");
     Utils.checkState(!stopped, "Already stopped");
     stopped = true;
+    long currentTimeMillis = System.currentTimeMillis();
+    for(Map.Entry<Aggregator, AggregatorData> e : data.entrySet()) {
+      e.getValue().setTime(currentTimeMillis);
+    }
+    return data;
   }
 
   /**
@@ -256,26 +222,22 @@ public class AggregatorDataProvider {
   }
 
   /**
-   * Returns the current AggregatorData for an Agregator.
+   * Returns the current AggregatorData for an Aggregator.
    * <p/>
    * This method is also used by the group-by element Aggregators.
    *
    * @param aggregator Aggregator to get the AggregatorData for.
-   * @return the current AggregatorData for an Agregator.
+   * @return the current AggregatorData for an Aggregator.
    */
   public AggregatorData getData(Aggregator aggregator) {
     Utils.checkState(started, "Not started");
     Utils.checkState(!stopped, "Already stopped");
     Utils.checkNotNull(aggregator, "aggregator");
-    // only groupBy group aggregators are created on the fly for simple aggregators they are created on roll.
-    Utils.checkArgument((aggregator.getGroupByParent() == null && aggregators.contains(aggregator)) ||
-                        (aggregator.getGroupByParent() != null && aggregators.contains(aggregator.getGroupByParent())),
-        Utils.formatL("Agregator {} is not registered to provider, nor its parent", aggregator)
+    Utils.checkArgument(
+        aggregators.contains(aggregator),
+        Utils.formatL("Aggregator {} is not registered to provider", aggregator)
     );
-    return data.computeIfAbsent(
-        aggregator,
-        aggregator1 -> aggregator1.createAggregatorData(currentDataWindow.getEndTimeMillis())
-    );
+    return data.get(aggregator);
   }
 
 }

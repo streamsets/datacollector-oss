@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.processor.aggregation.aggregator;
 
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.processor.aggregation.WindowType;
 
 import java.util.AbstractSequentialList;
@@ -36,6 +37,10 @@ public class GroupByValueGaugeList extends AbstractSequentialList {
   private final GroupByAggregator aggregator;
 
   public GroupByValueGaugeList(WindowType windowType, GroupByAggregator aggregator) {
+    Utils.checkArgument(
+        aggregator instanceof GroupByAggregator,
+        Utils.formatL("Aggregator '{}' is not a group-by aggregator", aggregator)
+    );
     this.windowType = windowType;
     this.aggregator = aggregator;
   }
@@ -48,14 +53,13 @@ public class GroupByValueGaugeList extends AbstractSequentialList {
 
     // the datawindows is a snapshot at the time of assignment except for the live window that may be updated or
     // or become a close window.
-    // the complete groupby gauge value set will be constructed from the datawindows snapshot.
+    // the complete group-by gauge value set will be constructed from the datawindows snapshot.
+
 
     // finding the group-by elements in all data windows
     for (AggregatorDataProvider.DataWindow dataWindow : dataWindows) {
-      Map<String, Aggregator> childrenAgregators = dataWindow.getGroupByElementAggregators(aggregator);
-      if (childrenAgregators != null) {
-        elements.addAll(childrenAgregators.keySet());
-      }
+      GroupByAggregator.Data aggregatorData = (GroupByAggregator.Data)dataWindow.getData(aggregator);
+      elements.addAll(aggregatorData.getGroupByElements());
     }
 
     // we need to sort them so they always show up orderly
@@ -77,19 +81,11 @@ public class GroupByValueGaugeList extends AbstractSequentialList {
     if (windowType == WindowType.ROLLING) {
       //scanning all datawindows (they are in time order) and creating the structure for metrics UI
       for (AggregatorDataProvider.DataWindow dataWindow : dataWindows) {
-        // get the aggregator for the groupby element from the datawindow
-        Map<String, Aggregator> childrenAggregator = dataWindow.getGroupByElementAggregators(aggregator);
-        if (childrenAggregator != null) {
-          Aggregator groupByElementAggregator = childrenAggregator.get(elementName);
-
-          if (groupByElementAggregator != null) {
-            // if there was a groupby element aggregator in the data window, get the corresponding value
-            AggregatorData groupByElementAggregatorData = dataWindow.getData(groupByElementAggregator);
-            Number value = (Number) groupByElementAggregatorData.get();
-
-            // added it to the result map
-            data.put(Long.toString(dataWindow.getEndTimeMillis()), value);
-          }
+        GroupByAggregator.Data aggregatorData = (GroupByAggregator.Data)dataWindow.getData(aggregator);
+        AggregatorData<SimpleAggregator, Number> groupByElementData = aggregatorData.getGroupByElementData(elementName);
+        if (groupByElementData != null) {
+          // added it to the result map
+          data.put(Long.toString(dataWindow.getEndTimeMillis()), groupByElementData.get());
         }
       }
     } else {
@@ -101,29 +97,19 @@ public class GroupByValueGaugeList extends AbstractSequentialList {
 
       //scanning all datawindows (they are in time order) and creating the structure for metrics UI
       for (AggregatorDataProvider.DataWindow dataWindow : dataWindows) {
-        // get the aggregator for the groupby element from the datawindow
-        Map<String, Aggregator> childrenAggregator = dataWindow.getGroupByElementAggregators(aggregator);
-        if (childrenAggregator != null) {
-          Aggregator groupByElementAggregator = childrenAggregator.get(elementName);
-
-          if (groupByElementAggregator != null) {
-            if (aggregatorDataForElement == null) {
-              aggregatorDataForElement = groupByElementAggregator.createAggregatorData(endTimeMillis);
-            }
-
-            // if there was a groupby element aggregator in the data window, get the corresponding value
-            AggregatorData groupByElementAggregatorData = dataWindow.getData(groupByElementAggregator);
-
-            aggregatorDataForElement.aggregate(groupByElementAggregatorData.getAggregatable());
-
+        GroupByAggregator.Data aggregatorData = (GroupByAggregator.Data) dataWindow.getData(aggregator);
+        AggregatorData<SimpleAggregator, Number> groupByElementData = aggregatorData.getGroupByElementData(elementName);
+        if (groupByElementData != null) {
+          if (aggregatorDataForElement == null) {
+            aggregatorDataForElement = aggregator.createElementAggregatorData(elementName, endTimeMillis);
           }
+          aggregatorDataForElement.aggregate(groupByElementData.getAggregatable());
         }
       }
 
       Number value = (Number) aggregatorDataForElement.get();
       // added it to the result map
       data.put(Long.toString(endTimeMillis), value);
-
     }
     return data;
   }

@@ -25,7 +25,7 @@ package com.streamsets.pipeline.stage.processor.aggregation.aggregator;
  */
 public abstract class AggregatorData<A extends Aggregator, T> {
   private final String name;
-  private final long time;
+  private long time;
 
   public AggregatorData(String name, long time) {
     this.name = name;
@@ -48,6 +48,15 @@ public abstract class AggregatorData<A extends Aggregator, T> {
    */
   public long getTime() {
     return time;
+  }
+
+  /**
+   * Sets the time window of the data.
+   *
+   * @param time
+   */
+  public void setTime(long time) {
+    this.time = time;
   }
 
   /**

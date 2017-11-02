@@ -98,8 +98,8 @@ public class DoubleMinAggregator extends SimpleAggregator<DoubleMinAggregator, D
     }
   }
 
-  public DoubleMinAggregator(String name, GroupByAggregator parent) {
-    super(Double.class, name, parent);
+  public DoubleMinAggregator(String name) {
+    super(Double.class, name);
   }
 
   public AggregatorData createAggregatorData(long timeWindowMillis) {

@@ -22,13 +22,11 @@ public abstract class SimpleAggregator<A extends SimpleAggregator, T> extends Ag
 
   /**
    * Constructor
-   *
-   * @param type type of the aggregator value.
+   *  @param type type of the aggregator value.
    * @param name name of the aggregator.
-   * @param parent parent aggregator, if the aggregator is a group-by element aggregator.
    */
-  protected SimpleAggregator(Class<? extends Number> type, String name, GroupByAggregator parent) {
-    super(type, name, parent);
+  protected SimpleAggregator(Class<? extends Number> type, String name) {
+    super(type, name);
   }
 
   /**

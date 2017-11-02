@@ -48,7 +48,7 @@ public class Aggregators {
 
   static Constructor<? extends SimpleAggregator> getConstructor(Class<? extends SimpleAggregator> klass) {
     try {
-      return klass.getConstructor(String.class, GroupByAggregator.class);
+      return klass.getConstructor(String.class);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
@@ -91,17 +91,47 @@ public class Aggregators {
    */
   @SuppressWarnings("unchecked")
   public <A extends SimpleAggregator> A createSimple(String name, Class<? extends Aggregator> klass) {
-    return createSimple(name, (Class<A>) klass, null);
-  }
-
-  @SuppressWarnings("unchecked")
-  <A extends SimpleAggregator, T> A createSimple(String name, Class<A> klass, GroupByAggregator<A, T> groupByParent) {
-    Utils.checkState(!started || groupByParent != null, "Already started");
+    Utils.checkState(!started, "Already started");
     try {
-      A aggregator = (A) CONSTRUCTORS.get(klass).newInstance(name, groupByParent);
+      A aggregator = (A) CONSTRUCTORS.get(klass).newInstance(name);
       dataProvider.addAggregator(aggregator);
       aggregator.setDataProvider(dataProvider);
       return aggregator;
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  /**
+   * Returns the unit type of an aggregator value. Typically Long or Double.
+   *
+   * @param klass the aggregator class.
+   * @return the unit type of an aggregator value.
+   */
+  <A extends SimpleAggregator, T> Class<? extends Number> getAggregatorUnit(Class<A> klass) {
+    try {
+      A aggregator = (A) CONSTRUCTORS.get(klass).newInstance("forAggregatorTypeDiscoveryOnly");
+      return aggregator.getValueType();
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  /**
+   * Creates an AggregatorData.
+   *
+   * @param klass aggregator type the AggregatorData is for.
+   * @param name name of the AggregatorData instance.
+   * @param timeWindowMillis timewindow of the AggregatorData instance.
+   * @return the new AggregatorData instance.
+   */
+  <A extends SimpleAggregator, T> AggregatorData<A, T> createAggregatorData(
+      Class<A> klass,
+      String name,
+      long timeWindowMillis) {
+    try {
+      A aggregator = (A) CONSTRUCTORS.get(klass).newInstance(name);
+      return aggregator.createAggregatorData(timeWindowMillis);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
@@ -140,11 +170,12 @@ public class Aggregators {
   /**
    * Stops the Aggregators instance.
    */
-  public void stop() {
+  public Map<Aggregator, AggregatorData> stop() {
     Utils.checkState(started, "Already started");
     Utils.checkState(!stopped, "Already stopped");
-    dataProvider.stop();
+    Map<Aggregator, AggregatorData> aggregatorDataMap = dataProvider.stop();
     stopped = true;
+    return aggregatorDataMap;
   }
 
   /**

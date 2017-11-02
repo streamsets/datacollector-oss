@@ -24,11 +24,11 @@ public class TestAggregator {
   private static class MyAggregator extends Aggregator<MyAggregator, Long> {
 
     public MyAggregator(String name, GroupByAggregator groupByParent) {
-      super(Long.class, name, groupByParent);
+      super(Long.class, name);
     }
 
     @Override
-    AggregatorData createAggregatorData(long timeWindowMillis) {
+    public AggregatorData createAggregatorData(long timeWindowMillis) {
       return null;
     }
   }
@@ -43,7 +43,6 @@ public class TestAggregator {
 
     Assert.assertEquals(Long.class, aggregator.getValueType());
     Assert.assertEquals("name", aggregator.getName());
-    Assert.assertEquals(parent, aggregator.getGroupByParent());
     Assert.assertEquals(dataProvider, aggregator.getDataProvider());
 
     AggregatorData<MyAggregator, Long> aggregatorData = Mockito.mock(AggregatorData.class);

@@ -113,8 +113,8 @@ public class LongSumAggregator extends SimpleAggregator<LongSumAggregator, Long>
     }
   }
 
-  public LongSumAggregator(String name, GroupByAggregator parent) {
-    super(Long.class, name, parent);
+  public LongSumAggregator(String name) {
+    super(Long.class, name);
   }
 
   @Override

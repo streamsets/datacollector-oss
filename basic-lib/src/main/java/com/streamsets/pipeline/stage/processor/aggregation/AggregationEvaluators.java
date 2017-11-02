@@ -86,13 +86,15 @@ public class AggregationEvaluators {
 
   public void init() {
     for (AggregatorConfig aggregatorConfig : config.aggregatorConfigs) {
-      evaluators.add(new AggregationEvaluator(
-          context,
-          config.windowType,
-          config.getTimeWindowLabel(),
-          aggregatorConfig,
-          aggregators
-      ));
+      if (aggregatorConfig.enabled) {
+        evaluators.add(new AggregationEvaluator(
+            context,
+            config.windowType,
+            config.getTimeWindowLabel(),
+            aggregatorConfig,
+            aggregators
+        ));
+      }
     }
     long currentTime = getNowMillis();
     currentWindowCloseTime = config.getRollingTimeWindow().getCurrentWindowCloseTimeMillis(config.getTimeZone(), currentTime);
@@ -114,7 +116,8 @@ public class AggregationEvaluators {
 
   public void destroy() {
     executor.shutdownNow();
-    aggregators.stop();
+    Map<Aggregator, AggregatorData> allAggregatorsDataMap = aggregators.stop();
+    prepareEvents(allAggregatorsDataMap);
   }
 
   @VisibleForTesting

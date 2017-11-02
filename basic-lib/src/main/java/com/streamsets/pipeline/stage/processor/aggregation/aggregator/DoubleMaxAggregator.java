@@ -98,8 +98,8 @@ public class DoubleMaxAggregator extends SimpleAggregator<DoubleMaxAggregator, D
     }
   }
 
-  public DoubleMaxAggregator(String name, GroupByAggregator parent) {
-    super(Double.class, name, parent);
+  public DoubleMaxAggregator(String name) {
+    super(Double.class, name);
   }
 
   public AggregatorData createAggregatorData(long timeWindowMillis) {

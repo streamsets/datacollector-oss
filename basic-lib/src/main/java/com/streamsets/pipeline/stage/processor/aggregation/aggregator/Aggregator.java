@@ -50,20 +50,16 @@ public abstract class Aggregator<A extends Aggregator, T> {
 
   private final String name;
   private final Class<? extends Number> valueType;
-  private final GroupByAggregator groupByParent;
   private AggregatorDataProvider dataProvider;
 
   /**
    * Creates an Aggregator.
-   *
-   * @param valueType type of the aggregated value.
+   *  @param valueType type of the aggregated value.
    * @param name aggregator name.
-   * @param groupByParent groupBy parent Aggregator if any.
    */
-  public Aggregator(Class<? extends Number> valueType, String name, GroupByAggregator groupByParent) {
+  public Aggregator(Class<? extends Number> valueType, String name) {
     this.valueType = valueType;
     this.name = name;
-    this.groupByParent = groupByParent;
   }
 
   /**
@@ -81,15 +77,6 @@ public abstract class Aggregator<A extends Aggregator, T> {
    */
   public String getName() {
     return name;
-  }
-
-  /**
-   * Returns the group-by parent aggregator if any.
-   *
-   * @return the group-by parent aggregator, <b>NULL</b> if none.
-   */
-  GroupByAggregator getGroupByParent() {
-    return groupByParent;
   }
 
   /**
@@ -181,4 +168,7 @@ public abstract class Aggregator<A extends Aggregator, T> {
     return getClass().getSimpleName() + "{" + "name='" + getName() + "\', current=" + value + '}';
   }
 
+  public String toStringObject() {
+    return super.toString();
+  }
 }

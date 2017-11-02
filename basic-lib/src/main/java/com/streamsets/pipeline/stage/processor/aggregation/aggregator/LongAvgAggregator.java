@@ -107,8 +107,8 @@ public class LongAvgAggregator extends SimpleAggregator<LongAvgAggregator, Long>
     }
   }
 
-  public LongAvgAggregator(String name, GroupByAggregator parent) {
-    super(Long.class, name, parent);
+  public LongAvgAggregator(String name) {
+    super(Long.class, name);
   }
 
   @Override

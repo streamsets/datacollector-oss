@@ -113,8 +113,8 @@ public class DoubleAvgAggregator extends SimpleAggregator<DoubleAvgAggregator, D
     }
   }
 
-  public DoubleAvgAggregator(String name, GroupByAggregator parent) {
-    super(Double.class, name, parent);
+  public DoubleAvgAggregator(String name) {
+    super(Double.class, name);
   }
 
   @Override

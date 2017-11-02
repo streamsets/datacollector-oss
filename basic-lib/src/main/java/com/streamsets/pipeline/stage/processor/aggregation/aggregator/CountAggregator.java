@@ -88,10 +88,9 @@ public class CountAggregator extends SimpleAggregator<CountAggregator, Long> {
     }
   }
 
-  public CountAggregator(String name, GroupByAggregator parent) {
-    super(Long.class, name, parent);
+  public CountAggregator(String name) {
+    super(Long.class, name);
   }
-
 
   @Override
   public AggregatorData createAggregatorData(long timeWindowMillis) {

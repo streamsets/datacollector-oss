@@ -19,7 +19,9 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -51,8 +53,8 @@ public class GroupByAggregator<A extends SimpleAggregator, T> extends Aggregator
     }
   }
 
-  private class Data extends AggregatorData<GroupByAggregator<A, T>, Map<String, T>> {
-    private final Map<String, A> groups;
+  class Data extends AggregatorData<GroupByAggregator<A, T>, Map<String, T>> {
+    private final Map<String, AggregatorData<SimpleAggregator, Number>> groups;
     private final ReentrantReadWriteLock rwLock;
 
     public Data(String name, long time) {
@@ -75,16 +77,16 @@ public class GroupByAggregator<A extends SimpleAggregator, T> extends Aggregator
 
     @SuppressWarnings("unchecked")
     protected void process(String group, T value) {
-      A aggregator;
+      AggregatorData aggregatorData;
       rwLock.writeLock().lock();
       try {
-        aggregator = groups.computeIfAbsent(group,
-            k -> getAggregators().createSimple(group, getAggregatorKlass(), GroupByAggregator.this)
+        aggregatorData = groups.computeIfAbsent(group,
+            k -> GroupByAggregator.this.createElementAggregatorData(group, getTime())
         );
       } finally {
         rwLock.writeLock().unlock();
       }
-      aggregator.process(value);
+      aggregatorData.process(value);
     }
 
 
@@ -94,10 +96,29 @@ public class GroupByAggregator<A extends SimpleAggregator, T> extends Aggregator
       rwLock.readLock().lock();
       try {
         Map<String, T> map = new HashMap<>();
-        for (Map.Entry<String, A> group : groups.entrySet()) {
+        for (Map.Entry<String, AggregatorData<SimpleAggregator, Number>> group : groups.entrySet()) {
           map.put(group.getKey(), (T) group.getValue().get());
         }
         return map;
+      } finally {
+        rwLock.readLock().unlock();
+      }
+    }
+
+    @SuppressWarnings("unchecked")
+    public AggregatorData<SimpleAggregator, Number> getGroupByElementData(String groupName) {
+      rwLock.readLock().lock();
+      try {
+        return groups.get(groupName);
+      } finally {
+        rwLock.readLock().unlock();
+      }
+    }
+
+    public Set<String> getGroupByElements() {
+      rwLock.readLock().lock();
+      try {
+        return new HashSet<>(groups.keySet());
       } finally {
         rwLock.readLock().unlock();
       }
@@ -110,7 +131,7 @@ public class GroupByAggregator<A extends SimpleAggregator, T> extends Aggregator
       rwLock.readLock().lock();
       try {
         Map<String, Aggregatable> aggregatableGroups = new HashMap<>();
-        for (Map.Entry<String, A> group : groups.entrySet()) {
+        for (Map.Entry<String, AggregatorData<SimpleAggregator, Number>> group : groups.entrySet()) {
           aggregatableGroups.put(group.getKey(), group.getValue().getAggregatable());
         }
         aggregatable.setGroups(aggregatableGroups);
@@ -135,12 +156,11 @@ public class GroupByAggregator<A extends SimpleAggregator, T> extends Aggregator
 
       rwLock.writeLock().lock();
       try {
-        for (Map.Entry<String, Aggregatable> entry : ((GroupByAggregatable) aggregatable).getGroups()
-                                                                                                    .entrySet()) {
-          A aggregator = groups.computeIfAbsent(entry.getKey(),
-              k -> getAggregators().createSimple(entry.getKey(), getAggregatorKlass(), GroupByAggregator.this)
+        for (Map.Entry<String, Aggregatable> entry : ((GroupByAggregatable) aggregatable).getGroups().entrySet()) {
+          AggregatorData aggregatorData = groups.computeIfAbsent(entry.getKey(),
+              groupByElementName -> GroupByAggregator.this.createElementAggregatorData(groupByElementName, getTime())
           );
-          aggregator.aggregate(entry.getValue());
+          aggregatorData.aggregate(entry.getValue());
         }
       } finally {
         rwLock.writeLock().unlock();
@@ -161,7 +181,7 @@ public class GroupByAggregator<A extends SimpleAggregator, T> extends Aggregator
   GroupByAggregator(
       String name, Class<A> aggregatorKlass, Aggregators aggregators
   ) {
-    super(aggregators.createSimple(name, aggregatorKlass, null).getValueType(), name, null);
+    super(aggregators.getAggregatorUnit(aggregatorKlass), name);
     this.aggregators = aggregators;
     this.aggregatorKlass = aggregatorKlass;
   }
@@ -171,7 +191,7 @@ public class GroupByAggregator<A extends SimpleAggregator, T> extends Aggregator
    *
    * @return the Aggregator type to use with each group-by element.
    */
-  protected Class<A> getAggregatorKlass() {
+  protected Class<A> getAggregatorClass() {
     return aggregatorKlass;
   }
 
@@ -192,6 +212,10 @@ public class GroupByAggregator<A extends SimpleAggregator, T> extends Aggregator
   @Override
   public AggregatorData createAggregatorData(long timeWindowMillis) {
     return new Data(getName(), timeWindowMillis);
+  }
+
+  public AggregatorData createElementAggregatorData(String elementName, long timeWindowMillis) {
+    return aggregators.createAggregatorData(getAggregatorClass(), elementName, timeWindowMillis);
   }
 
   /**

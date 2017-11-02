@@ -72,6 +72,7 @@ public class AggregationProcessor extends SingleLaneRecordProcessor {
       if (evaluators != null) {
         evaluators.destroy();
         evaluators = null;
+        publishEventRecordsIfAny();
       }
     }
     super.destroy();

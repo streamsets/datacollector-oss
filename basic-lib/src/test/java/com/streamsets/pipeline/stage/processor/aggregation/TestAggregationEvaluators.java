@@ -51,6 +51,7 @@ public class TestAggregationEvaluators {
     processor.config.init(context);
 
     AggregatorConfig agggregatorConfig = new AggregatorConfig();
+    agggregatorConfig.enabled = true;
     agggregatorConfig.aggregationTitle = "title";
     agggregatorConfig.aggregationFunction = AggregationFunction.SUM_INTEGER;
     agggregatorConfig.aggregationExpression = "${record:value('/')}";
@@ -96,6 +97,7 @@ public class TestAggregationEvaluators {
     processor.config.init(context);
 
     AggregatorConfig agggregatorConfig = new AggregatorConfig();
+    agggregatorConfig.enabled = true;
     agggregatorConfig.aggregationTitle = "title";
     agggregatorConfig.aggregationFunction = AggregationFunction.COUNT;
     agggregatorConfig.aggregationExpression = "1";
@@ -138,6 +140,7 @@ public class TestAggregationEvaluators {
     processor.config.init(context);
 
     AggregatorConfig agggregatorConfig = new AggregatorConfig();
+    agggregatorConfig.enabled = true;
     agggregatorConfig.aggregationTitle = "title";
     agggregatorConfig.aggregationFunction = AggregationFunction.COUNT;
     agggregatorConfig.aggregationExpression = "1";
@@ -187,6 +190,7 @@ public class TestAggregationEvaluators {
     processor.config.init(context);
 
     AggregatorConfig agggregatorConfig = new AggregatorConfig();
+    agggregatorConfig.enabled = true;
     agggregatorConfig.aggregationTitle = "title";
     agggregatorConfig.aggregationFunction = AggregationFunction.COUNT;
     agggregatorConfig.aggregationExpression = "1";

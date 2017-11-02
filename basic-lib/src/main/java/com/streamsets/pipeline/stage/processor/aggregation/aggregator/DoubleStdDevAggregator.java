@@ -126,8 +126,8 @@ public class DoubleStdDevAggregator extends SimpleAggregator<DoubleStdDevAggrega
     }
   }
 
-  public DoubleStdDevAggregator(String name, GroupByAggregator parent) {
-    super(Double.class, name, parent);
+  public DoubleStdDevAggregator(String name) {
+    super(Double.class, name);
   }
 
   public AggregatorData createAggregatorData(long timeWindowMillis) {

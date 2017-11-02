@@ -98,8 +98,8 @@ public class LongMinAggregator extends SimpleAggregator<LongMinAggregator, Long>
     }
   }
 
-  public LongMinAggregator(String name, GroupByAggregator parent) {
-    super(Long.class, name, parent);
+  public LongMinAggregator(String name) {
+    super(Long.class, name);
   }
 
   public AggregatorData createAggregatorData(long timeWindowMillis) {

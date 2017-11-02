@@ -113,8 +113,8 @@ public class DoubleSumAggregator extends SimpleAggregator<DoubleSumAggregator, D
     }
   }
 
-  public DoubleSumAggregator(String name, GroupByAggregator parent) {
-    super(Double.class, name, parent);
+  public DoubleSumAggregator(String name) {
+    super(Double.class, name);
   }
 
   @Override
