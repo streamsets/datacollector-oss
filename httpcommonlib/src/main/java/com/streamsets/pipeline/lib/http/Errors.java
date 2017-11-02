@@ -52,6 +52,7 @@ public enum Errors implements ErrorCode {
   HTTP_29("Can't resolve credential value for {}: {}"),
   HTTP_30("Can't resolve OAuth2 credentials: {}"),
   HTTP_31("Can't resolve OAuth1 credentials: {}"),
+  HTTP_32("Error executing request: {}"),
 
 
   // HTTP Target

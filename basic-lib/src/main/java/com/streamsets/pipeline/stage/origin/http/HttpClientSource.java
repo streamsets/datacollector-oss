@@ -57,6 +57,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -430,14 +431,14 @@ public class HttpClientSource extends BaseSource {
         lastStatus = status;
       } catch (ProcessingException e) {
         LOG.debug("Request failed after {} ms", System.currentTimeMillis() - startTime);
-        if (e.getCause() != null && e.getCause() instanceof TimeoutException) {
+        final Throwable cause = e.getCause();
+        if (cause != null && (cause instanceof TimeoutException || cause instanceof SocketTimeoutException)) {
           LOG.warn(
-            String.format(
-                "TimeoutException attempting to read response in HttpClientSource: %s",
-                e.getMessage()
-            ),
-          e);
-
+              "{} attempting to read response in HttpClientSource: {}",
+              cause.getClass().getSimpleName(),
+              e.getMessage(),
+              e
+          );
           // read timeout; consult configured action to decide on backoff and retry strategy
           if (this.timeoutActionConfig != null) {
             final HttpResponseActionConfigBean actionConf = this.timeoutActionConfig;
@@ -450,7 +451,7 @@ public class HttpClientSource extends BaseSource {
 
           lastRequestTimedOut = true;
           keepRequesting = false;
-        } else if (e.getCause() != null && e.getCause() instanceof InterruptedException) {
+        } else if (cause != null && cause instanceof InterruptedException) {
           LOG.error(
             String.format(
                 "InterruptedException attempting to make request in HttpClientSource; stopping: %s",
@@ -465,6 +466,8 @@ public class HttpClientSource extends BaseSource {
                 e.getMessage()
             ),
           e);
+          Throwable reportEx = cause != null ? cause : e;
+          throw new StageException(Errors.HTTP_32, reportEx.toString(), reportEx);
         }
       }
       keepRequesting &= !getContext().isStopped();
