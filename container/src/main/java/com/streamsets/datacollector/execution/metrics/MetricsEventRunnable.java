@@ -165,7 +165,8 @@ public class MetricsEventRunnable implements Runnable {
       }
       ObjectMapper objectMapper = ObjectMapperFactory.get();
       PipelineState state = pipelineStateStore.getState(name, rev);
-      if (hasMetricEventListeners(state) || isDPMPipeline) {
+      if (hasMetricEventListeners(state) ||
+          (isDPMPipeline && (isWriteStatsToDPMDirectlyEnabled() || isStatAggregationEnabled()))) {
         // compute aggregated metrics in case of cluster mode pipeline
         // get individual pipeline metrics if non cluster mode pipeline
         String metricsJSONStr;
