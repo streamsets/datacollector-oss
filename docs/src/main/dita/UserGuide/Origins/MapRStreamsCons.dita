@@ -27,6 +27,14 @@
             Consumer, you configure the topic, consumer group, and other general properties. You
             configure the data type and related properties, and you can optionally add additional
             MapR Streams properties and supported Kafka properties. </p>
+        <p>
+            <note type="tip"><ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> provides several MapR origins to address different needs. For a quick comparison
+                chart to help you choose the right one, see <xref
+                    href="Origins-MapRComparison.dita#concept_ip2_szg_qbb">Comparing MapR
+                    Origins</xref>.</note>
+        </p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
  </conbody>
 </concept>

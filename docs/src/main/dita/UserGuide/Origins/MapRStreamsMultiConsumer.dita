@@ -20,9 +20,7 @@
                     Streams Multitopic
                 Consumer<indexterm>overview</indexterm></indexterm></indexterm>The MapR Streams
             Multitopic Consumer origin reads data from multiple topics in a MapR Streams cluster.
-            The origin can use multiple threads to enable parallel processing of data. When
-            preferred, you can use the <xref href="MapRStreamsMultiConsumer.dita">MapR
-                Streams Consumer</xref> to read from a single topic using a single thread. </p>
+            The origin can use multiple threads to enable parallel processing of data. </p>
         <p>When you configure a MapR Streams Multitopic Consumer, you configure the consumer group
             name, the topics to process, and the number of threads to use.</p>
         <p>You can configure the origin to produce a single record when a message includes multiple
@@ -34,6 +32,14 @@
             mechanism.</p>
         <p>MapR Streams Multitopic Consumer includes record header attributes that enable you to use
             information about the record in pipeline processing. </p>
+        <p>
+            <note type="tip"><ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> provides several MapR origins to address different needs. For a quick comparison
+                chart to help you choose the right one, see <xref
+                    href="Origins-MapRComparison.dita#concept_ip2_szg_qbb">Comparing MapR
+                    Origins</xref>.</note>
+        </p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
     </conbody>
 </concept>

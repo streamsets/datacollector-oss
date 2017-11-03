@@ -20,9 +20,9 @@
 <concept id="concept_rsz_cnw_qy">
  <title>Comparing HTTP Origins</title>
  <conbody>
-  <p>We have several HTTP origins, make sure to use the best one for your needs. Here's a quick
-            breakdown of some key differences: <table frame="all" rowsep="1" colsep="1"
-                id="table_pw5_npv_qy">
+  <p><indexterm>HTTP origins<indexterm>comparison</indexterm></indexterm>We have several HTTP
+            origins, make sure to use the best one for your needs. Here's a quick breakdown of some
+            key differences: <table frame="all" rowsep="1" colsep="1" id="table_pw5_npv_qy">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.0*"/>
                     <colspec colname="c2" colnum="2" colwidth="2.5*"/>

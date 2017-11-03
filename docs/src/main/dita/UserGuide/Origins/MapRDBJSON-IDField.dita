@@ -18,23 +18,27 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xpd_fn5_sy">
- <title>ID Field</title>
+ <title>Handling the _id Field</title>
  <shortdesc>When the origin converts a JSON document into a record, it includes the _id field of the
         JSON document in the record. If needed, you can use the Field Remover processor in the
         pipeline to remove the _id field.</shortdesc>
  <conbody>
-        <p><indexterm>MapR DB JSON origin<indexterm>ID field</indexterm></indexterm><indexterm>MapR
-                DB JSON origin<indexterm>row key</indexterm></indexterm>The _id field in a JSON
-            document can contain string or binary data. The MapR DB JSON origin can read from JSON
-            tables that include _id fields with one of the valid types. For example, the origin can
-            read from a JSON table when all documents in the table have a string _id field or when
-            all documents have a binary _id field. The origin cannot read from a table with a
-            combination of types for the _id field.</p>
+        <p><indexterm>MapR DB JSON origin<indexterm>handling the _id
+                field</indexterm></indexterm><indexterm>_id field<index-sort-as>id
+                    field</index-sort-as><indexterm>MapR DB JSON origin</indexterm></indexterm>The
+            _id field in a JSON document can contain string or binary data. The MapR DB JSON origin
+            can read from JSON tables that include _id fields with one of the valid types. For
+            example, the origin can read from a JSON table when all documents in the table have a
+            string _id field or when all documents have a binary _id field. The origin cannot read
+            from a table with a combination of types for the _id field.</p>
         <p>When a JSON document contains a string _id field, the origin creates the _id field in the
             record as a String.</p>
-        <p>A binary _id field in a JSON document must contain numeric data for the origin to process
-            the data correctly. In addition, binary _id fields must have the same width for all rows
-            or JSON documents in the table. When a JSON document contains a binary _id field, the
-            origin converts the data to String and then includes the field in the record.</p>
+        <p>When a JSON document contains a binary _id field, the origin converts the data to String
+            and then includes the field in the record.</p>
+        <p>
+            <note>A binary _id field in a JSON document must contain numeric data for the origin to
+                process the data correctly. In addition, binary _id fields must have the same width
+                for all rows or JSON documents in the table. </note>
+        </p>
     </conbody>
 </concept>

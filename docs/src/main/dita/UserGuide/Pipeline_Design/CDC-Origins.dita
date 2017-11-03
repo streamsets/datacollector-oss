@@ -45,6 +45,14 @@
                                     />.</p></entry>
                         </row>
                         <row>
+                            <entry>MapR DB CDC</entry>
+                            <entry>Includes the CRUD operation type in the sdc.operation.type record
+                                header attribute. <p>Includes additional CDC information in record
+                                    header attributes. </p><p>For more information, see <xref
+                                        href="../Origins/MapRdbCDC-CRUDcdcHeaderAtts.dita#concept_oq4_mhh_qbb"
+                                    />.</p></entry>
+                        </row>
+                        <row>
                             <entry>MongoDB Oplog</entry>
                             <entry>Includes the CRUD operation type in the sdc.operation.type record
                                 header attribute. <p>Can include additional CDC information in

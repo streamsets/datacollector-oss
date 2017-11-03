@@ -33,6 +33,14 @@
         <p>When necessary, you can enable Kerberos authentication or specify a Hadoop FS user. You
             can also use Hadoop configuration files and add other Hadoop configuration properties as
             needed.</p>
+        <p>
+            <note type="tip"><ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> provides several MapR origins to address different needs. For a quick comparison
+                chart to help you choose the right one, see <xref
+                    href="Origins-MapRComparison.dita#concept_ip2_szg_qbb">Comparing MapR
+                    Origins</xref>.</note>
+        </p>
      <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
     </conbody>
     <related-links>

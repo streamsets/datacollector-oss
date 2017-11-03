@@ -1430,6 +1430,9 @@ web-0011.log</codeblock></dd>
                               topics in a Kafka cluster.</li>
                         <li><xref href="../Origins/KinConsumer.dita#concept_anh_4y3_yr">Kinesis
                                     Consumer</xref> - Reads data from a Kinesis cluster.</li>
+                        <li><xref href="../Origins/MapRdbCDC.dita#concept_qwj_5vm_pbb">MapR DB
+                                    CDC</xref> - Reads changed MapR DB data that has been written to
+                              MapR Streams.</li>
                         <li><xref
                                     href="../Origins/MapRStreamsMultiConsumer.dita#concept_hvd_hww_lbb"
                                     >MapR Streams Multitopic Consumer</xref> - Reads data from
@@ -3318,11 +3321,12 @@ ${YY()}_${MM()}_${DD()}</codeblock>
                         header, JDBC Query Consumer > CDC header, </draft-comment>
             </p>
             <p id="CDC-UseCDCdest">If you use a CRUD-enabled destination in the pipeline such as
-                  JDBC Producer or Kudu, the destination can use the operation type when writing to
-                  destination systems. When necessary, you can use an Expression Evaluator or
-                  scripting processors to manipulate the value in the sdc.operation.type header
-                  attribute. For an overview of <ph conref="#concept_vhs_5tz_xp/pName-long"/>
-                  changed data processing and a list of CRUD-enabled destinations, see <xref
+                  JDBC Producer or Elasticsearch, the destination can use the operation type when
+                  writing to destination systems. When necessary, you can use an Expression
+                  Evaluator or scripting processors to manipulate the value in the
+                  sdc.operation.type header attribute. For an overview of <ph
+                        conref="#concept_vhs_5tz_xp/pName-long"/> changed data processing and a list
+                  of CRUD-enabled destinations, see <xref
                         href="../Pipeline_Design/CDC-Overview.dita#concept_apw_l2c_ty"/>.</p>
             <p/>
             <draft-comment author="Loretta">CRUD-dest-def is used in Processing Changed Data

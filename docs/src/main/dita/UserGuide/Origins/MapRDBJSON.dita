@@ -22,7 +22,7 @@
  <shortdesc>The MapR DB JSON origin reads JSON documents from MapR DB JSON tables. The origin
         converts each document into a record.</shortdesc>
  <conbody>
-  <p><indexterm>MapR DB JSON
+        <p><indexterm>MapR DB JSON
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>MapR
                     DB JSON</indexterm></indexterm>MapR DB JSON tables are tables in which every row
             is a JSON document. Each JSON document has a unique identifier stored in the _id field,
@@ -33,6 +33,14 @@
         <p>When the pipeline stops, the MapR DB JSON origin notes where it stops reading. When the
             pipeline starts again, the origin continues processing from where it stopped by default.
             You can reset the origin to process all available data.</p>
-     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
- </conbody>
+        <p>
+            <note type="tip"><ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> provides several MapR origins to address different needs. For a quick comparison
+                chart to help you choose the right one, see <xref
+                    href="Origins-MapRComparison.dita#concept_ip2_szg_qbb">Comparing MapR
+                    Origins</xref>.</note>
+        </p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
+    </conbody>
 </concept>

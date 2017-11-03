@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_oq4_mhh_qbb">
+ <title>CRUD Operation and CDC Header Attributes</title>
+ <conbody>
+        <p><indexterm>MapR DB CDC origin<indexterm>record header
+            attributes</indexterm></indexterm>The MapR DB CDC origin includes the CRUD operation
+            type in the sdc.operation.type record header attribute. </p>
+        <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/CDC-UseCDCdest"/>
+        <p>The MapR DB CDC origin includes additional CDC information in other record header
+            attributes. The following table describes the record header attributes that the MapR DB
+            CDC origin generates:<table frame="all" rowsep="1" colsep="1" id="table_xk2_wth_qbb">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                    <thead>
+                        <row>
+                            <entry>Record Header Attribute</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>mapr.op.timestamp</entry>
+                            <entry>The timestamp associated with the change.</entry>
+                        </row>
+                        <row>
+                            <entry>mapr.server.timestamp</entry>
+                            <entry>The server timestamp associated with the change.</entry>
+                        </row>
+                        <row>
+                            <entry>partition</entry>
+                            <entry>Partition where the data originated.</entry>
+                        </row>
+                        <row>
+                            <entry>offset</entry>
+                            <entry>Offset for the data.</entry>
+                        </row>
+                        <row>
+                            <entry>sdc.operation.type</entry>
+                            <entry>The CRUD operation type associated with the record. The
+                                sdc.operation.type record header attribute can include the following
+                                values: <ul id="ul_e1p_d5h_qbb">
+                                    <li>1 for INSERT</li>
+                                    <li>2 for DELETE</li>
+                                    <li>3 for UPDATE</li>
+                                </ul></entry>
+                        </row>
+                        <row>
+                            <entry>topic</entry>
+                            <entry>Topic where the data originated.</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+ </conbody>
+</concept>

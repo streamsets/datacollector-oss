@@ -23,6 +23,7 @@
   <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
     <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Origins-HTTPComparison.dita"/>
+   <topicref href="../Origins/Origins-MapRComparison.dita"/>
    <topicref href="../Origins/Origins-WebSocketComparison.dita"/>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
    <topicref href="../Origins/MaxRecordSize.dita"/>
@@ -290,6 +291,14 @@
    <topicref href="../Origins/KinConsumer-ResetOrigin.dita"/>
    <topicref href="../Origins/KinConsumer-DataFormats.dita"/>
    <topicref href="../Origins/KinConsumer-Configuring.dita"/></topicref>
+  <topicref href="../Origins/MapRdbCDC.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MapRdbCDC-Multithreaded.dita"/>
+   <topicref href="../Origins/MapRdbCDC-IDField.dita"/>
+   <topicref href="../Origins/MapRdbCDC-CRUDcdcHeaderAtts.dita"/>
+   <topicref href="../Origins/MapRdbCDC-AdditionalProps.dita"/>
+   <topicref href="../Origins/MapRdbCDC-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/MapRDBJSON.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/MapRDBJSON-IDField.dita"/>

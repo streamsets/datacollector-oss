@@ -144,6 +144,14 @@
                                         id="image_vyh_ty3_fbb"/></xref></entry>
                         </row>
                         <row>
+                            <entry>MapR DB CDC origin</entry>
+                            <entry>Includes CRUD and CDC information in record header attributes.
+                                    <xref
+                                    href="../Origins/MapRdbCDC-CRUDcdcHeaderAtts.dita">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                        id="image_owj_54h_qbb"/></xref></entry>
+                        </row>
+                        <row>
                             <entry>MapR Streams Consumer origin</entry>
                             <entry>Includes information about the origins of the record in record
                                 header attributes. <xref
