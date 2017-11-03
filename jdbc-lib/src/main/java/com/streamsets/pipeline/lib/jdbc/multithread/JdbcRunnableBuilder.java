@@ -17,6 +17,7 @@
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
 import com.google.common.cache.CacheLoader;
+import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
@@ -33,6 +34,7 @@ public class JdbcRunnableBuilder {
   private ConnectionManager connectionManager;
   private MultithreadedTableProvider tableProvider;
   private CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache;
+  private RateLimiter queryRateLimiter;
 
   public JdbcRunnableBuilder() {
   }
@@ -82,6 +84,11 @@ public class JdbcRunnableBuilder {
     return this;
   }
 
+  public JdbcRunnableBuilder queryRateLimiter(RateLimiter queryRateLimiter) {
+    this.queryRateLimiter = queryRateLimiter;
+    return this;
+  }
+
   public JdbcBaseRunnable build() {
     final String SQLServerCT = "SQLServerChangeTrackingClient";
     final String SQLServerCDC = "SQLServerCDCClient";
@@ -96,7 +103,8 @@ public class JdbcRunnableBuilder {
           connectionManager,
           tableJdbcConfigBean,
           commonSourceConfigBean,
-          tableReadContextCache
+          tableReadContextCache,
+          queryRateLimiter
       );
     } else if (context.getStageInfo().getInstanceName().startsWith(SQLServerCDC)) {
       return new CDCJdbcRunnable(
@@ -108,7 +116,8 @@ public class JdbcRunnableBuilder {
           connectionManager,
           tableJdbcConfigBean,
           commonSourceConfigBean,
-          tableReadContextCache
+          tableReadContextCache,
+          queryRateLimiter
       );
     } else {
       return new TableJdbcRunnable(
@@ -120,7 +129,8 @@ public class JdbcRunnableBuilder {
           connectionManager,
           tableJdbcConfigBean,
           commonSourceConfigBean,
-          tableReadContextCache
+          tableReadContextCache,
+          queryRateLimiter
       );
     }
   }

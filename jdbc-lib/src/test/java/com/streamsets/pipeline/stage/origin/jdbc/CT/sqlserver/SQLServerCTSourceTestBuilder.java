@@ -36,7 +36,7 @@ public class SQLServerCTSourceTestBuilder {
   private List<ConnectionPropertyBean> driverProperties;
   private  String driverClassName;
   private String connectionTestQuery;
-  private long queryInterval;
+  private String queriesPerSecond;
   private int maxBatchSize;
   private int maxClobSize;
   private int maxBlobSize;
@@ -61,7 +61,7 @@ public class SQLServerCTSourceTestBuilder {
     this.driverProperties = new ArrayList<>();
     this.driverClassName = "";
     this.connectionTestQuery = "";
-    this.queryInterval = 1;
+    this.queriesPerSecond = "1";
     this.maxBatchSize = 1000;
     this.maxClobSize = 1000;
     this.maxBlobSize = 1000;
@@ -117,8 +117,8 @@ public class SQLServerCTSourceTestBuilder {
     return this;
   }
 
-  public SQLServerCTSourceTestBuilder queryInterval(long queryInterval) {
-    this.queryInterval = queryInterval;
+  public SQLServerCTSourceTestBuilder queriesPerSecond(String queriesPerSecond) {
+    this.queriesPerSecond = queriesPerSecond;
     return this;
   }
 
@@ -217,7 +217,7 @@ public class SQLServerCTSourceTestBuilder {
     //tableJdbcConfigBean.quoteChar = quoteChar;
 
     CommonSourceConfigBean commonSourceConfigBean =  new CommonSourceConfigBean(
-        queryInterval,
+        queriesPerSecond,
         maxBatchSize,
         maxClobSize,
         maxBlobSize

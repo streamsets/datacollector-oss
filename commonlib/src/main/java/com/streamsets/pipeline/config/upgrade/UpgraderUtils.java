@@ -119,4 +119,24 @@ public abstract class UpgraderUtils {
     }
     return null;
   }
+
+
+  /**
+   * <p>
+   * Returns a {@link Config} object from the supplied list with the supplied name, if it exists.  If a non-null
+   * Config is returned, the supplied list of {@code configs} will be modified such that it no longer contains the
+   * returned value.
+   * </p>
+   *
+   * @param configs list of config objects (will not be modified)
+   * @param name the config to return, based on name
+   * @return the config object by the given name, if it exists, and null otherwise
+   */
+  public static Config getAndRemoveConfigWithName(List<Config> configs, String name) {
+    final Config config = getConfigWithName(configs, name);
+    if (config != null) {
+      configs.remove(config);
+    }
+    return config;
+  }
 }

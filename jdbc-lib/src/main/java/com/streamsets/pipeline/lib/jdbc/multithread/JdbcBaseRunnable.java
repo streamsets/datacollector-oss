@@ -20,6 +20,7 @@ import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.PushSource;
@@ -60,6 +61,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
   public static final String CURRENT_TABLE = "Current Table";
   static final String TABLES_OWNED_COUNT = "Tables Owned";
   static final String STATUS = "Status";
+  private static final String LAST_RATE_LIMIT_WAIT_TIME = "Last Rate Limit Wait (sec)";
   public static final String TABLE_METRICS = "Table Metrics for Thread - ";
   public static final String TABLE_JDBC_THREAD_PREFIX = "Table Jdbc Runner - ";
 
@@ -86,7 +88,11 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
   private int numSQLErrors = 0;
   private SQLException firstSqlException = null;
 
+  private final RateLimiter queryRateLimiter;
+
   private enum Status {
+    WAITING_FOR_RATE_LIMIT_PERMIT,
+    ACQUIRED_RATE_LIMIT_PERMIT,
     QUERYING_TABLE,
     GENERATING_BATCH,
     BATCH_GENERATED,
@@ -102,7 +108,8 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
       ConnectionManager connectionManager,
       TableJdbcConfigBean tableJdbcConfigBean,
       CommonSourceConfigBean commonSourceConfigBean,
-      CacheLoader<TableRuntimeContext, TableReadContext> tableCacheLoader
+      CacheLoader<TableRuntimeContext, TableReadContext> tableCacheLoader,
+      RateLimiter queryRateLimiter
   ) {
     this.context = context;
     this.threadNumber = threadNumber;
@@ -121,6 +128,7 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
 
     // Metrics
     this.gaugeMap = context.createGauge(TABLE_METRICS + threadNumber).getValue();
+    this.queryRateLimiter = queryRateLimiter;
   }
 
   public LoadingCache<TableRuntimeContext, TableReadContext> getTableReadContextCache() {
@@ -390,11 +398,15 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
    * Wait If needed before a new query is issued. (Does not wait if the result set is already cached)
    */
   private void waitIfNeeded() throws InterruptedException {
-    long delayTime =
-        (commonSourceConfigBean.queryInterval * 1000) - (System.currentTimeMillis() - lastQueryIntervalTime);
-    Thread.sleep((lastQueryIntervalTime < 0 || delayTime < 0) ? 0 : delayTime);
+    if (queryRateLimiter != null) {
+      updateGauge(Status.WAITING_FOR_RATE_LIMIT_PERMIT);
+      double waitTime = queryRateLimiter.acquire();
+      updateGauge(Status.ACQUIRED_RATE_LIMIT_PERMIT);
+      gaugeMap.put(LAST_RATE_LIMIT_WAIT_TIME, waitTime);
+    } else {
+      LOG.debug("No query rate limiter in effect; not waiting");
+    }
   }
-
 
   /**
    * Get Or Load {@link TableReadContext} for {@link #tableRuntimeContext}

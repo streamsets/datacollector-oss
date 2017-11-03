@@ -19,6 +19,8 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
+import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 import java.util.List;
 
@@ -46,5 +48,19 @@ public class SQLServerCTSourceUpgrader implements StageUpgrader {
 
   private void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config(ALLOW_LATE_TABLE, false));
+
+    // upgrade queryInterval to queriesPerSecond
+    final String numThreadsField = "ctTableJdbcConfigBean.numberOfThreads";
+    final Config numThreadsConfig = UpgraderUtils.getConfigWithName(configs, numThreadsField);
+    if (numThreadsConfig == null) {
+      throw new IllegalStateException(String.format(
+          "%s config was not found in configs: %s",
+          numThreadsField,
+          configs
+      ));
+    }
+    final int numThreads = (int) numThreadsConfig.getValue();
+
+    CommonSourceConfigBean.upgradeRateLimitConfigs(configs, "commonSourceConfigBean", numThreads);
   }
 }

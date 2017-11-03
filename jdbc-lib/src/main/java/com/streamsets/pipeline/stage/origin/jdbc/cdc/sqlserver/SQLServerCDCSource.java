@@ -20,6 +20,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheLoader;
+import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -274,6 +275,8 @@ public class SQLServerCDCSource extends BasePushSource {
 
       ExecutorCompletionService<Future> completionService = new ExecutorCompletionService<>(executorService);
 
+      final RateLimiter queryRateLimiter = commonSourceConfigBean.creatQueryRateLimiter();
+
       IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
         CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache = new SQLServerCDCContextLoader(
             connectionManager,
@@ -294,6 +297,7 @@ public class SQLServerCDCSource extends BasePushSource {
             .tableReadContextCache(tableReadContextCache)
             .commonSourceConfigBean(commonSourceConfigBean)
             .tableJdbcConfigBean(tableJdbcConfigBean)
+            .queryRateLimiter(queryRateLimiter)
             .build();
         toBeInvalidatedThreadCaches.add(runnable.getTableReadContextCache());
         completionService.submit(runnable, null);

@@ -123,5 +123,19 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
 
   private void upgradeV4ToV5(List<Config> configs) {
     configs.add(new Config(TableConfigBean.ALLOW_LATE_TABLE, false));
+
+    // upgrade queryInterval to queriesPerSecond
+    final String numThreadsField = "tableJdbcConfigBean.numberOfThreads";
+    final Config numThreadsConfig = UpgraderUtils.getConfigWithName(configs, numThreadsField);
+    if (numThreadsConfig == null) {
+      throw new IllegalStateException(String.format(
+          "%s config was not found in configs: %s",
+          numThreadsField,
+          configs
+      ));
+    }
+    final int numThreads = (int) numThreadsConfig.getValue();
+
+    CommonSourceConfigBean.upgradeRateLimitConfigs(configs, "commonSourceConfigBean", numThreads);
   }
 }

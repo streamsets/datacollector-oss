@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
 import com.google.common.cache.CacheLoader;
+import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
@@ -38,7 +39,8 @@ import java.util.Map;
 public final class TableJdbcRunnable extends JdbcBaseRunnable {
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcRunnable.class);
 
-  public TableJdbcRunnable(PushSource.Context context,
+  public TableJdbcRunnable(
+      PushSource.Context context,
       int threadNumber,
       int batchSize,
       Map<String, String> offsets,
@@ -46,8 +48,21 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
       ConnectionManager connectionManager,
       TableJdbcConfigBean tableJdbcConfigBean,
       CommonSourceConfigBean commonSourceConfigBean,
-      CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache) {
-    super(context, threadNumber, batchSize, offsets, tableProvider, connectionManager, tableJdbcConfigBean, commonSourceConfigBean, tableReadContextCache);
+      CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache,
+      RateLimiter queryRateLimiter
+  ) {
+    super(
+        context,
+        threadNumber,
+        batchSize,
+        offsets,
+        tableProvider,
+        connectionManager,
+        tableJdbcConfigBean,
+        commonSourceConfigBean,
+        tableReadContextCache,
+        queryRateLimiter
+    );
 
   }
 

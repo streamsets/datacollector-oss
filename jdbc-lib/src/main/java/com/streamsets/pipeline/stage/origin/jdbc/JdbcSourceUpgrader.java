@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import com.streamsets.pipeline.lib.jdbc.JdbcBaseUpgrader;
 
 import java.util.ArrayList;
@@ -54,6 +55,12 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
         // fall through
       case 8:
         upgradeV8toV9(configs);
+        if (toVersion == 9) {
+          break;
+        }
+        // fall through
+      case 9:
+        upgradeV9toV10(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -103,5 +110,9 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
 
   private void upgradeV8toV9(List<Config> configs) {
     configs.add(new Config("disableValidation", false));
+  }
+
+  private void upgradeV9toV10(List<Config> configs) {
+    UpgraderUtils.moveAllTo(configs, "commonSourceConfigBean.queryInterval", "queryInterval");
   }
 }

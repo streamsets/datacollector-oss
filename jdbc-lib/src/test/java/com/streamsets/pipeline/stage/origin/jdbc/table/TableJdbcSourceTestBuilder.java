@@ -34,7 +34,7 @@ public class TableJdbcSourceTestBuilder {
   private List<ConnectionPropertyBean> driverProperties;
   private  String driverClassName;
   private String connectionTestQuery;
-  private long queryInterval;
+  private String queriesPerSecond;
   private int maxBatchSize;
   private int maxClobSize;
   private int maxBlobSize;
@@ -59,7 +59,7 @@ public class TableJdbcSourceTestBuilder {
     this.driverProperties = new ArrayList<>();
     this.driverClassName = "";
     this.connectionTestQuery = "";
-    this.queryInterval = 0;
+    this.queriesPerSecond = "0";
     this.maxBatchSize = 1000;
     this.maxClobSize = 1000;
     this.maxBlobSize = 1000;
@@ -115,8 +115,8 @@ public class TableJdbcSourceTestBuilder {
     return this;
   }
 
-  public TableJdbcSourceTestBuilder queryInterval(long queryInterval) {
-    this.queryInterval = queryInterval;
+  public TableJdbcSourceTestBuilder queriesPerSecond(String queriesPerSecond) {
+    this.queriesPerSecond = queriesPerSecond;
     return this;
   }
 
@@ -220,7 +220,7 @@ public class TableJdbcSourceTestBuilder {
     tableJdbcConfigBean.quoteChar = quoteChar;
 
     CommonSourceConfigBean commonSourceConfigBean =  new CommonSourceConfigBean(
-        queryInterval,
+        queriesPerSecond,
         maxBatchSize,
         maxClobSize,
         maxBlobSize

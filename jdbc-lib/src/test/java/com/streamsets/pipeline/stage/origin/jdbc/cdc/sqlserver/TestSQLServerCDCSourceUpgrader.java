@@ -18,6 +18,8 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -113,6 +115,11 @@ public class TestSQLServerCDCSourceUpgrader {
   @Test
   public void testUpgradeV1toV3() throws StageException {
     List<Config> configs = new ArrayList<>();
+
+    configs.add(new Config("cdcTableJdbcConfigBean.numberOfThreads", 4));
+    final String queryIntervalField = "commonSourceConfigBean.queryInterval";
+    configs.add(new Config(queryIntervalField, "${10 * SECONDS}"));
+
     List<Map<String, String>> oldTableConfigs = new ArrayList<>();
 
     final String schema1 = "dbo";
@@ -134,18 +141,19 @@ public class TestSQLServerCDCSourceUpgrader {
     // removed timezone config from V3
     configs.add(new Config(TABLE_TIMEZONE_ID, ""));
 
-    Assert.assertEquals(2, configs.size());
+    Assert.assertEquals(4, configs.size());
 
     SQLServerCDCSourceUpgrader sqlServerCDCSourceUpgrader = new SQLServerCDCSourceUpgrader();
     sqlServerCDCSourceUpgrader.upgrade("a", "b", "c", 1, 3, configs);
 
-    Assert.assertEquals(2, configs.size());
+    Assert.assertEquals(4, configs.size());
 
     // Assertion for V2
     // "Allow Late Table" config returns false
-    Assert.assertEquals(false, configs.get(0).getValue());
+    UpgraderTestUtils.assertExists(configs, SQLServerCDCSourceUpgrader.ALLOW_LATE_TABLE, false);
 
-    ArrayList<HashMap<String, String>> tableConfigs = (ArrayList<HashMap<String, String>>)configs.get(1).getValue();
+    Config tableConfigObj = UpgraderUtils.getConfigWithName(configs, SQLServerCDCSourceUpgrader.TABLECONFIG);
+    ArrayList<HashMap<String, String>> tableConfigs = (ArrayList<HashMap<String, String>>) tableConfigObj.getValue();
     Assert.assertEquals(1, tableConfigs.size());
 
     HashMap<String, String> tableConfig = tableConfigs.get(0);
@@ -161,5 +169,8 @@ public class TestSQLServerCDCSourceUpgrader {
         .findAny()
         .isPresent()
     );
+
+    UpgraderTestUtils.assertNoneExist(configs, queryIntervalField);
+    UpgraderTestUtils.assertExists(configs, "commonSourceConfigBean.queriesPerSecond", "0.4");
   }
 }

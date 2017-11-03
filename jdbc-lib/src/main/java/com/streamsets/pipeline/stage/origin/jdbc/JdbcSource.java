@@ -20,6 +20,7 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
+import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -136,14 +137,15 @@ public class JdbcSource extends BaseSource {
       boolean createJDBCNsHeaders,
       String jdbcNsHeaderPrefix,
       HikariPoolConfigBean hikariConfigBean,
-      UnknownTypeAction unknownTypeAction
+      UnknownTypeAction unknownTypeAction,
+      long queryInterval
   ) {
     this.isIncrementalMode = isIncrementalMode;
     this.query = query;
     this.initialOffset = initialOffset;
     this.offsetColumn = offsetColumn;
     this.disableValidation = disableValidation;
-    this.queryIntervalMillis = 1000 * commonSourceConfigBean.queryInterval;
+    this.queryIntervalMillis = 1000 * queryInterval;
     this.txnColumnName = txnColumnName;
     this.txnMaxSize = txnMaxSize;
     this.commonSourceConfigBean = commonSourceConfigBean;

@@ -19,6 +19,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
@@ -59,9 +60,21 @@ public class CDCJdbcRunnable extends JdbcBaseRunnable {
       ConnectionManager connectionManager,
       TableJdbcConfigBean tableJdbcConfigBean,
       CommonSourceConfigBean commonSourceConfigBean,
-      CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache
+      CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache,
+      RateLimiter queryRateLimiter
   ) {
-    super(context, threadNumber, batchSize, offsets, tableProvider, connectionManager, tableJdbcConfigBean, commonSourceConfigBean, tableReadContextCache);
+    super(
+        context,
+        threadNumber,
+        batchSize,
+        offsets,
+        tableProvider,
+        connectionManager,
+        tableJdbcConfigBean,
+        commonSourceConfigBean,
+        tableReadContextCache,
+        queryRateLimiter
+    );
 
     this.recordHeader = ImmutableSet.of(
         MSQueryUtil.CDC_START_LSN,

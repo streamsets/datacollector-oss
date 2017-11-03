@@ -43,6 +43,8 @@ public final class TableConfigBean {
   public static final boolean ENABLE_NON_INCREMENTAL_DEFAULT_VALUE = false;
 
   public static final String ALLOW_LATE_TABLE = "commonSourceConfigBean.allowLateTable";
+  public static final String QUERY_INTERVAL_FIELD = "commonSourceConfigBean.queryInterval";
+  public static final String QUERIES_PER_SECOND_FIELD = "commonSourceConfigBean.queriesPerSecond";
 
   @ConfigDef(
       required = false,

@@ -20,6 +20,8 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
+import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SQLServerCDCSourceUpgrader implements StageUpgrader {
-  private static final String TABLECONFIG = "cdcTableJdbcConfigBean.tableConfigs";
-  private static final String ALLOW_LATE_TABLE = "commonSourceConfigBean.allowLateTable";
+  public static final String TABLECONFIG = "cdcTableJdbcConfigBean.tableConfigs";
+  public static final String ALLOW_LATE_TABLE = "commonSourceConfigBean.allowLateTable";
   private static final String SCHEMA_CONFIG = "schema";
   private static final String TABLEPATTERN_CONFIG = "tablePattern";
   private static final String TABLE_EXCLUSION_CONFIG = "tableExclusionPattern";
@@ -111,5 +113,19 @@ public class SQLServerCDCSourceUpgrader implements StageUpgrader {
         break;
       }
     }
+
+    // upgrade queryInterval to queriesPerSecond
+    final String numThreadsField = "cdcTableJdbcConfigBean.numberOfThreads";
+    final Config numThreadsConfig = UpgraderUtils.getConfigWithName(configs, numThreadsField);
+    if (numThreadsConfig == null) {
+      throw new IllegalStateException(String.format(
+          "%s config was not found in configs: %s",
+          numThreadsField,
+          configs
+      ));
+    }
+    final int numThreads = (int) numThreadsConfig.getValue();
+
+    CommonSourceConfigBean.upgradeRateLimitConfigs(configs, "commonSourceConfigBean", numThreads);
   }
 }

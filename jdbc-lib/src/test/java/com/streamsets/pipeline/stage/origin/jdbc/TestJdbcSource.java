@@ -72,11 +72,12 @@ public class TestJdbcSource {
   private final String queryStoredProcedure = "CALL STOREDPROC();";
   private final String queryUnknownType = "SELECT * FROM TEST.TEST_UNKNOWN_TYPE WHERE P_ID > ${offset} ORDER BY P_ID ASC LIMIT 10;";
   private final String initialOffset = "0";
-  private final long queryInterval = 0L;
+  private final String queriesPerSecond = "0";
+  private final long queryInterval = 0;
 
   private Connection connection = null;
-
   // This is used for the stored procedure, do not remove
+
   public static ResultSet simpleResultSet() throws SQLException {
     SimpleResultSet rs = new SimpleResultSet();
     rs.addColumn("ID", Types.INTEGER, 10, 0);
@@ -188,12 +189,13 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
-        );
+        UnknownTypeAction.STOP_PIPELINE,
+        queryInterval
+    );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
         .build();
@@ -245,12 +247,13 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
-        );
+        UnknownTypeAction.STOP_PIPELINE,
+        queryInterval
+    );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
         .build();
@@ -302,12 +305,13 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
-        );
+        UnknownTypeAction.STOP_PIPELINE,
+        queryInterval
+    );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
         .build();
@@ -356,11 +360,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean("some bad connection string", username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+        queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -386,11 +391,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         configBean,
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -413,11 +419,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -441,11 +448,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -472,11 +480,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -499,11 +508,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -526,12 +536,13 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
-      );
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
+    );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -564,11 +575,12 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -607,11 +619,12 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -653,11 +666,12 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -681,11 +695,12 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -708,11 +723,12 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -736,11 +752,12 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -774,11 +791,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -822,11 +840,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         true,
         "jdbc.",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -871,11 +890,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         null,
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -922,11 +942,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         null,
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -969,11 +990,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
         );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -1011,11 +1033,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(0, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
         );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -1066,11 +1089,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(0, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
         );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -1125,11 +1149,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(0, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -1183,11 +1208,12 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        new CommonSourceConfigBean(queryInterval, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -1247,11 +1273,12 @@ public class TestJdbcSource {
         1000,
         JdbcRecordType.LIST_MAP,
         // Using "0" leads to SDC-6429
-        new CommonSourceConfigBean(10, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean("0.1", BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -1292,11 +1319,12 @@ public class TestJdbcSource {
         1000,
         JdbcRecordType.LIST_MAP,
         // Using "0" leads to SDC-6429
-        new CommonSourceConfigBean(10, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean("0.1", BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.STOP_PIPELINE
+        UnknownTypeAction.STOP_PIPELINE,
+				queryInterval
         );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -1328,11 +1356,12 @@ public class TestJdbcSource {
         1000,
         JdbcRecordType.LIST_MAP,
         // Using "0" leads to SDC-6429
-        new CommonSourceConfigBean(10, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean("0.1", BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.CONVERT_TO_STRING
+        UnknownTypeAction.CONVERT_TO_STRING,
+        queryInterval
         );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -1371,11 +1400,12 @@ public class TestJdbcSource {
         1000,
         JdbcRecordType.LIST_MAP,
         // Using "0" leads to SDC-6429
-        new CommonSourceConfigBean(10, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        new CommonSourceConfigBean("0.1", BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
         false,
         "",
         createConfigBean(h2ConnectionString, username, password),
-        UnknownTypeAction.CONVERT_TO_STRING
+        UnknownTypeAction.CONVERT_TO_STRING,
+        queryInterval
     );
 
     final String lastSourceOffset = "10";
