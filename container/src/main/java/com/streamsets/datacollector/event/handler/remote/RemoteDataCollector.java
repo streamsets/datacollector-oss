@@ -38,6 +38,7 @@ import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.security.GroupsInScope;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -45,6 +46,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
@@ -80,6 +82,7 @@ public class RemoteDataCollector implements DataCollector {
   private final AclStoreTask aclStoreTask;
   private final AclCacheHelper aclCacheHelper;
   private final RuntimeInfo runtimeInfo;
+  private final StageLibraryTask stageLibrary;
 
   @Inject
   public RemoteDataCollector(
@@ -89,7 +92,8 @@ public class RemoteDataCollector implements DataCollector {
       AclStoreTask aclStoreTask,
       RemoteStateEventListener stateEventListener,
       RuntimeInfo runtimeInfo,
-      AclCacheHelper aclCacheHelper
+      AclCacheHelper aclCacheHelper,
+      StageLibraryTask stageLibrary
   ) {
     this.manager = manager;
     this.pipelineStore = pipelineStore;
@@ -99,6 +103,7 @@ public class RemoteDataCollector implements DataCollector {
     this.runtimeInfo = runtimeInfo;
     this.aclStoreTask = aclStoreTask;
     this.aclCacheHelper = aclCacheHelper;
+    this.stageLibrary = stageLibrary;
   }
 
   public void init() {
@@ -191,6 +196,8 @@ public class RemoteDataCollector implements DataCollector {
       ruleDefinitions.setUuid(pipelineStore.retrieveRules(name, rev).getUuid());
     }
     pipelineConfiguration.setUuid(uuid);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfiguration);
+    pipelineConfiguration = validator.validate();
     pipelineStore.save(user, name, rev, description, pipelineConfiguration);
     pipelineStore.storeRules(name, rev, ruleDefinitions);
     if (acl != null) { // can be null for old dpm or when DPM jobs have no acl

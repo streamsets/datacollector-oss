@@ -47,6 +47,7 @@ import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.runner.production.SourceOffsetUpgrader;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
@@ -861,7 +862,8 @@ public class TestRemoteDataCollector {
           aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
           null,
-          Mockito.mock(AclCacheHelper.class)
+          Mockito.mock(AclCacheHelper.class),
+          Mockito.mock(StageLibraryTask.class)
       );
       dataCollector.validateConfigs("user", "ns:name", "rev");
       dataCollector.validateConfigs("user1", "ns:name1", "rev1");
@@ -883,7 +885,8 @@ public class TestRemoteDataCollector {
           aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
           null,
-          Mockito.mock(AclCacheHelper.class)
+          Mockito.mock(AclCacheHelper.class),
+          Mockito.mock(StageLibraryTask.class)
       );
       dataCollector.stopAndDelete("user", "ns:name", "rev");
       dataCollector.stopAndDelete("user", "ns:name", "rev");
@@ -916,7 +919,8 @@ public class TestRemoteDataCollector {
           aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
           runtimeInfo,
-          Mockito.mock(AclCacheHelper.class)
+          Mockito.mock(AclCacheHelper.class),
+          Mockito.mock(StageLibraryTask.class)
       );
       dataCollector.init();
       dataCollector.validateConfigs("user", "ns:name", "rev");
@@ -967,7 +971,8 @@ public class TestRemoteDataCollector {
         aclStoreTask,
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
-        Mockito.mock(AclCacheHelper.class)
+        Mockito.mock(AclCacheHelper.class),
+        Mockito.mock(StageLibraryTask.class)
     );
     File testFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
@@ -991,7 +996,8 @@ public class TestRemoteDataCollector {
         aclStoreTask,
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
-        Mockito.mock(AclCacheHelper.class)
+        Mockito.mock(AclCacheHelper.class),
+        Mockito.mock(StageLibraryTask.class)
     );
     File testFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
@@ -1013,7 +1019,8 @@ public class TestRemoteDataCollector {
         aclStoreTask,
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
-        Mockito.mock(AclCacheHelper.class)
+        Mockito.mock(AclCacheHelper.class),
+        Mockito.mock(StageLibraryTask.class)
     );
     File testFolder = tempFolder.newFolder();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
@@ -1041,7 +1048,8 @@ public class TestRemoteDataCollector {
         aclStoreTask,
         remoteStateEventListener,
         runtimeInfo,
-        Mockito.mock(AclCacheHelper.class)
+        Mockito.mock(AclCacheHelper.class),
+        Mockito.mock(StageLibraryTask.class)
     );
     List<PipelineState> pipelineStates = new ArrayList<>();
     pipelineStates.add(new PipelineStateImpl("user",
@@ -1095,7 +1103,8 @@ public class TestRemoteDataCollector {
         Mockito.mock(AclStoreTask.class),
         Mockito.mock(RemoteStateEventListener.class),
         Mockito.mock(RuntimeInfo.class),
-        Mockito.mock(AclCacheHelper.class)
+        Mockito.mock(AclCacheHelper.class),
+        Mockito.mock(StageLibraryTask.class)
     ));
     PipelineState pipelineStatus1 = new PipelineStateImpl("user",
         "ns:name",

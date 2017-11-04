@@ -1291,6 +1291,9 @@ public class BeanHelper {
   }
 
   public static List<ServiceConfigurationJson> wrapServiceConfiguration(List<ServiceConfiguration> services) {
+    if (null == services) {
+      return null;
+    }
     return services.stream()
       .map(ServiceConfigurationJson::new)
       .collect(Collectors.toList());
