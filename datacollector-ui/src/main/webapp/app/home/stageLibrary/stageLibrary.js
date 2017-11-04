@@ -103,6 +103,8 @@ angular
 
     var updateStageGroups = function() {
       var stageGroups = [];
+      var labels = {};
+
       var libraryList = _.chain($scope.stageLibraries)
         .filter(function (stageLibrary) {
           return stageLibrary.library !== 'streamsets-datacollector-stats-lib';
@@ -111,22 +113,18 @@ angular
         .pluck("library")
         .unique()
         .value();
-      var libraryLabelList = _.chain($scope.stageLibraries)
-        .filter(function (stageLibrary) {
-          return stageLibrary.library !== 'streamsets-datacollector-stats-lib';
-        })
-        .sortBy('libraryLabel')
-        .pluck("libraryLabel")
-        .unique()
-        .value();
+
+      angular.forEach($scope.stageLibraries, function(stageLibrary) {
+        labels[stageLibrary.library] = stageLibrary.libraryLabel;
+      });
 
       stageGroups = stageGroups.concat(typeGroups);
 
-      angular.forEach(libraryList, function(library, index) {
+      angular.forEach(libraryList, function(library) {
         stageGroups.push({
           group: 'Library',
           name: library,
-          label: libraryLabelList[index]
+          label: labels[library]
         });
       });
 
